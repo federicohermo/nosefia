@@ -12,6 +12,6 @@ script = ExtResource("1_objeto")
 id = &"jabon_rosa"
 nombre = "Jabón rosa"
 sonoridad = 5
-subtitulo = "Un bidón de jabón rosa, marca “H”. Sirve para manchas de... para manchas marrones."
+subtitulo = "Un bidón de jabón rosa, marca “H”.\nSirve para manchas de... para manchas marrones."
 entra_en_el_contenedor = false
 revelacion = SubResource("Resource_revelacion")

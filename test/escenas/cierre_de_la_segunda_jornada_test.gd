@@ -93,10 +93,13 @@ func test_la_reflexion_retiene_la_entrada_y_fija_las_notas() -> void:  # AC-SHF-
 	var recuadro := _recuadro(almacen)
 	for _texto: int in ReflexionDeCierre.TEXTOS_DE_LA_PRIMERA.size():
 		recuadro.botones().back().pressed.emit()
-	assert_bool(recuadro.visible).is_false()
+	assert_bool(recuadro.visible).is_true()
+	assert_array(aperturas).is_empty()
 	assert_int(_celular(almacen).bandeja().mensajes_de(NOTAS).size()).is_equal(
 		ReflexionDeCierre.TEXTOS_DE_LA_PRIMERA.size()
 	)
+	almacen.call("_process", (almacen.get("_partida") as Partida).reflexion.restante())
+	assert_bool(recuadro.visible).is_false()
 	AvanceDeDevolucion.terminar_movimiento(pantalla)
 	assert_array(aperturas).is_equal([4])
 	assert_bool(pantalla.visible).is_false()
@@ -223,3 +226,28 @@ func test_la_pausa_congela_la_eleccion_y_la_espera() -> void:  # AC-INV-063
 	assert_bool(recuadro.visible).is_true()
 	pausa.reanudar()
 	assert_float(reflexion.restante()).is_equal(restante)
+
+
+func test_la_pausa_congela_la_espera_del_tercer_texto() -> void:  # AC-INV-063
+	var almacen: Node3D = await _almacen(
+		Partida.desde({"jornada": ReflexionDeCierre.JORNADA_DE_LOS_TEXTOS})
+	)
+	var aperturas := _aperturas(almacen)
+	await _hasta_la_reflexion(almacen)
+	var recuadro := _recuadro(almacen)
+	var reflexion := (almacen.get("_partida") as Partida).reflexion
+	for _texto: int in ReflexionDeCierre.TEXTOS_DE_LA_PRIMERA.size():
+		recuadro.botones().back().pressed.emit()
+	almacen.call("_process", 0.5)
+	var restante := reflexion.restante()
+	var mostrado := recuadro.texto()
+	var pausa: ControlDePausa = almacen.get_node("Interfaz/ControlDePausa")
+	pausa.pausar()
+	for _cuadro: int in 10:
+		await get_tree().process_frame
+	assert_float(reflexion.restante()).is_equal(restante)
+	assert_bool(recuadro.visible).is_true()
+	pausa.reanudar()
+	assert_float(reflexion.restante()).is_equal(restante)
+	assert_str(recuadro.texto()).is_equal(mostrado)
+	assert_array(aperturas).is_empty()

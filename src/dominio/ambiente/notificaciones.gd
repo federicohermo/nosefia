@@ -8,10 +8,8 @@ enum Tipo {
 	CIERRE_PROXIMO,
 	PISTA,
 	TAREAS_TERMINADAS,
-	SALIDA_RETRABADA,
 	CLIENTE_CANSADO_CON_PRODUCTOS,
 }
-enum Salida { SIN_AVISO, HABILITADA, RETRABADA }
 
 const DURACION := 3.0
 const HORA_DEL_AVISO := 7
@@ -30,7 +28,6 @@ var _orden: Array[Tipo] = []
 var _transcurrido: Dictionary[Tipo, float] = {}
 var _esperando: Comprador = null
 var _cierre_avisado := false
-var _salida := Salida.SIN_AVISO
 var _permiso := false
 var _en_la_computadora := false
 
@@ -77,10 +74,9 @@ func pista_anotada() -> void:
 
 func actualizar_salida(disponible: bool) -> void:
 	_permiso = disponible
-	if _en_la_computadora:
-		_retirar(Tipo.SALIDA_RETRABADA if disponible else Tipo.TAREAS_TERMINADAS)
-	else:
-		_avisar_salida(disponible)
+	if disponible and _en_la_computadora:
+		return
+	_avisar_salida(disponible)
 
 
 func actualizar_computadora(abierta: bool) -> void:
@@ -93,7 +89,7 @@ func avanzar(segundos: float) -> void:
 	if segundos <= 0.0:
 		return
 	for tipo in visibles():
-		if tipo == Tipo.CLIENTE and _esperando != null:
+		if _persiste(tipo):
 			continue
 		_transcurrido[tipo] += segundos
 		if _transcurrido[tipo] >= DURACION:
@@ -112,8 +108,11 @@ func vaciar() -> void:
 	_salidos.clear()
 	_esperando = null
 	_cierre_avisado = false
-	_salida = Salida.SIN_AVISO
 	_permiso = false
+
+
+func _persiste(tipo: Tipo) -> bool:
+	return tipo == Tipo.TAREAS_TERMINADAS or (tipo == Tipo.CLIENTE and _esperando != null)
 
 
 func _retirar(tipo: Tipo) -> void:
@@ -128,12 +127,7 @@ func _avisar(tipo: Tipo) -> void:
 
 
 func _avisar_salida(disponible: bool) -> void:
-	if disponible:
-		if _salida == Salida.SIN_AVISO:
-			_avisar(Tipo.TAREAS_TERMINADAS)
-		_retirar(Tipo.SALIDA_RETRABADA)
-		_salida = Salida.HABILITADA
-	elif _salida == Salida.HABILITADA:
+	if not disponible:
 		_retirar(Tipo.TAREAS_TERMINADAS)
-		_avisar(Tipo.SALIDA_RETRABADA)
-		_salida = Salida.RETRABADA
+	elif not _orden.has(Tipo.TAREAS_TERMINADAS):
+		_avisar(Tipo.TAREAS_TERMINADAS)

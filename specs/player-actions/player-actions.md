@@ -319,6 +319,12 @@ A4, con el contenido visible en el mundo; NO DEBEN presentarse como post its ni 
 por tarea.
 Las hojas del cuartito y del baño DEBEN conservar sus imágenes artísticas.
 
+MIENTRAS una tarea de la jornada está cumplida, su renglón en «TAREAS A REALIZAR» DEBE llevar
+tachada toda la oración, número y nombre, con una línea roja, en la hoja pegada y en su lectura.
+El tachado DEBE aparecer en el momento en que la tarea se cumple, también con la lectura abierta,
+y DEBE irse si la tarea vuelve a quedar sin cumplir. Las tareas sin cumplir NO DEBEN llevar
+tachado, y el orden, los nombres y la numeración de los renglones NO DEBEN cambiar.
+
 La nota de tareas DEBE enumerar sólo las obligatorias que declara la jornada, en el orden
 atención al cliente, registro de productos vendidos, limpieza, reposición y, al final, la
 particular de esa jornada. Ordenar las cajas DEBE llamarse «Ordenar cajas en el depósito» y
@@ -427,8 +433,8 @@ vigente, asociado al gesto que realmente ejecutan: lector, descarte de ticket, t
 del contenedor conservan «Interactuar» sobre el primario; la tapa usa «Abrir» o «Cerrar».
 Preparar las líneas Hablar y Entregar NO DEBE habilitar por sí mismo atención directa.
 
-El contador de tareas DEBE conservar su lugar sobre la primera línea. CUANDO cambian foco
-y mano en el mismo cuadro, la referencia DEBE usar ambos valores nuevos, sin combinación intermedia.
+CUANDO cambian foco y mano en el mismo cuadro, la referencia DEBE usar ambos valores nuevos, sin
+combinación intermedia.
 
 ### BR-PLY-036 — El contexto no adelanta el resultado
 
@@ -1039,7 +1045,7 @@ y las viñetas «No dejar productos tirados.», «Dejar las cajas en el depósit
 DADO las obligatorias declaradas, ENTONCES «TAREAS A REALIZAR» las enumera en el orden de la
 regla. DADO limpieza y tirar la basura, ENTONCES da «1. Limpieza» y «2. Tirar la basura».
 DADO cero, ENTONCES conserva el título y cero renglones. Cada tipo declarado tiene nombre,
-y los títulos y renglones son iguales en la hoja y su lectura.
+y los títulos y renglones son iguales en la hoja y su lectura, con o sin tachado.
 
 ### AC-PLY-070 — El cuartito y el baño comparten la imagen artística completa *(verifica BR-PLY-030)*
 
@@ -1180,7 +1186,6 @@ DADO los controles de fábrica, mano vacía y lavatorio enfocado CUANDO se consu
 ENTONCES muestra sólo «[E] Examinar». DADO el balde sostenido ENTONCES muestra exactamente
 «[E] Examinar (mano)» y «[Click Izq] Llenar». DADO una caja apoyada con una unidad y mano vacía
 ENTONCES muestra «[E] Examinar», «[Click Izq] Agarrar» y «[Click Der] Sacar producto».
-El contador de tareas permanece encima de la primera línea.
 
 ### AC-PLY-083 — Sacar y meter usan gestos distintos *(verifica BR-PLY-035, BR-PLY-036)*
 
@@ -1568,6 +1573,15 @@ se la empuja ENTONCES sigue cerrada.
 
 DADO la compuerta del mostrador cerrada CUANDO un cuerpo camina contra ella desde adentro ENTONCES
 sigue cerrada.
+
+### AC-PLY-165 — Una tarea cumplida se tacha en rojo y lo pierde al descumplirse *(verifica BR-PLY-030)*
+
+DADO las obligatorias limpieza y tirar la basura, y ninguna cumplida, ENTONCES ningún renglón
+va tachado. CUANDO se cumple limpieza ENTONCES «1. Limpieza» lleva una línea roja sobre toda la
+oración, y «2. Tirar la basura» no lleva ninguna, en la hoja y en la lectura, aunque la lectura
+esté abierta. CUANDO limpieza vuelve a quedar sin cumplir ENTONCES el tachado se va de las dos.
+DADO una jornada que abre con una tarea ya cumplida, ENTONCES su renglón arranca tachado. El
+orden, los nombres y la numeración son los mismos con y sin tachado.
 
 ## No objetivos
 

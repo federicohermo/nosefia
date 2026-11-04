@@ -39,6 +39,10 @@ func _bloque(mensajes: Array[Mensaje]) -> Array[Mensaje]:
 	)
 
 
+func _sin_pista(mensaje: Mensaje) -> bool:
+	return mensaje.tramo_de_pista.is_empty()
+
+
 func test_la_jornada_del_lector_suma_el_bloque_tras_los_quince() -> void:  # AC-INV-066
 	var bandeja := Bandeja.new(Conversacion.desde_disco())
 	bandeja.abrir_jornada(JORNADA_DEL_LECTOR - 1)
@@ -105,14 +109,47 @@ func test_el_bloque_no_concede_pistas_y_trae_sus_dos_glifos() -> void:  # AC-INV
 	bandeja.abrir_jornada(JORNADA_DEL_LECTOR)
 	var bloque := _bloque(bandeja.mensajes_de(YASMIN))
 	assert_array(_identidades(bloque)).is_equal(_guion_esperado().slice(_previos()))
-	for mensaje in bloque:
+	for mensaje: Mensaje in bloque.filter(_sin_pista):
 		assert_str(mensaje.tramo_de_pista).is_empty()
 		assert_str(mensaje.pista).is_empty()
 		assert_str(mensaje.texto_del_tramo).is_empty()
 		assert_str(mensaje.pista_del_tramo(mensaje.tramo_de_pista)).is_empty()
+	for mensaje in bloque:
 		assert_bool(mensaje.foto == null).is_true()
 	assert_bool(bloque[6].texto.contains(String.chr(CALAVERA))).is_true()
 	assert_bool(bloque[8].texto.contains(String.chr(CARA_APRETADA))).is_true()
+
+
+func test_solo_un_mensaje_del_bloque_es_la_pista_5b_y_se_marca_entero() -> void:  # AC-INV-090
+	var bandeja := Bandeja.new(Conversacion.desde_disco())
+	bandeja.abrir_jornada(JORNADA_DEL_LECTOR)
+	var con_pista := _bloque(bandeja.mensajes_de(YASMIN)).filter(
+		func(mensaje: Mensaje) -> bool: return not _sin_pista(mensaje)
+	)
+	assert_array(_identidades(con_pista)).is_equal(["J3_3"])
+	if con_pista.is_empty():
+		return
+	var mensaje: Mensaje = con_pista[0]
+	assert_str(mensaje.pista).is_equal("5B")
+	assert_str(mensaje.texto_del_tramo).is_equal(mensaje.texto)
+	assert_str(mensaje.pista_del_tramo(mensaje.tramo_de_pista)).is_equal("5B")
+	assert_str(mensaje.pista_del_tramo("otro")).is_empty()
+	assert_str(mensaje.pista_del_tramo("")).is_empty()
+	assert_str(bandeja.pista_de(YASMIN, mensaje.identidad, mensaje.tramo_de_pista)).is_equal("5B")
+	assert_str(bandeja.pista_de(YASMIN, mensaje.identidad, "otro")).is_empty()
+
+
+func test_la_pista_de_la_jornada_4_sigue_pidiendo_2a() -> void:  # AC-INV-090
+	var bandeja := Bandeja.new(Conversacion.desde_disco())
+	bandeja.abrir_jornada(JORNADA_DEL_LECTOR - 1)
+	var con_pista := bandeja.mensajes_de(YASMIN).filter(
+		func(mensaje: Mensaje) -> bool: return not mensaje.tramo_de_pista.is_empty()
+	)
+	assert_int(con_pista.size()).is_equal(1)
+	if con_pista.is_empty():
+		return
+	var mensaje: Mensaje = con_pista[0]
+	assert_str(bandeja.pista_de(YASMIN, mensaje.identidad, mensaje.tramo_de_pista)).is_equal("2A")
 
 
 func test_repetir_la_apertura_no_duplica_ni_altera_el_guion() -> void:  # AC-INV-069

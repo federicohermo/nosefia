@@ -211,6 +211,15 @@ func _unhandled_input(evento: InputEvent) -> void:
 			var con_el_clic := movimiento.button_mask & MOUSE_BUTTON_MASK_LEFT != 0
 			examen.arrastrar(movimiento.relative, con_el_clic)
 		return
+	if (
+		_en_web
+		and evento is InputEventMouseButton
+		and evento.is_pressed()
+		and _control.clic_es_para_tomar_el_cursor(_leer_cursor.call() == Input.MOUSE_MODE_CAPTURED)
+	):
+		get_viewport().set_input_as_handled()
+		_aplicar_el_modo_del_cursor(true)
+		return
 	if evento.is_action_pressed(ReglasDeLosObjetos.ACCION_AGARRAR):
 		# Quién se come el clic lo contesta `Examen`, que es el que sabe si hay algo pegado a la
 		# cara. Acá sólo se lo pasa al que quedó: esto es ruteo, no una regla del juego.
