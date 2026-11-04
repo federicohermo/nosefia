@@ -3,14 +3,15 @@ schema_version: 1
 capability_id: CAP-CFG
 status: ratified
 owner: por definir
-provenance: fichas «2. Menú de inicio» (sección «Interfaz de configuraciones») y «Pausa y menú de pausa»; rangos, pasos y defectos decididos por el dueño en #378, provisorios hasta que el testing los ajuste
+provenance: fichas «2. Menú de inicio» (sección «Interfaz de configuraciones») y «Pausa y menú de pausa»; rangos, pasos y defectos decididos por el dueño en #378, provisorios hasta que el testing los ajuste; «Controles» (esquema de teclado y mouse) de la ficha «2. Menú de inicio», #379
 ---
 
 # Capacidad: configuraciones
 
 ## Propósito
 
-Que el jugador ajuste cómo suena, cómo se ve y cómo responde el juego, y que el juego lo recuerde
+Que el jugador ajuste cómo suena, cómo se ve y cómo responde el juego, qué tecla o botón del
+mouse hace cada acción, y que el juego lo recuerde
 al volver a abrirlo. Lo único que tiene que hacer bien es **no empeorar el juego que ya está**:
 cada defecto es el juego de hoy, ningún ajuste suena más fuerte que hoy y un archivo roto no
 impide jugar.
@@ -26,6 +27,10 @@ impide jugar.
 | **Tope** | el mínimo o el máximo de una preferencia | límite, borde |
 | **Defecto** | el valor de una preferencia que nadie ajustó. Es el juego de hoy | por omisión, inicial |
 | **Sensibilidad de fábrica** | los radianes por píxel que el dominio del jugador declara para el giro de la vista y el del examen | — |
+| **Acción reasignable** | una de las siete que el jugador puede cambiar de tecla: movimiento, celular, examinar, agacharse, agarrar / soltar, interactuar y pausa | comando, bind |
+| **Entrada** | una tecla o un botón del mouse. Mover el mouse y la rueda no lo son | evento, input |
+| **Ranura** | el lugar fijo de una entrada dentro de una acción: Movimiento tiene ocho, dos por dirección —la de WASD y la de flechas—, y cada una de las demás tiene una | slot, alias |
+| **Esquema de fábrica** | la entrada que cada ranura tiene mientras nadie la cambió. Son las teclas que nombran los demás contratos | por omisión |
 
 ## Comportamiento normativo
 
@@ -133,6 +138,89 @@ de su rango, ENTONCES el sistema DEBE usar el defecto de ese campo y conservar l
 archivo es ilegible, ENTONCES DEBE usar todos los defectos y NO DEBE interrumpir el arranque. SI
 no hay archivo, ENTONCES DEBE usar todos los defectos.
 
+### BR-CFG-015 — La fila «CONTROLES» abre la pantalla de controles
+
+Configuraciones DEBE mostrar, debajo de lenguaje, la fila «CONTROLES» con un botón «AJUSTAR».
+CUANDO se aprieta, el sistema DEBE abrir la pantalla de controles, que DEBE ser una lista con un
+renglón por entrada: el nombre de su acción y la tecla o el botón que tiene. CUANDO llega la
+tecla de Pausa, el sistema DEBE cerrar la pantalla de controles y volver a Configuraciones.
+Abierta desde la pausa, el juego DEBE seguir en pausa y el cursor suelto, igual que
+Configuraciones.
+
+### BR-CFG-016 — Siete acciones reasignables
+
+El jugador DEBE poder reasignar siete acciones, con estos nombres en pantalla: **Movimiento**,
+**Abrir la interfaz del celular**, **Examinar**, **Agacharse**, **Agarrar / Soltar**,
+**Interactuar** y **Pausa**. Ninguna otra acción se reasigna. Movimiento DEBE mostrar ocho
+entradas, dos por cada dirección —adelante, atrás, izquierda y derecha—, una de WASD y otra de
+flechas. Las demás DEBEN mostrar una. El esquema de fábrica DEBE ser: W, A, S, D y las cuatro
+flechas en Movimiento; Q en celular; E en Examinar; Espacio en Agacharse; el clic izquierdo en
+Agarrar / Soltar; el clic derecho en Interactuar; Esc en Pausa.
+
+### BR-CFG-017 — Cualquier acción acepta una tecla o un botón del mouse
+
+CUANDO el jugador elige una entrada de la pantalla de controles y aprieta una tecla o un botón
+del mouse, el sistema DEBE asignársela a esa ranura. Toda acción DEBE aceptar las dos clases:
+un clic se puede pasar a una tecla, y una tecla a un clic. Mover el mouse y la rueda NO DEBEN
+ser entradas aceptadas: apretarlos NO DEBE cambiar nada. EN LA WEB, el sistema NO DEBE aceptar
+Esc en ninguna acción que no sea Pausa: con el cursor tomado el navegador se come Esc y esa
+acción no se podría hacer.
+
+### BR-CFG-018 — Una entrada nunca hace dos cosas
+
+CUANDO la entrada elegida ya la tiene otra ranura, el sistema DEBE intercambiarlas: la otra
+ranura DEBE recibir la entrada que tenía la elegida. Ninguna ranura DEBE quedar sin entrada y
+ninguna entrada DEBE estar en dos ranuras. El intercambio DEBE valer también entre las dos
+ranuras de una misma acción y entre direcciones. CUANDO la entrada elegida es la que la ranura
+ya tiene, el sistema NO DEBE cambiar nada ni escribir nada.
+
+### BR-CFG-019 — Cada entrada tiene una ranura estable
+
+Elegir una entrada en pantalla DEBE identificar su acción y su ranura. Cambiar la ranura de
+flechas de una dirección DEBE conservar la de WASD de esa dirección, y al revés. El intercambio
+DEBE identificar las dos ranuras, también si pertenecen a la misma acción.
+
+### BR-CFG-020 — Cada asignación vale en el momento, y las acciones leen la acción
+
+CUANDO cambia una asignación, el sistema DEBE aplicarla sin esperar a que se cierre la pantalla
+de controles: la caminata, la mano, el examen, el celular, la agachada, la pausa y cada puesto
+DEBEN responder a la entrada nueva y NO DEBEN responder a la que la ranura dejó. Una asignación
+hecha desde la pausa DEBE valer al reanudar, sin volver al menú. Pausa DEBE ser la tecla que
+pausa, reanuda y cierra Configuraciones y las listas desplegables. Los gestos del cursor
+sobre una pantalla —pulsar al comprador en la ventanilla, avanzar un diálogo, arrastrar para
+girar lo examinado, y pulsar los botones y renglones de las pantallas— NO son una acción: DEBEN
+seguir en el botón izquierdo del mouse, sin importar la asignación.
+
+### BR-CFG-021 — En la web, Esc sigue pausando
+
+SI el navegador suelta el cursor con Esc, ENTONCES el sistema DEBE pausar por `BR-SAV-016`,
+aunque Pausa tenga otra entrada. Con Pausa en otra tecla, la tecla nueva y Esc DEBEN pausar.
+
+### BR-CFG-022 — Las asignaciones se guardan con las preferencias
+
+El sistema DEBE guardar las asignaciones en el mismo archivo de las preferencias, con su propia
+clave, y cada cambio DEBE llegar al disco en el momento (`BR-CFG-012`). SI no hay asignaciones
+guardadas, ENTONCES cada ranura DEBE tener su entrada del esquema de fábrica. Volver al menú y
+entrar otra vez, y empezar un nuevo juego, NO DEBEN tocarlas (`BR-CFG-011`). CUANDO abre el
+juego, el sistema DEBE aplicarlas antes de que el jugador pueda usar una (`BR-CFG-013`).
+
+### BR-CFG-023 — Un esquema roto no deja a una acción sin entrada ni con una repetida
+
+CUANDO el sistema lee las asignaciones, DEBE cargarlas sobre las ranuras de fábrica y validar el
+conjunto resultante. SI una asignación es ilegible, o es de una acción o una ranura que no
+existe, ENTONCES DEBE ignorarla y esa ranura DEBE volver a su entrada de fábrica. SI el conjunto
+resultante deja una entrada en dos ranuras, o una entrada que la ranura no acepta, ENTONCES el
+sistema DEBE descartar el bloque de controles completo y restaurar el esquema de fábrica. NO
+DEBE aplicar nunca un esquema parcial con entradas repetidas o con una acción sin entrada. Las
+demás preferencias del archivo DEBEN conservarse (`BR-CFG-014`).
+
+### BR-CFG-024 — Las teclas que nombran los demás contratos son las de fábrica
+
+Las teclas que nombran los otros contratos —«clic derecho», «clic izquierdo», «Esc», «Espacio»,
+«E», «Q»— DEBEN leerse como las del esquema de fábrica de la acción. Una asignación las
+reemplaza: lo que un contrato atribuye a una tecla lo hace la entrada que la acción tiene
+ahora.
+
 ## Criterios de aceptación
 
 ### AC-CFG-001 — Las seis filas *(verifica BR-CFG-001)*
@@ -236,10 +324,102 @@ en 100 %. DADO un archivo ilegible CUANDO abre el juego ENTONCES las cinco prefe
 su defecto y el menú de inicio aparece. DADO que no hay archivo ENTONCES las cinco están en su
 defecto.
 
+### AC-CFG-015 — La fila y la pantalla de controles *(verifica BR-CFG-015)*
+
+DADO Configuraciones abierta ENTONCES la fila «CONTROLES», con el botón «AJUSTAR», está debajo de
+lenguaje. CUANDO se aprieta «AJUSTAR» ENTONCES la pantalla de controles está en pantalla, con un
+renglón por entrada; CUANDO llega Esc ENTONCES vuelve Configuraciones y la pantalla de controles
+ya no está. DADO Configuraciones abierta desde la pausa CUANDO se abre y se cierra la pantalla de
+controles ENTONCES el juego sigue en pausa y el cursor sigue suelto.
+
+### AC-CFG-016 — Las siete acciones y su esquema de fábrica *(verifica BR-CFG-016)*
+
+DADO ninguna asignación guardada ENTONCES la pantalla muestra siete acciones con estos nombres:
+Movimiento, Abrir la interfaz del celular, Examinar, Agacharse, Agarrar / Soltar, Interactuar y
+Pausa. Movimiento tiene ocho entradas: adelante en W y en la flecha arriba, atrás en S y en la
+flecha abajo, izquierda en A y en la flecha izquierda, derecha en D y en la flecha derecha. El
+celular está en Q, Examinar en E, Agacharse en Espacio, Agarrar / Soltar en el clic izquierdo,
+Interactuar en el clic derecho y Pausa en Esc. DADO la partida recién abierta ENTONCES las
+entradas de cada acción en el motor son esas.
+
+### AC-CFG-017 — Una tecla o un botón, en cualquier acción *(verifica BR-CFG-017)*
+
+DADO Agarrar / Soltar en el clic izquierdo CUANDO se elige y se aprieta F ENTONCES queda en F;
+DADO Examinar en E CUANDO se elige y se aprieta el clic central ENTONCES queda en el clic
+central. DADO Examinar elegida CUANDO se mueve el mouse o se gira la rueda ENTONCES sigue en E.
+DADO la web CUANDO se elige Examinar y se aprieta Esc ENTONCES sigue en E; DADO la web CUANDO se
+elige Pausa y se aprieta Esc ENTONCES sigue en Esc. DADO el juego de escritorio CUANDO se asigna
+Esc a Examinar ENTONCES queda en Esc, y Pausa recibe E.
+
+### AC-CFG-018 — El intercambio *(verifica BR-CFG-018)*
+
+DADO Examinar en E y Agacharse en Espacio CUANDO se asigna Espacio a Examinar ENTONCES Examinar
+queda en Espacio y Agacharse en E. DADO Agarrar / Soltar en el clic izquierdo e Interactuar en el
+clic derecho CUANDO se asigna el clic izquierdo a Interactuar ENTONCES Interactuar queda en el clic
+izquierdo y Agarrar / Soltar en el clic derecho. DADO adelante en W y en la flecha arriba CUANDO se
+asigna W a la ranura de flechas de adelante ENTONCES la ranura de flechas queda en W y la de WASD
+en la flecha arriba. DADO izquierda en A y derecha en D CUANDO se asigna D a la ranura de WASD de
+izquierda ENTONCES queda en D y la de WASD de derecha en A. En cada caso las catorce ranuras
+tienen, juntas, catorce entradas distintas. DADO Examinar en E CUANDO se asigna E a Examinar
+ENTONCES nada cambia y no se escribe nada.
+
+### AC-CFG-019 — Las ranuras *(verifica BR-CFG-019)*
+
+DADO Movimiento de fábrica CUANDO se asigna la tecla H a la ranura de flechas de adelante
+ENTONCES adelante tiene H y W, y las demás direcciones conservan sus dos entradas. DADO adelante
+en W y en la flecha arriba CUANDO se asigna la flecha arriba a la ranura de WASD de adelante
+ENTONCES la ranura de WASD queda en la flecha arriba y la de flechas en W, y ninguna otra acción
+cambia. DADO una asignación a una acción o a una ranura que no existe ENTONCES no cambia nada.
+
+### AC-CFG-020 — Vale en el momento *(verifica BR-CFG-020)*
+
+DADO Agarrar / Soltar asignada a F CUANDO llega F con algo al alcance ENTONCES la mano lo agarra y
+el clic izquierdo ya no lo hace. DADO Pausa asignada a P CUANDO llega P ENTONCES el juego se
+pausa; CUANDO llega P otra vez ENTONCES se reanuda; CUANDO llega Esc con la partida en curso
+ENTONCES no se pausa por esa tecla. DADO Pausa en P y Configuraciones abierta CUANDO llega P
+ENTONCES se cierra, y Esc no la cierra. DADO una asignación hecha con la pausa abierta CUANDO se
+reanuda ENTONCES vale sin volver al menú. DADO Agarrar / Soltar en F ENTONCES el clic izquierdo
+sigue pulsando al comprador, avanzando un diálogo y girando lo examinado al arrastrar.
+
+### AC-CFG-021 — La web sigue pausando con Esc *(verifica BR-CFG-021)*
+
+DADO la web, Pausa en P y el cursor tomado CUANDO el navegador lo suelta con Esc ENTONCES el juego
+queda en pausa; CUANDO llega P ENTONCES también. DADO la web y Pausa en Esc CUANDO el navegador
+suelta el cursor ENTONCES el juego queda en pausa una sola vez.
+
+### AC-CFG-022 — Las asignaciones se guardan *(verifica BR-CFG-022)*
+
+DADO Examinar asignada a F CUANDO se lee el archivo del disco, antes de cerrar la pantalla,
+ENTONCES Examinar está en F. DADO lo mismo CUANDO se vuelve al menú y se entra otra vez ENTONCES
+sigue en F. DADO un guardado y Examinar en F CUANDO se empieza un nuevo juego ENTONCES el guardado
+se borra y Examinar sigue en F. DADO preferencias guardadas sin asignaciones ENTONCES cada ranura
+tiene su entrada de fábrica y las cinco preferencias conservan su valor. DADO un archivo con
+música en 30 % y Examinar en F CUANDO abre el juego ENTONCES música está en 30 % y Examinar en F
+desde el primer cuadro.
+
+### AC-CFG-023 — El esquema roto *(verifica BR-CFG-023)*
+
+DADO una asignación de una acción que no existe ENTONCES se ignora y las siete acciones tienen su
+entrada de fábrica. DADO Examinar con una entrada ilegible —un tipo desconocido o un código que
+no es número— y Agacharse en F ENTONCES Examinar vuelve a E y Agacharse conserva F. DADO Examinar
+y Agacharse guardadas las dos en F ENTONCES se descarta el bloque completo: las siete acciones
+tienen su entrada de fábrica. DADO Examinar con una entrada ilegible y Agacharse guardada en E
+ENTONCES restaurar Examinar a E repite E, y se descarta el bloque completo. DADO la ranura de
+WASD de adelante y la de flechas guardadas las dos en H ENTONCES se descarta el bloque completo.
+DADO un archivo ilegible ENTONCES las cinco preferencias están en su defecto y las siete acciones
+en su entrada de fábrica. En cada caso de descarte, una música guardada en 30 % sigue en 30 %.
+
+### AC-CFG-024 — La tecla de fábrica es la de fábrica *(verifica BR-CFG-024)*
+
+DADO Interactuar asignada a G ENTONCES lo que el contrato de las acciones del jugador atribuye al
+clic derecho lo hace G, y el clic derecho no lo hace. DADO Pausa asignada a P ENTONCES lo que
+`BR-SAV-016` atribuye a Esc lo hace P.
+
 ## No objetivos
 
-- Esta capacidad NO ajusta el contraste, ni remapea los controles, ni ofrece otro idioma que el
-  español.
+- Esta capacidad NO ajusta el contraste, ni ofrece otro idioma que el español.
+- Esta capacidad NO reasigna el joystick, NO ofrece un botón que restablezca el esquema de fábrica
+  y NO acepta como entrada mover el mouse ni la rueda.
 - Esta capacidad NO guarda ni borra la partida: eso es de
   [`save-and-resume`](../save-and-resume/save-and-resume.md).
 - Esta capacidad NO decide qué suena ni por qué bus: eso es de
@@ -248,29 +428,37 @@ defecto.
 
 ## Contratos
 
-- **Entrada:** el + o el − de una barra, el valor arrastrado, el archivo de preferencias al
-  arrancar.
+- **Entrada:** el + o el − de una barra, el valor arrastrado, la tecla o el botón elegido para
+  una ranura, el archivo de preferencias al arrancar.
 - **Salida:** el valor de cada preferencia ya acotado a su rango y a su paso; si el gesto la
-  cambió; el volumen de cada bus, el brillo y la escala de la interfaz, y el factor de giro.
+  cambió; el volumen de cada bus, el brillo y la escala de la interfaz, el factor de giro y la entrada
+  de cada ranura.
 - **Falla:** + en el máximo y − en el mínimo contestan que no cambió; un campo faltante, de otro
   tipo o fuera de rango vuelve con su defecto; un archivo ilegible o ausente devuelve todos los
-  defectos; una escritura le contesta a quien la pidió si llegó al disco.
+  defectos; una escritura le contesta a quien la pidió si llegó al disco; una asignación a una
+  acción o ranura inexistente, o a una entrada que no acepta, contesta que no cambió; un bloque de
+  controles roto vuelve entero al esquema de fábrica.
 
 ## Señales
 
 - Preferencias cambiadas, una vez por cada gesto que cambia un valor. Un gesto en el tope no la
   emite.
+- Controles cambiados, una vez por cada asignación que cambia una ranura. Una asignación igual a la
+  que ya había no la emite.
 - Configuraciones cerrada.
+- Pantalla de controles cerrada.
 
 ## Dependencias
 
 - [`ambience`](../ambience/ambience.md) (consume): los cuatro buses que declara.
 - [`player-actions`](../player-actions/player-actions.md) (alimenta): el factor de giro de la
-  vista.
+  vista. También (consume): sus teclas son las de fábrica, que una asignación reemplaza
+  (`BR-CFG-024`).
 - [`investigation`](../investigation/investigation.md) (alimenta): el factor de giro de lo que
   se examina.
 - [`save-and-resume`](../save-and-resume/save-and-resume.md) (consume): los dos menús desde
-  donde se abre, y Esc para cerrarla. Borrar su guardado no toca las preferencias.
+  desde donde se abre, y la tecla de Pausa para cerrarla; en la web, Esc sigue pausando
+  (`BR-CFG-021`). Borrar su guardado no toca las preferencias ni las asignaciones.
 
 ## Preguntas abiertas
 
