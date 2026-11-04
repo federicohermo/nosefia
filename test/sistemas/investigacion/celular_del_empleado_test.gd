@@ -185,7 +185,12 @@ func test_abrir_repetido_no_duplica_y_cada_chat_tiene_su_lectura() -> void:
 		sistema.pedir_alternar(false)
 		sistema.pedir_alternar(false)
 		sistema.abrir_jornada(4)
-	assert_int(sistema.bandeja().mensajes_de(Conversacion.Interlocutor.YASMIN).size()).is_equal(15)
+	var guion := Conversacion.de(Conversacion.Interlocutor.YASMIN).mensajes.filter(
+		func(mensaje: Mensaje) -> bool: return mensaje.jornada == 4
+	)
+	assert_int(sistema.bandeja().mensajes_de(Conversacion.Interlocutor.YASMIN).size()).is_equal(
+		guion.size()
+	)
 	assert_int(sistema.bandeja().no_leidos(Conversacion.Interlocutor.YASMIN)).is_zero()
 	assert_int(sistema.bandeja().no_leidos(Conversacion.Interlocutor.JEFE)).is_equal(jefe)
 
