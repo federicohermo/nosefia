@@ -35,8 +35,12 @@ func test_tres_textos_tres_notas() -> void:  # AC-INV-059
 	assert_array(_textos(expediente)).is_equal([textos[0]])
 	assert_str(reflexion.texto_actual()).is_equal(textos[1])
 	assert_bool(reflexion.continuar(reflexion.identidad_del_texto())).is_true()
+	assert_str(reflexion.texto_actual()).is_equal(textos[2])
+	assert_int(reflexion.etapa()).is_equal(E.TEXTOS)
 	assert_bool(reflexion.continuar(reflexion.identidad_del_texto())).is_true()
 	assert_array(_textos(expediente)).is_equal(Array(textos))
+	assert_int(reflexion.etapa()).is_equal(E.ESPERA)
+	assert_bool(reflexion.avanzar(reflexion.restante())).is_true()
 	assert_int(reflexion.etapa()).is_equal(E.TERMINADA)
 	assert_bool(reflexion.continuar(reflexion.identidad_del_texto())).is_false()
 	assert_int(expediente.mensajes_de_notas().size()).is_equal(textos.size())
@@ -50,6 +54,7 @@ func test_cada_texto_tiene_identidad_propia_y_va_a_su_noche() -> void:  # AC-INV
 	var reflexion := _empezada(3, expediente)
 	while reflexion.etapa() == E.TEXTOS:
 		reflexion.continuar(reflexion.identidad_del_texto())
+	reflexion.avanzar(reflexion.restante())
 	var identidades := PackedStringArray()
 	for mensaje: Mensaje in expediente.mensajes_de_notas():
 		assert_int(mensaje.jornada).is_equal(3)
@@ -78,6 +83,71 @@ func test_la_reflexion_retoma_desde_lo_anotado() -> void:  # AC-INV-059
 	assert_str(retomada.texto_actual()).is_equal(ReflexionDeCierre.TEXTOS_DE_LA_PRIMERA[2])
 	retomada.continuar(retomada.identidad_del_texto())
 	assert_object(ReflexionDeCierre.para(3, expediente)).is_null()
+
+
+func _con_el_tercer_texto_recibido(expediente: Expediente) -> ReflexionDeCierre:
+	var reflexion := _empezada(3, expediente)
+	while reflexion.etapa() == E.TEXTOS:
+		reflexion.continuar(reflexion.identidad_del_texto())
+	return reflexion
+
+
+func test_la_placa_espera_despues_del_tercer_texto() -> void:  # AC-INV-059
+	var reflexion := _con_el_tercer_texto_recibido(_expediente())
+	var cuadro := 1.0 / 60.0
+	assert_int(reflexion.etapa()).is_equal(E.ESPERA)
+	assert_float(reflexion.restante()).is_equal(ReflexionDeCierre.ESPERA_DESPUES_DE_LOS_TEXTOS)
+	(
+		assert_bool(reflexion.avanzar(ReflexionDeCierre.ESPERA_DESPUES_DE_LOS_TEXTOS - cuadro))
+		. is_false()
+	)
+	assert_int(reflexion.etapa()).is_equal(E.ESPERA)
+	assert_float(reflexion.restante()).is_equal_approx(cuadro, 0.0001)
+	assert_bool(reflexion.avanzar(cuadro)).is_true()
+	assert_int(reflexion.etapa()).is_equal(E.TERMINADA)
+	assert_bool(reflexion.avanzar(cuadro)).is_false()
+
+
+func test_en_la_espera_del_tercer_texto_sigue_a_la_vista_y_no_responde() -> void:  # AC-INV-059
+	var expediente := _expediente()
+	var reflexion := _empezada(3, expediente)
+	reflexion.continuar(reflexion.identidad_del_texto())
+	reflexion.continuar(reflexion.identidad_del_texto())
+	var tercero := reflexion.identidad_del_texto()
+	reflexion.continuar(tercero)
+	var notas := expediente.mensajes_de_notas().size()
+	assert_str(reflexion.texto_actual()).is_equal(ReflexionDeCierre.TEXTOS_DE_LA_PRIMERA.back())
+	assert_str(reflexion.identidad_del_texto()).is_empty()
+	assert_bool(reflexion.continuar(reflexion.identidad_del_texto())).is_false()
+	assert_bool(reflexion.continuar(tercero)).is_false()
+	assert_int(reflexion.elegir("2P")).is_equal(ReflexionDeCierre.Eleccion.FUERA_DE_ETAPA)
+	assert_int(expediente.mensajes_de_notas().size()).is_equal(notas)
+	assert_int(reflexion.etapa()).is_equal(E.ESPERA)
+	assert_bool(reflexion.pendiente()).is_false()
+
+
+func test_un_cuadro_largo_tras_los_textos_termina_la_espera_una_sola_vez() -> void:  # AC-INV-059
+	var reflexion := _con_el_tercer_texto_recibido(_expediente())
+	assert_bool(reflexion.avanzar(10.0)).is_true()
+	assert_bool(reflexion.avanzar(10.0)).is_false()
+
+
+func test_los_textos_previos_al_tercero_se_reemplazan_sin_espera() -> void:  # AC-INV-059
+	var reflexion := _empezada(3, _expediente())
+	reflexion.continuar(reflexion.identidad_del_texto())
+	assert_int(reflexion.etapa()).is_equal(E.TEXTOS)
+	assert_float(reflexion.restante()).is_zero()
+	assert_bool(reflexion.avanzar(10.0)).is_false()
+	assert_int(reflexion.etapa()).is_equal(E.TEXTOS)
+
+
+func test_las_dos_esperas_son_valores_distintos() -> void:  # AC-INV-059, AC-INV-062
+	var tercera := _con_el_tercer_texto_recibido(_expediente())
+	var cuarta := _empezada(4, _expediente())
+	cuarta.elegir("2P")
+	assert_float(tercera.restante()).is_equal(ReflexionDeCierre.ESPERA_DESPUES_DE_LOS_TEXTOS)
+	assert_float(cuarta.restante()).is_equal(ReflexionDeCierre.ESPERA_ANTES_DE_LA_NOCHE)
+	assert_float(tercera.restante()).is_not_equal(cuarta.restante())
 
 
 func test_solo_la_tercera_y_la_cuarta_reflexionan() -> void:  # AC-INV-058
