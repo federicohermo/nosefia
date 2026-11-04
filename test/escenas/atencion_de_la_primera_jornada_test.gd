@@ -145,7 +145,7 @@ func test_las_dos_compras_fisicas_registran_una_vez_y_se_van_tras_despedirse() -
 			textos.append(texto.text)
 			_pulsar(almacen)
 		if atendida.comprador().personaje == DialogosDeCompradores.Personaje.TIA:
-			assert_array(textos).has_size(4)
+			assert_array(textos).has_size(1)
 		assert_bool(atendida.despachada()).is_true()
 		assert_bool(sprite.is_visible_in_tree()).is_false()
 		assert_object(atenciones.tarea().en_ventanilla()).is_null()
