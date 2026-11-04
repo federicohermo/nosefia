@@ -1,6 +1,6 @@
 ## Lo que piensa el protagonista cuando un gesto le sale mal (BR-SUB-013), y la mopa berreta la
-## primera vez que se seca (BR-SUB-014), y la primera pista anotada (BR-SUB-016). Los textos se
-## copian de la ficha «Subtítulos».
+## primera vez que se seca (BR-SUB-014), y la primera pista anotada, según su canal (BR-SUB-016).
+## Los textos se copian de la ficha «Subtítulos».
 ##
 ## **La mopa berreta espera al examen y la primera pista al celular.** Mientras se examina algo, la
 ## línea muestra el texto fijo de lo examinado; con el celular abierto, éste tapa la línea. El
@@ -23,7 +23,10 @@ enum Id {
 	PISO_DE_LAS_ESTANTERIAS_DEL_FONDO,
 	TECHO_SOBRE_UN_CUBICULO,
 	PUERTA_CON_TAREAS_PENDIENTES,
-	PRIMERA_PISTA,
+	PRIMERA_PISTA_OBJETO,
+	PRIMERA_PISTA_EXAMEN,
+	PRIMERA_PISTA_COMPRADOR,
+	PRIMERA_PISTA_CHAT,
 	SIN_LUZ,
 	ROUTER_ANTES_DEL_CORTE,
 	ROUTER_YA_RESTAURADO,
@@ -46,11 +49,21 @@ const TEXTOS: Dictionary[Id, String] = {
 	Id.PISO_DE_LAS_ESTANTERIAS_DEL_FONDO: "Espero que sea vómito…",
 	Id.TECHO_SOBRE_UN_CUBICULO: "¿¿Cómo llegó eso ahí??",
 	Id.PUERTA_CON_TAREAS_PENDIENTES: "No debería irme.\nTodavía me quedan tareas por completar.",
-	Id.PRIMERA_PISTA: "Encontré una pista. ¡Qué extraño! Me parece que está pasando algo.",
+	Id.PRIMERA_PISTA_OBJETO: "¿Y esto…? Qué raro…\nCreo que voy a anotarme estas cosas.",
+	Id.PRIMERA_PISTA_EXAMEN: "Hay algo raro acá…\nCreo que voy a anotarme estas cosas.",
+	Id.PRIMERA_PISTA_COMPRADOR:
+	"Ese comentario fue… curioso…\nCreo que voy a anotarme estas cosas.",
+	Id.PRIMERA_PISTA_CHAT: "Ese mensaje fue… curioso…\nCreo que voy a anotarme estas cosas.",
 	Id.SIN_LUZ: "Se cortó la luz…\nNingún aparato eléctrico funciona.",
 	Id.ROUTER_ANTES_DEL_CORTE:
 	"Mejor no me pongo a jugar con el router.\nYa veo que empieza a andar mal.",
 	Id.ROUTER_YA_RESTAURADO: "Mejor no vuelvo a tocar el router.\nNo sea que falle de nuevo.",
+}
+const DE_LAS_PRIMERAS_PISTAS: Dictionary[Pista.Canal, Id] = {
+	Pista.Canal.LEVANTAR: Id.PRIMERA_PISTA_OBJETO,
+	Pista.Canal.EXAMINAR_NO_LEVANTABLE: Id.PRIMERA_PISTA_EXAMEN,
+	Pista.Canal.COMPRADOR: Id.PRIMERA_PISTA_COMPRADOR,
+	Pista.Canal.CHAT: Id.PRIMERA_PISTA_CHAT,
 }
 const DE_LAS_MANCHAS: Dictionary[PisoDelLocal.Lugar, Id] = {
 	PisoDelLocal.Lugar.PARED_DEL_OTRO_INODORO: Id.PARED_DEL_OTRO_INODORO,
@@ -62,7 +75,7 @@ const DE_LAS_MANCHAS: Dictionary[PisoDelLocal.Lugar, Id] = {
 const SEGUNDOS_PARA_QUEDAR_QUIETO := 10.0
 
 var _berreta_pendiente := false
-var _primera_pista_pendiente := false
+var _primera_pista_pendiente := Id.NINGUNO
 
 
 ## Lo tirado sin llamado no piensa: es lo que va al contenedor.
@@ -161,25 +174,27 @@ func al_terminar_el_examen(partida: Partida) -> Id:
 
 
 ## La identidad que hay que mostrar ya, o `NINGUNO` si no toca o si espera al celular.
-func al_anotar_una_pista(partida: Partida, celular_abierto: bool) -> Id:
-	if partida.primera_pista_pensada or _primera_pista_pendiente:
+func al_anotar_una_pista(partida: Partida, celular_abierto: bool, canal: Pista.Canal) -> Id:
+	if partida.primera_pista_pensada or _primera_pista_pendiente != Id.NINGUNO:
 		return Id.NINGUNO
+	var pensamiento: Id = DE_LAS_PRIMERAS_PISTAS[canal]
 	if celular_abierto:
-		_primera_pista_pendiente = true
+		_primera_pista_pendiente = pensamiento
 		return Id.NINGUNO
 	partida.primera_pista_pensada = true
-	return Id.PRIMERA_PISTA
+	return pensamiento
 
 
 func al_cerrar_el_celular(partida: Partida) -> Id:
-	if not _primera_pista_pendiente:
+	var pensamiento := _primera_pista_pendiente
+	if pensamiento == Id.NINGUNO:
 		return Id.NINGUNO
-	_primera_pista_pendiente = false
+	_primera_pista_pendiente = Id.NINGUNO
 	partida.primera_pista_pensada = true
-	return Id.PRIMERA_PISTA
+	return pensamiento
 
 
 ## El cierre de la jornada tira los avisos que no llegaron a mostrarse: la partida sigue sin marca.
 func descartar() -> void:
 	_berreta_pendiente = false
-	_primera_pista_pendiente = false
+	_primera_pista_pendiente = Id.NINGUNO

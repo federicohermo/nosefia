@@ -212,11 +212,28 @@ func test_la_hipotesis_5b_trae_el_titulo_y_el_texto_de_su_ficha() -> void:  # AC
 func test_la_hipotesis_5b_depende_de_la_pista_5b() -> void:  # AC-INV-093
 	var caso := CasoDeInvestigacion.de_la_partida()
 	var jornada := GeneradorDeTickets.JORNADA_SIN_LECTOR
-	assert_array(caso.hipotesis_para(jornada, PackedStringArray())).is_empty()
-	assert_array(caso.hipotesis_para(jornada, PackedStringArray(["2A"]))).is_empty()
+	assert_array(_identidades(caso.hipotesis_para(jornada, PackedStringArray()))).is_equal(["5P"])
+	assert_array(_identidades(caso.hipotesis_para(jornada, PackedStringArray(["2A"])))).is_equal(
+		["5P"]
+	)
 	(
 		assert_array(_identidades(caso.hipotesis_para(jornada, PackedStringArray(["2A", "5B"]))))
 		. is_equal(["5B"])
 	)
 	var de_la_cuarta := caso.hipotesis_para(jornada - 1, PackedStringArray(["2A", "5B"]))
 	assert_array(_identidades(de_la_cuarta)).is_equal(["2A"])
+
+
+func test_la_hipotesis_5p_no_tiene_pista_ni_exigencias_ni_camino() -> void:  # AC-INV-110
+	var caso := CasoDeInvestigacion.de_la_partida()
+	var ofrecidas := caso.hipotesis_para(GeneradorDeTickets.JORNADA_SIN_LECTOR, PackedStringArray())
+	assert_array(_identidades(ofrecidas)).is_equal(["5P"])
+	if ofrecidas.is_empty():
+		return
+	var quinta := ofrecidas[0]
+	assert_str(quinta.titulo).is_equal("NO HAY PROBLEMA")
+	assert_str(quinta.texto).is_not_empty()
+	assert_array(Array(quinta.exigencias)).is_empty()
+	assert_array(Array(quinta.camino)).is_empty()
+	assert_object(caso.pista_de("5P")).is_null()
+	assert_int(caso.consistencia()).is_equal(CasoDeInvestigacion.Consistencia.VALIDO)
