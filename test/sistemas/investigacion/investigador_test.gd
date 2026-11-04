@@ -116,3 +116,14 @@ func test_cambiar_de_partida_desconecta_los_eventos_anteriores() -> void:  # AC-
 	assert_array(Array(actual.identidades())).is_empty()
 	investigador.pedir_pista(&"origen", Pista.Canal.CHAT, 2, true)
 	assert_int(pistas.size()).is_equal(1)
+
+
+func test_el_pedido_entrega_la_hora_a_las_notas_de_la_pista() -> void:  # AC-INV-085
+	var investigador: Investigador = auto_free(Investigador.new())
+	var notas: Array[Mensaje] = []
+	investigador.nota_agregada.connect(func(mensaje: Mensaje) -> void: notas.append(mensaje))
+	investigador.usar(_expediente())
+	investigador.pedir_pista(&"2A", Pista.Canal.CHAT, 4, true, "21:00")
+	assert_int(notas.size()).is_equal(2)
+	for nota: Mensaje in notas:
+		assert_str(nota.hora).is_equal("21:00")

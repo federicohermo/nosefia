@@ -1188,7 +1188,11 @@ func _cablear_la_investigacion() -> void:
 
 func _al_pedir_pista_del_chat(identidad: String) -> void:
 	_investigador.pedir_pista(
-		StringName(identidad), Pista.Canal.CHAT, _partida.jornada(), _se_puede_investigar()
+		StringName(identidad),
+		Pista.Canal.CHAT,
+		_partida.jornada(),
+		_se_puede_investigar(),
+		_reloj.hora()
 	)
 
 
@@ -1198,7 +1202,11 @@ func _al_agarrar_una_pista(nodo: Node3D) -> void:
 	var datos: ObjetoDelAlmacen = nodo.call(ReglasDeLosObjetos.METODO_INTERACTUAR)
 	if datos != null:
 		_investigador.pedir_pista(
-			datos.id, Pista.Canal.LEVANTAR, _partida.jornada(), _se_puede_investigar()
+			datos.id,
+			Pista.Canal.LEVANTAR,
+			_partida.jornada(),
+			_se_puede_investigar(),
+			_reloj.hora()
 		)
 
 
