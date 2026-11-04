@@ -42,7 +42,7 @@ func test_yasmin_lleva_la_hora_de_su_ficha() -> void:  # AC-INV-103
 		"17:35": _ids("J2_", 5, 7),
 		"17:36": _ids("J2_", 8, 9),
 		"17:37": _ids("J2_", 10, 12),
-		"17:38": _ids("J2_", 13, 15),
+		"17:38": _ids("J2_", 13, 16),
 		"09:11": _ids("J3_", 1, 4),
 		"09:12": _ids("J3_", 5, 7),
 		"09:13": _ids("J3_", 8, 10),
@@ -89,6 +89,12 @@ func test_la_apertura_de_la_cuarta_jornada_lleva_la_hora_de_la_ficha() -> void: 
 	var guion := _guion()
 	var apertura: Array[String] = ["J2_CONTENEDOR_FOTO", "J2_CONTENEDOR_TEXTO"]
 	assert_array(_horas(guion, apertura)).is_equal(["19:31", "19:31"])
+
+
+func test_la_apertura_de_la_quinta_jornada_lleva_la_hora_de_la_ficha() -> void:  # AC-INV-105
+	var guion := _guion()
+	var apertura: Array[String] = ["J5_CINDOLOR_FOTO", "J5_CINDOLOR_TEXTO"]
+	assert_array(_horas(guion, apertura)).is_equal(["19:20", "19:20"])
 
 
 func test_la_devolucion_suma_un_minuto_por_mensaje() -> void:  # AC-INV-105

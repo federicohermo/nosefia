@@ -381,6 +381,7 @@ texto = "Buenas tardes, pibe. Hoy te pido que tires la basura de todos los tacho
 [sub_resource type="Resource" id="J5_FOTO"]
 script = ExtResource("mensaje")
 identidad = "J5_CINDOLOR_FOTO"
+hora = "19:20"
 jornada = 5
 orden = 0
 de_quien = "Enrique Peldaño"
@@ -389,6 +390,7 @@ foto = ExtResource("cindolor")
 [sub_resource type="Resource" id="J5_TEXTO"]
 script = ExtResource("mensaje")
 identidad = "J5_CINDOLOR_TEXTO"
+hora = "19:20"
 jornada = 5
 orden = 1
 de_quien = "Enrique Peldaño"

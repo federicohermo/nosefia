@@ -144,6 +144,7 @@ texto = "quedamos en contacto p cualquier cosa"
 [sub_resource type="Resource" id="J2_16"]
 script = ExtResource("mensaje")
 identidad = "J2_16"
+hora = "17:38"
 jornada = 4
 orden = 15
 de_quien = "Yasmín"
