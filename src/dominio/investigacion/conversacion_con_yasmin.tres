@@ -68,7 +68,7 @@ identidad = "J2_8"
 jornada = 4
 orden = 7
 de_quien = "Yasmín"
-texto = "p ejemplo hoy parece que se acabo uno de los jabones para la limpieza y no había ningún repuesto"
+texto = "p ejemplo el wifi anda medio mal y a veces hay que apagarlo y volverlo a prender para que funcione"
 
 [sub_resource type="Resource" id="J2_9"]
 script = ExtResource("mensaje")
@@ -76,7 +76,7 @@ identidad = "J2_9"
 jornada = 4
 orden = 8
 de_quien = "Yasmín"
-texto = "no le reclames a enrique porque no va a hacer nada y encima se va a irritar"
+texto = "y hoy parece que se acabo uno de los jabones para la limpieza y no había ningún repuesto"
 
 [sub_resource type="Resource" id="J2_10"]
 script = ExtResource("mensaje")
@@ -84,7 +84,7 @@ identidad = "J2_10"
 jornada = 4
 orden = 9
 de_quien = "Yasmín"
-texto = "creo que lo podes reemplazar con chorrito del producto ese de limpieza que vendemos"
+texto = "no le reclames a enrique porque no va a hacer nada y encima se va a irritar"
 
 [sub_resource type="Resource" id="J2_11"]
 script = ExtResource("mensaje")
@@ -92,7 +92,7 @@ identidad = "J2_11"
 jornada = 4
 orden = 10
 de_quien = "Yasmín"
-texto = "no creo que enrique se de cuenta si usás uno"
+texto = "creo que lo podes reemplazar con un chorrito del producto ese de limpieza que vendemos"
 
 [sub_resource type="Resource" id="J2_12"]
 script = ExtResource("mensaje")
@@ -100,7 +100,7 @@ identidad = "J2_12"
 jornada = 4
 orden = 11
 de_quien = "Yasmín"
-texto = "pero nada"
+texto = "no creo que enrique se de cuenta si usás uno"
 
 [sub_resource type="Resource" id="J2_13"]
 script = ExtResource("mensaje")
@@ -108,7 +108,7 @@ identidad = "J2_13"
 jornada = 4
 orden = 12
 de_quien = "Yasmín"
-texto = "quería darte la bienvenida"
+texto = "pero nada"
 
 [sub_resource type="Resource" id="J2_14"]
 script = ExtResource("mensaje")
@@ -116,7 +116,7 @@ identidad = "J2_14"
 jornada = 4
 orden = 13
 de_quien = "Yasmín"
-texto = "quedamos en contacto p cualquier cosa"
+texto = "quería darte la bienvenida"
 
 [sub_resource type="Resource" id="J2_15"]
 script = ExtResource("mensaje")
@@ -124,13 +124,21 @@ identidad = "J2_15"
 jornada = 4
 orden = 14
 de_quien = "Yasmín"
+texto = "quedamos en contacto p cualquier cosa"
+
+[sub_resource type="Resource" id="J2_16"]
+script = ExtResource("mensaje")
+identidad = "J2_16"
+jornada = 4
+orden = 15
+de_quien = "Yasmín"
 texto = "exitos con eso!  💪"
 
 [sub_resource type="Resource" id="J3_1"]
 script = ExtResource("mensaje")
 identidad = "J3_1"
 jornada = 5
-orden = 15
+orden = 16
 de_quien = "Yasmín"
 texto = "che que onda el lector?? wtf"
 
@@ -138,7 +146,7 @@ texto = "che que onda el lector?? wtf"
 script = ExtResource("mensaje")
 identidad = "J3_2"
 jornada = 5
-orden = 16
+orden = 17
 de_quien = "Yasmín"
 texto = "tenés idea de q pasó?"
 
@@ -146,7 +154,7 @@ texto = "tenés idea de q pasó?"
 script = ExtResource("mensaje")
 identidad = "J3_3"
 jornada = 5
-orden = 17
+orden = 18
 de_quien = "Yasmín"
 texto = "para mi lo sacó enrique"
 tramo_de_pista = "lo_saco_enrique"
@@ -157,7 +165,7 @@ pista = "5B"
 script = ExtResource("mensaje")
 identidad = "J3_4"
 jornada = 5
-orden = 18
+orden = 19
 de_quien = "Yasmín"
 texto = "xq hace unas semanas mencioné q el lector a veces andaba mal"
 
@@ -165,7 +173,7 @@ texto = "xq hace unas semanas mencioné q el lector a veces andaba mal"
 script = ExtResource("mensaje")
 identidad = "J3_5"
 jornada = 5
-orden = 19
+orden = 20
 de_quien = "Yasmín"
 texto = "seguro pasó por el local para tratar de arreglarlo lo empeoró y lo sacó para que no nos diéramos cuenta de que la cagó xd"
 
@@ -173,7 +181,7 @@ texto = "seguro pasó por el local para tratar de arreglarlo lo empeoró y lo sa
 script = ExtResource("mensaje")
 identidad = "J3_6"
 jornada = 5
-orden = 20
+orden = 21
 de_quien = "Yasmín"
 texto = "y lo peor es que no deja un aviso ni nada lpm"
 
@@ -181,7 +189,7 @@ texto = "y lo peor es que no deja un aviso ni nada lpm"
 script = ExtResource("mensaje")
 identidad = "J3_7"
 jornada = 5
-orden = 21
+orden = 22
 de_quien = "Yasmín"
 texto = "tuve que usar el modo manual para hacer los tickets 💀 una paja"
 
@@ -189,7 +197,7 @@ texto = "tuve que usar el modo manual para hacer los tickets 💀 una paja"
 script = ExtResource("mensaje")
 identidad = "J3_8"
 jornada = 5
-orden = 22
+orden = 23
 de_quien = "Yasmín"
 texto = "igual te recomiendo hacerte el boludo y no decirle nada porque se pone re pesado si le tocás el ego"
 
@@ -197,7 +205,7 @@ texto = "igual te recomiendo hacerte el boludo y no decirle nada porque se pone 
 script = ExtResource("mensaje")
 identidad = "J3_9"
 jornada = 5
-orden = 23
+orden = 24
 de_quien = "Yasmín"
 texto = "esperemos que consiga otro rápido 😬"
 
@@ -205,7 +213,7 @@ texto = "esperemos que consiga otro rápido 😬"
 script = ExtResource("mensaje")
 identidad = "J3_10"
 jornada = 5
-orden = 24
+orden = 25
 de_quien = "Yasmín"
 texto = "igual con lo rata que es seguro que no lo va a hacer"
 
@@ -214,4 +222,4 @@ script = ExtResource("conversacion")
 interlocutor = 3
 nombre = "Yasmín"
 rol = "Compañera de trabajo"
-mensajes = Array[ExtResource("mensaje")]([SubResource("J2_1"), SubResource("J2_2"), SubResource("J2_3"), SubResource("J2_4"), SubResource("J2_5"), SubResource("J2_6"), SubResource("J2_7"), SubResource("J2_8"), SubResource("J2_9"), SubResource("J2_10"), SubResource("J2_11"), SubResource("J2_12"), SubResource("J2_13"), SubResource("J2_14"), SubResource("J2_15"), SubResource("J3_1"), SubResource("J3_2"), SubResource("J3_3"), SubResource("J3_4"), SubResource("J3_5"), SubResource("J3_6"), SubResource("J3_7"), SubResource("J3_8"), SubResource("J3_9"), SubResource("J3_10")])
+mensajes = Array[ExtResource("mensaje")]([SubResource("J2_1"), SubResource("J2_2"), SubResource("J2_3"), SubResource("J2_4"), SubResource("J2_5"), SubResource("J2_6"), SubResource("J2_7"), SubResource("J2_8"), SubResource("J2_9"), SubResource("J2_10"), SubResource("J2_11"), SubResource("J2_12"), SubResource("J2_13"), SubResource("J2_14"), SubResource("J2_15"), SubResource("J2_16"), SubResource("J3_1"), SubResource("J3_2"), SubResource("J3_3"), SubResource("J3_4"), SubResource("J3_5"), SubResource("J3_6"), SubResource("J3_7"), SubResource("J3_8"), SubResource("J3_9"), SubResource("J3_10")])

@@ -3,7 +3,7 @@ schema_version: 1
 capability_id: CAP-PLY
 status: ratified
 owner: por definir
-provenance: GDD «Controles»; fichas «8. Tarea: Reposición», «Notas», «Interfaces virtuales durante la jornada» y «Referencia de controles»; decisiones de #368, #369, #370, #373 y #382; migración de los specs 003, 004, 006, 014, 034, 043; fichas de interacción, limpieza y basura revisadas el 2026-10-15; decisiones de #425, bordes de GJ-52 (#428) e interacción directa con compradores (#429); ocho jornadas de #526; cuartito de limpieza de #541; depósito trabado en la jornada 1 y baño abierto en todas de #574; salida voluntaria de #573; ticket escrito de #580; agacharse de #177; empuje de útiles y bolsas de #563; hoja que se frena con lo pesado de #218; patada a la unidad de #219; compuerta del mostrador empujada de #695
+provenance: GDD «Controles»; fichas «8. Tarea: Reposición», «Notas», «Interfaces virtuales durante la jornada» y «Referencia de controles»; decisiones de #368, #369, #370, #373 y #382; migración de los specs 003, 004, 006, 014, 034, 043; fichas de interacción, limpieza y basura revisadas el 2026-10-15; decisiones de #425, bordes de GJ-52 (#428) e interacción directa con compradores (#429); ocho jornadas de #526; cuartito de limpieza de #541; depósito trabado en la jornada 1 y baño abierto en todas de #574; salida voluntaria de #573; ticket escrito de #580; agacharse de #177; empuje de útiles y bolsas de #563; hoja que se frena con lo pesado de #218; patada a la unidad de #219; compuerta del mostrador empujada de #695; Esc que sale de las interfaces de #607
 ---
 
 # Capacidad: lo que el empleado puede hacer
@@ -300,8 +300,8 @@ ruteo del gesto. Al salir, lo que se llevaba DEBE seguir en la mano, salvo una e
 ### BR-PLY-029 — Leer una nota pegada
 
 CUANDO el clic izquierdo apunta a una nota pegada, el sistema DEBE mostrar su lectura y
-suspender el control. Sólo un clic derecho DEBE cerrar y reanudar; un clic izquierdo NO DEBE
-cerrarla. Lo que se lleva DEBE conservar su lugar en la mano, sin usarse ni soltarse. Una pantalla abierta o un examen NO DEBE permitir
+suspender el control. Sólo un clic derecho o Esc (BR-PLY-054) DEBE cerrar y reanudar; un clic
+izquierdo NO DEBE cerrarla. Lo que se lleva DEBE conservar su lugar en la mano, sin usarse ni soltarse. Una pantalla abierta o un examen NO DEBE permitir
 abrir otra hoja. Leer NO DEBE detener el turno.
 
 CUANDO termina el turno, la lectura DEBE cerrarse antes de la devolución. La pausa DEBE verse
@@ -336,8 +336,8 @@ renglones. La nota de ordenado DEBE presentar las tres viñetas de su criterio, 
 ### BR-PLY-031 — El programa abre sin soltar la mano
 
 CUANDO se hace clic izquierdo sobre la caja registradora, el sistema DEBE abrir su programa y
-suspender el control, conservando lo que se lleva y su lugar en la mano. Sólo un clic derecho
-DEBE cerrar y reanudar; un clic izquierdo, adentro o afuera del panel, NO DEBE cerrarlo. Una pantalla o examen
+suspender el control, conservando lo que se lleva y su lugar en la mano. Sólo un clic derecho o
+Esc (BR-PLY-054) DEBE cerrar y reanudar; un clic izquierdo, adentro o afuera del panel, NO DEBE cerrarlo. Una pantalla o examen
 abiertos NO DEBEN permitir abrir el programa.
 Leerlo NO DEBE detener el turno. La pausa DEBE dibujarse por encima y, al reanudar, DEBE
 continuar abierto y suspendido. El cierre del turno DEBE cerrarlo antes de mostrar la devolución.
@@ -600,6 +600,18 @@ bisagras— y la compuerta no está trabada, el sistema DEBE abrirla hacia adent
 accionara (BR-PLY-011). Empujar una compuerta abierta NO DEBE cerrarla: el cuerpo sigue contra la
 hoja mientras pasa. Desde adentro la compuerta NO DEBE ceder al empujarla. Cerrarla sigue siendo
 accionarla.
+
+### BR-PLY-054 — Esc sale de la computadora, de la caja y de las notas
+
+CUANDO el jugador aprieta Esc con la computadora, la caja registradora o una nota abiertas, el
+sistema DEBE cerrar esa interfaz igual que el clic derecho (BR-PLY-029, BR-PLY-031) y NO DEBE
+pausar la jornada. Lo que se lleva DEBE seguir en la mano, sin usarse ni soltarse, y el control
+DEBE volver. SI no hay ninguna interfaz abierta, ENTONCES Esc DEBE pausar (BR-SAV-016): el Esc
+que cierra una interfaz no pausa, y el siguiente sí.
+
+MIENTRAS el programa de la caja tiene una lista de productos desplegada, Esc DEBE cerrar esa
+lista y dejar la caja abierta y sin pausa; el Esc siguiente DEBE cerrar la caja. La
+ventanilla con un comprador hablando NO DEBE cerrarse con Esc: ahí Esc pausa (BR-PLY-034).
 
 ## Criterios de aceptación
 
@@ -1582,6 +1594,37 @@ oración, y «2. Tirar la basura» no lleva ninguna, en la hoja y en la lectura,
 esté abierta. CUANDO limpieza vuelve a quedar sin cumplir ENTONCES el tachado se va de las dos.
 DADO una jornada que abre con una tarea ya cumplida, ENTONCES su renglón arranca tachado. El
 orden, los nombres y la numeración son los mismos con y sin tachado.
+
+### AC-PLY-166 — Esc cierra la computadora, la caja y la nota como el derecho *(verifica BR-PLY-054, BR-PLY-029, BR-PLY-031)*
+
+DADO la computadora, la caja registradora o una nota abiertas, con la mano vacía y luego con
+una unidad en la mano, CUANDO llega Esc ENTONCES la interfaz se cierra, el control vuelve, el
+juego no queda en pausa y la mano conserva el mismo objeto en su lugar. Esc no usa, agarra ni
+suelta nada en el mundo.
+
+### AC-PLY-167 — Sin interfaz abierta Esc pausa, y el siguiente cierra *(verifica BR-PLY-054)*
+
+DADO ninguna interfaz abierta CUANDO llega Esc ENTONCES el juego queda en pausa. DADO la
+computadora, la caja o una nota abiertas CUANDO llega Esc ENTONCES se cierra sin pausa; CUANDO
+llega otro Esc ENTONCES el juego queda en pausa.
+
+### AC-PLY-168 — Con una lista desplegada Esc cierra primero la lista *(verifica BR-PLY-054)*
+
+DADO la caja abierta y una lista de productos desplegada CUANDO llega Esc ENTONCES la lista se
+cierra, la caja sigue abierta y el juego no queda en pausa. CUANDO llega otro Esc ENTONCES la caja
+se cierra, también sin pausa. CUANDO llega un tercero ENTONCES el juego queda en pausa.
+
+### AC-PLY-169 — La pausa sobre una interfaz no la cierra, y la ventanilla sigue pausando *(verifica BR-PLY-054, BR-PLY-034)*
+
+DADO la computadora, la caja o una nota abiertas y el juego en pausa CUANDO llega Esc ENTONCES
+se reanuda y la interfaz sigue abierta con el control suspendido. DADO un comprador hablando en la
+ventanilla CUANDO llega Esc ENTONCES el juego queda en pausa y la conversación no se cierra.
+
+### AC-PLY-170 — El cursor que suelta el Esc de salida no pausa *(verifica BR-PLY-054)*
+
+DADO la computadora, la caja o una nota abiertas y el cursor tomado, CUANDO llega Esc y el cursor
+queda suelto sin que el juego lo suelte ENTONCES la interfaz se cierra y el juego no queda en
+pausa.
 
 ## No objetivos
 

@@ -69,9 +69,11 @@ y puede volver a avisar su propio cierre próximo.
 ### BR-NTF-007 — El cartel comunica sin tomar el control
 
 El sistema DEBE dibujar los carteles claros en la esquina superior derecha, con el símbolo
-del tipo a la izquierda y su texto en mayúsculas a la derecha. Llegada, lectura y pista van sin
+del tipo a la izquierda y su texto en mayúsculas a la derecha; sólo el de pista conserva la
+capitalización de la ficha, «Nueva pista desbloqueada». Llegada, lectura y pista van sin
 punto final; la salida conserva el punto final de su diseño. El aviso de tareas terminadas usa
-el símbolo de la puerta principal y suma un título en letra chica encima de su cuerpo. El comprador
+el símbolo de la puerta principal y el de cierre próximo usa el reloj de arena con exclamación.
+Los dos suman un título en letra chica encima de su cuerpo. El comprador
 usa la figura con exclamación, el lector usa la cruz y la pista usa el signo de pregunta del diseño.
 MIENTRAS computadora, ventanilla u otra interfaz de la jornada están abiertas, incluyendo los diálogos, el cartel
 DEBE verse encima y DEBE dejar pasar el clic. El menú
@@ -106,7 +108,7 @@ conservan el recorrido y duración anteriores hasta que tengan diálogos diseña
 ### BR-NTF-010 — Sólo una pista anotada avisa
 
 CUANDO investigación confirma una pista nueva anotada que desbloquea una hipótesis, el sistema
-DEBE mostrar «¡NUEVA PISTA!». El disparador es el registro aceptado, según la
+DEBE mostrar «Nueva pista desbloqueada». El disparador es el registro aceptado, según la
 [ficha «Notificaciones»](https://app.notion.com/p/3e486efecd9d808bb505c198429d316d).
 Un resultado repetido o desconocido NO DEBE crear ni renovar el aviso.
 Revelar o examinar un objeto sin registrar una pista NO DEBE producirlo.
@@ -133,11 +135,12 @@ turno. Abrir la noche siguiente DEBE habilitar un nuevo disparo, en cualquiera d
 jornadas. Retomar desde el inicio de la jornada DEBE habilitarlo sin guardar una bandera propia.
 El reloj detenido de la sexta noche NO DEBE impedir el aviso.
 
-### BR-NTF-013 — El cierre próximo comunica una hora restante
+### BR-NTF-013 — El cierre próximo comunica que queda poco tiempo
 
-CUANDO se muestra cierre próximo, el sistema DEBE comunicar que queda una hora de jornada,
-con un símbolo que identifique el tiempo restante, usando el fondo claro, fuente principal,
-esquina superior derecha, una sola línea y ancho ajustado de BR-NTF-007. DEBE permanecer
+CUANDO se muestra cierre próximo, el sistema DEBE mostrar el título «¡HORA DE CIERRE!» y el
+cuerpo «QUEDA POCO TIEMPO PARA QUE SE TERMINE LA JORNADA.», en dos renglones, con el reloj de
+arena con exclamación como símbolo, usando el fondo claro, fuente principal, esquina superior
+derecha y ancho ajustado de BR-NTF-007. DEBE permanecer
 durante la duración de BR-NTF-003, conservar su resto en pausa, dejar pasar clics y dibujarse
 encima de las interfaces de jornada y debajo del menú de pausa. NO DEBE añadir un reloj
 permanente al HUD ni cambiar la duración del turno.
@@ -220,7 +223,7 @@ completar el 0,1 restante sí.
 DADO llegada, lectura fallida y pista visibles CUANDO se presentan a 1920 × 1080 y 1280 × 720
 ENTONCES sus carteles quedan dentro de la esquina superior derecha, sin recorte.
 La cruz corresponde a «NO SE PUDO LEER» y
-la figura con exclamación a «¡HAY UN CLIENTE!»; el signo de pregunta corresponde a «¡NUEVA PISTA!».
+la figura con exclamación a «¡HAY UN CLIENTE!»; el signo de pregunta corresponde a «Nueva pista desbloqueada».
 Los tres símbolos están a la izquierda de su texto. Los tres carteles usan la
 fuente del tema de Manada y el fondo claro del diseño.
 
@@ -261,7 +264,7 @@ comparten el borde derecho dentro de la pantalla; el mensaje más largo ocupa un
 DADO cero avisos CUANDO se revela un objeto que no es pista, se repite una pista conocida
 o se intenta registrar una desconocida ENTONCES no aparece ningún aviso de pista.
 CUANDO investigación acepta una pista nueva ENTONCES aparece exactamente un cartel
-«¡NUEVA PISTA!» con el signo de pregunta a su izquierda.
+«Nueva pista desbloqueada» con el signo de pregunta a su izquierda.
 DADO ese aviso con dos segundos consumidos CUANDO se repite la pista o se intenta registrar
 una desconocida ENTONCES sigue uno solo y desaparece al consumir el segundo restante.
 
@@ -318,10 +321,11 @@ ENTONCES conserva el segundo restante: 0,9 no lo retiran y completar 0,1 sí.
 DADO la jornada 6 con el reloj leyendo `20:58` CUANDO el turno
 alcanza las 07:00 ENTONCES llega exactamente un cierre próximo a la pila de avisos.
 
-### AC-NTF-024 — Una hora legible sin tomar el clic *(verifica BR-NTF-013, BR-NTF-007)*
+### AC-NTF-024 — El aviso legible sin tomar el clic *(verifica BR-NTF-013, BR-NTF-007)*
 
-DADO cierre próximo a 1920×1080 y 1280×720 CUANDO se presenta ENTONCES comunica una hora
-restante, con símbolo de tiempo a la izquierda, texto en mayúsculas completo en una línea,
+DADO cierre próximo a 1920×1080 y 1280×720 CUANDO se presenta ENTONCES muestra en mayúsculas
+«¡HORA DE CIERRE!» como título y «QUEDA POCO TIEMPO PARA QUE SE TERMINE LA JORNADA.» como
+cuerpo, en dos renglones, con el reloj de arena con exclamación a la izquierda,
 fuente principal y fondo claro. Su ancho se ajusta al contenido y comparte el borde derecho
 de la pila. DADO computadora, celular o ventanilla abiertos ENTONCES el aviso queda encima y
 deja pasar clics hacia ellos; al abrir pausa, ésta queda encima del aviso. El HUD no incorpora
@@ -381,8 +385,9 @@ cambiar el permiso ENTONCES sigue a la vista, sin recrearse.
 
 DADO el aviso de tareas terminadas visible CUANDO se dibuja ENTONCES el título está encima del
 cuerpo, con letra más chica que la del cuerpo, y el cuerpo usa el mismo tamaño de letra que los
-demás carteles. El símbolo es el de la puerta principal, no el del comprador. DADO cualquier otro tipo visible CUANDO se dibuja ENTONCES no tiene título y
-conserva su texto en una sola línea.
+demás carteles. El símbolo es el de la puerta principal, no el del comprador. DADO cierre próximo visible CUANDO se dibuja ENTONCES lleva el mismo orden de título y cuerpo, y
+su símbolo es el reloj de arena con exclamación. DADO cualquier otro tipo visible CUANDO se dibuja
+ENTONCES no tiene título y conserva su texto en una sola línea.
 
 ### AC-NTF-044 — Las tareas terminadas no vencen *(verifica BR-NTF-014, BR-NTF-003, BR-NTF-009)*
 
@@ -444,5 +449,3 @@ dejaron nada, en la misma jornada, dejan dos avisos, uno de cada texto.
 ## Preguntas abiertas
 
 Ninguna para estos tipos. Los demás disparadores están fuera de sus objetivos.
-El texto del aviso de cierre próximo debe comunicar la hora restante.
-El diseño no prescribe una frase literal ni una ilustración específica.
