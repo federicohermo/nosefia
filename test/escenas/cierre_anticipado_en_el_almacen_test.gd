@@ -461,12 +461,10 @@ func test_otra_apertura_reinicia_la_salida() -> void:  # AC-SHF-039
 	assert_bool(retomado.call("_puede_salir")).is_false()
 
 
-func test_hud_y_nota_de_la_primera() -> void:  # AC-SHF-005, AC-SHF-027, AC-STK-094
+func test_la_nota_de_la_primera() -> void:  # AC-SHF-005, AC-STK-094
 	var almacen := await _abrir(1, true)
 	var reloj: RelojDelTurno = almacen.get("_reloj")
-	assert_object(reloj.obligatoria(Tarea.Tipo.REPONER)).is_not_null()
-	var hud: Hud = almacen.get("_hud")
-	assert_str((hud.get("_tareas") as Label).text).is_equal("Tareas 1/3")
+	assert_bool(reloj.obligatoria(Tarea.Tipo.REPONER).completada()).is_true()
 	var notas: Array = almacen.get_node("Estructura/NotasDelAlmacen").get("notas")
 	var tareas: Array[NotaPegada] = []
 	for nodo: Node in notas:
@@ -483,6 +481,10 @@ func test_hud_y_nota_de_la_primera() -> void:  # AC-SHF-005, AC-SHF-027, AC-STK-
 			]
 		)
 	)
+	var reponer: String = NotaPegada.NOMBRES_DE_LAS_TAREAS[Tarea.Tipo.REPONER]
+	var renglones := tareas[0].renglones()
+	for i in renglones.size():
+		assert_bool(tareas[0].cumplida(i)).is_equal(renglones[i] == reponer)
 
 
 func _completar_la_salida(almacen: Node3D) -> void:
