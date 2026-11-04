@@ -41,7 +41,7 @@ const AVATAR_ENRIQUE_MENU := preload("res://assets/ui/manada/celular/enrique_men
 const SIMBOLOS_DE_CHAT := preload("res://assets/ui/manada/celular/simbolos_de_chat.ttf")
 const RETRATO_ENRIQUE := "res://assets/ui/manada/enrique.png"
 const BUSCAR := "Buscar contacto..."
-const NARANJA := Color("c2410c")
+const ROJO := Color("cc0d08")
 const FOTO := "Foto"
 const MENSAJE := "Mensaje..."
 const AYUDA := "ARRASTRÁ EL FONDO O USÁ LA RUEDA"
@@ -607,7 +607,7 @@ func _burbuja_de(mensaje: Mensaje, indice: int) -> PanelContainer:
 			var inicio := mensaje.texto.find(mensaje.texto_del_tramo)
 			texto.add_text(mensaje.texto.left(inicio))
 			texto.push_meta(mensaje.tramo_de_pista)
-			texto.push_color(NARANJA)
+			texto.push_color(ROJO)
 			texto.add_text(mensaje.texto_del_tramo)
 			texto.pop()
 			texto.pop()

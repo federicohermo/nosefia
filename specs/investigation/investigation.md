@@ -265,7 +265,7 @@ con esos metadatos, con los mensajes del guion sin leer según BR-INV-023.
 
 ### BR-INV-031 — Sólo el tramo de pista emite su identidad
 
-El sistema DEBE mostrar en J2_6 sólo «acá siempre falta algo» en naranja y el resto del texto
+El sistema DEBE mostrar en J2_6 sólo «acá siempre falta algo» en rojo y el resto del texto
 en blanco. CUANDO se pulsa ese tramo, DEBE emitir un pedido identificado con 2A, sin deducir
 la identidad del texto visible ni registrar por ese gesto un hallazgo o hipótesis.
 Leer el mensaje, abrir el chat, pulsar otro tramo o una identidad inexistente NO DEBE emitir
@@ -321,7 +321,7 @@ independiente: el subtítulo con mano vacía NO DEBE registrar una pista levanta
 
 ### BR-INV-038 — Dos gestos concretos descubren las pistas de la cuarta noche
 
-MIENTRAS jornada 4 está abierta, CUANDO se pulsa la frase naranja «acá siempre falta algo» del
+MIENTRAS jornada 4 está abierta, CUANDO se pulsa la frase roja «acá siempre falta algo» del
 mensaje J2_6 de Yasmín, el sistema DEBE registrar 2A. Abrir o leer ese chat, o pulsar otra parte,
 NO DEBE registrarla. CUANDO se acepta levantar la colilla del fondo del depósito cerca de la
 puerta garage, el sistema DEBE registrar 2B. La colilla DEBE distinguirse visualmente como tal,
@@ -561,7 +561,7 @@ así que sin pistas ofrece sólo 2P.
 
 ### BR-INV-060 — El mensaje J3_3 es el tramo de la pista 5B
 
-El sistema DEBE mostrar en J3_3 el texto entero «para mi lo sacó enrique» en naranja, con el mismo
+El sistema DEBE mostrar en J3_3 el texto entero «para mi lo sacó enrique» en rojo, con el mismo
 gesto y la misma marca que el tramo de BR-INV-031. CUANDO se pulsa ese tramo, DEBE emitir un
 pedido identificado con 5B, sin deducir la identidad del texto visible ni registrar por ese
 gesto un hallazgo o hipótesis. Leer el mensaje, abrir el chat o pulsar otro mensaje del bloque
@@ -844,7 +844,7 @@ Los dieciséis mensajes de Yasmín tampoco se duplican al repetir esos recorrido
 
 ### AC-INV-041 — El clic de pista tiene un borde exacto *(verifica BR-INV-031)*
 
-DADO J2_6 visible CUANDO se mide el texto ENTONCES sólo «acá siempre falta algo» está en naranja
+DADO J2_6 visible CUANDO se mide el texto ENTONCES sólo «acá siempre falta algo» está en rojo
 y las palabras anteriores y posteriores siguen blancas y literales. CUANDO se abre o lee,
 o se pulsa fuera del tramo ENTONCES hay cero pedidos de 2A. Un clic dentro emite exactamente
 un pedido de 2A y dos clics válidos pueden emitir dos, con cero cambios directos del expediente.
@@ -1070,7 +1070,7 @@ con o sin el bloque de Yasmín.
 ### AC-INV-068 — El bloque no concede pistas y muestra sus glifos *(verifica BR-INV-048, BR-INV-031, BR-INV-060)*
 
 DADO la jornada 5 abierta, sin pistas anotadas, CUANDO se miden los diez mensajes ENTONCES
-sólo J3_3 tiene tramo en naranja, y abrir, leer o pulsar cualquier parte de J3_1, J3_2 y J3_4 a
+sólo J3_3 tiene tramo en rojo, y abrir, leer o pulsar cualquier parte de J3_1, J3_2 y J3_4 a
 J3_10 emite cero pedidos de pista y deja intactos el expediente y el chat de notas. DADO J3_7 y J3_9 CUANDO se
 muestran a 1920×1080 y a 1280×720, en escritorio y en paquete web, ENTONCES 💀 y 😬 se dibujan
 como glifos, sin caracteres ausentes, y los textos completos quedan dentro del celular, sin
@@ -1180,7 +1180,7 @@ ENTONCES sortear la 5 no guarda nada.
 ### AC-INV-090 — Sólo el mensaje entero de J3_3 pide 5B *(verifica BR-INV-060, BR-INV-031)*
 
 DADO la jornada 5 abierta CUANDO se muestra J3_3 ENTONCES «para mi lo sacó enrique» está entero
-en naranja y el mensaje no tiene otro tramo; pulsarlo emite exactamente un pedido con la identidad
+en rojo y el mensaje no tiene otro tramo; pulsarlo emite exactamente un pedido con la identidad
 5B, y pulsarlo dos veces emite dos pedidos iguales. DADO el mismo chat CUANDO se lee o se abre
 Yasmín, o se pulsa J3_2 o J3_4 ENTONCES se emiten cero pedidos y el expediente queda intacto.
 DADO la jornada 4 abierta ENTONCES J2_6 sigue pidiendo 2A con «acá siempre falta algo».
