@@ -3,7 +3,7 @@ schema_version: 1
 capability_id: CAP-SUB
 status: ratified
 owner: por definir
-provenance: fichas «Subtítulos», «5. Formas de interacción con objetos», «Interfaces virtuales durante la jornada» y «8. Tarea: Reposición»; columnas «Subtítulo al examinar» de las bases «Productos y cajas contenedoras» y «Otros objetos interactuables»; decisiones de #376; exención de bolsa, producto vencido, ticket y pista de #516; cuartito de limpieza de #541; texto provisorio del depósito trabado de #574; útiles fuera del contenedor de #552, ficha «Subtítulos» revisada el 2026-10-21; subtítulos de las manchas de #457, ficha «Limpieza» revisada el 2026-10-20
+provenance: fichas «Subtítulos», «5. Formas de interacción con objetos», «Interfaces virtuales durante la jornada» y «8. Tarea: Reposición»; columnas «Subtítulo al examinar» de las bases «Productos y cajas contenedoras» y «Otros objetos interactuables»; decisiones de #376; exención de bolsa, producto vencido, ticket y pista de #516; cuartito de limpieza de #541; texto provisorio del depósito trabado de #574; útiles fuera del contenedor de #552, ficha «Subtítulos» revisada el 2026-10-21; pensamiento de la primera pista de #714, ficha «Subtítulos» revisada el 2026-10-30; subtítulos de las manchas de #457, ficha «Limpieza» revisada el 2026-10-20; renglones y ancho de #626, ficha «Subtítulos» revisada el 2026-11-03
 ---
 
 # Capacidad: los subtítulos
@@ -20,6 +20,7 @@ detener al jugador y sin entregar lo que el objeto esconde.
 |---|---|---|
 | **Línea de subtítulo** | la única línea de texto abajo al centro de la pantalla donde se lee lo que piensa el protagonista | leyenda, caption |
 | **Subtítulo** | el texto que muestra la línea de subtítulo en un instante | mensaje, aviso |
+| **Renglón** | cada tramo de un subtítulo entre dos saltos de línea. La línea de subtítulo puede tener varios | línea (es la del cuadro entero) |
 | **Pensamiento** | un subtítulo temporal: se ve entero un tiempo y después se desvanece | aviso, notificación |
 | **Texto al examinar** | lo que dice un objeto cuando se pide examinarlo. Sale de la ficha, no de la revelación | descripción, revelación |
 | **Examen** | el de `investigation`: lo que se lleva en la mano, delante de la cámara, hasta pulsar otra vez la tecla de examinar | observación, inspección |
@@ -135,28 +136,29 @@ con el mismo contenido, y el cuerpo y la tapa del contenedor.
 |---|---|
 | Mopa | Una mopa para limpiar las manchas del local. |
 | Balde | Un balde para hacer las mezclas con los jabones. |
-| Jabón azul | Un bidón de jabón azul, marca “2”. Sirve para manchas de humedad. |
-| Jabón rosa | Un bidón de jabón rosa, marca “H”. Sirve para manchas de... para manchas marrones. |
-| Jabón amarillo | Un bidón de jabón amarillo, marca “O”. Sirve para manchas de polvo. |
+| Jabón azul | Un bidón de jabón azul, marca “2”.<br>Sirve para manchas de humedad. |
+| Jabón rosa | Un bidón de jabón rosa, marca “H”.<br>Sirve para manchas de... para manchas marrones. |
+| Jabón amarillo | Un bidón de jabón amarillo, marca “O”.<br>Sirve para manchas de polvo. |
 | Cada bolsa de basura | Una bolsa de basura. |
-| Inodoro | Un inodoro. Enrique me pidió encarecidamente que no tire papel en él, porque se tapa. |
+| Colilla | Una colilla de cigarrillo. Qué raro… |
+| Inodoro | Un inodoro. Enrique me pidió encarecidamente<br>que no tire papel en él, porque se tapa. |
 | Lavatorio | Un lavatorio. Acá puedo cargar el balde. |
-| Nota de jabones y manchas | Una nota explicando qué jabón usar para cada tipo de mancha. |
-| Nota de instrucciones de limpieza | Una nota que explica cómo usar los elementos de limpieza. |
+| Nota de jabones y manchas | Una nota explicando qué jabón usar<br>para cada tipo de mancha. |
+| Nota de instrucciones de limpieza | Una nota que explica cómo usar<br>los elementos de limpieza. |
 | Nota de no tirar papel | “Por favor, no tirar papel en el inodoro” |
 | Nota de tareas a realizar | Una lista de las tareas que me dejó Enrique. |
-| Nota del local ordenado | Una nota sobre el correcto orden del local. Enrique es medio insoportable con eso… |
-| Computadora | Una computadora viejita. El único programa que tiene es el registro de productos vendidos. |
-| Caja registradora | La caja registradora. Acá puedo hacer los tickets para los compradores. |
-| Lector | El lector de código de barras. Si le paso un producto, lo va a anotar en el programa generador de tickets de la caja. |
-| Entrada principal | La entrada principal al local. Queda cerrada con llave durante el turno nocturno. |
-| Puerta del jefe | Esta puerta lleva a la “oficina” de Enrique. Así le dice él. Siempre está cerrada. |
+| Nota del local ordenado | Una nota sobre el correcto orden del local.<br>Enrique es medio insoportable con eso… |
+| Computadora | Una computadora medio vieja. El único programa<br>que tiene es el registro de productos vendidos. |
+| Caja registradora | La caja registradora. Acá puedo hacer<br>los tickets para los compradores. |
+| Lector | El lector de código de barras. Si le paso un producto,<br>lo va a anotar en el programa de la caja. |
+| Entrada principal | La entrada principal al local. Queda cerrada<br>con llave durante el turno nocturno. |
+| Puerta del jefe | Esta puerta lleva a la “oficina” de Enrique.<br>Así le dice él. Siempre queda cerrada. |
 | Puerta del cuartito, trabada | Acá guardan las cosas de limpieza. Está cerrado con llave. |
 | Portón del depósito | Un portón que da a la calle. |
 | Contenedor de basura | Un contenedor de basura. |
 | Tacho del local | Un tacho de basura para los compradores diurnos. |
-| Tacho del escritorio | Un tachito de basura para nosotros, los empleados. |
-| Tacho del baño | El tacho de basura del baño. Mejor ni mirar lo que tiene adentro. |
+| Tacho del escritorio | Un tacho de basura para nosotros,<br>los empleados. |
+| Tacho del baño | El tacho de basura del baño.<br>Mejor ni mirar lo que tiene adentro. |
 
 Las puertas interiores, las puertas de las heladeras, la ventanilla, el comprador, la góndola y
 las manchas NO DEBEN tener texto al examinar. La excepción es la puerta del
@@ -191,7 +193,7 @@ comprador en la ventanilla en el momento de decir el texto. MIENTRAS el jugador 
 el texto es de una entrega del comprador (margen decidido por el usuario en el QA del
 30/10/2026), éste DEBE durar lo de BR-SUB-004. Un aviso de una acción o del estado del jugador NO
 DEBE tener anclaje espacial, y DEBE durar siempre lo de BR-SUB-004 aunque el jugador camine. Esto incluye los gestos de
-BR-SUB-013 y la mopa que se seca de BR-SUB-014. CUANDO el texto tiene un lugar y el jugador
+BR-SUB-013, la mopa que se seca de BR-SUB-014 y la primera pista de BR-SUB-016. CUANDO el texto tiene un lugar y el jugador
 se aleja más que eso, DEBE empezar a desvanecerse en ese momento, en los mismos 0,5 segundos,
 salvo que ya se estuviera desvanecido. Volver a acercarse NO DEBE devolverle la opacidad. El
 texto fijo del examen NO DEBE acortarse. Un texto nuevo DEBE medir desde su propio lugar y desde
@@ -208,19 +210,19 @@ es contenido editable: cambiarla NO DEBE cambiar la identidad ni la condición q
 | Gesto | ID | Pensamiento |
 |---|---|---|
 | Tirar al contenedor algo que no es una bolsa de basura, un producto vencido, un ticket ni una pista | `MALA_IDEA` | Me parece que eso fue una mala idea… |
-| Tirar al contenedor una caja del depósito, que no entra | `CAJA_EN_EL_CONTENEDOR` | La caja es bastante grande para el contenedor. Rebalsaría. Además, Enrique me pidió que no tire las cajas de productos, ni siquiera las vacías. |
-| Tirar al contenedor un útil de limpieza —la mopa, el balde o un jabón—, que no entra | `UTIL_EN_EL_CONTENEDOR` | Me parece que no debería tirar<br>los elementos de limpieza. |
-| Soltar algo que no es un ticket y que queda quieto fuera del local, el depósito y el baño | `POR_LA_VENTANA` | Si Enrique se entera de que estoy tirando cosas por la ventana, me mata. |
-| Pasar por una mancha la mopa mojada con el jabón que no es el suyo | `JABON_EQUIVOCADO` | Esto no está funcionando… Creo que no estoy usando el jabón correcto. |
+| Tirar al contenedor una caja del depósito, que no entra | `CAJA_EN_EL_CONTENEDOR` | Enrique me pidió que no tirara las cajas<br>de productos, ni siquiera las vacías. |
+| Tirar al contenedor un útil de limpieza —la mopa, el balde o un jabón—, que no entra | `UTIL_EN_EL_CONTENEDOR` | Meee parece que no debería tirar<br>los elementos de limpieza. |
+| Soltar algo que no es un ticket y que queda quieto fuera del local, el depósito y el baño | `POR_LA_VENTANA` | Si Enrique se entera de que estoy tirando<br>cosas por la ventana, me mata. |
+| Pasar por una mancha la mopa mojada con el jabón que no es el suyo | `JABON_EQUIVOCADO` | Esto no está funcionando…<br>Creo que no estoy usando el jabón correcto. |
 | Pasar por una mancha la mopa mojada con agua sola | `MOPA_SIN_MOJAR` | Necesitaría mojar la mopa en agua con jabón. |
 | Pasar por una mancha la mopa seca, sin haberla mojado en esa jornada | `MOPA_SIN_MOJAR` | Necesitaría mojar la mopa en agua con jabón. |
 | Pasar por una mancha la mopa seca, después de haberla mojado en esa jornada | `MOPA_YA_SECA` | Ya se secó la mopa… |
 | Borrar la caca de la pared del otro inodoro | `PARED_DEL_OTRO_INODORO` | Se ve que alguien no tuvo tiempo de apuntar bien… |
 | Borrar la caca del piso frente a las estanterías del fondo del local, en la jornada 5 | `PISO_DE_LAS_ESTANTERIAS_DEL_FONDO` | Espero que sea vómito… |
 | Borrar la caca del techo del baño, en la jornada 6 | `TECHO_SOBRE_UN_CUBICULO` | ¿¿Cómo llegó eso ahí?? |
-| Usar la puerta de entrada del local en una jornada de prueba, con alguna obligatoria pendiente | `PUERTA_CON_TAREAS_PENDIENTES` | No debería irme. Todavía me quedan tareas por completar. |
+| Usar la puerta de entrada del local en una jornada de prueba, con alguna obligatoria pendiente | `PUERTA_CON_TAREAS_PENDIENTES` | No debería irme.<br>Todavía me quedan tareas por completar. |
 
-El `<br>` de la tabla es un salto de línea del subtítulo, tal como lo marca la ficha.
+El `<br>` de la tabla es un salto de renglón del subtítulo, tal como lo marca la ficha (BR-SUB-017).
 
 `CAJA_EN_EL_CONTENEDOR` y `UTIL_EN_EL_CONTENEDOR` DEBEN decidirse por lo que se intenta tirar y no
 por la tapa: con la tapa cerrada o girando piensan lo mismo que con la tapa abierta. Poético, aun en
@@ -254,6 +256,34 @@ pensamiento pendiente NO DEBE duplicarlo.
 La frase de los tres segundos expresa una queja del protagonista; NO DEBE fijar una duración
 exacta ni modificar el desgaste por tiempo y recorrido de
 [`store-cleanup`](../store-cleanup/store-cleanup.md) (BR-CLN-022).
+
+### BR-SUB-016 — La primera pista anotada
+
+CUANDO [`investigation`](../investigation/investigation.md) anota la primera pista de la partida,
+por cualquier canal, el sistema DEBE mostrar el pensamiento `PRIMERA_PISTA`, cuyo texto actual es
+«Encontré una pista. ¡Qué extraño! Me parece que está pasando algo.». Las pistas siguientes, en
+esa jornada o en otra, NO DEBEN mostrarlo. Una partida nueva lo vuelve a mostrar una vez. Un
+resultado repetido o desconocido NO DEBE mostrarlo, igual que no produce el aviso de
+[`notifications`](../notifications/notifications.md) (BR-NTF-010). Retomar una partida guardada
+que ya tiene una pista NO DEBE mostrarlo: restaurar el expediente no es anotar una pista.
+
+SI el celular está abierto al anotarse la pista, ENTONCES el pensamiento DEBE esperar a que se
+cierre y mostrarse entonces. Recién al mostrarse cuenta como mostrado: si la jornada cierra antes,
+se descarta y la partida sigue sin marca. Anotar otra pista con el pensamiento pendiente NO DEBE
+duplicarlo. SI otro subtítulo reemplaza al pensamiento ya mostrado, ENTONCES el pensamiento cuenta
+como mostrado y NO DEBE volver (BR-SUB-001). El aviso «¡NUEVA PISTA!» NO cambia.
+
+### BR-SUB-017 — Los renglones los marca la ficha
+
+El sistema DEBE cortar un subtítulo en renglones exactamente donde lo corta la ficha «Subtítulos»,
+y en ningún otro lugar. Un texto que la ficha no corta DEBE verse en un solo renglón. La línea de
+subtítulo NO DEBE tener un ancho fijo: cada renglón DEBE ocupar lo que mide, y el conjunto DEBE
+quedar centrado abajo (BR-SUB-001). SI un renglón no entra en el ancho de la ventana, ENTONCES el
+sistema DEBE cortarlo igual, para que no se salga de la pantalla. Vale para todo subtítulo,
+también el texto al examinar de cada objeto, que se corta donde marca su ficha de «Otros objetos
+interactuables» o de «Productos y cajas contenedoras» (BR-SUB-009, BR-SUB-010).
+
+El salto de renglón cuenta como un carácter para la duración (BR-SUB-004).
 
 ## Criterios de aceptación
 
@@ -472,6 +502,49 @@ después una descumplida CUANDO se usa la puerta ENTONCES el pensamiento vuelve.
 jornada completa con obligatorias pendientes CUANDO se usa la puerta ENTONCES no hay pensamiento.
 DADA la puerta de entrada en una jornada de prueba con una pendiente CUANDO se la examina con E
 ENTONCES dice su texto fijo (BR-SUB-010).
+
+### AC-SUB-027 — La primera pista piensa, una vez *(verifica BR-SUB-016, BR-SUB-001)*
+
+DADA una partida sin la marca CUANDO se anota una pista, por cada canal de anotación, ENTONCES se
+muestra `PRIMERA_PISTA` con la duración que le da su largo (BR-SUB-004), y la partida queda
+marcada; CUANDO se anota la segunda pista, en esa jornada o en otra, ENTONCES no se muestra.
+DADO un resultado repetido o desconocido en una partida sin la marca ENTONCES no se muestra y la
+partida sigue sin marca. DADA una partida guardada que ya tiene una pista y la marca CUANDO se
+retoma ENTONCES no se muestra; DADA una partida nueva ENTONCES se muestra una vez más.
+DADO el celular abierto CUANDO se anota la primera pista ENTONCES no se muestra; CUANDO se anota
+otra con el celular abierto ENTONCES sigue habiendo uno solo pendiente; CUANDO se cierra el celular
+ENTONCES se muestra y recién ahí la partida queda marcada. DADO el pensamiento pendiente CUANDO
+cierra la jornada ENTONCES se descarta y la partida sigue sin marca. DADO el pensamiento visible
+CUANDO llega otro subtítulo ENTONCES lo reemplaza y el pensamiento no vuelve.
+
+### AC-SUB-028 — Los renglones de cada pensamiento *(verifica BR-SUB-017, BR-SUB-013, BR-SUB-014)*
+
+DADO cada pensamiento de la tabla de BR-SUB-013 y `MOPA_BERRETA` ENTONCES su texto tiene los
+renglones de la ficha: dos para `CAJA_EN_EL_CONTENEDOR`, `UTIL_EN_EL_CONTENEDOR`,
+`POR_LA_VENTANA`, `JABON_EQUIVOCADO` y `PUERTA_CON_TAREAS_PENDIENTES`, y uno para cada uno de los
+demás. Ningún renglón queda vacío y el texto no empieza ni termina con un salto.
+
+### AC-SUB-029 — Los mismos renglones en pantalla *(verifica BR-SUB-017, BR-SUB-001)*
+
+DADO el HUD a 1920×1080 y a 1280×720 CUANDO se piensa cada pensamiento del AC-SUB-028 y cada texto
+al examinar del AC-SUB-031 ENTONCES la línea muestra tantos renglones como la ficha, sin ningún
+corte de más, y queda centrada en el encuadre y en la mitad inferior. La única excepción es un
+renglón más ancho que la ventana (BR-SUB-017), que se corta por la red de seguridad: a 1280×720 le
+pasa a `MOPA_BERRETA`.
+
+### AC-SUB-030 — Un renglón que no entra se corta *(verifica BR-SUB-017)*
+
+DADO el HUD a 1280×720 y a 1920×1080 CUANDO se piensa un texto de 300 caracteres sin saltos
+ENTONCES se ve en más de un renglón y ninguno sale de la ventana.
+
+### AC-SUB-031 — Los renglones de cada texto al examinar *(verifica BR-SUB-017, BR-SUB-009, BR-SUB-010)*
+
+DADO el texto al examinar de cada objeto de la tabla de BR-SUB-010 ENTONCES tiene los
+renglones de su ficha: dos para el inodoro, la computadora, la caja registradora, el lector, la
+entrada principal, la puerta del jefe, las notas de jabones y manchas, de instrucciones de limpieza
+y del local ordenado, los tachos del escritorio y del baño y los tres jabones, y uno para cada uno
+de los demás. Ningún renglón queda vacío. Cada producto del catálogo, que la ficha no corta, tiene
+un solo renglón.
 
 ## No objetivos
 

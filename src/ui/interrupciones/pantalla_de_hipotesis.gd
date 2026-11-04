@@ -98,9 +98,9 @@ func mostrar(reflexion: ReflexionDeCierre) -> void:
 	var con_opcion := _elige and opcion != null
 	_titulo.visible = con_opcion
 	_flecha.visible = con_opcion
-	_titulo.text = "“%s”" % opcion.titulo if con_opcion else ""
+	_titulo.text = opcion.titulo if con_opcion else ""
 	_texto.position.y = TEXTO.position.y if con_opcion else TITULO.position.y
-	_texto.text = "“%s”" % opcion.texto if con_opcion else reflexion.texto_actual()
+	_texto.text = opcion.texto if con_opcion else reflexion.texto_actual()
 	_identidad = opcion.identidad if con_opcion else reflexion.identidad_del_texto()
 	var opciones := reflexion.opciones()
 	var navegable := etapa == ReflexionDeCierre.Etapa.ELEGIR and opciones.size() > 1

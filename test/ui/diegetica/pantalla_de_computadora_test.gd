@@ -9,7 +9,6 @@ const PRECIO := 3
 const RESTAR := 4
 const UNIDADES := 5
 const SUMAR := 6
-const TOTAL := 7
 
 
 func _planilla(pantalla: PantallaDeComputadora) -> RegistroDeVentas:
@@ -78,22 +77,16 @@ func test_la_planilla_muestra_cada_producto_y_sigue_a_los_gestos() -> void:
 		(primera.get_child(SUMAR) as Button).pressed.emit()
 	app.mostrar(registro)
 	assert_str((primera.get_child(UNIDADES) as Label).text).is_equal("3")
-	assert_str((primera.get_child(TOTAL) as Label).text).is_equal(
-		AppCaja.texto_de_pesos(producto.precio * 3)
-	)
 	(primera.get_child(RESTAR) as Button).pressed.emit()
 	app.mostrar(registro)
 	assert_str((primera.get_child(UNIDADES) as Label).text).is_equal("2")
-	assert_str((primera.get_child(TOTAL) as Label).text).is_equal(
-		AppCaja.texto_de_pesos(producto.precio * 2)
-	)
 	assert_str((app.get("_total") as Label).text).is_equal(
 		AppCaja.texto_de_pesos(producto.precio * 2)
 	)
 	await get_tree().process_frame
 
 
-func test_el_encabezado_tiene_las_seis_columnas_en_orden() -> void:
+func test_el_encabezado_tiene_las_cinco_columnas_en_orden() -> void:
 	var pantalla: PantallaDeComputadora = auto_free(ESCENA.instantiate())
 	add_child(pantalla)
 	var textos: Array[String] = []
@@ -104,14 +97,13 @@ func test_el_encabezado_tiene_las_seis_columnas_en_orden() -> void:
 		"_columna_producto",
 		"_columna_precio",
 		"_columna_vendido",
-		"_columna_total",
 	]:
 		var columna: Label = pantalla.caja().get(nombre)
 		textos.append(columna.text)
 		assert_int(columna.get_index()).is_greater(anterior)
 		anterior = columna.get_index()
 	assert_array(textos).is_equal(
-		["IMAGEN", "MARCA", "PRODUCTO", "PRECIO", "VENDIDO", "TOTAL"] as Array[String]
+		["IMAGEN", "MARCA", "PRODUCTO", "PRECIO", "VENDIDO"] as Array[String]
 	)
 
 
@@ -136,7 +128,6 @@ func test_una_fila_en_el_tope_no_cambia_con_un_mas_rechazado() -> void:
 	var registro := _planilla(pantalla)
 	var app := pantalla.caja()
 	var fila := _fila_de(app, Producto.Id.FERNET_GOD)
-	var fernet := Catalogo.de(Producto.Id.FERNET_GOD)
 	var sumar: Button = fila.get_child(SUMAR)
 	for _vez in RegistroDeVentas.TOPE_POR_FILA + 1:
 		sumar.pressed.emit()
@@ -144,17 +135,13 @@ func test_una_fila_en_el_tope_no_cambia_con_un_mas_rechazado() -> void:
 	assert_str((fila.get_child(UNIDADES) as Label).text).is_equal(
 		str(RegistroDeVentas.TOPE_POR_FILA)
 	)
-	assert_str((fila.get_child(TOTAL) as Label).text).is_equal(
-		AppCaja.texto_de_pesos(fernet.precio * RegistroDeVentas.TOPE_POR_FILA)
-	)
 	var sin_anotar := _fila_de(app, Producto.Id.ACTRONCITO)
 	(sin_anotar.get_child(RESTAR) as Button).pressed.emit()
 	app.mostrar(registro)
 	assert_str((sin_anotar.get_child(UNIDADES) as Label).text).is_equal("0")
-	assert_str((sin_anotar.get_child(TOTAL) as Label).text).is_equal(AppCaja.texto_de_pesos(0))
 
 
-func test_el_total_de_la_noche_entra_entero_y_queda_bajo_la_columna_total() -> void:
+func test_el_total_de_la_noche_entra_entero() -> void:
 	var pantalla: PantallaDeComputadora = auto_free(ESCENA.instantiate())
 	add_child(pantalla)
 	pantalla.mostrar()
@@ -170,30 +157,6 @@ func test_el_total_de_la_noche_entra_entero_y_queda_bajo_la_columna_total() -> v
 	assert_str(total.text).is_equal(AppCaja.texto_de_pesos(registro.total()))
 	assert_int(total.text.count(".")).is_equal(2)
 	assert_float(_ancho_del_texto(total)).is_less_equal(total.size.x)
-	var escala := total.get_global_transform().get_scale().x
-	var centro := total.get_global_rect().end.x - _ancho_del_texto(total) * escala / 2.0
-	var columna: Label = app.get("_columna_total")
-	var cabecera := columna.get_global_rect()
-	assert_float(centro).is_between(cabecera.position.x, cabecera.end.x)
-
-
-func test_el_total_de_la_fila_mas_larga_entra_entero_sin_margen_sobrante() -> void:
-	var pantalla: PantallaDeComputadora = auto_free(ESCENA.instantiate())
-	add_child(pantalla)
-	pantalla.mostrar()
-	var registro := _planilla(pantalla)
-	for producto in registro.productos():
-		for _vez in RegistroDeVentas.TOPE_POR_FILA:
-			registro.sumar(producto)
-	pantalla.caja().mostrar(registro)
-	await get_tree().process_frame
-	await get_tree().process_frame
-	var mayor := 0.0
-	for panel: Node in (pantalla.caja().get("_filas") as Container).get_children():
-		var total := panel.get_child(0).get_child(TOTAL) as Label
-		assert_float(_ancho_del_texto(total)).is_less_equal(total.size.x)
-		mayor = maxf(mayor, _ancho_del_texto(total))
-	assert_float(AppCaja.ANCHO_DEL_TOTAL).is_less_equal(mayor * 1.1)
 
 
 func test_la_imagen_dibujada_ocupa_todo_el_ancho_de_su_columna_y_el_alto_de_la_fila() -> void:
@@ -242,7 +205,6 @@ func test_cada_columna_del_encabezado_arranca_en_la_misma_x_que_las_de_las_filas
 		RUBRO: "_columna_producto",
 		PRECIO: "_columna_precio",
 		RESTAR: "_columna_vendido",
-		TOTAL: "_columna_total",
 	}
 	for panel: Node in (app.get("_filas") as Container).get_children():
 		for indice: int in encabezados:
