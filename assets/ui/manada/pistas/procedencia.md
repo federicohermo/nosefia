@@ -1,4 +1,4 @@
-# Fotos de pistas de jornada 2
+# Fotos de pistas
 
 La foto 2A es una captura del mensaje de Yasmín que dispara la pista, tal como lo dibuja el
 celular. El usuario la pidió el 18 de octubre de 2026 en lugar del círculo de su contacto.

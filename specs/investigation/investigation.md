@@ -1255,8 +1255,7 @@ sí sólo en la jornada 6 y sólo con 6C entre las pistas activas: con 2A elegid
 5B elegida en la 5; o con 2A elegida en la 4, la 5 sin pistas y el sorteo caído en 5B. Contesta
 que no en las demás jornadas con esas mismas elecciones; con 2B elegida en la 4; con 2A elegida en
 la 4 y la 5 sin pistas ni sorteo; con 2A elegida en la 4 y ninguna elección en la 5; con ninguna
-elección en la 4 ni en la 5; y con un caso de prueba donde la 5 eligió una hipótesis que abre otro
-camino. Los objetos que no levantan una pista siguen en el local.
+elección en la 4 ni en la 5; y con 2P elegida en la 4, que no abre ningún camino. Los objetos que no levantan una pista siguen en el local.
 
 ### AC-INV-121 — Fuera de su condición la nota no se ve ni se levanta *(verifica BR-INV-071)*
 
@@ -1302,7 +1301,7 @@ DADO la 5 con 5B encontrada y elegida ENTONCES no se sortea y 6C está activa.
 
 DADO la nota del local ENTONCES su identidad no es la de ningún producto ni la de la colilla, es
 levantable, tiene subtítulo, se dibuja con una textura de papel distinta de la de las cajas, y su
-texto es legible al examinarla.
+cara escrita usa la textura de la nota con texto.
 
 ## No objetivos
 

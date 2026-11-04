@@ -206,3 +206,37 @@ func test_la_nota_es_un_papel_manuscrito_propio() -> void:  # AC-INV-126
 	assert_int(texturas.size()).is_equal(2)
 	if texturas.size() == 2:
 		assert_bool(texturas[0] != texturas[1]).is_true()
+	var caja: Node = auto_free(
+		(load("res://src/escenas/objetos/caja_de_productos.tscn") as PackedScene).instantiate()
+	)
+	var de_la_caja := (
+		(caja.get_node("Malla") as MeshInstance3D).get_active_material(0) as BaseMaterial3D
+	)
+	assert_object(de_la_caja).is_not_null()
+	if de_la_caja != null:
+		for textura: Texture2D in texturas:
+			assert_str(textura.resource_path).is_not_equal(de_la_caja.albedo_texture.resource_path)
+	var escrita := nota.get_node("Escrito") as MeshInstance3D
+	var de_la_cara := escrita.get_surface_override_material(0) as StandardMaterial3D
+	assert_str(de_la_cara.albedo_texture.resource_path).is_equal(
+		"res://assets/ui/manada/pistas/nota-bajo-la-puerta.png"
+	)
+
+
+func test_la_nota_toca_la_puerta_del_jefe() -> void:
+	await _abrir(JORNADA_DE_LA_NOTA, _por_la_5b())
+	var nota := _nota()
+	assert_object(nota).is_not_null()
+	if nota == null:
+		return
+	var volumen := (
+		_almacen.get_node("Estructura/puertajefe/CuerpoDeLaHoja/Volumen") as CollisionShape3D
+	)
+	var hoja: AABB = volumen.global_transform * volumen.shape.get_debug_mesh().get_aabb()
+	var papel := (nota.get_node("Escrito") as MeshInstance3D).mesh as PlaneMesh
+	var en_planta := Vector2(nota.global_position.x, nota.global_position.z)
+	var cerca := Vector2(
+		clampf(en_planta.x, hoja.position.x, hoja.end.x),
+		clampf(en_planta.y, hoja.position.z, hoja.end.z)
+	)
+	assert_float(en_planta.distance_to(cerca)).is_less_equal(papel.size.x / 2.0)
