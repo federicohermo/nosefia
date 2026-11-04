@@ -110,7 +110,7 @@ func test_la_tarea_cumplida_marca_su_renglon_y_al_descumplirse_lo_pierde() -> vo
 	assert_bool(NotaPegada.tareas_a_realizar(obligatorias).cumplida(0)).is_false()
 
 
-func test_la_jornada_que_abre_con_una_tarea_cumplida_arranca_con_su_tick() -> void:  # AC-PLY-165
+func test_la_jornada_que_abre_con_una_tarea_cumplida_arranca_cumplida() -> void:  # AC-PLY-165
 	var obligatorias := Apertura.obligatorias(ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA)
 	obligatorias[2].completar()
 	var nota := NotaPegada.tareas_a_realizar(obligatorias)
@@ -118,7 +118,7 @@ func test_la_jornada_que_abre_con_una_tarea_cumplida_arranca_con_su_tick() -> vo
 		assert_bool(nota.cumplida(fila)).is_equal(fila == 2)
 
 
-func test_las_hojas_sin_tareas_no_llevan_ticks() -> void:  # AC-PLY-165
+func test_las_hojas_sin_tareas_no_arrancan_cumplidas() -> void:  # AC-PLY-165
 	for id: NotaPegada.Id in NotaPegada.Id.values():
 		var nota := NotaPegada.de(id)
 		for fila in nota.renglones().size():

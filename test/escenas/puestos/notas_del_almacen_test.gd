@@ -370,7 +370,7 @@ func test_hay_una_hoja_de_no_tirar_papel_arriba_de_cada_inodoro() -> void:  # AC
 	)
 
 
-func test_el_tick_aparece_en_las_dos_notas_al_cumplir_y_se_va_al_descumplir() -> void:  # AC-PLY-165
+func test_el_tachado_aparece_en_las_dos_notas_y_se_va_al_descumplir() -> void:  # AC-PLY-165
 	var almacen := await _abrir()
 	var jugador: Node3D = almacen.get_node("Jugador")
 	var reloj: RelojDelTurno = almacen.get("_reloj")
@@ -378,23 +378,19 @@ func test_el_tick_aparece_en_las_dos_notas_al_cumplir_y_se_va_al_descumplir() ->
 	assert_int(hoja.get("id")).is_equal(NotaPegada.Id.TAREAS_A_REALIZAR)
 	var tarea := reloj.obligatoria(Tarea.Tipo.REGISTRAR)
 	assert_bool(tarea.completada()).is_false()
-	# Una tarea que ya abre cumplida, como la limpieza de un local limpio, arranca con su tick.
-	var cumplidas: Array[int] = hoja.call("filas_con_tick")
+	# Una tarea que ya abre cumplida, como la limpieza de un local limpio, arranca tachada.
+	var cumplidas: Array[int] = hoja.call("filas_tachadas")
 	assert_array(cumplidas).not_contains([1])
 	# Con la lectura abierta, la nota se actualiza sin cerrarla.
 	_accion(jugador, hoja, ReglasDeLosObjetos.ACCION_AGARRAR)
-	assert_array(_vista(almacen).filas_con_tick()).contains_exactly(cumplidas)
+	assert_array(_vista(almacen).filas_tachadas()).contains_exactly(cumplidas)
 	var con_registro := cumplidas.duplicate()
 	con_registro.append(1)
 	con_registro.sort()
 	assert_bool(reloj.completar(tarea)).is_true()
-	assert_array(hoja.call("filas_con_tick")).contains_exactly(con_registro)
-	assert_array(_vista(almacen).filas_con_tick()).contains_exactly(con_registro)
 	assert_array(hoja.call("filas_tachadas")).contains_exactly(con_registro)
 	assert_array(_vista(almacen).filas_tachadas()).contains_exactly(con_registro)
 	assert_bool(_vista(almacen).visible).is_true()
 	assert_bool(reloj.descumplir(tarea)).is_true()
-	assert_array(hoja.call("filas_con_tick")).contains_exactly(cumplidas)
-	assert_array(_vista(almacen).filas_con_tick()).contains_exactly(cumplidas)
 	assert_array(hoja.call("filas_tachadas")).contains_exactly(cumplidas)
 	assert_array(_vista(almacen).filas_tachadas()).contains_exactly(cumplidas)
