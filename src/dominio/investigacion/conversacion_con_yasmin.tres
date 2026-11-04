@@ -149,6 +149,9 @@ jornada = 5
 orden = 17
 de_quien = "Yasmín"
 texto = "para mi lo sacó enrique"
+tramo_de_pista = "lo_saco_enrique"
+texto_del_tramo = "para mi lo sacó enrique"
+pista = "5B"
 
 [sub_resource type="Resource" id="J3_4"]
 script = ExtResource("mensaje")

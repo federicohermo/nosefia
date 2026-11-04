@@ -3,7 +3,7 @@ schema_version: 1
 capability_id: CAP-INV
 status: draft
 owner: por definir
-provenance: GDD «Investigación» y «La computadora»; ficha «Interfaces virtuales durante la jornada» y decisiones de #373, #375 y #376; migración de los specs 006, 009, 018; fichas Chat con el jefe, Chat con compañera y 2A revisadas el 2026-10-15; decisiones de #430; «Sistema de investigación», fichas 2A/2B/2P y decisiones de #22 del 2026-10-15; decisión del usuario del 2026-10-18 de usar la captura del mensaje de Yasmín como foto de 2A; decisión del usuario del 2026-10-17 de retirar las notas de la computadora y usar el diseño del registro de productos; ficha «Pantalla entre jornadas», reflexión de jornada 1, encabezado de jornada 2 y decisiones de #436; decisiones del usuario del 2026-10-18 sobre el recorrido lateral, la elección sin límite de tiempo, la reanudación del cierre y la espera de 1 segundo; ocho jornadas de #526; instrucciones por jornada de #527; la colilla sólo en su jornada, de #536; ficha Chat con compañera, jornada 5, de #458; ficha «Caminos narrativos y finales» y cuadro de pistas e hipótesis de #766
+provenance: GDD «Investigación» y «La computadora»; ficha «Interfaces virtuales durante la jornada» y decisiones de #373, #375 y #376; migración de los specs 006, 009, 018; fichas Chat con el jefe, Chat con compañera y 2A revisadas el 2026-10-15; decisiones de #430; «Sistema de investigación», fichas 2A/2B/2P y decisiones de #22 del 2026-10-15; decisión del usuario del 2026-10-18 de usar la captura del mensaje de Yasmín como foto de 2A; decisión del usuario del 2026-10-17 de retirar las notas de la computadora y usar el diseño del registro de productos; ficha «Pantalla entre jornadas», reflexión de jornada 1, encabezado de jornada 2 y decisiones de #436; decisiones del usuario del 2026-10-18 sobre el recorrido lateral, la elección sin límite de tiempo, la reanudación del cierre y la espera de 1 segundo; ocho jornadas de #526; instrucciones por jornada de #527; la colilla sólo en su jornada, de #536; ficha Chat con compañera, jornada 5, de #458; ficha «Caminos narrativos y finales» y cuadro de pistas e hipótesis de #766 y la ficha «5B» de la lista de pistas e hipótesis y decisiones del usuario del 2026-10-30 sobre su foto y su texto, de #731
 ---
 
 # Capacidad: la investigación
@@ -352,7 +352,7 @@ inventar 2L ni una pista o foto para 2P.
 
 ### BR-INV-040 — Cada pista agrega foto y texto una vez al chat de notas
 
-CUANDO una pista de jornada 4 resulta ANOTADA, el sistema DEBE agregar al chat de notas primero
+CUANDO una pista resulta ANOTADA, el sistema DEBE agregar al chat de notas primero
 su foto y después su texto, una sola vez, conservando el orden de descubrimiento entre pistas.
 REPETIDA y DESCONOCIDA NO DEBEN agregar mensajes ni publicar pista nueva. La foto DEBE ampliarse
 con el texto siguiente como adjunto según BR-INV-025. El chat DEBE tener identidad y contenido
@@ -498,9 +498,9 @@ independientes, con estas identidades estables y en este orden:
 Los diez mensajes DEBEN estar disponibles al abrir la jornada, sin arribos programados durante
 el turno, y NO DEBEN aparecer en las jornadas 1 a 4. Desde la jornada 5 DEBEN permanecer en el
 chat. Las identidades J3_1 a J3_10 conservan su nombre: son identidades, no la jornada. 💀 y 😬
-DEBEN verse como glifos, sin caracteres ausentes. Ningún mensaje del bloque tiene tramo de pista:
-NO DEBE emitir un pedido de pista, registrar un hallazgo ni elegir una hipótesis, ni agregar al
-chat de notas. Reabrir el celular, volver al menú o repetir la apertura NO DEBE duplicar el
+DEBEN verse como glifos, sin caracteres ausentes. Sólo J3_3 tiene tramo de pista (BR-INV-060):
+los otros nueve mensajes NO DEBEN emitir un pedido de pista, registrar un hallazgo ni elegir una
+hipótesis, ni agregar al chat de notas. Reabrir el celular, volver al menú o repetir la apertura NO DEBE duplicar el
 bloque ni alterar el guion compartido. Los mensajes llegan sin leer según BR-INV-023; leer
 Yasmín conserva el transcurso del turno de BR-INV-006 y las marcas de BR-INV-008/009. El bloque
 cruza la sesión como el resto del guion de apertura (BR-SAV-020): un guardado de una jornada
@@ -557,6 +557,38 @@ al menos una en una jornada anterior. P y L DEBEN ser datos del caso. SI el caso
 ENTONCES el sistema NO DEBE ofrecer otra en su lugar ni inventar su texto: los de 5L, 6L y 7L
 siguen en OQ-INV-004. Esto no cambia BR-INV-039: en la jornada 4 nunca hay una pista anterior,
 así que sin pistas ofrece sólo 2P.
+
+### BR-INV-060 — El mensaje J3_3 es el tramo de la pista 5B
+
+El sistema DEBE mostrar en J3_3 el texto entero «para mi lo sacó enrique» en lila, con el mismo
+gesto y la misma marca que el tramo de BR-INV-031. CUANDO se pulsa ese tramo, DEBE emitir un
+pedido identificado con 5B, sin deducir la identidad del texto visible ni registrar por ese
+gesto un hallazgo o hipótesis. Leer el mensaje, abrir el chat o pulsar otro mensaje del bloque
+NO DEBE emitir ese pedido. Repetir el clic válido PUEDE repetir el pedido; la aceptación e
+idempotencia del hallazgo corresponden a quien registra la pista (BR-INV-032).
+
+### BR-INV-061 — El contenido de 5B procede de su ficha
+
+CUANDO se registra 5B con la jornada 5 abierta y el canal de chat, el sistema DEBE contestar
+ANOTADA y agregar al chat de notas primero su foto y después su texto (BR-INV-040). La pista 5B
+DEBE ser de la jornada 5, del canal de chat y del camino de la hipótesis 2A (BR-INV-049). La hipótesis 5B DEBE estar disponible al cierre de
+la jornada 5 si y sólo si 5B está registrada. Los datos DEBEN ser, según la ficha «5B» de la lista
+de pistas e hipótesis:
+
+| Identidad | Foto de pista | Texto de pista | Título de hipótesis |
+|---|---|---|---|
+| 5B | foto de perfil de Yasmín | Ya es la segunda vez que Yasmín le echa la culpa a Enrique y me dice que no lo contacte… | INCOMPETENCIA |
+
+El texto de la hipótesis 5B DEBE ser: «¿Será posible que Enrique tenga TAN mal gestionado su
+local? ¿O Yasmín está tratando de hacerse la inocente? De lo único que puedo estar seguro es de
+que estas cosas raras se deben a la incompetencia de alguno de ellos. Necesito verificar cuál de
+los dos es el verdadero responsable…»
+
+Por decisión del usuario del 2026-10-30, la foto DEBE ser la de perfil de Yasmín que entregó el
+artista, sin redibujar, y NO DEBE ser la captura de un mensaje. Por decisión del usuario del
+2026-10-30, el doble espacio de la ficha entre «la» e «incompetencia» DEBE quedar como un solo
+espacio; el mismo criterio vale para el «que que» de la ficha en el texto de la pista. Las pistas
+y las hipótesis 2A, 2B y 2P NO DEBEN cambiar.
 
 ## Criterios de aceptación
 
@@ -997,11 +1029,11 @@ exactamente las quince identidades de BR-INV-029. DADO una partida nueva ENTONCE
 jornada 1 sin Yasmín y sin ese bloque. Los mensajes de Enrique de la jornada 5 son los mismos
 con o sin el bloque de Yasmín.
 
-### AC-INV-068 — El bloque no concede pistas y muestra sus glifos *(verifica BR-INV-048, BR-INV-031)*
+### AC-INV-068 — El bloque no concede pistas y muestra sus glifos *(verifica BR-INV-048, BR-INV-031, BR-INV-060)*
 
 DADO la jornada 5 abierta, sin pistas anotadas, CUANDO se miden los diez mensajes ENTONCES
-ninguno tiene tramo en lila, y abrir, leer o pulsar cualquier parte de J3_1 a J3_10 emite cero
-pedidos de pista y deja intactos el expediente y el chat de notas. DADO J3_7 y J3_9 CUANDO se
+sólo J3_3 tiene tramo en lila, y abrir, leer o pulsar cualquier parte de J3_1, J3_2 y J3_4 a
+J3_10 emite cero pedidos de pista y deja intactos el expediente y el chat de notas. DADO J3_7 y J3_9 CUANDO se
 muestran a 1920×1080 y a 1280×720, en escritorio y en paquete web, ENTONCES 💀 y 😬 se dibujan
 como glifos, sin caracteres ausentes, y los textos completos quedan dentro del celular, sin
 recortes ni errores.
@@ -1106,6 +1138,39 @@ sale siempre el mismo camino. CUANDO se registra una pista del camino sorteado E
 ANOTADA, y una del otro camino, DESCONOCIDA. CUANDO se pide otra vez con otra semilla, o se
 reconstruye desde lo guardado, ENTONCES el sorteo no cambia. DADO una pista encontrada en la 4
 ENTONCES sortear la 5 no guarda nada.
+
+### AC-INV-090 — Sólo el mensaje entero de J3_3 pide 5B *(verifica BR-INV-060, BR-INV-031)*
+
+DADO la jornada 5 abierta CUANDO se muestra J3_3 ENTONCES «para mi lo sacó enrique» está entero
+en lila y el mensaje no tiene otro tramo; pulsarlo emite exactamente un pedido con la identidad
+5B, y pulsarlo dos veces emite dos pedidos iguales. DADO el mismo chat CUANDO se lee o se abre
+Yasmín, o se pulsa J3_2 o J3_4 ENTONCES se emiten cero pedidos y el expediente queda intacto.
+DADO la jornada 4 abierta ENTONCES J2_6 sigue pidiendo 2A con «acá siempre falta algo».
+
+### AC-INV-091 — Registrar 5B agrega foto y texto una vez *(verifica BR-INV-061, BR-INV-032, BR-INV-040, BR-INV-037, BR-INV-050)*
+
+DADO el caso de la partida con 2A registrada y elegida en la jornada 4 CUANDO se pide 5B por el
+canal de chat en la jornada 5 ENTONCES contesta ANOTADA, el expediente es [2A, 5B], se publica una
+pista nueva de jornada 5 con su foto y su texto, y el chat de notas recibe primero la foto y
+después el texto, sin cambiar las notas de 2A. CUANDO se repite el pedido ENTONCES contesta
+REPETIDA y no agrega mensajes ni publica otra pista. CUANDO se pide 5B por el canal de chat en la
+jornada 4, o por otro canal en la 5, ENTONCES contesta DESCONOCIDA y el expediente queda intacto.
+DADO 2B elegida en la jornada 4, o ninguna elección, CUANDO se pide 5B ENTONCES contesta
+DESCONOCIDA, porque 5B es del camino de 2A (BR-INV-049, BR-INV-050).
+
+### AC-INV-092 — El contenido de 5B es el de su ficha *(verifica BR-INV-061)*
+
+DADO el caso de la partida CUANDO se consulta 5B ENTONCES su texto de pista, su título de
+hipótesis y su texto de hipótesis coinciden con BR-INV-061, con un solo espacio entre «la» e
+«incompetencia» y un solo «que» en «que no lo contacte», y su foto es una imagen distinta de la
+de 2A y de la de 2B. Las identidades 2A, 2B y 2P conservan los datos de BR-INV-041.
+
+### AC-INV-093 — La hipótesis 5B depende de la pista 5B *(verifica BR-INV-061, BR-INV-039)*
+
+DADO el caso de la partida CUANDO se consultan las hipótesis de la jornada 5 con 5B registrada
+ENTONCES devuelve exactamente la hipótesis 5B; con el expediente vacío o con sólo 2A devuelve
+ninguna. DADO la jornada 4 CUANDO se consultan las hipótesis con 5B registrada ENTONCES las cuatro
+combinaciones de BR-INV-039 no cambian.
 
 ## No objetivos
 
