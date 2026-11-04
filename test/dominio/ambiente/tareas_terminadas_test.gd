@@ -52,7 +52,7 @@ func test_cambiar_la_salida_conserva_el_orden_y_resto_de_otros_avisos() -> void:
 	assert_array(estado.visibles()).is_empty()
 
 
-func test_cada_perdida_de_permiso_retira_y_cada_recuperacion_vuelve_a_avisar() -> void:  # AC-NTF-045
+func test_perder_el_permiso_retira_y_recuperarlo_vuelve_a_avisar() -> void:  # AC-NTF-045
 	var estado := Notificaciones.new()
 	estado.actualizar_salida(false)
 	assert_array(estado.visibles()).is_empty()
