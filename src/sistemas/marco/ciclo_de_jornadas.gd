@@ -60,7 +60,7 @@ func abrir_la_jornada() -> bool:
 func _al_cerrar_el_turno(cumplidas: int) -> void:
 	var jornada := _partida.jornada()
 	turno_agotado.emit(jornada)
-	_partida.cerrar_la_jornada(cumplidas, _mal_atendidos())
+	_partida.cerrar_la_jornada(cumplidas, _mal_atendidos(), _reloj.hora_al_cierre())
 	jornada_cerrada.emit(jornada, cumplidas)
 
 
