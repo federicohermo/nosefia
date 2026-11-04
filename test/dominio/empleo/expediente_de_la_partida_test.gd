@@ -156,16 +156,22 @@ func test_las_jornadas_sin_hipotesis_que_sortean_no_sortean() -> void:  # AC-INV
 
 
 func test_sin_pistas_en_la_5_la_6_sortea_el_camino_de_la_rama() -> void:  # AC-INV-076
-	var partida := _partida_de_la_5(_semilla_que_sortea_en_la_5("2A"))
+	var partida := Partida.desde({"jornada": 5, "semilla": 1})
+	partida.expediente.registrar("2A")
+	assert_int(partida.expediente.elegir(4, "2A")).is_equal(Expediente.Resultado.ANOTADA)
+	partida.abrir_la_jornada()
+	assert_dict(partida.expediente.sorteos()).is_empty()
 	partida.cerrar_la_jornada(partida.obligatorias().size())
 	partida.abrir_la_jornada()
 	assert_int(partida.jornada()).is_equal(6)
-	assert_array(partida.expediente.sorteos().keys()).contains_exactly([5, 6])
-	assert_str(partida.expediente.sorteos()[6]).is_equal("5B")
+	assert_dict(partida.expediente.sorteos()).is_equal({6: "5B"})
 
 
-func test_sin_pistas_activas_en_la_5_no_hay_nada_que_sortear_en_la_6() -> void:  # AC-INV-077
-	var partida := _partida_de_la_5(_semilla_que_sortea_en_la_5("2B"))
+func test_dos_jornadas_seguidas_sin_pistas_no_sortean_la_segunda() -> void:  # AC-INV-077
+	var partida := _partida_de_la_5(_semilla_que_sortea_en_la_5("2A"))
+	var sorteados := partida.expediente.sorteos()
+	assert_array(Array(partida.expediente.pistas_activas(5))).is_not_empty()
 	partida.cerrar_la_jornada(partida.obligatorias().size())
 	partida.abrir_la_jornada()
-	assert_array(partida.expediente.sorteos().keys()).contains_exactly([5])
+	assert_int(partida.jornada()).is_equal(6)
+	assert_dict(partida.expediente.sorteos()).is_equal(sorteados)
