@@ -166,14 +166,67 @@ func test_fede_nunca_pide_durextra() -> void:  # AC-CTR-107
 
 func test_los_pedidos_son_de_dos_y_de_tres_con_frecuencias_parecidas() -> void:  # AC-CTR-108
 	var por_cantidad := {2: 0, 3: 0}
-	for jornada: int in AGENDAS:
+	for jornada: int in [CUARTA, QUINTA]:
 		for semilla in range(1, SEMILLAS + 1):
 			for comprador in Compradores.de_la_jornada(jornada, semilla):
 				por_cantidad[comprador.pedido().productos().size()] += 1
 	var total: int = por_cantidad[2] + por_cantidad[3]
-	assert_int(total).is_equal(AGENDAS.size() * 2 * SEMILLAS)
+	assert_int(total).is_equal(2 * 2 * SEMILLAS)
 	assert_int(por_cantidad[2]).is_greater(total / 4)
 	assert_int(por_cantidad[3]).is_greater(total / 4)
+
+
+func test_cami_de_la_tercera_pide_tres_tipos_y_oaaaa_es_el_tercero() -> void:  # AC-CTR-152
+	var primeros: Dictionary = {}
+	for semilla in range(1, SEMILLAS * 3 + 1):
+		var cami := Compradores.de_la_jornada(TERCERA, semilla)[0]
+		var ids: Array[Producto.Id] = []
+		var distintos: Dictionary = {}
+		for producto in cami.pedido().productos():
+			ids.append(producto.id)
+			distintos[producto.id] = true
+		assert_array(ids).has_size(3)
+		assert_int(distintos.size()).is_equal(3)
+		assert_int(ids[2]).is_equal(Producto.Id.OAAAA)
+		for id in ids.slice(0, 2):
+			assert_int(id).is_not_equal(Producto.Id.OAAAA)
+			assert_array(Compradores.GRUPOS[PERSONAJE.CAMI]).contains([id])
+			primeros[id] = true
+	var sin_oaaaa: Array = Compradores.GRUPOS[PERSONAJE.CAMI].filter(
+		func(id: Producto.Id) -> bool: return id != Producto.Id.OAAAA
+	)
+	assert_array(primeros.keys()).contains_exactly_in_any_order(sin_oaaaa)
+
+
+func test_cami_de_la_quinta_conserva_el_sorteo_comun() -> void:  # AC-CTR-152
+	var tamanos: Dictionary = {}
+	for semilla in range(1, SEMILLAS + 1):
+		var cami := Compradores.de_la_jornada(QUINTA, semilla)[0]
+		tamanos[cami.pedido().productos().size()] = true
+	assert_array(tamanos.keys()).contains_exactly_in_any_order([2, 3])
+
+
+func test_tin_de_la_tercera_pide_tres_tipos_y_el_primero_es_valido() -> void:  # AC-CTR-153
+	var prohibidos: Array[Producto.Id] = [
+		Producto.Id.PURA_COLA, Producto.Id.MALBARDO, Producto.Id.DON_SATURADOS
+	]
+	var primeros: Dictionary = {}
+	var vistos: Dictionary = {}
+	for semilla in range(1, SEMILLAS * 3 + 1):
+		var tin := Compradores.de_la_jornada(TERCERA, semilla)[1]
+		var productos := tin.pedido().productos()
+		assert_array(productos).has_size(3)
+		primeros[productos[0].id] = true
+		for producto in productos:
+			vistos[producto.id] = true
+			assert_array(Compradores.GRUPOS[PERSONAJE.TIN]).contains([producto.id])
+		assert_array(prohibidos).not_contains([productos[0].id])
+	assert_array(primeros.keys()).contains_exactly_in_any_order(
+		Compradores.GRUPOS[PERSONAJE.TIN].filter(
+			func(id: Producto.Id) -> bool: return not id in prohibidos
+		)
+	)
+	assert_array(vistos.keys()).contains_exactly_in_any_order(Compradores.GRUPOS[PERSONAJE.TIN])
 
 
 func test_la_tercera_jornada_pide_del_catalogo_completo() -> void:  # AC-CTR-071

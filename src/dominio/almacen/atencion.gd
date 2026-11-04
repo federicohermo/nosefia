@@ -103,13 +103,13 @@ func _decir(dialogo: Dialogo, de_entrega: bool) -> void:
 func _inicial() -> Dialogo:
 	if _comprador.dialogos == null:
 		return DialogosDeCompradores.apertura_predeterminada(_comprador.pedido())
-	return _comprador.dialogos.inicial(_comprador.personaje)
+	return _comprador.dialogos.inicial(_comprador.personaje, _comprador.pedido())
 
 
 func _despedida() -> Dialogo:
 	if _comprador.dialogos == null:
 		return DialogosDeCompradores.despedida_predeterminada()
-	return _comprador.dialogos.despedida(_comprador.personaje)
+	return _comprador.dialogos.despedida(_comprador.personaje, _comprador.pedido())
 
 
 func _recordatorio(rechazo: bool = false) -> Dialogo:
