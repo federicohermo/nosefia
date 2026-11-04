@@ -22,7 +22,8 @@ func _textos(local: Node3D) -> Array[String]:
 	var pila: PilaDeNotificaciones = local.get_node("Interfaz/PilaDeNotificaciones")
 	var textos: Array[String] = []
 	for label: Label in pila.get_node("Marco/Pila").find_children("*", "Label", true, false):
-		textos.append(label.text.replace("\n", " "))
+		if label.name != &"Titulo":
+			textos.append(label.text.replace("\n", " "))
 	return textos
 
 
@@ -96,7 +97,7 @@ func test_la_pila_se_dibuja_sobre_las_interfaces_y_debajo_de_pausa() -> void:  #
 	assert_int(pila.layer).is_less(pausa.layer)
 
 
-func test_todas_las_noches_y_reloj_apagado() -> void:  # AC-NTF-020, AC-NTF-023
+func test_todas_las_noches_con_el_reloj_andando() -> void:  # AC-NTF-020, AC-NTF-023
 	var primera := ReglasDeLaPartida.PRIMERA_JORNADA
 	for jornada in range(primera, primera + ReglasDeLaPartida.JORNADAS_DE_LA_PARTIDA):
 		var local := _local(jornada)
@@ -104,8 +105,7 @@ func test_todas_las_noches_y_reloj_apagado() -> void:  # AC-NTF-020, AC-NTF-023
 		var pila: PilaDeNotificaciones = local.get_node("Interfaz/PilaDeNotificaciones")
 		RelojDePrueba.avanzar_turno(reloj, Reglas.DURACION_DEL_TURNO - 3601.0)
 		assert_bool(_textos(local).has("QUEDA UNA HORA DE JORNADA")).is_false()
-		if jornada == Reglas.JORNADA_EN_QUE_FALLA_EL_RELOJ:
-			assert_str((local.get("_reloj_de_mesa") as Label3D).text).is_empty()
+		assert_str((local.get("_reloj_de_mesa") as Label3D).text).is_not_empty()
 		RelojDePrueba.avanzar_turno(reloj, 1.0)
 		assert_bool(_textos(local).has("QUEDA UNA HORA DE JORNADA")).is_true()
 		pila._process(Notificaciones.DURACION)

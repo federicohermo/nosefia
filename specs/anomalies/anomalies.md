@@ -12,7 +12,7 @@ provenance: ficha «11. Anomalías», «9. Tarea Limpieza», fichas Poético y b
 
 Alterar las condiciones de una tarea rutinaria según la jornada. La cuarta noche exige buscar
 un sustituto vendible del jabón que falta, conservando las reglas de preparación y limpieza. La
-sexta noche corta la luz a las 20:58 y deja el reloj de mesa detenido hasta el cierre. La
+sexta noche corta la luz a las 20:58 y deja el reloj de pared detenido hasta el cierre. La
 última noche cambia qué trae cada caja del depósito, sin cambiar qué productos existen.
 
 ## Lenguaje de la capacidad
@@ -87,7 +87,7 @@ seguir limitados por el contenido real disponible de su producto.
 
 CUANDO la hora de ficción de la jornada 6 alcanza las 20:58, el sistema DEBE pasar el corte de
 sin corte a cortado, una sola vez. La hora de ficción es la que define BR-SHF-014, medida desde
-la apertura del turno, y no depende de lo que lea el reloj de mesa. Antes de las 20:58 la
+la apertura del turno, y no depende de lo que lea el reloj de pared. Antes de las 20:58 la
 jornada 6 DEBE comportarse como una noche con luz y reloj normales. Las demás jornadas NO DEBEN
 cortar la luz.
 
@@ -104,7 +104,7 @@ normales (BR-SHF-001, BR-SHF-002 y BR-SHF-003).
 CUANDO el jugador hace clic sobre el panel eléctrico con el corte cortado, el sistema DEBE
 pasarlo a restaurado: la iluminación y las interfaces vuelven a la normalidad. Hacer clic sobre el
 panel sin corte o ya restaurado NO DEBE cambiar el estado, cortar de nuevo ni alterar la lectura
-del reloj de mesa. Un corte restaurado
+del reloj de pared. Un corte restaurado
 NO DEBE volver a cortar en esa noche.
 
 ### BR-ANO-014 — Los estados del corte viven sólo en la jornada en memoria
@@ -229,7 +229,7 @@ corte.
 - Esta capacidad NO define las anomalías de la jornada 5. Sus contenidos pertenecen a sus
   contratos respectivos; aquí sólo se fijan la vigencia de la excepción del jabón azul, el corte
   de luz de la sexta noche y la permutación de cajas de la última noche.
-- Esta capacidad NO decide qué lee el reloj de mesa: eso es de
+- Esta capacidad NO decide qué lee el reloj de pared: eso es de
   [`shift-cycle`](../shift-cycle/shift-cycle.md). Tampoco decide cómo se ve la luz de
   emergencia: eso es de [`ambience`](../ambience/ambience.md).
 - Esta capacidad NO decide el aspecto de las etiquetas ni de las cajas, ni qué dice una pista
@@ -256,7 +256,7 @@ corte.
 ## Dependencias
 
 - [`shift-cycle`](../shift-cycle/shift-cycle.md) (consume): jornada que abre y hora de ficción.
-  Su reloj de mesa consume la sexta noche detenida desde las 20:58.
+  Su reloj de pared consume la sexta noche detenida desde las 20:58.
 - [`ambience`](../ambience/ambience.md) (alimenta): el estado del corte, que decide qué luces
   quedan encendidas.
 - [`save-and-resume`](../save-and-resume/save-and-resume.md) (consume): la apertura de la jornada

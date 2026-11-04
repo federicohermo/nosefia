@@ -206,7 +206,7 @@ func _jugar(partida: Partida, cumplidas: int) -> void:
 	partida.cerrar_la_jornada(cumplidas)
 
 
-func test_la_ultima_de_la_prueba_cierra_con_cuatro_tres_y_dos() -> void:  # AC-SHF-027, AC-EMP-050
+func test_la_ultima_de_la_prueba_cierra_con_cuatro_tres_y_dos() -> void:  # AC-EMP-050
 	var partida := Partida.desde({"jornada": 2, "medios": 0})
 	var turno := partida.abrir_la_jornada()
 	assert_int(partida.obligatorias().size()).is_equal(4)

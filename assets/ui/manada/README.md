@@ -32,6 +32,7 @@ comercial. La incorporación al build local no acredita una licencia comercial.
 | `notificacion_cliente.svg` | Figma, grupo `213:191` del frame `243:150` | Símbolo original del aviso «¡HAY UN CLIENTE!» |
 | `notificacion_lectura.svg` | Figma, grupo `480:319` del frame `477:243` | Cruz original del aviso «NO SE PUDO LEER» |
 | `notificacion_pista.svg` | Figma, grupo `480:323` del frame `477:225`, descargado sin editar el 2026-10-18 | Signo de pregunta del aviso «¡NUEVA PISTA!» |
+| `notificacion_tareas_completadas.svg` | Figma, ícono `1523:452` del frame `1523:451`, descargado sin editar el 2026-11-03 | Puerta principal del aviso «¡TAREAS COMPLETADAS!» |
 | `fondo.png` | Captura histórica de `almacen.tscn` | Recurso conservado; la computadora actual usa un shader |
 | `fondo_inicio.png` | Figma, `217:533` («FONDO 4 1»), la estación de servicio de luz cálida | Fondo del menú de inicio |
 | `titulo_inicio.png` | Figma, grupo `112:388` del frame «UI INICIO» (`13:1075`) | Título del menú de inicio |
