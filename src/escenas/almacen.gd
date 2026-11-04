@@ -50,6 +50,7 @@ const GUION_DEL_JEFE := preload("res://src/dominio/investigacion/conversacion_co
 
 const ESCENA_DEL_MENU := "res://src/escenas/menu_de_inicio.tscn"
 const PANTALLA_DE_CARGA := preload("res://src/ui/interrupciones/pantalla_de_carga.tscn")
+const PANTALLA_DE_FINAL := preload("res://src/ui/interrupciones/pantalla_de_final.tscn")
 
 
 class PresenciaDeCaja:
@@ -690,7 +691,7 @@ func _seguir_sin_celular(devolucion: DevolucionDelJefe) -> void:
 
 func _al_comenzar_las_instrucciones() -> void:
 	if _partida.terminada():
-		_ir_al_menu.call()
+		_terminar_la_partida()
 	else:
 		anunciar_la_noche()
 
@@ -706,6 +707,9 @@ func _al_despachar_la_devolucion(opcion: DevolucionDelJefe.Opcion) -> void:
 
 func _salir_del_cierre(opcion: DevolucionDelJefe.Opcion) -> void:
 	_pantalla.cerrar()
+	if opcion == DevolucionDelJefe.Opcion.VER_EL_FINAL:
+		_mostrar_el_final()
+		return
 	if opcion == DevolucionDelJefe.Opcion.CONTINUAR:
 		# La noche siguiente espera al celular fuera de pantalla, con el jugador suspendido.
 		_jugador.suspender()
@@ -717,6 +721,23 @@ func _salir_del_cierre(opcion: DevolucionDelJefe.Opcion) -> void:
 		DevolucionDelJefe.Opcion.VOLVER_AL_MENU: _ir_al_menu,
 	}
 	acciones[opcion].call()
+
+
+## La persiana sigue baja: la pantalla de final se dibuja encima, y sólo su botón sale al menú.
+func _mostrar_el_final() -> void:
+	var pantalla: PantallaDeFinal = PANTALLA_DE_FINAL.instantiate()
+	add_child(pantalla)
+	pantalla.volver_al_menu_pedido.connect(func() -> void: _ir_al_menu.call())
+	pantalla.mostrar(FinalConPantalla.de(_partida))
+
+
+## Terminada la partida sin devolución por el celular: con pantalla de final se muestra, y sin ella
+## se vuelve al menú.
+func _terminar_la_partida() -> void:
+	if FinalConPantalla.de(_partida) == FinalConPantalla.Cual.NINGUNO:
+		_ir_al_menu.call()
+	else:
+		_mostrar_el_final()
 
 
 func _preparar_lo_postergado() -> void:

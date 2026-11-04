@@ -508,7 +508,7 @@ func test_abrir_la_jornada_deja_al_jugador_en_el_arranque() -> void:  # AC-PLY-0
 	assert_vector(al_abrir["frente"]).is_equal_approx(-arranque.basis.z, Vector3.ONE * 1e-4)
 
 
-func test_con_el_despido_la_devolucion_vuelve_al_menu_y_no_abre_otra_noche() -> void:  # AC-EMP-016
+func test_con_el_despido_la_devolucion_lleva_a_la_pantalla_de_final() -> void:  # AC-SHF-063
 	var almacen: Node3D = auto_free(load(ESCENA_DEL_ALMACEN).instantiate())
 	# Tres apercibimientos y una noche sin tareas: salta de 3 a 5 sin pisar el 4.
 	almacen.set(
@@ -535,9 +535,17 @@ func test_con_el_despido_la_devolucion_vuelve_al_menu_y_no_abre_otra_noche() -> 
 	assert_bool(pantalla.visible).is_true()
 	AvanceDeDevolucion.entregar(pantalla)
 	var opcion := (almacen.get_node("Interfaz/PantallaDelCelular") as PantallaDelCelular).opcion()
-	assert_str(opcion.text).is_equal("VOLVER AL MENÚ")
+	assert_str(opcion.text).is_equal(
+		PantallaDeDevolucion.TEXTOS[DevolucionDelJefe.Opcion.VER_EL_FINAL]
+	)
 	pantalla.elegir()
 	pantalla.elegir()
+	assert_int(menus[0]).is_zero()
+	var final: PantallaDeFinal = almacen.get_node("PantallaDeFinal")
+	assert_bool(final.visible).is_true()
+	assert_str(final.titulo()).is_equal(PantallaDeFinal.TITULOS[FinalConPantalla.Cual.DESPEDIDO])
+	final.boton().pressed.emit()
+	final.boton().pressed.emit()
 	assert_int(menus[0]).is_equal(1)
 	assert_int(aperturas[0]).is_zero()
 	assert_bool(reloj.corriendo()).is_false()
