@@ -106,7 +106,7 @@ func test_el_bloque_no_concede_pistas_y_trae_sus_dos_glifos() -> void:  # AC-INV
 	bandeja.abrir_jornada(JORNADA_DEL_LECTOR)
 	var bloque := _bloque(bandeja.mensajes_de(YASMIN))
 	assert_array(_identidades(bloque)).is_equal(_guion_esperado().slice(_previos()))
-	for mensaje in bloque.filter(_sin_pista):
+	for mensaje: Mensaje in bloque.filter(_sin_pista):
 		assert_str(mensaje.tramo_de_pista).is_empty()
 		assert_str(mensaje.pista).is_empty()
 		assert_str(mensaje.texto_del_tramo).is_empty()
