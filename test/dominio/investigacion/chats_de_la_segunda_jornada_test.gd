@@ -9,7 +9,10 @@ const TEXTOS: Array[String] = [
 	"el chabon es bastante denso pero ya te vas a acostumbrar",
 	"y te aviso q acá siempre falta algo o anda todo a medias",
 	"para que te vayas acostumbrando también",
-	"p ejemplo el wifi anda medio mal y a veces hay que apagarlo y volverlo a prender para que funcione",
+	(
+		"p ejemplo el wifi anda medio mal y a veces hay que apagarlo y volverlo a prender "
+		+ "para que funcione"
+	),
 	"y hoy parece que se acabo uno de los jabones para la limpieza y no había ningún repuesto",
 	"no le reclames a enrique porque no va a hacer nada y encima se va a irritar",
 	"creo que lo podes reemplazar con un chorrito del producto ese de limpieza que vendemos",
