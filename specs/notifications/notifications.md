@@ -163,7 +163,7 @@ CUANDO el jugador sale de la computadora, el sistema DEBE mostrar el aviso que
 corresponde al estado vigente de la salida, como si el cambio ocurriera en ese instante.
 SI sale con el mismo permiso con que entró, ENTONCES NO DEBE dispararse un nuevo aviso de salida.
 Una habilitación que se pierde antes de salir NO cuenta como avisada. El retiro del aviso
-opuesto que ya no vale NO DEBE esperar. SI el turno cierra con la computadora abierta,
+que ya no vale NO DEBE esperar. SI el turno cierra con la computadora abierta,
 ENTONCES salir de ella NO DEBE mostrar un aviso pendiente.
 
 ## Criterios de aceptación
