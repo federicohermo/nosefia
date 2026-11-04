@@ -101,8 +101,8 @@ func test_reabrir_historial_real_de_jornada_4_conserva_lecturas_y_guion() -> voi
 	var guion := chat.mensajes.duplicate()
 	pantalla.mostrar_chat(chat, mensajes, false, 4)
 	var rotulos := _rotulos(pantalla)
-	assert_str(rotulos[0]).is_equal(PantallaDelCelular.DIAS[3])
-	assert_str(rotulos[-1]).is_equal(PantallaDelCelular.DIAS[0])
+	assert_bool(rotulos[0].begins_with(PantallaDelCelular.DIAS[3])).is_true()
+	assert_bool(rotulos[-1].begins_with(PantallaDelCelular.DIAS[0])).is_true()
 	for _apertura: int in 2:
 		pantalla.mostrar_chat(chat, mensajes, false, 4)
 		assert_array(_rotulos(pantalla)).is_equal(rotulos)
@@ -238,3 +238,44 @@ func test_cabecera_opcion_y_foto_caben_en_ambos_encuadres() -> void:
 		assert_int(scroll.scroll_vertical).is_equal(antes)
 	get_window().size = tamano_anterior
 	get_window().mode = modo_anterior
+
+
+func _con_hora(jornada: int, momento: Mensaje.Momento, hora: String) -> Mensaje:
+	var mensaje := _mensaje(jornada)
+	mensaje.momento = momento
+	mensaje.hora = hora
+	return mensaje
+
+
+func test_el_rotulo_lleva_la_hora_del_primer_mensaje_de_la_tanda() -> void:  # AC-INV-086
+	var pantalla := _pantalla()
+	var mensajes: Array[Mensaje] = [
+		_con_hora(1, Mensaje.Momento.APERTURA, "19:40"),
+		_con_hora(1, Mensaje.Momento.APERTURA, "19:44"),
+		_con_hora(2, Mensaje.Momento.APERTURA, "19:41"),
+	]
+	pantalla.mostrar_chat(_chat(mensajes), mensajes, false, 2)
+	assert_array(_rotulos(pantalla)).is_equal(["AYER\n19:40", "HOY\n19:41"])
+
+
+func test_la_manana_y_la_tarde_de_un_mismo_dia_van_en_tandas_separadas() -> void:  # AC-INV-086
+	var pantalla := _pantalla()
+	var mensajes: Array[Mensaje] = [
+		_con_hora(3, Mensaje.Momento.CIERRE, "8:26"),
+		_con_hora(3, Mensaje.Momento.CIERRE, "8:27"),
+		_con_hora(4, Mensaje.Momento.APERTURA, "17:34"),
+	]
+	pantalla.mostrar_chat(_chat(mensajes), mensajes, false, 4)
+	assert_array(_rotulos(pantalla)).is_equal(["HOY\n8:26", "HOY\n17:34"])
+	assert_int(_burbujas(pantalla).size()).is_equal(3)
+
+
+func test_un_rotulo_sin_hora_y_un_legado_no_inventan_horas() -> void:  # AC-INV-087
+	var pantalla := _pantalla()
+	var mensajes: Array[Mensaje] = [
+		Mensaje.desde_datos("Texto sin fecha"),
+		_con_hora(1, Mensaje.Momento.APERTURA, ""),
+		_con_hora(2, Mensaje.Momento.APERTURA, "19:31"),
+	]
+	pantalla.mostrar_chat(_chat(mensajes), mensajes, false, 2)
+	assert_array(_rotulos(pantalla)).is_equal(["AYER", "HOY\n19:31"])
