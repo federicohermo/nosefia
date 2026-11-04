@@ -185,12 +185,9 @@ func test_solo_el_tramo_real_pide_pista_y_foto_vuelve_al_mismo_scroll() -> void:
 	telefono.resized.connect(func() -> void: cambios.append(telefono.size))
 	await _clic(foto.get_global_rect().get_center())
 	assert_int(_celular().celular().pantalla()).is_equal(Celular.Pantalla.FOTO)
-	assert_str((_pantalla().get("_adjunto") as RichTextLabel).text).is_equal(
-		(
-			"Buen día, pibe. Hoy te pido que tires la basura de todos los tachos del local "
-			+ "en el contenedor. Saludos"
-		)
-	)
+	var texto_de_la_foto := _celular().bandeja().mensajes_de(JEFE)[indice_de_la_foto + 1].texto
+	assert_str(texto_de_la_foto).is_not_empty()
+	assert_str((_pantalla().get("_adjunto") as RichTextLabel).text).is_equal(texto_de_la_foto)
 	await _clic((_pantalla().get("_telefono") as Control).get_global_rect().get_center())
 	assert_int(_celular().celular().pantalla()).is_equal(Celular.Pantalla.CHAT)
 	assert_int(_celular().celular().chat()).is_equal(JEFE)

@@ -54,7 +54,9 @@ func test_la_apertura_cuatro_contiene_foto_y_texto_siguiente() -> void:  # AC-IN
 	bandeja.abrir_jornada(4)
 	var mensajes := bandeja.mensajes_de(JEFE)
 	assert_array(mensajes).is_equal(
-		Conversacion.de(JEFE).mensajes.filter(func(m: Mensaje) -> bool: return m.vale_para([]))
+		Conversacion.de(JEFE).mensajes.filter(
+			func(m: Mensaje) -> bool: return m.jornada <= 4 and m.vale_para([])
+		)
 	)
 	var foto := mensajes.size() - 2
 	assert_str(mensajes[foto].identidad).is_equal("J2_CONTENEDOR_FOTO")
