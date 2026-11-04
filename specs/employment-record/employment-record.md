@@ -122,8 +122,9 @@ jugador. Con la partida en curso, ofrece **sólo continuar**. En las jornadas 3 
 cierre (BR-INV-042) y la entrada de la noche siguiente empieza cuando ésta termina. En las
 demás, el celular baja por el margen inferior y después empieza la entrada de la noche
 siguiente (BR-SHF-019). Salir al menú pasa por la pausa, como en cualquier
-otro momento de la jornada. Con la partida terminada, despedido o contrato cumplido, ofrece sólo
-volver al menú: no hay noche siguiente que abrir. La opción DEBE aparecer debajo del último
+otro momento de la jornada. Con la partida terminada, despedido o contrato cumplido, ofrece una
+sola opción de salida: no hay noche siguiente que abrir. Esa opción lleva a la pantalla de final
+cuando el final la tiene (BR-SHF-027) y vuelve al menú cuando no. La opción DEBE aparecer debajo del último
 mensaje, recién cuando ése está a la vista (BR-EMP-030). Elegirla dos veces NO DEBE abrir dos
 noches ni pedir dos veces el menú.
 
@@ -661,7 +662,8 @@ noche de `AVISO` ENTONCES está despedida.
 ### AC-EMP-016 — La partida terminada no ofrece continuar *(verifica BR-EMP-011)*
 
 DADO una partida que termina al cerrar la noche, despedido o contrato cumplido, CUANDO se arma
-la devolución ENTONCES ofrece una sola opción, volver al menú, y no ofrece continuar. DADO la
+la devolución ENTONCES ofrece una sola opción de salida, que lleva a la pantalla de final si el final la tiene
+(BR-SHF-027) y vuelve al menú si no, y no ofrece continuar. DADO la
 partida en curso CUANDO se arma la devolución ENTONCES ofrece una sola opción, continuar, y no
 ofrece volver al menú.
 

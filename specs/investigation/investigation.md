@@ -602,6 +602,14 @@ usar ese texto como adjunto (BR-INV-025). La apertura de la jornada 5 NO DEBE ll
 mensaje de Enrique. Las jornadas 1 a 4 NO DEBEN mostrar esos mensajes, y retomar una partida en
 la jornada 5 DEBE mostrarlos una sola vez, sin leer (BR-INV-023).
 
+### BR-INV-103 — Sin ninguna pista en toda la partida, el final es «Empleado estresado»
+
+SI la partida termina con el contrato cumplido y el expediente no registró ninguna pista en
+ninguna jornada, ENTONCES el final DEBE ser «Empleado estresado» (final 1) y la devolución DEBE
+llevar a su pantalla (BR-SHF-027). Una sola pista registrada, de cualquier jornada, DEBE bastar para
+que no lo sea. Elegir una hipótesis sin pista, P o L, NO DEBE contar como pista. SI la partida termina
+despedida, ENTONCES el final NO DEBE ser éste, aunque no haya pistas.
+
 ## Criterios de aceptación
 
 ### AC-INV-001 — Examinar revela *(verifica BR-INV-001)*
@@ -1206,6 +1214,18 @@ adjunto. Reabrir el celular, volver al menú y repetir la apertura no duplican l
 DADO cada jornada de la 1 a la 4 CUANDO se recorre Enrique ENTONCES ninguno de los dos
 mensajes de BR-INV-100 está en su chat. DADO una partida retomada en la jornada 5 ENTONCES los
 dos aparecen una sola vez, y el contador de Enrique cuenta sólo los que no leyó.
+
+### AC-INV-127 — Sin ninguna pista, estresado *(verifica BR-INV-103)*
+
+DADO la jornada 7 cerrada con el contrato cumplido y el expediente sin pistas, aunque la hipótesis P
+se haya elegido en las jornadas 4 a 6, ENTONCES el final es «Empleado estresado». DADO el mismo
+cierre con la pista 4A registrada en la jornada 4 y ninguna otra ENTONCES no lo es. DADO el mismo
+cierre con una única pista registrada en la jornada 7 ENTONCES tampoco.
+
+### AC-INV-128 — El despido no es estresado *(verifica BR-INV-103)*
+
+DADO una partida despedida al cerrar la jornada 5 con el expediente sin pistas ENTONCES el final es
+el despido y no «Empleado estresado». DADO una partida en curso sin pistas ENTONCES no hay final.
 
 ## No objetivos
 
