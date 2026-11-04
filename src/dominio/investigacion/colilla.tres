@@ -6,5 +6,5 @@
 script = ExtResource("objeto")
 id = &"colilla"
 nombre = "Colilla de cigarrillo"
-subtitulo = "Una colilla de cigarrillo."
+subtitulo = "Una colilla de cigarrillo. Qué raro…"
 levantable = true

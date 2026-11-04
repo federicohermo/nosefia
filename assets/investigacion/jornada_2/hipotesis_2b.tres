@@ -9,3 +9,4 @@ jornada = 4
 titulo = "CIGARRILLO EN EL DEPÓSITO"
 texto = "¿Puede ser que alguien se esté metiendo sin que nos demos cuenta? Debería examinar bien las formas de ingreso al local…"
 exigencias = PackedStringArray("2B")
+camino = PackedStringArray("5C", "5D")

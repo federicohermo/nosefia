@@ -274,7 +274,7 @@ func _ordenar_en_sus_estanterias(local: Node3D) -> void:
 		await get_tree().physics_frame
 
 
-func test_apoyar_descumplir_sostener_y_examinar_actualizan_ordenar_y_hud() -> void:  # AC-STK-079
+func test_apoyar_descumplir_sostener_y_examinar_actualizan_ordenar() -> void:  # AC-STK-079
 	var local := await _abrir()
 	var reloj: RelojDelTurno = local.get("_reloj")
 	var tarea := reloj.obligatoria(Tarea.Tipo.ORDENAR_LAS_CAJAS)
@@ -284,8 +284,6 @@ func test_apoyar_descumplir_sostener_y_examinar_actualizan_ordenar_y_hud() -> vo
 	assert_bool(tarea.completada()).is_false()
 	await _ordenar_en_sus_estanterias(local)
 	assert_bool(tarea.completada()).is_true()
-	var contador: Label = local.get("_hud").get("_tareas")
-	assert_str(contador.text).is_equal("Tareas 1/5")
 	var caja: Caja = local.get("_cajas_de_productos")[0]
 	var arriba: Caja = caja
 	for candidata: Caja in local.get("_cajas_de_productos"):
@@ -315,25 +313,20 @@ func test_apoyar_descumplir_sostener_y_examinar_actualizan_ordenar_y_hud() -> vo
 		await get_tree().physics_frame
 	assert_bool(_estanteria(_apoyo(local, caja))).is_false()
 	assert_bool(tarea.completada()).is_false()
-	assert_str(contador.text).is_equal("Tareas 0/5")
 	var agarre: Agarre = local.get("_agarre")
 	assert_bool(agarre.pedir_agarrar(caja.datos, caja)).is_true()
 	await get_tree().process_frame
 	assert_bool(tarea.completada()).is_false()
-	assert_str(contador.text).is_equal("Tareas 0/5")
 	assert_bool(local.get("_jugador").examen.iniciar()).is_true()
 	await get_tree().process_frame
 	assert_bool(tarea.completada()).is_false()
-	assert_str(contador.text).is_equal("Tareas 0/5")
 	local.get("_jugador").examen.terminar()
 	agarre.soltar(false)
 	await _ordenar_en_sus_estanterias(local)
 	assert_bool(tarea.completada()).is_true()
-	assert_str(contador.text).is_equal("Tareas 1/5")
 	assert_bool(agarre.pedir_agarrar(caja.datos, caja)).is_true()
 	await get_tree().process_frame
 	assert_bool(tarea.completada()).is_false()
-	assert_str(contador.text).is_equal("Tareas 0/5")
 	RelojDePrueba.avanzar_turno(reloj, Reglas.DURACION_DEL_TURNO)
 	agarre.soltar(false)
 	await _ordenar_en_sus_estanterias(local)
@@ -425,10 +418,8 @@ func _comprobar_rescate(local: Node3D, id: Producto.Id, en_estanteria: bool) -> 
 	)
 
 
-func test_hud_y_nota_siguen_la_jornada_sin_recargar_el_local() -> void:  # AC-SHF-027, AC-PLY-080
+func test_la_nota_sigue_la_jornada_sin_recargar_el_local() -> void:  # AC-PLY-080
 	var local := await _abrir()
-	var contador: Label = local.get("_hud").get("_tareas")
-	assert_str(contador.text).is_equal("Tareas 0/5")
 	var notas: Array = local.get_node("Estructura/NotasDelAlmacen").get("notas")
 	var hoja: Node
 	for nota: Node in notas:
@@ -468,14 +459,3 @@ func test_hud_y_nota_siguen_la_jornada_sin_recargar_el_local() -> void:  # AC-SH
 		assert_str(hoja.get("renglones_del_papel").text).is_equal(
 			NotaEncuadrada.texto_de_renglones(hoja.call("dato"))
 		)
-		assert_str(contador.text).is_equal(
-			"Tareas 0/%d" % Apertura.cantidad_de_obligatorias(jornada)
-		)
-	var declaradas := Apertura.cantidad_de_obligatorias(
-		ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA + 2
-	)
-	assert_str(contador.text).is_equal("Tareas 0/%d" % declaradas)
-	for tarea in partida.obligatorias():
-		local.get("_reloj").completar(tarea)
-	local.get("_reloj").completar(Tarea.new(Tarea.Tipo.ORDENAR_LAS_CAJAS))
-	assert_str(contador.text).is_equal("Tareas %d/%d" % [declaradas, declaradas])

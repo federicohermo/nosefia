@@ -11,26 +11,18 @@ content_margin_right = 13.0
 content_margin_top = 15.0
 content_margin_bottom = 15.0
 
-[node name="Hud" type="CanvasLayer" node_paths=PackedStringArray("_tareas", "_subtitulo", "_controles", "_comprador", "_texto_del_comprador")]
+[node name="Hud" type="CanvasLayer" node_paths=PackedStringArray("_subtitulo", "_controles", "_comprador", "_texto_del_comprador")]
 script = ExtResource("1_hud")
-_tareas = NodePath("Tareas")
 _subtitulo = NodePath("Subtitulo")
 _controles = NodePath("Controles")
 _comprador = NodePath("Comprador")
 _texto_del_comprador = NodePath("Comprador/Texto")
 
-[node name="Tareas" type="Label" parent="."]
-offset_left = 24.0
-offset_top = 16.0
-offset_right = 424.0
-offset_bottom = 48.0
-theme_override_font_sizes/font_size = 22
-
 [node name="Controles" type="Label" parent="."]
 offset_left = 24.0
-offset_top = 56.0
+offset_top = 16.0
 offset_right = 624.0
-offset_bottom = 256.0
+offset_bottom = 216.0
 mouse_filter = 2
 theme_override_font_sizes/font_size = 18
 
@@ -45,11 +37,12 @@ grow_vertical = 2
 mouse_filter = 2
 
 [node name="Subtitulo" type="Label" parent="."]
-anchor_left = 0.25
 anchor_top = 1.0
-anchor_right = 0.75
+anchor_right = 1.0
 anchor_bottom = 1.0
+offset_left = 48.0
 offset_top = -160.0
+offset_right = -48.0
 offset_bottom = -48.0
 grow_horizontal = 2
 grow_vertical = 0

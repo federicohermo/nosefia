@@ -95,18 +95,8 @@ func _comprobar_planilla_en_cero(almacen: Node3D) -> void:
 
 # AC-STK-024
 func _comprobar_ninguna_cumplida_al_abrir(almacen: Node3D) -> void:
-	var reloj: RelojDelTurno = almacen.get("_reloj")
 	for tarea: Tarea in (almacen.get("_partida") as Partida).obligatorias():
 		assert_bool(tarea.completada()).is_false()
-	var contador: Label = almacen.get("_hud").get("_tareas")
-	assert_str(contador.text).is_equal(
-		(
-			Hud.TEXTO_DE_LAS_TAREAS
-			% Marcador.tareas(
-				0, Apertura.cantidad_de_obligatorias((almacen.get("_partida") as Partida).jornada())
-			)
-		)
-	)
 
 
 # AC-CLN-060
@@ -251,17 +241,13 @@ func _registrar(almacen: Node3D) -> void:
 		for unidad in atender.vendidas_de(productos[indice]):
 			_boton_de_la_fila(filas, indice, 6).pressed.emit()
 	assert_bool(tarea.completada()).is_true()
-	var contador: Label = almacen.get("_hud").get("_tareas")
-	var con_registrar := contador.text
 	# Una unidad de más la descumple, y sacarla la vuelve a cumplir.
 	_boton_de_la_fila(filas, 0, 6).pressed.emit()
 	assert_bool(tarea.completada()).is_false()
-	assert_str(contador.text).is_not_equal(con_registrar)
 	_boton_de_la_fila(filas, 0, 4).pressed.emit()
 	await get_tree().process_frame
 	assert_bool(reloj.corriendo()).is_true()
 	assert_bool(tarea.completada()).is_true()
-	assert_str(contador.text).is_equal(con_registrar)
 	escritorio.call("cerrar")
 
 
