@@ -193,8 +193,10 @@ func _ready() -> void:
 	_caja.lectura_rechazada.connect(avisos.avisar_lectura_rechazada)
 	_investigador.pista_nueva.connect(avisos.avisar_pista.unbind(1))
 	_investigador.pista_nueva.connect(
-		func(_pista: Pista) -> void:
-			_pensar_gesto(_gestos.al_anotar_una_pista(_partida, _celular.celular().abierto()))
+		func(pista: Pista) -> void:
+			_pensar_gesto(
+				_gestos.al_anotar_una_pista(_partida, _celular.celular().abierto(), pista.canal)
+			)
 	)
 	_computadora.computadora_abierta.connect(avisos.actualizar_computadora.bind(true))
 	_computadora.computadora_cerrada.connect(avisos.actualizar_computadora.bind(false))
@@ -257,6 +259,7 @@ func _ready() -> void:
 				_atenciones,
 				_computadora,
 				_celular,
+				_investigador,
 				_caja,
 				_programa_de_tickets,
 				_limpiador,
@@ -1121,6 +1124,10 @@ func _cablear_el_celular() -> void:
 	_celular.foto_ampliada.connect(_pantalla_del_celular.ampliar)
 	_celular.foto_cerrada.connect(_pantalla_del_celular.cerrar_foto)
 	_celular.mensaje_recibido.connect(_al_recibir_en_el_celular)
+	_celular.nota_recibida.connect(
+		func(mensaje: Mensaje) -> void:
+			_al_recibir_en_el_celular(Conversacion.Interlocutor.NOTAS, mensaje)
+	)
 	_pantalla_del_celular.chat_pedido.connect(_celular.pedir_chat)
 	_pantalla_del_celular.volver_pedido.connect(_celular.pedir_volver)
 	_pantalla_del_celular.foto_pedida.connect(_celular.pedir_foto)
@@ -1173,9 +1180,7 @@ func _al_recibir_en_el_celular(quien: Conversacion.Interlocutor, mensaje: Mensaj
 
 
 func _cablear_la_investigacion() -> void:
-	_investigador.nota_agregada.connect(
-		func(mensaje: Mensaje) -> void: _celular.recibir(Conversacion.Interlocutor.NOTAS, mensaje)
-	)
+	_investigador.nota_agregada.connect(_celular.recibir_nota)
 	_investigador.usar(_partida.expediente)
 	_celular.tramo_de_pista_pedido.connect(_al_pedir_pista_del_chat)
 	_agarre.objeto_agarrado.connect(_al_agarrar_una_pista)
