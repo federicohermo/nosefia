@@ -3,7 +3,7 @@ schema_version: 1
 capability_id: CAP-INV
 status: draft
 owner: por definir
-provenance: GDD «Investigación» y «La computadora»; ficha «Interfaces virtuales durante la jornada» y decisiones de #373, #375 y #376; migración de los specs 006, 009, 018; fichas Chat con el jefe, Chat con compañera y 2A revisadas el 2026-10-15; decisiones de #430; «Sistema de investigación», fichas 2A/2B/2P y decisiones de #22 del 2026-10-15; decisión del usuario del 2026-10-18 de usar la captura del mensaje de Yasmín como foto de 2A; decisión del usuario del 2026-10-17 de retirar las notas de la computadora y usar el diseño del registro de productos; ficha «Pantalla entre jornadas», reflexión de jornada 1, encabezado de jornada 2 y decisiones de #436; decisiones del usuario del 2026-10-18 sobre el recorrido lateral, la elección sin límite de tiempo, la reanudación del cierre y la espera de 1 segundo; ocho jornadas de #526; instrucciones por jornada de #527; la colilla sólo en su jornada, de #536; ficha Chat con compañera, jornada 5, de #458; ficha «Caminos narrativos y finales» y cuadro de pistas e hipótesis de #766 y la ficha «5B» de la lista de pistas e hipótesis y decisiones del usuario del 2026-10-30 sobre su foto y su texto, de #731
+provenance: GDD «Investigación» y «La computadora»; ficha «Interfaces virtuales durante la jornada» y decisiones de #373, #375 y #376; migración de los specs 006, 009, 018; fichas Chat con el jefe, Chat con compañera y 2A revisadas el 2026-10-15; decisiones de #430; «Sistema de investigación», fichas 2A/2B/2P y decisiones de #22 del 2026-10-15; decisión del usuario del 2026-10-18 de usar la captura del mensaje de Yasmín como foto de 2A; decisión del usuario del 2026-10-17 de retirar las notas de la computadora y usar el diseño del registro de productos; ficha «Pantalla entre jornadas», reflexión de jornada 1, encabezado de jornada 2 y decisiones de #436; decisiones del usuario del 2026-10-18 sobre el recorrido lateral, la elección sin límite de tiempo, la reanudación del cierre y la espera de 1 segundo; ocho jornadas de #526; instrucciones por jornada de #527; la colilla sólo en su jornada, de #536; ficha Chat con compañera, jornada 5, de #458; ficha «Caminos narrativos y finales» y cuadro de pistas e hipótesis de #766 y la ficha «5B» de la lista de pistas e hipótesis y decisiones del usuario del 2026-10-30 sobre su foto y su texto, de #731; la fila «6C» de la lista de pistas e hipótesis, la ficha «Caminos narrativos y finales» y decisiones del usuario del 2026-11-03 sobre Yasmín y la textura de la nota, de #741
 ---
 
 # Capacidad: la investigación
@@ -590,6 +590,48 @@ artista, sin redibujar, y NO DEBE ser la captura de un mensaje. Por decisión de
 espacio; el mismo criterio vale para el «que que» de la ficha en el texto de la pista. Las pistas
 y las hipótesis 2A, 2B y 2P NO DEBEN cambiar.
 
+### BR-INV-070 — El contenido de 6C procede de su ficha
+
+CUANDO se registra 6C con la jornada 6 abierta y el canal de levantar, el sistema DEBE contestar
+ANOTADA y agregar al chat de notas primero su foto y después su texto (BR-INV-040). La pista 6C
+DEBE ser de la jornada 6, del canal de levantar y del camino de la hipótesis 5B (BR-INV-049,
+BR-INV-050): está activa si la 5B se eligió en la jornada 5, o si la jornada 5 terminó sin pistas
+y el sorteo de BR-INV-051 cayó en 5B. La hipótesis 6C DEBE estar disponible al cierre de la
+jornada 6 si y sólo si 6C está registrada. Los datos DEBEN ser, según la fila «6C» de la lista de
+pistas e hipótesis:
+
+| Identidad | Foto de pista | Texto de pista | Título de hipótesis |
+|---|---|---|---|
+| 6C | la nota examinada | Encontré un papel asomando por la puerta de la oficina de Enrique. Parece ser una nota que le dejó Yasmín. | NOTA BAJO LA PUERTA |
+
+El texto de la hipótesis 6C DEBE ser: «Me siento mal por haber dudado de Yasmín. Está claro que los
+dos somos víctimas de la ineptitud de nuestro jefe y que, sin nuestro trabajo, la estación se
+caería a pedazos. ¿Qué otras cosas estará descuidando Enrique? Seguramente encuentre más
+información si consigo acceder a su oficina.»
+
+Por decisión del usuario del 2026-11-03, donde la ficha dice «Jazmín» DEBE decir «Yasmín», en el
+texto de la pista y en la firma de la nota, y la errata «conisgo» DEBE quedar «consigo». La
+hipótesis 5B suma el camino de 6C y 6D (BR-INV-049), y la jornada 5 sortea la siguiente
+(BR-INV-051). Las pistas y las hipótesis 2A, 2B, 2P y 5B, y la colilla, NO DEBEN cambiar.
+
+### BR-INV-071 — La nota asoma bajo la puerta de la oficina de Enrique
+
+La jornada 6 DEBE tener, en el piso, asomando por debajo de la puerta de la oficina de Enrique, una
+nota levantable con identidad propia, independiente de los productos vendibles, y distinguible
+como un papel manuscrito. Examinada, DEBE poder leerse su texto: «Hola, Enrique. Te dejo esto por
+escrito porque no me estás contestando los mensajes. En serio, hace falta revisar si hay un cable
+pelado en el local o algo, porque se sigue cortando la luz. Por favor, respondé. Saludos,
+Yasmín.» CUANDO se acepta levantarla, el sistema DEBE registrar 6C y avisar la pista nueva, como
+con la colilla (BR-INV-038). Mirarla, mostrar su subtítulo con E y manos vacías, un agarre
+rechazado o durante pausa NO DEBEN anotarla. Soltarla y volver a levantarla NO DEBE duplicar la
+pista ni sus notas.
+
+La nota DEBE estar en el local sólo CUANDO 6C está activa en la jornada abierta (BR-INV-050). En
+cualquier otro caso —otra jornada, otra elección o ninguna— NO DEBE verse, NO DEBE ser enfocada
+por la mira ni poder levantarse. Una partida guardada en la jornada 6 DEBE conservarla según las
+elecciones guardadas. La nota en la mano al abrir la jornada siguiente DEBE salir de la mano y del
+local, como la colilla.
+
 ## Criterios de aceptación
 
 ### AC-INV-001 — Examinar revela *(verifica BR-INV-001)*
@@ -1171,6 +1213,62 @@ DADO el caso de la partida CUANDO se consultan las hipótesis de la jornada 5 co
 ENTONCES devuelve exactamente la hipótesis 5B; con el expediente vacío o con sólo 2A devuelve
 ninguna. DADO la jornada 4 CUANDO se consultan las hipótesis con 5B registrada ENTONCES las cuatro
 combinaciones de BR-INV-039 no cambian.
+
+### AC-INV-120 — La nota está sólo si 6C está activa *(verifica BR-INV-071, BR-INV-050)*
+
+DADO el caso de la partida CUANDO se consulta si la nota está en el local ENTONCES contesta que
+sí sólo en la jornada 6 y sólo con 6C entre las pistas activas: con 2A elegida en la jornada 4 y
+5B elegida en la 5; o con 2A elegida en la 4, la 5 sin pistas y el sorteo caído en 5B. Contesta
+que no en las demás jornadas con esas mismas elecciones; con 2B elegida en la 4; con 2A elegida en
+la 4 y la 5 sin pistas ni sorteo; con 2A elegida en la 4 y ninguna elección en la 5; con ninguna
+elección en la 4 ni en la 5; y con un caso de prueba donde la 5 eligió una hipótesis que abre otro
+camino. Los objetos que no levantan una pista siguen en el local.
+
+### AC-INV-121 — Fuera de su condición la nota no se ve ni se levanta *(verifica BR-INV-071)*
+
+DADO una partida que eligió 2A en la 4 y 5B en la 5 CUANDO se abre la jornada 6 ENTONCES la nota
+es visible, la mira la enfoca y se puede levantar. CUANDO se abre cualquier otra jornada, o la
+jornada 6 con otra elección, ENTONCES la nota no es visible, no tiene colisión, la mira no la
+enfoca ni la mano la sostiene. CUANDO se la deja en la mano y se abre la jornada 7 ENTONCES sale de
+la mano y del contenedor y no está en el local.
+
+### AC-INV-122 — Levantar la nota registra 6C una vez *(verifica BR-INV-070, BR-INV-071, BR-INV-032, BR-INV-040, BR-INV-037)*
+
+DADO la jornada 6 abierta con 6C activa CUANDO se levanta la nota ENTONCES contesta ANOTADA, el
+expediente suma 6C, se publica una pista nueva de la jornada 6 con su foto y su texto, y el chat de
+notas recibe primero la foto y después el texto. CUANDO se la suelta y se la vuelve a levantar
+ENTONCES contesta REPETIDA y no agrega mensajes ni publica otra pista. CUANDO se la mira, se la
+examina con las manos vacías, se rechaza el agarre o hay pausa ENTONCES el expediente queda
+intacto. CUANDO se registra 6C por el canal de levantar en otra jornada, o por otro canal en la
+6, ENTONCES contesta DESCONOCIDA y el expediente queda intacto.
+
+### AC-INV-123 — El contenido de 6C es el de su ficha *(verifica BR-INV-070)*
+
+DADO el caso de la partida CUANDO se consulta 6C ENTONCES su pista es de la jornada 6, del canal de
+levantar y de la nota; su texto de pista nombra a Yasmín y no a Jazmín; su título de hipótesis es
+«NOTA BAJO LA PUERTA»; su texto de hipótesis nombra a Yasmín, dice «consigo» y no «conisgo»; y
+su foto es una imagen distinta de la de 2A, 2B y 5B. Las identidades 2A, 2B, 2P y 5B conservan sus
+datos, y 5B suma el camino de 6C y 6D.
+
+### AC-INV-124 — La hipótesis 6C depende de la pista 6C *(verifica BR-INV-070, BR-INV-039)*
+
+DADO el caso de la partida CUANDO se consultan las hipótesis de la jornada 6 con 6C registrada
+ENTONCES devuelve exactamente la hipótesis 6C; con el expediente vacío o con sólo 2A y 5B devuelve
+ninguna. DADO las jornadas 4 y 5 CUANDO se consultan las hipótesis ENTONCES las combinaciones de
+BR-INV-039 y BR-INV-061 no cambian.
+
+### AC-INV-125 — Con 2A y sin pistas en la 5, el sorteo cae en 5B y activa 6C *(verifica BR-INV-051, BR-INV-070)*
+
+DADO el caso de la partida con 2A elegida en la jornada 4 y ninguna pista encontrada en la 5
+CUANDO se sortea el camino de la 6, con cualquier semilla, ENTONCES las pistas activas de la 6
+incluyen 6C y el sorteo guardado es 5B. CUANDO se repite el pedido ENTONCES el sorteo no cambia.
+DADO la 5 con 5B encontrada y elegida ENTONCES no se sortea y 6C está activa.
+
+### AC-INV-126 — La nota es un papel manuscrito propio *(verifica BR-INV-071)*
+
+DADO la nota del local ENTONCES su identidad no es la de ningún producto ni la de la colilla, es
+levantable, tiene subtítulo, se dibuja con una textura de papel distinta de la de las cajas, y su
+texto es legible al examinarla.
 
 ## No objetivos
 
