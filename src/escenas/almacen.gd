@@ -194,8 +194,10 @@ func _ready() -> void:
 	_caja.lectura_rechazada.connect(avisos.avisar_lectura_rechazada)
 	_investigador.pista_nueva.connect(avisos.avisar_pista.unbind(1))
 	_investigador.pista_nueva.connect(
-		func(_pista: Pista) -> void:
-			_pensar_gesto(_gestos.al_anotar_una_pista(_partida, _celular.celular().abierto()))
+		func(pista: Pista) -> void:
+			_pensar_gesto(
+				_gestos.al_anotar_una_pista(_partida, _celular.celular().abierto(), pista.canal)
+			)
 	)
 	_computadora.computadora_abierta.connect(avisos.actualizar_computadora.bind(true))
 	_computadora.computadora_cerrada.connect(avisos.actualizar_computadora.bind(false))

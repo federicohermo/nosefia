@@ -1,0 +1,10 @@
+[gd_resource type="Resource" script_class="Hipotesis" format=3]
+
+[ext_resource type="Script" path="res://src/dominio/investigacion/hipotesis.gd" id="hipotesis"]
+
+[resource]
+script = ExtResource("hipotesis")
+identidad = "5P"
+jornada = 5
+titulo = "NO HAY PROBLEMA"
+texto = "Está claro que ese aparato estaba viejito y había que jubilarlo. Me tendré que adaptar a trabajar sin él hasta que Enrique consiga otro."
