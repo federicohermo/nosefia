@@ -81,6 +81,18 @@ func test_la_burbuja_se_ajusta_al_texto_hasta_un_maximo() -> void:
 	assert_float(burbujas[2].get_combined_minimum_size().x).is_equal(larga)
 
 
+func test_el_texto_del_mensaje_se_dibuja_mas_grande_que_su_hora() -> void:
+	var pantalla := _pantalla()
+	var mensajes: Array[Mensaje] = [_mensaje("Hola", "17:34")]
+	pantalla.mostrar_chat(_chat(Conversacion.Interlocutor.JEFE, mensajes), mensajes, false, 2)
+	var texto: RichTextLabel = (
+		_burbujas(pantalla)[0].find_children("*", "RichTextLabel", true, false)[0]
+	)
+	var tamano: int = texto.get_theme_font_size("normal_font_size")
+	assert_int(tamano).is_equal(PantallaDelCelular.TAMANO_DEL_TEXTO)
+	assert_int(tamano).is_greater(PantallaDelCelular.TAMANO_DE_LA_HORA)
+
+
 func test_el_campo_sigue_sin_poder_escribirse_y_lleva_la_flecha() -> void:
 	var pantalla := _pantalla()
 	var entrada: LineEdit = pantalla.get("_entrada")
