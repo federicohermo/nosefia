@@ -18,6 +18,16 @@ const SEGUNDOS_ENTRE_MENSAJES := 1.0
 ## Con la persiana ya baja y antes de que el celular suba.
 const SEGUNDOS_DE_ESPERA_DEL_CELULAR := 0.5
 
+## El minuto del día en que sale el primer mensaje de la devolución de cada jornada, según la
+## ficha del jefe. Cada mensaje siguiente suma un minuto.
+const PRIMER_MINUTO: Dictionary[int, int] = {
+	3: 8 * Marcador.MINUTOS_POR_HORA + 26,
+	4: 8 * Marcador.MINUTOS_POR_HORA + 38,
+	5: 9 * Marcador.MINUTOS_POR_HORA + 5,
+	6: 8 * Marcador.MINUTOS_POR_HORA + 42,
+	7: 9 * Marcador.MINUTOS_POR_HORA + 11,
+}
+
 ## Cuántos medios hay en un punto de la tabla.
 const MEDIOS_POR_PUNTO := Reglas.MEDIOS_POR_APERCIBIMIENTO
 
@@ -401,7 +411,16 @@ static func mensaje(texto: String, jornada: int = 0, orden: int = 0) -> Mensaje:
 	nuevo.momento = Mensaje.Momento.CIERRE if jornada > 0 else Mensaje.Momento.SIN_FECHA
 	if jornada > 0:
 		nuevo.identidad = "DEVOLUCION_J%d_%d" % [jornada, orden]
+		nuevo.hora = _hora_de_la_devolucion(jornada, orden)
 	return nuevo
+
+
+@warning_ignore("integer_division")
+static func _hora_de_la_devolucion(jornada: int, orden: int) -> String:
+	if not PRIMER_MINUTO.has(jornada):
+		return ""
+	var minuto := PRIMER_MINUTO[jornada] + orden
+	return "%d:%02d" % [minuto / Marcador.MINUTOS_POR_HORA, minuto % Marcador.MINUTOS_POR_HORA]
 
 
 func mensajes_fechados() -> Array[Mensaje]:

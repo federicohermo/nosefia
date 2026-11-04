@@ -202,10 +202,12 @@ static func desde(datos: Dictionary) -> Partida:
 
 func _restaurar_la_investigacion(saneado: Dictionary) -> void:
 	var notas := PackedStringArray()
+	var horas: Dictionary[String, String] = {}
 	for dato: Variant in saneado[PartidaSerializada.clave(PartidaSerializada.Campo.NOTAS)]:
 		var nota := Mensaje.desde_datos(dato)
 		if nota != null:
 			notas.append(nota.identidad)
+			horas[nota.identidad] = nota.hora
 	ReflexionDeCierre.restaurar_notas(_expediente, notas)
 	var identidades := PackedStringArray()
 	for dato: Variant in saneado[PartidaSerializada.clave(PartidaSerializada.Campo.EXPEDIENTE)]:
@@ -214,6 +216,7 @@ func _restaurar_la_investigacion(saneado: Dictionary) -> void:
 	_expediente.restaurar(
 		identidades, saneado[PartidaSerializada.clave(PartidaSerializada.Campo.ELECCIONES)]
 	)
+	_expediente.fijar_horas(horas)
 	var pendiente: int = saneado[PartidaSerializada.clave(
 		PartidaSerializada.Campo.CIERRE_PENDIENTE
 	)]
@@ -359,7 +362,9 @@ func abrir_la_jornada() -> Turno:
 ##
 ## Los clientes mal atendidos los cuenta la ventanilla y entran por parámetro: la partida no
 ## sabe cuántos vinieron. Sólo pesan en la prueba, donde cada uno suma como una falla.
-func cerrar_la_jornada(cumplidas: int, clientes_mal_atendidos: int = 0) -> void:
+func cerrar_la_jornada(
+	cumplidas: int, clientes_mal_atendidos: int = 0, hora_del_cierre: String = ""
+) -> void:
 	if not _jornada_abierta:
 		return
 	_jornada_abierta = false
@@ -390,7 +395,9 @@ func cerrar_la_jornada(cumplidas: int, clientes_mal_atendidos: int = 0) -> void:
 		if cerrada == _ULTIMA_DE_LA_PRUEBA:
 			_legajo.empezar_las_jornadas_completas()
 		_jornada += 1
-	_reflexion = null if terminada() else ReflexionDeCierre.para(cerrada, _expediente)
+	_reflexion = (
+		null if terminada() else ReflexionDeCierre.para(cerrada, _expediente, hora_del_cierre)
+	)
 	# Después de anotar la noche: la devolución lee las cuentas que ya la incluyen.
 	_devoluciones.append_array(DevolucionDelJefe.new(cerrada, self).mensajes_fechados())
 
