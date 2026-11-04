@@ -39,6 +39,9 @@ const MASCARA_DEL_AVATAR := preload("res://assets/ui/manada/celular/avatar.tres"
 const AVATAR_ENRIQUE := preload("res://assets/ui/manada/celular/enrique.png")
 const AVATAR_ENRIQUE_MENU := preload("res://assets/ui/manada/celular/enrique_menu.png")
 const SIMBOLOS_DE_CHAT := preload("res://assets/ui/manada/celular/simbolos_de_chat.ttf")
+const ICONO_SIN_WIFI := preload("res://assets/ui/manada/celular/wifi_sin_conexion.svg")
+## El lugar del ícono de wifi en la barra de estado: lo que mide el dibujo de la ficha de diseño.
+const TAMANO_DEL_ICONO_DE_WIFI := Vector2(28.0, 24.0)
 const RETRATO_ENRIQUE := "res://assets/ui/manada/enrique.png"
 const BUSCAR := "Buscar contacto..."
 const ROJO := Color("cc0d08")
@@ -92,6 +95,7 @@ var _historial: Array[Mensaje] = []
 var _burbujas: Array[PanelContainer] = []
 var _recordatorio_pedido: bool = false
 var _recordatorio_cubierto: bool = false
+var _sin_wifi: TextureRect
 var _arrastrando: bool = false
 var _posicion_del_arrastre: float = 0.0
 var _desplazamiento_del_arrastre: float = 0.0
@@ -121,6 +125,7 @@ func _ready() -> void:
 	_entrada.placeholder_text = MENSAJE
 	_agregar_la_flecha_del_campo()
 	_agregar_la_funda()
+	_agregar_la_barra_de_estado()
 	_ayuda.text = AYUDA
 	_scroll.gui_input.connect(_al_tocar_el_historial)
 	_scroll.get_v_scroll_bar().changed.connect(_actualizar_desplazamiento)
@@ -308,6 +313,11 @@ func ampliar(foto: Mensaje, adjunto: Mensaje) -> void:
 func cerrar_foto() -> void:
 	_foto_ampliada.hide()
 	_actualizar_desplazamiento()
+
+
+## El ícono de sin conexión se ve mientras no hay wifi.
+func mostrar_el_wifi(hay_wifi: bool) -> void:
+	_sin_wifi.visible = not hay_wifi
 
 
 func mostrar_recordatorio(se_ve: bool) -> void:
@@ -667,6 +677,28 @@ func _agregar_la_funda() -> void:
 	funda.add_theme_stylebox_override("panel", estilo)
 	_telefono.add_child(funda)
 	_telefono.move_child(funda, 0)
+
+
+## La barra de estado ocupa la fila de arriba del teléfono, a la derecha. Hoy sólo guarda el ícono
+## de sin conexión, que aparece cuando el router no da wifi; con wifi la fila queda vacía.
+func _agregar_la_barra_de_estado() -> void:
+	var barra := HBoxContainer.new()
+	barra.name = "BarraDeEstado"
+	barra.alignment = BoxContainer.ALIGNMENT_END
+	barra.custom_minimum_size = Vector2(0.0, TAMANO_DEL_ICONO_DE_WIFI.y)
+	barra.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_sin_wifi = TextureRect.new()
+	_sin_wifi.name = "SinWifi"
+	_sin_wifi.texture = ICONO_SIN_WIFI
+	_sin_wifi.custom_minimum_size = TAMANO_DEL_ICONO_DE_WIFI
+	_sin_wifi.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	_sin_wifi.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	_sin_wifi.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_sin_wifi.visible = false
+	barra.add_child(_sin_wifi)
+	var contenido := _cabecera.get_parent()
+	contenido.add_child(barra)
+	contenido.move_child(barra, 0)
 
 
 func _ordenar_el_historial() -> void:

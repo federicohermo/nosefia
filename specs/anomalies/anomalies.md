@@ -150,8 +150,9 @@ NO DEBE escribir ni cargar guardado alguno.
 ### BR-ANO-019 — El ícono de wifi del celular sigue al wifi
 
 MIENTRAS no hay wifi —router sin energía, apagado o descompuesto—, el ícono de wifi de la barra
-de estado del celular DEBE ser el de sin conexión: tachado y en rojo. CUANDO vuelve el wifi, el
-ícono DEBE volver al de conectado. El ícono NO DEBE cambiar ni el chat ni el reloj del celular.
+de estado del celular DEBE ser el de sin conexión: tachado y en rojo. CUANDO hay wifi, la barra
+NO DEBE mostrar ese ícono, y CUANDO vuelve el wifi, DEBE quitarlo. El ícono NO DEBE cambiar ni el
+chat ni el reloj del celular.
 
 ## Criterios de aceptación
 
@@ -294,9 +295,9 @@ jornada 7 después de una noche 6 sin wifi deja el router con wifi.
 ### AC-ANO-025 — El ícono del celular sigue al wifi *(verifica BR-ANO-019)*
 
 DADO el router sin energía, apagado o descompuesto CUANDO se mira la barra de estado del celular
-ENTONCES el ícono de wifi es el de sin conexión. DADO el router con wifi ENTONCES es el de
-conectado, también en las jornadas 1 a 5 y 7. CUANDO el router vuelve a tener wifi ENTONCES el
-ícono vuelve al de conectado sin abrir ni cerrar el celular.
+ENTONCES el ícono de wifi es el de sin conexión. DADO el router con wifi ENTONCES la barra no
+muestra el de sin conexión, también en las jornadas 1 a 5 y 7. CUANDO el router vuelve a tener
+wifi ENTONCES el ícono de sin conexión se quita sin abrir ni cerrar el celular.
 
 ## No objetivos
 

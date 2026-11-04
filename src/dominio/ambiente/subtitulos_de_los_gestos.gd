@@ -25,6 +25,8 @@ enum Id {
 	PUERTA_CON_TAREAS_PENDIENTES,
 	PRIMERA_PISTA,
 	SIN_LUZ,
+	ROUTER_ANTES_DEL_CORTE,
+	ROUTER_YA_RESTAURADO,
 }
 
 ## No declara `class_name`: se preloadea para preguntarle qué se tira sin llamado.
@@ -46,6 +48,9 @@ const TEXTOS: Dictionary[Id, String] = {
 	Id.PUERTA_CON_TAREAS_PENDIENTES: "No debería irme.\nTodavía me quedan tareas por completar.",
 	Id.PRIMERA_PISTA: "Encontré una pista. ¡Qué extraño! Me parece que está pasando algo.",
 	Id.SIN_LUZ: "Se cortó la luz…\nNingún aparato eléctrico funciona.",
+	Id.ROUTER_ANTES_DEL_CORTE:
+	"Mejor no me pongo a jugar con el router.\nYa veo que empieza a andar mal.",
+	Id.ROUTER_YA_RESTAURADO: "Mejor no vuelvo a tocar el router.\nNo sea que falle de nuevo.",
 }
 const DE_LAS_MANCHAS: Dictionary[PisoDelLocal.Lugar, Id] = {
 	PisoDelLocal.Lugar.PARED_DEL_OTRO_INODORO: Id.PARED_DEL_OTRO_INODORO,
@@ -118,6 +123,18 @@ static func al_usar_la_entrada(
 	):
 		return Id.PUERTA_CON_TAREAS_PENDIENTES
 	return Id.NINGUNO
+
+
+## El clic sobre el router. Con el corte cortado piensa lo mismo que los demás aparatos; sin
+## cortar, que no lo toque; y con el wifi ya devuelto, que no lo vuelva a tocar. Descompuesto o
+## apagado, con la luz de vuelta, el clic lo apaga o lo prende y no piensa nada.
+static func al_usar_el_router(corte: AnomaliasDeLaJornada.Corte, wifi: WifiDelLocal.Estado) -> Id:
+	match corte:
+		AnomaliasDeLaJornada.Corte.CORTADO:
+			return Id.SIN_LUZ
+		AnomaliasDeLaJornada.Corte.SIN_CORTE:
+			return Id.ROUTER_ANTES_DEL_CORTE
+	return Id.ROUTER_YA_RESTAURADO if wifi == WifiDelLocal.Estado.CON_WIFI else Id.NINGUNO
 
 
 static func texto(id: Id) -> String:
