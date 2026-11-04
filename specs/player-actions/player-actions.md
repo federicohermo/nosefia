@@ -323,9 +323,7 @@ MIENTRAS una tarea de la jornada está cumplida, su renglón en «TAREAS A REALI
 tachada toda la oración, número y nombre, con una línea roja, en la hoja pegada y en su lectura.
 El tachado DEBE aparecer en el momento en que la tarea se cumple, también con la lectura abierta,
 y DEBE irse si la tarea vuelve a quedar sin cumplir. Las tareas sin cumplir NO DEBEN llevar
-tachado, y el orden, los nombres y la numeración de los renglones NO DEBEN cambiar. La lista, con
-sus tachados, DEBE quedar corrida hacia el centro del papel sin que el renglón más largo se
-salga ni se corte.
+tachado, y el orden, los nombres y la numeración de los renglones NO DEBEN cambiar.
 
 La nota de tareas DEBE enumerar sólo las obligatorias que declara la jornada, en el orden
 atención al cliente, registro de productos vendidos, limpieza, reposición y, al final, la
@@ -1583,9 +1581,7 @@ va tachado. CUANDO se cumple limpieza ENTONCES «1. Limpieza» lleva una línea 
 oración, y «2. Tirar la basura» no lleva ninguna, en la hoja y en la lectura, aunque la lectura
 esté abierta. CUANDO limpieza vuelve a quedar sin cumplir ENTONCES el tachado se va de las dos.
 DADO una jornada que abre con una tarea ya cumplida, ENTONCES su renglón arranca tachado. El
-orden, los nombres y la numeración son los mismos con y sin tachado. DADO todas las obligatorias
-de la primera jornada completa, ENTONCES en la lectura el renglón más largo entra entero en el
-papel, sin partirse.
+orden, los nombres y la numeración son los mismos con y sin tachado.
 
 ## No objetivos
 

@@ -4,9 +4,6 @@ extends CanvasLayer
 
 ## El tono del tachado de las tareas cumplidas. Las dos notas lo toman de acá.
 const COLOR_DEL_TACHADO := Color(0.8, 0.05, 0.03)
-## Cuánto se corre la lista de tareas hacia el centro del papel, en renglones. Los tachados
-## van con ella.
-const CORRIMIENTO_DE_LA_LISTA := 0.3
 ## El grosor del tachado y la altura de su línea dentro del renglón, en renglones.
 const GROSOR_DEL_TACHADO := 0.06
 const ALTURA_DEL_TACHADO := 0.55
@@ -22,11 +19,9 @@ const ALTURA_DEL_TACHADO := 0.55
 
 var _tachados: Array[ColorRect] = []
 var _filas_tachadas: Array[int] = []
-var _x_de_los_renglones: float
 
 
 func _ready() -> void:
-	_x_de_los_renglones = _renglones.position.x
 	_salida.text = LienzoDeManada.TEXTO_DE_SALIDA
 	get_viewport().size_changed.connect(_ajustar)
 	_ajustar()
@@ -45,9 +40,6 @@ func mostrar(nota: NotaPegada, imagen: Texture2D) -> void:
 		_grafica_de_tareas.visible = es_tareas
 		_grafica_de_orden.visible = not es_tareas
 		_renglones.position.y = 200.0 if es_tareas else 260.0
-		_renglones.position.x = _x_de_los_renglones
-		if es_tareas:
-			_renglones.position.x += CORRIMIENTO_DE_LA_LISTA * _renglones.get_line_height()
 	_pintar_tachados(nota)
 	visible = true
 

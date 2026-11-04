@@ -37,8 +37,7 @@ func tachados_visibles() -> Array[Sprite3D]:
 	return _tachados.duplicate()
 
 
-## Por tarea cumplida, una línea sobre toda la oración. La lista de tareas va corrida hacia el
-## centro del papel.
+## Por tarea cumplida, una línea sobre toda la oración.
 func _pintar_tachados(nota: NotaPegada) -> void:
 	for tachado in _tachados:
 		renglones_del_papel.remove_child(tachado)
@@ -47,8 +46,6 @@ func _pintar_tachados(nota: NotaPegada) -> void:
 	_filas_tachadas.clear()
 	var papel := renglones_del_papel
 	var alto := (papel.font.get_height(papel.font_size) + papel.line_spacing) * papel.pixel_size
-	var corrimiento := NotaEncuadrada.CORRIMIENTO_DE_LA_LISTA * alto if nota.numerada() else 0.0
-	papel.offset.x = corrimiento / papel.pixel_size
 	var oraciones := papel.text.split("\n")
 	var linea := Image.create(1, 1, false, Image.FORMAT_RGBA8)
 	linea.fill(Color.WHITE)
@@ -74,7 +71,7 @@ func _pintar_tachados(nota: NotaPegada) -> void:
 		tachado.gi_mode = papel.gi_mode
 		tachado.render_priority = papel.render_priority + 1
 		tachado.position = Vector3(
-			corrimiento + largo / 2.0, -(fila + NotaEncuadrada.ALTURA_DEL_TACHADO) * alto, 0.001
+			largo / 2.0, -(fila + NotaEncuadrada.ALTURA_DEL_TACHADO) * alto, 0.001
 		)
 		papel.add_child(tachado)
 		_tachados.append(tachado)

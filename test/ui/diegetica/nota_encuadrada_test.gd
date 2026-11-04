@@ -101,26 +101,6 @@ func test_el_tachado_cubre_toda_la_oracion_en_el_rojo_del_tachado() -> void:  # 
 	assert_float(NotaEncuadrada.COLOR_DEL_TACHADO.r).is_greater(NotaEncuadrada.COLOR_DEL_TACHADO.g)
 
 
-func test_la_lista_corrida_conserva_el_renglon_mas_largo_entero_en_el_papel() -> void:  # AC-PLY-165
-	var vista: NotaEncuadrada = auto_free(ESCENA.instantiate())
-	add_child(vista)
-	var obligatorias := Apertura.obligatorias(ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA)
-	for tarea in obligatorias:
-		tarea.completar()
-	vista.mostrar(NotaPegada.tareas_a_realizar(obligatorias), null)
-	var renglones: Label = vista.get("_renglones")
-	var papel: Control = vista.get("_papel")
-	var mas_largo := 0.0
-	for tachado in vista.tachados_visibles():
-		mas_largo = maxf(mas_largo, tachado.size.x)
-	assert_int(renglones.get_line_count()).is_equal(obligatorias.size())
-	assert_float(renglones.position.x + mas_largo).is_less_equal(papel.size.x)
-	# La lista corrida no arrastra a las hojas que no son de tareas.
-	var base := renglones.position.x
-	vista.mostrar(NotaPegada.de(NotaPegada.Id.LOCAL_ORDENADO), null)
-	assert_float(renglones.position.x).is_less(base)
-
-
 func test_las_hojas_sin_tareas_no_muestran_tachados() -> void:  # AC-PLY-165
 	var vista: NotaEncuadrada = auto_free(ESCENA.instantiate())
 	add_child(vista)

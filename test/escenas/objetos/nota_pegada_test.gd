@@ -92,18 +92,5 @@ func test_el_tachado_pegado_cubre_toda_la_oracion_en_el_rojo_del_tachado() -> vo
 	var tachado: Sprite3D = cuerpo.tachados_visibles()[0]
 	var cubre := tachado.texture.get_width() * tachado.pixel_size * tachado.scale.x
 	assert_float(cubre).is_equal_approx(ancho, 0.0001)
-	assert_float(tachado.position.x - cubre / 2.0).is_equal_approx(
-		papel.offset.x * papel.pixel_size, 0.0001
-	)
+	assert_float(tachado.position.x - cubre / 2.0).is_equal_approx(0.0, 0.0001)
 	assert_bool(tachado.modulate == NotaEncuadrada.COLOR_DEL_TACHADO).is_true()
-
-
-func test_la_lista_pegada_se_corre_al_centro() -> void:  # AC-PLY-165
-	var obligatorias := Apertura.obligatorias(ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA)
-	obligatorias[1].completar()
-	var cuerpo := _hoja_de_tareas(obligatorias)
-	var papel := cuerpo.renglones_del_papel
-	assert_float(papel.offset.x).is_greater(0.0)
-	# Una hoja que no es de tareas no se corre.
-	cuerpo.declarar(NotaPegada.de(NotaPegada.Id.LOCAL_ORDENADO))
-	assert_float(papel.offset.x).is_equal(0.0)
