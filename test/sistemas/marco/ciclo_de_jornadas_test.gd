@@ -224,3 +224,21 @@ func test_el_cierre_conserva_los_clientes_mal_atendidos_de_la_ventanilla() -> vo
 	assert_array(CondicionesDelJefe.elegidas(partida.noches_de_prueba)).is_equal(
 		[CondicionesDelJefe.J2_NINGUNO_ANOTADO_Y_REPOSICION_MAL]
 	)
+
+
+func test_el_cierre_le_entrega_a_la_partida_la_hora_en_que_empezo() -> void:  # AC-INV-106
+	var reloj: RelojDelTurno = auto_free(RelojDelTurno.new())
+	var partida := Partida.desde({"jornada": 3})
+	_ciclo_arrancado(partida, reloj)
+	RelojDePrueba.avanzar_hasta(reloj, Vector2i(23, 15))
+	for tarea: Tarea in partida.obligatorias():
+		reloj.completar(tarea)
+	var al_irse := reloj.hora()
+	assert_bool(al_irse.begins_with("23:")).is_true()
+	reloj.terminar()
+	assert_object(partida.reflexion).is_not_null()
+	partida.reflexion.empezar()
+	partida.reflexion.continuar(partida.reflexion.identidad_del_texto())
+	var notas := partida.expediente.mensajes_de_notas()
+	assert_int(notas.size()).is_equal(1)
+	assert_str(notas[0].hora).is_equal(al_irse)

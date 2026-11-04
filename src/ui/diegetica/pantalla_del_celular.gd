@@ -24,14 +24,24 @@ const TEXTO_DEL_RECORDATORIO := "Q"
 const TINTA := Color("1a1a1a")
 const PAPEL := Color("ffffff")
 const BURBUJA := Color("0b343d")
+const BURBUJA_RECIBIDA := Color("e0f3f4")
+const BURBUJA_PROPIA := Color("f3f3ef")
 const GRIS := Color("787878")
+const GRIS_DE_LA_HORA := Color("7d8280")
+const FONDO_DE_LA_FUNDA := Color("1a2426")
+const BORDE_DE_LA_FUNDA := Color("3b4a4a")
+const FONDO_DE_LA_PANTALLA := Color("c8c8c8")
+const TAMANO_DEL_TEXTO := 28
+const TAMANO_DE_LA_HORA := 20
+const INTERLINEADO := 6
+const ANCHO_MAXIMO_DEL_TEXTO := 336.0
 const MASCARA_DEL_AVATAR := preload("res://assets/ui/manada/celular/avatar.tres")
 const AVATAR_ENRIQUE := preload("res://assets/ui/manada/celular/enrique.png")
 const AVATAR_ENRIQUE_MENU := preload("res://assets/ui/manada/celular/enrique_menu.png")
 const SIMBOLOS_DE_CHAT := preload("res://assets/ui/manada/celular/simbolos_de_chat.ttf")
 const RETRATO_ENRIQUE := "res://assets/ui/manada/enrique.png"
 const BUSCAR := "Buscar contacto..."
-const LILA := Color("c99cf4")
+const ROJO := Color("cc0d08")
 const FOTO := "Foto"
 const MENSAJE := "Mensaje..."
 const AYUDA := "ARRASTRÁ EL FONDO O USÁ LA RUEDA"
@@ -77,6 +87,7 @@ var _opcion: Button
 var _basurero: Control
 var _fuente_del_chat: FontVariation
 var _jornada_de_referencia: int = 0
+var _chat_de_notas: bool = false
 var _historial: Array[Mensaje] = []
 var _burbujas: Array[PanelContainer] = []
 var _recordatorio_pedido: bool = false
@@ -108,6 +119,8 @@ func _ready() -> void:
 	_busqueda.text_changed.connect(_filtrar)
 	_opciones.text = "..."
 	_entrada.placeholder_text = MENSAJE
+	_agregar_la_flecha_del_campo()
+	_agregar_la_funda()
 	_ayuda.text = AYUDA
 	_scroll.gui_input.connect(_al_tocar_el_historial)
 	_scroll.get_v_scroll_bar().changed.connect(_actualizar_desplazamiento)
@@ -214,7 +227,8 @@ func mostrar_chat(
 	_busqueda.hide()
 	_busqueda.release_focus()
 	_pie.show()
-	_componer(false, conversacion.interlocutor == Conversacion.Interlocutor.NOTAS)
+	_chat_de_notas = conversacion.interlocutor == Conversacion.Interlocutor.NOTAS
+	_componer(false, _chat_de_notas)
 	_limpiar()
 	_historial = mensajes.duplicate()
 	for indice in mensajes.size():
@@ -440,10 +454,10 @@ func _componer(menu: bool, notas: bool = false) -> void:
 	_scroll.vertical_scroll_mode = (
 		ScrollContainer.SCROLL_MODE_DISABLED if menu else ScrollContainer.SCROLL_MODE_AUTO
 	)
-	var marco := _estilo(PAPEL if menu else Color("c8c8c8"), 35 if menu else 26, 12)
-	if menu:
-		marco.set_border_width_all(8)
-		marco.border_color = Color("c8c8c8")
+	var marco := _estilo(PAPEL if menu else FONDO_DE_LA_PANTALLA, 26, 12)
+	marco.shadow_color = Color(0.0, 0.0, 0.0, 0.35)
+	marco.shadow_size = 24
+	marco.shadow_offset = Vector2(0.0, 12.0)
 	_telefono.add_theme_stylebox_override("panel", marco)
 	_cabecera.add_theme_stylebox_override(
 		"panel", _estilo(FONDO_DE_NOTAS if notas else PAPEL, 16, 16)
@@ -510,7 +524,7 @@ func _boton_de(conversacion: Conversacion, sin_leer: int, resumen: String) -> Bu
 	var nombre := _etiqueta(conversacion.nombre.to_upper(), TINTA, 26)
 	nombre.name = "Nombre"
 	contacto.add_child(nombre)
-	var vista_previa := _etiqueta(resumen, GRIS, 21)
+	var vista_previa := _etiqueta(resumen, GRIS, 24)
 	vista_previa.name = "VistaPrevia"
 	vista_previa.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	vista_previa.max_lines_visible = 2
@@ -519,9 +533,9 @@ func _boton_de(conversacion: Conversacion, sin_leer: int, resumen: String) -> Bu
 	if sin_leer > 0:
 		var badge := PanelContainer.new()
 		badge.name = "NoLeidos"
-		badge.custom_minimum_size = Vector2(28, 28)
+		badge.custom_minimum_size = Vector2(36, 36)
 		badge.size_flags_vertical = Control.SIZE_SHRINK_CENTER
-		badge.add_theme_stylebox_override("panel", _estilo(Color("093338"), 14, 4))
+		badge.add_theme_stylebox_override("panel", _estilo(Color("093338"), 18, 4))
 		badge.mouse_filter = Control.MOUSE_FILTER_IGNORE
 		var cuenta := _etiqueta(str(sin_leer), PAPEL, 20)
 		cuenta.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
@@ -558,15 +572,17 @@ func _avatar(imagen: Texture2D) -> PanelContainer:
 
 
 func _burbuja_de(mensaje: Mensaje, indice: int) -> PanelContainer:
+	var propia := _chat_de_notas
 	var panel := PanelContainer.new()
 	panel.set_meta("indice_de_mensaje", indice)
-	panel.custom_minimum_size = Vector2(368, 0)
-	panel.size_flags_horizontal = Control.SIZE_SHRINK_BEGIN
-	panel.add_theme_stylebox_override("panel", _estilo(Color("0b363d"), 16, 16))
+	panel.size_flags_horizontal = Control.SIZE_SHRINK_END if propia else Control.SIZE_SHRINK_BEGIN
+	panel.add_theme_stylebox_override(
+		"panel", _estilo(BURBUJA_PROPIA if propia else BURBUJA_RECIBIDA, 16, 16)
+	)
 	panel.mouse_filter = Control.MOUSE_FILTER_PASS
 	panel.mouse_default_cursor_shape = _scroll.mouse_default_cursor_shape
 	var contenido := VBoxContainer.new()
-	contenido.add_theme_constant_override("separation", 12)
+	contenido.add_theme_constant_override("separation", 8)
 	contenido.mouse_filter = Control.MOUSE_FILTER_PASS
 	contenido.mouse_default_cursor_shape = _scroll.mouse_default_cursor_shape
 	panel.add_child(contenido)
@@ -575,22 +591,23 @@ func _burbuja_de(mensaje: Mensaje, indice: int) -> PanelContainer:
 		foto.texture_normal = mensaje.foto
 		foto.ignore_texture_size = true
 		foto.stretch_mode = TextureButton.STRETCH_KEEP_ASPECT_CENTERED
-		foto.custom_minimum_size = Vector2(0, 240)
+		foto.custom_minimum_size = Vector2(ANCHO_MAXIMO_DEL_TEXTO, 240)
 		foto.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
 		foto.pressed.connect(
 			func() -> void: foto_pedida.emit(int(panel.get_meta("indice_de_mensaje")))
 		)
 		contenido.add_child(foto)
 	if not mensaje.texto.is_empty():
-		var texto := _texto(mensaje.texto, PAPEL, 28)
-		texto.custom_minimum_size.x = 336
+		var texto := _texto(mensaje.texto, TINTA, TAMANO_DEL_TEXTO)
+		texto.add_theme_constant_override("line_separation", INTERLINEADO)
+		texto.custom_minimum_size.x = _ancho_del_texto(mensaje.texto)
 		texto.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		if not mensaje.pista_del_tramo(mensaje.tramo_de_pista).is_empty():
 			texto.clear()
 			var inicio := mensaje.texto.find(mensaje.texto_del_tramo)
 			texto.add_text(mensaje.texto.left(inicio))
 			texto.push_meta(mensaje.tramo_de_pista)
-			texto.push_color(LILA)
+			texto.push_color(ROJO)
 			texto.add_text(mensaje.texto_del_tramo)
 			texto.pop()
 			texto.pop()
@@ -601,7 +618,55 @@ func _burbuja_de(mensaje: Mensaje, indice: int) -> PanelContainer:
 				func(tramo: Variant) -> void: tramo_pedido.emit(mensaje.identidad, str(tramo))
 			)
 		contenido.add_child(texto)
+	if not mensaje.hora.is_empty():
+		var hora := _etiqueta(mensaje.hora, GRIS_DE_LA_HORA, TAMANO_DE_LA_HORA)
+		hora.name = "Hora"
+		hora.size_flags_horizontal = Control.SIZE_SHRINK_END
+		contenido.add_child(hora)
 	return panel
+
+
+## El ancho que pide el texto en una línea, sin pasar del máximo: la burbuja se ajusta al texto.
+func _ancho_del_texto(texto: String) -> float:
+	var ancho := 0.0
+	for linea: String in texto.replace("[b]", "").replace("[/b]", "").split("\n"):
+		var medida := _fuente_del_chat.get_string_size(
+			linea, HORIZONTAL_ALIGNMENT_LEFT, -1, TAMANO_DEL_TEXTO
+		)
+		ancho = maxf(ancho, medida.x)
+	return minf(ceilf(ancho) + 2.0, ANCHO_MAXIMO_DEL_TEXTO)
+
+
+func _agregar_la_flecha_del_campo() -> void:
+	var flecha := _etiqueta(">", GRIS_DE_LA_HORA, 30)
+	flecha.name = "Enviar"
+	flecha.set_anchors_and_offsets_preset(Control.PRESET_RIGHT_WIDE)
+	flecha.offset_left = -48.0
+	flecha.offset_right = -14.0
+	flecha.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	flecha.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	_entrada.add_child(flecha)
+
+
+## La funda se dibuja detrás de la pantalla y sobresale de ella, así que sigue al teléfono.
+func _agregar_la_funda() -> void:
+	var estilo := _estilo(FONDO_DE_LA_FUNDA, 38)
+	estilo.set_border_width_all(2)
+	estilo.border_color = BORDE_DE_LA_FUNDA
+	estilo.expand_margin_left = 24.5
+	estilo.expand_margin_right = 24.5
+	estilo.expand_margin_top = 24.0
+	estilo.expand_margin_bottom = 24.0
+	estilo.shadow_color = Color(0.0, 0.0, 0.0, 0.42)
+	estilo.shadow_size = 22
+	estilo.shadow_offset = Vector2(0.0, 12.0)
+	var funda := Panel.new()
+	funda.name = "Funda"
+	funda.show_behind_parent = true
+	funda.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	funda.add_theme_stylebox_override("panel", estilo)
+	_telefono.add_child(funda)
+	_telefono.move_child(funda, 0)
 
 
 func _ordenar_el_historial() -> void:
@@ -611,14 +676,17 @@ func _ordenar_el_historial() -> void:
 			hijo.reparent(_basurero, false)
 			hijo.queue_free()
 	var posicion := 0
-	var anterior := 0
+	var anterior := -1
 	for indice: int in _historial.size():
 		var mensaje := _historial[indice]
-		var jornada := mensaje.jornada if mensaje.momento != Mensaje.Momento.SIN_FECHA else 0
-		var diferencia := _jornada_de_referencia - jornada
-		if jornada > 0 and jornada != anterior and diferencia >= 0 and diferencia < DIAS.size():
-			var separador := _etiqueta(DIAS[diferencia], GRIS, 24)
-			separador.set_meta("separador_de_jornada", jornada)
+		var tanda := mensaje.tanda()
+		var diferencia := _jornada_de_referencia - mensaje.jornada
+		if tanda >= 0 and tanda != anterior and diferencia >= 0 and diferencia < DIAS.size():
+			var rotulo := DIAS[maxi(0, _jornada_de_referencia - mensaje.dia())]
+			if not mensaje.hora.is_empty():
+				rotulo += "\n" + mensaje.hora
+			var separador := _etiqueta(rotulo, GRIS, 24)
+			separador.set_meta("separador_de_jornada", tanda)
 			separador.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 			_mensajes.add_child(separador)
 			_mensajes.move_child(separador, posicion)
@@ -627,7 +695,7 @@ func _ordenar_el_historial() -> void:
 		burbuja.set_meta("indice_de_mensaje", indice)
 		_mensajes.move_child(burbuja, posicion)
 		posicion += 1
-		anterior = jornada
+		anterior = tanda
 	_actualizar_desplazamiento.call_deferred()
 
 
