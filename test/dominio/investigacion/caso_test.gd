@@ -226,10 +226,11 @@ func test_la_hipotesis_5b_depende_de_la_pista_5b() -> void:  # AC-INV-093
 
 func test_la_hipotesis_5p_no_tiene_pista_ni_exigencias_ni_camino() -> void:  # AC-INV-110
 	var caso := CasoDeInvestigacion.de_la_partida()
-	var quinta := caso.opcion(GeneradorDeTickets.JORNADA_SIN_LECTOR, "5P")
-	assert_object(quinta).is_not_null()
-	if quinta == null:
+	var ofrecidas := caso.hipotesis_para(GeneradorDeTickets.JORNADA_SIN_LECTOR, PackedStringArray())
+	assert_array(_identidades(ofrecidas)).is_equal(["5P"])
+	if ofrecidas.is_empty():
 		return
+	var quinta := ofrecidas[0]
 	assert_str(quinta.titulo).is_equal("NO HAY PROBLEMA")
 	assert_str(quinta.texto).is_not_empty()
 	assert_array(Array(quinta.exigencias)).is_empty()

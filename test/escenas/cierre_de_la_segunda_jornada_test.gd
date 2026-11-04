@@ -277,4 +277,9 @@ func test_la_quinta_jornada_cierra_eligiendo_y_pide_la_sexta() -> void:  # AC-IN
 	assert_array(aperturas).is_empty()
 	almacen.call("_process", cuadro)
 	AvanceDeDevolucion.terminar_movimiento(pantalla)
+	# La noche del corte espera a que su oscuridad quede preparada.
+	for _cuadro in CUADROS_DEL_CALENTAMIENTO:
+		if not aperturas.is_empty():
+			break
+		await get_tree().process_frame
 	assert_array(aperturas).is_equal([GeneradorDeTickets.JORNADA_SIN_LECTOR + 1])
