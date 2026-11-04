@@ -6,6 +6,8 @@ extends Resource
 @export var titulo: String = ""
 @export_multiline var texto: String = ""
 @export var exigencias: PackedStringArray = PackedStringArray()
+## Las pistas de la jornada siguiente que esta hipótesis desbloquea. Las predeterminadas no tienen.
+@export var camino: PackedStringArray = PackedStringArray()
 
 
 func habilitada_por(descubiertas: PackedStringArray) -> bool:
