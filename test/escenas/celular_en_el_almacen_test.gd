@@ -147,19 +147,25 @@ func test_celular_bloquea_entrada_y_conserva_la_unidad_y_la_pose() -> void:  # A
 	assert_bool(cuerpo.transform.is_equal_approx(pose)).is_true()
 
 
+func _esc() -> void:
+	var evento := InputEventAction.new()
+	evento.action = &"ui_cancel"
+	evento.pressed = true
+	(_almacen.get_node("Interfaz/ControlDePausa") as ControlDePausa)._input(evento)
+
+
 func test_esc_cubre_la_foto_q_no_cambia_y_reanudar_conserva_la_pantalla() -> void:  # AC-INV-036
 	_abrir()
 	var mensaje := _llegada()
 	mensaje.foto = GradientTexture2D.new()
 	var quien := _celular().bandeja().conversaciones()[0].interlocutor
 	_celular().recibir(quien, mensaje)
-	await _q()
-	_celular().pedir_chat(quien)
+	_celular().mostrar_fijo(quien)
 	_celular().pedir_foto(_celular().bandeja().mensajes_de(quien).size() - 1)
 	var foto: Control = _pantalla().get("_foto_ampliada")
 	assert_bool(foto.visible).is_true()
 	var pausa: ControlDePausa = _almacen.get_node("Interfaz/ControlDePausa")
-	pausa.pausar()
+	_esc()
 	assert_bool(get_tree().paused).is_true()
 	assert_bool((_almacen.get_node("Interfaz/MenuDePausa") as CanvasLayer).visible).is_true()
 	await _q()
@@ -169,6 +175,67 @@ func test_esc_cubre_la_foto_q_no_cambia_y_reanudar_conserva_la_pantalla() -> voi
 	assert_bool(foto.visible).is_true()
 	assert_bool(_jugador().suspendido()).is_true()
 	await get_tree().process_frame
+
+
+func test_esc_cierra_el_celular_libre_sin_pausar_y_el_siguiente_pausa() -> void:  # AC-INV-070
+	_abrir()
+	await _q()
+	assert_bool(_celular().celular().abierto()).is_true()
+	_esc()
+	assert_bool(_celular().celular().abierto()).is_false()
+	assert_bool(_jugador().suspendido()).is_false()
+	assert_bool(get_tree().paused).is_false()
+	_esc()
+	assert_bool(get_tree().paused).is_true()
+
+
+func test_esc_con_el_celular_cerrado_pausa() -> void:  # AC-INV-070
+	_abrir()
+	_esc()
+	assert_bool(get_tree().paused).is_true()
+	assert_bool((_almacen.get_node("Interfaz/MenuDePausa") as CanvasLayer).visible).is_true()
+
+
+func test_clic_afuera_no_cierra_y_la_foto_cede_el_primer_esc() -> void:  # AC-INV-071
+	_abrir()
+	var mensaje := _llegada()
+	mensaje.foto = GradientTexture2D.new()
+	var quien := _celular().bandeja().conversaciones()[0].interlocutor
+	_celular().recibir(quien, mensaje)
+	await _q()
+	_celular().pedir_chat(quien)
+	var clic := InputEventMouseButton.new()
+	clic.button_index = MOUSE_BUTTON_LEFT
+	clic.pressed = true
+	clic.position = Vector2(10, 10)
+	_pantalla()._input(clic)
+	assert_bool(_celular().celular().abierto()).is_true()
+	_celular().pedir_foto(_celular().bandeja().mensajes_de(quien).size() - 1)
+	_pantalla()._input(clic)
+	assert_int(_celular().celular().pantalla()).is_equal(Celular.Pantalla.CHAT)
+	assert_bool(_celular().celular().abierto()).is_true()
+	_celular().pedir_foto(_celular().bandeja().mensajes_de(quien).size() - 1)
+	_esc()
+	assert_int(_celular().celular().pantalla()).is_equal(Celular.Pantalla.CHAT)
+	assert_bool(_celular().celular().abierto()).is_true()
+	assert_bool(get_tree().paused).is_false()
+	_esc()
+	assert_bool(_celular().celular().abierto()).is_false()
+	assert_bool(get_tree().paused).is_false()
+	_esc()
+	assert_bool(get_tree().paused).is_true()
+
+
+func test_con_el_celular_fijo_q_no_cierra_y_esc_pausa() -> void:  # AC-INV-072
+	_abrir()
+	var quien := _celular().bandeja().conversaciones()[0].interlocutor
+	_celular().mostrar_fijo(quien)
+	await _q()
+	assert_bool(_celular().celular().abierto()).is_true()
+	_esc()
+	assert_bool(get_tree().paused).is_true()
+	assert_bool(_celular().celular().abierto()).is_true()
+	assert_int(_celular().celular().chat()).is_equal(quien)
 
 
 func test_cierre_baja_celular_y_otra_jornada_cierra() -> void:  # AC-INV-035, AC-INV-036

@@ -7,15 +7,13 @@ signal volver_pedido
 signal foto_pedida(indice: int)
 signal tramo_pedido(identidad: String, tramo: String)
 signal cierre_de_foto_pedido
-## Un clic izquierdo por fuera del teléfono, con el celular arriba.
-signal cierre_pedido
 ## La opción que se ofrece debajo del último mensaje del chat, como la de la devolución.
 signal opcion_elegida
 signal celular_bajado
 ## Llegó a la mitad izquierda del encuadre, para la reflexión de cierre.
 signal celular_desplazado
 
-const RECORRIDO_COMPLETO := 0.25
+const RECORRIDO_COMPLETO := RecorridoDelCelular.DURACION
 const PASO_MAXIMO := CabeceraConSolapa.PASO_MAXIMO
 const TAMANO := Vector2(522.0, 928.0)
 const CENTRO := Vector2(960.0, 540.0)
@@ -68,8 +66,7 @@ const DIAS: Array[String] = [
 @export var _entrada: LineEdit
 @export var _ayuda: Label
 
-var _avance: float = 0.0
-var _destino: float = 0.0
+var _recorrido := RecorridoDelCelular.new()
 var _lateral: float = 0.0
 var _destino_lateral: float = 0.0
 var _ultimo: int = 0
@@ -142,15 +139,15 @@ func _process(_delta: float) -> void:
 	_ultimo = ahora
 	var llegaba := is_equal_approx(_lateral, _destino_lateral)
 	var puede_correrse := _sube_antes_de_correrse()
-	_avance = move_toward(_avance, _destino, segundos / RECORRIDO_COMPLETO)
+	_recorrido.avanzar(segundos)
 	if puede_correrse:
 		_lateral = move_toward(_lateral, _destino_lateral, segundos / RECORRIDO_COMPLETO)
 	_pintar_posicion()
 	if not llegaba and is_equal_approx(_lateral, 1.0):
 		celular_desplazado.emit()
-	if is_equal_approx(_avance, _destino) and is_equal_approx(_lateral, _destino_lateral):
+	if _recorrido.llego() and is_equal_approx(_lateral, _destino_lateral):
 		set_process(false)
-		if _destino == 0.0:
+		if _recorrido.destino() == 0.0:
 			_lateral = 0.0
 			_destino_lateral = 0.0
 			_telefono.hide()
@@ -167,7 +164,7 @@ func bajar() -> void:
 
 
 func centrado() -> bool:
-	return _destino == 1.0 and is_equal_approx(_avance, 1.0) and _destino_lateral == 0.0
+	return _recorrido.destino() == 1.0 and _recorrido.llego() and _destino_lateral == 0.0
 
 
 ## Lleva el teléfono, ya arriba o subiendo, hasta la mitad izquierda sin bajarlo.
@@ -321,9 +318,6 @@ func _input(evento: InputEvent) -> void:
 	if _foto_ampliada.visible:
 		get_viewport().set_input_as_handled()
 		cierre_de_foto_pedido.emit()
-	elif _cierra_con_un_clic_afuera() and not _telefono.get_global_rect().has_point(clic.position):
-		get_viewport().set_input_as_handled()
-		cierre_pedido.emit()
 
 
 func _al_tocar_el_historial(evento: InputEvent) -> void:
@@ -411,15 +405,11 @@ func _pintar_cursor(forma: Control.CursorShape) -> void:
 
 
 func _sube_antes_de_correrse() -> bool:
-	return is_equal_approx(_avance, 1.0) or _destino == 0.0
-
-
-func _cierra_con_un_clic_afuera() -> bool:
-	return _destino == 1.0 and _destino_lateral == 0.0
+	return _recorrido.destino() == 0.0 or _recorrido.llego()
 
 
 func _mover_hacia(destino: float) -> void:
-	_destino = destino
+	_recorrido.ir_a(destino)
 	_ultimo = _ahora.call()
 	if destino == 1.0:
 		_telefono.show()
@@ -441,7 +431,9 @@ func _pintar_posicion() -> void:
 	_telefono.size = TAMANO
 	var arriba := CENTRO.y - TAMANO.y / 2.0
 	var centro := lerpf(CENTRO.x, CENTRO_A_LA_IZQUIERDA.x, _lateral)
-	_telefono.position = Vector2(centro - TAMANO.x / 2.0, lerpf(1080.0, arriba, _avance))
+	_telefono.position = Vector2(
+		centro - TAMANO.x / 2.0, lerpf(1080.0, arriba, _recorrido.posicion())
+	)
 
 
 func _componer(menu: bool, notas: bool = false) -> void:
