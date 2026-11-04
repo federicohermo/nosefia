@@ -188,7 +188,7 @@ func test_cami_de_la_tercera_pide_tres_tipos_y_oaaaa_es_el_tercero() -> void:  #
 		assert_array(ids).has_size(3)
 		assert_int(distintos.size()).is_equal(3)
 		assert_int(ids[2]).is_equal(Producto.Id.OAAAA)
-		for id in ids.slice(0, 2):
+		for id: Producto.Id in ids.slice(0, 2):
 			assert_int(id).is_not_equal(Producto.Id.OAAAA)
 			assert_array(Compradores.GRUPOS[PERSONAJE.CAMI]).contains([id])
 			primeros[id] = true
