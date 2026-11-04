@@ -36,6 +36,8 @@ const TEXTOS_DE_LA_PRIMERA: Array[String] = [
 ]
 ## En segundos de juego, entre elegir la hipótesis y pedir la entrada de la noche siguiente.
 const ESPERA_ANTES_DE_LA_NOCHE := 1.0
+## En segundos de juego, entre recibir el último de los tres textos y pedir la entrada.
+const ESPERA_DESPUES_DE_LOS_TEXTOS := 1.5
 
 var _jornada: int
 var _expediente: Expediente
@@ -92,8 +94,14 @@ func empezar() -> void:
 		_etapa = Etapa.TEXTOS if _jornada == JORNADA_DE_LOS_TEXTOS else Etapa.ELEGIR
 
 
+## El texto a la vista: el que falta recibir, o el último mientras corre su espera.
 func texto_actual() -> String:
-	return TEXTOS_DE_LA_PRIMERA[_recibidos()] if _etapa == Etapa.TEXTOS else ""
+	match _etapa:
+		Etapa.TEXTOS:
+			return TEXTOS_DE_LA_PRIMERA[_recibidos()]
+		Etapa.ESPERA when _jornada == JORNADA_DE_LOS_TEXTOS:
+			return TEXTOS_DE_LA_PRIMERA.back()
+	return ""
 
 
 ## La identidad del texto a la vista. El pedido la trae para que un gesto repetido no avance dos.
@@ -106,7 +114,8 @@ func continuar(identidad: String) -> bool:
 		return false
 	_expediente.anotar(_nota(_recibidos()))
 	if _completa():
-		_etapa = Etapa.TERMINADA
+		_etapa = Etapa.ESPERA
+		_espera = 0.0
 	return true
 
 
@@ -147,14 +156,20 @@ func avanzar(segundos: float) -> bool:
 	if _etapa != Etapa.ESPERA or segundos <= 0.0:
 		return false
 	_espera += segundos
-	if _espera < ESPERA_ANTES_DE_LA_NOCHE:
+	if _espera < _espera_declarada():
 		return false
 	_etapa = Etapa.TERMINADA
 	return true
 
 
 func restante() -> float:
-	return maxf(0.0, ESPERA_ANTES_DE_LA_NOCHE - _espera) if _etapa == Etapa.ESPERA else 0.0
+	return maxf(0.0, _espera_declarada() - _espera) if _etapa == Etapa.ESPERA else 0.0
+
+
+func _espera_declarada() -> float:
+	if _jornada == JORNADA_DE_LOS_TEXTOS:
+		return ESPERA_DESPUES_DE_LOS_TEXTOS
+	return ESPERA_ANTES_DE_LA_NOCHE
 
 
 func _navegar(paso: int) -> bool:
