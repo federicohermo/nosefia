@@ -123,7 +123,7 @@ func test_el_pedido_entrega_la_hora_a_las_notas_de_la_pista() -> void:  # AC-INV
 	var notas: Array[Mensaje] = []
 	investigador.nota_agregada.connect(func(mensaje: Mensaje) -> void: notas.append(mensaje))
 	investigador.usar(_expediente())
-	investigador.pedir_pista(&"2A", Pista.Canal.CHAT, 4, true, "21:00")
+	investigador.pedir_pista(&"origen", Pista.Canal.CHAT, 2, true, "21:00")
 	assert_int(notas.size()).is_equal(2)
 	for nota: Mensaje in notas:
 		assert_str(nota.hora).is_equal("21:00")
