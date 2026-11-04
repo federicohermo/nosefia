@@ -823,7 +823,7 @@ DADO la jornada 4 CUANDO se enfoca cada tacho desde un punto libre del piso dent
 vigente ENTONCES aparece su contorno y la mira no se detiene en la bolsa. CUANDO se hace clic
 izquierdo con la mano vacía ENTONCES la bolsa queda en la mano y desaparece de la boca de ese
 tacho. CUANDO se tiran dos al contenedor con la tapa abierta ENTONCES la basura sigue pendiente;
-tirar la tercera la cumple y sube el HUD en 1. Repetir la misma identidad no vuelve a sumar.
+tirar la tercera la cumple. Repetir la misma identidad no vuelve a sumar.
 
 ### AC-CLN-055 — Otros gestos y otras noches conservan el estado *(verifica BR-CLN-032, BR-CLN-007)*
 

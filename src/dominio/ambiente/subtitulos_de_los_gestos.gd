@@ -33,20 +33,17 @@ const TEXTOS: Dictionary[Id, String] = {
 	Id.NINGUNO: "",
 	Id.MALA_IDEA: "Me parece que eso fue una mala idea…",
 	Id.CAJA_EN_EL_CONTENEDOR:
-	(
-		"La caja es bastante grande para el contenedor. Rebalsaría. Además, Enrique me pidió que no"
-		+ " tire las cajas de productos, ni siquiera las vacías."
-	),
-	Id.UTIL_EN_EL_CONTENEDOR: "Me parece que no debería tirar\nlos elementos de limpieza.",
-	Id.POR_LA_VENTANA: "Si Enrique se entera de que estoy tirando cosas por la ventana, me mata.",
-	Id.JABON_EQUIVOCADO: "Esto no está funcionando… Creo que no estoy usando el jabón correcto.",
+	"Enrique me pidió que no tirara las cajas\nde productos, ni siquiera las vacías.",
+	Id.UTIL_EN_EL_CONTENEDOR: "Meee parece que no debería tirar\nlos elementos de limpieza.",
+	Id.POR_LA_VENTANA: "Si Enrique se entera de que estoy tirando\ncosas por la ventana, me mata.",
+	Id.JABON_EQUIVOCADO: "Esto no está funcionando…\nCreo que no estoy usando el jabón correcto.",
 	Id.MOPA_SIN_MOJAR: "Necesitaría mojar la mopa en agua con jabón.",
 	Id.MOPA_YA_SECA: "Ya se secó la mopa…",
 	Id.MOPA_BERRETA: "Dios mío, qué mopa berreta. Se seca a los tres segundos. Literal.",
 	Id.PARED_DEL_OTRO_INODORO: "Se ve que alguien no tuvo tiempo de apuntar bien…",
 	Id.PISO_DE_LAS_ESTANTERIAS_DEL_FONDO: "Espero que sea vómito…",
 	Id.TECHO_SOBRE_UN_CUBICULO: "¿¿Cómo llegó eso ahí??",
-	Id.PUERTA_CON_TAREAS_PENDIENTES: "No debería irme. Todavía me quedan tareas por completar.",
+	Id.PUERTA_CON_TAREAS_PENDIENTES: "No debería irme.\nTodavía me quedan tareas por completar.",
 	Id.PRIMERA_PISTA: "Encontré una pista. ¡Qué extraño! Me parece que está pasando algo.",
 	Id.SIN_LUZ: "Se cortó la luz…\nNingún aparato eléctrico funciona.",
 }

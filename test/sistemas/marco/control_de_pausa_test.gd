@@ -149,3 +149,40 @@ func test_con_configuraciones_abierta_esc_la_cierra_y_sigue_en_pausa() -> void: 
 	control._input(_esc())
 	assert_bool(get_tree().paused).is_false()
 	assert_int(_reanudaciones).is_equal(1)
+
+
+func _celular_abierto(fijo: bool) -> CelularDelEmpleado:
+	var celular: CelularDelEmpleado = auto_free(CelularDelEmpleado.new())
+	if fijo:
+		celular.mostrar_fijo(Conversacion.Interlocutor.JEFE)
+	else:
+		celular.abrir_jornada(1)
+		celular.pedir_alternar(false)
+	return celular
+
+
+func test_con_el_celular_libre_abierto_esc_lo_cierra_y_no_pausa() -> void:  # AC-INV-070
+	var control := _control()
+	control.celular = _celular_abierto(false)
+	var devueltos: Array[int] = []
+	control.esc_atendido_por_el_celular.connect(func() -> void: devueltos.append(1))
+	control._input(_esc())
+	assert_bool(control.celular.celular().abierto()).is_false()
+	assert_bool(get_tree().paused).is_false()
+	assert_int(_pausas).is_zero()
+	assert_array(devueltos).is_equal([1])
+	control._input(_esc())
+	assert_bool(get_tree().paused).is_true()
+	assert_int(_pausas).is_equal(1)
+	assert_array(devueltos).is_equal([1])
+
+
+func test_con_el_celular_fijo_esc_pausa_y_lo_deja_abierto() -> void:  # AC-INV-072
+	var control := _control()
+	control.celular = _celular_abierto(true)
+	control._input(_esc())
+	assert_bool(get_tree().paused).is_true()
+	assert_bool(control.celular.celular().abierto()).is_true()
+	control._input(_esc())
+	assert_bool(get_tree().paused).is_false()
+	assert_bool(control.celular.celular().abierto()).is_true()

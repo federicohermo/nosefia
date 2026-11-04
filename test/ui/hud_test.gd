@@ -44,6 +44,16 @@ const TEMA := "res://assets/ui/manada/tema.tres"
 ## La variación del tema que lleva el subtítulo: la del `Label`, con contorno.
 const VARIACION_DEL_SUBTITULO := "Subtitulo"
 
+## Lo levantable que dice su texto de examinar desde su recurso.
+const UTILES_DE_EXAMINAR: Array[String] = [
+	"res://src/dominio/almacen/mopa.tres",
+	"res://src/dominio/almacen/balde.tres",
+	"res://src/dominio/almacen/jabon_azul.tres",
+	"res://src/dominio/almacen/jabon_rosa.tres",
+	"res://src/dominio/almacen/jabon_amarillo.tres",
+	"res://src/dominio/investigacion/colilla.tres",
+]
+
 ## Lo que delataría el texto de la caja armado acá: sus palabras, su cuenta y quien la lleva.
 const RASTROS_DEL_TEXTO_DE_LA_CAJA := [
 	"Una caja con", "Entra", "ContenidoDeLaCaja", "UNIDADES_POR_CAJA"
@@ -66,7 +76,7 @@ func test_el_hud_no_dibuja_el_veredicto_del_cierre() -> void:
 func test_el_hud_sigue_pintando_lo_que_si_es_suyo() -> void:
 	# El par del caso de arriba: sin esto, borrar el archivo entero lo dejaría en verde.
 	var texto := FileAccess.get_file_as_string(HUD)
-	assert_str(texto).contains("func mostrar_tareas")
+	assert_str(texto).contains("func mostrar_subtitulo")
 
 
 func test_la_hora_se_fue_del_hud_con_todo_lo_que_traia() -> void:
@@ -82,7 +92,7 @@ func test_la_hora_se_fue_del_hud_con_todo_lo_que_traia() -> void:
 		)
 
 
-func test_la_escena_del_hud_conserva_el_contador_de_tareas() -> void:
+func test_la_escena_del_hud_no_trae_la_hora() -> void:
 	# **El `node_paths` de la raíz pierde `"_reloj"` además del `Label`.** Si el nombre quedara
 	# declarado apuntando a un nodo que ya no está, la escena carga sin un solo error y el juego
 	# muere en el primer cuadro con un mensaje que no nombra al `.tscn`.
@@ -92,7 +102,6 @@ func test_la_escena_del_hud_conserva_el_contador_de_tareas() -> void:
 		. override_failure_message("`hud.tscn` todavía trae el `Label` de la hora")
 		. is_false()
 	)
-	assert_bool(hud.has_node("Tareas")).is_true()
 	assert_str(FileAccess.get_file_as_string(ESCENA_DEL_HUD)).not_contains("_reloj")
 
 
@@ -238,6 +247,78 @@ func test_el_subtitulo_va_abajo_al_centro_y_uno_por_vez() -> void:  # AC-SUB-001
 		assert_str(subtitulo.text).is_equal(segundo)
 
 
+func _textos_que_se_piensan() -> Array[String]:
+	var textos: Array[String] = []
+	for id: SubtitulosDeLosGestos.Id in SubtitulosDeLosGestos.Id.values():
+		if id not in [SubtitulosDeLosGestos.Id.NINGUNO, SubtitulosDeLosGestos.Id.PRIMERA_PISTA]:
+			textos.append(SubtitulosDeLosGestos.texto(id))
+	for tabla: Dictionary in [
+		SubtitulosAlExaminar.DE_LO_DEMAS,
+		SubtitulosAlExaminar.DE_LAS_NOTAS,
+		SubtitulosAlExaminar.DE_LOS_TACHOS,
+	]:
+		for texto: String in tabla.values():
+			textos.append(texto)
+	for ruta in UTILES_DE_EXAMINAR:
+		textos.append((load(ruta) as ObjetoDelAlmacen).texto_al_examinar())
+	return textos
+
+
+func test_el_subtitulo_muestra_los_renglones_de_su_texto() -> void:  # AC-SUB-029
+	var textos := _textos_que_se_piensan()
+	for tamano: Vector2i in [Vector2i(1920, 1080), Vector2i(1280, 720)]:
+		var ventana: SubViewport = auto_free(SubViewport.new())
+		ventana.size = tamano
+		add_child(ventana)
+		var hud: Hud = load(ESCENA_DEL_HUD).instantiate()
+		ventana.add_child(hud)
+		var subtitulo: Label = hud.get_node("Subtitulo")
+		var fuente := subtitulo.get_theme_font("font")
+		var tamano_de_fuente := subtitulo.get_theme_font_size("font_size")
+		var sin_cortes := 0
+		for texto in textos:
+			# Un renglón más ancho que la ventana no entra por más que el cuadro la ocupe entera:
+			# la red de seguridad lo corta, y es la única excepción.
+			var entra := true
+			for renglon in texto.split("\n"):
+				var ancho := fuente.get_string_size(
+					renglon, HORIZONTAL_ALIGNMENT_LEFT, -1, tamano_de_fuente
+				)
+				entra = entra and ancho.x <= tamano.x
+			hud.pensar(texto)
+			await get_tree().process_frame
+			var renglones := texto.split("\n").size()
+			if entra:
+				sin_cortes += 1
+				(
+					assert_int(subtitulo.get_line_count())
+					. override_failure_message("%s a %s: renglones de más" % [texto, tamano])
+					. is_equal(renglones)
+				)
+			else:
+				assert_int(subtitulo.get_line_count()).is_greater(renglones)
+			var caja := subtitulo.get_global_rect()
+			assert_float(caja.get_center().x).is_equal_approx(tamano.x / 2.0, 1.0)
+			assert_float(caja.get_center().y).is_greater(tamano.y / 2.0)
+		assert_int(sin_cortes).is_greater(textos.size() - 2)
+
+
+func test_un_renglon_que_no_entra_en_la_ventana_se_corta() -> void:  # AC-SUB-030
+	for tamano: Vector2i in [Vector2i(1920, 1080), Vector2i(1280, 720)]:
+		var ventana: SubViewport = auto_free(SubViewport.new())
+		ventana.size = tamano
+		add_child(ventana)
+		var hud: Hud = load(ESCENA_DEL_HUD).instantiate()
+		ventana.add_child(hud)
+		hud.pensar("palabra ".repeat(38))
+		await get_tree().process_frame
+		var subtitulo: Label = hud.get_node("Subtitulo")
+		assert_int(subtitulo.get_line_count()).is_greater(1)
+		var caja := subtitulo.get_global_rect()
+		assert_float(caja.position.x).is_greater_equal(0.0)
+		assert_float(caja.end.x).is_less_equal(float(tamano.x))
+
+
 func test_el_hud_no_arma_el_texto_de_la_caja() -> void:
 	# El texto lo arma la caja en `dominio/`, donde tiene test. Armado acá, cuántas le entran a
 	# una caja sería una regla del juego en una capa que el gate de tests no mira.
@@ -263,19 +344,14 @@ func _scripts_de(carpeta: String) -> Array[String]:
 	return encontrados
 
 
-func test_la_referencia_va_debajo_del_contador_una_por_renglon() -> void:  # AC-PLY-082
+func test_la_referencia_va_una_por_renglon() -> void:  # AC-PLY-082
 	var hud: Hud = auto_free(load(ESCENA_DEL_HUD).instantiate())
 	add_child(hud)
-	hud.declarar_obligatorias(1)
-	var tareas: Label = hud.get_node("Tareas")
 	var controles := hud.get_node_or_null("Controles") as Label
 	assert_object(controles).is_not_null()
 	if controles == null:
 		return
 	assert_str(controles.text).is_empty()
-	assert_float(tareas.get_global_rect().end.y).is_less_equal(
-		controles.get_global_rect().position.y
-	)
 	assert_int(controles.mouse_filter).is_equal(Control.MOUSE_FILTER_IGNORE)
 	hud.mostrar_referencia(PackedStringArray(["[E] Examinar (mano)", "[Click Izq] Dejar"]))
 	assert_str(controles.text).is_equal("[E] Examinar (mano)\n[Click Izq] Dejar")
