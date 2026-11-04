@@ -154,6 +154,53 @@ func test_el_cartel_con_titulo_pone_el_titulo_sobre_el_cuerpo() -> void:  # AC-N
 		)
 
 
+func test_el_cierre_proximo_lleva_titulo_y_el_reloj_de_arena() -> void:  # AC-NTF-043
+	var viewport: SubViewport = auto_free(SubViewport.new())
+	viewport.size = Vector2i(1920, 1080)
+	add_child(viewport)
+	var pila: PilaDeNotificaciones = load(ESCENA).instantiate()
+	viewport.add_child(pila)
+	pila.set_process(false)
+	pila.avisar_pista()
+	pila.actualizar_tiempo(3600.0)
+	pila._process(1.0)
+	for tamano: Vector2i in [Vector2i(1920, 1080), Vector2i(1280, 720)]:
+		viewport.size = tamano
+		await get_tree().process_frame
+		await get_tree().process_frame
+		var carteles := pila.get_node("Marco/Pila").get_children()
+		var cierre: PanelContainer = carteles[0]
+		var titulo: Label = cierre.find_child("Titulo", true, false)
+		var cuerpo: Label = cierre.find_children("*", "Label", true, false).back()
+		assert_object(titulo).is_not_null()
+		assert_str(titulo.text).is_equal(
+			PilaDeNotificaciones.TITULOS[Notificaciones.Tipo.CIERRE_PROXIMO]
+		)
+		assert_str(cuerpo.text).is_equal(
+			PilaDeNotificaciones.TEXTOS[Notificaciones.Tipo.CIERRE_PROXIMO]
+		)
+		assert_float(titulo.get_global_rect().end.y).is_less_equal(
+			cuerpo.get_global_rect().position.y
+		)
+		assert_int(titulo.get_theme_font_size("font_size")).is_less(
+			cuerpo.get_theme_font_size("font_size")
+		)
+		(
+			assert_str(
+				cierre.find_children("*", "TextureRect", true, false)[0].texture.resource_path
+			)
+			. ends_with("/notificacion_cierre.svg")
+		)
+		assert_object((carteles[1] as Control).find_child("Titulo", true, false)).is_null()
+		assert_float(cierre.get_global_rect().end.x).is_equal_approx(
+			(carteles[1] as Control).get_global_rect().end.x, 0.1
+		)
+		(
+			assert_bool(Rect2(Vector2.ZERO, Vector2(tamano)).encloses(cierre.get_global_rect()))
+			. is_true()
+		)
+
+
 func test_la_salida_con_productos_usa_el_simbolo_de_salida_y_respeta_pausa() -> void:  # AC-NTF-033
 	var pila := _pila()
 	pila.avisar_salida(Compradores.de_la_jornada(ReglasDeLaPartida.PRIMERA_JORNADA)[0], true)
@@ -356,7 +403,9 @@ func test_el_aviso_de_una_hora_conserva_su_resto_en_pausa() -> void:  # AC-NTF-0
 	await get_tree().process_frame
 	await get_tree().process_frame
 	assert_bool(pila.can_process()).is_false()
-	assert_array(_textos(pila)).is_equal(["QUEDA UNA HORA DE JORNADA"])
+	assert_array(_textos(pila)).is_equal(
+		[PilaDeNotificaciones.TEXTOS[Notificaciones.Tipo.CIERRE_PROXIMO]]
+	)
 	get_tree().paused = false
 	pila._process(0.9)
 	assert_array(_textos(pila)).has_size(1)
@@ -377,7 +426,9 @@ func test_una_hora_comparte_esquina_y_su_texto_entra_en_ambas_resoluciones() -> 
 	pila.avisar_salida(Comprador.new("Otro", Venta.new(), 0))
 	pila.avisar_lectura_rechazada(GeneradorDeTickets.Resultado.LLENO)
 	pila.actualizar_tiempo(3600.0)
-	assert_str(_textos(pila)[0]).is_equal("QUEDA UNA HORA DE JORNADA")
+	assert_str(_textos(pila)[0]).is_equal(
+		PilaDeNotificaciones.TEXTOS[Notificaciones.Tipo.CIERRE_PROXIMO]
+	)
 	pila._process(1.0)
 	for tamano: Vector2i in [Vector2i(1920, 1080), Vector2i(1280, 720)]:
 		viewport.size = tamano
@@ -389,8 +440,9 @@ func test_una_hora_comparte_esquina_y_su_texto_entra_en_ambas_resoluciones() -> 
 		for cartel: PanelContainer in carteles:
 			var fila: HBoxContainer = cartel.get_child(0)
 			var simbolo: TextureRect = fila.get_child(0)
-			var texto: Label = fila.get_child(1)
-			assert_int(texto.get_line_count()).is_equal(1)
+			var texto: Label = cartel.find_children("*", "Label", true, false).back()
+			var renglones := 2 if cartel == carteles[0] else 1
+			assert_int(texto.get_line_count()).is_equal(renglones)
 			assert_float(texto.size.x).is_greater_equal(texto.get_minimum_size().x)
 			assert_object(texto.get_theme_font("font")).is_same(pila._marco.get_theme_font("font"))
 			assert_float(cartel.get_global_rect().end.x).is_equal_approx(derecha, 0.1)
