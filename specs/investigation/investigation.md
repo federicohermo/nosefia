@@ -422,9 +422,12 @@ textos, de a uno por vez y en este orden, cada uno con el botón «Continuar»:
 
 CUANDO se pulsa «Continuar», el sistema DEBE agregar el texto actual al chat de notas una sola
 vez y reemplazar el recuadro por el texto siguiente. El recuadro NO DEBE acumular textos; las
-notas sí. CUANDO se recibe el tercero, la reflexión DEBE terminar y pedir una sola entrada a
-«NOCHE 4» (BR-SHF-019). Un pedido repetido sobre un texto ya recibido, o fuera de la reflexión,
-NO DEBE avanzar otro texto ni agregar otra nota. Cada texto DEBE tener identidad propia, y
+notas sí. CUANDO se recibe el tercero, la reflexión DEBE esperar 1,5 segundos y entonces
+terminar y pedir una sola entrada a «NOCHE 4» (BR-SHF-019). MIENTRAS corre esa espera, el recuadro
+DEBE seguir mostrando el tercer texto, sin responder a «Continuar». La espera DEBE correr con el
+tiempo real del juego en ejecución y NO DEBE correr con la pausa. Un cuadro largo NO DEBE pedir
+dos entradas. Un pedido repetido sobre un texto ya recibido, o fuera de la reflexión, NO DEBE
+avanzar otro texto ni agregar otra nota. Cada texto DEBE tener identidad propia, y
 recibirlo NO DEBE registrar una pista ni contar como hipótesis elegida.
 
 ### BR-INV-044 — La cuarta jornada se cierra eligiendo una hipótesis
@@ -457,8 +460,8 @@ entradas. La espera NO DEBE reutilizar los tiempos de la placa ni de la persiana
 
 CUANDO se pulsa Esc durante la devolución, el desplazamiento lateral, la reflexión, la elección o
 la espera, el sistema DEBE abrir la pausa encima (BR-SAV-016). MIENTRAS la pausa está en
-pantalla, ningún botón del cierre DEBE responder, y el recorrido, la entrega de mensajes y la
-espera NO DEBEN avanzar. Reanudar DEBE conservar la etapa, el desplazamiento del chat, la foto
+pantalla, ningún botón del cierre DEBE responder, y el recorrido, la entrega de mensajes y cada
+espera (la del tercer texto de jornada 3 y la de la elección de jornada 4) NO DEBEN avanzar. Reanudar DEBE conservar la etapa, el desplazamiento del chat, la foto
 ampliada, el texto o la opción mostrada, la posición del celular y lo que falta de la espera.
 
 ### BR-INV-047 — Las notas conservan el cierre en orden
@@ -857,8 +860,15 @@ DADO la reflexión de jornada 3 con notas vacías ENTONCES el recuadro dice «Te
 terminada…» y el texto 1. CUANDO se pulsa «Continuar» ENTONCES las notas son [texto 1], el
 recuadro muestra sólo el texto 2 y no hay entrada. CUANDO se repite el pedido del texto 1
 ENTONCES las notas siguen [texto 1] y el recuadro sigue en el texto 2. CUANDO se pulsa
-«Continuar» dos veces más ENTONCES las notas son [texto 1, texto 2, texto 3], hay una sola
-entrada «NOCHE 4» y otro pedido no agrega nada. El expediente sigue vacío y no hay elección.
+«Continuar» una vez más ENTONCES las notas son [texto 1, texto 2], el recuadro muestra el
+texto 3. CUANDO se pulsa «Continuar» sobre el texto 3 ENTONCES las notas son [texto 1, texto 2,
+texto 3] y todavía no hay entrada. CUANDO pasa la espera declarada menos un cuadro ENTONCES sigue
+sin haber entrada y el recuadro sigue en el texto 3, sin responder a otro «Continuar» ni agregar
+una nota. CUANDO pasa el cuadro siguiente ENTONCES hay exactamente una entrada «NOCHE 4», y otro
+pedido no agrega nada. DADO la espera empezada CUANDO un cuadro llega 10 segundos tarde ENTONCES
+hay a lo sumo una entrada. DADO la espera a mitad CUANDO se pausa, pasan 3 segundos y se reanuda
+ENTONCES falta lo mismo que antes de pausar. Los textos 1 y 2 se reemplazan en el acto, sin
+espera. El expediente sigue vacío y no hay elección.
 
 ### AC-INV-060 — Cuatro combinaciones en el recuadro *(verifica BR-INV-044, BR-INV-039)*
 
@@ -893,8 +903,8 @@ Ni la espera ni la entrada descuentan el turno de la jornada 5.
 ### AC-INV-063 — La pausa congela cada etapa *(verifica BR-INV-046)*
 
 DADO cada etapa por separado —la devolución con 2 de 4 mensajes, el recorrido lateral a mitad,
-la reflexión de jornada 3 en el texto 2 con las notas desplazadas, la elección mostrando 2B y la
-espera a mitad— CUANDO se pulsa Esc, se pulsan los botones del cierre, pasan 3 segundos y se
+la reflexión de jornada 3 en el texto 2 con las notas desplazadas, la espera del texto 3 a mitad,
+la elección mostrando 2B y la espera de la elección a mitad— CUANDO se pulsa Esc, se pulsan los botones del cierre, pasan 3 segundos y se
 reanuda ENTONCES la etapa, los mensajes visibles, la posición del celular, el desplazamiento, el
 texto u opción mostrada y lo que falta de la espera son los mismos, y los botones pulsados
 durante la pausa no tuvieron efecto.
