@@ -112,6 +112,8 @@ texel_scale = 1.0
 directional = true
 generate_probes_subdiv = 3
 light_data = ExtResource("lightmap")
+editor_description = "Lo que no tiene lightmap —los productos, las cajas— toma la luz de las sondas y de las luces del techo, que no dan sombra. La ganancia (`metadata/ganancia_de_las_sondas`, la aplica el horneado a toda sonda sin ganancia propia) les da luz por el rebote, que un estante sí tapa, y no por un color más claro."
+metadata/ganancia_de_las_sondas = 1.36
 
 [node name="StaticBody3D" parent="Estructura/cajaregistradora" node_paths=PackedStringArray("jugador", "agarre", "reloj", "caja", "programa")]
 jugador = NodePath("../../../Jugador")
