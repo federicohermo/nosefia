@@ -249,7 +249,7 @@ Leer DEBE conservar el transcurso del turno de BR-INV-006 y las marcas de BR-INV
 ### BR-INV-030 — El historial mezcla guion y devoluciones en orden temporal
 
 El sistema DEBE ordenar los mensajes por jornada, momento de apertura o cierre y orden
-dentro del bloque, sin ordenarlos por texto ni inventar horas. En Enrique, cada devolución
+dentro del bloque, sin ordenarlos por texto ni por hora. En Enrique, cada devolución
 DEBE ir después de los mensajes de su jornada y antes de los de la siguiente: instrucciones de
 jornada 1, devolución 1, instrucciones de jornada 2, devolución 2, mensajes de jornada 3,
 devolución 3, foto y texto de apertura 4, devolución 4, foto y texto de apertura 5, y
@@ -258,14 +258,14 @@ su identidad; dos textos iguales con identidades distintas NO DEBEN fusionarse p
 
 Cada devolución nueva DEBE aportar explícitamente la jornada que cerró y el orden de sus
 mensajes (BR-EMP-031). Los mensajes legados sin jornada DEBEN conservar texto y orden relativo,
-sin recibir una jornada ni hora inventada. Su intercalado con bloques fechados depende de
+sin recibir una jornada ni una hora. Su intercalado con bloques fechados depende de
 OQ-INV-005. La vista cronológica y sus consultas NO DEBEN mutar el guion compartido ni sus
 marcas de lectura. Retomar DEBE reconstruir el guion y conservar las devoluciones guardadas
 con esos metadatos, con los mensajes del guion sin leer según BR-INV-023.
 
 ### BR-INV-031 — Sólo el tramo de pista emite su identidad
 
-El sistema DEBE mostrar en J2_6 sólo «acá siempre falta algo» en lila y el resto del texto
+El sistema DEBE mostrar en J2_6 sólo «acá siempre falta algo» en rojo y el resto del texto
 en blanco. CUANDO se pulsa ese tramo, DEBE emitir un pedido identificado con 2A, sin deducir
 la identidad del texto visible ni registrar por ese gesto un hallazgo o hipótesis.
 Leer el mensaje, abrir el chat, pulsar otro tramo o una identidad inexistente NO DEBE emitir
@@ -321,7 +321,7 @@ independiente: el subtítulo con mano vacía NO DEBE registrar una pista levanta
 
 ### BR-INV-038 — Dos gestos concretos descubren las pistas de la cuarta noche
 
-MIENTRAS jornada 4 está abierta, CUANDO se pulsa la frase lila «acá siempre falta algo» del
+MIENTRAS jornada 4 está abierta, CUANDO se pulsa la frase roja «acá siempre falta algo» del
 mensaje J2_6 de Yasmín, el sistema DEBE registrar 2A. Abrir o leer ese chat, o pulsar otra parte,
 NO DEBE registrarla. CUANDO se acepta levantar la colilla del fondo del depósito cerca de la
 puerta garage, el sistema DEBE registrar 2B. La colilla DEBE distinguirse visualmente como tal,
@@ -562,7 +562,7 @@ DEBE hacer también de 5L en la jornada 5 (BR-INV-062), para que nadie quede sin
 
 ### BR-INV-060 — El mensaje J3_3 es el tramo de la pista 5B
 
-El sistema DEBE mostrar en J3_3 el texto entero «para mi lo sacó enrique» en lila, con el mismo
+El sistema DEBE mostrar en J3_3 el texto entero «para mi lo sacó enrique» en rojo, con el mismo
 gesto y la misma marca que el tramo de BR-INV-031. CUANDO se pulsa ese tramo, DEBE emitir un
 pedido identificado con 5B, sin deducir la identidad del texto visible ni registrar por ese
 gesto un hallazgo o hipótesis. Leer el mensaje, abrir el chat o pulsar otro mensaje del bloque
@@ -622,6 +622,32 @@ Sospecho que algunas de las Cindolor se deben haber echado a perder.». Ampliar 
 usar ese texto como adjunto (BR-INV-025). La apertura de la jornada 5 NO DEBE llevar un tercer
 mensaje de Enrique. Las jornadas 1 a 4 NO DEBEN mostrar esos mensajes, y retomar una partida en
 la jornada 5 DEBE mostrarlos una sola vez, sin leer (BR-INV-023).
+
+### BR-INV-101 — Cada mensaje fechado lleva su hora
+
+El sistema DEBE dar a cada mensaje fechado una hora con forma `H:MM` o `HH:MM`. Un mensaje
+recibido lleva la hora que define su ficha: los de Yasmín, las devoluciones del jefe y los
+mensajes que el jefe manda al iniciar una jornada. Los introductorios del jefe, a los que la
+ficha no les pone hora, llevan la hora que decidió el usuario el 2026-10-26, todas antes de las 20:00 de su
+noche: **reemplazar si la ficha las define**. Ningún mensaje recibido DEBE quedar entre las
+20:00 y las 08:00 de su noche, porque los mensajes nunca se reciben durante la jornada. La
+devolución de una jornada empieza en el minuto que fija la ficha y cada mensaje siguiente suma
+un minuto a su orden.
+
+Una nota DEBE llevar la hora del reloj del juego: la de la pista, en el momento en que se
+encontró, y la de la hipótesis y la reflexión, en el momento en que empieza el cierre. Esa hora
+NO DEBE cambiar al guardar y cargar. Un dato guardado sin hora DEBE cargar sin hora y sin fallar.
+Un mensaje legado sin jornada NO DEBE recibir hora. La hora es un dato del mensaje: ninguna
+pantalla la calcula ni la inventa.
+
+### BR-INV-102 — El separador marca el día y el momento del día
+
+El sistema DEBE separar el historial en tandas y rotular cada una con el día relativo («HOY»,
+«AYER», …) y, debajo, la hora de su primer mensaje. Una tanda cambia cuando cambia el día o el
+momento del día: antes del mediodía es la mañana, y desde el mediodía es la tarde. Una
+devolución es de la mañana siguiente a su jornada, así que su día es el de la jornada que sigue.
+Una tanda cuyo primer mensaje no tiene hora DEBE rotularse sin hora. Un mensaje legado sin
+jornada NO DEBE abrir una tanda ni aportar hora.
 
 ## Criterios de aceptación
 
@@ -839,7 +865,7 @@ Los dieciséis mensajes de Yasmín tampoco se duplican al repetir esos recorrido
 
 ### AC-INV-041 — El clic de pista tiene un borde exacto *(verifica BR-INV-031)*
 
-DADO J2_6 visible CUANDO se mide el texto ENTONCES sólo «acá siempre falta algo» está en lila
+DADO J2_6 visible CUANDO se mide el texto ENTONCES sólo «acá siempre falta algo» está en rojo
 y las palabras anteriores y posteriores siguen blancas y literales. CUANDO se abre o lee,
 o se pulsa fuera del tramo ENTONCES hay cero pedidos de 2A. Un clic dentro emite exactamente
 un pedido de 2A y dos clics válidos pueden emitir dos, con cero cambios directos del expediente.
@@ -1065,7 +1091,7 @@ con o sin el bloque de Yasmín.
 ### AC-INV-068 — El bloque no concede pistas y muestra sus glifos *(verifica BR-INV-048, BR-INV-031, BR-INV-060)*
 
 DADO la jornada 5 abierta, sin pistas anotadas, CUANDO se miden los diez mensajes ENTONCES
-sólo J3_3 tiene tramo en lila, y abrir, leer o pulsar cualquier parte de J3_1, J3_2 y J3_4 a
+sólo J3_3 tiene tramo en rojo, y abrir, leer o pulsar cualquier parte de J3_1, J3_2 y J3_4 a
 J3_10 emite cero pedidos de pista y deja intactos el expediente y el chat de notas. DADO J3_7 y J3_9 CUANDO se
 muestran a 1920×1080 y a 1280×720, en escritorio y en paquete web, ENTONCES 💀 y 😬 se dibujan
 como glifos, sin caracteres ausentes, y los textos completos quedan dentro del celular, sin
@@ -1175,7 +1201,7 @@ ENTONCES sortear la 5 no guarda nada.
 ### AC-INV-090 — Sólo el mensaje entero de J3_3 pide 5B *(verifica BR-INV-060, BR-INV-031)*
 
 DADO la jornada 5 abierta CUANDO se muestra J3_3 ENTONCES «para mi lo sacó enrique» está entero
-en lila y el mensaje no tiene otro tramo; pulsarlo emite exactamente un pedido con la identidad
+en rojo y el mensaje no tiene otro tramo; pulsarlo emite exactamente un pedido con la identidad
 5B, y pulsarlo dos veces emite dos pedidos iguales. DADO el mismo chat CUANDO se lee o se abre
 Yasmín, o se pulsa J3_2 o J3_4 ENTONCES se emiten cero pedidos y el expediente queda intacto.
 DADO la jornada 4 abierta ENTONCES J2_6 sigue pidiendo 2A con «acá siempre falta algo».
@@ -1257,6 +1283,55 @@ adjunto. Reabrir el celular, volver al menú y repetir la apertura no duplican l
 DADO cada jornada de la 1 a la 4 CUANDO se recorre Enrique ENTONCES ninguno de los dos
 mensajes de BR-INV-100 está en su chat. DADO una partida retomada en la jornada 5 ENTONCES los
 dos aparecen una sola vez, y el contador de Enrique cuenta sólo los que no leyó.
+
+### AC-INV-103 — Yasmín lleva la hora de su ficha *(verifica BR-INV-101)*
+
+DADO el guion de Yasmín CUANDO se leen las horas ENTONCES J2_1 a J2_4 tienen 17:34, J2_5 a J2_7
+17:35, J2_8 a J2_10 17:36, J2_11 a J2_13 17:37 y J2_14 a J2_16 17:38; J3_1 a J3_4 tienen 09:11,
+J3_5 a J3_7 09:12 y J3_8 a J3_10 09:13. Ninguna queda entre las 20:00 y las 08:00.
+
+### AC-INV-104 — Los introductorios del jefe quedan antes de las 20:00 *(verifica BR-INV-101)*
+
+DADO el guion del jefe CUANDO se leen los mensajes de jornada 1 ENTONCES J1_Intro01 tiene 19:40;
+J1_FotoReloj, J1_Foto02 y J1_Intro02, 19:41; J1_Foto03 y J1_Intro03, 19:42; J1_Foto04, J1_Intro04 y
+J1_Intro05, 19:43; J1_Foto06 y J1_Intro06, 19:44. CUANDO se leen los de jornada 2 ENTONCES cada
+variante de J2_Mensaje1 tiene 19:40; J2_FotoGondolas y J1_Foto07, 19:41; J1_Intro07 y J1_Intro08,
+19:42; J1_Foto09 y J1_Intro09, 19:43. CUANDO se leen los de jornada 3 ENTONCES cada variante de
+J3_Mensaje1 tiene 19:40; J1_Intro10 y J1_Foto11, 19:41; J1_Intro11 y J1_Intro12, 19:42. Ninguno
+queda entre las 20:00 y las 08:00.
+
+### AC-INV-105 — Las devoluciones y las aperturas llevan la hora de la ficha *(verifica BR-INV-101)*
+
+DADO la devolución de la jornada 3 CUANDO se leen sus mensajes ENTONCES salen a las 8:26, 8:27,
+8:28… en su orden. DADO las devoluciones de las jornadas 4, 5, 6 y 7 ENTONCES su primer mensaje
+sale a las 8:38, 9:05, 8:42 y 9:11, y cada siguiente suma un minuto. DADO el mensaje de apertura
+de la jornada 4 ENTONCES J2_CONTENEDOR_FOTO y J2_CONTENEDOR_TEXTO tienen 19:31. Cada mensaje de
+apertura de las jornadas 5, 6 y 7 que exista lleva la hora de la ficha: 19:20, 19:48, y 15:57,
+15:58 y 15:59 en la 7.
+
+### AC-INV-106 — Una nota lleva la hora del reloj del juego *(verifica BR-INV-101)*
+
+DADO una pista encontrada con 3630 segundos del turno gastados ENTONCES su nota lleva 21:00, la
+hora del reloj truncada al minuto, y cargar la partida guardada no la cambia.
+DADO una pista encontrada con el turno recién abierto ENTONCES su nota lleva 20:00. DADO una
+hipótesis o una reflexión CUANDO empieza el cierre con el turno cumplido ENTONCES su nota lleva
+08:00, y CUANDO empieza antes ENTONCES lleva la hora del reloj en ese momento. DADO un guardado de
+una nota sin hora CUANDO se carga ENTONCES la nota existe, con el mismo texto y sin hora.
+
+### AC-INV-107 — El separador corta por día y por momento del día *(verifica BR-INV-102)*
+
+DADO una devolución con hora de la mañana y mensajes de Yasmín con hora de la tarde del día
+siguiente a su jornada CUANDO se ordena el historial ENTONCES quedan en dos tandas, cada una con
+su rótulo de día y la hora de su primer mensaje debajo. DADO dos mensajes de la misma jornada y
+del mismo momento del día ENTONCES quedan en una tanda. DADO un mensaje a las 11:59 y otro a las
+12:00 del mismo día ENTONCES quedan en dos tandas. DADO el mensaje de la mañana de la devolución
+de la jornada N CUANDO la referencia es la jornada N+1 ENTONCES su rótulo es «HOY».
+
+### AC-INV-108 — Sin hora no hay hora ni tanda inventada *(verifica BR-INV-101, BR-INV-102)*
+
+DADO un mensaje fechado sin hora al frente de una tanda ENTONCES el rótulo no lleva hora. DADO un
+mensaje legado sin jornada ENTONCES no abre tanda, no muestra hora y no cambia las tandas de los
+fechados.
 
 ## No objetivos
 

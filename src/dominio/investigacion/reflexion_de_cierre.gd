@@ -45,13 +45,17 @@ var _expediente: Expediente
 var _etapa: Etapa = Etapa.POR_EMPEZAR
 var _mostrada: int = 0
 var _espera: float = 0.0
+var _hora: String = ""
 
 
 ## La reflexión pendiente de esa jornada cerrada, o `null` si no tiene o ya terminó.
-static func para(jornada: int, expediente: Expediente) -> ReflexionDeCierre:
+##
+## `hora` es la del reloj del juego al empezar el cierre, y la llevan las notas que anota.
+static func para(jornada: int, expediente: Expediente, hora: String = "") -> ReflexionDeCierre:
 	if not ENCABEZADOS.has(jornada) or expediente == null:
 		return null
 	var reflexion := ReflexionDeCierre.new(jornada, expediente)
+	reflexion._hora = hora
 	return null if reflexion._completa() else reflexion
 
 
@@ -61,7 +65,7 @@ static func restaurar_notas(expediente: Expediente, identidades: PackedStringArr
 	for indice: int in TEXTOS_DE_LA_PRIMERA.size():
 		if not identidades.has(_identidad(indice)):
 			return
-		expediente.anotar(_nota(indice))
+		expediente.anotar(_nota(indice, ""))
 
 
 func _init(jornada: int, expediente: Expediente) -> void:
@@ -113,7 +117,7 @@ func identidad_del_texto() -> String:
 func continuar(identidad: String) -> bool:
 	if _etapa != Etapa.TEXTOS or identidad != identidad_del_texto():
 		return false
-	_expediente.anotar(_nota(_recibidos()))
+	_expediente.anotar(_nota(_recibidos(), _hora))
 	if _completa():
 		_etapa = Etapa.ESPERA
 		_espera = 0.0
@@ -142,7 +146,7 @@ func anterior() -> bool:
 func elegir(identidad: String) -> Eleccion:
 	if _jornada == JORNADA_DE_LOS_TEXTOS or _etapa == Etapa.POR_EMPEZAR:
 		return Eleccion.FUERA_DE_ETAPA
-	match _expediente.elegir(_jornada, identidad):
+	match _expediente.elegir(_jornada, identidad, _hora):
 		Expediente.Resultado.ANOTADA:
 			_etapa = Etapa.ESPERA
 			_espera = 0.0
@@ -201,10 +205,11 @@ static func _identidad(indice: int) -> String:
 	return "REFLEXION_J%d_%d" % [JORNADA_DE_LOS_TEXTOS, indice + 1]
 
 
-static func _nota(indice: int) -> Mensaje:
+static func _nota(indice: int, hora: String) -> Mensaje:
 	var nota := Mensaje.new()
 	nota.identidad = _identidad(indice)
 	nota.jornada = JORNADA_DE_LOS_TEXTOS
 	nota.momento = Mensaje.Momento.CIERRE
 	nota.texto = TEXTOS_DE_LA_PRIMERA[indice]
+	nota.hora = hora
 	return nota

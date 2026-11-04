@@ -17,7 +17,8 @@ extends RefCounted
 const VECINAS := 6
 const ALCANCE := 2.5
 const COEFICIENTES := 9
-## Lo que declara el padre de un grupo de `LightmapProbe`: cuánto se multiplica su luz al hornear.
+## Cuánto se multiplica la luz de una sonda al hornear. Lo declara el `LightmapGI` para toda sonda,
+## y el padre de un grupo de `LightmapProbe` para las suyas.
 const GANANCIA := &"ganancia_de_las_sondas"
 ## Cuánto se aleja una sonda del horneado de la posición del nodo que la puso.
 const TOLERANCIA := 0.01
@@ -146,24 +147,38 @@ static func _vecinas(puntos: PackedVector3Array, con_luz: Array[int], desde: Vec
 	return cerca.slice(0, VECINAS)
 
 
-## Multiplica la luz de las sondas manuales cuyo padre declara una `GANANCIA`. Va después de
-## `rellenar`: la luz de más no se reparte a las sondas de afuera. Devuelve cuántas reforzó.
+## Multiplica la luz de las sondas por la `GANANCIA` de `horno`, y la de las manuales por la de su
+## padre, si declara una. Va después de `rellenar`: la luz de más no se reparte a las sondas de
+## afuera. Devuelve cuántas reforzó.
 ##
 ## Una sonda guarda el rebote, nunca la luz directa de una lámpara. Lo horneado en un mueble lleva
 ## las dos, y lo que toma la luz de las sondas, no: la mercadería de una heladera, pegada a su
 ## lámpara, queda más oscura que el estante donde se apoya.
-static func reforzar(datos: LightmapGIData, raiz: Node, marco: Transform3D) -> int:
+static func reforzar(datos: LightmapGIData, raiz: Node, horno: LightmapGI) -> int:
 	var sondas: Dictionary = datos.get("probe_data")
 	var puntos: PackedVector3Array = sondas["points"]
-	var ganancias := {}
+	var marco := horno.global_transform.affine_inverse()
+	var propias := {}
 	for nodo: Node in raiz.find_children("*", "LightmapProbe", true, false):
 		var ganancia: float = nodo.get_parent().get_meta(GANANCIA, 1.0)
 		var sonda := _mas_cercana(puntos, marco * (nodo as Node3D).global_position)
 		if ganancia != 1.0 and sonda >= 0:
-			ganancias[sonda] = ganancia
-	sondas["sh"] = reforzar_coeficientes(sondas["sh"], ganancias)
+			propias[sonda] = ganancia
+	var por_sonda := ganancias(puntos.size(), horno.get_meta(GANANCIA, 1.0), propias)
+	sondas["sh"] = reforzar_coeficientes(sondas["sh"], por_sonda)
 	datos.set("probe_data", sondas)
-	return ganancias.size()
+	return por_sonda.size()
+
+
+## La ganancia de cada sonda: la `general` para todas, salvo las que tienen una `propia`. Una
+## ganancia de 1 no figura.
+static func ganancias(total: int, general: float, propias: Dictionary) -> Dictionary:
+	var resultado := {}
+	if general != 1.0:
+		for sonda in total:
+			resultado[sonda] = general
+	resultado.merge(propias, true)
+	return resultado
 
 
 static func reforzar_coeficientes(sh: PackedColorArray, ganancias: Dictionary) -> PackedColorArray:
