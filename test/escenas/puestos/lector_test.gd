@@ -475,10 +475,7 @@ func test_la_lista_pausa_y_reanuda_programa_y_mano() -> void:  # AC-CTR-030, AC-
 	var selector := _vista(almacen).selectores[2]
 	(selector.find_child("Cabecera", true, false) as Button).pressed.emit()
 	assert_bool(selector.esta_abierta()).is_true()
-	var evento := InputEventKey.new()
-	evento.keycode = KEY_ESCAPE
-	evento.pressed = true
-	(almacen.get_node("Interfaz/ControlDePausa") as ControlDePausa).call("_input", evento)
+	(almacen.get_node("Interfaz/ControlDePausa") as ControlDePausa).pausar()
 	for _cuadro in 4:
 		await get_tree().process_frame
 	assert_bool(get_tree().paused).is_true()

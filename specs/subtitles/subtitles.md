@@ -278,7 +278,7 @@ SI el celular está abierto al anotarse la pista, ENTONCES el pensamiento DEBE e
 cierre y mostrarse entonces. Recién al mostrarse cuenta como mostrado: si la jornada cierra antes,
 se descarta y la partida sigue sin marca. Anotar otra pista con el pensamiento pendiente NO DEBE
 duplicarlo. SI otro subtítulo reemplaza al pensamiento ya mostrado, ENTONCES el pensamiento cuenta
-como mostrado y NO DEBE volver (BR-SUB-001). El aviso «¡NUEVA PISTA!» NO cambia.
+como mostrado y NO DEBE volver (BR-SUB-001). El aviso «Nueva pista desbloqueada» NO cambia.
 
 ### BR-SUB-017 — Los renglones los marca la ficha
 

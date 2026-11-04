@@ -85,6 +85,17 @@ func cerrar() -> void:
 	jugador.reanudar()
 
 
+func esta_abierta() -> bool:
+	return _abierta
+
+
+## Lo pide el nodo de la pausa. Una lista desplegada se cierra primero; la caja, con el Esc
+## siguiente.
+func cerrar_con_esc() -> void:
+	if not programa.cerrar_las_listas_abiertas():
+		_cerrar_desde_entrada()
+
+
 func _input(evento: InputEvent) -> void:
 	if _abierta and evento.is_action_pressed(ReglasDelJugador.ACCION_USAR):
 		get_viewport().set_input_as_handled()

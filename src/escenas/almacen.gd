@@ -336,6 +336,11 @@ func _ready() -> void:
 	pausa.pausado.connect(_programa_de_tickets.cerrar_las_listas)
 	pausa.reanudado.connect(_jugador.tomar_el_cursor_desde_entrada)
 	pausa.celular = _celular
+	var escritorio: EscritorioDelLocal = $"Estructura/base compu/StaticBody3D"
+	var notas: NotasDelLocal = get_node("Estructura/NotasDelAlmacen")
+	pausa.registrar_interfaz(escritorio.esta_abierta, escritorio.cerrar_con_esc)
+	pausa.registrar_interfaz(_puesto_de_la_caja.esta_abierta, _puesto_de_la_caja.cerrar_con_esc)
+	pausa.registrar_interfaz(notas.esta_abierta, notas.cerrar_con_esc)
 	pausa.esc_atendido_por_el_celular.connect(_jugador.tomar_el_cursor_desde_entrada)
 	pausa.pausado.connect(_jugador.declarar_la_pausa.bind(true))
 	pausa.reanudado.connect(_jugador.declarar_la_pausa.bind(false))
@@ -814,10 +819,7 @@ func _al_continuar_la_reflexion(identidad: String) -> void:
 	if reflexion == null or not reflexion.continuar(identidad):
 		return
 	_anotar_el_paso()
-	if reflexion.etapa() == ReflexionDeCierre.Etapa.TERMINADA:
-		_terminar_la_reflexion()
-	else:
-		_hipotesis.mostrar(reflexion)
+	_hipotesis.mostrar(reflexion)
 
 
 func _al_elegir_la_hipotesis(identidad: String) -> void:

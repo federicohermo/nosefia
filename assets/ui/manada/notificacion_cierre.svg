@@ -1,4 +1,5 @@
-<svg width="170" height="170" viewBox="0 0 170 170" fill="none" xmlns="http://www.w3.org/2000/svg">
-<circle cx="85" cy="85" r="61" stroke="#04060c" stroke-width="12"/>
-<path d="M85 45V85L116 103" stroke="#04060c" stroke-width="12" stroke-linecap="round" stroke-linejoin="round"/>
+<svg width="164" height="154" viewBox="0 0 164 154" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path id="Union" d="M16 138H93V107H109V154H0V107H16V138ZM59 102H69V117H84V132H24V117H39V102H49V92H59V102ZM31 62H45V92H31V107H16V92H30V62H16V47H31V62ZM93 107H78V92H93V107ZM78 92H63V62H78V92ZM69 57H59V67H49V57H39V42H69V57ZM93 62H78V47H93V62ZM109 47H93V16H16V47H0V0H109V47ZM39 42H24V27H39V42ZM84 42H69V27H84V42Z" fill="black"/>
+<path id="Palo" transform="translate(138 0)" d="M26.0627 0V70.415H0V0.68586L0.68586 0H26.0627Z" fill="black"/>
+<path id="Punto" transform="translate(138 84)" d="M25.1482 0H0V23.3193H25.1482V0Z" fill="black"/>
 </svg>

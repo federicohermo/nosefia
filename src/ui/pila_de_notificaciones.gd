@@ -5,13 +5,14 @@ const TEXTOS := {
 	Notificaciones.Tipo.CLIENTE: "¡HAY UN CLIENTE!",
 	Notificaciones.Tipo.LECTURA_FALLIDA: "NO SE PUDO LEER",
 	Notificaciones.Tipo.CLIENTE_CANSADO: "EL CLIENTE SE CANSÓ DE ESPERAR.",
-	Notificaciones.Tipo.CIERRE_PROXIMO: "QUEDA UNA HORA DE JORNADA",
-	Notificaciones.Tipo.PISTA: "¡NUEVA PISTA!",
+	Notificaciones.Tipo.CIERRE_PROXIMO: "QUEDA POCO TIEMPO PARA QUE\nSE TERMINE LA JORNADA.",
+	Notificaciones.Tipo.PISTA: "Nueva pista desbloqueada",
 	Notificaciones.Tipo.TAREAS_TERMINADAS: "YA PODÉS RETIRARTE\nPOR LA PUERTA PRINCIPAL.",
 	Notificaciones.Tipo.CLIENTE_CANSADO_CON_PRODUCTOS:
 	"EL CLIENTE SE CANSÓ DE ESPERAR Y DEJÓ LOS PRODUCTOS.",
 }
 const TITULOS := {
+	Notificaciones.Tipo.CIERRE_PROXIMO: "¡HORA DE CIERRE!",
 	Notificaciones.Tipo.TAREAS_TERMINADAS: "¡TAREAS COMPLETADAS!",
 }
 const SIMBOLO_DEL_CLIENTE := preload("res://assets/ui/manada/notificacion_cliente.svg")

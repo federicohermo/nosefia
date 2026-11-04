@@ -9,9 +9,13 @@ const TEXTOS: Array[String] = [
 	"el chabon es bastante denso pero ya te vas a acostumbrar",
 	"y te aviso q acá siempre falta algo o anda todo a medias",
 	"para que te vayas acostumbrando también",
-	"p ejemplo hoy parece que se acabo uno de los jabones para la limpieza y no había ningún repuesto",
+	(
+		"p ejemplo el wifi anda medio mal y a veces hay que apagarlo y volverlo a prender "
+		+ "para que funcione"
+	),
+	"y hoy parece que se acabo uno de los jabones para la limpieza y no había ningún repuesto",
 	"no le reclames a enrique porque no va a hacer nada y encima se va a irritar",
-	"creo que lo podes reemplazar con chorrito del producto ese de limpieza que vendemos",
+	"creo que lo podes reemplazar con un chorrito del producto ese de limpieza que vendemos",
 	"no creo que enrique se de cuenta si usás uno",
 	"pero nada",
 	"quería darte la bienvenida",
@@ -54,7 +58,9 @@ func test_la_apertura_cuatro_contiene_foto_y_texto_siguiente() -> void:  # AC-IN
 	bandeja.abrir_jornada(4)
 	var mensajes := bandeja.mensajes_de(JEFE)
 	assert_array(mensajes).is_equal(
-		Conversacion.de(JEFE).mensajes.filter(func(m: Mensaje) -> bool: return m.vale_para([]))
+		Conversacion.de(JEFE).mensajes.filter(
+			func(m: Mensaje) -> bool: return m.jornada <= 4 and m.vale_para([])
+		)
 	)
 	var foto := mensajes.size() - 2
 	assert_str(mensajes[foto].identidad).is_equal("J2_CONTENEDOR_FOTO")
