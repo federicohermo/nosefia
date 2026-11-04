@@ -172,6 +172,10 @@ func test_retomar_vuelve_a_la_eleccion_sin_la_devolucion() -> void:  # AC-SAV-02
 	AvanceDeDevolucion.entregar(pantalla)
 	pantalla.elegir()
 	AvanceDeDevolucion.terminar_movimiento(pantalla)
+	assert_bool(recuadro.visible).is_true()
+	recuadro.botones().back().pressed.emit()
+	almacen.call("_process", ReflexionDeCierre.ESPERA_ANTES_DE_LA_NOCHE)
+	AvanceDeDevolucion.terminar_movimiento(pantalla)
 	# La noche del corte espera a que su oscuridad quede preparada.
 	for _cuadro in CUADROS_DEL_CALENTAMIENTO:
 		if aperturas.size() == 2:
@@ -251,3 +255,26 @@ func test_la_pausa_congela_la_espera_del_tercer_texto() -> void:  # AC-INV-063
 	assert_float(reflexion.restante()).is_equal(restante)
 	assert_str(recuadro.texto()).is_equal(mostrado)
 	assert_array(aperturas).is_empty()
+
+
+func test_la_quinta_jornada_cierra_eligiendo_y_pide_la_sexta() -> void:  # AC-INV-112
+	var partida := Partida.desde({"jornada": GeneradorDeTickets.JORNADA_SIN_LECTOR})
+	var almacen: Node3D = await _almacen(partida)
+	var aperturas := _aperturas(almacen)
+	var pantalla := await _hasta_la_reflexion(almacen)
+	var recuadro := _recuadro(almacen)
+	assert_bool(recuadro.visible).is_true()
+	assert_int(recuadro.botones().size()).is_equal(1)
+	assert_array(aperturas).is_empty()
+	almacen.call("_process", 10.0)
+	assert_bool(recuadro.visible).is_true()
+	assert_array(aperturas).is_empty()
+	recuadro.botones().back().pressed.emit()
+	assert_str(partida.expediente.eleccion(GeneradorDeTickets.JORNADA_SIN_LECTOR)).is_equal("5P")
+	assert_array(aperturas).is_empty()
+	var cuadro := 1.0 / 60.0
+	almacen.call("_process", ReflexionDeCierre.ESPERA_ANTES_DE_LA_NOCHE - cuadro)
+	assert_array(aperturas).is_empty()
+	almacen.call("_process", cuadro)
+	AvanceDeDevolucion.terminar_movimiento(pantalla)
+	assert_array(aperturas).is_equal([GeneradorDeTickets.JORNADA_SIN_LECTOR + 1])
