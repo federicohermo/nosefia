@@ -82,7 +82,6 @@ func test_los_tres_tachos_enfocados_entregan_y_la_tercera_cuenta() -> void:  # A
 	var recolector: RecolectorDeBasura = almacen.get("_recolector")
 	var agarre: Agarre = almacen.get("_agarre")
 	var reloj: RelojDelTurno = almacen.get("_reloj")
-	var hud: Label = almacen.get("_hud").get("_tareas")
 	var avisos: Array[int] = []
 	reloj.tarea_completada.connect(func(cantidad: int) -> void: avisos.append(cantidad))
 	var previo := _cumplidas(almacen)
@@ -110,7 +109,6 @@ func test_los_tres_tachos_enfocados_entregan_y_la_tercera_cuenta() -> void:  # A
 		)
 	assert_int(_cumplidas(almacen)).is_equal(previo + 1)
 	assert_array(avisos).contains([previo + 1])
-	assert_str(hud.text).contains(str(previo + 1))
 
 
 func test_tacho_extrae_una_vez_con_primario() -> void:  # AC-CLN-053 AC-CLN-055

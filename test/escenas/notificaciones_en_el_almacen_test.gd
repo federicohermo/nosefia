@@ -22,7 +22,8 @@ func _textos(local: Node3D) -> Array[String]:
 	var pila: PilaDeNotificaciones = local.get_node("Interfaz/PilaDeNotificaciones")
 	var textos: Array[String] = []
 	for label: Label in pila.get_node("Marco/Pila").find_children("*", "Label", true, false):
-		textos.append(label.text.replace("\n", " "))
+		if label.name != &"Titulo":
+			textos.append(label.text.replace("\n", " "))
 	return textos
 
 

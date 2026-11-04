@@ -59,37 +59,39 @@ const DE_LOS_PRODUCTOS := {
 }
 
 const DE_LAS_NOTAS := {
-	NotaPegada.Id.JABONES_Y_MANCHAS: "Una nota explicando qué jabón usar para cada tipo de mancha.",
+	NotaPegada.Id.JABONES_Y_MANCHAS:
+	"Una nota explicando qué jabón usar\npara cada tipo de mancha.",
 	NotaPegada.Id.INSTRUCCIONES_DE_LIMPIEZA:
-	"Una nota que explica cómo usar los elementos de limpieza.",
+	"Una nota que explica cómo usar\nlos elementos de limpieza.",
 	NotaPegada.Id.NO_TIRAR_PAPEL: "“Por favor, no tirar papel en el inodoro”",
 	NotaPegada.Id.TAREAS_A_REALIZAR: "Una lista de las tareas que me dejó Enrique.",
 	NotaPegada.Id.LOCAL_ORDENADO:
-	"Una nota sobre el correcto orden del local. Enrique es medio insoportable con eso…",
+	"Una nota sobre el correcto orden del local.\nEnrique es medio insoportable con eso…",
 }
 
 const DE_LOS_TACHOS := {
 	TareaDeLaBasura.Tacho.LOCAL: "Un tacho de basura para los compradores diurnos.",
-	TareaDeLaBasura.Tacho.ESCRITORIO: "Un tachito de basura para nosotros, los empleados.",
-	TareaDeLaBasura.Tacho.BANO: "El tacho de basura del baño. Mejor ni mirar lo que tiene adentro.",
+	TareaDeLaBasura.Tacho.ESCRITORIO: "Un tacho de basura para nosotros,\nlos empleados.",
+	TareaDeLaBasura.Tacho.BANO:
+	"El tacho de basura del baño.\nMejor ni mirar lo que tiene adentro.",
 }
 
 const DE_LO_DEMAS := {
 	INODORO:
-	"Un inodoro. Enrique me pidió encarecidamente que no tire papel en él, porque se tapa.",
+	"Un inodoro. Enrique me pidió encarecidamente\nque no tire papel en él, porque se tapa.",
 	LAVATORIO: "Un lavatorio. Acá puedo cargar el balde.",
 	COMPUTADORA:
-	"Una computadora viejita. El único programa que tiene es el registro de productos vendidos.",
-	CAJA_REGISTRADORA: "La caja registradora. Acá puedo hacer los tickets para los compradores.",
+	"Una computadora medio vieja. El único programa\nque tiene es el registro de productos vendidos.",
+	CAJA_REGISTRADORA: "La caja registradora. Acá puedo hacer\nlos tickets para los compradores.",
 	LECTOR:
 	(
-		"El lector de código de barras. Si le paso un producto, lo va a anotar en el programa"
-		+ " generador de tickets de la caja."
+		"El lector de código de barras. Si le paso un producto,\n"
+		+ "lo va a anotar en el programa de la caja."
 	),
 	ENTRADA_PRINCIPAL:
-	"La entrada principal al local. Queda cerrada con llave durante el turno nocturno.",
+	"La entrada principal al local. Queda cerrada\ncon llave durante el turno nocturno.",
 	PUERTA_DEL_JEFE:
-	"Esta puerta lleva a la “oficina” de Enrique. Así le dice él. Siempre está cerrada.",
+	"Esta puerta lleva a la “oficina” de Enrique.\nAsí le dice él. Siempre queda cerrada.",
 	CUARTITO_CERRADO: "Acá guardan las cosas de limpieza. Está cerrado con llave.",
 	PORTON: "Un portón que da a la calle.",
 	CONTENEDOR: "Un contenedor de basura.",

@@ -13,7 +13,7 @@ enum Eleccion { ACEPTADA, REPETIDA, NO_DISPONIBLE, FUERA_DE_ETAPA }
 
 const JORNADA_DE_LOS_TEXTOS := ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA
 const ENCABEZADOS: Dictionary[int, String] = {
-	JORNADA_DE_LOS_TEXTOS: "Primera jornada terminada…",
+	JORNADA_DE_LOS_TEXTOS: "Tercera jornada terminada…",
 	JORNADA_DE_LOS_TEXTOS + 1:
 	(
 		"Hoy faltaba uno de los jabones para la limpieza del local. No me quiero empezar a "
