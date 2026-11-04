@@ -77,7 +77,7 @@ func test_la_primera_pista_anotada_piensa_y_las_demas_no() -> void:  # AC-SUB-02
 	assert_int(investigador.pedir_pista(&"colilla", Pista.Canal.LEVANTAR, jornada, true)).is_equal(
 		Expediente.Resultado.ANOTADA
 	)
-	assert_str(_linea(almacen)).is_equal(SubtitulosDeLosGestos.texto(S.PRIMERA_PISTA))
+	assert_str(_linea(almacen)).is_equal(SubtitulosDeLosGestos.texto(S.PRIMERA_PISTA_OBJETO))
 	assert_bool(partida.primera_pista_pensada).is_true()
 	(almacen.get("_hud") as Hud).vaciar_subtitulo()
 	assert_int(investigador.pedir_pista(&"colilla", Pista.Canal.LEVANTAR, jornada, true)).is_equal(
@@ -97,8 +97,18 @@ func test_con_el_celular_abierto_la_primera_pista_espera_a_que_se_cierre() -> vo
 	assert_str(_linea(almacen)).is_empty()
 	assert_bool((almacen.get("_partida") as Partida).primera_pista_pensada).is_false()
 	celular.pedir_alternar(false)
-	assert_str(_linea(almacen)).is_equal(SubtitulosDeLosGestos.texto(S.PRIMERA_PISTA))
+	assert_str(_linea(almacen)).is_equal(SubtitulosDeLosGestos.texto(S.PRIMERA_PISTA_OBJETO))
 	assert_bool((almacen.get("_partida") as Partida).primera_pista_pensada).is_true()
+
+
+func test_una_primera_pista_de_chat_piensa_el_texto_del_chat() -> void:  # AC-SUB-027, AC-SUB-033
+	var jornada := 4
+	var almacen := await _almacen_en(jornada)
+	var investigador: Investigador = almacen.get("_investigador")
+	assert_int(investigador.pedir_pista(&"2A", Pista.Canal.CHAT, jornada, true)).is_equal(
+		Expediente.Resultado.ANOTADA
+	)
+	assert_str(_linea(almacen)).is_equal(SubtitulosDeLosGestos.texto(S.PRIMERA_PISTA_CHAT))
 
 
 func test_alejarse_del_objeto_desvanece_su_subtitulo() -> void:  # AC-SUB-020
