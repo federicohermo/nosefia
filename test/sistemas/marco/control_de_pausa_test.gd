@@ -186,3 +186,65 @@ func test_con_el_celular_fijo_esc_pausa_y_lo_deja_abierto() -> void:  # AC-INV-0
 	control._input(_esc())
 	assert_bool(get_tree().paused).is_false()
 	assert_bool(control.celular.celular().abierto()).is_true()
+
+
+## Una interfaz de prueba: abierta hasta que Esc la cierra, con su cursor devuelto al juego.
+class InterfazDePrueba:
+	var abierta := true
+	var cierres: int = 0
+
+	func esta_abierta() -> bool:
+		return abierta
+
+	func cerrar_con_esc() -> void:
+		abierta = false
+		cierres += 1
+
+
+func test_con_una_interfaz_abierta_esc_la_cierra_y_el_siguiente_pausa() -> void:  # AC-PLY-167
+	var control := _control()
+	var interfaz := InterfazDePrueba.new()
+	control.registrar_interfaz(interfaz.esta_abierta, interfaz.cerrar_con_esc)
+	control._input(_esc())
+	assert_int(interfaz.cierres).is_equal(1)
+	assert_bool(get_tree().paused).is_false()
+	assert_int(_pausas).is_zero()
+	control._input(_esc())
+	assert_int(interfaz.cierres).is_equal(1)
+	assert_bool(get_tree().paused).is_true()
+	assert_int(_pausas).is_equal(1)
+
+
+func test_cada_interfaz_registrada_se_cierra_sola() -> void:  # AC-PLY-166
+	var control := _control()
+	var cerrada := InterfazDePrueba.new()
+	cerrada.abierta = false
+	var abierta := InterfazDePrueba.new()
+	control.registrar_interfaz(cerrada.esta_abierta, cerrada.cerrar_con_esc)
+	control.registrar_interfaz(abierta.esta_abierta, abierta.cerrar_con_esc)
+	control._input(_esc())
+	assert_int(cerrada.cierres).is_zero()
+	assert_int(abierta.cierres).is_equal(1)
+	assert_bool(get_tree().paused).is_false()
+
+
+func test_en_pausa_esc_reanuda_y_no_cierra_la_interfaz() -> void:  # AC-PLY-169
+	var control := _control()
+	var interfaz := InterfazDePrueba.new()
+	control.registrar_interfaz(interfaz.esta_abierta, interfaz.cerrar_con_esc)
+	control.pausar()
+	control._input(_esc())
+	assert_bool(get_tree().paused).is_false()
+	assert_int(interfaz.cierres).is_zero()
+	assert_bool(interfaz.abierta).is_true()
+
+
+func test_el_cursor_que_suelta_el_esc_de_la_interfaz_no_pausa() -> void:  # AC-PLY-170
+	var control := _control()
+	var interfaz := InterfazDePrueba.new()
+	control.registrar_interfaz(interfaz.esta_abierta, interfaz.cerrar_con_esc)
+	control._cursor_antes = true
+	control._input(_esc())
+	control._mirar_el_cursor()
+	assert_bool(get_tree().paused).is_false()
+	assert_int(_pausas).is_zero()

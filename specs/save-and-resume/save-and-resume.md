@@ -115,15 +115,17 @@ entrada (BR-SAV-021).
 
 CUANDO el jugador aprieta Esc en cualquier momento del juego en el almacén, con la partida en
 curso o terminada, el sistema DEBE pausarlo y mostrar el menú de pausa. Un segundo Esc DEBE
-reanudarlo, igual que «reanudar». La excepción es el celular abierto en modo libre: ahí Esc
-lo cierra y NO DEBE pausar (BR-INV-021). El celular fijo no es una excepción. La devolución no es una excepción: con la devolución en
+reanudarlo, igual que «reanudar». Las excepciones son las interfaces abiertas: el celular
+abierto en modo libre (BR-INV-021) y la computadora, la caja registradora o una nota (BR-PLY-054).
+Ahí Esc la cierra y NO DEBE pausar; el Esc siguiente, sin ninguna interfaz abierta, pausa. El
+celular fijo no es una excepción. La devolución no es una excepción: con la devolución en
 pantalla, Esc DEBE abrir la pausa por encima de ella, y reanudar DEBE dejar la misma devolución,
 con el turno todavía detenido y sin abrir la noche siguiente. MIENTRAS la pausa está en pantalla,
 la devolución NO DEBE responder a ningún gesto. Lo mismo vale para la reflexión de cierre y la
 espera posterior a elegir (BR-INV-046). SI el cursor pasa de tomado a suelto con la ventana
 activa y sin que el juego lo suelte, ENTONCES el sistema DEBE pausar: en la web el navegador
-consume Esc para soltar el cursor. El cursor que suelta el Esc que cerró el celular NO DEBE
-pausar: ese Esc ya lo atendió el celular. Soltarlo el propio juego NO DEBE pausar, y con la
+consume Esc para soltar el cursor. El cursor que suelta el Esc que cerró una interfaz NO DEBE
+pausar: ese Esc ya lo atendió la interfaz. Soltarlo el propio juego NO DEBE pausar, y con la
 devolución o la reflexión de cierre en pantalla perder el cursor NO DEBE pausar. Cambiar de pestaña, minimizar o pasar a otra ventana NO DEBE pausar la jornada ni
 mostrar el menú de pausa; volver tampoco DEBE abrirlo.
 
@@ -303,7 +305,7 @@ apercibimientos.
 
 ### AC-SAV-018 — Esc pausa y reanuda *(verifica BR-SAV-016)*
 
-DADO la jornada en curso, con el celular cerrado, CUANDO llega Esc ENTONCES el juego queda en pausa; CUANDO llega otro Esc
+DADO la jornada en curso, sin ninguna interfaz abierta, CUANDO llega Esc ENTONCES el juego queda en pausa; CUANDO llega otro Esc
 ENTONCES se reanuda. DADO la devolución en pantalla, con la partida en curso o terminada,
 CUANDO llega Esc ENTONCES el menú de pausa se abre por encima de la devolución; mientras tanto,
 ni un clic ni Enter despachan la devolución. CUANDO llega otro Esc ENTONCES la pausa se cierra,
@@ -392,7 +394,7 @@ DADO cierre 3 con las devoluciones 1 a 3 fechadas CUANDO se guarda, lee y retoma
 jornada 4, conserva identidad, texto, jornada y orden de cada mensaje de esas devoluciones, y el
 chat ordena los mensajes de las jornadas 1 a 3 intercalados con las devoluciones 1 a 3, y
 después la foto y el texto de apertura 4. El guion de Yasmín vuelve con
-sus quince mensajes sin leer. No se repiten las instrucciones en modo introductorio.
+sus dieciséis mensajes sin leer. No se repiten las instrucciones en modo introductorio.
 CUANDO cierra la 4 y se repite guardar y retomar ENTONCES la devolución 4 vuelve detrás de
 la apertura 4, sin duplicar ni serializar de nuevo los mensajes del guion.
 
@@ -459,10 +461,10 @@ lugar de fábrica. DADO un despido o un contrato cumplido ENTONCES no queda guar
 ### AC-SAV-035 — El bloque de Yasmín de la jornada 5 se reconstruye una sola vez *(verifica BR-SAV-020, BR-SAV-015)*
 
 DADO un guardado del cierre de la jornada 4, escrito antes del bloque de la jornada 5, CUANDO se
-retoma ENTONCES abre la jornada 5 y el chat de Yasmín tiene J2_1 a J2_15 y después J3_1 a J3_10,
+retoma ENTONCES abre la jornada 5 y el chat de Yasmín tiene J2_1 a J2_16 y después J3_1 a J3_10,
 una sola vez, todos sin leer, y el chat de Enrique conserva sus devoluciones intactas. CUANDO se
 cierra la 5 y se repite guardar y retomar ENTONCES el guardado no contiene mensajes del guion de
-Yasmín y la jornada 6 abre con las mismas 25 identidades, sin duplicar ninguna.
+Yasmín y la jornada 6 abre con las mismas 26 identidades, sin duplicar ninguna.
 
 ## No objetivos
 
