@@ -455,7 +455,8 @@ func test_cero_y_solo_ticket_no_dejan_unidades() -> void:  # AC-CTR-040, AC-STK-
 	RelojDePrueba.avanzar_hasta(reloj, Vector2i(23, 30))
 	ventana.call("abrir")
 	_pulsar_comprador()
-	_pulsar_comprador()
+	while not atenciones.puede_abandonar():
+		_pulsar_comprador()
 	var caja: CajaRegistradora = _almacen.get("_caja")
 	caja.pedir_borrar()
 	for producto in atenciones.atencion().comprador().pedido().productos():
@@ -547,7 +548,8 @@ func test_dos_vencimientos_en_un_avance_separan_cinco_cuerpos() -> void:  # AC-C
 	)
 	RelojDePrueba.avanzar_hasta(reloj, Vector2i(22, 0))
 	_pulsar_comprador()
-	_pulsar_comprador()
+	while not atenciones.puede_abandonar():
+		_pulsar_comprador()
 	for producto in atenciones.atencion().comprador().pedido().productos():
 		_almacen.get("_reposicion_manual").call("retirar", producto.id)
 		var cuerpo := agarre.cuerpo_sostenido() as ObjetoAgarrable
