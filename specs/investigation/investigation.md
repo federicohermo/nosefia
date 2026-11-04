@@ -520,9 +520,11 @@ con su origen.
 CUANDO una jornada que sortea la siguiente termina sin ninguna pista encontrada y tenía pistas
 activas, el sistema DEBE sortear al azar, una sola vez, una de las hipótesis que esas pistas
 activas habilitan, y activar en la jornada siguiente el camino de la sorteada. El caso DEBE
-declarar qué jornadas sortean; la ficha lo fija para la jornada 5, hacia la 6. Con 4A elegida y
-ninguna pista en la 5, las pistas activas de la 5 son 5A y 5B, y la 6 activa 6A y 6B (si sale 5A)
-o 6C y 6D (si sale 5B), nunca mezcladas. Con una semilla fija el sorteo DEBE dar siempre lo mismo.
+declarar qué jornadas sortean; la ficha lo fija para las jornadas 4 y 5, hacia la 5 y la 6. Con 4A
+elegida y ninguna pista en la 5, las pistas activas de la 5 son 5A y 5B, y la 6 activa 6A y 6B (si
+sale 5A) o 6C y 6D (si sale 5B), nunca mezcladas. Lo mismo vale en la raíz, donde no hay rama
+elegida: sin pistas en la 4, sus pistas activas son 4A y 4B, y la 5 activa 5A y 5B (si sale 4A) o
+5C y 5D (si sale 4B). Con una semilla fija el sorteo DEBE dar siempre lo mismo.
 
 El sorteo DEBE quedar guardado en el expediente: repetir el pedido, aun con otra semilla, NO DEBE
 cambiarlo ni sortear otra vez, y reconstruir desde lo guardado DEBE conservarlo. Un dato guardado
@@ -533,11 +535,9 @@ DEBE elegir una hipótesis por el jugador, agregar notas ni registrar pistas.
 ### BR-INV-052 — Sin pistas en la 6 no hay en la 7, y sin pistas en la 4 y la 5 no hay en la 6
 
 SI una jornada que no sortea la siguiente termina sin pistas, ENTONCES la siguiente NO DEBE activar
-ninguna pista: sin pistas en la jornada 6 no hay pistas en la 7. SI la jornada 5 no tuvo pistas
-activas, ENTONCES la 6 NO DEBE sortear ni activar ninguna: sin pistas en la 4 ni en la 5 no hay
-pistas en la 6. La ficha no dice qué activa la jornada 5 cuando la 4 termina sin pistas
-(OQ-INV-008): mientras siga abierta, el sistema NO DEBE inventar esa regla, y la 5 no activa
-ninguna.
+ninguna pista: sin pistas en la jornada 6 no hay pistas en la 7. SI las pistas activas de
+la jornada 5 salieron de un sorteo, o no hubo ninguna, y la 5 también termina sin pistas, ENTONCES
+la 6 NO DEBE sortear ni activar ninguna: sin pistas en la 4 ni en la 5 no hay pistas en la 6.
 
 ### BR-INV-053 — Sin pistas, la hipótesis es P o L
 
@@ -1029,10 +1029,9 @@ hipótesis, no agrega notas y no registra pistas.
 
 ### AC-INV-078 — Los cortes de la ficha *(verifica BR-INV-052)*
 
-DADO el caso de AC-INV-074, sin pistas en la jornada 4 (elegida 4P) ni en la 5 ENTONCES las activas
-de la 6 son ninguna y sortear la 6 no guarda nada. DADO 4A y 5A elegidas y ninguna pista en la 6
-ENTONCES las activas de la 7 son ninguna y sortear la 7 no guarda nada. DADO ninguna pista en la 4
-ENTONCES las activas de la 5 son ninguna.
+DADO el caso de AC-INV-074, sin pistas en la jornada 4 (elegida 4P) y con la 5 sorteada, ni en la 5
+ENTONCES las activas de la 6 son ninguna y sortear la 6 no guarda nada. DADO 4A y 5A elegidas y
+ninguna pista en la 6 ENTONCES las activas de la 7 son ninguna y sortear la 7 no guarda nada.
 
 ### AC-INV-079 — Sin pistas la hipótesis es P o L *(verifica BR-INV-053, BR-INV-039)*
 
@@ -1046,6 +1045,16 @@ de la jornada ENTONCES no se ofrece ni P ni L. DADO un caso sin L ENTONCES ofrec
 DADO el caso de la partida CUANDO se registran 2A y 2B en la jornada 4, con o sin elección ENTONCES
 contestan ANOTADA, y las hipótesis de la 4 son las de AC-INV-050. Registrar 2A en cualquier otra
 jornada se rechaza como antes.
+
+### AC-INV-081 — Sin pistas en la jornada 4 se sortea uno de los dos caminos de la raíz *(verifica BR-INV-051, BR-INV-050)*
+
+DADO el caso de AC-INV-074 y ninguna pista en la 4 (elegida 4P) ENTONCES, antes de sortear, las
+activas de la 5 son ninguna. CUANDO se sortea la 5 ENTONCES las activas son 5A y 5B, o 5C y 5D, y
+nunca otra combinación; con otras dos semillas conocidas salen una y otra, y con una semilla fija
+sale siempre el mismo camino. CUANDO se registra una pista del camino sorteado ENTONCES contesta
+ANOTADA, y una del otro camino, DESCONOCIDA. CUANDO se pide otra vez con otra semilla, o se
+reconstruye desde lo guardado, ENTONCES el sorteo no cambia. DADO una pista encontrada en la 4
+ENTONCES sortear la 5 no guarda nada.
 
 ## No objetivos
 
@@ -1127,9 +1136,3 @@ jornada se rechaza como antes.
   - Decide: el dueño del repo con diseño narrativo.
   - Bloquea: fijar un intercalado cronológico entre registros legados sin fecha y aperturas;
     no bloquea conservar sus textos y orden relativo ni ordenar los registros nuevos fechados.
-- **OQ-INV-008 — Sin pistas en la jornada 4, ¿qué pistas aparecen en la 5?**
-  - Por qué sigue abierta: la ficha dice que el jugador podría no encontrar pistas en una sola de
-    las jornadas 4 y 5, pero en la 4 todavía no hay una rama elegida que sortear.
-  - Decide: game design.
-  - Bloquea: que la jornada 5 active pistas tras una 4 sin pistas; hasta entonces no activa
-    ninguna (BR-INV-052). No bloquea el resto de los caminos.

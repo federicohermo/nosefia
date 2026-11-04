@@ -19,7 +19,7 @@ const CAMINOS: Dictionary[String, Array] = {
 	"6G": ["7G"],
 	"6H": ["7H"],
 }
-const SORTEAN: Array[int] = [5]
+const SORTEAN: Array[int] = [4, 5]
 const CON_L: Array[int] = [5, 6]
 
 
@@ -234,17 +234,62 @@ func test_un_guardado_sin_sorteo_carga_y_uno_ajeno_se_descarta() -> void:  # AC-
 func test_sin_pistas_en_la_4_ni_en_la_5_no_hay_pistas_en_la_6() -> void:  # AC-INV-078
 	var caso := _caso_de_la_ficha()
 	var expediente := Expediente.new(caso)
-	assert_array(_activas(expediente, 5)).is_empty()
 	_elegir_la_predeterminada(expediente, 4)
-	assert_array(_activas(expediente, 5)).is_empty()
-	assert_int(expediente.registrar("5A")).is_equal(Expediente.Resultado.DESCONOCIDA)
 	expediente.sortear_camino(5, _azar(1))
+	var sorteo_de_la_5 := expediente.sorteos()
+	assert_dict(sorteo_de_la_5).has_size(1)
 	_elegir_la_predeterminada(expediente, 5)
 	for semilla: int in range(1, 9):
 		expediente.sortear_camino(6, _azar(semilla))
-	assert_dict(expediente.sorteos()).is_empty()
+	assert_dict(expediente.sorteos()).is_equal(sorteo_de_la_5)
 	assert_array(_activas(expediente, 6)).is_empty()
 	assert_int(expediente.registrar("6A")).is_equal(Expediente.Resultado.DESCONOCIDA)
+
+
+func test_sin_pistas_en_la_4_se_sortea_uno_de_los_dos_caminos_de_la_raiz() -> void:  # AC-INV-081
+	var caso := _caso_de_la_ficha()
+	var caminos: Array = [CAMINOS["4A"], CAMINOS["4B"]]
+	var salidos: Array = []
+	for semilla: int in range(1, 33):
+		var expediente := Expediente.new(caso)
+		_elegir_la_predeterminada(expediente, 4)
+		assert_array(_activas(expediente, 5)).is_empty()
+		expediente.sortear_camino(5, _azar(semilla))
+		var activas := _activas(expediente, 5)
+		assert_bool(caminos.has(activas)).is_true()
+		if not salidos.has(activas):
+			salidos.append(activas)
+		var repetido := Expediente.new(caso)
+		_elegir_la_predeterminada(repetido, 4)
+		repetido.sortear_camino(5, _azar(semilla))
+		assert_array(_activas(repetido, 5)).is_equal(activas)
+	assert_int(salidos.size()).is_equal(2)
+
+
+func test_el_sorteo_de_la_raiz_deja_anotar_su_camino_y_se_guarda() -> void:  # AC-INV-081
+	var caso := _caso_de_la_ficha()
+	var expediente := Expediente.new(caso)
+	_elegir_la_predeterminada(expediente, 4)
+	expediente.sortear_camino(5, _azar(1))
+	var sorteadas := _activas(expediente, 5)
+	var ajena: String = "5C" if sorteadas.has("5A") else "5A"
+	assert_int(expediente.registrar(ajena)).is_equal(Expediente.Resultado.DESCONOCIDA)
+	assert_int(expediente.registrar(sorteadas[0])).is_equal(Expediente.Resultado.ANOTADA)
+	for semilla: int in range(2, 33):
+		expediente.sortear_camino(5, _azar(semilla))
+		assert_array(_activas(expediente, 5)).is_equal(sorteadas)
+	var retomado := Expediente.new(caso)
+	retomado.restaurar(expediente.identidades(), expediente.elecciones(), expediente.sorteos())
+	assert_array(_activas(retomado, 5)).is_equal(sorteadas)
+
+
+func test_con_una_pista_en_la_4_no_se_sortea_la_5() -> void:  # AC-INV-081
+	var caso := _caso_de_la_ficha()
+	var expediente := _por_el_camino(caso, ["4B"])
+	for semilla: int in range(1, 9):
+		expediente.sortear_camino(5, _azar(semilla))
+	assert_dict(expediente.sorteos()).is_empty()
+	assert_array(_activas(expediente, 5)).is_equal(CAMINOS["4B"])
 
 
 func test_sin_pistas_en_la_6_no_hay_pistas_en_la_7() -> void:  # AC-INV-078
@@ -287,6 +332,7 @@ func test_la_cuarta_jornada_del_juego_sigue_igual() -> void:  # AC-INV-080
 	var expediente := Expediente.new(caso)
 	assert_array(_activas(expediente, 4)).is_equal(["2A", "2B"])
 	assert_array(_activas(expediente, 5)).is_empty()
+	assert_bool(caso.hipotesis[0].sortea_la_siguiente).is_true()
 	assert_int(expediente.registrar("2A")).is_equal(Expediente.Resultado.ANOTADA)
 	assert_int(expediente.elegir(4, "2A")).is_equal(Expediente.Resultado.ANOTADA)
 	assert_int(expediente.registrar("2B")).is_equal(Expediente.Resultado.ANOTADA)

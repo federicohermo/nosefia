@@ -83,14 +83,14 @@ func pistas_activas(jornada: int, elecciones: Dictionary, sorteos: Dictionary) -
 
 
 ## Las hipótesis de la jornada anterior entre las que se sortea el camino de ésta: las que sus
-## pistas activas habilitan. Ninguna si esa jornada no sortea, si dio alguna pista o si no tuvo
-## pistas activas.
+## pistas activas habilitan. Ninguna si esa jornada no sortea, si dio alguna pista, si no tuvo
+## pistas activas o si ya las activó un sorteo: dos jornadas seguidas sin pistas cortan el camino.
 func opciones_a_sortear(
 	jornada: int, descubiertas: PackedStringArray, elecciones: Dictionary, sorteos: Dictionary
 ) -> Array[Hipotesis]:
 	var candidatas: Array[Hipotesis] = []
 	var anterior := _hipotesis_de(jornada - 1)
-	if anterior == null or not anterior.sortea_la_siguiente:
+	if anterior == null or not anterior.sortea_la_siguiente or sorteos.has(jornada - 1):
 		return candidatas
 	for identidad: String in descubiertas:
 		var pista := pista_de(identidad)
