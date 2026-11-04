@@ -40,7 +40,7 @@ func _con_hora(jornada: int, momento: Mensaje.Momento, hora: String) -> Mensaje:
 	return mensaje
 
 
-func test_la_hora_cruza_el_guardado() -> void:  # AC-INV-085
+func test_la_hora_cruza_el_guardado() -> void:  # AC-INV-106
 	var nota := Mensaje.new()
 	nota.identidad = "NOTA_2A_TEXTO"
 	nota.texto = "Una nota"
@@ -51,7 +51,7 @@ func test_la_hora_cruza_el_guardado() -> void:  # AC-INV-085
 	assert_str(cargada.hora).is_equal("21:00")
 
 
-func test_un_dato_guardado_sin_hora_carga_sin_hora() -> void:  # AC-INV-085
+func test_un_dato_guardado_sin_hora_carga_sin_hora() -> void:  # AC-INV-106
 	var viejo := {"texto": "Una nota", "identidad": "NOTA_2A_TEXTO", "jornada": 4, "orden": 0}
 	var cargada := Mensaje.desde_datos(viejo)
 	assert_object(cargada).is_not_null()
@@ -59,7 +59,7 @@ func test_un_dato_guardado_sin_hora_carga_sin_hora() -> void:  # AC-INV-085
 	assert_str(cargada.texto).is_equal("Una nota")
 
 
-func test_la_tanda_corta_en_el_mediodia() -> void:  # AC-INV-086
+func test_la_tanda_corta_en_el_mediodia() -> void:  # AC-INV-107
 	var antes := _con_hora(4, Mensaje.Momento.APERTURA, "11:59")
 	var despues := _con_hora(4, Mensaje.Momento.APERTURA, "12:00")
 	var tambien := _con_hora(4, Mensaje.Momento.APERTURA, "19:31")
@@ -70,7 +70,7 @@ func test_la_tanda_corta_en_el_mediodia() -> void:  # AC-INV-086
 	)
 
 
-func test_la_devolucion_de_la_manana_es_del_dia_de_la_jornada_siguiente() -> void:  # AC-INV-086
+func test_la_devolucion_de_la_manana_es_del_dia_de_la_jornada_siguiente() -> void:  # AC-INV-107
 	var devolucion := _con_hora(3, Mensaje.Momento.CIERRE, "8:26")
 	var yasmin := _con_hora(4, Mensaje.Momento.APERTURA, "17:34")
 	assert_int(devolucion.dia()).is_equal(yasmin.dia())
@@ -78,7 +78,7 @@ func test_la_devolucion_de_la_manana_es_del_dia_de_la_jornada_siguiente() -> voi
 	assert_int(_con_hora(3, Mensaje.Momento.APERTURA, "19:41").dia()).is_equal(3)
 
 
-func test_sin_hora_y_sin_fecha_no_inventan_tanda() -> void:  # AC-INV-087
+func test_sin_hora_y_sin_fecha_no_inventan_tanda() -> void:  # AC-INV-108
 	var sin_hora := _con_hora(4, Mensaje.Momento.CIERRE, "")
 	assert_str(sin_hora.hora).is_empty()
 	assert_int(sin_hora.dia()).is_equal(4)

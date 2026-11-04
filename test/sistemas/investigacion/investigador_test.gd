@@ -118,7 +118,7 @@ func test_cambiar_de_partida_desconecta_los_eventos_anteriores() -> void:  # AC-
 	assert_int(pistas.size()).is_equal(1)
 
 
-func test_el_pedido_entrega_la_hora_a_las_notas_de_la_pista() -> void:  # AC-INV-085
+func test_el_pedido_entrega_la_hora_a_las_notas_de_la_pista() -> void:  # AC-INV-106
 	var investigador: Investigador = auto_free(Investigador.new())
 	var notas: Array[Mensaje] = []
 	investigador.nota_agregada.connect(func(mensaje: Mensaje) -> void: notas.append(mensaje))

@@ -35,7 +35,7 @@ func _ids(prefijo: String, desde: int, hasta: int) -> Array[String]:
 	return identidades
 
 
-func test_yasmin_lleva_la_hora_de_su_ficha() -> void:  # AC-INV-082
+func test_yasmin_lleva_la_hora_de_su_ficha() -> void:  # AC-INV-103
 	var guion := _guion()
 	var tabla := {
 		"17:34": _ids("J2_", 1, 4),
@@ -52,7 +52,7 @@ func test_yasmin_lleva_la_hora_de_su_ficha() -> void:  # AC-INV-082
 		assert_array(_horas(guion, identidades)).is_equal(_repetida(hora, identidades.size()))
 
 
-func test_los_introductorios_del_jefe_quedan_antes_de_las_20() -> void:  # AC-INV-083
+func test_los_introductorios_del_jefe_quedan_antes_de_las_20() -> void:  # AC-INV-104
 	var guion := _guion()
 	var tabla := {
 		"19:40": ["J1_Intro01"],
@@ -76,7 +76,7 @@ func test_los_introductorios_del_jefe_quedan_antes_de_las_20() -> void:  # AC-IN
 	assert_array(_horas(guion, tercera_parte)).is_equal(["19:42", "19:42"])
 
 
-func test_ningun_mensaje_recibido_cae_durante_la_jornada() -> void:  # AC-INV-082, AC-INV-083
+func test_ningun_mensaje_recibido_cae_durante_la_jornada() -> void:  # AC-INV-103, AC-INV-104
 	var guion := _guion()
 	for identidad: String in guion:
 		var partes := guion[identidad].hora.split(":")
@@ -85,13 +85,13 @@ func test_ningun_mensaje_recibido_cae_durante_la_jornada() -> void:  # AC-INV-08
 		assert_bool(hora >= 8 and hora < 20).is_true()
 
 
-func test_la_apertura_de_la_cuarta_jornada_lleva_la_hora_de_la_ficha() -> void:  # AC-INV-084
+func test_la_apertura_de_la_cuarta_jornada_lleva_la_hora_de_la_ficha() -> void:  # AC-INV-105
 	var guion := _guion()
 	var apertura: Array[String] = ["J2_CONTENEDOR_FOTO", "J2_CONTENEDOR_TEXTO"]
 	assert_array(_horas(guion, apertura)).is_equal(["19:31", "19:31"])
 
 
-func test_la_devolucion_suma_un_minuto_por_mensaje() -> void:  # AC-INV-084
+func test_la_devolucion_suma_un_minuto_por_mensaje() -> void:  # AC-INV-105
 	var primeras := {3: "8:26", 4: "8:38", 5: "9:05", 6: "8:42", 7: "9:11"}
 	for jornada: int in primeras:
 		assert_str(DevolucionDelJefe.mensaje("Saludo", jornada, 0).hora).is_equal(primeras[jornada])

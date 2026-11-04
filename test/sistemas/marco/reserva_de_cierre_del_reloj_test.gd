@@ -40,7 +40,7 @@ func test_arrancar_descarta_la_reserva_anterior_sin_cambiar_retener() -> void:
 	assert_bool(nuevo.cerrado()).is_true()
 
 
-func test_el_reloj_lee_la_hora_del_juego_desde_las_20() -> void:  # AC-INV-085
+func test_el_reloj_lee_la_hora_del_juego_desde_las_20() -> void:  # AC-INV-106
 	var reloj: RelojDelTurno = auto_free(RelojDelTurno.new())
 	assert_str(reloj.hora()).is_empty()
 	var turno := Turno.new(Reglas.DURACION_DEL_TURNO, [])
@@ -50,7 +50,7 @@ func test_el_reloj_lee_la_hora_del_juego_desde_las_20() -> void:  # AC-INV-085
 	assert_str(reloj.hora()).is_equal("21:00")
 
 
-func test_irse_antes_fija_la_hora_del_cierre_en_la_del_reloj() -> void:  # AC-INV-085
+func test_irse_antes_fija_la_hora_del_cierre_en_la_del_reloj() -> void:  # AC-INV-106
 	var reloj: RelojDelTurno = auto_free(RelojDelTurno.new())
 	var turno := Turno.new(Reglas.DURACION_DEL_TURNO, [])
 	reloj.arrancar(turno, [])
@@ -60,7 +60,7 @@ func test_irse_antes_fija_la_hora_del_cierre_en_la_del_reloj() -> void:  # AC-IN
 	assert_str(reloj.hora_al_cierre()).is_equal("21:00")
 
 
-func test_irse_antes_con_el_cierre_reservado_fija_la_hora_del_cierre() -> void:  # AC-INV-085
+func test_irse_antes_con_el_cierre_reservado_fija_la_hora_del_cierre() -> void:  # AC-INV-106
 	var reloj: RelojDelTurno = auto_free(RelojDelTurno.new())
 	var turno := Turno.new(Reglas.DURACION_DEL_TURNO, [])
 	reloj.arrancar(turno, [])
@@ -70,7 +70,7 @@ func test_irse_antes_con_el_cierre_reservado_fija_la_hora_del_cierre() -> void: 
 	assert_str(reloj.hora_al_cierre()).is_equal("22:00")
 
 
-func test_cumplir_el_turno_entero_cierra_a_las_8() -> void:  # AC-INV-085
+func test_cumplir_el_turno_entero_cierra_a_las_8() -> void:  # AC-INV-106
 	var reloj: RelojDelTurno = auto_free(RelojDelTurno.new())
 	reloj.arrancar(Turno.new(Reglas.DURACION_DEL_TURNO, []), [])
 	reloj.avanzar(1000000.0)

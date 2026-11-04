@@ -247,7 +247,7 @@ func _con_hora(jornada: int, momento: Mensaje.Momento, hora: String) -> Mensaje:
 	return mensaje
 
 
-func test_el_rotulo_lleva_la_hora_del_primer_mensaje_de_la_tanda() -> void:  # AC-INV-086
+func test_el_rotulo_lleva_la_hora_del_primer_mensaje_de_la_tanda() -> void:  # AC-INV-107
 	var pantalla := _pantalla()
 	var mensajes: Array[Mensaje] = [
 		_con_hora(1, Mensaje.Momento.APERTURA, "19:40"),
@@ -258,7 +258,7 @@ func test_el_rotulo_lleva_la_hora_del_primer_mensaje_de_la_tanda() -> void:  # A
 	assert_array(_rotulos(pantalla)).is_equal(["AYER\n19:40", "HOY\n19:41"])
 
 
-func test_la_manana_y_la_tarde_de_un_mismo_dia_van_en_tandas_separadas() -> void:  # AC-INV-086
+func test_la_manana_y_la_tarde_de_un_mismo_dia_van_en_tandas_separadas() -> void:  # AC-INV-107
 	var pantalla := _pantalla()
 	var mensajes: Array[Mensaje] = [
 		_con_hora(3, Mensaje.Momento.CIERRE, "8:26"),
@@ -270,7 +270,7 @@ func test_la_manana_y_la_tarde_de_un_mismo_dia_van_en_tandas_separadas() -> void
 	assert_int(_burbujas(pantalla).size()).is_equal(3)
 
 
-func test_un_rotulo_sin_hora_y_un_legado_no_inventan_horas() -> void:  # AC-INV-087
+func test_un_rotulo_sin_hora_y_un_legado_no_inventan_horas() -> void:  # AC-INV-108
 	var pantalla := _pantalla()
 	var mensajes: Array[Mensaje] = [
 		Mensaje.desde_datos("Texto sin fecha"),

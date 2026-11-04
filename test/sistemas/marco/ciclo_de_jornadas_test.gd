@@ -226,7 +226,7 @@ func test_el_cierre_conserva_los_clientes_mal_atendidos_de_la_ventanilla() -> vo
 	)
 
 
-func test_el_cierre_le_entrega_a_la_partida_la_hora_en_que_empezo() -> void:  # AC-INV-085
+func test_el_cierre_le_entrega_a_la_partida_la_hora_en_que_empezo() -> void:  # AC-INV-106
 	var reloj: RelojDelTurno = auto_free(RelojDelTurno.new())
 	var partida := Partida.desde({"jornada": 3})
 	_ciclo_arrancado(partida, reloj)
