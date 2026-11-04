@@ -1,4 +1,4 @@
-## El nodo del reloj de mesa: que pinte lo que dice el dominio, y nada más.
+## El nodo del reloj de pared: que pinte lo que dice el dominio, y nada más.
 ##
 ## **La escena se instancia y no se entra al árbol**, igual que las otras suites de `escenas/`:
 ## el script no tiene `_ready()` y `text` se lee sin un frame. Que alcance con eso es la prueba
@@ -13,7 +13,7 @@ const ESCENA := "res://src/escenas/puestos/reloj_de_mesa.tscn"
 ## `declarar_jornada()` no compilaría. Es la misma forma que documenta `.claude/rules/tests.md`.
 const RelojDeMesaDelLocal := preload("res://src/escenas/puestos/reloj_de_mesa.gd")
 
-## Un segundo de ficción a cada lado del corte de la mitad del turno.
+## Un segundo de ficción de la mitad del turno.
 const UN_SEGUNDO := 1.0
 
 
@@ -27,17 +27,15 @@ func test_el_display_dice_exactamente_lo_que_contesta_el_dominio() -> void:
 	assert_str(reloj.text).is_not_empty()
 
 
-func test_pasada_la_mitad_de_la_noche_que_falla_el_display_queda_en_blanco() -> void:
-	# El nodo no sabe que falló: le pregunta al dominio y copia. Con un texto de reemplazo
-	# escrito acá, el reloj apagado estaría avisando que está apagado, y darse cuenta es parte
-	# de lo que la noche cobra.
+func test_pasada_la_mitad_de_la_noche_del_corte_el_display_sigue_en_la_hora_del_corte() -> void:
+	# El nodo no sabe que se detuvo: le pregunta al dominio y copia.
 	var reloj := _reloj()
-	var falla := Reglas.JORNADA_EN_QUE_FALLA_EL_RELOJ
+	var corte := AnomaliasDeLaJornada.JORNADA_DEL_CORTE
 	var pasada_la_mitad := Reglas.DURACION_DEL_TURNO / 2.0 - UN_SEGUNDO
-	reloj.declarar_jornada(falla)
+	reloj.declarar_jornada(corte)
 	reloj.mostrar_tiempo(pasada_la_mitad)
-	assert_str(reloj.text).is_equal(RelojDeMesa.lectura(falla, pasada_la_mitad))
-	assert_str(reloj.text).is_empty()
+	assert_str(reloj.text).is_equal(RelojDeMesa.lectura(corte, pasada_la_mitad))
+	assert_str(reloj.text).is_not_empty()
 
 
 func test_el_display_no_gira_hacia_la_camara() -> void:  # AC-SHF-017
