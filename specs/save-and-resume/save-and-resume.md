@@ -392,7 +392,7 @@ DADO cierre 3 con las devoluciones 1 a 3 fechadas CUANDO se guarda, lee y retoma
 jornada 4, conserva identidad, texto, jornada y orden de cada mensaje de esas devoluciones, y el
 chat ordena los mensajes de las jornadas 1 a 3 intercalados con las devoluciones 1 a 3, y
 después la foto y el texto de apertura 4. El guion de Yasmín vuelve con
-sus quince mensajes sin leer. No se repiten las instrucciones en modo introductorio.
+sus dieciséis mensajes sin leer. No se repiten las instrucciones en modo introductorio.
 CUANDO cierra la 4 y se repite guardar y retomar ENTONCES la devolución 4 vuelve detrás de
 la apertura 4, sin duplicar ni serializar de nuevo los mensajes del guion.
 
@@ -459,10 +459,10 @@ lugar de fábrica. DADO un despido o un contrato cumplido ENTONCES no queda guar
 ### AC-SAV-035 — El bloque de Yasmín de la jornada 5 se reconstruye una sola vez *(verifica BR-SAV-020, BR-SAV-015)*
 
 DADO un guardado del cierre de la jornada 4, escrito antes del bloque de la jornada 5, CUANDO se
-retoma ENTONCES abre la jornada 5 y el chat de Yasmín tiene J2_1 a J2_15 y después J3_1 a J3_10,
+retoma ENTONCES abre la jornada 5 y el chat de Yasmín tiene J2_1 a J2_16 y después J3_1 a J3_10,
 una sola vez, todos sin leer, y el chat de Enrique conserva sus devoluciones intactas. CUANDO se
 cierra la 5 y se repite guardar y retomar ENTONCES el guardado no contiene mensajes del guion de
-Yasmín y la jornada 6 abre con las mismas 25 identidades, sin duplicar ninguna.
+Yasmín y la jornada 6 abre con las mismas 26 identidades, sin duplicar ninguna.
 
 ## No objetivos
 

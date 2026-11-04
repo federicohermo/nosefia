@@ -16,7 +16,7 @@ func _identidades(mensajes: Array[Mensaje]) -> Array[String]:
 
 func _guion_esperado() -> Array[String]:
 	var identidades: Array[String] = []
-	for numero in range(1, 16):
+	for numero in range(1, 17):
 		identidades.append("J2_%d" % numero)
 	for numero in range(1, 11):
 		identidades.append("J3_%d" % numero)
