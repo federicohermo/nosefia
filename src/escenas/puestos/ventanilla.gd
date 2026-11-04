@@ -17,6 +17,9 @@
 extends StaticBody3D
 
 signal entregas_abandonadas(cuerpos: Array[Node3D])
+## Sale una vez por compra vencida, con lo que el comprador ya había recibido: el aviso de salida
+## espera a saber si quedaron productos en el piso.
+signal comprador_se_fue(comprador: Comprador, dejo_productos: bool)
 
 ## El script del jugador se preloadea para poder tiparlo: los scripts de `escenas/` son cáscara y
 ## no declaran `class_name`, así que sin esto el tipo estático sería `CharacterBody3D` y llamarle
@@ -275,6 +278,7 @@ func _al_vencer(comprador: Comprador) -> void:
 			nodo.queue_free()
 	_recibidos[comprador] = []
 	entregas_abandonadas.emit(abandonadas)
+	comprador_se_fue.emit(comprador, not abandonadas.is_empty())
 	_repintar()
 
 
