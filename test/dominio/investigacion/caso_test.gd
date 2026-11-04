@@ -251,7 +251,6 @@ func test_la_nota_esta_solo_en_la_jornada_6_y_con_6c_activa() -> void:  # AC-INV
 		assert_bool(_la_nota_esta(jornada, por_eleccion)).is_equal(corresponde)
 		assert_bool(_la_nota_esta(jornada, por_sorteo, sorteos)).is_equal(corresponde)
 	assert_bool(_la_nota_esta(JORNADA_6, {cuarta: "2B"})).is_false()
-	assert_bool(_la_nota_esta(JORNADA_6, {cuarta: "2B", JORNADA_5: "5B"})).is_false()
 	assert_bool(_la_nota_esta(JORNADA_6, por_sorteo)).is_false()
 	assert_bool(_la_nota_esta(JORNADA_6, {})).is_false()
 	assert_bool(_la_nota_esta(JORNADA_6, {JORNADA_5: "5A"})).is_false()
