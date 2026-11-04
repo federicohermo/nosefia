@@ -72,7 +72,7 @@ func _contenido(pantalla: PantallaDelCelular) -> Control:
 
 
 func _ancho(pantalla: PantallaDelCelular) -> float:
-	return (pantalla.get("_capa") as Control).size.x
+	return (pantalla.get("_telefono") as Control).size.x
 
 
 func _burbujas_visibles(pantalla: PantallaDelCelular) -> int:

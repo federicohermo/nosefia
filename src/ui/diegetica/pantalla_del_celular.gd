@@ -524,7 +524,7 @@ func _pintar_deslizamiento() -> void:
 	if not _desliza():
 		return
 	var avance := clampf(_deslizamiento.posicion(), 0.0, 1.0)
-	var corrimiento := (1.0 - avance) * _capa.size.x
+	var corrimiento := (1.0 - avance) * _telefono.size.x
 	var deslizante: Control = _chat_saliente if _chat_saliente != null else _contenido
 	deslizante.offset_left = corrimiento
 	deslizante.offset_right = corrimiento
