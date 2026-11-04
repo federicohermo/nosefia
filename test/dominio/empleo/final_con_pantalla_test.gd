@@ -1,6 +1,7 @@
 ## Qué final con pantalla alcanzó la partida, y a dónde lleva la opción de su devolución.
 extends GdUnitTestSuite
 
+const CondicionesDelJefeTest := preload("res://test/dominio/empleo/condiciones_del_jefe_test.gd")
 const COMPLETA := ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA
 ## Las hipótesis de la jornada 4 sin ninguna pista: sólo se ofrece la que dice que no hubo.
 const JORNADA_DE_LA_HIPOTESIS := 4
