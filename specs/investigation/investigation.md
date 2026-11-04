@@ -1236,7 +1236,7 @@ dos aparecen una sola vez, y el contador de Enrique cuenta sólo los que no ley�
 ### AC-INV-103 — Yasmín lleva la hora de su ficha *(verifica BR-INV-101)*
 
 DADO el guion de Yasmín CUANDO se leen las horas ENTONCES J2_1 a J2_4 tienen 17:34, J2_5 a J2_7
-17:35, J2_8 y J2_9 17:36, J2_10 a J2_12 17:37 y J2_13 a J2_15 17:38; J3_1 a J3_4 tienen 09:11,
+17:35, J2_8 a J2_10 17:36, J2_11 a J2_13 17:37 y J2_14 a J2_16 17:38; J3_1 a J3_4 tienen 09:11,
 J3_5 a J3_7 09:12 y J3_8 a J3_10 09:13. Ninguna queda entre las 20:00 y las 08:00.
 
 ### AC-INV-104 — Los introductorios del jefe quedan antes de las 20:00 *(verifica BR-INV-101)*

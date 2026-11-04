@@ -90,7 +90,7 @@ texto = "y hoy parece que se acabo uno de los jabones para la limpieza y no hab�
 [sub_resource type="Resource" id="J2_10"]
 script = ExtResource("mensaje")
 identidad = "J2_10"
-hora = "17:37"
+hora = "17:36"
 jornada = 4
 orden = 9
 de_quien = "Yasmín"
@@ -117,7 +117,7 @@ texto = "no creo que enrique se de cuenta si usás uno"
 [sub_resource type="Resource" id="J2_13"]
 script = ExtResource("mensaje")
 identidad = "J2_13"
-hora = "17:38"
+hora = "17:37"
 jornada = 4
 orden = 12
 de_quien = "Yasmín"
