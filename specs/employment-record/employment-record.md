@@ -932,7 +932,7 @@ despido. DADO P = 4 con atender y reponer sin cumplir y los cuatro llamados, cad
 vez, ENTONCES la devolución es, en orden: «Che», la fila n = 1 de Tarea 1 y de Tarea 3, la fila
 n = 1 de Reto 1, Reto 2, Reto 3 y Reto 4, y el Cierre del despido: ocho mensajes, sin Tarea 2 ni
 Tarea 4 ni Tarea 5, y la
-única opción es volver al menú.
+única opción lleva a la pantalla de final del despido (BR-SHF-027).
 
 ### AC-EMP-062 — Un mensaje más por segundo *(verifica BR-EMP-011, BR-EMP-030)*
 
@@ -962,8 +962,8 @@ bajar; tras los tres «Continuar» de la reflexión, baja y la persiana muestra 
 CUANDO la noche 4 está abierta y se abre el celular con Q ENTONCES el chat de
 Enrique tiene los mensajes de las jornadas 1 a 3 intercalados con las devoluciones 1 a 3, y
 después la foto y el texto de apertura 4 definidos por `investigation`. DADO una partida despedida
-desde la jornada 3 CUANDO se elige «volver al menú» ENTONCES se pide el menú una vez y no se
-anuncia otra noche.
+desde la jornada 3 CUANDO se elige la opción de la devolución ENTONCES aparece la pantalla de final
+del despido (BR-SHF-027), no se pide el menú y no se anuncia otra noche.
 
 ### AC-EMP-093 — Las noches de prueba cierran sin celular *(verifica BR-EMP-011, BR-EMP-030, BR-EMP-022)*
 
@@ -987,8 +987,9 @@ siguen las instrucciones una sola vez.
 
 DADO la devolución de la noche 3 con la opción a la vista CUANDO se elige «continuar» dos veces
 ENTONCES empieza una sola reflexión y no se anuncia ninguna noche; terminada la reflexión, se
-anuncia una sola «NOCHE 4» y la jornada es 4. DADO una partida terminada CUANDO se
-elige «volver al menú» dos veces ENTONCES el menú se pide una sola vez.
+anuncia una sola «NOCHE 4» y la jornada es 4. DADO una partida terminada sin pantalla de
+final CUANDO se elige «volver al menú» dos veces ENTONCES el menú se pide una sola vez. Con
+pantalla de final lo cubre AC-SHF-067.
 
 ### AC-EMP-066 — Las devoluciones conservan su lugar entre aperturas *(verifica BR-EMP-031)*
 
