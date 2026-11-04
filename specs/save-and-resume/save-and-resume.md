@@ -436,9 +436,9 @@ se descarta y se ofrece sólo 2B.
 
 ### AC-SAV-032 — El despido gana sobre la reflexión *(verifica BR-SAV-021, BR-SAV-002)*
 
-DADO un despido en jornada 5 CUANDO termina la devolución ENTONCES se ofrece sólo volver al menú,
-no aparece la reflexión y no hay guardado. CUANDO se vuelve al menú, desde la opción o desde la
-pausa, ENTONCES continuar sigue deshabilitado.
+DADO un despido en jornada 5 CUANDO termina la devolución ENTONCES se ofrece una sola opción de salida
+(BR-EMP-011), no aparece la reflexión y no hay guardado. CUANDO se vuelve al menú, desde la
+pantalla de final o desde la pausa, ENTONCES continuar sigue deshabilitado.
 
 ### AC-SAV-033 — Un guardado de otra numeración no se migra *(verifica BR-SAV-007)*
 

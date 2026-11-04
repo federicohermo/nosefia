@@ -205,8 +205,10 @@ func test_la_entrada_esta_sobre_el_local_y_debajo_de_avisos_y_pausa() -> void:  
 		assert_int(entrada.layer).is_less(capa.layer)
 
 
-func test_volver_de_una_partida_terminada_no_anuncia_otra_noche() -> void:  # AC-SHF-024
+func test_volver_de_una_partida_terminada_no_anuncia_otra_noche() -> void:  # AC-SHF-024, AC-EMP-065
 	_abrir(ReglasDeLaPartida.JORNADAS_DE_LA_PARTIDA)
+	# Con una pista el contrato cumplido no tiene pantalla de final (BR-SHF-027).
+	(_almacen.get("_partida") as Partida).expediente.registrar("2A")
 	var pedidos := [0]
 	_almacen.set("_ir_al_menu", func() -> void: pedidos[0] += 1)
 	var reloj: RelojDelTurno = _almacen.get("_reloj")
@@ -215,6 +217,7 @@ func test_volver_de_una_partida_terminada_no_anuncia_otra_noche() -> void:  # AC
 	AvanceDeDevolucion.esperar_el_celular(pantalla)
 	assert_bool(pantalla.visible).is_true()
 	AvanceDeDevolucion.entregar(pantalla)
+	pantalla.elegir()
 	pantalla.elegir()
 	assert_int(pedidos[0]).is_equal(1)
 	assert_bool(_persiana().en_pantalla()).is_false()
