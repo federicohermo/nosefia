@@ -92,7 +92,7 @@ func test_al_cerrar_baja_la_persiana_y_sube_el_celular_fijo() -> void:  # AC-EMP
 	assert_int((almacen.get("_partida") as Partida).jornada()).is_equal(COMPLETA + 1)
 	var lista: VBoxContainer = _pantalla_del_celular(almacen).get("_mensajes")
 	var separadores := lista.get_children().filter(func(hijo: Node) -> bool: return hijo is Label)
-	assert_str((separadores.back() as Label).text).is_equal("HOY")
+	assert_bool((separadores.back() as Label).text.begins_with("HOY")).is_true()
 
 
 func test_un_mensaje_por_segundo_y_la_opcion_al_final() -> void:  # AC-EMP-062

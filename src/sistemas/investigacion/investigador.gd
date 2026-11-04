@@ -20,12 +20,13 @@ func usar(recibido: Expediente) -> void:
 		_publicar_notas()
 
 
+## `hora` es la del reloj del juego en el momento del pedido: la lleva la nota de la pista.
 func pedir_pista(
-	origen: StringName, canal: Pista.Canal, jornada: int, permitido: bool
+	origen: StringName, canal: Pista.Canal, jornada: int, permitido: bool, hora: String = ""
 ) -> Expediente.Resultado:
 	if not permitido or _expediente == null:
 		return Expediente.Resultado.DESCONOCIDA
-	return _expediente.registrar_por_canal(origen, canal, jornada)
+	return _expediente.registrar_por_canal(origen, canal, jornada, hora)
 
 
 func _al_anotar(pista: Pista) -> void:
