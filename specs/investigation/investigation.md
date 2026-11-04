@@ -245,7 +245,7 @@ Leer DEBE conservar el transcurso del turno de BR-INV-006 y las marcas de BR-INV
 ### BR-INV-030 — El historial mezcla guion y devoluciones en orden temporal
 
 El sistema DEBE ordenar los mensajes por jornada, momento de apertura o cierre y orden
-dentro del bloque, sin ordenarlos por texto ni inventar horas. En Enrique, cada devolución
+dentro del bloque, sin ordenarlos por texto ni por hora. En Enrique, cada devolución
 DEBE ir después de los mensajes de su jornada y antes de los de la siguiente: instrucciones de
 jornada 1, devolución 1, instrucciones de jornada 2, devolución 2, mensajes de jornada 3,
 devolución 3, foto y texto de apertura 4, devolución 4, y
@@ -254,7 +254,7 @@ su identidad; dos textos iguales con identidades distintas NO DEBEN fusionarse p
 
 Cada devolución nueva DEBE aportar explícitamente la jornada que cerró y el orden de sus
 mensajes (BR-EMP-031). Los mensajes legados sin jornada DEBEN conservar texto y orden relativo,
-sin recibir una jornada ni hora inventada. Su intercalado con bloques fechados depende de
+sin recibir una jornada ni una hora. Su intercalado con bloques fechados depende de
 OQ-INV-005. La vista cronológica y sus consultas NO DEBEN mutar el guion compartido ni sus
 marcas de lectura. Retomar DEBE reconstruir el guion y conservar las devoluciones guardadas
 con esos metadatos, con los mensajes del guion sin leer según BR-INV-023.
@@ -500,6 +500,32 @@ bloque ni alterar el guion compartido. Los mensajes llegan sin leer según BR-IN
 Yasmín conserva el transcurso del turno de BR-INV-006 y las marcas de BR-INV-008/009. El bloque
 cruza la sesión como el resto del guion de apertura (BR-SAV-020): un guardado de una jornada
 anterior abre la jornada 5 con el bloque una sola vez.
+
+### BR-INV-049 — Cada mensaje fechado lleva su hora
+
+El sistema DEBE dar a cada mensaje fechado una hora con forma `H:MM` o `HH:MM`. Un mensaje
+recibido lleva la hora que define su ficha: los de Yasmín, las devoluciones del jefe y los
+mensajes que el jefe manda al iniciar una jornada. Los introductorios del jefe, a los que la
+ficha no les pone hora, llevan la hora que decidió el usuario el 2026-10-26, todas antes de las 20:00 de su
+noche: **reemplazar si la ficha las define**. Ningún mensaje recibido DEBE quedar entre las
+20:00 y las 08:00 de su noche, porque los mensajes nunca se reciben durante la jornada. La
+devolución de una jornada empieza en el minuto que fija la ficha y cada mensaje siguiente suma
+un minuto a su orden.
+
+Una nota DEBE llevar la hora del reloj del juego: la de la pista, en el momento en que se
+encontró, y la de la hipótesis y la reflexión, en el momento en que empieza el cierre. Esa hora
+NO DEBE cambiar al guardar y cargar. Un dato guardado sin hora DEBE cargar sin hora y sin fallar.
+Un mensaje legado sin jornada NO DEBE recibir hora. La hora es un dato del mensaje: ninguna
+pantalla la calcula ni la inventa.
+
+### BR-INV-050 — El separador marca el día y el momento del día
+
+El sistema DEBE separar el historial en tandas y rotular cada una con el día relativo («HOY»,
+«AYER», …) y, debajo, la hora de su primer mensaje. Una tanda cambia cuando cambia el día o el
+momento del día: antes del mediodía es la mañana, y desde el mediodía es la tarde. Una
+devolución es de la mañana siguiente a su jornada, así que su día es el de la jornada que sigue.
+Una tanda cuyo primer mensaje no tiene hora DEBE rotularse sin hora. Un mensaje legado sin
+jornada NO DEBE abrir una tanda ni aportar hora.
 
 ## Criterios de aceptación
 
@@ -981,6 +1007,55 @@ DADO el celular arriba CUANDO se pulsa Q ENTONCES baja con el mismo resorte, sin
 vuelva a subir más allá de la que tenía, y termina fuera del margen inferior a los 0,25
 segundos con la señal de fin emitida una sola vez. DADO una subida interrumpida por Q o Esc
 CUANDO empieza la bajada ENTONCES parte de la posición del cuadro anterior, sin salto.
+
+### AC-INV-082 — Yasmín lleva la hora de su ficha *(verifica BR-INV-049)*
+
+DADO el guion de Yasmín CUANDO se leen las horas ENTONCES J2_1 a J2_4 tienen 17:34, J2_5 a J2_7
+17:35, J2_8 y J2_9 17:36, J2_10 a J2_12 17:37 y J2_13 a J2_15 17:38; J3_1 a J3_4 tienen 09:11,
+J3_5 a J3_7 09:12 y J3_8 a J3_10 09:13. Ninguna queda entre las 20:00 y las 08:00.
+
+### AC-INV-083 — Los introductorios del jefe quedan antes de las 20:00 *(verifica BR-INV-049)*
+
+DADO el guion del jefe CUANDO se leen los mensajes de jornada 1 ENTONCES J1_Intro01 tiene 19:40;
+J1_FotoReloj, J1_Foto02 y J1_Intro02, 19:41; J1_Foto03 y J1_Intro03, 19:42; J1_Foto04, J1_Intro04 y
+J1_Intro05, 19:43; J1_Foto06 y J1_Intro06, 19:44. CUANDO se leen los de jornada 2 ENTONCES cada
+variante de J2_Mensaje1 tiene 19:40; J2_FotoGondolas y J1_Foto07, 19:41; J1_Intro07 y J1_Intro08,
+19:42; J1_Foto09 y J1_Intro09, 19:43. CUANDO se leen los de jornada 3 ENTONCES cada variante de
+J3_Mensaje1 tiene 19:40; J1_Intro10 y J1_Foto11, 19:41; J1_Intro11 y J1_Intro12, 19:42. Ninguno
+queda entre las 20:00 y las 08:00.
+
+### AC-INV-084 — Las devoluciones y las aperturas llevan la hora de la ficha *(verifica BR-INV-049)*
+
+DADO la devolución de la jornada 3 CUANDO se leen sus mensajes ENTONCES salen a las 8:26, 8:27,
+8:28… en su orden. DADO las devoluciones de las jornadas 4, 5, 6 y 7 ENTONCES su primer mensaje
+sale a las 8:38, 9:05, 8:42 y 9:11, y cada siguiente suma un minuto. DADO el mensaje de apertura
+de la jornada 4 ENTONCES J2_CONTENEDOR_FOTO y J2_CONTENEDOR_TEXTO tienen 19:31. Cada mensaje de
+apertura de las jornadas 5, 6 y 7 que exista lleva la hora de la ficha: 19:20, 19:48, y 15:57,
+15:58 y 15:59 en la 7.
+
+### AC-INV-085 — Una nota lleva la hora del reloj del juego *(verifica BR-INV-049)*
+
+DADO una pista encontrada con 3630 segundos del turno gastados ENTONCES su nota lleva 21:00, la
+hora del reloj truncada al minuto, y cargar la partida guardada no la cambia.
+DADO una pista encontrada con el turno recién abierto ENTONCES su nota lleva 20:00. DADO una
+hipótesis o una reflexión CUANDO empieza el cierre con el turno cumplido ENTONCES su nota lleva
+08:00, y CUANDO empieza antes ENTONCES lleva la hora del reloj en ese momento. DADO un guardado de
+una nota sin hora CUANDO se carga ENTONCES la nota existe, con el mismo texto y sin hora.
+
+### AC-INV-086 — El separador corta por día y por momento del día *(verifica BR-INV-050)*
+
+DADO una devolución con hora de la mañana y mensajes de Yasmín con hora de la tarde del día
+siguiente a su jornada CUANDO se ordena el historial ENTONCES quedan en dos tandas, cada una con
+su rótulo de día y la hora de su primer mensaje debajo. DADO dos mensajes de la misma jornada y
+del mismo momento del día ENTONCES quedan en una tanda. DADO un mensaje a las 11:59 y otro a las
+12:00 del mismo día ENTONCES quedan en dos tandas. DADO el mensaje de la mañana de la devolución
+de la jornada N CUANDO la referencia es la jornada N+1 ENTONCES su rótulo es «HOY».
+
+### AC-INV-087 — Sin hora no hay hora ni tanda inventada *(verifica BR-INV-049, BR-INV-050)*
+
+DADO un mensaje fechado sin hora al frente de una tanda ENTONCES el rótulo no lleva hora. DADO un
+mensaje legado sin jornada ENTONCES no abre tanda, no muestra hora y no cambia las tandas de los
+fechados.
 
 ## No objetivos
 
