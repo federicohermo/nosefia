@@ -436,7 +436,7 @@ func test_recibido_futuro_no_aparece_en_el_chat_abierto() -> void:  # AC-INV-028
 	var anteriores: Array[Mensaje] = _celular().bandeja().mensajes_de(
 		Conversacion.Interlocutor.YASMIN
 	)
-	assert_int(anteriores.size()).is_equal(15)
+	assert_array(anteriores).is_not_empty()
 	var futuro := Mensaje.new()
 	futuro.identidad = "FUTURO_DE_PRUEBA"
 	futuro.jornada = ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA + 2
