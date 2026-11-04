@@ -123,8 +123,8 @@ Estos pares se confunden seguido, y cada uno tiene su regla escrita en los dos s
   la entrada mientras todas sus tareas estén cumplidas. Descumplir una vuelve a trabar la
   salida; recuperar todas la habilita de nuevo. La planilla conserva sus gestos de sumar y
   restar, y retirar mercadería vuelve a dejar reposición pendiente. La primera habilitación
-  avisa una vez por noche y cada nueva traba produce su propio aviso. Recuperar retira el aviso
-  de traba sin repetir el inicial. La puerta termina la noche por el mismo recorrido que el
+  avisa y el aviso queda a la vista hasta que una tarea se descumple o el jugador se va;
+  recuperar todas lo devuelve. La puerta termina la noche por el mismo recorrido que el
   tiempo agotado, contando el cumplimiento actual. Abrir otra jornada vuelve a evaluar sus
   tareas y permiso propios. El reloj conserva el ritmo de esa jornada.
 - **`player-actions` y `counter-service`.** Atención decide si corresponde hablar, recibir o

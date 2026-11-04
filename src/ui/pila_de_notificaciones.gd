@@ -8,7 +8,6 @@ const TEXTOS := {
 	Notificaciones.Tipo.CIERRE_PROXIMO: "QUEDA UNA HORA DE JORNADA",
 	Notificaciones.Tipo.PISTA: "¡NUEVA PISTA!",
 	Notificaciones.Tipo.TAREAS_TERMINADAS: "YA PODÉS RETIRARTE\nPOR LA PUERTA PRINCIPAL.",
-	Notificaciones.Tipo.SALIDA_RETRABADA: "YA NO PODÉS IRTE PORQUE UNA TAREA QUEDÓ SIN CUMPLIR",
 	Notificaciones.Tipo.CLIENTE_CANSADO_CON_PRODUCTOS:
 	"EL CLIENTE SE CANSÓ DE ESPERAR Y DEJÓ LOS PRODUCTOS.",
 }
@@ -25,7 +24,6 @@ const SIMBOLOS := {
 	Notificaciones.Tipo.PISTA: preload("res://assets/ui/manada/notificacion_pista.svg"),
 	Notificaciones.Tipo.TAREAS_TERMINADAS:
 	preload("res://assets/ui/manada/notificacion_tareas_completadas.svg"),
-	Notificaciones.Tipo.SALIDA_RETRABADA: SIMBOLO_DEL_CLIENTE,
 	Notificaciones.Tipo.CLIENTE_CANSADO_CON_PRODUCTOS: SIMBOLO_DE_LA_SALIDA,
 }
 const ESCALA_DEL_CARTEL := 0.4
