@@ -17,7 +17,7 @@ El artista reemplazó el archivo el 3 de noviembre de 2026 (commit `236a970a`): 
 | Dato | Valor |
 |---|---|
 | Rama de origen | `modelossupermercado` |
-| Revisión fijada | `4eb137ae44684b0e23ca509a611dc2d660afee53` (3 de noviembre de 2026) |
+| Revisión fijada | `4eb137ae44684b0e23ca509a611dc2d660afee53` (4 de noviembre de 2026) |
 | Ruta en esa revisión | `assets/personajes/Yasmin/Yasmin.png` |
 | Blob de git | `66e1e215ad339b4c65a3e7976e3cd5b8f1b988b6` |
 | SHA-256 | `aabe7af42805bac9fc32c5533290dfa4be8251eb22bace10c7fc7b5748744bd8` |
