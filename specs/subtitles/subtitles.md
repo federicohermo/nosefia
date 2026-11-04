@@ -3,7 +3,7 @@ schema_version: 1
 capability_id: CAP-SUB
 status: ratified
 owner: por definir
-provenance: fichas «Subtítulos», «5. Formas de interacción con objetos», «Interfaces virtuales durante la jornada» y «8. Tarea: Reposición»; columnas «Subtítulo al examinar» de las bases «Productos y cajas contenedoras» y «Otros objetos interactuables»; decisiones de #376; exención de bolsa, producto vencido, ticket y pista de #516; cuartito de limpieza de #541; texto provisorio del depósito trabado de #574; útiles fuera del contenedor de #552, ficha «Subtítulos» revisada el 2026-10-21; pensamiento de la primera pista de #714, ficha «Subtítulos» revisada el 2026-10-30; pensamiento sin luz de #689, ficha «Subtítulos» leída el 2026-11-03; subtítulos de las manchas de #457, ficha «Limpieza» revisada el 2026-10-20; renglones y ancho de #626, ficha «Subtítulos» revisada el 2026-11-03
+provenance: fichas «Subtítulos», «5. Formas de interacción con objetos», «Interfaces virtuales durante la jornada» y «8. Tarea: Reposición»; columnas «Subtítulo al examinar» de las bases «Productos y cajas contenedoras» y «Otros objetos interactuables»; decisiones de #376; exención de bolsa, producto vencido, ticket y pista de #516; cuartito de limpieza de #541; texto provisorio del depósito trabado de #574; útiles fuera del contenedor de #552, ficha «Subtítulos» revisada el 2026-10-21; pensamiento de la primera pista de #714, ficha «Subtítulos» revisada el 2026-10-30; pensamiento sin luz de #689, ficha «Subtítulos» leída el 2026-11-03; subtítulos de las manchas de #457, ficha «Limpieza» revisada el 2026-10-20; renglones y ancho de #626, ficha «Subtítulos» revisada el 2026-11-03; router del wifi de #690, fichas «Subtítulos» y «Objetos interactuables» leídas el 2026-11-04
 ---
 
 # Capacidad: los subtítulos
@@ -148,6 +148,7 @@ con el mismo contenido, y el cuerpo y la tapa del contenedor.
 | Nota de no tirar papel | “Por favor, no tirar papel en el inodoro” |
 | Nota de tareas a realizar | Una lista de las tareas que me dejó Enrique. |
 | Nota del local ordenado | Una nota sobre el correcto orden del local.<br>Enrique es medio insoportable con eso… |
+| Router | El router del WiFi. Anda más o menos. |
 | Computadora | Una computadora medio vieja. El único programa<br>que tiene es el registro de productos vendidos. |
 | Caja registradora | La caja registradora. Acá puedo hacer<br>los tickets para los compradores. |
 | Lector | El lector de código de barras. Si le paso un producto,<br>lo va a anotar en el programa de la caja. |
@@ -221,7 +222,9 @@ es contenido editable: cambiarla NO DEBE cambiar la identidad ni la condición q
 | Borrar la caca del piso frente a las estanterías del fondo del local, en la jornada 5 | `PISO_DE_LAS_ESTANTERIAS_DEL_FONDO` | Espero que sea vómito… |
 | Borrar la caca del techo del baño, en la jornada 6 | `TECHO_SOBRE_UN_CUBICULO` | ¿¿Cómo llegó eso ahí?? |
 | Usar la puerta de entrada del local en una jornada de prueba, con alguna obligatoria pendiente | `PUERTA_CON_TAREAS_PENDIENTES` | No debería irme.<br>Todavía me quedan tareas por completar. |
-| Hacer clic izquierdo sobre la computadora o la caja registradora con el corte de luz cortado | `SIN_LUZ` | Se cortó la luz…<br>Ningún aparato eléctrico funciona. |
+| Hacer clic izquierdo sobre la computadora, la caja registradora o el router con el corte de luz cortado | `SIN_LUZ` | Se cortó la luz…<br>Ningún aparato eléctrico funciona. |
+| Hacer clic izquierdo sobre el router con el corte sin cortar: antes del corte de la jornada 6 o en cualquier otra jornada | `ROUTER_ANTES_DEL_CORTE` | Mejor no me pongo a jugar con el router.<br>Ya veo que empieza a andar mal. |
+| Hacer clic izquierdo sobre el router con el wifi devuelto después del corte | `ROUTER_YA_RESTAURADO` | Mejor no vuelvo a tocar el router.<br>No sea que falle de nuevo. |
 
 El `<br>` de la tabla es un salto de renglón del subtítulo, tal como lo marca la ficha (BR-SUB-017).
 
@@ -243,7 +246,14 @@ trabada, y examinarla con E conserva su texto (BR-SUB-010).
 jornada: MIENTRAS el corte está cortado, la computadora y la caja registradora DEBEN pensarlo y
 seguir cerradas. Con el corte sin cortar o restaurado NO DEBEN pensarlo, y se abren como siempre.
 Cortarse con una abierta, que se cierra sola, NO DEBE pensarlo. Repetir el clic repite el
-pensamiento, como los demás de esta tabla.
+pensamiento, como los demás de esta tabla. El router lo piensa con el corte cortado igual que los
+otros dos aparatos, y no cambia su estado (BR-ANO-017).
+
+`ROUTER_ANTES_DEL_CORTE` y `ROUTER_YA_RESTAURADO` DEBEN decidirse por el estado del router
+(BR-ANO-015, BR-ANO-016) en el instante del clic: el primero, con el corte sin cortar —antes de las
+20:58 de la jornada 6 y en las demás jornadas—; el segundo, con el wifi devuelto después del corte.
+Ninguno cambia el router. Un clic sobre el router descompuesto o apagado, con la luz restaurada, NO DEBE
+pensar nada: apaga o prende (BR-ANO-016).
 
 Los pensamientos de la mopa de esta tabla DEBEN aparecer sólo al intentar limpiar una mancha.
 Mojarla, transportarla o dejar marcas de agua NO DEBE dispararlos. SI se secó después de mojarla
@@ -395,7 +405,7 @@ examinar ENTONCES cada uno conserva su identidad y devuelve el subtítulo no vac
 ### AC-SUB-013 — Lo fijo dice su texto, y lo demás calla *(verifica BR-SUB-010)*
 
 DADO los dos inodoros, los dos lavatorios, las cinco notas, la computadora, la caja
-registradora, el lector, la entrada principal, la puerta del jefe, el portón del depósito, los
+registradora, el router, el lector, la entrada principal, la puerta del jefe, el portón del depósito, los
 tres tachos y el cuerpo y la tapa del contenedor CUANDO se pide su texto al examinar ENTONCES
 cada uno devuelve el subtítulo asociado a su identidad. DADO una puerta interior sin traba, una puerta
 de heladera, la ventanilla, el comprador, la góndola y una mancha ENTONCES no tienen texto. DADO
@@ -528,7 +538,8 @@ CUANDO llega otro subtítulo ENTONCES lo reemplaza y el pensamiento no vuelve.
 
 DADO cada pensamiento de la tabla de BR-SUB-013 y `MOPA_BERRETA` ENTONCES su texto tiene los
 renglones de la ficha: dos para `CAJA_EN_EL_CONTENEDOR`, `UTIL_EN_EL_CONTENEDOR`,
-`POR_LA_VENTANA`, `JABON_EQUIVOCADO`, `PUERTA_CON_TAREAS_PENDIENTES` y `SIN_LUZ`, y uno para cada uno de los
+`POR_LA_VENTANA`, `JABON_EQUIVOCADO`, `PUERTA_CON_TAREAS_PENDIENTES`, `SIN_LUZ`,
+`ROUTER_ANTES_DEL_CORTE` y `ROUTER_YA_RESTAURADO`, y uno para cada uno de los
 demás. Ningún renglón queda vacío y el texto no empieza ni termina con un salto.
 
 ### AC-SUB-029 — Los mismos renglones en pantalla *(verifica BR-SUB-017, BR-SUB-001)*
@@ -562,6 +573,17 @@ mostrando sólo ese texto, una vez, y empieza de nuevo.
 DADO el corte sin cortar, o restaurado con el tablero, CUANDO se hace clic sobre cualquiera de las
 dos ENTONCES se abre y no hay pensamiento. DADA la computadora abierta CUANDO se corta la luz
 ENTONCES se cierra y no hay pensamiento.
+
+### AC-SUB-034 — El router piensa según su estado *(verifica BR-SUB-013, BR-SUB-010, BR-SUB-001)*
+
+DADO el corte cortado CUANDO se hace clic izquierdo sobre el router ENTONCES el pensamiento es
+`SIN_LUZ`, con sus dos renglones. DADA cada jornada de 1 a 5 y la 7, y la 6 con el corte sin
+cortar, CUANDO se hace clic sobre el router ENTONCES el pensamiento es `ROUTER_ANTES_DEL_CORTE`,
+con dos renglones. DADO el router con el wifi devuelto después del corte CUANDO se hace clic
+ENTONCES el pensamiento es `ROUTER_YA_RESTAURADO`, con dos renglones. DADO el router descompuesto
+o apagado, con la luz restaurada, CUANDO se hace clic ENTONCES no hay pensamiento. DADO cualquier
+estado y jornada CUANDO se examina el router con E y las manos vacías ENTONCES se muestra su texto
+al examinar, de un renglón.
 
 ## No objetivos
 
@@ -600,6 +622,8 @@ ENTONCES se cierra y no hay pensamiento.
 - [`counter-service`](../counter-service/counter-service.md) (consume): los productos del
   ticket, en el orden de sus renglones.
 - [`shift-cycle`](../shift-cycle/shift-cycle.md) (consume): la jornada que se abre y la pausa.
+- [`anomalies`](../anomalies/anomalies.md) (consume): el estado del corte y del router, que eligen el
+  pensamiento de un clic.
 
 ## Preguntas abiertas
 
