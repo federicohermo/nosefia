@@ -290,6 +290,7 @@ entre tres textos según BR-EMP-046:
 | 3 | Cuando te pedí que ordenaras las cajas en las estanterías del depósito, lo que quería decir es que pongas TODAS y cada una de las CAJAS de cartón con productos ARRIBA de las ESTANTERÍAS del DEPÓSITO. Ahí se entendió? |
 | 4 | De verdad era tan difícil tirar tres bolsas de basura? |
 | 5 | El de BR-EMP-046. |
+| 7 | Te encargué ocuparte de las quejas y ahora recibo quejas sobre la gestión de las quejas. |
 
 ### BR-EMP-028 — Los Retos dicen el llamado que es
 
