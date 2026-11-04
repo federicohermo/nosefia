@@ -88,14 +88,15 @@ func _ready() -> void:
 	_ajustar()
 
 
-## Pinta la etapa de la reflexión. Durante la espera deja la elección a la vista sin responder.
+## Pinta la etapa de la reflexión. Durante la espera deja a la vista la elección, o el último
+## texto, sin responder.
 func mostrar(reflexion: ReflexionDeCierre) -> void:
 	visible = true
 	_encabezado.text = reflexion.encabezado()
 	var etapa := reflexion.etapa()
-	_elige = etapa in [ReflexionDeCierre.Etapa.ELEGIR, ReflexionDeCierre.Etapa.ESPERA]
 	var opcion := reflexion.mostrada()
-	var con_opcion := _elige and opcion != null
+	var con_opcion := opcion != null
+	_elige = con_opcion
 	_titulo.visible = con_opcion
 	_flecha.visible = con_opcion
 	_titulo.text = opcion.titulo if con_opcion else ""
