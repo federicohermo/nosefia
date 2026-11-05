@@ -1788,9 +1788,9 @@ ENTONCES contesta NO_DISPONIBLE.
 ### AC-INV-151 — Sin pista en la jornada 6 se ofrece 6P o 6L *(verifica BR-INV-116, BR-INV-053)*
 
 DADO el cierre de jornada 6 con el expediente vacío ENTONCES la única opción es 6P «NADA DE OTRO
-MUNDO» con su texto de la ficha, y ofrece sólo «Elegir». DADO 5B registrada en la jornada 5, sin 6C,
-ENTONCES la única opción es 6L «INVESTIGACIÓN INCONCLUSA» con su texto de la ficha, sin 6P. DADO 2A
-anotada en la jornada 4 y la 5P elegida, sin 6C, ENTONCES la única opción también es 6L. CUANDO en
+MUNDO» con su texto de la ficha, y ofrece sólo «Elegir». DADO 5B registrada en la jornada 5, sin 6B
+ni 6C, ENTONCES la única opción es 6L «INVESTIGACIÓN INCONCLUSA» con su texto de la ficha, sin 6P.
+DADO 2A anotada en la jornada 4 y la 5P elegida, sin 6B ni 6C, ENTONCES la única opción también es 6L. CUANDO en
 cualquiera de los tres casos se pide elegir la identidad que no se ofrece ENTONCES contesta
 NO_DISPONIBLE.
 

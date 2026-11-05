@@ -75,6 +75,16 @@ func test_sin_la_6c_la_sexta_ofrece_la_6p_o_la_6l() -> void:  # AC-INV-151
 	assert_str(con_la_5b.eleccion(6)).is_empty()
 	var con_la_5p := _empezada(6, _con_la_quinta_elegida("5P"))
 	assert_array(_identidades(con_la_5p.opciones())).is_equal(["6L"])
+	var con_la_6b := _con_la_cuarta_elegida("2A")
+	con_la_6b.registrar("5A")
+	con_la_6b.elegir(5, "5A")
+	con_la_6b.registrar("6B")
+	var reflexion_de_la_6b := _empezada(6, con_la_6b)
+	assert_array(_identidades(reflexion_de_la_6b.opciones())).is_equal(["6B"])
+	for ajena: String in ["6P", "6L"]:
+		assert_int(reflexion_de_la_6b.elegir(ajena)).is_equal(
+			ReflexionDeCierre.Eleccion.NO_DISPONIBLE
+		)
 
 
 func test_la_6p_y_la_6l_son_hipotesis_sin_pista_ni_camino() -> void:  # AC-INV-151
