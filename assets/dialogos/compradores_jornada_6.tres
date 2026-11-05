@@ -1,0 +1,8 @@
+[gd_resource type="Resource" script_class="DialogosDeCompradores" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://src/dominio/almacen/dialogos_de_compradores.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+tia = PackedStringArray("Qué tal….", "………", "Dame {pedido}.")
+despedida_tia = PackedStringArray("…..", "Gracias….")
