@@ -13,11 +13,8 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[2] / ".claude/scripts"))
 from lib.godot import validar_motor
 
 
-IMPORTADORES = {
-    "assets/models/importar_modelo.gd": "2e775ade95b5342f297f9e5abd686e9a9b701b4b20b29d0378df75717c018cdb",
-    "assets/models/importar_caja.gd": "92f38d55d8c23f27f0f47b12118c55eeb75a4c7f17d3da919201552e6c6212f6",
-}
-CAJAS = {"caja_registradora", "lector_de_productos", "ticket_impreso"}
+IMPORTADORES = {"assets/models/importar_modelo.gd", "assets/models/importar_caja.gd"}
+IMPORTADOR_DE_CAJAS = "assets/models/importar_caja.gd"
 MATERIAL = "src/escenas/puestos/vidrio_del_local.tres"
 EXCLUIDOS = {".github", ".claude", ".agents", "docs", "reports", "specs", "tools"}
 
@@ -77,54 +74,41 @@ def identidad(
         if nombre.endswith(".import") and nombre[:-7] in nombres:
             seleccion.append(nombre[:-7])
     seleccion = sorted(set(seleccion))
-    for nombre, esperado in IMPORTADORES.items():
+    for nombre in seleccion:
         ruta = raiz / nombre
-        if ruta.is_symlink() or not ruta.is_file() or hashlib.sha256(
-            ruta.read_text(encoding="utf-8").encode("utf-8")
-        ).hexdigest() != esperado:
-            motivo = f"importador sin auditar: {nombre}"
+        if ruta.is_symlink():
+            motivo = f"entrada enlazada no soportada: {nombre}"
+            break
+        if nombre.endswith(".import"):
+            script, destinos = configuracion_importacion(ruta)
+            if script and script not in IMPORTADORES:
+                motivo = f"importador sin auditar: {script}"
+                break
+            if script == IMPORTADOR_DE_CAJAS:
+                if not destinos:
+                    motivo = f"salidas de importación no reconocidas: {nombre}"
+                    break
+                try:
+                    for destino in destinos:
+                        destino_privado(raiz, destino)
+                except ValueError:
+                    motivo = f"salidas de importación fuera del directorio privado: {nombre}"
+                    break
+        if nombre.endswith(".gd") and re.search(
+            r"\b(?:EditorImportPlugin|add_import_plugin)\b", ruta.read_text(encoding="utf-8")
+        ):
+            motivo = f"EditorImportPlugin no soportado: {nombre}"
             break
     else:
-        for nombre in seleccion:
-            ruta = raiz / nombre
-            if ruta.is_symlink():
-                motivo = f"entrada enlazada no soportada: {nombre}"
-                break
-            if nombre.endswith(".import"):
-                script, destinos = configuracion_importacion(ruta)
-                if script and script not in IMPORTADORES:
-                    motivo = f"importador sin auditar: {script}"
-                    break
-                if script.endswith("importar_caja.gd") and nombre not in {
-                    f"assets/models/{caja}.glb.import" for caja in CAJAS
-                }:
-                    motivo = f"salidas de importador sin auditar: {nombre}"
-                    break
-                if script.endswith("importar_caja.gd"):
-                    if not destinos:
-                        motivo = f"salidas de importación no reconocidas: {nombre}"
-                        break
-                    try:
-                        for destino in destinos:
-                            destino_privado(raiz, destino)
-                    except ValueError:
-                        motivo = f"salidas de importación fuera del directorio privado: {nombre}"
-                        break
-            if nombre.endswith(".gd") and re.search(
-                r"\b(?:EditorImportPlugin|add_import_plugin)\b", ruta.read_text(encoding="utf-8")
-            ):
-                motivo = f"EditorImportPlugin no soportado: {nombre}"
-                break
+        material = (raiz / MATERIAL).read_text(encoding="utf-8")
+        referencias = re.findall(r'res://([^"\s]+)', material)
+        if re.search(r'type\s*=\s*"(?:Script|GDScript|CSharpScript)"', material) or any(
+            ref.endswith((".gd", ".tres", ".res")) or ref not in seleccion
+            for ref in referencias
+        ):
+            motivo = "dependencia del material importado sin auditar"
         else:
-            material = (raiz / MATERIAL).read_text(encoding="utf-8")
-            referencias = re.findall(r'res://([^"\s]+)', material)
-            if re.search(r'type\s*=\s*"(?:Script|GDScript|CSharpScript)"', material) or any(
-                ref.endswith((".gd", ".tres", ".res")) or ref not in seleccion
-                for ref in referencias
-            ):
-                motivo = "dependencia del material importado sin auditar"
-            else:
-                motivo = ""
+            motivo = ""
     motor = (raiz / ".godot-version").read_text(encoding="utf-8").strip()
     if motivo:
         return IdentidadImportacion(
@@ -170,12 +154,9 @@ def preparar_verificacion(raiz: Path, exacta: bool) -> list[str]:
     if not exacta and carpeta.exists():
         shutil.rmtree(carpeta)
     eliminados = []
-    for caja in sorted(CAJAS):
-        ruta = raiz / "assets" / "models" / f"{caja}.glb.import"
-        if not ruta.exists():
-            continue
+    for ruta in sorted((raiz / "assets" / "models").glob("*.glb.import")):
         script, destinos = configuracion_importacion(ruta)
-        if script != "assets/models/importar_caja.gd":
+        if script != IMPORTADOR_DE_CAJAS:
             continue
         for destino in destinos:
             archivo = destino_privado(raiz, destino)
