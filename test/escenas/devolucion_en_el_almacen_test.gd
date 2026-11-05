@@ -245,8 +245,8 @@ func test_despedido_sale_al_menu_una_sola_vez_desde_el_final() -> void:  # AC-EM
 	assert_int(menus[0]).is_zero()
 	var final: PantallaDeFinal = almacen.get_node("PantallaDeFinal")
 	assert_bool(final.visible).is_true()
-	final.boton().pressed.emit()
-	final.boton().pressed.emit()
+	final.boton_de_volver().pressed.emit()
+	final.boton_de_volver().pressed.emit()
 	assert_int(menus[0]).is_equal(1)
 
 
