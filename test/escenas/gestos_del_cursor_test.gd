@@ -67,23 +67,22 @@ func _ventanilla_con_comprador() -> Node3D:
 
 
 func test_con_agarrar_en_f_f_atiende_al_comprador_y_el_clic_izquierdo_no() -> void:  # AC-CFG-020
-	_agarrar_en_f()
 	var almacen := await _ventanilla_con_comprador()
+	_agarrar_en_f()
 	var puesto: Node3D = almacen.get_node("Estructura/Ventanilla")
 	var atencion: Atencion = (almacen.get("_atenciones") as Ventanilla).atencion()
-	assert_bool(atencion.dialogo().terminado()).is_false()
-	var inicial := atencion.dialogo().entrada_actual()
+	assert_object(atencion.dialogo()).is_null()
 	var clic := InputEventMouseButton.new()
 	clic.button_index = MOUSE_BUTTON_LEFT
 	clic.pressed = true
 	puesto.call("_input", clic)
-	assert_str(atencion.dialogo().entrada_actual()).is_equal(inicial)
+	assert_object(atencion.dialogo()).is_null()
 	var tecla := InputEventKey.new()
 	tecla.keycode = KEY_F
 	tecla.physical_keycode = KEY_F
 	tecla.pressed = true
 	puesto.call("_input", tecla)
-	assert_str(atencion.dialogo().entrada_actual()).is_not_equal(inicial)
+	assert_object(atencion.dialogo()).is_not_null()
 
 
 func test_con_agarrar_en_f_el_clic_izquierdo_sigue_avanzando_un_dialogo() -> void:  # AC-CFG-020
