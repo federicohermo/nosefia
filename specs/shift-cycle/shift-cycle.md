@@ -3,7 +3,7 @@ schema_version: 1
 capability_id: CAP-SHF
 status: ratified
 owner: por definir
-provenance: GDD «Ciclo de jornadas»; fichas «Pantalla entre jornadas» y «Particulares de cada jornada»; decisiones de #364, #369, #436, #526, #527, #573 y #693; migración de los specs 001, 007, 011, 016, 027, 031; quejas de la jornada 7 de #759, ficha «Particulares de cada jornada»; la ficha «Caminos narrativos y finales» y la fila «7B» de la lista de pistas e hipótesis, de #790; cajas del proveedor de #788, filas «Caja de cartón del proveedor» y «Caja de madera» de «Objetos interactuables» leídas el 2026-11-04; hora del celular de #613, decisiones del 2026-10-29, 2026-10-30 y 2026-11-02
+provenance: GDD «Ciclo de jornadas»; fichas «Pantalla entre jornadas» y «Particulares de cada jornada»; decisiones de #364, #369, #436, #526, #527, #573, #691 y #693; migración de los specs 001, 007, 011, 016, 027, 031; quejas de la jornada 7 de #759, ficha «Particulares de cada jornada»; la ficha «Caminos narrativos y finales» y la fila «7B» de la lista de pistas e hipótesis, de #790; cajas del proveedor de #788, filas «Caja de cartón del proveedor» y «Caja de madera» de «Objetos interactuables» leídas el 2026-11-04; hora del celular de #613, decisiones del 2026-10-29, 2026-10-30 y 2026-11-02
 ---
 
 # Capacidad: el ciclo de la jornada
@@ -69,11 +69,11 @@ son de introducción: las tareas entran de a poco.
 | 3 | las cuatro fijas y ordenar las cajas del depósito |
 | 4 | las cuatro fijas y tirar la basura |
 | 5 | las cuatro fijas y desechar los Cindolor vencidos |
-| 6 | las cuatro fijas |
+| 6 | las cuatro fijas y hacerle un pedido al proveedor |
 | 7 | las cuatro fijas y responder a las quejas de los compradores |
 
-Mientras sigue abierta OQ-SHF-006, la jornada 6 DEBE declarar sólo las cuatro fijas. Una jornada
-sin fila propia DEBE declarar también sólo las cuatro fijas. Cada apertura DEBE crear tareas nuevas, sin cumplir.
+Una jornada sin fila propia DEBE declarar sólo las cuatro fijas. Cada apertura DEBE crear tareas
+nuevas, sin cumplir.
 
 La jornada 1 declara reposición: los casilleros que el jugador vacía al vender son huecos que
 repone. La nota de tareas DEBE listar sólo las obligatorias declaradas para esa noche.
@@ -101,6 +101,22 @@ contenedor además un Cindolor sano u otro objeto NO DEBE impedir ni deshacer el
 llamado que eso suma es de [`employment-record`](../employment-record/employment-record.md).
 Reponer los casilleros que dejaron los vencidos no interviene en esta obligatoria, pero sí en
 reponer (BR-STK-052).
+
+### BR-SHF-031 — La jornada 6 pide el pedido al proveedor
+
+CUANDO se abre la jornada 6, el sistema DEBE declarar, además de las cuatro fijas, hacerle un
+pedido al proveedor, y la nota de tareas DEBE listarla como «Hacerle un pedido al proveedor». Las
+demás jornadas NO DEBEN declararla.
+
+### BR-SHF-032 — El pedido cuenta cuando es exacto y salió con wifi
+
+MIENTRAS queda turno y la jornada declara el pedido al proveedor, el sistema DEBE contar esa
+obligatoria cuando el último pedido enviado con wifi (BR-INV-125) tiene exactamente los productos
+de las cinco cajas vacías de la noche (BR-STK-055): ni uno más ni uno menos, en cualquier orden.
+Un pedido enviado sin wifi NO DEBE contar ni reemplazar al último enviado con wifi. SI después de
+cumplida sale con wifi otro pedido que no es exacto, ENTONCES el sistema DEBE dejarla sin cumplir;
+SI sale con wifi uno exacto, ENTONCES vuelve a contar. Sin ningún pedido enviado con wifi, queda
+sin cumplir. Un pedido que sale con el turno cerrado NO DEBE cambiar el cierre (BR-SHF-007).
 
 ### BR-SHF-027 — Al terminar la partida, la devolución lleva a la pantalla de final
 
@@ -315,7 +331,7 @@ está cerrado.
 DADO las jornadas 1 a 7 CUANDO cada una pide sus obligatorias ENTONCES la 1 recibe 3:
 cobrar, registrar y reponer, sin limpiar ni particular; la 2 recibe las 4 fijas; la 3 recibe 5,
 con ordenar las cajas y sin basura; la 4 recibe 5, con basura y sin ordenar; la 5 recibe 5, con
-desechar los Cindolor vencidos y sin ordenar ni basura; la 6 recibe las 4 fijas; la 7 recibe 5, con responder a las quejas y sin ordenar, basura ni vencidos. DADO dos aperturas seguidas CUANDO se comparan sus tareas ENTONCES ninguna instancia se
+desechar los Cindolor vencidos y sin ordenar ni basura; la 6 recibe 5, con el pedido al proveedor y sin ordenar, basura ni vencidos; la 7 recibe 5, con responder a las quejas y sin ordenar, basura ni vencidos. DADO dos aperturas seguidas CUANDO se comparan sus tareas ENTONCES ninguna instancia se
 comparte y todas las de la segunda están sin cumplir. DADO la jornada 1 recién abierta ENTONCES la
 nota de tareas lista atención, registro y reposición, sin limpieza.
 
@@ -711,6 +727,40 @@ obligatorias cumplidas CUANDO se arma la devolución del jefe ENTONCES trae como
 encargué ocuparte de las quejas y ahora recibo quejas sobre la gestión de las quejas.». DADO la
 jornada 7 con las cinco quejas bien respondidas ENTONCES la devolución no trae Tarea 5.
 
+### AC-SHF-083 — El pedido exacto con wifi cumple *(verifica BR-SHF-032)*
+
+DADO la jornada 6 con las cinco cajas vacías de la noche CUANDO se envía con wifi un pedido con
+exactamente esos cinco productos ENTONCES el pedido está cumplido y la cuenta de cumplidas sube
+uno. CUANDO el pedido lista los mismos cinco en otro orden ENTONCES también cuenta.
+
+### AC-SHF-084 — Uno de más, uno de menos o uno cambiado no cumple *(verifica BR-SHF-032)*
+
+DADO la jornada 6 con cinco cajas vacías CUANDO se envía con wifi un pedido con cuatro de ellas
+ENTONCES sigue sin cumplir. CUANDO se envía con wifi un pedido con las cinco y un producto más
+ENTONCES sigue sin cumplir. CUANDO se envía con wifi un pedido con cuatro de las cinco y un
+producto que no está vacío ENTONCES sigue sin cumplir. DADO ningún pedido enviado ENTONCES sigue
+sin cumplir.
+
+### AC-SHF-085 — Sin wifi no cumple ni deshace *(verifica BR-SHF-032)*
+
+DADO el pedido exacto enviado sin wifi ENTONCES sigue sin cumplir. DADO el pedido exacto cumplido
+con wifi CUANDO sale sin wifi un pedido distinto ENTONCES sigue cumplido: el último enviado con
+wifi es el exacto.
+
+### AC-SHF-086 — Cuenta el último pedido enviado con wifi *(verifica BR-SHF-032, BR-SHF-007)*
+
+DADO el pedido exacto cumplido CUANDO sale con wifi un pedido distinto ENTONCES queda sin cumplir
+y la cuenta de cumplidas baja uno. CUANDO sale con wifi el exacto otra vez ENTONCES vuelve a
+cumplirse una sola vez. DADO el turno cerrado CUANDO sale con wifi un pedido ENTONCES el cierre no
+cambia.
+
+### AC-SHF-087 — Sólo la jornada 6 lo declara *(verifica BR-SHF-031)*
+
+DADO las jornadas 1 a 7 CUANDO cada una pide sus obligatorias ENTONCES sólo la 6 incluye el pedido
+al proveedor, y la nota de tareas de la 6 lo lista como «Hacerle un pedido al proveedor» a
+continuación de las cuatro fijas. DADO dos aperturas seguidas de la 6 ENTONCES el pedido es una
+instancia nueva y sin cumplir.
+
 ## No objetivos
 
 - Esta capacidad NO decide **cómo** se cumple cada obligatoria: eso es de la capacidad de cada
@@ -752,12 +802,6 @@ jornada 7 con las cinco quejas bien respondidas ENTONCES la devolución no trae 
   noche tiene el reloj detenido.
 
 ## Preguntas abiertas
-
-- **OQ-SHF-006 — ¿Qué particular declara la jornada 6?**
-  - Por qué sigue abierta: la ficha de la 6 no tiene diseño cerrado. La decisión de #369 la deja
-    con sólo las cuatro fijas.
-  - Decide: game design, en la ficha e issue de esa jornada.
-  - Bloquea: agregar esa particular; no bloquea abrir ni cerrar con las cuatro declaradas.
 
 - **OQ-SHF-008 — ¿Qué mensaje lleva la pantalla de final y se puede reintentar la jornada?**
   - Por qué sigue abierta: las pantallas de diseño traen un mensaje del jefe y, la del despido, un botón

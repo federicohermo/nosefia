@@ -296,7 +296,7 @@ func test_todo_lo_que_se_suelta_choca_con_la_capa_del_contorno() -> void:
 	)
 	assert_array(agarrables).is_not_empty()
 	var cajas: Array = almacen.get("_cajas_de_productos")
-	assert_int(cajas.size()).is_equal(Producto.Id.size())
+	assert_int(cajas.size()).is_equal(Catalogo.todos().size())
 	assert_array(agarrables).contains(cajas)
 	for cuerpo in agarrables:
 		(

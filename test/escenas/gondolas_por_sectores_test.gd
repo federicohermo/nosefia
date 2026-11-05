@@ -228,7 +228,7 @@ func test_jornada_dos_puede_vender_reponer_y_cerrar_con_duronga_exhibida() -> vo
 	var atenciones: Ventanilla = almacen.get("_atenciones")
 	assert_object(atenciones.tarea().get("_inventario")).is_same(inventario)
 	var cupos: Dictionary[Producto.Id, int] = puesto.call("casilleros")
-	assert_int(cupos.size()).is_equal(Producto.Id.size())
+	assert_int(cupos.size()).is_equal(Catalogo.todos().size())
 	assert_int(cupos[Producto.Id.DURONGA]).is_greater(0)
 	var disposicion: DisposicionDeLaGondola = puesto.get("disposicion")
 	assert_int(disposicion.filas_de_adelante[Producto.Id.DURONGA]).is_greater(0)
