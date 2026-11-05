@@ -150,10 +150,10 @@ func test_las_dos_esperas_son_valores_distintos() -> void:  # AC-INV-059, AC-INV
 	assert_float(tercera.restante()).is_not_equal(cuarta.restante())
 
 
-func test_solo_de_la_tercera_a_la_quinta_reflexionan() -> void:  # AC-INV-058, AC-INV-113
-	for jornada: int in [0, 1, 2, 6, 7]:
+func test_solo_de_la_tercera_a_la_sexta_reflexionan() -> void:  # AC-INV-058, AC-INV-113
+	for jornada: int in [0, 1, 2, 7]:
 		assert_object(ReflexionDeCierre.para(jornada, _expediente())).is_null()
-	for jornada: int in [3, 4, 5]:
+	for jornada: int in [3, 4, 5, 6]:
 		assert_object(ReflexionDeCierre.para(jornada, _expediente())).is_not_null()
 
 
