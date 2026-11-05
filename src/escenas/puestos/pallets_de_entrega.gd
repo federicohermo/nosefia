@@ -8,8 +8,8 @@ extends Node3D
 const PASO_AL_CUARTITO := 0.5
 const HOLGURA_CON_LA_PARED := 0.1
 const ESCALA := 1.15
-## Cuánto separa a los dos pallets del fondo.
-const SEPARACION_DEL_FONDO := 0.12
+## Cuánto separa de la estantería del fondo al pallet que se apoya junto a ella.
+const SEPARACION_CON_LA_ESTANTERIA := 0.2
 const GIROS_DEL_FONDO: Array[float] = [0.012, -0.015]
 
 

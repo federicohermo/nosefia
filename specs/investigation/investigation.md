@@ -3,7 +3,7 @@ schema_version: 1
 capability_id: CAP-INV
 status: draft
 owner: por definir
-provenance: GDD «Investigación» y «La computadora»; ficha «Interfaces virtuales durante la jornada» y decisiones de #373, #375 y #376; migración de los specs 006, 009, 018; fichas Chat con el jefe, Chat con compañera y 2A revisadas el 2026-10-15; decisiones de #430; «Sistema de investigación», fichas 2A/2B/2P y decisiones de #22 del 2026-10-15; decisión del usuario del 2026-10-18 de usar la captura del mensaje de Yasmín como foto de 2A; decisión del usuario del 2026-10-17 de retirar las notas de la computadora y usar el diseño del registro de productos; ficha «Pantalla entre jornadas», reflexión de jornada 1, encabezado de jornada 2 y decisiones de #436; decisiones del usuario del 2026-10-18 sobre el recorrido lateral, la elección sin límite de tiempo, la reanudación del cierre y la espera de 1 segundo; ocho jornadas de #526; instrucciones por jornada de #527; la colilla sólo en su jornada, de #536; ficha Chat con compañera, jornada 5, de #458; ficha «Caminos narrativos y finales» y cuadro de pistas e hipótesis de #766 y la ficha «5B» de la lista de pistas e hipótesis y decisiones del usuario del 2026-10-30 sobre su foto y su texto, de #731; la fila «6C» de la lista de pistas e hipótesis, la ficha «Caminos narrativos y finales» y decisiones del usuario del 2026-11-03 sobre Yasmín y la textura de la nota, de #741; encabezado de la jornada 5 y ficha «5P» de la lista de pistas e hipótesis y decisión del usuario del 2026-11-04 sobre la 5L, de #740; quejas de la jornada 7, captura de la transferencia y pantalla conjunta de #759, ficha «Particulares de cada jornada» y comentario de Notion del 2026-11-04; ficha «Especificar animaciones», el chat que entra y sale deslizándose, de #627; GJ-62, el chat que abre en el primer mensaje sin leer, de #568; encabezado de la jornada 6 y fichas «6P» y «6L» de la lista de pistas e hipótesis, de #742; la fila «5A» de la lista de pistas e hipótesis y el mensaje de Cami de «Diálogos de compradores», de #785; la fila «6B» de la lista de pistas e hipótesis y la fila «Documento impreso» de «Objetos interactuables», de #789; la fila «7B» de la lista de pistas e hipótesis, la fila «Palanca» de «Objetos interactuables» y la ficha «Caminos narrativos y finales», de #790; la fila «7C» de la lista de pistas e hipótesis, la fila «Llave» de «Objetos interactuables» y la ficha «Caminos narrativos y finales», de #810; el chat de Hernán y el pedido al proveedor, de #691
+provenance: GDD «Investigación» y «La computadora»; ficha «Interfaces virtuales durante la jornada» y decisiones de #373, #375 y #376; migración de los specs 006, 009, 018; fichas Chat con el jefe, Chat con compañera y 2A revisadas el 2026-10-15; decisiones de #430; «Sistema de investigación», fichas 2A/2B/2P y decisiones de #22 del 2026-10-15; decisión del usuario del 2026-10-18 de usar la captura del mensaje de Yasmín como foto de 2A; decisión del usuario del 2026-10-17 de retirar las notas de la computadora y usar el diseño del registro de productos; ficha «Pantalla entre jornadas», reflexión de jornada 1, encabezado de jornada 2 y decisiones de #436; decisiones del usuario del 2026-10-18 sobre el recorrido lateral, la elección sin límite de tiempo, la reanudación del cierre y la espera de 1 segundo; ocho jornadas de #526; instrucciones por jornada de #527; la colilla sólo en su jornada, de #536; ficha Chat con compañera, jornada 5, de #458; ficha «Caminos narrativos y finales» y cuadro de pistas e hipótesis de #766 y la ficha «5B» de la lista de pistas e hipótesis y decisiones del usuario del 2026-10-30 sobre su foto y su texto, de #731; la fila «6C» de la lista de pistas e hipótesis, la ficha «Caminos narrativos y finales» y decisiones del usuario del 2026-11-03 sobre Yasmín y la textura de la nota, de #741; encabezado de la jornada 5 y ficha «5P» de la lista de pistas e hipótesis y decisión del usuario del 2026-11-04 sobre la 5L, de #740; quejas de la jornada 7, captura de la transferencia y pantalla conjunta de #759, ficha «Particulares de cada jornada» y comentario de Notion del 2026-11-04; ficha «Especificar animaciones», el chat que entra y sale deslizándose, de #627; GJ-62, el chat que abre en el primer mensaje sin leer, de #568; encabezado de la jornada 6 y fichas «6P» y «6L» de la lista de pistas e hipótesis, de #742; la fila «5A» de la lista de pistas e hipótesis y el mensaje de Cami de «Diálogos de compradores», de #785; la fila «6B» de la lista de pistas e hipótesis y la fila «Documento impreso» de «Objetos interactuables», de #789; la fila «7B» de la lista de pistas e hipótesis, la fila «Palanca» de «Objetos interactuables» y la ficha «Caminos narrativos y finales», de #790; la fila «7C» de la lista de pistas e hipótesis, la fila «Llave» de «Objetos interactuables» y la ficha «Caminos narrativos y finales», de #810; el círculo de mensajes nuevos y la vibración del ícono del HUD, ficha «Interfaces virtuales durante la jornada», de #662; el chat de Hernán y el pedido al proveedor, de #691
 ---
 
 # Capacidad: la investigación
@@ -893,6 +893,29 @@ el primer mensaje que llega DEBE quedar en el borde superior y cada siguiente DE
 debajo. La lista DEBE bajar sólo lo necesario para que el último mensaje, y la opción que lo
 sigue, queden a la vista. CUANDO llega un mensaje a un chat libre que se abrió sin mensajes sin
 leer y la lista está en su último mensaje, la lista DEBE bajar hasta el nuevo.
+
+### BR-INV-130 — El ícono del HUD cuenta los mensajes sin leer
+MIENTRAS haya mensajes sin leer en cualquier conversación, el ícono del celular del HUD DEBE
+mostrar en su esquina superior derecha un círculo naranja con el total de mensajes sin leer de
+todas las conversaciones, y no la cantidad de chats que los tienen. CUANDO el total llega a cero,
+el círculo NO DEBE verse. El total DEBE ser la misma cuenta de BR-INV-009. El círculo NO DEBE verse
+mientras el ícono esté oculto o cubierto por la computadora. El círculo DEBE cambiar sólo cuando
+cambia el total, y no consultar la bandeja en cada cuadro.
+
+### BR-INV-131 — El ícono vibra mientras suena el mensaje recibido
+CUANDO el total de mensajes sin leer sube, el ícono del HUD DEBE vibrar en su lugar, sin mover el
+resto del HUD, desde que empieza el sonido de mensaje recibido hasta que termina, y DEBE volver
+exactamente a su posición. El ícono NO DEBE crecer. CUANDO el total baja, el ícono NO DEBE vibrar.
+CUANDO el ícono está oculto o cubierto, NO DEBE vibrar, y esa vibración NO DEBE quedar pendiente.
+Una pista nueva y una respuesta de Hernán suben el total como cualquier mensaje. CUANDO sube el
+total durante una vibración, la vibración DEBE reiniciarse y no superponerse. La amplitud y la
+frecuencia son constantes de diseño que se ajustan en el QA.
+
+### BR-INV-132 — La persiana retiene el aviso de la apertura
+CUANDO la jornada abre con mensajes sin leer, el círculo y la vibración DEBEN esperar a que la
+persiana termine de subir y aparecer entonces. MIENTRAS la persiana no terminó de subir, ningún
+cambio del total DEBE pintarse ni vibrar. CUANDO la persiana termina de subir, el círculo DEBE
+mostrar el total vigente, y el ícono DEBE vibrar sólo si ese total supera el que el jugador veía.
 
 ### BR-INV-105 — El deslizamiento no deja la pantalla a medias
 MIENTRAS un chat se desliza, un pedido de volver o de abrir otro chat NO DEBE dejar la pantalla
@@ -2159,6 +2182,28 @@ opción ya no entran ENTONCES la lista baja lo justo para ver el último y la op
 DADO un chat libre abierto sin mensajes sin leer y con la lista en su último mensaje CUANDO llega
 un mensaje ENTONCES la lista baja hasta el nuevo. DADO el mismo chat con la lista desplazada hacia
 arriba ENTONCES la lista no se mueve.
+
+### AC-INV-180 — El ícono muestra el total de no leídos y se oculta en cero *(verifica BR-INV-130, BR-INV-009)*
+
+DADO 2 mensajes sin leer de Enrique y 1 de Yasmín ENTONCES el círculo del ícono muestra 3 y no 2.
+CUANDO se abre el chat de Enrique ENTONCES el círculo muestra 1. CUANDO se abre el chat de Yasmín
+ENTONCES el círculo no se ve. DADO un total de 3 CUANDO el ícono se oculta o lo cubre la
+computadora ENTONCES el círculo tampoco se ve, y reaparece con el ícono.
+
+### AC-INV-181 — El ícono vibra al subir el total y vuelve a su lugar *(verifica BR-INV-131)*
+
+DADO el ícono visible CUANDO el total sube ENTONCES el ícono se desplaza y la vibración dura lo
+que dura el sonido de mensaje recibido, y al terminar el ícono queda exactamente en su posición
+original sin que su escala cambie. CUANDO el total baja o se mantiene ENTONCES el ícono no vibra.
+CUANDO sube con el ícono oculto ENTONCES no vibra, y al mostrarse tampoco. CUANDO sube dos veces
+durante una vibración ENTONCES queda una sola vibración, que empieza de nuevo.
+
+### AC-INV-182 — La persiana retiene el aviso de la apertura *(verifica BR-INV-132)*
+
+DADO que la jornada abre con 2 mensajes sin leer CUANDO la persiana todavía no terminó de subir
+ENTONCES el círculo no se ve y el ícono no vibra. CUANDO la persiana termina de subir ENTONCES el
+círculo muestra 2 y el ícono vibra una vez. DADO que el jugador veía 2 y la jornada siguiente abre
+con esos mismos 2 ENTONCES al subir la persiana el ícono no vibra.
 
 ## No objetivos
 

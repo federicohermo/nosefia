@@ -19,8 +19,8 @@ signal celular_desplazado
 ## El jugador pulsó uno de los dos botones de una queja: darle la razón o rechazarla.
 signal respuesta_pedida(da_la_razon: bool)
 
-## El jugador pulsó «Enviar» en la lista del pedido. Quien escucha lo envía y avisa con
-## `actualizar_el_pedido()`.
+## El jugador pulsó «Enviar» en la lista del pedido. Quien escucha lo envía, y la pantalla se
+## repinta sola.
 signal envio_del_pedido_pedido
 
 enum Vista { NINGUNA, MENU, CHAT, CHAT_FIJO }
@@ -72,6 +72,9 @@ const ROJO := Color("cc0d08")
 const BURBUJA_CON_ERROR := Color("f7c9cc")
 const TEXTO_DE_HACER_PEDIDO := "Hacer pedido"
 const TEXTO_DE_ENVIAR := "Enviar"
+const NARANJA_DEL_AVISO := Color("ffa024")
+const DIAMETRO_DEL_AVISO := 30.0
+const TAMANO_DEL_NUMERO_DEL_AVISO := 20
 const FOTO := "Foto"
 const MENSAJE := "Mensaje..."
 const AYUDA := "ARRASTRÁ EL FONDO O USÁ LA RUEDA"
@@ -107,6 +110,13 @@ const DIAS: Array[String] = [
 @export var _ayuda: Label
 @export var _capa: Control
 @export var _contenido: VBoxContainer
+## El pedido de la noche: lo que el jugador marca en la lista de Hernán vive en él. Cambiarlo
+## empieza de nuevo el chat.
+var pedido: PedidoAlProveedor:
+	set(valor):
+		pedido = valor
+		_chat_del_pedido = false
+		_pintar_el_pedido()
 
 var _recorrido := RecorridoDelCelular.new()
 var _lateral: float = 0.0
@@ -126,8 +136,13 @@ var _relleno: Control
 var _burbujas: Array[PanelContainer] = []
 var _recordatorio_pedido: bool = false
 var _recordatorio_cubierto: bool = false
+var _aviso: PanelContainer
+var _estado_del_aviso := AvisoDeMensajesNuevos.new()
+var _vibracion: Tween
+var _duracion_de_la_vibracion: float = -1.0
+var _base_del_recordatorio := Vector2.ZERO
+var _desplazamiento_de_la_vibracion := Vector2.ZERO
 var _sin_wifi: TextureRect
-var _pedido: PedidoAlProveedor
 var _chat_del_pedido: bool = false
 var _lista_del_pedido: ListaDelPedido
 var _hacer_pedido: Button
@@ -183,6 +198,7 @@ func _ready() -> void:
 				_terminar_arrastre()
 	)
 	(_recordatorio.get_node("Tecla") as Label).text = TEXTO_DEL_RECORDATORIO
+	_crear_el_aviso()
 	_foto_ampliada.hide()
 	_recordatorio.hide()
 	_telefono.hide()
@@ -313,7 +329,7 @@ func mostrar_chat(
 	_busqueda.release_focus()
 	_pie.show()
 	_chat_de_notas = conversacion.interlocutor == Conversacion.Interlocutor.NOTAS
-	_chat_del_pedido = conversacion.ofrece_pedido and _pedido != null
+	_chat_del_pedido = conversacion.ofrece_pedido and pedido != null
 	_componer(false, _chat_de_notas)
 	_limpiar()
 	_ancla = primer_nuevo
@@ -413,18 +429,6 @@ func cerrar_foto() -> void:
 	_actualizar_desplazamiento()
 
 
-## El pedido de la noche: lo que el jugador marca en la lista de Hernán vive en él.
-func usar_el_pedido(pedido: PedidoAlProveedor) -> void:
-	_pedido = pedido
-	_chat_del_pedido = false
-	_pintar_el_pedido()
-
-
-## Vuelve a pintar el pie y la lista del chat de Hernán según el estado del pedido.
-func actualizar_el_pedido() -> void:
-	_pintar_el_pedido()
-
-
 ## El ícono de sin conexión se ve mientras no hay wifi.
 func mostrar_el_wifi(hay_wifi: bool) -> void:
 	_sin_wifi.visible = not hay_wifi
@@ -438,6 +442,95 @@ func mostrar_recordatorio(se_ve: bool) -> void:
 func cubrir_recordatorio(cubierto: bool) -> void:
 	_recordatorio_cubierto = cubierto
 	_recordatorio.visible = _recordatorio_pedido and not _recordatorio_cubierto
+
+
+## El total de mensajes sin leer, tal como lo cuenta la bandeja. Sube: el ícono vibra.
+func mostrar_no_leidos(cuantos: int) -> void:
+	var vibra := _estado_del_aviso.cambiar(cuantos)
+	_pintar_el_aviso()
+	if vibra and _recordatorio.is_visible_in_tree():
+		_vibrar()
+
+
+## Mientras la persiana está baja, el total se junta y no se pinta.
+func retener_los_no_leidos() -> void:
+	_estado_del_aviso.retener()
+
+
+func soltar_los_no_leidos() -> void:
+	var vibra := _estado_del_aviso.soltar()
+	_pintar_el_aviso()
+	if vibra and _recordatorio.is_visible_in_tree():
+		_vibrar()
+
+
+func vibrando() -> bool:
+	return _vibracion != null and _vibracion.is_valid()
+
+
+func _pintar_la_vibracion(transcurrido: float) -> void:
+	_desplazamiento_de_la_vibracion = AvisoDeMensajesNuevos.desplazamiento(
+		transcurrido, _duracion_del_sonido()
+	)
+	_posar_el_recordatorio()
+
+
+func _terminar_la_vibracion() -> void:
+	if _vibracion != null:
+		_vibracion.kill()
+	_desplazamiento_de_la_vibracion = Vector2.ZERO
+	_posar_el_recordatorio()
+
+
+func _vibrar() -> void:
+	var duracion := _duracion_del_sonido()
+	if duracion <= 0.0:
+		return
+	if _vibracion != null:
+		_vibracion.kill()
+	_vibracion = create_tween()
+	_vibracion.tween_method(_pintar_la_vibracion, 0.0, duracion, duracion)
+	_vibracion.tween_callback(_terminar_la_vibracion)
+
+
+func _duracion_del_sonido() -> float:
+	if _duracion_de_la_vibracion < 0.0:
+		_duracion_de_la_vibracion = AvisoDeMensajesNuevos.duracion_de_la_vibracion(
+			TablaDeSonidos.desde_disco()
+		)
+	return _duracion_de_la_vibracion
+
+
+func _posar_el_recordatorio() -> void:
+	_recordatorio.position = (
+		_base_del_recordatorio + _desplazamiento_de_la_vibracion * _recordatorio.scale
+	)
+
+
+func _pintar_el_aviso() -> void:
+	_aviso.visible = _estado_del_aviso.se_ve()
+	(_aviso.get_node("Numero") as Label).text = str(_estado_del_aviso.numero())
+
+
+## El círculo cuelga del ícono y no del contenedor: un hijo de `HBoxContainer` se reacomoda.
+func _crear_el_aviso() -> void:
+	var icono: Control = _recordatorio.get_node("Icono")
+	_aviso = PanelContainer.new()
+	_aviso.name = "Aviso"
+	_aviso.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_aviso.custom_minimum_size = Vector2(DIAMETRO_DEL_AVISO, DIAMETRO_DEL_AVISO)
+	_aviso.size = _aviso.custom_minimum_size
+	_aviso.position = Vector2(icono.custom_minimum_size.x, 0.0) - _aviso.size / 2.0
+	_aviso.add_theme_stylebox_override(
+		"panel", _estilo(NARANJA_DEL_AVISO, int(DIAMETRO_DEL_AVISO / 2.0))
+	)
+	var numero := _etiqueta("0", TINTA, TAMANO_DEL_NUMERO_DEL_AVISO)
+	numero.name = "Numero"
+	numero.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	numero.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	_aviso.add_child(numero)
+	icono.add_child(_aviso)
+	_aviso.hide()
 
 
 func _input(evento: InputEvent) -> void:
@@ -642,7 +735,8 @@ func _ajustar() -> void:
 	LienzoDeManada.ajustar(_lienzo, encuadre)
 	# El recordatorio pertenece al borde de la ventana, no al lienzo centrado del teléfono.
 	_recordatorio.scale = _lienzo.scale
-	_recordatorio.position = Vector2(36.0, -130.0) * _lienzo.scale + Vector2(0, encuadre.y)
+	_base_del_recordatorio = Vector2(36.0, -130.0) * _lienzo.scale + Vector2(0, encuadre.y)
+	_posar_el_recordatorio()
 	_pintar_posicion()
 
 
@@ -1125,12 +1219,16 @@ func _agregar_los_botones_del_pedido() -> void:
 	_hacer_pedido.name = "HacerPedido"
 	_hacer_pedido.pressed.connect(
 		func() -> void:
-			_pedido.abrir_lista()
+			pedido.abrir_lista()
 			_pintar_el_pedido()
 	)
 	_enviar_pedido = _boton_del_pie(TEXTO_DE_ENVIAR, Color("0b343d"), PAPEL)
 	_enviar_pedido.name = "EnviarPedido"
-	_enviar_pedido.pressed.connect(func() -> void: envio_del_pedido_pedido.emit())
+	_enviar_pedido.pressed.connect(
+		func() -> void:
+			envio_del_pedido_pedido.emit()
+			_pintar_el_pedido()
+	)
 	for boton: Button in [_hacer_pedido, _enviar_pedido]:
 		boton.hide()
 		_pie.add_child(boton)
@@ -1169,15 +1267,15 @@ func _boton_del_pie(texto: String, fondo: Color, tinta: Color) -> Button:
 func _pintar_el_pedido() -> void:
 	if _hacer_pedido == null:
 		return
-	var abierta := _chat_del_pedido and _pedido != null and _pedido.lista_abierta()
+	var abierta := _chat_del_pedido and pedido != null and pedido.lista_abierta()
 	_entrada.visible = not _chat_del_pedido
 	_hacer_pedido.visible = _chat_del_pedido and not abierta
 	_enviar_pedido.visible = abierta
 	if abierta:
-		_enviar_pedido.disabled = not _pedido.puede_enviar()
+		_enviar_pedido.disabled = not pedido.puede_enviar()
 		if not is_instance_valid(_lista_del_pedido) or _lista_del_pedido.get_parent() != _mensajes:
 			_lista_del_pedido = ListaDelPedido.new()
-			_lista_del_pedido.armar(_pedido, BURBUJA_PROPIA, TINTA, _fuente_del_chat)
+			_lista_del_pedido.armar(pedido, BURBUJA_PROPIA, TINTA, _fuente_del_chat)
 			_lista_del_pedido.seleccion_cambiada.connect(_pintar_el_pedido)
 			_mensajes.add_child(_lista_del_pedido)
 			_acomodar_la_lectura.call_deferred(true)

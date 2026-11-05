@@ -521,7 +521,7 @@ func _al_abrir_la_jornada(jornada: int) -> void:
 		comprador.pistas_activas = _partida.expediente.pistas_activas(jornada)
 	_cajas_vacias = Apertura.cajas_vacias_de_la_jornada(jornada, compradores, _partida.semilla)
 	_pedido = PedidoAlProveedor.new(jornada)
-	_pantalla_del_celular.usar_el_pedido(_pedido)
+	_pantalla_del_celular.pedido = _pedido
 	_reposicion_manual.limpiar()
 	_reposicion_manual.seleccionar_disposicion(jornada)
 	mostrar_las_bandejas(get_node("Estructura"), _reposicion_manual.es_de_prueba())
@@ -797,6 +797,7 @@ func _al_cerrar_la_jornada(jornada: int, _cumplidas: int) -> void:
 	var persiana: PersianaDeLaNoche = get_node("Interfaz/PersianaDeLaNoche")
 	persiana.bajar()
 	_celular.cerrar_jornada()
+	_pantalla_del_celular.retener_los_no_leidos()
 	_pantalla_del_celular.mostrar_recordatorio(false)
 	_audio.callar_la_musica()
 	var devolucion := DevolucionDelJefe.new(jornada, _partida)
@@ -1064,6 +1065,7 @@ func anunciar_la_noche() -> void:
 
 
 func _al_subir_la_persiana(_jornada: int) -> void:
+	_pantalla_del_celular.soltar_los_no_leidos()
 	_reloj.soltar()
 	_jugador.reanudar()
 
@@ -1251,7 +1253,6 @@ func _al_enviar_el_pedido() -> void:
 	if mensaje != null:
 		_celular.recibir(Conversacion.Interlocutor.PROVEEDOR, mensaje)
 		_gestor_del_pedido.revisar(_pedido, _cajas_vacias)
-	_pantalla_del_celular.actualizar_el_pedido()
 
 
 func _al_agotar_el_turno(_jornada: int) -> void:
@@ -1378,6 +1379,7 @@ func _cablear_el_celular() -> void:
 	_celular.foto_ampliada.connect(_pantalla_del_celular.ampliar)
 	_celular.foto_cerrada.connect(_pantalla_del_celular.cerrar_foto)
 	_celular.mensaje_recibido.connect(_al_recibir_en_el_celular)
+	_celular.no_leidos_cambiados.connect(_pantalla_del_celular.mostrar_no_leidos)
 	_celular.nota_recibida.connect(
 		func(mensaje: Mensaje) -> void:
 			_al_recibir_en_el_celular(Conversacion.Interlocutor.NOTAS, mensaje)
