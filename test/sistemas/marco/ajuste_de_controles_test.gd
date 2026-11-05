@@ -4,7 +4,6 @@
 ## El `InputMap` es de todo el proceso: cada caso lo deja como en `project.godot` al terminar.
 extends GdUnitTestSuite
 
-const A := AsignacionDeControles
 const TECLA := AsignacionDeControles.TipoDeEntrada.TECLA
 const BOTON := AsignacionDeControles.TipoDeEntrada.BOTON_DEL_MOUSE
 
@@ -58,7 +57,7 @@ func _eventos_de_teclas_y_clics(accion: StringName) -> int:
 
 func test_el_motor_arranca_con_el_esquema_de_fabrica() -> void:  # AC-CFG-016
 	var fabrica := AsignacionDeControles.new()
-	for accion: StringName in A.ACCIONES:
+	for accion: StringName in AsignacionDeControles.ACCIONES:
 		var esperadas := 0
 		for entrada: Dictionary in fabrica.entradas():
 			if entrada["accion"] != accion:
@@ -78,45 +77,56 @@ func test_el_motor_arranca_con_el_esquema_de_fabrica() -> void:  # AC-CFG-016
 
 
 func test_agarrar_en_f_responde_a_f_y_no_al_clic_izquierdo() -> void:  # AC-CFG-020
-	_ajuste.aplicar(_con([[A.AGARRAR, 0, TECLA, KEY_F]]))
-	assert_bool(_responde(_tecla(KEY_F), A.AGARRAR)).is_true()
-	assert_bool(_responde(_clic(MOUSE_BUTTON_LEFT), A.AGARRAR)).is_false()
+	_ajuste.aplicar(_con([[AsignacionDeControles.AGARRAR, 0, TECLA, KEY_F]]))
+	assert_bool(_responde(_tecla(KEY_F), AsignacionDeControles.AGARRAR)).is_true()
+	assert_bool(_responde(_clic(MOUSE_BUTTON_LEFT), AsignacionDeControles.AGARRAR)).is_false()
 
 
 func test_examinar_en_el_clic_central_responde_al_clic_central() -> void:  # AC-CFG-020
-	_ajuste.aplicar(_con([[A.EXAMINAR, 0, BOTON, MOUSE_BUTTON_MIDDLE]]))
-	assert_bool(_responde(_clic(MOUSE_BUTTON_MIDDLE), A.EXAMINAR)).is_true()
-	assert_bool(_responde(_tecla(KEY_E), A.EXAMINAR)).is_false()
+	_ajuste.aplicar(_con([[AsignacionDeControles.EXAMINAR, 0, BOTON, MOUSE_BUTTON_MIDDLE]]))
+	assert_bool(_responde(_clic(MOUSE_BUTTON_MIDDLE), AsignacionDeControles.EXAMINAR)).is_true()
+	assert_bool(_responde(_tecla(KEY_E), AsignacionDeControles.EXAMINAR)).is_false()
 
 
 func test_un_intercambio_se_ve_en_las_dos_acciones() -> void:  # AC-CFG-020
-	_ajuste.aplicar(_con([[A.EXAMINAR, 0, TECLA, KEY_SPACE]]))
-	assert_bool(_responde(_tecla(KEY_SPACE), A.EXAMINAR)).is_true()
-	assert_bool(_responde(_tecla(KEY_E), A.AGACHARSE)).is_true()
-	assert_bool(_responde(_tecla(KEY_SPACE), A.AGACHARSE)).is_false()
+	_ajuste.aplicar(_con([[AsignacionDeControles.EXAMINAR, 0, TECLA, KEY_SPACE]]))
+	assert_bool(_responde(_tecla(KEY_SPACE), AsignacionDeControles.EXAMINAR)).is_true()
+	assert_bool(_responde(_tecla(KEY_E), AsignacionDeControles.AGACHARSE)).is_true()
+	assert_bool(_responde(_tecla(KEY_SPACE), AsignacionDeControles.AGACHARSE)).is_false()
 
 
 func test_cada_direccion_responde_a_sus_dos_ranuras() -> void:  # AC-CFG-020
-	_ajuste.aplicar(_con([[A.ADELANTE, A.RANURA_DE_FLECHAS, TECLA, KEY_H]]))
-	assert_bool(_responde(_tecla(KEY_W), A.ADELANTE)).is_true()
-	assert_bool(_responde(_tecla(KEY_H), A.ADELANTE)).is_true()
-	assert_bool(_responde(_tecla(KEY_UP), A.ADELANTE)).is_false()
-	assert_bool(_responde(_tecla(KEY_DOWN), A.ATRAS)).is_true()
+	_ajuste.aplicar(
+		_con(
+			[
+				[
+					AsignacionDeControles.ADELANTE,
+					AsignacionDeControles.RANURA_DE_FLECHAS,
+					TECLA,
+					KEY_H
+				]
+			]
+		)
+	)
+	assert_bool(_responde(_tecla(KEY_W), AsignacionDeControles.ADELANTE)).is_true()
+	assert_bool(_responde(_tecla(KEY_H), AsignacionDeControles.ADELANTE)).is_true()
+	assert_bool(_responde(_tecla(KEY_UP), AsignacionDeControles.ADELANTE)).is_false()
+	assert_bool(_responde(_tecla(KEY_DOWN), AsignacionDeControles.ATRAS)).is_true()
 
 
 func test_volver_al_esquema_de_fabrica_devuelve_las_teclas_de_hoy() -> void:  # AC-CFG-020
-	_ajuste.aplicar(_con([[A.AGARRAR, 0, TECLA, KEY_F]]))
+	_ajuste.aplicar(_con([[AsignacionDeControles.AGARRAR, 0, TECLA, KEY_F]]))
 	_ajuste.aplicar(Preferencias.new())
-	assert_bool(_responde(_clic(MOUSE_BUTTON_LEFT), A.AGARRAR)).is_true()
-	assert_bool(_responde(_tecla(KEY_F), A.AGARRAR)).is_false()
+	assert_bool(_responde(_clic(MOUSE_BUTTON_LEFT), AsignacionDeControles.AGARRAR)).is_true()
+	assert_bool(_responde(_tecla(KEY_F), AsignacionDeControles.AGARRAR)).is_false()
 
 
 func test_pausa_en_p_conserva_el_joystick_de_la_accion() -> void:  # AC-CFG-020
-	var botones_antes := _cuantos_botones_de_joystick(A.PAUSA)
-	_ajuste.aplicar(_con([[A.PAUSA, 0, TECLA, KEY_P]]))
-	assert_bool(_responde(_tecla(KEY_P), A.PAUSA)).is_true()
-	assert_bool(_responde(_tecla(KEY_ESCAPE), A.PAUSA)).is_false()
-	assert_int(_cuantos_botones_de_joystick(A.PAUSA)).is_equal(botones_antes)
+	var botones_antes := _cuantos_botones_de_joystick(AsignacionDeControles.PAUSA)
+	_ajuste.aplicar(_con([[AsignacionDeControles.PAUSA, 0, TECLA, KEY_P]]))
+	assert_bool(_responde(_tecla(KEY_P), AsignacionDeControles.PAUSA)).is_true()
+	assert_bool(_responde(_tecla(KEY_ESCAPE), AsignacionDeControles.PAUSA)).is_false()
+	assert_int(_cuantos_botones_de_joystick(AsignacionDeControles.PAUSA)).is_equal(botones_antes)
 
 
 func _cuantos_botones_de_joystick(accion: StringName) -> int:
@@ -128,7 +138,7 @@ func _cuantos_botones_de_joystick(accion: StringName) -> int:
 
 
 func test_la_tecla_de_pausa_nueva_pausa_y_reanuda_y_esc_ya_no() -> void:  # AC-CFG-020
-	_ajuste.aplicar(_con([[A.PAUSA, 0, TECLA, KEY_P]]))
+	_ajuste.aplicar(_con([[AsignacionDeControles.PAUSA, 0, TECLA, KEY_P]]))
 	var control: ControlDePausa = auto_free(ControlDePausa.new())
 	add_child(control)
 	control._input(_tecla(KEY_ESCAPE))
@@ -140,7 +150,7 @@ func test_la_tecla_de_pausa_nueva_pausa_y_reanuda_y_esc_ya_no() -> void:  # AC-C
 
 
 func test_con_pausa_en_p_perder_el_cursor_sigue_pausando() -> void:  # AC-CFG-021
-	_ajuste.aplicar(_con([[A.PAUSA, 0, TECLA, KEY_P]]))
+	_ajuste.aplicar(_con([[AsignacionDeControles.PAUSA, 0, TECLA, KEY_P]]))
 	var control: ControlDePausa = auto_free(ControlDePausa.new())
 	add_child(control)
 	control.set("_cursor_antes", true)
@@ -149,18 +159,18 @@ func test_con_pausa_en_p_perder_el_cursor_sigue_pausando() -> void:  # AC-CFG-02
 
 
 func test_interactuar_en_g_responde_a_g_y_no_al_clic_derecho() -> void:  # AC-CFG-024
-	_ajuste.aplicar(_con([[A.INTERACTUAR, 0, TECLA, KEY_G]]))
-	assert_bool(_responde(_tecla(KEY_G), A.INTERACTUAR)).is_true()
-	assert_bool(_responde(_clic(MOUSE_BUTTON_RIGHT), A.INTERACTUAR)).is_false()
+	_ajuste.aplicar(_con([[AsignacionDeControles.INTERACTUAR, 0, TECLA, KEY_G]]))
+	assert_bool(_responde(_tecla(KEY_G), AsignacionDeControles.INTERACTUAR)).is_true()
+	assert_bool(_responde(_clic(MOUSE_BUTTON_RIGHT), AsignacionDeControles.INTERACTUAR)).is_false()
 
 
 func test_el_esquema_que_se_guarda_vuelve_a_aplicarse_en_otro_arranque() -> void:  # AC-CFG-022
-	var preferencias := _con([[A.EXAMINAR, 0, TECLA, KEY_F]])
+	var preferencias := _con([[AsignacionDeControles.EXAMINAR, 0, TECLA, KEY_F]])
 	assert_bool(_ajuste.cambiar(preferencias)).is_true()
 	_ajuste.aplicar(Preferencias.new())
-	assert_bool(_responde(_tecla(KEY_F), A.EXAMINAR)).is_false()
+	assert_bool(_responde(_tecla(KEY_F), AsignacionDeControles.EXAMINAR)).is_false()
 	var otro_arranque: AjusteDePreferencias = auto_free(AjusteDePreferencias.new())
 	add_child(otro_arranque)
 	otro_arranque.cargar_y_aplicar()
-	assert_bool(_responde(_tecla(KEY_F), A.EXAMINAR)).is_true()
-	assert_bool(_responde(_tecla(KEY_E), A.EXAMINAR)).is_false()
+	assert_bool(_responde(_tecla(KEY_F), AsignacionDeControles.EXAMINAR)).is_true()
+	assert_bool(_responde(_tecla(KEY_E), AsignacionDeControles.EXAMINAR)).is_false()

@@ -3,7 +3,6 @@
 extends GdUnitTestSuite
 
 const ESCENA := "res://src/ui/interrupciones/pantalla_de_controles.tscn"
-const A := AsignacionDeControles
 const TECLA := AsignacionDeControles.TipoDeEntrada.TECLA
 const BOTON := AsignacionDeControles.TipoDeEntrada.BOTON_DEL_MOUSE
 
@@ -55,7 +54,7 @@ func _clic(boton: int) -> InputEventMouseButton:
 
 func _pausa() -> InputEventAction:
 	var evento := InputEventAction.new()
-	evento.action = A.PAUSA
+	evento.action = AsignacionDeControles.PAUSA
 	evento.pressed = true
 	return evento
 
@@ -76,13 +75,15 @@ func _boton_de(pantalla: PantallaDeControles, accion: StringName, ranura: int) -
 func test_muestra_un_renglon_por_entrada_con_su_tecla() -> void:  # AC-CFG-015, AC-CFG-016
 	var pantalla := _pantalla()
 	assert_int(pantalla.filas().size()).is_equal(AsignacionDeControles.new().entradas().size())
-	assert_str(pantalla.texto_de(A.EXAMINAR, 0)).is_equal(
+	assert_str(pantalla.texto_de(AsignacionDeControles.EXAMINAR, 0)).is_equal(
 		PantallaDeControles.nombre_de_la_entrada(TECLA, KEY_E)
 	)
-	assert_str(pantalla.texto_de(A.AGARRAR, 0)).is_equal(
+	assert_str(pantalla.texto_de(AsignacionDeControles.AGARRAR, 0)).is_equal(
 		PantallaDeControles.nombre_de_la_entrada(BOTON, MOUSE_BUTTON_LEFT)
 	)
-	assert_str(pantalla.texto_de(A.AGARRAR, 0)).is_not_equal(pantalla.texto_de(A.INTERACTUAR, 0))
+	assert_str(pantalla.texto_de(AsignacionDeControles.AGARRAR, 0)).is_not_equal(
+		pantalla.texto_de(AsignacionDeControles.INTERACTUAR, 0)
+	)
 	for fila: HBoxContainer in pantalla.filas():
 		assert_str((fila.get_child(0) as Label).text).is_not_empty()
 		assert_str((fila.get_child(1) as Button).text).is_not_empty()
@@ -91,40 +92,46 @@ func test_muestra_un_renglon_por_entrada_con_su_tecla() -> void:  # AC-CFG-015, 
 func test_apretar_el_renglon_espera_la_entrada() -> void:  # AC-CFG-017
 	var pantalla := _pantalla()
 	assert_bool(pantalla.capturando()).is_false()
-	_boton_de(pantalla, A.EXAMINAR, 0).pressed.emit()
+	_boton_de(pantalla, AsignacionDeControles.EXAMINAR, 0).pressed.emit()
 	assert_bool(pantalla.capturando()).is_true()
-	assert_str(pantalla.texto_de(A.EXAMINAR, 0)).is_equal(PantallaDeControles.TEXTO_DE_ESPERA)
+	assert_str(pantalla.texto_de(AsignacionDeControles.EXAMINAR, 0)).is_equal(
+		PantallaDeControles.TEXTO_DE_ESPERA
+	)
 
 
 func test_elegir_una_accion_y_apretar_una_tecla_la_asigna_y_avisa_una_vez() -> void:  # AC-CFG-017
 	var pantalla := _pantalla()
-	pantalla.elegir(A.EXAMINAR, 0)
+	pantalla.elegir(AsignacionDeControles.EXAMINAR, 0)
 	assert_bool(pantalla.atender(_tecla(KEY_F))).is_true()
 	assert_bool(pantalla.capturando()).is_false()
 	assert_int(_avisos.size()).is_equal(1)
-	assert_vector(_entrada(_avisos[0], A.EXAMINAR, 0)).is_equal(Vector2i(TECLA, KEY_F))
-	assert_str(pantalla.texto_de(A.EXAMINAR, 0)).is_equal(
+	assert_vector(_entrada(_avisos[0], AsignacionDeControles.EXAMINAR, 0)).is_equal(
+		Vector2i(TECLA, KEY_F)
+	)
+	assert_str(pantalla.texto_de(AsignacionDeControles.EXAMINAR, 0)).is_equal(
 		PantallaDeControles.nombre_de_la_entrada(TECLA, KEY_F)
 	)
 
 
 func test_apretar_un_boton_del_mouse_se_lo_asigna_a_otra_accion() -> void:  # AC-CFG-017, AC-CFG-018
 	var pantalla := _pantalla()
-	pantalla.elegir(A.INTERACTUAR, 0)
+	pantalla.elegir(AsignacionDeControles.INTERACTUAR, 0)
 	assert_bool(pantalla.atender(_clic(MOUSE_BUTTON_LEFT))).is_true()
 	assert_int(_avisos.size()).is_equal(1)
-	assert_vector(_entrada(_avisos[0], A.INTERACTUAR, 0)).is_equal(
+	assert_vector(_entrada(_avisos[0], AsignacionDeControles.INTERACTUAR, 0)).is_equal(
 		Vector2i(BOTON, MOUSE_BUTTON_LEFT)
 	)
-	assert_vector(_entrada(_avisos[0], A.AGARRAR, 0)).is_equal(Vector2i(BOTON, MOUSE_BUTTON_RIGHT))
-	assert_str(pantalla.texto_de(A.AGARRAR, 0)).is_equal(
+	assert_vector(_entrada(_avisos[0], AsignacionDeControles.AGARRAR, 0)).is_equal(
+		Vector2i(BOTON, MOUSE_BUTTON_RIGHT)
+	)
+	assert_str(pantalla.texto_de(AsignacionDeControles.AGARRAR, 0)).is_equal(
 		PantallaDeControles.nombre_de_la_entrada(BOTON, MOUSE_BUTTON_RIGHT)
 	)
 
 
 func test_la_rueda_y_el_movimiento_del_mouse_no_son_entradas() -> void:  # AC-CFG-017
 	var pantalla := _pantalla()
-	pantalla.elegir(A.EXAMINAR, 0)
+	pantalla.elegir(AsignacionDeControles.EXAMINAR, 0)
 	assert_bool(pantalla.atender(InputEventMouseMotion.new())).is_false()
 	assert_bool(pantalla.atender(_clic(MOUSE_BUTTON_WHEEL_UP))).is_true()
 	assert_bool(pantalla.capturando()).is_true()
@@ -133,11 +140,11 @@ func test_la_rueda_y_el_movimiento_del_mouse_no_son_entradas() -> void:  # AC-CF
 
 func test_la_tecla_de_pausa_cancela_la_espera_sin_cambiar_nada() -> void:  # AC-CFG-017
 	var pantalla := _pantalla()
-	pantalla.elegir(A.EXAMINAR, 0)
+	pantalla.elegir(AsignacionDeControles.EXAMINAR, 0)
 	assert_bool(pantalla.atender(_pausa())).is_true()
 	assert_bool(pantalla.capturando()).is_false()
 	assert_array(_avisos).is_empty()
-	assert_str(pantalla.texto_de(A.EXAMINAR, 0)).is_equal(
+	assert_str(pantalla.texto_de(AsignacionDeControles.EXAMINAR, 0)).is_equal(
 		PantallaDeControles.nombre_de_la_entrada(TECLA, KEY_E)
 	)
 	assert_bool(pantalla.visible).is_true()
@@ -145,7 +152,7 @@ func test_la_tecla_de_pausa_cancela_la_espera_sin_cambiar_nada() -> void:  # AC-
 
 func test_retroceder_cancela_la_espera_y_despues_cierra() -> void:  # AC-CFG-015
 	var pantalla := _pantalla()
-	pantalla.elegir(A.EXAMINAR, 0)
+	pantalla.elegir(AsignacionDeControles.EXAMINAR, 0)
 	pantalla.retroceder()
 	assert_bool(pantalla.capturando()).is_false()
 	assert_bool(pantalla.visible).is_true()
@@ -157,7 +164,7 @@ func test_retroceder_cancela_la_espera_y_despues_cierra() -> void:  # AC-CFG-015
 
 func test_apretar_la_entrada_que_ya_tiene_no_avisa() -> void:  # AC-CFG-018
 	var pantalla := _pantalla()
-	pantalla.elegir(A.EXAMINAR, 0)
+	pantalla.elegir(AsignacionDeControles.EXAMINAR, 0)
 	assert_bool(pantalla.atender(_tecla(KEY_E))).is_true()
 	assert_bool(pantalla.capturando()).is_false()
 	assert_array(_avisos).is_empty()
@@ -172,26 +179,32 @@ func test_sin_esperar_nada_no_se_come_ninguna_tecla() -> void:  # AC-CFG-017
 
 func test_con_pausa_en_otra_tecla_esc_se_asigna_a_otra_accion() -> void:  # AC-CFG-017
 	var pantalla := _pantalla()
-	pantalla.elegir(A.PAUSA, 0)
+	pantalla.elegir(AsignacionDeControles.PAUSA, 0)
 	pantalla.atender(_tecla(KEY_P))
 	_aplicar_al_motor(_avisos.back())
-	pantalla.elegir(A.EXAMINAR, 0)
+	pantalla.elegir(AsignacionDeControles.EXAMINAR, 0)
 	assert_bool(pantalla.atender(_tecla(KEY_ESCAPE))).is_true()
-	assert_vector(_entrada(_avisos.back(), A.EXAMINAR, 0)).is_equal(Vector2i(TECLA, KEY_ESCAPE))
-	assert_vector(_entrada(_avisos.back(), A.PAUSA, 0)).is_equal(Vector2i(TECLA, KEY_P))
+	assert_vector(_entrada(_avisos.back(), AsignacionDeControles.EXAMINAR, 0)).is_equal(
+		Vector2i(TECLA, KEY_ESCAPE)
+	)
+	assert_vector(_entrada(_avisos.back(), AsignacionDeControles.PAUSA, 0)).is_equal(
+		Vector2i(TECLA, KEY_P)
+	)
 
 
 func test_en_la_web_esc_no_se_asigna_a_otra_accion_y_sigue_esperando() -> void:  # AC-CFG-017
 	var pantalla := _pantalla()
 	pantalla.en_la_web = true
-	pantalla.elegir(A.PAUSA, 0)
+	pantalla.elegir(AsignacionDeControles.PAUSA, 0)
 	pantalla.atender(_tecla(KEY_P))
 	_aplicar_al_motor(_avisos.back())
-	pantalla.elegir(A.EXAMINAR, 0)
+	pantalla.elegir(AsignacionDeControles.EXAMINAR, 0)
 	assert_bool(pantalla.atender(_tecla(KEY_ESCAPE))).is_true()
 	assert_bool(pantalla.capturando()).is_true()
 	assert_int(_avisos.size()).is_equal(1)
-	assert_vector(_entrada(_avisos[0], A.EXAMINAR, 0)).is_equal(Vector2i(TECLA, KEY_E))
+	assert_vector(_entrada(_avisos[0], AsignacionDeControles.EXAMINAR, 0)).is_equal(
+		Vector2i(TECLA, KEY_E)
+	)
 
 
 func test_corre_tambien_con_el_arbol_en_pausa() -> void:
