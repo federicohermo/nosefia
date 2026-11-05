@@ -16,6 +16,7 @@ const RelojDeMesaDelLocal := preload("res://src/escenas/puestos/reloj_de_mesa.gd
 const CorteDeLuz := preload("res://src/escenas/puestos/corte_de_luz.gd")
 const EscritorioDelLocal := preload("res://src/escenas/puestos/escritorio.gd")
 const TableroElectrico := preload("res://src/escenas/puestos/tablero_electrico.gd")
+const RouterDelWifi := preload("res://src/escenas/puestos/router_del_wifi.gd")
 
 ## Los scripts de `escenas/` se preloadean por el mismo motivo que el del reloj de mesa:
 ## son cáscara y no declaran `class_name`, así que sin esto el tipo estático del `@export` sería
@@ -50,6 +51,7 @@ const GUION_DEL_JEFE := preload("res://src/dominio/investigacion/conversacion_co
 
 const ESCENA_DEL_MENU := "res://src/escenas/menu_de_inicio.tscn"
 const PANTALLA_DE_CARGA := preload("res://src/ui/interrupciones/pantalla_de_carga.tscn")
+const PANTALLA_DE_FINAL := preload("res://src/ui/interrupciones/pantalla_de_final.tscn")
 
 
 class PresenciaDeCaja:
@@ -119,6 +121,8 @@ var _logros := _archivo_de_logros.cargar()
 ## transición que los preparó.
 var _jornada_preparada := 0
 var _corte: CorteDeLuz
+var _wifi := WifiDelLocal.new()
+var _router: RouterDelWifi
 
 ## Donde el jugador arranca cada noche: el lugar del nodo `Jugador` en la escena, leído antes de
 ## la primera apertura. Es geometría de la escena y no un número del dominio. No es un nodo propio
@@ -136,6 +140,8 @@ var _gestos := SubtitulosDeLosGestos.new()
 var _lugar_del_pensamiento := Vector3.INF
 var _distancia_al_pensar := 0.0
 var _jornada_del_celular: int = 0
+## Lo crea el cableado del celular: `almacen.tscn` no se mergea y no se toca a mano.
+var _respondedor: RespondedorDeQuejas
 var _devolucion_en_espera: DevolucionDelJefe
 var _espera_del_celular := 0.0
 var _enlace_de_guardado: EnlaceDeGuardado
@@ -146,9 +152,11 @@ var _hojas_de_entrada: Array[PuertaDelLocal] = []
 @onready var _instrucciones: PantallaDeInstrucciones = $Interfaz/PantallaDeInstrucciones
 @onready var _celular: CelularDelEmpleado = $Interfaz/CelularDelEmpleado
 @onready var _pantalla_del_celular: PantallaDelCelular = $Interfaz/PantallaDelCelular
+@onready var _pantalla_de_la_computadora: PantallaDeComputadora = $Interfaz/PantallaDeComputadora
 @onready var _hipotesis: PantallaDeHipotesis = $Interfaz/PantallaDeHipotesis
 @onready var _investigador: Investigador = $Servicios/Investigador
 @onready var _colilla: ObjetoAgarrable = $Objetos/Colilla
+@onready var _nota: ObjetoAgarrable = $Objetos/NotaBajoLaPuerta
 
 
 func _compradores_de_la_partida(jornada: int) -> Array[Comprador]:
@@ -392,6 +400,28 @@ func _cablear_el_corte_de_luz() -> void:
 				escritorio.cerrar()
 				_puesto_de_la_caja.cerrar()
 	)
+	_cablear_el_router(corte)
+
+
+## El router sigue al corte, y el clic lo apaga o lo prende. Qué estado tiene y qué piensa el
+## protagonista lo decide el dominio; acá se lo cuenta al router y al celular. Abrir la jornada va
+## después de que el corte abre la suya, para que el wifi parta siempre de «con wifi».
+func _cablear_el_router(corte: CorteDeLuz) -> void:
+	_router = $Estructura/Router
+	corte.luz_cambiada.connect(func(_hay_luz: bool) -> void: _wifi.seguir_al_corte(corte.estado()))
+	_ciclo.jornada_abierta.connect(func(_jornada: int) -> void: _wifi.abrir_jornada())
+	_wifi.estado_cambiado.connect(func(_estado: WifiDelLocal.Estado) -> void: _mostrar_el_wifi())
+	_router.accionado.connect(
+		func() -> void:
+			_pensar_gesto(SubtitulosDeLosGestos.al_usar_el_router(corte.estado(), _wifi.estado()))
+			_wifi.accionar()
+	)
+	_mostrar_el_wifi()
+
+
+func _mostrar_el_wifi() -> void:
+	_router.mostrar(_wifi.luces())
+	_pantalla_del_celular.mostrar_el_wifi(_wifi.hay_wifi())
 
 
 func _cablear_las_preferencias(pausa: ControlDePausa) -> void:
@@ -404,6 +434,7 @@ func _cablear_las_preferencias(pausa: ControlDePausa) -> void:
 	configuraciones.preparar(preferencias)
 	configuraciones.preferencias_cambiadas.connect(ajuste.previsualizar)
 	configuraciones.preferencias_confirmadas.connect(ajuste.cambiar)
+	configuraciones.controles_cambiados.connect(ajuste.previsualizar)
 	configuraciones.preferencias_cambiadas.connect(
 		func(nuevas: Preferencias) -> void:
 			_jugador.ajustar_sensibilidad(nuevas.sensibilidad_del_giro())
@@ -436,6 +467,9 @@ func _al_abrir_la_jornada(jornada: int) -> void:
 	(get_node("Interfaz/PilaDeNotificaciones") as PilaDeNotificaciones).vaciar()
 	_jornada_del_celular = jornada
 	_celular.abrir_jornada(jornada, _condiciones_del_jefe())
+	var con_quejas := Apertura.pide(jornada, Tarea.Tipo.RESPONDER_QUEJAS)
+	_respondedor.arrancar(QuejasDeLaJornada.de_la_partida(_partida.semilla) if con_quejas else null)
+	_pantalla_de_la_computadora.ofrecer_el_celular(con_quejas)
 	_pantalla_del_celular.mostrar_recordatorio(true)
 	# Primero que nada, y por eso antes de `limpiar()`: lo que quedó en la mano cuelga del
 	# jugador, así que devolverlo a su lugar le escribiría la posición relativa a la mano y la
@@ -446,14 +480,8 @@ func _al_abrir_la_jornada(jornada: int) -> void:
 	# Un pensamiento a medio desvanecer tampoco pasa a la noche nueva.
 	_hud.vaciar_subtitulo()
 	_agarre.vaciar_las_manos()
-	_colilla.volver_a_su_lugar()
-	if CasoDeInvestigacion.de_la_partida().esta_en_el_local(_colilla.datos.id, jornada):
-		_colilla.process_mode = Node.PROCESS_MODE_INHERIT
-	else:
-		_colilla.hide()
-		_colilla.collision_layer = 0
-		_colilla.collision_mask = 0
-		_colilla.process_mode = Node.PROCESS_MODE_DISABLED
+	for de_una_pista: ObjetoAgarrable in [_colilla, _nota]:
+		_ubicar_lo_de_una_pista(de_una_pista, jornada)
 	_caja.arrancar(GeneradorDeTickets.para_la_jornada(jornada, _partida.numeros_de_ticket))
 	_puesto_de_la_caja.limpiar()
 	_jugador.ubicar(_arranque)
@@ -495,7 +523,9 @@ func _al_abrir_la_jornada(jornada: int) -> void:
 	_contenedor.reiniciar()
 	var atender := TareaDeAtender.new(compradores, inventario)
 	_atenciones.arrancar(atender)
-	_computadora.arrancar(RegistroDeVentas.new(Catalogo.de_la_jornada(jornada), atender))
+	_computadora.arrancar(
+		RegistroDeVentas.new(Catalogo.de_la_jornada(jornada), atender), con_quejas
+	)
 	# El piso se rehace cada noche: guardar el estado entre jornadas está fuera de alcance, y una
 	# sola instancia dejaría el local limpio de anoche y la obligatoria cumplida sola.
 	_limpiador.arrancar(PisoDelLocal.de_la_jornada(jornada))
@@ -710,7 +740,7 @@ func _seguir_sin_celular(devolucion: DevolucionDelJefe) -> void:
 
 func _al_comenzar_las_instrucciones() -> void:
 	if _partida.terminada():
-		_ir_al_menu.call()
+		_terminar_la_partida()
 	else:
 		anunciar_la_noche()
 
@@ -726,6 +756,9 @@ func _al_despachar_la_devolucion(opcion: DevolucionDelJefe.Opcion) -> void:
 
 func _salir_del_cierre(opcion: DevolucionDelJefe.Opcion) -> void:
 	_pantalla.cerrar()
+	if opcion == DevolucionDelJefe.Opcion.VER_EL_FINAL:
+		_mostrar_el_final()
+		return
 	if opcion == DevolucionDelJefe.Opcion.CONTINUAR:
 		# La noche siguiente espera al celular fuera de pantalla, con el jugador suspendido.
 		_jugador.suspender()
@@ -737,6 +770,23 @@ func _salir_del_cierre(opcion: DevolucionDelJefe.Opcion) -> void:
 		DevolucionDelJefe.Opcion.VOLVER_AL_MENU: _ir_al_menu,
 	}
 	acciones[opcion].call()
+
+
+## La persiana sigue baja: la pantalla de final se dibuja encima, y sólo su botón sale al menú.
+func _mostrar_el_final() -> void:
+	var pantalla: PantallaDeFinal = PANTALLA_DE_FINAL.instantiate()
+	add_child(pantalla)
+	pantalla.volver_al_menu_pedido.connect(func() -> void: _ir_al_menu.call())
+	pantalla.mostrar(FinalConPantalla.de(_partida))
+
+
+## Terminada la partida sin devolución por el celular: con pantalla de final se muestra, y sin ella
+## se vuelve al menú.
+func _terminar_la_partida() -> void:
+	if FinalConPantalla.de(_partida) == FinalConPantalla.Cual.NINGUNO:
+		_ir_al_menu.call()
+	else:
+		_mostrar_el_final()
 
 
 func _preparar_lo_postergado() -> void:
@@ -1118,6 +1168,19 @@ func _al_desechar_un_ticket() -> void:
 	_desbloquear(Logros.Logro.REBELDE)
 
 
+## Lo que se levanta para dar una pista vuelve a su lugar, y queda en el local sólo si el camino
+## de esa noche lo activa.
+func _ubicar_lo_de_una_pista(objeto: ObjetoAgarrable, jornada: int) -> void:
+	objeto.volver_a_su_lugar()
+	if _partida.expediente.esta_en_el_local(objeto.datos.id, jornada):
+		objeto.process_mode = Node.PROCESS_MODE_INHERIT
+	else:
+		objeto.hide()
+		objeto.collision_layer = 0
+		objeto.collision_mask = 0
+		objeto.process_mode = Node.PROCESS_MODE_DISABLED
+
+
 func _levanta_una_pista(datos: ObjetoDelAlmacen) -> bool:
 	return datos != null and _partida.expediente.levanta_una_pista(datos.id, _partida.jornada())
 
@@ -1169,6 +1232,10 @@ func _unhandled_input(evento: InputEvent) -> void:
 
 
 func _alternar_el_celular() -> void:
+	# Con la computadora abierta, Q alterna la pantalla conjunta y no el celular suelto.
+	if _computadora.computadora().abierta():
+		_computadora.pedir_alternar_la_conjunta()
+		return
 	_celular.pedir_alternar(_jugador.suspendido() or _jugador.examen.esta_examinando())
 	_jugador.tomar_el_cursor_desde_entrada()
 
@@ -1193,6 +1260,15 @@ func _cablear_el_celular() -> void:
 	_pantalla_del_celular.tramo_pedido.connect(_celular.pedir_tramo)
 	_pantalla_del_celular.cierre_de_foto_pedido.connect(_celular.pedir_cerrar_foto)
 	_pantalla.preparar(_celular, _pantalla_del_celular)
+	_respondedor = RespondedorDeQuejas.new()
+	_respondedor.reloj = _reloj
+	_respondedor.celular = _celular
+	add_child(_respondedor)
+	_respondedor.queja_respondida.connect(_mostrar_el_chat_del_celular)
+	_pantalla_del_celular.respuesta_pedida.connect(_respondedor.pedir_responder)
+	_pantalla_de_la_computadora.conjunta_pedida.connect(_computadora.pedir_alternar_la_conjunta)
+	_computadora.pantalla_conjunta_cambiada.connect(_al_cambiar_la_pantalla_conjunta)
+	_celular.celular_cerrado.connect(_computadora.pedir_volver_a_la_normal)
 	_hipotesis.continuacion_pedida.connect(_al_continuar_la_reflexion)
 	_hipotesis.eleccion_pedida.connect(_al_elegir_la_hipotesis)
 	_hipotesis.siguiente_pedido.connect(_navegar_las_hipotesis.bind(true))
@@ -1203,13 +1279,24 @@ func _cablear_el_celular() -> void:
 
 
 func _al_abrir_el_celular() -> void:
+	if _computadora.computadora().conjunta():
+		_pantalla_del_celular.abrir_en_la_conjunta()
+		return
 	_jugador.suspender()
 	_pantalla_del_celular.subir()
 
 
+## El registro y el celular a la vez: el celular se abre o se cierra con la pantalla.
+func _al_cambiar_la_pantalla_conjunta(activa: bool) -> void:
+	_pantalla_de_la_computadora.mostrar_conjunta(activa)
+	if activa != _celular.celular().abierto():
+		_celular.pedir_alternar(false)
+
+
 func _al_cerrar_el_celular() -> void:
 	_pensar_gesto(_gestos.al_cerrar_el_celular(_partida))
-	_jugador.reanudar()
+	if not _computadora.computadora().abierta():
+		_jugador.reanudar()
 	_pantalla_del_celular.bajar()
 
 
@@ -1222,7 +1309,9 @@ func _mostrar_el_chat_del_celular(quien: Conversacion.Interlocutor) -> void:
 		_celular.bandeja().conversacion_de(quien),
 		_celular.bandeja().mensajes_de(quien),
 		_celular.celular().fijo(),
-		_jornada_del_celular
+		_jornada_del_celular,
+		_celular.celular().primer_nuevo(),
+		_respondedor.admite_respuesta(quien)
 	)
 
 
@@ -1235,7 +1324,7 @@ func _al_recibir_en_el_celular(quien: Conversacion.Interlocutor, mensaje: Mensaj
 	if _celular.celular().pantalla() == Celular.Pantalla.MENU:
 		_mostrar_el_menu_del_celular()
 	elif _celular.celular().chat() == quien:
-		_pantalla_del_celular.recibir(mensaje, indice)
+		_pantalla_del_celular.recibir(mensaje, indice, _celular.celular().primer_nuevo())
 
 
 func _cablear_la_investigacion() -> void:

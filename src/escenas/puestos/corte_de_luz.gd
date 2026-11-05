@@ -176,6 +176,11 @@ func hay_luz() -> bool:
 	return _hay_luz
 
 
+## El corte de hoy. Lo leen el wifi y el pensamiento del router, que no lo duplican.
+func estado() -> AnomaliasDeLaJornada.Corte:
+	return _estado
+
+
 ## Pone el local como lo deja el corte, para preparar sus programas antes de que se corte. No es
 ## un corte: sigue habiendo luz, y los muebles conservan su horneado, que no cambia el programa.
 func ensayar(a_oscuras: bool) -> void:

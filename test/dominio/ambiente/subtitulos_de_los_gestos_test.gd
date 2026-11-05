@@ -23,6 +23,8 @@ const RENGLONES_DE_LA_FICHA: Dictionary[SubtitulosDeLosGestos.Id, int] = {
 	SubtitulosDeLosGestos.Id.TECHO_SOBRE_UN_CUBICULO: 1,
 	SubtitulosDeLosGestos.Id.PUERTA_CON_TAREAS_PENDIENTES: 2,
 	SubtitulosDeLosGestos.Id.SIN_LUZ: 2,
+	SubtitulosDeLosGestos.Id.ROUTER_ANTES_DEL_CORTE: 2,
+	SubtitulosDeLosGestos.Id.ROUTER_YA_RESTAURADO: 2,
 	SubtitulosDeLosGestos.Id.PRIMERA_PISTA_OBJETO: 2,
 	SubtitulosDeLosGestos.Id.PRIMERA_PISTA_EXAMEN: 2,
 	SubtitulosDeLosGestos.Id.PRIMERA_PISTA_COMPRADOR: 2,

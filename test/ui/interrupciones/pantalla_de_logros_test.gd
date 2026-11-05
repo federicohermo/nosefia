@@ -93,7 +93,7 @@ func test_la_fuente_del_tema_dibuja_los_signos_de_los_nombres() -> void:  # AC-A
 			assert_bool(fuente.has_char(letra.unicode_at(0))).is_true()
 
 
-func test_esc_la_cierra_y_avisa_una_sola_vez() -> void:  # AC-SAV-036
+func test_esc_la_cierra_y_avisa_una_sola_vez() -> void:  # AC-SAV-037
 	var pantalla := _pantalla()
 	assert_bool(pantalla.visible).is_true()
 	var esc := InputEventAction.new()

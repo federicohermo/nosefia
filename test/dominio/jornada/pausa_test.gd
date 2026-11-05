@@ -40,7 +40,7 @@ func test_esc_con_configuraciones_abierta_la_cierra_sin_reanudar() -> void:  # A
 	assert_int(Pausa.ante_esc(true, true)).is_equal(Pausa.Accion.CERRAR_CONFIGURACIONES)
 
 
-func test_esc_con_logros_abierta_la_cierra_sin_reanudar() -> void:  # AC-SAV-036
+func test_esc_con_logros_abierta_la_cierra_sin_reanudar() -> void:  # AC-SAV-037
 	assert_int(Pausa.ante_esc(true, false, false, false, true)).is_equal(Pausa.Accion.CERRAR_LOGROS)
 	assert_int(Pausa.ante_esc(true, false, false, false, false)).is_equal(Pausa.Accion.REANUDAR)
 

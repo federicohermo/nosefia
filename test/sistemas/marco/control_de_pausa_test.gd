@@ -250,7 +250,7 @@ func test_el_cursor_que_suelta_el_esc_de_la_interfaz_no_pausa() -> void:  # AC-P
 	assert_int(_pausas).is_zero()
 
 
-func test_con_logros_abierta_esc_la_cierra_y_sigue_en_pausa() -> void:  # AC-SAV-036
+func test_con_logros_abierta_esc_la_cierra_y_sigue_en_pausa() -> void:  # AC-SAV-037
 	var logros: CanvasLayer = auto_free(CanvasLayer.new())
 	logros.visible = false
 	var control := _control()

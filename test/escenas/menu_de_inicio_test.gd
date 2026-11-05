@@ -240,6 +240,23 @@ func test_cambiar_una_preferencia_invalida_la_copia() -> void:
 		remove_child(menu)
 
 
+func test_reasignar_una_tecla_invalida_la_copia() -> void:  # AC-CFG-022
+	var menu := _menu()
+	menu.set_process(false)
+	var pantalla := _configuraciones(menu)
+	_boton(menu, "CONFIGURACIONES").pressed.emit()
+	assert_bool(menu.call("_sirve_la_copia")).is_true()
+	var fila: HBoxContainer = pantalla.filas()[Preferencias.CAMPOS.size() + 1]
+	(fila.get_child(1) as Button).pressed.emit()
+	var controles: PantallaDeControles = pantalla.get_node("Controles")
+	controles.elegir(AsignacionDeControles.EXAMINAR, 0)
+	var tecla := InputEventKey.new()
+	tecla.physical_keycode = KEY_F
+	tecla.pressed = true
+	assert_bool(controles.atender(tecla)).is_true()
+	assert_bool(menu.call("_sirve_la_copia")).is_false()
+
+
 func test_la_letra_cambia_al_volver_de_configuraciones() -> void:  # AC-CFG-008, AC-CFG-010
 	var menu := _menu()
 	_boton(menu, "CONFIGURACIONES").pressed.emit()
@@ -321,7 +338,7 @@ func test_la_pausa_del_almacen_que_se_calienta_no_escucha_el_menu() -> void:
 	assert_bool((pausas[0] as ControlDePausa).can_process()).is_false()
 
 
-func test_logros_se_abre_y_esc_la_cierra_y_deja_el_menu() -> void:  # AC-ACH-014, AC-SAV-036
+func test_logros_se_abre_y_esc_la_cierra_y_deja_el_menu() -> void:  # AC-ACH-014, AC-SAV-037
 	var menu := _menu()
 	var pantalla: PantallaDeLogros = menu.get("_logros_pantalla")
 	assert_bool(pantalla.visible).is_false()

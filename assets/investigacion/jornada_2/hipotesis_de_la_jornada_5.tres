@@ -11,3 +11,4 @@ jornada = 5
 opciones = Array[ExtResource("hipotesis")]([ExtResource("b")])
 predeterminada = ExtResource("predeterminada")
 con_antecedentes = ExtResource("predeterminada")
+sortea_la_siguiente = true

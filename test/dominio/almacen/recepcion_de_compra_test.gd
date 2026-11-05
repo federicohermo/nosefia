@@ -9,9 +9,9 @@ func test_atencion_habla_antes_de_recibir_y_solo_vende_el_pedido_completo() -> v
 	var atencion := Atencion.new(comprador, inventario)
 	var unidad := estante.retirar(Catalogo.de(Producto.Id.ZUCARACHAS))
 	assert_int(atencion.interactuar(unidad)).is_equal(RecepcionDeCompra.Resultado.DIALOGO)
-	assert_str(atencion.dialogo().entrada_actual()).contains("Zucarachas")
-	assert_bool(atencion.puede_abandonar()).is_false()
-	assert_int(atencion.interactuar(unidad)).is_equal(RecepcionDeCompra.Resultado.DIALOGO)
+	while atencion.abre_la_ventanilla():
+		assert_bool(atencion.puede_abandonar()).is_false()
+		assert_int(atencion.interactuar(unidad)).is_equal(RecepcionDeCompra.Resultado.DIALOGO)
 	assert_bool(atencion.puede_abandonar()).is_true()
 	assert_bool(atencion.vendida()).is_false()
 	assert_int(atencion.interactuar(unidad)).is_equal(RecepcionDeCompra.Resultado.ACEPTADA)
@@ -87,8 +87,7 @@ func test_el_recordatorio_no_retiene_el_clic_de_la_entrega() -> void:  # AC-CTR-
 	var atencion := Atencion.new(
 		Compradores.de_la_jornada(ReglasDeLaPartida.PRIMERA_JORNADA)[1], inventario
 	)
-	atencion.interactuar(null)
-	atencion.interactuar(null)
+	_terminar_la_inicial(atencion)
 	atencion.interactuar(null)
 	var unidad := Estante.new(inventario, Catalogo.todos()).retirar(
 		Catalogo.de(Producto.Id.ZUCARACHAS)
@@ -102,14 +101,20 @@ func test_el_rechazo_no_retiene_con_el_objeto_en_mano_y_deja_salir() -> void:  #
 	var atencion := Atencion.new(
 		Compradores.de_la_jornada(ReglasDeLaPartida.PRIMERA_JORNADA)[1], inventario
 	)
-	atencion.interactuar(null)
-	atencion.interactuar(null)
+	_terminar_la_inicial(atencion)
 	var incorrecto := ObjetoDelAlmacen.new()
 	assert_int(atencion.interactuar(incorrecto)).is_equal(RecepcionDeCompra.Resultado.RECHAZADA)
 	assert_bool(atencion.puede_abandonar()).is_true()
 	assert_int(atencion.interactuar(incorrecto)).is_equal(RecepcionDeCompra.Resultado.RECHAZADA)
 	assert_bool(atencion.puede_abandonar()).is_true()
 	assert_bool(atencion.vendida()).is_false()
+
+
+## Presenta al comprador y avanza su conversación inicial hasta el final.
+func _terminar_la_inicial(atencion: Atencion) -> void:
+	atencion.interactuar(null)
+	while atencion.abre_la_ventanilla():
+		atencion.interactuar(null)
 
 
 func _pedido() -> Venta:
@@ -160,8 +165,7 @@ func test_tia_rechaza_otra_zucarachas_y_conserva_el_pedido_entero() -> void:  # 
 	var atencion := Atencion.new(
 		Compradores.de_la_jornada(ReglasDeLaPartida.PRIMERA_JORNADA)[1], inventario
 	)
-	atencion.interactuar(null)
-	atencion.interactuar(null)
+	_terminar_la_inicial(atencion)
 	var estante := Estante.new(inventario, Catalogo.todos())
 	var primera := estante.retirar(Catalogo.de(Producto.Id.ZUCARACHAS))
 	assert_int(atencion.interactuar(primera)).is_equal(RecepcionDeCompra.Resultado.ACEPTADA)
