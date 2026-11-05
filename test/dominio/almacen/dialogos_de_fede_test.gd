@@ -6,8 +6,9 @@ const AMARILLO := "[color=#e4f850]"
 const SEMILLAS := 120
 const ENTRADAS_DE_APERTURA := 6
 const ENTRADAS_DE_DESPEDIDA := 1
-## Las posiciones del mensaje 4, que nombra Durextra y el segundo producto, y del 5, que nombra el
-## tercero.
+## Las posiciones del mensaje 3, que nombra Duronga, del 4, que nombra Durextra y el segundo
+## producto, y del 5, que nombra el tercero.
+const MENSAJE_3 := 2
 const MENSAJE_4 := 3
 const MENSAJE_5 := 4
 
@@ -58,6 +59,7 @@ func test_fede_pide_durextra_primero_y_dos_tipos_mas_de_su_grupo() -> void:  # A
 		func(id: Producto.Id) -> bool: return id in vendibles
 	)
 	var vistos: Dictionary = {}
+	var con_duronga := 0
 	for semilla in range(1, SEMILLAS + 1):
 		var fede := _fede(semilla)
 		var ids := _ids(fede)
@@ -67,9 +69,12 @@ func test_fede_pide_durextra_primero_y_dos_tipos_mas_de_su_grupo() -> void:  # A
 		for id: Producto.Id in ids.slice(1):
 			assert_array(elegibles).contains([id])
 			vistos[id] = true
+		if ids.has(Producto.Id.DURONGA):
+			con_duronga += 1
 		for producto in fede.pedido().productos():
 			assert_int(fede.pedido().unidades_de(producto)).is_equal(1)
 	assert_array(vistos.keys()).contains_exactly_in_any_order(elegibles)
+	assert_int(con_duronga).is_between(1, SEMILLAS - 1)
 
 
 func test_la_misma_semilla_repite_el_pedido_de_fede() -> void:  # AC-CTR-174
@@ -109,6 +114,41 @@ func test_los_demas_mensajes_de_fede_no_resaltan_nada() -> void:  # AC-CTR-175
 	for indice in apertura.size():
 		if indice != MENSAJE_4 and indice != MENSAJE_5:
 			assert_int(apertura[indice].count(AMARILLO)).is_zero()
+
+
+func test_la_tercera_entrada_de_fede_nombra_duronga_sin_resaltarlo() -> void:  # AC-CTR-175
+	var duronga := Catalogo.de(Producto.Id.DURONGA).nombre
+	var tercera := _apertura(_fede())[MENSAJE_3]
+	assert_str(tercera).contains(duronga)
+	assert_int(tercera.count(AMARILLO)).is_zero()
+
+
+func test_fede_rechaza_un_ajeno_y_el_recordatorio_nombra_lo_que_falta() -> void:  # AC-CTR-159
+	var fede := _fede()
+	var pedido := fede.pedido().productos()
+	var inventario := Apertura.inventario_con_faltantes({}, {}, Catalogo.todos())
+	var estante := Estante.new(inventario, Catalogo.todos())
+	fede.horario = Vector2(0.0, 1000.0)
+	var atencion := Atencion.new(fede, inventario)
+	atencion.interactuar(null)
+	while not atencion.puede_abandonar():
+		atencion.interactuar(null)
+	assert_int(atencion.interactuar(estante.retirar(pedido[0]))).is_equal(
+		RecepcionDeCompra.Resultado.ACEPTADA
+	)
+	var ajeno: Producto = null
+	for producto in Catalogo.todos():
+		if not _ids(fede).has(producto.id):
+			ajeno = producto
+			break
+	assert_object(ajeno).is_not_null()
+	assert_int(atencion.interactuar(estante.retirar(ajeno))).is_equal(
+		RecepcionDeCompra.Resultado.RECHAZADA
+	)
+	var rechazo := atencion.dialogo().entrada_actual()
+	assert_str(rechazo).not_contains(_presentado(pedido[0]))
+	for producto: Producto in pedido.slice(1):
+		assert_str(rechazo).contains(_presentado(producto))
 
 
 func test_fede_vende_una_vez_y_se_retira_tras_su_despedida() -> void:  # AC-CTR-175

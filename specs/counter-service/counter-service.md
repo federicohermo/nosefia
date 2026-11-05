@@ -548,7 +548,7 @@ jornada NO DEBE reutilizar su pedido ni su estado.
 
 ### BR-CTR-048 — Los compradores sin guion propio usan la apertura y la despedida predeterminadas
 
-CUANDO un comprador sin guion propio de las jornadas 3 a 5 inicia su conversación, el sistema DEBE decir, en una
+CUANDO un comprador sin guion propio de las jornadas 3 a 7 inicia su conversación, el sistema DEBE decir, en una
 sola entrada, «Buenas noches. Quiero » seguido de sus productos y un punto final: uno,
 «[producto1]»; dos, «[producto1] y [producto2]»; tres, «[producto1], [producto2] y [producto3]».
 Los productos DEBEN presentarse como en BR-CTR-039. Terminar la entrada DEBE devolver el control
@@ -1176,7 +1176,7 @@ producto.
 
 ### AC-CTR-074 — Apertura y despedida predeterminadas *(verifica BR-CTR-048)*
 
-DADO un comprador sin guion propio de la jornada 3, 4 o 5 con pedido de uno, dos o tres tipos CUANDO se le habla por
+DADO un comprador sin guion propio de una jornada de la 3 a la 7 con pedido de uno, dos o tres tipos CUANDO se le habla por
 primera vez ENTONCES muestra una sola entrada «Buenas noches. Quiero » más sus productos con la
 conjunción de BR-CTR-048 y punto final, con los nombres en amarillo y sin pistas lilas; tras
 terminarla, hablar de nuevo muestra el recordatorio sin repetirla. CUANDO se le entregan sus
@@ -1485,7 +1485,7 @@ BR-CTR-048. DADO las jornadas 1 y 2 ENTONCES siguen con los guiones propios de s
 
 ### AC-CTR-159 — Con un guion propio, los textos comunes y la misma partida *(verifica BR-CTR-047, BR-CTR-048)*
 
-DADO Cami, Tin, Tia o Mía con guion propio, terminada su apertura CUANDO se les habla de nuevo, se les
+DADO Cami, Tin, Tia, Mía o Fede de la jornada 4, con guion propio, terminada su apertura CUANDO se les habla de nuevo, se les
 ofrece un objeto ajeno, se les entrega un producto que falta o ya recibieron, o completan el
 pedido sin ticket ENTONCES responden con el recordatorio, el rechazo, el agradecimiento y el aviso
 de ticket comunes, y no repiten la apertura. DADO una partida CUANDO se reabre o se reintenta la
