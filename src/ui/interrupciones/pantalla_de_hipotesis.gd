@@ -29,6 +29,8 @@ const MARCO := Rect2(838.0, 385.0, 808.0, 326.0)
 const FLECHA := Vector2(861.0, 441.0)
 const TITULO := Rect2(903.0, 437.0, 720.0, 44.0)
 const TEXTO := Rect2(903.0, 499.0, 720.0, 200.0)
+const TAMANO_DEL_TEXTO := 27
+const TAMANO_MINIMO_DEL_TEXTO := 18
 const PUNTOS := Vector2(1672.0, 694.0)
 const ANTERIOR := Rect2(1389.0, 748.0, 188.0, 45.0)
 const SIGUIENTE := Rect2(1596.0, 748.0, 188.0, 45.0)
@@ -71,7 +73,7 @@ func _ready() -> void:
 	_flecha.position = FLECHA
 	_lienzo.add_child(_flecha)
 	_titulo = _etiqueta("Titulo", 36, TINTA, TITULO)
-	_texto = _etiqueta("Texto", 27, Color.WHITE, TEXTO)
+	_texto = _etiqueta("Texto", TAMANO_DEL_TEXTO, Color.WHITE, TEXTO)
 	_puntos = HBoxContainer.new()
 	_puntos.name = "Puntos"
 	_puntos.position = PUNTOS
@@ -102,6 +104,7 @@ func mostrar(reflexion: ReflexionDeCierre) -> void:
 	_titulo.text = opcion.titulo if con_opcion else ""
 	_texto.position.y = TEXTO.position.y if con_opcion else TITULO.position.y
 	_texto.text = opcion.texto if con_opcion else reflexion.texto_actual()
+	_texto.add_theme_font_size_override("font_size", _tamano_que_entra(_texto.text))
 	_identidad = opcion.identidad if con_opcion else reflexion.identidad_del_texto()
 	var opciones := reflexion.opciones()
 	var navegable := etapa == ReflexionDeCierre.Etapa.ELEGIR and opciones.size() > 1
@@ -155,6 +158,23 @@ func _pintar_puntos(mostrada: int, cuantas: int) -> void:
 		var circulo := _panel("Punto", Color.TRANSPARENT, punto)
 		circulo.custom_minimum_size = Vector2(17, 17)
 		circulo.reparent(_puntos, false)
+
+
+## El tamaño de siempre, o el mayor menor que deja el texto adentro del marco.
+func _tamano_que_entra(contenido: String) -> int:
+	var tipografia := _texto.get_theme_font("font")
+	var separacion := _texto.get_theme_constant("line_spacing")
+	var disponible := MARCO.end.y - _texto.position.y
+	var tamano := TAMANO_DEL_TEXTO
+	while tamano > TAMANO_MINIMO_DEL_TEXTO:
+		var medida := tipografia.get_multiline_string_size(
+			contenido, HORIZONTAL_ALIGNMENT_LEFT, TEXTO.size.x, tamano
+		)
+		var lineas := roundi(medida.y / tipografia.get_height(tamano))
+		if medida.y + (lineas - 1) * separacion <= disponible:
+			break
+		tamano -= 1
+	return tamano
 
 
 func _ajustar() -> void:

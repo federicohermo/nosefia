@@ -381,11 +381,13 @@ lo dibuja el chat:
 
 Los textos de hipótesis DEBEN ser:
 
-- **2A:** «No me sorprendería tener un jefe inútil. Pero también, ¿no es responsabilidad de Yasmín
-  avisar si faltan cosas esenciales? Si esto va a ser frecuente, tengo que empezar a prestar más
-  atención a las dinámicas internas del local.»
+- **2A:** «Siento que esto no fue casualidad. Ya tuve malas experiencias con jefes y colegas que no
+  hacían bien su trabajo o que directamente me querían serruchar el piso. Si esto va a ser
+  frecuente, tengo que empezar a prestar más atención a las dinámicas internas del local.»
 - **2B:** «¿Puede ser que alguien se esté metiendo sin que nos demos cuenta? Debería examinar bien
-  las formas de ingreso al local…»
+  las formas de ingreso al local…» y, en un párrafo aparte: «ADVERTENCIA: Este camino aún no está
+  listo. Si lo elegís, no te van a aparecer más pistas y tu investigación va a quedar incompleta.
+  Recomendamos elegir la otra pista o reiniciar la jornada si no la encontraste.»
 - **2P:** «Solo se acabó un jabón. No me tengo que hacer la cabeza con algo tan poco trascendental.»
 
 La errata «cigarrilo» DEBE conservarse como aparece en la fuente. Las fotos DEBEN representar
