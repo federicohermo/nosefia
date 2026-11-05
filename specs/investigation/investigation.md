@@ -3,7 +3,7 @@ schema_version: 1
 capability_id: CAP-INV
 status: draft
 owner: por definir
-provenance: GDD «Investigación» y «La computadora»; ficha «Interfaces virtuales durante la jornada» y decisiones de #373, #375 y #376; migración de los specs 006, 009, 018; fichas Chat con el jefe, Chat con compañera y 2A revisadas el 2026-10-15; decisiones de #430; «Sistema de investigación», fichas 2A/2B/2P y decisiones de #22 del 2026-10-15; decisión del usuario del 2026-10-18 de usar la captura del mensaje de Yasmín como foto de 2A; decisión del usuario del 2026-10-17 de retirar las notas de la computadora y usar el diseño del registro de productos; ficha «Pantalla entre jornadas», reflexión de jornada 1, encabezado de jornada 2 y decisiones de #436; decisiones del usuario del 2026-10-18 sobre el recorrido lateral, la elección sin límite de tiempo, la reanudación del cierre y la espera de 1 segundo; ocho jornadas de #526; instrucciones por jornada de #527; la colilla sólo en su jornada, de #536; ficha Chat con compañera, jornada 5, de #458; ficha «Caminos narrativos y finales» y cuadro de pistas e hipótesis de #766 y la ficha «5B» de la lista de pistas e hipótesis y decisiones del usuario del 2026-10-30 sobre su foto y su texto, de #731; la fila «6C» de la lista de pistas e hipótesis, la ficha «Caminos narrativos y finales» y decisiones del usuario del 2026-11-03 sobre Yasmín y la textura de la nota, de #741; encabezado de la jornada 5 y ficha «5P» de la lista de pistas e hipótesis y decisión del usuario del 2026-11-04 sobre la 5L, de #740; quejas de la jornada 7, captura de la transferencia y pantalla conjunta de #759, ficha «Particulares de cada jornada» y comentario de Notion del 2026-11-04; ficha «Especificar animaciones», el chat que entra y sale deslizándose, de #627; GJ-62, el chat que abre en el primer mensaje sin leer, de #568; encabezado de la jornada 6 y fichas «6P» y «6L» de la lista de pistas e hipótesis, de #742; la fila «5A» de la lista de pistas e hipótesis y el mensaje de Cami de «Diálogos de compradores», de #785; la fila «6B» de la lista de pistas e hipótesis y la fila «Documento impreso» de «Objetos interactuables», de #789
+provenance: GDD «Investigación» y «La computadora»; ficha «Interfaces virtuales durante la jornada» y decisiones de #373, #375 y #376; migración de los specs 006, 009, 018; fichas Chat con el jefe, Chat con compañera y 2A revisadas el 2026-10-15; decisiones de #430; «Sistema de investigación», fichas 2A/2B/2P y decisiones de #22 del 2026-10-15; decisión del usuario del 2026-10-18 de usar la captura del mensaje de Yasmín como foto de 2A; decisión del usuario del 2026-10-17 de retirar las notas de la computadora y usar el diseño del registro de productos; ficha «Pantalla entre jornadas», reflexión de jornada 1, encabezado de jornada 2 y decisiones de #436; decisiones del usuario del 2026-10-18 sobre el recorrido lateral, la elección sin límite de tiempo, la reanudación del cierre y la espera de 1 segundo; ocho jornadas de #526; instrucciones por jornada de #527; la colilla sólo en su jornada, de #536; ficha Chat con compañera, jornada 5, de #458; ficha «Caminos narrativos y finales» y cuadro de pistas e hipótesis de #766 y la ficha «5B» de la lista de pistas e hipótesis y decisiones del usuario del 2026-10-30 sobre su foto y su texto, de #731; la fila «6C» de la lista de pistas e hipótesis, la ficha «Caminos narrativos y finales» y decisiones del usuario del 2026-11-03 sobre Yasmín y la textura de la nota, de #741; encabezado de la jornada 5 y ficha «5P» de la lista de pistas e hipótesis y decisión del usuario del 2026-11-04 sobre la 5L, de #740; quejas de la jornada 7, captura de la transferencia y pantalla conjunta de #759, ficha «Particulares de cada jornada» y comentario de Notion del 2026-11-04; ficha «Especificar animaciones», el chat que entra y sale deslizándose, de #627; GJ-62, el chat que abre en el primer mensaje sin leer, de #568; encabezado de la jornada 6 y fichas «6P» y «6L» de la lista de pistas e hipótesis, de #742; la fila «5A» de la lista de pistas e hipótesis y el mensaje de Cami de «Diálogos de compradores», de #785; la fila «6B» de la lista de pistas e hipótesis y la fila «Documento impreso» de «Objetos interactuables», de #789; la fila «7B» de la lista de pistas e hipótesis, la fila «Palanca» de «Objetos interactuables» y la ficha «Caminos narrativos y finales», de #790
 ---
 
 # Capacidad: la investigación
@@ -32,6 +32,7 @@ suma. Sin eso, se puede pasar la noche examinando la misma lata.
 | **Camino** | las pistas de la jornada siguiente que desbloquea una hipótesis | rama, final |
 | **Pistas activas** | las pistas de una jornada que el expediente puede anotar | pistas presentes |
 | **Sorteo** | la hipótesis de la jornada anterior que se toma al azar cuando esa jornada termina sin pistas, para fijar el camino de la siguiente | elección |
+| **Pista de acción** | pista que se registra cuando se hace una acción con un objeto, y no al mirarlo ni al levantarlo | pista de objeto |
 
 ## Comportamiento normativo
 
@@ -729,6 +730,40 @@ ser enfocado por la mira ni poder levantarse. Una partida guardada en la jornada
 conservarlo según las elecciones guardadas. El documento en la mano al abrir la jornada siguiente
 DEBE salir de la mano y del local, como la nota. SI por algún camino estuvieran activas 6B y 6C,
 ENTONCES el documento y la nota NO DEBEN superponerse bajo la puerta.
+
+### BR-INV-140 — La pista 7B es una acción y no deja nada en las notas
+
+CUANDO se registra 7B con la jornada 7 abierta y el canal de acción, el sistema DEBE contestar
+ANOTADA y sumar 7B al expediente. La pista 7B DEBE ser de la jornada 7, del canal de acción y del
+camino de la hipótesis 6B (BR-INV-049, BR-INV-050): está activa si la 6B se eligió en la jornada 6.
+Con cualquier otra elección, o con la 6 sin pistas (BR-INV-052), no lo está. Una pista de acción
+DEBE registrarse sólo cuando el sistema avisa que la acción pasó, nunca por mirar ni por levantar.
+
+Según la fila «7B» de la lista de pistas e hipótesis, 7B NO DEBE tener foto, texto ni hipótesis:
+registrarla NO DEBE agregar mensajes al chat de notas (BR-INV-040) ni avisar una pista nueva
+(BR-INV-038), y no hay hipótesis 7B que ofrecer. La hipótesis 6B DEBE declarar el camino de 7B
+(BR-INV-049). Las pistas y las hipótesis 2A, 2B, 2P, 5A, 5B, 6B y 6C, y la colilla, NO DEBEN cambiar.
+
+### BR-INV-141 — La palanca está al fondo del depósito sólo si 7B está activa
+
+La jornada 7 DEBE tener, apoyada en el piso, al fondo del depósito y a la vista desde la entrada
+del depósito, una palanca levantable con identidad propia, independiente de los productos vendibles
+y de los demás objetos de pista, y distinguible como una palanca. Examinada, su subtítulo al
+examinar es el de BR-SUB-010. Mirarla, levantarla, soltarla o volver a levantarla NO DEBEN
+registrar ninguna pista ni mostrar ningún aviso.
+
+La palanca DEBE estar en el local sólo CUANDO 7B está activa en la jornada abierta (BR-INV-050). En
+cualquier otro caso —otra jornada, otra elección o ninguna— NO DEBE verse, NO DEBE ser enfocada por
+la mira ni poder levantarse. Una partida guardada en la jornada 7 DEBE conservarla según las
+elecciones guardadas. Soltarla en cualquier lugar NO DEBE cambiar nada: sólo cuenta tenerla en la
+mano al accionar la puerta de la oficina de Enrique (BR-PLY-060).
+
+### BR-INV-142 — Abrir la puerta del jefe con la palanca registra 7B
+
+CUANDO la puerta de la oficina de Enrique se abre con la palanca en la mano (BR-PLY-060), el
+sistema DEBE registrar 7B por el canal de acción. Un gesto sobre la puerta sin la palanca, un gesto
+rechazado o uno durante la pausa NO DEBEN registrarla. Registrarla otra vez NO DEBE duplicar nada.
+El final al que lleva es el de BR-SHF-060.
 
 ### BR-INV-116 — La sexta jornada se cierra eligiendo una hipótesis
 
@@ -1600,6 +1635,38 @@ DADO el documento del local ENTONCES su identidad no es la de ningún producto, 
 ni la de la nota de 6C, es levantable, tiene subtítulo, se dibuja con una textura de papel distinta
 de la de las cajas y de la de la nota, y su cara impresa usa la textura de la pista 6B.
 
+### AC-INV-176 — La pista 7B es de acción y está activa sólo con 6B elegida *(verifica BR-INV-140, BR-INV-050, BR-INV-052)*
+
+DADO el caso de la partida CUANDO se consulta 7B ENTONCES su pista es de la jornada 7 y del canal
+de acción, no tiene foto ni texto ni hipótesis, y la hipótesis 6B declara el camino de 7B. DADO 2A
+elegida en la jornada 4, 5A en la 5 y 6B en la 6 ENTONCES 7B está entre las pistas activas de la 7.
+DADO 6C elegida en la 6, 6P o 6L elegida, la 6 sin elección, o 5B elegida en la 5 ENTONCES 7B no lo
+está. DADO la 6 terminada sin pistas ENTONCES no hay ninguna pista activa en la 7. Las identidades
+2A, 2B, 2P, 5A, 5B, 6B y 6C conservan sus datos.
+
+### AC-INV-177 — La palanca está sólo si 7B está activa *(verifica BR-INV-141)*
+
+DADO una partida que eligió 2A, 5A y 6B CUANDO se abre la jornada 7 ENTONCES la palanca está al
+fondo del depósito, es visible, la mira la enfoca y se puede levantar. CUANDO se abre la jornada 7
+con cualquier otra elección, o cualquier otra jornada, ENTONCES la palanca no es visible, no tiene
+colisión, la mira no la enfoca ni la mano la sostiene.
+
+### AC-INV-178 — Mirar, levantar y soltar la palanca no registra nada *(verifica BR-INV-141, BR-INV-140)*
+
+DADO la jornada 7 con 7B activa CUANDO se levanta la palanca, se la suelta y se la vuelve a levantar
+ENTONCES el expediente queda intacto, no se publica ninguna pista, no hay aviso y el chat de notas no
+recibe mensajes. CUANDO se la examina con las manos vacías ENTONCES piensa el subtítulo de BR-SUB-010
+y el expediente sigue intacto. CUANDO se la deja caer lejos de la puerta ENTONCES no cambia nada.
+
+### AC-INV-179 — Abrir la puerta con la palanca registra 7B una vez, sin rastro *(verifica BR-INV-142, BR-INV-140)*
+
+DADO la jornada 7 con 7B activa y la palanca en la mano CUANDO se abre la puerta del jefe ENTONCES
+contesta ANOTADA, el expediente suma 7B, el chat de notas no recibe mensajes, no se publica ninguna
+pista nueva y no hay hipótesis que ofrecer. CUANDO se registra 7B otra vez ENTONCES contesta REPETIDA
+y no cambia nada. CUANDO se acciona la puerta sin la palanca, con otro objeto en la mano o con las
+manos vacías ENTONCES el expediente queda intacto. CUANDO se registra 7B por el canal de acción en
+otra jornada, o por otro canal en la 7, ENTONCES contesta DESCONOCIDA y el expediente queda intacto.
+
 ### AC-INV-100 — La apertura de la jornada 4 saluda de tarde *(verifica BR-INV-029, BR-INV-030)*
 
 DADO la apertura de la jornada 4 por transición y, por separado, desde un checkpoint CUANDO se
@@ -1934,7 +2001,8 @@ arriba ENTONCES la lista no se mueve.
 - **Entrada:** el objeto examinado, la entrada de movimiento y los segundos del cuadro, el
   arrastre del mouse y la conversación abierta; caso, pistas, exigencias y desenlaces,
   expediente recibido, identidades para reconstrucción y gestos de pista con canal y jornada;
-  el camino de cada hipótesis, el azar para sortear y el sorteo guardado;
+  el camino de cada hipótesis, el azar para sortear y el sorteo guardado; el aviso de que la
+  puerta del jefe se abrió con la palanca;
   la jornada, Q, el estado del control
   y los pedidos de recibir mensajes, navegar chats, ampliar fotos, fijar y soltar el celular;
   identidad y metadatos temporales de mensajes y el tramo de pista pulsado; continuar, navegar
@@ -1984,6 +2052,12 @@ arriba ENTONCES la lista no se mueve.
 
 ## Preguntas abiertas
 
+- **OQ-INV-010 — ¿Qué hay entre abrir la puerta de Enrique y la pantalla del final 4?**
+  - Por qué sigue abierta: la fila «7B» dice que la jornada termina y «pasa directamente al
+    epílogo», pero el epílogo no tiene contenido en Notion ni frame en Figma. Mientras no lo
+    tenga, la puerta lleva directo a la pantalla del final (BR-SHF-060).
+  - Decide: game design con narrativa.
+  - Bloquea: intercalar el epílogo antes de la pantalla; no bloquea la pantalla ni el final.
 - **OQ-INV-007 — ¿Cuánto dura y qué curva tiene el deslizamiento del chat?**
   - Por qué sigue abierta: la ficha «Especificar animaciones» pide que el chat entre desde el
     margen derecho «como Instagram» y no da duración ni curva. El juego usa valores provisionales

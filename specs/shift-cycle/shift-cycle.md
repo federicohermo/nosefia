@@ -3,7 +3,7 @@ schema_version: 1
 capability_id: CAP-SHF
 status: ratified
 owner: por definir
-provenance: GDD «Ciclo de jornadas»; fichas «Pantalla entre jornadas» y «Particulares de cada jornada»; decisiones de #364, #369, #436, #526, #527, #573 y #693; migración de los specs 001, 007, 011, 016, 027, 031; quejas de la jornada 7 de #759, ficha «Particulares de cada jornada»
+provenance: GDD «Ciclo de jornadas»; fichas «Pantalla entre jornadas» y «Particulares de cada jornada»; decisiones de #364, #369, #436, #526, #527, #573 y #693; migración de los specs 001, 007, 011, 016, 027, 031; quejas de la jornada 7 de #759, ficha «Particulares de cada jornada»; la ficha «Caminos narrativos y finales» y la fila «7B» de la lista de pistas e hipótesis, de #790
 ---
 
 # Capacidad: el ciclo de la jornada
@@ -115,11 +115,26 @@ encabezado, su título y un solo botón, «VOLVER AL MENÚ», que sale al menú.
   «EMPLEADO ESTRESADO».
 - SI la partida termina despedida, ENTONCES la pantalla DEBE ser la del despido aunque no haya
   pistas.
-- Cualquier otro final NO DEBE mostrar pantalla de final: la única opción de la devolución vuelve
-  al menú, como siempre.
+- Cualquier otro final que cierre con la devolución NO DEBE mostrar pantalla de final: la única
+  opción de la devolución vuelve al menú, como siempre. El final 4 no pasa por la devolución
+  (BR-SHF-060).
 
 Elegir la opción de la devolución o el botón dos veces NO DEBE mostrar dos pantallas ni pedir dos
 veces el menú. El guardado se borra igual que sin la pantalla (BR-SAV-002).
+
+### BR-SHF-060 — Abrir la puerta del jefe con la palanca termina la partida en el final 4
+
+CUANDO la puerta de la oficina de Enrique se abre con la palanca en la jornada 7 (BR-PLY-060,
+BR-INV-142), el sistema DEBE terminar en ese momento la jornada y la partida con el final 4, sin
+devolución del jefe, sin cierre de la jornada y sin elección de hipótesis. La jornada NO DEBE
+evaluarse: las tareas pendientes, el turno que queda y los llamados no deciden nada, y la partida
+no puede terminar despedida ni con el contrato cumplido por esa jornada.
+
+La pantalla de final DEBE mostrarse en ese mismo paso, con el encabezado «/ FINAL 4», el título
+«JEFE SABOTEADOR» y un solo botón, «VOLVER AL MENÚ», que sale al menú. Accionar otra vez la puerta
+o pulsar el botón dos veces NO DEBE mostrar dos pantallas ni pedir dos veces el menú. El guardado se
+borra (BR-SAV-002). Mientras el epílogo no tenga contenido (OQ-INV-010), NO DEBE intercalarse nada
+entre la puerta y la pantalla.
 
 ### BR-SHF-030 — Responder a las quejas cuenta cuando las cinco tienen respuesta correcta
 
@@ -548,6 +563,24 @@ pide el menú. DADO una partida en curso ENTONCES la devolución no lleva a ning
 DADO la pantalla de final del despido y la del contrato sin pistas CUANDO se elige dos veces la opción de
 la devolución ENTONCES se muestra una sola pantalla. CUANDO se pulsa dos veces el botón ENTONCES el
 menú se pide una sola vez.
+
+### AC-SHF-110 — Abrir la puerta con la palanca termina la partida sin devolución *(verifica BR-SHF-060)*
+
+DADO la jornada 7 abierta tras elegir 6B, con tareas pendientes y turno por delante, y la palanca en
+la mano CUANDO se abre la puerta del jefe ENTONCES la partida termina con el final 4, el expediente
+suma 7B, no se arma la devolución del jefe, no hay reflexión de cierre ni elección de hipótesis, y la
+jornada no se evalúa. DADO el mismo caso con todas las obligatorias cumplidas ENTONCES el resultado es
+el mismo, y no termina despedida ni con el contrato cumplido. DADO la jornada 7 sin la palanca en la
+mano CUANDO se acciona la puerta ENTONCES la partida sigue en curso.
+
+### AC-SHF-111 — El final 4 muestra su pantalla *(verifica BR-SHF-060, BR-SHF-027)*
+
+DADO el final 4 CUANDO termina la partida ENTONCES aparece, sin otra pantalla antes, la pantalla con
+«/ FINAL 4», «JEFE SABOTEADOR» y un solo botón, «VOLVER AL MENÚ», y el menú todavía no se pidió.
+CUANDO se pulsa el botón ENTONCES se pide el menú; CUANDO se pulsa dos veces ENTONCES se pide una sola
+vez. CUANDO se acciona otra vez la puerta ENTONCES se sigue mostrando una sola pantalla. DADO el
+despido o el contrato cumplido sin pistas ENTONCES sus pantallas siguen como en AC-SHF-063 y
+AC-SHF-064.
 
 ### AC-SHF-080 — La jornada 7 declara responder a las quejas *(verifica BR-SHF-005, BR-SHF-030)*
 
