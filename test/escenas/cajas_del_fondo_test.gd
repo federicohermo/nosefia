@@ -152,13 +152,14 @@ func test_una_caja_del_fondo_fuera_del_deposito_cuenta_para_el_cierre() -> void:
 		)
 		. is_empty()
 	)
-	caja.global_position = lector.to_global(lector.local[0].get_center())
+	caja.global_position = lector.to_global(lector.bano[0].get_center())
 	(
 		assert_array(
 			ReglasDelCierre.clases_de_desorden(local.call("_estados_del_cierre"), COMPLETA)
 		)
 		. contains(ReglasDelCierre.Clase.CAJA)
 	)
+	caja.global_position = lector.to_global(lector.local[0].get_center())
 	caja.global_position += Vector3.UP * lector.local[0].size.y
 	assert_int(lector.de(caja.global_position)).is_equal(ReglasDelCierre.Habitacion.AFUERA)
 	assert_bool(ReglasDelCierre.hay_objetos_afuera(local.call("_estados_del_cierre"))).is_true()
