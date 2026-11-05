@@ -793,11 +793,29 @@ func _filtrar(busqueda: String) -> void:
 		var mensajes := _bandeja.mensajes_de(conversacion.interlocutor)
 		var resumen := ""
 		if not mensajes.is_empty():
-			resumen = mensajes[-1].texto if not mensajes[-1].texto.is_empty() else FOTO
+			resumen = (
+				_sin_etiquetas(mensajes[-1].texto) if not mensajes[-1].texto.is_empty() else FOTO
+			)
 		_mensajes.add_child(
 			_boton_de(conversacion, _bandeja.no_leidos(conversacion.interlocutor), resumen)
 		)
 	_scroll.scroll_vertical = 0
+
+
+## La vista previa es un `Label` y no interpreta BBCode: se quitan las etiquetas y queda el texto.
+static func _sin_etiquetas(texto: String) -> String:
+	var limpio := ""
+	var resto := texto
+	while true:
+		var abre := resto.find("[")
+		var cierra := resto.find("]", abre + 1) if abre >= 0 else -1
+		if cierra < 0:
+			return limpio + resto
+		var nombre := resto.substr(abre + 1, cierra - abre - 1).lstrip("/")
+		var es_etiqueta := not nombre.is_empty() and nombre[0].to_lower() != nombre[0].to_upper()
+		limpio += resto.substr(0, abre if es_etiqueta else cierra + 1)
+		resto = resto.substr(cierra + 1)
+	return limpio
 
 
 func _boton_de(conversacion: Conversacion, sin_leer: int, resumen: String) -> Button:
