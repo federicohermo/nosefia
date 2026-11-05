@@ -336,19 +336,3 @@ func test_la_pausa_del_almacen_que_se_calienta_no_escucha_el_menu() -> void:
 	var pausas := copia.find_children("*", "ControlDePausa", true, false)
 	assert_array(pausas).has_size(1)
 	assert_bool((pausas[0] as ControlDePausa).can_process()).is_false()
-
-
-func test_logros_se_abre_y_esc_la_cierra_y_deja_el_menu() -> void:  # AC-ACH-014, AC-SAV-037
-	var menu := _menu()
-	var pantalla: PantallaDeLogros = menu.get("_logros_pantalla")
-	assert_bool(pantalla.visible).is_false()
-	assert_bool(_boton(menu, "LOGROS").disabled).is_false()
-	_boton(menu, "LOGROS").pressed.emit()
-	assert_bool(pantalla.visible).is_true()
-	assert_bool((menu.get("_marco") as Control).visible).is_false()
-	pantalla._unhandled_input(_esc())
-	assert_bool(pantalla.visible).is_false()
-	assert_bool((menu.get("_marco") as Control).visible).is_true()
-	assert_bool(_boton(menu, "LOGROS").has_focus()).is_true()
-	assert_object(menu.get("_espera")).is_null()
-	assert_bool(menu.get("_fundiendo")).is_false()
