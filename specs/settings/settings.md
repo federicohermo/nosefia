@@ -265,7 +265,8 @@ CUANDO se abre una interfaz, el sistema DEBE dejar el foco en uno de sus control
 para que la cruceta tenga por dónde empezar. Son interfaces: el menú de inicio, la pausa,
 Configuraciones, la pantalla de controles, la computadora y sus programas, el programa de tickets y
 sus listas, la ventanilla, la pantalla de devolución y el celular. La nota encuadrada no tiene
-ningún control que elegir.
+ningún control que elegir, y en la pantalla de devolución el foco llega con su opción, que aparece
+cuando llega el último mensaje.
 
 ### BR-CFG-029 — Los tres gestos del botón izquierdo tienen su equivalente en el joystick
 

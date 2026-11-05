@@ -164,7 +164,9 @@ func _ready() -> void:
 	_scroll.get_v_scroll_bar().changed.connect(_actualizar_desplazamiento)
 	_telefono.visibility_changed.connect(
 		func() -> void:
-			if not _telefono.is_visible_in_tree():
+			if _telefono.is_visible_in_tree():
+				_enfocar_el_primero.call_deferred()
+			else:
 				_terminar_arrastre()
 	)
 	(_recordatorio.get_node("Tecla") as Label).text = TEXTO_DEL_RECORDATORIO
