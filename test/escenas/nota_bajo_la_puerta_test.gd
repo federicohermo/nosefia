@@ -84,17 +84,21 @@ func _la_mira_la_encuentra(nota: ObjetoAgarrable) -> bool:
 	return golpe.get("collider") == nota or jugador.call("enfocado") == nota
 
 
-func test_la_nota_se_ve_y_se_enfoca_con_la_5b_elegida_en_la_jornada_6() -> void:  # AC-INV-121
-	await _abrir(JORNADA_DE_LA_NOTA, _por_la_5b())
-	var nota := _nota()
-	assert_object(nota).is_not_null()
-	if nota == null:
-		return
-	assert_bool(nota.is_visible_in_tree()).is_true()
-	assert_bool(await _la_mira_la_encuentra(nota)).is_true()
-	var agarre: Agarre = _almacen.get("_agarre")
-	assert_bool(agarre.pedir_agarrar(nota.datos, nota)).is_true()
-	assert_object(agarre.cuerpo_sostenido()).is_same(nota)
+func test_la_nota_se_ve_y_se_enfoca_con_la_5b_elegida_o_sorteada() -> void:  # AC-INV-121
+	var elecciones: Array[Dictionary] = [_por_la_5b(), {JORNADA_DE_LA_NOTA - 2: "2A"}]
+	for eleccion: Dictionary in elecciones:
+		await _abrir(JORNADA_DE_LA_NOTA, eleccion)
+		var nota := _nota()
+		assert_object(nota).is_not_null()
+		if nota == null:
+			return
+		var mensaje := "jornada %d, elecciones %s" % [JORNADA_DE_LA_NOTA, eleccion]
+		assert_bool(nota.is_visible_in_tree()).override_failure_message(mensaje).is_true()
+		assert_bool(await _la_mira_la_encuentra(nota)).override_failure_message(mensaje).is_true()
+		var agarre: Agarre = _almacen.get("_agarre")
+		assert_bool(agarre.pedir_agarrar(nota.datos, nota)).is_true()
+		assert_object(agarre.cuerpo_sostenido()).is_same(nota)
+		await _cerrar_almacen()
 
 
 func test_otra_jornada_u_otra_eleccion_no_dejan_ver_la_nota() -> void:  # AC-INV-121
@@ -102,7 +106,6 @@ func test_otra_jornada_u_otra_eleccion_no_dejan_ver_la_nota() -> void:  # AC-INV
 		[JORNADA_DE_LA_NOTA - 1, _por_la_5b()],
 		[JORNADA_DE_LA_NOTA + 1, _por_la_5b()],
 		[JORNADA_DE_LA_NOTA, {JORNADA_DE_LA_NOTA - 2: "2B"}],
-		[JORNADA_DE_LA_NOTA, {JORNADA_DE_LA_NOTA - 2: "2A"}],
 		[JORNADA_DE_LA_NOTA, {}],
 	]
 	for caso: Array in casos:
