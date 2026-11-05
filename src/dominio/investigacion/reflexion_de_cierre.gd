@@ -20,6 +20,7 @@ const ENCABEZADOS: Dictionary[int, String] = {
 		+ "perseguir, pero…"
 	),
 	JORNADA_DE_LOS_TEXTOS + 2: "Esta vez desapareció el lector de la caja…",
+	JORNADA_DE_LOS_TEXTOS + 3: "Un apagón me agarró desprevenido esta noche…",
 }
 const TEXTOS_DE_LA_PRIMERA: Array[String] = [
 	(
