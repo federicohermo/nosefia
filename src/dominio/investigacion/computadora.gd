@@ -12,6 +12,8 @@ class_name Computadora
 extends RefCounted
 
 var _abierta: bool = false
+var _se_ofrece_la_conjunta: bool = false
+var _conjunta: bool = false
 
 
 func abierta() -> bool:
@@ -26,6 +28,7 @@ func abrir() -> bool:
 	if _abierta:
 		return false
 	_abierta = true
+	_conjunta = false
 	return true
 
 
@@ -33,4 +36,37 @@ func cerrar() -> bool:
 	if not _abierta:
 		return false
 	_abierta = false
+	_conjunta = false
+	return true
+
+
+## Si la jornada ofrece la pantalla conjunta del registro y el celular. Cambiar de jornada la
+## deja en la pantalla normal.
+func ofrecer_la_conjunta(se_ofrece: bool) -> void:
+	_se_ofrece_la_conjunta = se_ofrece
+	_conjunta = false
+
+
+func conjunta_ofrecida() -> bool:
+	return _se_ofrece_la_conjunta
+
+
+func conjunta() -> bool:
+	return _conjunta
+
+
+## Pasa de la pantalla normal a la conjunta y de la conjunta a la normal. Devuelve `true` sólo si
+## cambió: con la computadora cerrada, o en una jornada que no la ofrece, no hace nada.
+func alternar_la_conjunta() -> bool:
+	if not _abierta or not _se_ofrece_la_conjunta:
+		return false
+	_conjunta = not _conjunta
+	return true
+
+
+## Devuelve `true` sólo si estaba en la conjunta.
+func volver_a_la_normal() -> bool:
+	if not _conjunta:
+		return false
+	_conjunta = false
 	return true

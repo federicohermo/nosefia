@@ -2,13 +2,14 @@
 
 [ext_resource type="Script" path="res://src/dominio/investigacion/hipotesis_de_la_jornada.gd" id="jornada"]
 [ext_resource type="Script" path="res://src/dominio/investigacion/hipotesis.gd" id="hipotesis"]
+[ext_resource type="Resource" path="res://assets/investigacion/jornada_2/hipotesis_5a.tres" id="a"]
 [ext_resource type="Resource" path="res://assets/investigacion/jornada_2/hipotesis_5b.tres" id="b"]
 [ext_resource type="Resource" path="res://assets/investigacion/jornada_2/hipotesis_5p.tres" id="predeterminada"]
 
 [resource]
 script = ExtResource("jornada")
 jornada = 5
-opciones = Array[ExtResource("hipotesis")]([ExtResource("b")])
+opciones = Array[ExtResource("hipotesis")]([ExtResource("a"), ExtResource("b")])
 predeterminada = ExtResource("predeterminada")
 con_antecedentes = ExtResource("predeterminada")
 sortea_la_siguiente = true

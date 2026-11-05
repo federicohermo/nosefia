@@ -16,6 +16,10 @@ const VELOCIDAD_DE_CAMINATA := 3.5
 ## un radián» sin una conversión escondida en el medio.
 const SENSIBILIDAD_DEL_MOUSE := 0.003
 
+## Radianes por segundo con el joystick derecho a fondo: 180 grados. Lo decidió el dueño, y gira
+## en proporción a la inclinación.
+const GIRO_DEL_JOYSTICK := deg_to_rad(180.0)
+
 ## Metros, medidos desde el origen del `CharacterBody3D` que está apoyado en el piso.
 const ALTURA_DE_LA_CAMARA := 1.7
 
@@ -76,6 +80,12 @@ const ACCION_IZQUIERDA := "mover_izquierda"
 const ACCION_DERECHA := "mover_derecha"
 
 const ACCION_USAR: StringName = &"usar"
+
+## Las cuatro direcciones del joystick derecho, que gira la vista.
+const ACCION_MIRAR_IZQUIERDA: StringName = &"mirar_izquierda"
+const ACCION_MIRAR_DERECHA: StringName = &"mirar_derecha"
+const ACCION_MIRAR_ARRIBA: StringName = &"mirar_arriba"
+const ACCION_MIRAR_ABAJO: StringName = &"mirar_abajo"
 
 ## Se mantiene apretada: soltarla levanta la vista.
 const ACCION_AGACHARSE: StringName = &"agacharse"

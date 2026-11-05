@@ -24,6 +24,10 @@ signal puerta_trabada(puerta: Node3D)
 signal porton_trabado(puerta: Node3D)
 signal salida_solicitada
 
+## Una trabada se abrió porque el primario la encontró con su objeto en la mano (BR-PLY-060). Se
+## suma a `puerta_abierta`.
+signal puerta_forzada(puerta: Node3D)
+
 ## La entrada preguntó si se puede salir y la respuesta fue no. Se suma a `puerta_trabada`.
 signal salida_rechazada
 
@@ -64,6 +68,9 @@ const CORRIMIENTO_MINIMO := 0.05
 ## se la declara por su ruta; una puerta sin identidad no dice nada al examinarla.
 var identidad: StringName = &""
 var consultar_salida: Callable
+
+## Qué lleva el jugador en la mano, o `null`. Lo declara la escena a la puerta que cede a un objeto.
+var lo_que_se_lleva: Callable
 
 var _puerta := Puerta.new()
 
@@ -145,6 +152,12 @@ func accionar() -> void:
 			salida_solicitada.emit()
 			return
 		salida_rechazada.emit()
+	if lo_que_se_lleva.is_valid():
+		var llevado: ObjetoDelAlmacen = lo_que_se_lleva.call()
+		if _puerta.forzar(llevado):
+			puerta_abierta.emit(self)
+			puerta_forzada.emit(self)
+			return
 	alternar()
 
 

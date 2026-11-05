@@ -30,6 +30,11 @@ func cambiar_sensibilidad(radianes_por_pixel: float) -> void:
 
 ## Las dos cuentas son asimétricas a propósito.
 func girar(delta_del_mouse: Vector2) -> void:
+	girar_en_radianes(delta_del_mouse * _sensibilidad)
+
+
+## Gira la vista en radianes: `x` a la derecha e `y` hacia abajo, como el delta del mouse.
+func girar_en_radianes(giro: Vector2) -> void:
 	# Los dos signos son negativos: mover el mouse a la derecha tiene que girar la vista a la
 	# derecha, y en Godot eso es un yaw decreciente porque la rotación positiva alrededor de +Y
 	# va al otro lado. Lo mismo para el pitch: bajar el mouse es mirar para abajo.
@@ -37,8 +42,8 @@ func girar(delta_del_mouse: Vector2) -> void:
 	# El yaw da la vuelta —girar en redondo es legal, lo que no puede es que el número crezca
 	# sin límite— y el pitch se clampea, porque acá el límite es el diseño: pasarse es darse
 	# vuelta.
-	_yaw = wrapf(_yaw - delta_del_mouse.x * _sensibilidad, -PI, PI)
-	_pitch = clampf(_pitch - delta_del_mouse.y * _sensibilidad, _pitch_minimo, _pitch_maximo)
+	_yaw = wrapf(_yaw - giro.x, -PI, PI)
+	_pitch = clampf(_pitch - giro.y, _pitch_minimo, _pitch_maximo)
 
 
 ## Deja la vista hacia `nuevo_yaw` y horizontal, sin pasar por el mouse.

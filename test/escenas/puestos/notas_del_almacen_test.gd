@@ -75,6 +75,33 @@ func test_las_seis_hojas_abren_su_propio_dato_y_cierran_con_el_derecho() -> void
 	assert_array(ids).contains_exactly_in_any_order(_ids_de_las_seis_hojas())
 
 
+func test_x_no_cierra_la_nota_ni_aprieta_el_foco_e_interactuar_la_cierra() -> void:  # AC-CFG-029
+	var almacen := await _abrir()
+	var jugador: Node3D = almacen.get_node("Jugador")
+	var puesto: Node = almacen.get_node("Estructura/NotasDelAlmacen")
+	var vista := _vista(almacen)
+	var apretado: Array[bool] = [false]
+	var boton: Button = auto_free(Button.new())
+	boton.pressed.connect(func() -> void: apretado[0] = true)
+	almacen.add_child(boton)
+	boton.grab_focus()
+	_accion(jugador, (puesto.get("notas") as Array)[0], ReglasDeLosObjetos.ACCION_AGARRAR)
+	assert_bool(vista.visible).is_true()
+	assert_object(get_viewport().gui_get_focus_owner()).is_same(boton)
+	var equis := InputEventJoypadButton.new()
+	equis.button_index = JOY_BUTTON_A
+	for presionado: bool in [true, false]:
+		equis.pressed = presionado
+		get_viewport().push_input(equis)
+	assert_bool(vista.visible).is_true()
+	assert_bool(apretado[0]).is_false()
+	var interactuar := InputEventAction.new()
+	interactuar.action = ReglasDelJugador.ACCION_USAR
+	interactuar.pressed = true
+	get_viewport().push_input(interactuar)
+	assert_bool(vista.visible).is_false()
+
+
 func test_cada_objeto_sigue_en_la_mano_al_leer_y_salir() -> void:  # AC-PLY-064
 	var almacen := await _abrir()
 	assert_object(BolsaEnLaMano.preparar(almacen)).is_not_null()

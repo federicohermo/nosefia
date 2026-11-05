@@ -3,7 +3,7 @@ schema_version: 1
 capability_id: CAP-NTF
 status: ratified
 owner: por definir
-provenance: GDD «Notificaciones»; ficha «Sistema de investigación (pistas e hipótesis)»; GJ-43; decisiones de los issues 309, 385 y 435; ocho jornadas de #526; salida voluntaria de #573; siete jornadas de #693; salida con productos de #734
+provenance: GDD «Notificaciones»; ficha «Logros» y decisiones de #381; ficha «Sistema de investigación (pistas e hipótesis)»; GJ-43; decisiones de los issues 309, 385 y 435; ocho jornadas de #526; salida voluntaria de #573; siete jornadas de #693; salida con productos de #734
 ---
 
 # Capacidad: los avisos durante la noche
@@ -11,7 +11,7 @@ provenance: GDD «Notificaciones»; ficha «Sistema de investigación (pistas e 
 ## Propósito
 
 Hacer visibles la llegada y salida por cansancio de un comprador y el rechazo del lector lleno.
-Avisar también una pista nueva, la salida habilitada de las jornadas de prueba
+Avisar también una pista nueva, un logro ganado, la salida habilitada de las jornadas de prueba
 y la proximidad del cierre mientras el jugador reparte su atención entre las tareas.
 Los avisos acompañan esos sucesos sin cambiar su resultado.
 
@@ -20,9 +20,10 @@ Los avisos acompañan esos sucesos sin cambiar su resultado.
 | Término | Significado acá | Evitar |
 |---|---|---|
 | **Notificación** | cartel breve con texto y símbolo de un suceso | ventana, diálogo |
-| **Tipo** | llegada, salida por cansancio, salida por cansancio con productos dejados, lectura fallida por renglones llenos, pista nueva, cierre próximo o tareas terminadas | prioridad |
+| **Tipo** | llegada, salida por cansancio, salida por cansancio con productos dejados, lectura fallida por renglones llenos, pista nueva, logro, cierre próximo o tareas terminadas | prioridad |
 | **Visible** | tipo cuyo tiempo todavía no se agotó | historial |
 | **Comprador avisado** | la misma identidad que ya disparó su llegada durante el turno | mismo nombre |
+| **Logro** | uno de los nueve de [`achievements`](../achievements/achievements.md), con su nombre | medalla |
 | **Pista nueva** | pista cuyo registro acepta investigación por primera vez y desbloquea una hipótesis | objeto revelado, objeto examinado |
 
 ## Comportamiento normativo
@@ -168,6 +169,18 @@ SI sale con el mismo permiso con que entró, ENTONCES NO DEBE dispararse un nuev
 Una habilitación que se pierde antes de salir NO cuenta como avisada. El retiro del aviso
 que ya no vale NO DEBE esperar. SI el turno cierra con la computadora abierta,
 ENTONCES salir de ella NO DEBE mostrar un aviso pendiente.
+
+### BR-NTF-017 — Un logro ganado avisa su nombre
+
+CUANDO se desbloquea un logro (BR-ACH-002), el sistema DEBE mostrar su nombre en mayúsculas, en un
+solo renglón, con el trofeo a la izquierda. El aviso DEBE usar la duración, la pausa, el orden, el
+borde derecho, el fondo y el clic atravesado de BR-NTF-003, BR-NTF-005 y BR-NTF-007. La identidad
+del aviso es el logro: dos logros distintos ganados a la vez DEBEN dejar dos avisos, el más nuevo
+primero, y un logro nunca avisa dos veces (BR-ACH-002). El nombre con «¿», «¡» o «…» DEBE verse
+entero.
+
+Un logro ganado al cerrar la noche DEBE avisarse después de que BR-NTF-006 vacíe los avisos de esa
+noche, y su aviso DEBE verse encima de la pantalla del cierre.
 
 ## Criterios de aceptación
 
@@ -416,16 +429,28 @@ visible; al completar 3,0 desaparece. Repetir la misma identidad en la misma jor
 renueva, y cerrar permite avisar otra vez. Un comprador que dejó productos y otro que no
 dejaron nada, en la misma jornada, dejan dos avisos, uno de cada texto.
 
+### AC-NTF-046 — El logro avisa su nombre y no se repite *(verifica BR-NTF-017, BR-NTF-003, BR-NTF-005, BR-NTF-006)*
+
+DADO cero avisos CUANDO se desbloquea un logro ENTONCES hay un aviso con su nombre en mayúsculas,
+en un solo renglón, con el trofeo a la izquierda, que sigue visible a los 2,9 segundos y desaparece
+al completar 3,0. DADO dos logros distintos desbloqueados en el mismo cuadro ENTONCES hay dos avisos,
+el más nuevo primero. DADO un logro ya ganado CUANDO se cumple otra vez su condición ENTONCES no hay
+aviso. DADO un aviso de logro y otro de pista ENTONCES conviven en el orden de BR-NTF-005. A 1920 × 1080
+y 1280 × 720 el aviso queda dentro de la esquina superior derecha, comparte el borde derecho de la pila
+y deja pasar el clic. Los nombres con «¿», «¡» y «…» se ven enteros con la fuente del tema.
+DADO un logro que se gana al cerrar la noche, con avisos visibles CUANDO cierra el turno ENTONCES los
+avisos de la noche se retiran y el del logro queda visible, encima de la pantalla del cierre.
+
 ## No objetivos
 
 - Esta capacidad NO decide cuándo llegan o se despachan compradores ni acepta lecturas.
 - Esta capacidad NO decide el abandono del comprador ni qué es una pista o qué hipótesis desbloquea.
-- Esta capacidad NO incorpora logros.
+- Esta capacidad NO decide cuándo se gana un logro: lo decide [`achievements`](../achievements/achievements.md).
 - Esta capacidad NO guarda avisos entre sesiones.
 
 ## Contratos
 
-- **Entrada:** identidad de quien llega o vence y si ya había recibido un producto, motivo de lectura, confirmación de pista nueva
+- **Entrada:** un logro desbloqueado, identidad de quien llega o vence y si ya había recibido un producto, motivo de lectura, confirmación de pista nueva
   anotada por investigación, tiempo en ejecución, tiempo restante de ficción del turno abierto,
   salida habilitada o vuelta a trabar, computadora abierta o cerrada y cierre.
 - **Salida:** tipos visibles ordenados, texto y símbolo correspondientes.
@@ -434,7 +459,7 @@ dejaron nada, en la misma jornada, dejan dos avisos, uno de cada texto.
 
 ## Señales
 
-- Escucha llegada, vencimiento, rechazo, pista nueva anotada, tiempo restante, salida habilitada
+- Escucha llegada, vencimiento, rechazo, pista nueva anotada, logro desbloqueado, tiempo restante, salida habilitada
   o vuelta a trabar y cierre.
   No emite decisiones a las capacidades que los publican.
 
@@ -445,6 +470,7 @@ dejaron nada, en la misma jornada, dejan dos avisos, uno de cada texto.
 - `player-actions` (consume): suspensión del procesamiento durante la pausa.
 - [`investigation`](../investigation/investigation.md) (consume): confirmación de pista nueva
   anotada que desbloquea una hipótesis; una revelación de objeto no reemplaza esa confirmación.
+- [`achievements`](../achievements/achievements.md) (consume): el logro recién desbloqueado y su nombre.
 
 ## Preguntas abiertas
 

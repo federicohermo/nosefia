@@ -197,12 +197,22 @@ func test_cada_canal_piensa_su_texto() -> void:  # AC-SUB-027, AC-SUB-033
 		C.COMPRADOR: S.PRIMERA_PISTA_COMPRADOR,
 		C.CHAT: S.PRIMERA_PISTA_CHAT,
 	}
-	assert_int(esperados.size()).is_equal(C.values().size())
+	assert_int(esperados.size() + 1).is_equal(C.values().size())
 	for canal: C in esperados:
 		var gestos := SubtitulosDeLosGestos.new()
 		assert_int(gestos.al_anotar_una_pista(Partida.nueva(), false, canal)).is_equal(
 			esperados[canal]
 		)
+
+
+func test_una_pista_de_accion_no_piensa_ni_gasta_el_primer_pensamiento() -> void:  # AC-SUB-033
+	var partida := Partida.nueva()
+	var gestos := SubtitulosDeLosGestos.new()
+	assert_int(gestos.al_anotar_una_pista(partida, false, C.ACCION)).is_equal(S.NINGUNO)
+	assert_bool(partida.primera_pista_pensada).is_false()
+	assert_int(gestos.al_anotar_una_pista(partida, false, C.LEVANTAR)).is_equal(
+		S.PRIMERA_PISTA_OBJETO
+	)
 
 
 func test_con_el_celular_abierto_la_primera_pista_espera_y_no_se_duplica() -> void:  # AC-SUB-027

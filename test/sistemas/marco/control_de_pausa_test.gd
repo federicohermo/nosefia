@@ -248,3 +248,25 @@ func test_el_cursor_que_suelta_el_esc_de_la_interfaz_no_pausa() -> void:  # AC-P
 	control._mirar_el_cursor()
 	assert_bool(get_tree().paused).is_false()
 	assert_int(_pausas).is_zero()
+
+
+func test_con_logros_abierta_esc_la_cierra_y_sigue_en_pausa() -> void:  # AC-SAV-037
+	var logros: CanvasLayer = auto_free(CanvasLayer.new())
+	logros.visible = false
+	var control := _control()
+	control.logros = logros
+	var cierres_de_logros: Array[int] = []
+	control.cierre_de_logros_pedido.connect(
+		func() -> void:
+			cierres_de_logros.append(1)
+			logros.hide()
+	)
+	control._input(_esc())
+	logros.show()
+	control._input(_esc())
+	assert_int(cierres_de_logros.size()).is_equal(1)
+	assert_bool(logros.visible).is_false()
+	assert_bool(get_tree().paused).is_true()
+	assert_int(_reanudaciones).is_zero()
+	control._input(_esc())
+	assert_bool(get_tree().paused).is_false()

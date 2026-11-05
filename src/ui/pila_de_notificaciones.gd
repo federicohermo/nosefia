@@ -26,6 +26,7 @@ const SIMBOLOS := {
 	Notificaciones.Tipo.TAREAS_TERMINADAS:
 	preload("res://assets/ui/manada/notificacion_tareas_completadas.svg"),
 	Notificaciones.Tipo.CLIENTE_CANSADO_CON_PRODUCTOS: SIMBOLO_DE_LA_SALIDA,
+	Notificaciones.Tipo.LOGRO: preload("res://assets/ui/manada/notificacion_logro.svg"),
 }
 const ESCALA_DEL_CARTEL := 0.4
 const PROPORCION_DEL_TITULO := 32.0 / 56.0
@@ -57,8 +58,9 @@ class AvisoEnPantalla:
 @export var _estilo: StyleBoxFlat
 
 var _estado := Notificaciones.new()
-var _dibujadas: Array[Notificaciones.Tipo] = []
-var _activos: Dictionary[Notificaciones.Tipo, AvisoEnPantalla] = {}
+## Cada aviso por su clave: un logro es un aviso por logro, no uno por tipo.
+var _dibujadas: Array[int] = []
+var _activos: Dictionary[int, AvisoEnPantalla] = {}
 var _saliendo: Array[AvisoEnPantalla] = []
 
 
@@ -99,6 +101,11 @@ func avisar_pista() -> void:
 	_pintar()
 
 
+func avisar_logro(logro: Logros.Logro) -> void:
+	_estado.logro_desbloqueado(logro)
+	_pintar()
+
+
 func actualizar_salida(disponible: bool) -> void:
 	_estado.actualizar_salida(disponible)
 	_pintar()
@@ -123,27 +130,27 @@ func vaciar() -> void:
 
 
 func _pintar() -> void:
-	var actuales := _estado.visibles()
+	var actuales := _estado.avisos()
 	if actuales == _dibujadas:
 		return
-	for tipo: Notificaciones.Tipo in _activos.keys():
-		if not actuales.has(tipo):
-			_despedir(tipo)
+	for clave: int in _activos.keys():
+		if not actuales.has(clave):
+			_despedir(clave)
 	for indice in actuales.size():
-		var tipo := actuales[indice]
-		if not _activos.has(tipo):
-			var aviso := AvisoEnPantalla.new(_cartel(tipo))
+		var clave := actuales[indice]
+		if not _activos.has(clave):
+			var aviso := AvisoEnPantalla.new(_cartel(clave))
 			if get_tree().paused:
 				aviso.entrada = 1.0
-			_activos[tipo] = aviso
+			_activos[clave] = aviso
 			_pila.add_child(aviso.cartel)
-		_pila.move_child(_activos[tipo].cartel, indice)
+		_pila.move_child(_activos[clave].cartel, indice)
 	_dibujadas = actuales
 
 
-func _despedir(tipo: Notificaciones.Tipo) -> void:
-	var aviso := _activos[tipo]
-	_activos.erase(tipo)
+func _despedir(clave: int) -> void:
+	var aviso := _activos[clave]
+	_activos.erase(clave)
 	var cartel := aviso.cartel
 	aviso.recorrido = _recorrido_hasta_el_borde(cartel)
 	var posicion := cartel.position + _pila.position
@@ -193,7 +200,8 @@ func _recorrido_hasta_el_borde(cartel: Control) -> float:
 	return (borde - cartel.get_global_rect().position.x) / _marco.scale.x
 
 
-func _cartel(tipo: Notificaciones.Tipo) -> PanelContainer:
+func _cartel(clave: int) -> PanelContainer:
+	var tipo := Notificaciones.tipo_de(clave)
 	var cartel := PanelContainer.new()
 	cartel.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	cartel.size_flags_horizontal = Control.SIZE_SHRINK_END
@@ -209,7 +217,7 @@ func _cartel(tipo: Notificaciones.Tipo) -> PanelContainer:
 	simbolo.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 	simbolo.custom_minimum_size = simbolo.texture.get_size() * ESCALA_DEL_CARTEL
 	fila.add_child(simbolo)
-	var texto := _etiqueta(TEXTOS[tipo])
+	var texto := _etiqueta(_texto_de(clave))
 	if TITULOS.has(tipo):
 		var titulo := _etiqueta(TITULOS[tipo])
 		titulo.name = &"Titulo"
@@ -225,6 +233,13 @@ func _cartel(tipo: Notificaciones.Tipo) -> PanelContainer:
 	else:
 		fila.add_child(texto)
 	return cartel
+
+
+## El nombre del logro, en mayúsculas y en un renglón, como el resto de los avisos.
+func _texto_de(clave: int) -> String:
+	if Notificaciones.tipo_de(clave) == Notificaciones.Tipo.LOGRO:
+		return Logros.nombre(Notificaciones.logro_de(clave)).to_upper()
+	return TEXTOS[Notificaciones.tipo_de(clave)]
 
 
 func _etiqueta(contenido: String) -> Label:

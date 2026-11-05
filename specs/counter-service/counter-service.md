@@ -551,7 +551,9 @@ noches y los de la jornada 7 usan la apertura y la despedida predeterminadas, y 
 inventarles guion. Un guion propio DEBE decir sus entradas de apertura en el orden de la ficha, una
 por una, y después sus entradas de despedida, también en su orden; la ficha no tiene un mensaje 9
 de Cami y el sistema NO DEBE inventarlo. Cami dice en la jornada 5 los dos mensajes 3 y 4 de la
-ficha. Una entrada puede nombrar el pedido de esa noche: «[pedido]» es el pedido entero con la
+ficha. El mensaje de «actitudes extrañas de Peldaño» de la jornada 5 sólo se dice SI la pista 5A
+está activa por el camino abierto (BR-INV-050); SI no lo está, ENTONCES el sistema NO DEBE decirlo y
+las demás entradas DEBEN conservar su orden. Una entrada puede nombrar el pedido de esa noche: «[pedido]» es el pedido entero con la
 enumeración de BR-CTR-039 («a», «a y b» o «a, b y c»), y «[producto1]», «[producto2]» y
 «[producto3]» son el primero, el segundo y el tercero del pedido, presentados como en BR-CTR-039.
 En todos sólo los nombres de producto DEBEN llevar amarillo. La apertura propia termina como la
@@ -1399,9 +1401,11 @@ despedida.
 
 ### AC-CTR-157 — Cami en la jornada 5 dice su guion y nombra el pedido entero *(verifica BR-CTR-048)*
 
-DADO la jornada 5 CUANDO se le habla a Cami por primera vez ENTONCES dice 10 entradas de apertura
-en el orden de la ficha, los mensajes 1 a 8 y 10 y 11, con los mensajes 3 y 4 los dos; la del
-mensaje 10 nombra el pedido entero. CUANDO se completa su compra ENTONCES vende una sola vez, dice
+DADO la jornada 5 con la pista 5A activa CUANDO se le habla a Cami por primera vez ENTONCES dice 10
+entradas de apertura en el orden de la ficha, los mensajes 1 a 8 y 10 y 11, con los mensajes 3 y 4
+los dos; la del mensaje 10 nombra el pedido entero. DADO la jornada 5 sin la pista 5A activa
+ENTONCES dice 9 entradas: las mismas, sin la de «actitudes extrañas de Peldaño», en su orden y con
+la del pedido entero como penúltima. CUANDO se completa su compra ENTONCES vende una sola vez, dice
 3 entradas de despedida y no se retira hasta terminarlas.
 
 ### AC-CTR-158 — Los demás compradores usan el guion predeterminado *(verifica BR-CTR-048)*

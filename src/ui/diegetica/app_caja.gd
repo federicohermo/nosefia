@@ -25,6 +25,8 @@ const TEXTO_DEL_DESPLAZAMIENTO := "ARRASTRÁ PARA DESPLAZAR  /  + − AJUSTAR UN
 const TEXTO_DE_LA_ETIQUETA_TOTAL := "TOTAL"
 const TEXTO_DE_SUMAR := "+"
 const TEXTO_DE_RESTAR := "−"
+## La fila que la cruceta tiene elegida se aclara: el panel no dibuja el foco.
+const COLOR_DE_LA_FILA_ELEGIDA := Color(1.35, 1.35, 1.35)
 
 ## El ancho de cada columna fija, igual en el encabezado y en las filas. La marca y el rubro
 ## se reparten lo que sobra según su peso.
@@ -174,6 +176,8 @@ func mostrar(registro: RegistroDeVentas) -> void:
 		var unidades: Label = _unidades_por_id[producto.id]
 		unidades.text = str(registro.unidades_de(producto))
 	_total.text = texto_de_pesos(registro.total())
+	if is_visible_in_tree():
+		FocoDeLaInterfaz.en_el_primero(_filas)
 
 
 ## El monto con el signo, un espacio y el punto como separador de miles. La planilla no produce
@@ -214,6 +218,12 @@ func _fila_de(producto: Producto) -> PanelContainer:
 	panel.custom_minimum_size = Vector2(0, ALTO_DE_LA_FILA)
 	panel.mouse_filter = Control.MOUSE_FILTER_PASS
 	panel.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
+	# Con el joystick se elige la fila entera: arriba y abajo pasan de producto, y los costados
+	# restan y suman. Los dos botones siguen siendo del clic.
+	panel.focus_mode = Control.FOCUS_ALL
+	panel.gui_input.connect(_al_elegir_la_fila.bind(producto, panel))
+	panel.focus_entered.connect(_resaltar.bind(panel, true))
+	panel.focus_exited.connect(_resaltar.bind(panel, false))
 	var fila := HBoxContainer.new()
 	fila.add_theme_constant_override(&"separation", 24)
 	fila.mouse_filter = Control.MOUSE_FILTER_PASS
@@ -260,6 +270,20 @@ func _etiqueta(texto: String, ancho: float, peso: float = 0.0) -> Label:
 	return etiqueta
 
 
+func _resaltar(panel: PanelContainer, elegida: bool) -> void:
+	panel.self_modulate = COLOR_DE_LA_FILA_ELEGIDA if elegida else Color.WHITE
+
+
+## Con la fila elegida, la izquierda resta una unidad y la derecha suma una.
+func _al_elegir_la_fila(evento: InputEvent, producto: Producto, panel: PanelContainer) -> void:
+	if evento.is_action_pressed(&"ui_left"):
+		resta_pedida.emit(producto)
+		panel.accept_event()
+	elif evento.is_action_pressed(&"ui_right"):
+		suma_pedida.emit(producto)
+		panel.accept_event()
+
+
 ## El clic queda en el botón y la rueda llega a la lista. Así un «+» no inicia un arrastre.
 func _boton(texto: String, al_apretar: Callable) -> Button:
 	var boton := Button.new()
@@ -270,5 +294,6 @@ func _boton(texto: String, al_apretar: Callable) -> Button:
 	boton.mouse_filter = Control.MOUSE_FILTER_STOP
 	boton.mouse_force_pass_scroll_events = true
 	boton.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
+	boton.focus_mode = Control.FOCUS_NONE
 	boton.pressed.connect(al_apretar)
 	return boton

@@ -40,9 +40,24 @@ func _cuadros(cantidad: int = 3) -> void:
 		await get_tree().process_frame
 
 
+## La primera semilla con la que, sin pistas en la 5 y con 2A elegida, la 6 sortea ese camino.
+func _semilla_que_sortea(identidad: String) -> int:
+	for semilla: int in range(1, 65):
+		var partida := Partida.desde({"jornada": JORNADA_DE_LA_NOTA, "semilla": semilla})
+		partida.expediente.registrar("2A")
+		partida.expediente.elegir(JORNADA_DE_LA_NOTA - 2, "2A")
+		partida.abrir_la_jornada()
+		if partida.expediente.sorteos().get(JORNADA_DE_LA_NOTA, "") == identidad:
+			return semilla
+	return 0
+
+
 ## Abre la jornada con lo que se eligió antes: las hipótesis elegidas por jornada y sus pistas.
-func _abrir(jornada: int, elecciones: Dictionary = {}) -> void:
+## Con `semilla` cero, la partida trae una al azar.
+func _abrir(jornada: int, elecciones: Dictionary = {}, semilla: int = 0) -> void:
 	var guardada := {"jornada": jornada, "medios": 0, "elecciones": elecciones}
+	if semilla > 0:
+		guardada["semilla"] = semilla
 	var encontradas: Array[String] = []
 	for hipotesis: String in elecciones.values():
 		encontradas.append(hipotesis)
@@ -85,9 +100,12 @@ func _la_mira_la_encuentra(nota: ObjetoAgarrable) -> bool:
 
 
 func test_la_nota_se_ve_y_se_enfoca_con_la_5b_elegida_o_sorteada() -> void:  # AC-INV-121
-	var elecciones: Array[Dictionary] = [_por_la_5b(), {JORNADA_DE_LA_NOTA - 2: "2A"}]
-	for eleccion: Dictionary in elecciones:
-		await _abrir(JORNADA_DE_LA_NOTA, eleccion)
+	var semilla := _semilla_que_sortea("5B")
+	assert_int(semilla).is_greater(0)
+	var casos: Array[Array] = [[_por_la_5b(), 0], [{JORNADA_DE_LA_NOTA - 2: "2A"}, semilla]]
+	for caso: Array in casos:
+		var eleccion: Dictionary = caso[0]
+		await _abrir(JORNADA_DE_LA_NOTA, eleccion, caso[1])
 		var nota := _nota()
 		assert_object(nota).is_not_null()
 		if nota == null:
@@ -103,13 +121,14 @@ func test_la_nota_se_ve_y_se_enfoca_con_la_5b_elegida_o_sorteada() -> void:  # A
 
 func test_otra_jornada_u_otra_eleccion_no_dejan_ver_la_nota() -> void:  # AC-INV-121
 	var casos: Array[Array] = [
-		[JORNADA_DE_LA_NOTA - 1, _por_la_5b()],
-		[JORNADA_DE_LA_NOTA + 1, _por_la_5b()],
-		[JORNADA_DE_LA_NOTA, {JORNADA_DE_LA_NOTA - 2: "2B"}],
-		[JORNADA_DE_LA_NOTA, {}],
+		[JORNADA_DE_LA_NOTA - 1, _por_la_5b(), 0],
+		[JORNADA_DE_LA_NOTA + 1, _por_la_5b(), 0],
+		[JORNADA_DE_LA_NOTA, {JORNADA_DE_LA_NOTA - 2: "2B"}, 0],
+		[JORNADA_DE_LA_NOTA, {}, 0],
+		[JORNADA_DE_LA_NOTA, {JORNADA_DE_LA_NOTA - 2: "2A"}, _semilla_que_sortea("5A")],
 	]
 	for caso: Array in casos:
-		await _abrir(caso[0], caso[1])
+		await _abrir(caso[0], caso[1], caso[2])
 		var nota := _nota()
 		assert_object(nota).is_not_null()
 		if nota == null:
