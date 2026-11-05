@@ -388,9 +388,9 @@ Los textos de hipótesis DEBEN ser:
 La errata «cigarrilo» DEBE conservarse como aparece en la fuente. Las fotos DEBEN representar
 los motivos indicados; NO DEBEN reemplazarse por imágenes de otro personaje u objeto.
 
-### BR-INV-042 — El cierre de las jornadas 3, 4 y 5 pasa a las notas
+### BR-INV-042 — El cierre de las jornadas 3, 4, 5 y 6 pasa a las notas
 
-CUANDO se elige continuar al terminar la devolución de jornada 3, 4 o 5 con la partida en curso
+CUANDO se elige continuar al terminar la devolución de jornada 3, 4, 5 o 6 con la partida en curso
 (BR-EMP-011), el sistema DEBE pasar a la reflexión de cierre sobre la misma persiana baja. El
 celular DEBE desplazarse desde el centro hasta la mitad izquierda del encuadre sin salir por el
 margen inferior, y abrir el chat de notas en modo fijo (BR-INV-026). Un recuadro con el
@@ -1079,7 +1079,7 @@ rueda desplaza y una foto se amplía y se cierra. El turno no descuenta y el jug
 
 ### AC-INV-058 — Sin reflexión, y la apertura siguiente al centro *(verifica BR-INV-042)*
 
-DADO un despido en jornada 3, 4 o 5 CUANDO termina su devolución ENTONCES sólo se ofrece volver al
+DADO un despido en jornada 3, 4, 5 o 6 CUANDO termina su devolución ENTONCES sólo se ofrece volver al
 menú y no aparece la reflexión. DADO el cierre de la jornada 1 o 2 con la partida en curso
 CUANDO se elige continuar ENTONCES el celular baja y empieza la noche siguiente, sin reflexión.
 DADO la reflexión de jornada 3 terminada CUANDO empieza la entrada ENTONCES el celular está
@@ -1489,8 +1489,8 @@ datos, y 5B suma el camino de 6C y 6D.
 ### AC-INV-124 — La hipótesis 6C depende de la pista 6C *(verifica BR-INV-070, BR-INV-039)*
 
 DADO el caso de la partida CUANDO se consultan las hipótesis de la jornada 6 con 6C registrada
-ENTONCES devuelve exactamente la hipótesis 6C; con el expediente vacío o con sólo 2A y 5B devuelve
-ninguna. DADO las jornadas 4 y 5 CUANDO se consultan las hipótesis ENTONCES las combinaciones de
+ENTONCES devuelve exactamente la hipótesis 6C; con el expediente vacío devuelve exactamente la 6P,
+y con sólo 2A y 5B, exactamente la 6L (BR-INV-116). DADO las jornadas 4 y 5 CUANDO se consultan las hipótesis ENTONCES las combinaciones de
 BR-INV-039 y BR-INV-061 no cambian.
 
 ### AC-INV-125 — Con 2A y 5B elegidas la nota se levanta; con 2A y 5P, no *(verifica BR-INV-070, BR-INV-062)*
