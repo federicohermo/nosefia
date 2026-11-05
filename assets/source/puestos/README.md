@@ -86,3 +86,35 @@ la malla. `importar_caja.gd` guarda `router.res` y su colisión convexa al impor
 El router va donde lo dejó el artista, sobre el escritorio, con la correspondencia de la caja
 registradora y el corrimiento del escritorio vigente: la computadora y el teclado están
 `(0.25, 0.2269, 0)` más allá que en la fuente. El cuerpo queda en `(1.4774, 1.2071, 5.0256)`.
+
+## Las cajas del proveedor
+
+La caja de cartón del proveedor y la caja de madera de Fernet God salen de `modelossupermercado`,
+revisión `4eb137ae44684b0e23ca509a611dc2d660afee53`. Los `.blend` y las imágenes son los del
+artista, sin tocar: se copiaron con su disposición de carpetas, porque el `.blend` enlaza las
+imágenes por ruta relativa.
+
+| Archivo en la rama (`assets/models/Cajas_jornada7/`) | Blob | Acá |
+|---|---|---|
+| `CajaProveedor.blend` | `2e81dc4d050e6a6b62d3d37377cdc6edd22ae813` | `caja_del_proveedor.blend` |
+| `Texturas caja proveedor/caja proveedor uvs.png` | `8a3b50e3b5eb30ce7603f2c9a0bbc5a1c1b2f5c7` | igual |
+| `CajaDeMadera.blend` | `34d28bb3a9d9f235822d6ec20bafbd09b38de8e0` | `caja_de_madera.blend` |
+| `Texturas caja madera/textura madera frontal.png` | `01ae9e0037a68bfa3958bfe034456960db26b22d` | igual |
+| `Texturas caja madera/textura madera laterales.png` | `1c881f7973fc8561cfd27e3bfea3a642d16a7438` | igual |
+
+Cada `.blend` se exporta a un GLB con una sola malla y un material por pieza, con Blender 5.2,
+desde la raíz del repositorio:
+
+```powershell
+blender assets/source/puestos/caja_del_proveedor.blend --background --python-exit-code 1 --python .claude/scripts/blender/exportar_cajas_del_proveedor.py -- assets/models caja_del_proveedor
+blender assets/source/puestos/caja_de_madera.blend --background --python-exit-code 1 --python .claude/scripts/blender/exportar_cajas_del_proveedor.py -- assets/models caja_de_madera
+```
+
+El exportador evalúa los modificadores antes de aplicar la transformación, apoya la malla en el
+piso con el centro de su base en el origen y limita las imágenes a 1024 píxeles. Conserva la
+escala del artista: la caja del proveedor mide lo que dos cajas contenedoras grandes una al lado
+de la otra, así que la escena la escala como a una caja de productos grande. La textura del
+cartón conserva las etiquetas y los símbolos del artista, y la caja de madera trae su tapa.
+
+Al reimportar los GLB, `assets/models/importar_caja.gd` guarda las mallas `.res` y su casco
+convexo de colisión: lo levantable se apoya sobre el casco.

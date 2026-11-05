@@ -34,8 +34,12 @@ const DE_DOS_RENGLONES: Array[StringName] = [
 	&"jabon_azul",
 	&"jabon_rosa",
 	&"jabon_amarillo",
+	SubtitulosAlExaminar.CAJA_DEL_PROVEEDOR,
 	&"palanca",
 ]
+
+## Y los que se ven en tres.
+const DE_TRES_RENGLONES: Array[StringName] = [SubtitulosAlExaminar.CAJA_DE_MADERA]
 
 
 func _textos_fijos_por_id() -> Dictionary:
@@ -85,6 +89,22 @@ func test_cada_id_fijo_elige_su_subtitulo() -> void:  # AC-SUB-013
 		assert_str(SubtitulosAlExaminar.de_lo_fijo(id)).is_equal(textos[id])
 
 
+func test_las_cajas_del_proveedor_dicen_su_texto_y_no_el_de_un_producto() -> void:  # AC-SUB-050
+	var cajas: Array[StringName] = [
+		SubtitulosAlExaminar.CAJA_DEL_PROVEEDOR, SubtitulosAlExaminar.CAJA_DE_MADERA
+	]
+	var vistos: Array[String] = []
+	for id in cajas:
+		var texto := SubtitulosAlExaminar.de_lo_fijo(id)
+		assert_str(texto).override_failure_message("%s no tiene texto" % id).is_not_empty()
+		assert_bool(texto in vistos).is_false()
+		vistos.append(texto)
+		assert_int(texto.split("\n").size()).is_equal(_renglones_de_la_ficha(id))
+	for producto: Producto in Catalogo.todos():
+		assert_str(SubtitulosAlExaminar.de_producto(producto.id)).is_not_equal(vistos[0])
+		assert_str(SubtitulosAlExaminar.de_producto(producto.id)).is_not_equal(vistos[1])
+
+
 func test_lo_que_no_esta_en_la_tabla_no_dice_nada() -> void:  # AC-SUB-013
 	for id: StringName in [&"", &"ventanilla", &"puerta_de_heladera", &"gondola", &"mancha"]:
 		assert_str(SubtitulosAlExaminar.de_lo_fijo(id)).is_empty()
@@ -98,6 +118,8 @@ func test_el_texto_no_es_la_revelacion() -> void:  # AC-SUB-010
 
 
 func _renglones_de_la_ficha(id: StringName) -> int:
+	if id in DE_TRES_RENGLONES:
+		return 3
 	if id in DE_DOS_RENGLONES:
 		return 2
 	var de_dos: Array[StringName] = [
