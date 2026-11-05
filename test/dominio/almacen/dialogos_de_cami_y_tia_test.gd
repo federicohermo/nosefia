@@ -49,7 +49,11 @@ func _entradas(dialogo: Dialogo) -> PackedStringArray:
 
 
 func _apertura(comprador: Comprador) -> PackedStringArray:
-	return _entradas(comprador.dialogos.inicial(comprador.personaje, comprador.pedido()))
+	return _entradas(
+		comprador.dialogos.inicial(
+			comprador.personaje, comprador.pedido(), comprador.pistas_activas
+		)
+	)
 
 
 func _despedida(comprador: Comprador) -> PackedStringArray:
