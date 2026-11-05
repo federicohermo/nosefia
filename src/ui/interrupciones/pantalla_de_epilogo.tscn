@@ -1,7 +1,15 @@
-[gd_scene load_steps=3 format=3]
+[gd_scene load_steps=4 format=3]
 
 [ext_resource type="Script" path="res://src/ui/interrupciones/pantalla_de_epilogo.gd" id="1_pantalla"]
 [ext_resource type="Theme" path="res://assets/ui/manada/tema.tres" id="2_tema"]
+
+[sub_resource type="Gradient" id="Lectura"]
+offsets = PackedFloat32Array(0, 0.25, 0.75, 1)
+colors = PackedColorArray(0, 0, 0, 0, 0, 0, 0, 0.7, 0, 0, 0, 0.7, 0, 0, 0, 0)
+
+[sub_resource type="GradientTexture2D" id="GradienteDeLectura"]
+gradient = SubResource("Lectura")
+fill_to = Vector2(0, 1)
 
 [node name="PantallaDeEpilogo" type="CanvasLayer" node_paths=PackedStringArray("_placa", "_fondo", "_marco", "_texto", "_boton", "_negro")]
 layer = 6
@@ -35,16 +43,6 @@ mouse_filter = 2
 expand_mode = 1
 stretch_mode = 6
 
-[node name="Velo" type="ColorRect" parent="Placa"]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-mouse_filter = 2
-color = Color(0, 0, 0, 0.45)
-
 [node name="Marco" type="Control" parent="Placa"]
 layout_mode = 3
 anchors_preset = 0
@@ -53,23 +51,34 @@ offset_bottom = 1080.0
 mouse_filter = 2
 theme = ExtResource("2_tema")
 
+[node name="Lectura" type="TextureRect" parent="Placa/Marco"]
+layout_mode = 0
+offset_top = 360.0
+offset_right = 1920.0
+offset_bottom = 780.0
+mouse_filter = 2
+texture = SubResource("GradienteDeLectura")
+expand_mode = 1
+
 [node name="Contenido" type="VBoxContainer" parent="Placa/Marco"]
 layout_mode = 0
-offset_left = 440.0
-offset_top = 200.0
-offset_right = 1480.0
-offset_bottom = 880.0
-theme_override_constants/separation = 56
+offset_left = 280.0
+offset_top = 300.0
+offset_right = 1640.0
+offset_bottom = 840.0
+theme_override_constants/separation = 31
 alignment = 1
 
 [node name="Texto" type="Label" parent="Placa/Marco/Contenido"]
 layout_mode = 2
-theme_override_font_sizes/font_size = 30
+theme_override_colors/font_color = Color(0.941176, 0.956863, 0.819608, 1)
+theme_override_constants/line_spacing = 14
+theme_override_font_sizes/font_size = 34
 horizontal_alignment = 1
 autowrap_mode = 3
 
 [node name="Boton" type="Button" parent="Placa/Marco/Contenido"]
-custom_minimum_size = Vector2(560, 72)
+custom_minimum_size = Vector2(360, 64)
 layout_mode = 2
 size_flags_horizontal = 4
 theme_type_variation = &"BotonContinuar"
