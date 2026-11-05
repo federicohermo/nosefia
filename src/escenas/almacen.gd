@@ -973,6 +973,7 @@ func cuerpos_sin_copias() -> Array[Node3D]:
 
 func retomar_la_partida() -> void:
 	if _partida.reflexion == null:
+		_celular.dar_por_leidos_los_anteriores_a(_partida.jornada())
 		_entrar_a_la_jornada()
 		return
 	_jugador.suspender()
@@ -980,6 +981,7 @@ func retomar_la_partida() -> void:
 	(get_node("Interfaz/PersianaDeLaNoche") as PersianaDeLaNoche).mostrar_baja()
 	_jornada_del_celular = _partida.reflexion.jornada()
 	_celular.bandeja().abrir_jornada(_jornada_del_celular, _condiciones_del_jefe())
+	_celular.dar_por_leidos_los_anteriores_a(_jornada_del_celular + 1)
 	_pantalla.visible = true
 	_empezar_la_reflexion()
 

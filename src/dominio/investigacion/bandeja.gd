@@ -6,6 +6,8 @@ var _conversaciones: Array[Conversacion] = []
 var _leidos: Dictionary[Conversacion.Interlocutor, int] = {}
 var _recibidos: Dictionary[Conversacion.Interlocutor, Array] = {}
 var _jornada: int = 1
+## Lo de jornadas anteriores a ésta no cuenta como nuevo, esté donde esté la marca de `_leidos`.
+var _primera_jornada_nueva: int = 0
 var _condiciones: Array[StringName] = []
 var _quejas: QuejasDeLaJornada = null
 
@@ -118,7 +120,12 @@ func esta_leida(quien: Conversacion.Interlocutor) -> bool:
 
 
 func no_leidos(quien: Conversacion.Interlocutor) -> int:
-	return maxi(0, mensajes_de(quien).size() - _leidos.get(quien, 0))
+	var sin_leer := 0
+	var mensajes := mensajes_de(quien)
+	for posicion in range(_leidos.get(quien, 0), mensajes.size()):
+		if mensajes[posicion].jornada >= _primera_jornada_nueva:
+			sin_leer += 1
+	return sin_leer
 
 
 func no_leidos_totales() -> int:
@@ -130,8 +137,17 @@ func no_leidos_totales() -> int:
 
 ## El lugar, en `mensajes_de`, del primer mensaje sin leer; -1 si el chat está al día.
 func primer_no_leido(quien: Conversacion.Interlocutor) -> int:
-	var sin_leer := no_leidos(quien)
-	return -1 if sin_leer == 0 else mensajes_de(quien).size() - sin_leer
+	var mensajes := mensajes_de(quien)
+	for posicion in range(_leidos.get(quien, 0), mensajes.size()):
+		if mensajes[posicion].jornada >= _primera_jornada_nueva:
+			return posicion
+	return -1
+
+
+## Al continuar una partida: sólo cuentan como nuevos los mensajes de `jornada` en adelante. Las
+## devoluciones sin jornada tienen la 0, y por eso también quedan leídas.
+func dar_por_leidos_los_anteriores_a(jornada: int) -> void:
+	_primera_jornada_nueva = jornada
 
 
 func marcar_leida(quien: Conversacion.Interlocutor) -> bool:
