@@ -3,7 +3,7 @@ schema_version: 1
 capability_id: CAP-PLY
 status: ratified
 owner: por definir
-provenance: GDD «Controles»; fichas «8. Tarea: Reposición», «Notas», «Interfaces virtuales durante la jornada» y «Referencia de controles»; decisiones de #368, #369, #370, #373 y #382; migración de los specs 003, 004, 006, 014, 034, 043; fichas de interacción, limpieza y basura revisadas el 2026-10-15; decisiones de #425, bordes de GJ-52 (#428) e interacción directa con compradores (#429); ocho jornadas de #526; cuartito de limpieza de #541; depósito trabado en la jornada 1 y baño abierto en todas de #574; salida voluntaria de #573; ticket escrito de #580; agacharse de #177; empuje de útiles y bolsas de #563; hoja que se frena con lo pesado de #218; patada a la unidad de #219; compuerta del mostrador empujada de #695; Esc que sale de las interfaces de #607; joystick de #380; la fila «7B» de la lista de pistas e hipótesis y la fila «Palanca» de «Objetos interactuables», de #790
+provenance: GDD «Controles»; fichas «8. Tarea: Reposición», «Notas», «Interfaces virtuales durante la jornada» y «Referencia de controles»; decisiones de #368, #369, #370, #373 y #382; migración de los specs 003, 004, 006, 014, 034, 043; fichas de interacción, limpieza y basura revisadas el 2026-10-15; decisiones de #425, bordes de GJ-52 (#428) e interacción directa con compradores (#429); ocho jornadas de #526; cuartito de limpieza de #541; depósito trabado en la jornada 1 y baño abierto en todas de #574; salida voluntaria de #573; ticket escrito de #580; agacharse de #177; empuje de útiles y bolsas de #563; hoja que se frena con lo pesado de #218; patada a la unidad de #219; compuerta del mostrador empujada de #695; Esc que sale de las interfaces de #607; joystick de #380; la fila «7B» de la lista de pistas e hipótesis y la fila «Palanca» de «Objetos interactuables», de #790; la fila «Llave» de «Objetos interactuables», de #810
 ---
 
 # Capacidad: lo que el empleado puede hacer
@@ -260,7 +260,7 @@ CUANDO se hace el primario sobre una puerta interior, de heladera o trabada, la 
 la caja registradora o una nota pegada, el sistema DEBE resolver esa interacción
 con las manos vacías o con cualquier cosa en la mano. Las puertas habilitadas DEBEN alternar, salvo la salida de BR-PLY-041;
 las trabadas DEBEN avisar una vez por pulsación sin girar, salvo la oficina del jefe con la
-palanca de BR-PLY-060; los paneles DEBEN abrirse y las notas
+palanca o la llave de BR-PLY-060; los paneles DEBEN abrirse y las notas
 DEBEN mostrar su lectura. Lo que se lleva DEBE seguir en la mano sin soltarse ni usarse.
 La atención DEBE iniciarse sobre la persona según BR-PLY-034, sin abrir el hueco.
 
@@ -270,15 +270,16 @@ reposición con ninguno de los dos gestos. SI el control está suspendido, ENTON
 gesto DEBE abrir ni alternar lo fijo. El clic que cierra una interfaz DEBE consumirse antes
 de devolver el control: NO DEBE actuar también sobre el mundo.
 
-### BR-PLY-060 — Con la palanca en la mano, la oficina del jefe abre
+### BR-PLY-060 — Con la palanca o la llave en la mano, la oficina del jefe abre
 
-CUANDO se hace el primario sobre la puerta de la oficina del jefe con la palanca (BR-INV-141) en
-la mano, el sistema DEBE abrirla en vez de avisar que está trabada, y avisar una vez que se abrió
-(BR-PLY-020). Con las manos vacías o con cualquier otra cosa en la mano, la puerta DEBE seguir como
-en BR-PLY-020: trabada, con su aviso. El secundario, el control suspendido y la pausa NO DEBEN
-abrirla. Sólo cuenta la palanca en la mano: suelta, en el contenedor o en el piso, NO DEBE abrir
-nada. La traba sigue siendo de la puerta y la excepción es sólo por el objeto en la mano. NINGUNA
-otra puerta trabada DEBE ceder a la palanca.
+CUANDO se hace el primario sobre la puerta de la oficina del jefe con la palanca (BR-INV-141) o
+con la llave (BR-INV-144) en la mano, el sistema DEBE abrirla en vez de avisar que está trabada, y
+avisar una vez que se abrió (BR-PLY-020). Con las manos vacías o con cualquier otra cosa en la
+mano, la puerta DEBE seguir como en BR-PLY-020: trabada, con su aviso. El secundario, el control
+suspendido y la pausa NO DEBEN abrirla. Sólo cuenta la palanca o la llave en la mano: suelta, en el
+contenedor o en el piso, NO DEBE abrir nada. La traba sigue siendo de la puerta y la excepción es
+sólo por el objeto en la mano. NINGUNA otra puerta trabada DEBE ceder a la palanca ni a la llave, y
+la llave abre la oficina por el mismo camino que la palanca: no hay un segundo mecanismo.
 
 ### BR-PLY-027 — Asomarse encuadra los bordes visibles y devuelve la vista
 
@@ -1696,6 +1697,16 @@ mopa en la mano o la palanca suelta en el piso CUANDO se pulsa diez veces el pri
 puerta ENTONCES emite diez avisos de trabada y la hoja no gira. CUANDO se pulsa el secundario con la
 palanca en la mano, o el primario con el control suspendido o en pausa, ENTONCES la puerta sigue
 cerrada y trabada, sin avisos. CUANDO se pulsa el primario con la palanca en la mano sobre el portón
+del depósito o sobre la entrada ENTONCES avisan de trabada como siempre y no giran.
+
+### AC-PLY-191 — La llave en la mano abre la oficina del jefe *(verifica BR-PLY-060, BR-PLY-020, BR-PLY-026)*
+
+DADO la jornada 7 con la llave en la mano CUANDO se pulsa el primario sobre la puerta de la oficina
+del jefe ENTONCES se abre, avisa una vez que se abrió y no avisa de trabada. DADO las manos vacías, la
+mopa en la mano o la llave suelta en el piso CUANDO se pulsa diez veces el primario sobre esa
+puerta ENTONCES emite diez avisos de trabada y la hoja no gira. CUANDO se pulsa el secundario con la
+llave en la mano, o el primario con el control suspendido o en pausa, ENTONCES la puerta sigue
+cerrada y trabada, sin avisos. CUANDO se pulsa el primario con la llave en la mano sobre el portón
 del depósito o sobre la entrada ENTONCES avisan de trabada como siempre y no giran.
 
 ## No objetivos
