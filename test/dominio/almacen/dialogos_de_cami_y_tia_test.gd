@@ -261,13 +261,14 @@ func test_cami_de_la_quinta_dice_el_mensaje_de_5a_solo_con_la_5a_activa() -> voi
 
 func test_el_fragmento_de_la_pista_5a_va_en_lila_y_con_su_identidad() -> void:  # AC-INV-165
 	var apertura := _apertura(_cami_de_la_quinta())
-	var del_mensaje := apertura.filter(
-		func(entrada: String) -> bool: return entrada.contains("[url=")
-	)
+	var del_mensaje: Array[String] = []
+	for texto: String in apertura:
+		if texto.contains("[url="):
+			del_mensaje.append(texto)
 	assert_array(del_mensaje).has_size(1)
 	if del_mensaje.is_empty():
 		return
-	var entrada: String = del_mensaje[0]
+	var entrada := del_mensaje[0]
 	assert_int(entrada.count(MARCA_DE_LA_PISTA)).is_equal(1)
 	assert_int(entrada.count("[color=" + DialogosDeCompradores.LILA + "]")).is_equal(1)
 	assert_int(entrada.count(AMARILLO)).is_zero()
