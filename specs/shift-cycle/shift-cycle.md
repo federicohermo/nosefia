@@ -3,7 +3,7 @@ schema_version: 1
 capability_id: CAP-SHF
 status: ratified
 owner: por definir
-provenance: GDD «Ciclo de jornadas»; fichas «Pantalla entre jornadas» y «Particulares de cada jornada»; decisiones de #364, #369, #436, #526, #527, #573 y #693; migración de los specs 001, 007, 011, 016, 027, 031
+provenance: GDD «Ciclo de jornadas»; fichas «Pantalla entre jornadas» y «Particulares de cada jornada»; decisiones de #364, #369, #436, #526, #527, #573 y #693; cajas del proveedor de #788, filas «Caja de cartón del proveedor» y «Caja de madera» de «Objetos interactuables» leídas el 2026-11-04; migración de los specs 001, 007, 011, 016, 027, 031
 ---
 
 # Capacidad: el ciclo de la jornada
@@ -214,6 +214,25 @@ por la puerta DEBE conservar su recorrido habitual sin girar la vista ni abrir l
 Al comenzar cada jornada, incluidas la jornada 3 y las posteriores, ambas hojas DEBEN estar
 cerradas, tanto al continuar desde la anterior como al retomar desde el menú o reintentar la
 noche. Desde la jornada 3 la entrada NO DEBE permitir salir.
+
+### BR-SHF-050 — En la jornada 7 el proveedor deja dos cajas junto al portón
+
+CUANDO se abre la jornada 7, el sistema DEBE poner en el depósito dos objetos fijos: una caja de
+cartón del proveedor y una caja de madera de Fernet God. La caja de cartón DEBE quedar junto al
+portón del depósito, ligeramente en diagonal y casi pegada a la pared contraria a la del
+contenedor de basura. La caja de madera DEBE quedar entre la caja de cartón y la estantería más
+cercana, también casi pegada a esa pared, con su tapa apoyada sobre ella. Las jornadas 1 a 6
+NO DEBEN tener ninguna de las dos.
+
+Las dos DEBEN estar en la jornada 7 aunque no se haya hecho el pedido al proveedor, y también al
+retomar una partida guardada en esa jornada: salen de la jornada, no de un estado.
+
+Ninguna DEBE poder levantarse ni empujarse, y las dos DEBEN poder examinarse (BR-SUB-010 de
+[`subtitles`](../subtitles/subtitles.md)). Lo levantable DEBE poder apoyarse encima, como en el
+resto de lo fijo. Tocarlas NO DEBE sonar. Ninguna es una caja de productos del depósito: NO DEBE
+contar para ordenar las cajas, para la reposición ni para la revisión del depósito.
+
+Dónde queda cada una, su diagonal y que la tapa se vea apoyada son territorio de juicio humano.
 
 ## Criterios de aceptación
 
@@ -537,6 +556,21 @@ pide el menú. DADO una partida en curso ENTONCES la devolución no lleva a ning
 DADO la pantalla de final del despido y la del contrato sin pistas CUANDO se elige dos veces la opción de
 la devolución ENTONCES se muestra una sola pantalla. CUANDO se pulsa dos veces el botón ENTONCES el
 menú se pide una sola vez.
+
+### AC-SHF-100 — Las dos cajas del proveedor están sólo en la jornada 7 *(verifica BR-SHF-050)*
+
+DADA cada jornada de 1 a 6 abierta CUANDO se arma el depósito ENTONCES no hay caja de cartón del
+proveedor ni caja de madera. DADA la jornada 7 abierta ENTONCES hay una de cada una, sin hacer el
+pedido al proveedor y con el pedido hecho. DADA una partida guardada en la jornada 7 CUANDO se
+retoma ENTONCES siguen las dos, una de cada una.
+
+### AC-SHF-101 — Fijas, mudas y ajenas al depósito *(verifica BR-SHF-050)*
+
+DADA la jornada 7 abierta CUANDO se intenta levantar, y después empujar, cada una de las dos
+cajas ENTONCES no se mueve ni queda en la mano. DADA una caja levantable CUANDO se apoya sobre
+cada una ENTONCES queda apoyada. CUANDO se las toca ENTONCES no suena ningún sonido. DADA la
+jornada 7 con las dos cajas CUANDO se cuentan las cajas del depósito para ordenar, para reponer
+y para la revisión ENTONCES ninguna de las dos entra en la cuenta.
 
 ## No objetivos
 
