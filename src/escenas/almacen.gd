@@ -53,6 +53,7 @@ const GUION_DEL_JEFE := preload("res://src/dominio/investigacion/conversacion_co
 const ESCENA_DEL_MENU := "res://src/escenas/menu_de_inicio.tscn"
 const PANTALLA_DE_CARGA := preload("res://src/ui/interrupciones/pantalla_de_carga.tscn")
 const PANTALLA_DE_FINAL := preload("res://src/ui/interrupciones/pantalla_de_final.tscn")
+const PANTALLA_DE_EPILOGO := preload("res://src/ui/interrupciones/pantalla_de_epilogo.tscn")
 
 
 class PresenciaDeCaja:
@@ -882,8 +883,22 @@ func _al_forzar_la_puerta_del_jefe() -> void:
 	_mostrar_el_final()
 
 
-## La persiana sigue baja: la pantalla de final se dibuja encima, y sólo su botón sale al menú.
+## El final de la partida: su epílogo, si lo tiene, y después su pantalla (BR-SHF-070). La pantalla
+## de final se pone debajo del negro cuando el epílogo termina de cerrarse.
 func _mostrar_el_final() -> void:
+	var placas := EpilogosDeLosFinales.placas_de(FinalConPantalla.de(_partida))
+	if placas.is_empty():
+		_mostrar_la_pantalla_del_final()
+		return
+	var epilogo: PantallaDeEpilogo = PANTALLA_DE_EPILOGO.instantiate()
+	add_child(epilogo)
+	(get_node("Interfaz/ControlDePausa") as ControlDePausa).epilogo = epilogo
+	epilogo.terminado.connect(_mostrar_la_pantalla_del_final, CONNECT_ONE_SHOT)
+	epilogo.mostrar(placas)
+
+
+## La persiana sigue baja: la pantalla de final se dibuja encima, y sólo su botón sale al menú.
+func _mostrar_la_pantalla_del_final() -> void:
 	var pantalla: PantallaDeFinal = PANTALLA_DE_FINAL.instantiate()
 	add_child(pantalla)
 	pantalla.volver_al_menu_pedido.connect(func() -> void: _ir_al_menu.call())

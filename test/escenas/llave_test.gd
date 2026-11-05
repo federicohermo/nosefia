@@ -1,5 +1,6 @@
 extends GdUnitTestSuite
 
+const AvanceDelEpilogo := preload("res://test/avance_del_epilogo.gd")
 const JORNADA_7 := QuejasDeLaJornada.JORNADA
 const JORNADA_6 := JORNADA_7 - 1
 const JORNADA_5 := JORNADA_6 - 1
@@ -219,6 +220,7 @@ func test_con_la_llave_en_la_mano_la_puerta_abre_y_termina_la_partida() -> void:
 
 
 func test_el_final_5_muestra_su_pantalla_y_borra_el_guardado() -> void:  # AC-SHF-113 AC-SAV-051
+	# AC-SHF-136
 	await _abrir(JORNADA_7, _por_la_6c())
 	assert_bool(Guardado.new().hay_guardado()).is_true()
 	var llave := _llave()
@@ -226,6 +228,13 @@ func test_el_final_5_muestra_su_pantalla_y_borra_el_guardado() -> void:  # AC-SH
 	_puerta_del_jefe().call("accionar")
 	_puerta_del_jefe().call("accionar")
 	await _cuadros()
+	assert_int(AvanceDelEpilogo.cuantos(_almacen)).is_equal(1)
+	assert_array(_almacen.find_children("*", "PantallaDeFinal", true, false)).is_empty()
+	var esperadas := EpilogosDeLosFinales.placas_de(FinalConPantalla.Cual.JEFE_INCOMPETENTE)
+	var vistas := AvanceDelEpilogo.recorrer(_almacen)
+	assert_int(vistas.size()).is_equal(esperadas.size())
+	for indice in range(esperadas.size()):
+		assert_str(vistas[indice].texto).is_equal(esperadas[indice].texto)
 	var pantallas := _almacen.find_children("*", "PantallaDeFinal", true, false)
 	assert_int(pantallas.size()).is_equal(1)
 	var pantalla := pantallas[0] as PantallaDeFinal

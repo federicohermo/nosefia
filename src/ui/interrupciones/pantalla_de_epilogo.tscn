@@ -1,0 +1,85 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://src/ui/interrupciones/pantalla_de_epilogo.gd" id="1_pantalla"]
+[ext_resource type="Theme" path="res://assets/ui/manada/tema.tres" id="2_tema"]
+
+[node name="PantallaDeEpilogo" type="CanvasLayer" node_paths=PackedStringArray("_placa", "_fondo", "_marco", "_texto", "_boton", "_negro")]
+layer = 6
+visible = false
+script = ExtResource("1_pantalla")
+_placa = NodePath("Placa")
+_fondo = NodePath("Placa/Fondo")
+_marco = NodePath("Placa/Marco")
+_texto = NodePath("Placa/Marco/Contenido/Texto")
+_boton = NodePath("Placa/Marco/Contenido/Boton")
+_negro = NodePath("Negro")
+
+[node name="Placa" type="Control" parent="."]
+visible = false
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="Fondo" type="TextureRect" parent="Placa"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+expand_mode = 1
+stretch_mode = 6
+
+[node name="Velo" type="ColorRect" parent="Placa"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0, 0, 0, 0.45)
+
+[node name="Marco" type="Control" parent="Placa"]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 1920.0
+offset_bottom = 1080.0
+mouse_filter = 2
+theme = ExtResource("2_tema")
+
+[node name="Contenido" type="VBoxContainer" parent="Placa/Marco"]
+layout_mode = 0
+offset_left = 440.0
+offset_top = 200.0
+offset_right = 1480.0
+offset_bottom = 880.0
+theme_override_constants/separation = 56
+alignment = 1
+
+[node name="Texto" type="Label" parent="Placa/Marco/Contenido"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 30
+horizontal_alignment = 1
+autowrap_mode = 3
+
+[node name="Boton" type="Button" parent="Placa/Marco/Contenido"]
+custom_minimum_size = Vector2(560, 72)
+layout_mode = 2
+size_flags_horizontal = 4
+theme_type_variation = &"BotonContinuar"
+theme_override_font_sizes/font_size = 32
+
+[node name="Negro" type="ColorRect" parent="."]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0, 0, 0, 0)
