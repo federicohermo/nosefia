@@ -3,7 +3,7 @@ schema_version: 1
 capability_id: CAP-INV
 status: draft
 owner: por definir
-provenance: GDD «Investigación» y «La computadora»; ficha «Interfaces virtuales durante la jornada» y decisiones de #373, #375 y #376; migración de los specs 006, 009, 018; fichas Chat con el jefe, Chat con compañera y 2A revisadas el 2026-10-15; decisiones de #430; «Sistema de investigación», fichas 2A/2B/2P y decisiones de #22 del 2026-10-15; decisión del usuario del 2026-10-18 de usar la captura del mensaje de Yasmín como foto de 2A; decisión del usuario del 2026-10-17 de retirar las notas de la computadora y usar el diseño del registro de productos; ficha «Pantalla entre jornadas», reflexión de jornada 1, encabezado de jornada 2 y decisiones de #436; decisiones del usuario del 2026-10-18 sobre el recorrido lateral, la elección sin límite de tiempo, la reanudación del cierre y la espera de 1 segundo; ocho jornadas de #526; instrucciones por jornada de #527; la colilla sólo en su jornada, de #536; ficha Chat con compañera, jornada 5, de #458; ficha «Caminos narrativos y finales» y cuadro de pistas e hipótesis de #766 y la ficha «5B» de la lista de pistas e hipótesis y decisiones del usuario del 2026-10-30 sobre su foto y su texto, de #731; la fila «6C» de la lista de pistas e hipótesis, la ficha «Caminos narrativos y finales» y decisiones del usuario del 2026-11-03 sobre Yasmín y la textura de la nota, de #741; encabezado de la jornada 5 y ficha «5P» de la lista de pistas e hipótesis y decisión del usuario del 2026-11-04 sobre la 5L, de #740; ficha «Especificar animaciones», el chat que entra y sale deslizándose, de #627; encabezado de la jornada 6 y fichas «6P» y «6L» de la lista de pistas e hipótesis, de #742
+provenance: GDD «Investigación» y «La computadora»; ficha «Interfaces virtuales durante la jornada» y decisiones de #373, #375 y #376; migración de los specs 006, 009, 018; fichas Chat con el jefe, Chat con compañera y 2A revisadas el 2026-10-15; decisiones de #430; «Sistema de investigación», fichas 2A/2B/2P y decisiones de #22 del 2026-10-15; decisión del usuario del 2026-10-18 de usar la captura del mensaje de Yasmín como foto de 2A; decisión del usuario del 2026-10-17 de retirar las notas de la computadora y usar el diseño del registro de productos; ficha «Pantalla entre jornadas», reflexión de jornada 1, encabezado de jornada 2 y decisiones de #436; decisiones del usuario del 2026-10-18 sobre el recorrido lateral, la elección sin límite de tiempo, la reanudación del cierre y la espera de 1 segundo; ocho jornadas de #526; instrucciones por jornada de #527; la colilla sólo en su jornada, de #536; ficha Chat con compañera, jornada 5, de #458; ficha «Caminos narrativos y finales» y cuadro de pistas e hipótesis de #766 y la ficha «5B» de la lista de pistas e hipótesis y decisiones del usuario del 2026-10-30 sobre su foto y su texto, de #731; la fila «6C» de la lista de pistas e hipótesis, la ficha «Caminos narrativos y finales» y decisiones del usuario del 2026-11-03 sobre Yasmín y la textura de la nota, de #741; encabezado de la jornada 5 y ficha «5P» de la lista de pistas e hipótesis y decisión del usuario del 2026-11-04 sobre la 5L, de #740; quejas de la jornada 7, captura de la transferencia y pantalla conjunta de #759, ficha «Particulares de cada jornada» y comentario de Notion del 2026-11-04; ficha «Especificar animaciones», el chat que entra y sale deslizándose, de #627; GJ-62, el chat que abre en el primer mensaje sin leer, de #568; encabezado de la jornada 6 y fichas «6P» y «6L» de la lista de pistas e hipótesis, de #742; la fila «5A» de la lista de pistas e hipótesis y el mensaje de Cami de «Diálogos de compradores», de #785; la fila «6B» de la lista de pistas e hipótesis y la fila «Documento impreso» de «Objetos interactuables», de #789; la fila «7B» de la lista de pistas e hipótesis, la fila «Palanca» de «Objetos interactuables» y la ficha «Caminos narrativos y finales», de #790; la fila «7C» de la lista de pistas e hipótesis, la fila «Llave» de «Objetos interactuables» y la ficha «Caminos narrativos y finales», de #810
 ---
 
 # Capacidad: la investigación
@@ -32,6 +32,7 @@ suma. Sin eso, se puede pasar la noche examinando la misma lata.
 | **Camino** | las pistas de la jornada siguiente que desbloquea una hipótesis | rama, final |
 | **Pistas activas** | las pistas de una jornada que el expediente puede anotar | pistas presentes |
 | **Sorteo** | la hipótesis de la jornada anterior que se toma al azar cuando esa jornada termina sin pistas, para fijar el camino de la siguiente | elección |
+| **Pista de acción** | pista que se registra cuando se hace una acción con un objeto, y no al mirarlo ni al levantarlo | pista de objeto |
 
 ## Comportamiento normativo
 
@@ -128,14 +129,16 @@ modo libre, Esc DEBE cerrar primero la foto; el Esc siguiente cierra el celular 
 siguiente pausa. Con el turno cerrado, otra interfaz al control, un examen o una
 pausa, Q NO DEBE abrirlo ni alterar el estado existente. Abrir o cerrar NO DEBE cambiar lo que
 se lleva en la mano. Otro Q o Esc durante la subida DEBE iniciar la bajada desde la posición
-actual, sin duplicar el celular ni dejarlo detenido a mitad de camino.
+actual, sin duplicar el celular ni dejarlo detenido a mitad de camino. La pantalla conjunta de la jornada 7 es la excepción: con la computadora
+abierta, Q DEBE alternarla (BR-INV-115).
 
 ### BR-INV-022 — Cada apertura libre empieza en el menú
 
 CUANDO se abre el celular en modo libre, el sistema DEBE mostrar el menú de chats, aunque se
 haya cerrado viendo un chat o una foto. Clic izquierdo en un botón DEBE abrir su chat y marcarlo
-leído; la flecha del encabezado DEBE volver al menú. Abrir un chat DEBE mostrar su último mensaje
-y permitir desplazarlo con la rueda hacia los anteriores. Un menú sin chats DEBE verse vacío,
+leído; la flecha del encabezado DEBE volver al menú. Abrir un chat sin mensajes sin leer DEBE
+mostrar su último mensaje y permitir desplazarlo con la rueda hacia los anteriores; con mensajes
+sin leer, BR-INV-120 decide dónde empieza. Un menú sin chats DEBE verse vacío,
 sin error; un chat de un solo mensaje NO DEBE exigir desplazamiento para verlo.
 
 ### BR-INV-023 — La jornada decide los mensajes disponibles
@@ -378,11 +381,13 @@ lo dibuja el chat:
 
 Los textos de hipótesis DEBEN ser:
 
-- **2A:** «No me sorprendería tener un jefe inútil. Pero también, ¿no es responsabilidad de Yasmín
-  avisar si faltan cosas esenciales? Si esto va a ser frecuente, tengo que empezar a prestar más
-  atención a las dinámicas internas del local.»
+- **2A:** «Siento que esto no fue casualidad. Ya tuve malas experiencias con jefes y colegas que no
+  hacían bien su trabajo o que directamente me querían serruchar el piso. Si esto va a ser
+  frecuente, tengo que empezar a prestar más atención a las dinámicas internas del local.»
 - **2B:** «¿Puede ser que alguien se esté metiendo sin que nos demos cuenta? Debería examinar bien
-  las formas de ingreso al local…»
+  las formas de ingreso al local…» y, en un párrafo aparte: «ADVERTENCIA: Este camino aún no está
+  listo. Si lo elegís, no te van a aparecer más pistas y tu investigación va a quedar incompleta.
+  Recomendamos elegir la otra pista o reiniciar la jornada si no la encontraste.»
 - **2P:** «Solo se acabó un jabón. No me tengo que hacer la cabeza con algo tan poco trascendental.»
 
 La errata «cigarrilo» DEBE conservarse como aparece en la fuente. Las fotos DEBEN representar
@@ -595,9 +600,10 @@ y las hipótesis 2A, 2B y 2P NO DEBEN cambiar.
 ### BR-INV-062 — La quinta jornada se cierra eligiendo una hipótesis
 
 La reflexión de jornada 5 DEBE mostrar el encabezado «Esta vez desapareció el lector de la
-caja…». SI se registró 5B, ENTONCES la única opción DEBE ser la hipótesis 5B (BR-INV-061), sin
-la predeterminada. SI no se registró 5B, ENTONCES la única opción DEBE ser la hipótesis 5P, haya o
-no pistas en noches anteriores (BR-INV-053). Los datos de 5P DEBEN ser, según la ficha «5P» de la
+caja…». SI se registró 5A o 5B, ENTONCES las opciones DEBEN ser las hipótesis de las pistas
+registradas (BR-INV-122, BR-INV-061), en el orden 5A, 5B y sin la predeterminada. SI no se registró
+ninguna, ENTONCES la única opción DEBE ser la hipótesis 5P, haya o no pistas en noches anteriores
+(BR-INV-053). Los datos de 5P DEBEN ser, según la ficha «5P» de la
 lista de pistas e hipótesis:
 
 | Identidad | Título de hipótesis | Texto de hipótesis |
@@ -611,6 +617,37 @@ BR-INV-045 y entonces pedir una sola entrada a «NOCHE 6» (BR-SHF-019). Antes d
 aceptada, NO DEBE empezar ninguna entrada. Una reflexión restaurada a mitad de la elección DEBE
 volver a la elección, y pausar o salir al menú NO DEBE elegir por el jugador. La 5L sigue sin
 texto: queda en OQ-INV-004.
+
+### BR-INV-121 — «actitudes extrañas de Peldaño» es el tramo de la pista 5A
+
+MIENTRAS la ventanilla muestra el mensaje de Cami que dice «actitudes extrañas de Peldaño»
+(BR-CTR-048), el sistema DEBE mostrar sólo ese fragmento en lila, el color de pista, y el resto del
+mensaje en el color normal del diálogo. CUANDO se pulsa el fragmento, DEBE emitir un pedido
+identificado con 5A por el canal de comprador (BR-INV-037), sin deducir la identidad del texto
+visible, y NO DEBE avanzar el diálogo. Leer el mensaje, avanzar el diálogo con otro gesto y pulsar
+otra parte del texto NO DEBEN emitir ese pedido. Repetir el clic válido PUEDE repetir el pedido; la
+aceptación e idempotencia del hallazgo corresponden a quien registra la pista (BR-INV-032).
+
+### BR-INV-122 — El contenido de 5A procede de su ficha
+
+CUANDO se registra 5A con la jornada 5 abierta y el canal de comprador, el sistema DEBE contestar
+ANOTADA y agregar al chat de notas primero su foto y después su texto (BR-INV-040). La pista 5A
+DEBE ser de la jornada 5, del canal de comprador y del camino de la hipótesis 2A (BR-INV-049,
+BR-INV-050): por el camino de 2B no está activa. La hipótesis 5A DEBE estar disponible al cierre de
+la jornada 5 si y sólo si 5A está registrada (BR-INV-062). Los datos DEBEN ser, según la ficha
+«5A» de la lista de pistas e hipótesis:
+
+| Identidad | Foto de pista | Texto de pista | Título de hipótesis |
+|---|---|---|---|
+| 5A | la imagen del comprador Cami | Una compradora mencionó que los empleados de la estación de servicio no duran mucho por las “actitudes extrañas” de Enrique. | ACTITUDES EXTRAÑAS |
+
+El texto de la hipótesis 5A DEBE ser: «¿Qué habrá querido decir con "actitudes extrañas"? ¿Será que
+Enrique maltrató de alguna forma a sus antiguos empleados? ¿Tendrá que ver con estas cosas raras que
+están pasando? Debería buscar algún registro sobre actitudes peculiares de Enrique.»
+
+La ficha no dice cuál imagen de Cami es la foto: DEBE ser un retrato de Cami, distinto de las fotos
+de las demás pistas. Registrar 5A NO DEBE cambiar lo que hacen 5B y 5P. Las pistas y las hipótesis
+2A, 2B, 2P, 5B y 6C NO DEBEN cambiar.
 
 ### BR-INV-070 — El contenido de 6C procede de su ficha
 
@@ -654,11 +691,123 @@ por la mira ni poder levantarse. Una partida guardada en la jornada 6 DEBE conse
 elecciones guardadas. La nota en la mano al abrir la jornada siguiente DEBE salir de la mano y del
 local, como la colilla.
 
+### BR-INV-123 — El contenido de 6B procede de su ficha
+
+CUANDO se registra 6B con la jornada 6 abierta y el canal de levantar, el sistema DEBE contestar
+ANOTADA y agregar al chat de notas primero su foto y después su texto (BR-INV-040). La pista 6B
+DEBE ser de la jornada 6, del canal de levantar y del camino de la hipótesis 5A (BR-INV-049,
+BR-INV-050): está activa si la 5A se eligió en la jornada 5, o si la 5 terminó sin pistas y el
+sorteo de la 6 (BR-INV-051) cayó en el camino de la 5A. Con la 5B elegida, con la 5P elegida y sin
+sorteo, o con un sorteo que cayó en otro camino, no lo está. La hipótesis 6B DEBE estar disponible
+al cierre de la jornada 6 si y sólo si 6B está registrada. La hipótesis 5A DEBE declarar el camino
+de 6A y 6B (BR-INV-049); 6A no tiene pista ni objeto todavía. Los datos DEBEN ser, según la fila
+«6B» de la lista de pistas e hipótesis:
+
+| Identidad | Foto de pista | Texto de pista | Título de hipótesis |
+|---|---|---|---|
+| 6B | el documento examinado | Encontré un papel asomando por la puerta de la oficina de Enrique. Parece como… ¿una especie de documento? | DOCUMENTO PECULIAR |
+
+El texto de la hipótesis 6B DEBE ser: «¿Testear habilidades técnicas del nuevo empleado? ¿¿En mi
+sexto día?? ¿¿¿El mismo día en que casualmente se cortó la luz??? No, no, esto es muy turbio. ¿En
+serio Enrique me está causando estos problemas a propósito? Necesito descubrir qué otras cosas
+esconde en su oficina, cueste lo que cueste.»
+
+La foto DEBE ser una captura del documento examinado, distinta de las fotos de las demás pistas.
+Las pistas y las hipótesis 2A, 2B, 2P, 5A, 5B y 6C, y la colilla, NO DEBEN cambiar.
+
+### BR-INV-124 — El documento asoma bajo la puerta de la oficina de Enrique
+
+La jornada 6 DEBE tener, en el piso, asomando por debajo de la puerta de la oficina de Enrique, un
+documento levantable con identidad propia, independiente de los productos vendibles, de la colilla
+y de la nota de BR-INV-071, y distinguible como una hoja impresa. Examinado, DEBE poder leerse su
+texto impreso, que dice el día y la tarea de la ficha «6B», y su subtítulo al examinar es el de
+BR-SUB-010. CUANDO se acepta levantarlo, el sistema DEBE registrar 6B y avisar la pista nueva,
+como con la colilla (BR-INV-038). Mirarlo, mostrar su subtítulo con E y manos vacías, un agarre
+rechazado o durante pausa NO DEBEN anotarlo. Soltarlo y volver a levantarlo NO DEBE duplicar la
+pista ni sus notas.
+
+El documento DEBE estar en el local sólo CUANDO 6B está activa en la jornada abierta
+(BR-INV-050). En cualquier otro caso —otra jornada, otra elección o ninguna— NO DEBE verse, NO DEBE
+ser enfocado por la mira ni poder levantarse. Una partida guardada en la jornada 6 DEBE
+conservarlo según las elecciones guardadas. El documento en la mano al abrir la jornada siguiente
+DEBE salir de la mano y del local, como la nota. SI por algún camino estuvieran activas 6B y 6C,
+ENTONCES el documento y la nota NO DEBEN superponerse bajo la puerta.
+
+### BR-INV-140 — La pista 7B es una acción y no deja nada en las notas
+
+CUANDO se registra 7B con la jornada 7 abierta y el canal de acción, el sistema DEBE contestar
+ANOTADA y sumar 7B al expediente. La pista 7B DEBE ser de la jornada 7, del canal de acción y del
+camino de la hipótesis 6B (BR-INV-049, BR-INV-050): está activa si la 6B se eligió en la jornada 6.
+Con cualquier otra elección, o con la 6 sin pistas (BR-INV-052), no lo está. Una pista de acción
+DEBE registrarse sólo cuando el sistema avisa que la acción pasó, nunca por mirar ni por levantar.
+
+Según la fila «7B» de la lista de pistas e hipótesis, 7B NO DEBE tener foto, texto ni hipótesis:
+registrarla NO DEBE agregar mensajes al chat de notas (BR-INV-040) ni avisar una pista nueva
+(BR-INV-038), y no hay hipótesis 7B que ofrecer. La hipótesis 6B DEBE declarar el camino de 7B
+(BR-INV-049). Las pistas y las hipótesis 2A, 2B, 2P, 5A, 5B, 6B y 6C, y la colilla, NO DEBEN cambiar.
+
+### BR-INV-141 — La palanca está al fondo del depósito sólo si 7B está activa
+
+La jornada 7 DEBE tener, apoyada en el piso, al fondo del depósito y a la vista desde la entrada
+del depósito, una palanca levantable con identidad propia, independiente de los productos vendibles
+y de los demás objetos de pista, y distinguible como una palanca. Examinada, su subtítulo al
+examinar es el de BR-SUB-010. Mirarla, levantarla, soltarla o volver a levantarla NO DEBEN
+registrar ninguna pista ni mostrar ningún aviso.
+
+La palanca DEBE estar en el local sólo CUANDO 7B está activa en la jornada abierta (BR-INV-050). En
+cualquier otro caso —otra jornada, otra elección o ninguna— NO DEBE verse, NO DEBE ser enfocada por
+la mira ni poder levantarse. Una partida guardada en la jornada 7 DEBE conservarla según las
+elecciones guardadas. Soltarla en cualquier lugar NO DEBE cambiar nada: sólo cuenta tenerla en la
+mano al accionar la puerta de la oficina de Enrique (BR-PLY-060).
+
+### BR-INV-142 — Abrir la puerta del jefe con la palanca registra 7B
+
+CUANDO la puerta de la oficina de Enrique se abre con la palanca en la mano (BR-PLY-060), el
+sistema DEBE registrar 7B por el canal de acción. Un gesto sobre la puerta sin la palanca, un gesto
+rechazado o uno durante la pausa NO DEBEN registrarla. Registrarla otra vez NO DEBE duplicar nada.
+El final al que lleva es el de BR-SHF-060.
+
+### BR-INV-143 — La pista 7C es una acción y no deja nada en las notas
+
+CUANDO se registra 7C con la jornada 7 abierta y el canal de acción, el sistema DEBE contestar
+ANOTADA y sumar 7C al expediente. La pista 7C DEBE ser de la jornada 7, del canal de acción y del
+camino de la hipótesis 6C (BR-INV-049, BR-INV-050): está activa si la 6C se eligió en la jornada 6.
+Con cualquier otra elección, o con la 6 sin pistas (BR-INV-052), no lo está.
+
+Según la fila «7C» de la lista de pistas e hipótesis, 7C NO DEBE tener foto, texto ni hipótesis:
+registrarla NO DEBE agregar mensajes al chat de notas (BR-INV-040) ni avisar una pista nueva
+(BR-INV-038), y no hay hipótesis 7C que ofrecer. La hipótesis 6C DEBE declarar el camino de 7C
+(BR-INV-049) y, salvo ese camino, conservar sus datos. Las pistas y las hipótesis 2A, 2B, 2P, 5A,
+5B, 6B, 6C y 7B, y la colilla, NO DEBEN cambiar.
+
+### BR-INV-144 — La llave está bajo una estantería del depósito sólo si 7C está activa
+
+La jornada 7 DEBE tener, en el piso y bajo la estantería del depósito más cercana a la puerta del
+depósito, una llave levantable con identidad propia, independiente de los productos vendibles, de
+la palanca y de los demás objetos de pista, y distinguible como una llave. Examinada, su subtítulo al
+examinar es el de BR-SUB-010. Mirarla, levantarla, soltarla o volver a levantarla NO DEBEN
+registrar ninguna pista ni mostrar ningún aviso.
+
+La llave DEBE estar en el local sólo CUANDO 7C está activa en la jornada abierta (BR-INV-050). En
+cualquier otro caso —otra jornada, otra elección o ninguna— NO DEBE verse, NO DEBE ser enfocada por
+la mira ni poder levantarse. Una partida guardada en la jornada 7 DEBE conservarla según las
+elecciones guardadas. Soltarla en cualquier lugar NO DEBE cambiar nada: sólo cuenta tenerla en la
+mano al accionar la puerta de la oficina de Enrique (BR-PLY-060). La llave y la palanca NO DEBEN
+estar nunca en la misma partida, porque 6B y 6C se excluyen.
+
+### BR-INV-145 — Abrir la puerta del jefe con la llave registra 7C
+
+CUANDO la puerta de la oficina de Enrique se abre con la llave en la mano (BR-PLY-060), el sistema
+DEBE registrar 7C por el canal de acción. Un gesto sobre la puerta sin la llave, un gesto
+rechazado o uno durante la pausa NO DEBEN registrarla. Registrarla otra vez NO DEBE duplicar nada.
+El final al que lleva es el de BR-SHF-061.
+
 ### BR-INV-116 — La sexta jornada se cierra eligiendo una hipótesis
 
 La reflexión de jornada 6 DEBE mostrar el encabezado «Un apagón me agarró desprevenido esta
-noche…». SI se registró 6C, ENTONCES la única opción DEBE ser la hipótesis 6C (BR-INV-070), sin la
-predeterminada. SI no se registró 6C, ENTONCES la única opción DEBE ser la hipótesis 6P si el
+noche…». SI se registró 6B o 6C, ENTONCES la única opción DEBE ser la hipótesis de la pista
+registrada (BR-INV-123, BR-INV-070), sin la predeterminada. SI no se registró ni 6B ni 6C,
+ENTONCES la única opción DEBE ser la hipótesis 6P si el
 jugador nunca encontró una pista en la partida, o la 6L si encontró al menos una en una jornada
 anterior (BR-INV-053). Los datos DEBEN ser, según las fichas «6P» y «6L» de la lista de pistas e
 hipótesis:
@@ -713,13 +862,16 @@ devolución es de la mañana siguiente a su jornada, así que su día es el de l
 Una tanda cuyo primer mensaje no tiene hora DEBE rotularse sin hora. Un mensaje legado sin
 jornada NO DEBE abrir una tanda ni aportar hora.
 
-### BR-INV-103 — Sin ninguna pista en toda la partida, el final es «Empleado estresado»
+### BR-INV-103 — Al cumplir el contrato, las pistas deciden entre el final 1 y el final 2
 
 SI la partida termina con el contrato cumplido y el expediente no registró ninguna pista en
-ninguna jornada, ENTONCES el final DEBE ser «Empleado estresado» (final 1) y la devolución DEBE
-llevar a su pantalla (BR-SHF-027). Una sola pista registrada, de cualquier jornada, DEBE bastar para
-que no lo sea. Elegir una hipótesis sin pista, P o L, NO DEBE contar como pista. SI la partida termina
-despedida, ENTONCES el final NO DEBE ser éste, aunque no haya pistas.
+ninguna jornada, ENTONCES el final DEBE ser «Empleado estresado» (final 1). SI registró al menos
+una, de cualquier jornada, ENTONCES el final DEBE ser «Locura paranoica» (final 2): la
+investigación quedó incompleta. En los dos casos la devolución DEBE llevar a la pantalla de su
+final (BR-SHF-027). Una sola pista registrada DEBE bastar para el final 2. Elegir una hipótesis sin
+pista, P o L, NO DEBE contar como pista. SI la partida termina despedida, ENTONCES el final NO DEBE
+ser ninguno de los dos, aunque haya o no pistas. SI la puerta del jefe se abre con la palanca
+(BR-INV-142) o con la llave (BR-INV-145), ENTONCES el final DEBE ser el 4 o el 5 y NO DEBE ser el 2.
 
 ### BR-INV-104 — El chat entra y sale deslizándose
 CUANDO el jugador abre un chat desde el menú de chats, el chat DEBE entrar desde el borde derecho
@@ -728,12 +880,97 @@ un chat, el chat DEBE salir hacia la derecha y descubrir la lista, que DEBE qued
 Un chat en modo fijo (BR-INV-026) NO DEBE deslizarse: aparece en su lugar. La duración y la curva
 del deslizamiento DEBEN ser las mismas en la entrada y en la salida (OQ-INV-007).
 
+### BR-INV-120 — Un chat se abre en su primer mensaje sin leer
+CUANDO se abre un chat en modo libre con uno o más mensajes sin leer, el primero de ellos DEBE
+quedar en el borde superior de la lista visible y los demás debajo, en su orden. Los que no
+entren DEBEN alcanzarse con la rueda. SI el primero sin leer es el último mensaje, ENTONCES DEBE
+quedar arriba aunque debajo sobra espacio. SI todo el chat entra a la vista, ENTONCES NO DEBE
+exigir desplazamiento. CUANDO el chat no tiene mensajes sin leer, DEBE abrirse en su último
+mensaje (BR-INV-022).
+
+CUANDO el celular está fijo en el chat de Enrique durante el cierre de la jornada (BR-INV-026),
+el primer mensaje que llega DEBE quedar en el borde superior y cada siguiente DEBE aparecer
+debajo. La lista DEBE bajar sólo lo necesario para que el último mensaje, y la opción que lo
+sigue, queden a la vista. CUANDO llega un mensaje a un chat libre que se abrió sin mensajes sin
+leer y la lista está en su último mensaje, la lista DEBE bajar hasta el nuevo.
+
 ### BR-INV-105 — El deslizamiento no deja la pantalla a medias
 MIENTRAS un chat se desliza, un pedido de volver o de abrir otro chat NO DEBE dejar la pantalla
 a medio camino ni abrir dos chats: el celular DEBE terminar mostrando un solo destino, el último
 pedido. CUANDO el celular baja o se cierra con un deslizamiento en curso, el deslizamiento DEBE
 saltar a su estado final, de modo que la próxima apertura empiece desde el menú o desde el chat
 que le toque y no desde un punto intermedio.
+
+### BR-INV-110 — La séptima jornada trae cinco chats de compradores que se quejan de un cobro
+
+CUANDO abre la jornada 7, por transición o desde un checkpoint, el sistema DEBE ofrecer, además de
+los chats de Enrique y Yasmín, un chat por cada uno de cinco compradores, con su nombre: El Seba,
+Suko Yañez, Lucas Ortega, Flavio Balbín y Myriam Melano. Cada chat DEBE tener un solo mensaje del
+comprador, con el texto de la ficha «Jornada 7: Responder a quejas» de «Particulares de cada
+jornada» y la captura de una transferencia bancaria (BR-INV-113), sin leer. Los mensajes de El
+Seba, Suko Yañez y Lucas Ortega DEBEN nombrar el valor cobrado de su queja; los de Flavio Balbín y
+Myriam Melano NO DEBEN nombrarlo: sólo la captura lo dice. El valor del texto y el de la captura
+DEBEN ser el mismo. Los productos de cada compra son fijos: El Seba, un Amargadito y un Oremos;
+Suko Yañez, dos Poético, un Laysnnt y un Zucarachas; Lucas Ortega, una Pura-Cola, un Arvecor y
+dos Durextra; Flavio Balbín, un Fernet God, un Burbaloo, un Progres y un Cindolor; Myriam Melano,
+un Terminator, un Actroncito y un Marolini. El total correcto de cada compra DEBE salir de los
+precios del catálogo. Las jornadas 1 a 6 NO DEBEN mostrar estos chats.
+
+### BR-INV-111 — El valor cobrado se sortea al abrir la noche y la semilla de la partida lo conserva
+
+CUANDO abre la jornada 7, el sistema DEBE sortear el valor cobrado de cada queja. Entre una y
+cuatro de las cinco quejas DEBEN tener un valor incorrecto; las otras DEBEN tener exactamente el
+total correcto de su compra. Un valor incorrecto DEBE ser el total de la misma compra con uno o
+dos de sus productos reemplazados por otros productos del catálogo de esa noche, elegidos al
+azar, y NO DEBE coincidir nunca con el total correcto. El sorteo DEBE depender sólo de la semilla
+de la partida y de la jornada: con la misma semilla DEBE dar los mismos valores, y retomar un
+guardado NO DEBE volver a sortear. Una partida nueva DEBE sortear con su propia semilla.
+
+### BR-INV-112 — Cada queja se responde una vez, dándole la razón o rechazándola
+
+MIENTRAS una queja no tiene respuesta, su chat DEBE ofrecer dos botones: «DARLE LA RAZÓN» y
+«RECHAZAR QUEJA». CUANDO el jugador pulsa uno, el chat DEBE mostrar la respuesta del jugador y
+retirar los dos botones. Darle la razón DEBE responder, letra por letra de la ficha: «Mil
+disculpas. Está claro que hubo un error de nuestra parte. Te descontamos la diferencia en tu
+próxima compra». Rechazar DEBE responder: «Perdón, pero no hubo ningún error. El valor que se
+cobró coincide con los precios de los productos. Buenas noches». La respuesta DEBE aparecer como
+mensaje del jugador, sin el aviso ni el sonido de un mensaje recibido. Una queja respondida NO DEBE
+poder responderse otra vez. La respuesta es correcta SI el jugador le da la razón a una queja con
+valor incorrecto, o rechaza una con el valor correcto. Responder NO DEBE descontar tiempo
+(BR-INV-006). La jornada que se retoma empieza con las cinco sin respuesta.
+
+### BR-INV-113 — La captura de la transferencia lleva el valor y las cuentas
+
+La captura de cada queja DEBE seguir el diseño «Captura de transferencia (jornada 7)» de Figma:
+un comprobante del banco ABBA, con el importe en la forma `$ 30.000` (punto de mil), el destino
+«ENRIQUE PELDAÑO S.A. ****4689» y el origen «Cuenta de ahorro ****NNNN». El importe DEBE ser el
+valor cobrado de esa queja. Los cuatro dígitos del origen DEBEN ser fijos, distintos para cada
+uno de los cinco compradores, y NO DEBEN sortearse. Ampliar la captura DEBE mostrarla entera,
+como cualquier foto (BR-INV-025).
+
+### BR-INV-114 — Enrique avisa de las quejas al abrir la jornada 7
+
+CUANDO abre la jornada 7, por transición o desde un checkpoint, Enrique DEBE incorporar, a
+continuación de la devolución de la jornada 6, tres mensajes de apertura con identidades
+estables, en este orden y letra por letra de la ficha «Chat con el jefe»: «Hola, flaco.»; «Mirá,
+hay algunos compradores diurnos que están dele que dele insistiendo con que les cobraron mal. No
+tengo mucho tiempo para contestarles, así que puse tu número como contacto para quejas.»; y
+«Fijate bien si los reclamos tienen sentido o no. A veces les gusta quejarse porque sí.». Las
+jornadas 1 a 6 NO DEBEN mostrarlos, y retomar una partida en la jornada 7 DEBE mostrarlos una sola
+vez, sin leer.
+
+### BR-INV-115 — La pantalla conjunta muestra el registro y el celular juntos
+
+MIENTRAS la computadora está abierta en la jornada 7, el sistema DEBE ofrecer un botón arriba a
+la derecha de su pantalla que abre la pantalla conjunta: el registro de ventas y el celular, lado
+a lado y a la vez, cada uno con su propio desplazamiento. En la pantalla conjunta el botón DEBE
+volver a la pantalla normal. Apretar Q con la computadora abierta DEBE hacer lo mismo que el
+botón, en un sentido y en el otro. La pantalla conjunta DEBE mostrar el menú de chats al abrir. El
+celular de la pantalla conjunta NO DEBE tapar ni desenfocar el registro, y el registro DEBE
+conservar sus unidades al pasar de una pantalla a la otra. CUANDO la computadora se abre, DEBE
+arrancar en la pantalla normal, y al cerrarla el celular DEBE cerrarse con ella. En las
+jornadas 1 a 6 NO DEBE haber botón, y Q con la computadora abierta NO DEBE cambiar la pantalla
+(BR-INV-021). Pasar de una pantalla a la otra NO DEBE descontar tiempo (BR-INV-006).
 
 ## Criterios de aceptación
 
@@ -838,8 +1075,9 @@ en menú, cerrado, cerrado con la otra interfaz intacta, cerrado con el examen i
 ### AC-INV-027 — Reabrir y navegar *(verifica BR-INV-022)*
 
 DADO el celular cerrado desde un chat y, por separado, desde una foto CUANDO se reabre ENTONCES
-ambas veces muestra el menú. CUANDO se pulsa un botón ENTONCES abre ese chat en su último
-mensaje y con cero no leídos; la rueda permite llegar al primero y la flecha vuelve al menú.
+ambas veces muestra el menú. CUANDO se pulsa un botón ENTONCES abre ese chat con cero no leídos y,
+si no tenía ninguno sin leer, en su último mensaje (BR-INV-120); la rueda permite llegar al primero
+y la flecha vuelve al menú.
 DADO un menú sin chats ENTONCES no hay botones ni error; con un chat de un mensaje, éste queda
 a la vista sin desplazar.
 
@@ -1347,6 +1585,162 @@ DADO el cierre de la jornada 3 ENTONCES sigue con su encabezado y sus tres texto
 DADO el cierre de la jornada 4 ENTONCES sigue con su encabezado y las cuatro combinaciones de
 BR-INV-039, y pide «NOCHE 5». DADO el cierre de la jornada 7 ENTONCES no hay reflexión.
 
+### AC-INV-165 — Sólo el fragmento de Cami pide 5A *(verifica BR-INV-121, BR-INV-037)*
+
+DADO la jornada 5 abierta y la ventanilla con el mensaje de «actitudes extrañas de Peldaño» CUANDO
+se muestra ENTONCES esas palabras, y sólo ellas, van en lila; pulsarlas emite exactamente un
+pedido con la identidad 5A por el canal de comprador, no avanza el diálogo, y pulsarlas dos veces
+emite dos pedidos iguales. DADO el mismo mensaje CUANDO se lee, se avanza el diálogo o se pulsa otra
+parte del texto ENTONCES se emiten cero pedidos y el expediente queda intacto. DADO el pedido con
+el reloj detenido, el juego en pausa o un examen en curso ENTONCES no registra nada.
+
+### AC-INV-166 — Registrar 5A agrega foto y texto una vez *(verifica BR-INV-122, BR-INV-032, BR-INV-040, BR-INV-037, BR-INV-050)*
+
+DADO el caso de la partida con 2A registrada y elegida en la jornada 4 CUANDO se pide 5A por el
+canal de comprador en la jornada 5 ENTONCES contesta ANOTADA, el expediente es [2A, 5A], se publica
+una pista nueva de jornada 5 con su foto y su texto, y el chat de notas recibe primero la foto y
+después el texto, sin cambiar las notas de 2A. CUANDO se repite el pedido ENTONCES contesta
+REPETIDA y no agrega mensajes ni publica otra pista. CUANDO se pide 5A por el canal de comprador en
+la jornada 4, o por otro canal en la 5, ENTONCES contesta DESCONOCIDA y el expediente queda
+intacto. DADO 2B elegida en la jornada 4, o ninguna elección, CUANDO se pide 5A ENTONCES contesta
+DESCONOCIDA, porque 5A es del camino de 2A (BR-INV-049, BR-INV-050). DADO 5A registrada CUANDO se
+pide 5B por el canal de chat ENTONCES contesta ANOTADA y el expediente es [2A, 5A, 5B].
+
+### AC-INV-167 — El contenido de 5A es el de su ficha *(verifica BR-INV-122)*
+
+DADO el caso de la partida CUANDO se consulta 5A ENTONCES su texto de pista, su título de hipótesis
+y su texto de hipótesis coinciden con BR-INV-122, y su foto es una imagen distinta de la de 2A, la
+de 2B, la de 5B y la de 6C. Las identidades 2A, 2B, 2P, 5B y 6C conservan sus datos.
+
+### AC-INV-168 — Con la pista 5A se ofrece su hipótesis *(verifica BR-INV-062, BR-INV-122, BR-INV-039)*
+
+DADO 2A elegida en la jornada 4 y 5A registrada en la 5, sin 5B, ENTONCES la única opción del cierre
+es 5A «ACTITUDES EXTRAÑAS», sin 5P. DADO 5A y 5B registradas ENTONCES las opciones son 5A y 5B, en
+ese orden, sin 5P. DADO sólo 5B registrada ENTONCES la única opción sigue siendo 5B. DADO el
+expediente sin 5A CUANDO se pide elegir 5A ENTONCES contesta NO_DISPONIBLE, sin nota ni elección.
+CUANDO se elige 5A con 5A registrada ENTONCES contesta ACEPTADA, las notas reciben su texto una
+sola vez, la elección de la jornada 5 es 5A y la reflexión pide «NOCHE 6» como con 5B (AC-INV-112).
+
+### AC-INV-170 — El documento está sólo si 6B está activa *(verifica BR-INV-124, BR-INV-050, BR-INV-051)*
+
+DADO el caso de la partida CUANDO se consulta si el documento está en el local ENTONCES contesta
+que sí sólo en la jornada 6 y sólo con 6B entre las pistas activas: con 2A elegida en la jornada 4
+y 5A elegida en la 5, o con 2A elegida en la 4, la 5 sin pistas y el sorteo de la 6 en el camino de
+la 5A (con una semilla fija). Contesta que no en las demás jornadas con esas mismas elecciones; con
+5B elegida en la 5; con 2B elegida en la 4; con 2A elegida en la 4 y 5P elegida en la 5 sin sorteo
+de la 6; con 2A elegida en la 4 y ninguna elección en la 5; con ninguna elección en la 4 ni en la
+5; y con 2P elegida en la 4. Con 5B elegida, la nota de 6C está y el documento no; con 5A elegida,
+el documento está y la nota no.
+
+### AC-INV-171 — Fuera de su condición el documento no se ve ni se levanta *(verifica BR-INV-124)*
+
+DADO una partida que eligió 2A en la 4 y 5A en la 5 CUANDO se abre la jornada 6 ENTONCES el
+documento es visible, la mira lo enfoca y se puede levantar. CUANDO se abre cualquier otra
+jornada, o la jornada 6 con otra elección, ENTONCES el documento no es visible, no tiene colisión,
+la mira no lo enfoca ni la mano lo sostiene. CUANDO se lo deja en la mano y se abre la jornada 7
+ENTONCES sale de la mano y del contenedor y no está en el local. DADO el documento y la nota de
+6C en el local a la vez CUANDO se comparan los lugares que ocupan bajo la puerta ENTONCES no se
+superponen.
+
+### AC-INV-172 — Levantar el documento registra 6B una vez *(verifica BR-INV-123, BR-INV-124, BR-INV-032, BR-INV-040, BR-INV-037)*
+
+DADO la jornada 6 abierta con 6B activa CUANDO se levanta el documento ENTONCES contesta ANOTADA,
+el expediente suma 6B, se publica una pista nueva de la jornada 6 con su foto y su texto, y el chat
+de notas recibe primero la foto y después el texto. CUANDO se lo suelta y se lo vuelve a levantar
+ENTONCES contesta REPETIDA y no agrega mensajes ni publica otra pista. CUANDO se lo mira, se lo
+examina con las manos vacías, se rechaza el agarre o hay pausa ENTONCES el expediente queda
+intacto. CUANDO se registra 6B por el canal de levantar en otra jornada, o por otro canal en la
+6, ENTONCES contesta DESCONOCIDA y el expediente queda intacto.
+
+### AC-INV-173 — El contenido de 6B es el de su ficha *(verifica BR-INV-123)*
+
+DADO el caso de la partida CUANDO se consulta 6B ENTONCES su pista es de la jornada 6, del canal de
+levantar y del documento; su texto de pista y su título y texto de hipótesis coinciden con
+BR-INV-123; y su foto es una imagen distinta de la de 2A, 2B, 5A, 5B y 6C. La hipótesis 5A
+declara el camino de 6A y 6B. Las identidades 2A, 2B, 2P, 5A, 5B y 6C conservan sus datos.
+
+### AC-INV-174 — Con la pista 6B se ofrece sólo su hipótesis *(verifica BR-INV-116, BR-INV-123, BR-INV-039)*
+
+DADO 2A elegida en la jornada 4, 5A elegida en la 5 y 6B registrada en la 6 ENTONCES el cierre de
+la jornada 6 lleva el encabezado de BR-INV-116, la única opción es 6B «DOCUMENTO PECULIAR», sin 6P
+ni 6L, y ofrece sólo «Elegir». CUANDO se pide elegir 6P, 6L o 6C ENTONCES contesta NO_DISPONIBLE,
+sin nota ni elección. DADO el expediente sin 6B CUANDO se pide elegir 6B ENTONCES contesta
+NO_DISPONIBLE. CUANDO se elige 6B con 6B registrada ENTONCES contesta ACEPTADA, las notas reciben
+su texto una sola vez, la elección de la jornada 6 es 6B y la reflexión pide «NOCHE 7» como con 6C.
+DADO el expediente con 2A y 5A y sin 6B ni 6C ENTONCES la única opción es 6L.
+
+### AC-INV-175 — El documento es una hoja impresa propia *(verifica BR-INV-124)*
+
+DADO el documento del local ENTONCES su identidad no es la de ningún producto, ni la de la colilla
+ni la de la nota de 6C, es levantable, tiene subtítulo, se dibuja con una textura de papel distinta
+de la de las cajas y de la de la nota, y su cara impresa usa la textura de la pista 6B.
+
+### AC-INV-176 — La pista 7B es de acción y está activa sólo con 6B elegida *(verifica BR-INV-140, BR-INV-050, BR-INV-052)*
+
+DADO el caso de la partida CUANDO se consulta 7B ENTONCES su pista es de la jornada 7 y del canal
+de acción, no tiene foto ni texto ni hipótesis, y la hipótesis 6B declara el camino de 7B. DADO 2A
+elegida en la jornada 4, 5A en la 5 y 6B en la 6 ENTONCES 7B está entre las pistas activas de la 7.
+DADO 6C elegida en la 6, 6P o 6L elegida, la 6 sin elección, o 5B elegida en la 5 ENTONCES 7B no lo
+está. DADO la 6 terminada sin pistas ENTONCES no hay ninguna pista activa en la 7. Las identidades
+2A, 2B, 2P, 5A, 5B, 6B y 6C conservan sus datos.
+
+### AC-INV-177 — La palanca está sólo si 7B está activa *(verifica BR-INV-141)*
+
+DADO una partida que eligió 2A, 5A y 6B CUANDO se abre la jornada 7 ENTONCES la palanca está al
+fondo del depósito, es visible, la mira la enfoca y se puede levantar. CUANDO se abre la jornada 7
+con cualquier otra elección, o cualquier otra jornada, ENTONCES la palanca no es visible, no tiene
+colisión, la mira no la enfoca ni la mano la sostiene.
+
+### AC-INV-178 — Mirar, levantar y soltar la palanca no registra nada *(verifica BR-INV-141, BR-INV-140)*
+
+DADO la jornada 7 con 7B activa CUANDO se levanta la palanca, se la suelta y se la vuelve a levantar
+ENTONCES el expediente queda intacto, no se publica ninguna pista, no hay aviso y el chat de notas no
+recibe mensajes. CUANDO se la examina con las manos vacías ENTONCES piensa el subtítulo de BR-SUB-010
+y el expediente sigue intacto. CUANDO se la deja caer lejos de la puerta ENTONCES no cambia nada.
+
+### AC-INV-179 — Abrir la puerta con la palanca registra 7B una vez, sin rastro *(verifica BR-INV-142, BR-INV-140)*
+
+DADO la jornada 7 con 7B activa y la palanca en la mano CUANDO se abre la puerta del jefe ENTONCES
+contesta ANOTADA, el expediente suma 7B, el chat de notas no recibe mensajes, no se publica ninguna
+pista nueva y no hay hipótesis que ofrecer. CUANDO se registra 7B otra vez ENTONCES contesta REPETIDA
+y no cambia nada. CUANDO se acciona la puerta sin la palanca, con otro objeto en la mano o con las
+manos vacías ENTONCES el expediente queda intacto. CUANDO se registra 7B por el canal de acción en
+otra jornada, o por otro canal en la 7, ENTONCES contesta DESCONOCIDA y el expediente queda intacto.
+
+### AC-INV-184 — La pista 7C es de acción y está activa sólo con 6C elegida *(verifica BR-INV-143, BR-INV-050, BR-INV-052)*
+
+DADO el caso de la partida CUANDO se consulta 7C ENTONCES su pista es de la jornada 7 y del canal
+de acción, no tiene foto ni texto ni hipótesis, y la hipótesis 6C declara el camino de 7C. DADO 2A
+elegida en la jornada 4, 5B en la 5 y 6C en la 6 ENTONCES 7C está entre las pistas activas de la 7.
+DADO 6B elegida en la 6, 6P o 6L elegida, la 6 sin elección, o 5A elegida en la 5 ENTONCES 7C no lo
+está. DADO la 6 terminada sin pistas ENTONCES no hay ninguna pista activa en la 7. Las identidades
+2A, 2B, 2P, 5A, 5B, 6B, 6C y 7B conservan sus datos, y 6C conserva los suyos salvo el camino.
+
+### AC-INV-185 — La llave está sólo si 7C está activa *(verifica BR-INV-144)*
+
+DADO una partida que eligió 2A, 5B y 6C CUANDO se abre la jornada 7 ENTONCES la llave está en el
+piso del depósito, bajo una estantería, es visible, la mira la enfoca y se puede levantar. CUANDO
+se abre la jornada 7 con cualquier otra elección, o cualquier otra jornada, ENTONCES la llave no
+es visible, no tiene colisión, la mira no la enfoca ni la mano la sostiene. DADA la jornada 7 por el
+camino de la 6B ENTONCES hay palanca y no hay llave; por el de la 6C hay llave y no hay palanca.
+
+### AC-INV-186 — Mirar, levantar y soltar la llave no registra nada *(verifica BR-INV-144, BR-INV-143)*
+
+DADO la jornada 7 con 7C activa CUANDO se levanta la llave, se la suelta y se la vuelve a levantar
+ENTONCES el expediente queda intacto, no se publica ninguna pista, no hay aviso y el chat de notas no
+recibe mensajes. CUANDO se la examina con las manos vacías ENTONCES piensa el subtítulo de BR-SUB-010
+y el expediente sigue intacto. CUANDO se la deja caer lejos de la puerta ENTONCES no cambia nada.
+
+### AC-INV-187 — Abrir la puerta con la llave registra 7C una vez, sin rastro *(verifica BR-INV-145, BR-INV-143)*
+
+DADO la jornada 7 con 7C activa y la llave en la mano CUANDO se abre la puerta del jefe ENTONCES
+contesta ANOTADA, el expediente suma 7C, el chat de notas no recibe mensajes, no se publica ninguna
+pista nueva y no hay hipótesis que ofrecer. CUANDO se registra 7C otra vez ENTONCES contesta REPETIDA
+y no cambia nada. CUANDO se acciona la puerta sin la llave, con otro objeto en la mano o con las
+manos vacías ENTONCES el expediente queda intacto. CUANDO se registra 7C por el canal de acción en
+otra jornada, o por otro canal en la 7, ENTONCES contesta DESCONOCIDA y el expediente queda intacto.
+CUANDO se registra 7C sin que 6C esté elegida ENTONCES contesta DESCONOCIDA.
+
 ### AC-INV-100 — La apertura de la jornada 4 saluda de tarde *(verifica BR-INV-029, BR-INV-030)*
 
 DADO la apertura de la jornada 4 por transición y, por separado, desde un checkpoint CUANDO se
@@ -1524,6 +1918,21 @@ cierre con una única pista registrada en la jornada 7 ENTONCES tampoco.
 DADO una partida despedida al cerrar la jornada 5 con el expediente sin pistas ENTONCES el final es
 el despido y no «Empleado estresado». DADO una partida en curso sin pistas ENTONCES no hay final.
 
+### AC-INV-190 — Con alguna pista, locura paranoica *(verifica BR-INV-103)*
+
+DADO la jornada 7 cerrada con el contrato cumplido y una única pista registrada, en cualquier
+jornada de la 1 a la 7, ENTONCES el final es «Locura paranoica» y no «Empleado estresado». DADO el
+mismo cierre sin pistas y con la hipótesis P o L elegida en alguna jornada ENTONCES el final es
+«Empleado estresado». DADO una partida en curso con pistas ENTONCES no hay final.
+
+### AC-INV-191 — El despido y la puerta del jefe ganan sobre la locura paranoica *(verifica BR-INV-103)*
+
+DADO una partida con pistas registradas despedida al cerrar la jornada 5, o al cerrar la 7,
+ENTONCES el final es el despido y no «Locura paranoica». DADO la jornada 7 con la pista 7B activa y
+otras pistas registradas CUANDO se abre la puerta del jefe con la palanca ENTONCES el final es el 4 y
+no «Locura paranoica». DADO la 7C activa CUANDO se abre con la llave ENTONCES el final es el 5 y no
+«Locura paranoica».
+
 ### AC-INV-150 — Con la pista 6C se ofrece sólo 6C *(verifica BR-INV-116, BR-INV-070)*
 
 DADO 2A elegida en la jornada 4, 5B elegida en la 5 y 6C registrada en la 6 ENTONCES el cierre de la
@@ -1532,12 +1941,12 @@ jornada 6 lleva el encabezado «Un apagón me agarró desprevenido esta noche…
 contesta NO_DISPONIBLE, sin nota ni elección. DADO el expediente sin 6C CUANDO se pide elegir 6C
 ENTONCES contesta NO_DISPONIBLE.
 
-### AC-INV-151 — Sin la pista 6C se ofrece 6P o 6L *(verifica BR-INV-116, BR-INV-053)*
+### AC-INV-151 — Sin pista en la jornada 6 se ofrece 6P o 6L *(verifica BR-INV-116, BR-INV-053)*
 
 DADO el cierre de jornada 6 con el expediente vacío ENTONCES la única opción es 6P «NADA DE OTRO
-MUNDO» con su texto de la ficha, y ofrece sólo «Elegir». DADO 5B registrada en la jornada 5, sin 6C,
-ENTONCES la única opción es 6L «INVESTIGACIÓN INCONCLUSA» con su texto de la ficha, sin 6P. DADO 2A
-anotada en la jornada 4 y la 5P elegida, sin 6C, ENTONCES la única opción también es 6L. CUANDO en
+MUNDO» con su texto de la ficha, y ofrece sólo «Elegir». DADO 5B registrada en la jornada 5, sin 6B
+ni 6C, ENTONCES la única opción es 6L «INVESTIGACIÓN INCONCLUSA» con su texto de la ficha, sin 6P.
+DADO 2A anotada en la jornada 4 y la 5P elegida, sin 6B ni 6C, ENTONCES la única opción también es 6L. CUANDO en
 cualquiera de los tres casos se pide elegir la identidad que no se ofrece ENTONCES contesta
 NO_DISPONIBLE.
 
@@ -1549,7 +1958,7 @@ ENTONCES contesta REPETIDA y las notas no cambian. DADO la elección aceptada CU
 declarada menos un cuadro ENTONCES no hay entrada; CUANDO pasa el cuadro siguiente ENTONCES hay
 exactamente una entrada «NOCHE 7». DADO la reflexión sin elegir CUANDO pasan 10 minutos ENTONCES no
 hay entrada, nota nueva ni elección. DADO una reflexión restaurada con la elección vacía ENTONCES
-vuelve a la elección. Pasa igual con 6C o con 6L como única opción.
+vuelve a la elección. Pasa igual con 6B, 6C o 6L como única opción.
 
 ### AC-INV-153 — Las reflexiones de las jornadas 3, 4 y 5 no cambian *(verifica BR-INV-116, BR-INV-043, BR-INV-044, BR-INV-062)*
 
@@ -1557,6 +1966,114 @@ DADO el cierre de la jornada 3 ENTONCES sigue con su encabezado y sus tres texto
 DADO el cierre de la jornada 4 ENTONCES sigue con su encabezado y las cuatro combinaciones de
 BR-INV-039, y pide «NOCHE 5». DADO el cierre de la jornada 5 ENTONCES sigue con su encabezado y sus
 opciones 5B o 5P, y pide «NOCHE 6».
+
+### AC-INV-140 — Enrique avisa de las quejas en la jornada 7 *(verifica BR-INV-114)*
+
+DADO la jornada 7 abierta CUANDO se recorre el chat de Enrique ENTONCES, a continuación de la
+devolución de la jornada 6, hay tres mensajes de apertura, en el orden de BR-INV-114 y con las
+horas 15:57, 15:58 y 15:59. DADO cada jornada de la 1 a la 6 ENTONCES ninguno de los tres está en
+su chat. DADO una partida retomada en la jornada 7 ENTONCES aparecen una sola vez y el contador
+de Enrique cuenta sólo los que no leyó.
+
+### AC-INV-141 — Los cinco chats de compradores *(verifica BR-INV-110)*
+
+DADO la jornada 7 abierta CUANDO se lista el menú del celular ENTONCES hay un chat por cada uno
+de los cinco compradores, con su nombre, cada uno con un solo mensaje sin leer del comprador que
+trae la captura de BR-INV-113. DADO cada jornada de la 1 a la 6 ENTONCES ninguno de esos cinco
+chats está en el menú. DADO la compra de cada comprador ENTONCES su total correcto es la suma de los
+precios del catálogo de sus productos fijos.
+
+### AC-INV-142 — El valor del texto es el de la captura *(verifica BR-INV-110, BR-INV-113)*
+
+DADO el mensaje de El Seba, el de Suko Yañez y el de Lucas Ortega CUANDO se lee su texto ENTONCES
+contiene el valor cobrado con el formato de la captura, y la captura lleva el mismo importe.
+DADO el mensaje de Flavio Balbín y el de Myriam Melano ENTONCES su texto no contiene ningún
+importe y la captura lleva el valor cobrado.
+
+### AC-INV-143 — Entre una y cuatro quejas incorrectas, y nunca el total correcto *(verifica BR-INV-111)*
+
+DADO 200 semillas distintas CUANDO se sortea la jornada 7 ENTONCES en cada una entre 1 y 4
+quejas tienen un valor incorrecto y las otras tienen el total correcto; se observan cantidades
+de 1 y de 4 incorrectas. DADO cada queja incorrecta ENTONCES su valor es el total de su compra con
+uno o dos productos reemplazados por otros del catálogo de la noche, y nunca es el total
+correcto.
+
+### AC-INV-144 — La semilla fija el sorteo *(verifica BR-INV-111)*
+
+DADO la misma semilla y la jornada 7 CUANDO se sortea dos veces ENTONCES los cinco valores son
+iguales. DADO semillas distintas ENTONCES los valores difieren en alguna de las quejas.
+
+### AC-INV-145 — Dar la razón o rechazar *(verifica BR-INV-112)*
+
+DADO una queja con valor incorrecto CUANDO el jugador le da la razón ENTONCES la respuesta es
+correcta, y rechazarla es incorrecta. DADO una con el valor correcto ENTONCES rechazarla es
+correcto y darle la razón es incorrecto. DADO una queja ya respondida CUANDO se responde otra vez,
+en cualquier sentido, ENTONCES se rechaza y la respuesta anterior no cambia. DADO un índice que no
+existe ENTONCES se rechaza sin cambiar nada.
+
+### AC-INV-146 — La respuesta aparece en el chat y retira los botones *(verifica BR-INV-112)*
+
+DADO el chat de una queja sin responder CUANDO se abre ENTONCES ofrece los dos botones. CUANDO el
+jugador pulsa uno ENTONCES el chat muestra una respuesta del jugador con el texto de ese botón
+tras el mensaje del comprador, sin los botones y sin avisar un mensaje recibido, y los
+no leídos de los demás chats no cambian. DADO el chat respondido CUANDO se vuelve a abrir
+ENTONCES no ofrece los botones.
+
+### AC-INV-147 — Sin respuestas no se cumple y lo respondido no se retoma *(verifica BR-INV-112, BR-INV-111)*
+
+DADO las cinco quejas CUANDO ninguna tiene respuesta ENTONCES no está cumplida. DADO cuatro
+respondidas bien ENTONCES no está cumplida; con las cinco bien, sí; con una equivocada, no.
+DADO la jornada 7 retomada de un guardado ENTONCES los valores son los de la partida y las cinco
+quejas empiezan sin respuesta.
+
+### AC-INV-148 — La captura lleva el diseño y cuentas fijas *(verifica BR-INV-113)*
+
+DADO los cinco compradores CUANDO se leen los cuatro dígitos de la cuenta de origen ENTONCES son
+cinco números distintos, iguales en todo sorteo, y el destino de Enrique es siempre el mismo. DADO
+un valor de 4200 ENTONCES el importe se escribe `$ 4.200`, y uno de 30000 se escribe `$ 30.000`.
+
+### AC-INV-149 — La pantalla conjunta alterna con el botón y con Q *(verifica BR-INV-115)*
+
+DADO la jornada 7 con la computadora recién abierta CUANDO se mira ENTONCES está en la pantalla
+normal y ofrece el botón. CUANDO se pulsa el botón ENTONCES pasa a la conjunta, con el celular
+abierto en el menú, y pulsarlo otra vez la devuelve a la normal con el celular cerrado. DADO la
+computadora abierta CUANDO se aprieta Q ENTONCES alterna igual. DADO la conjunta CUANDO se cierra la
+computadora y se vuelve a abrir ENTONCES arranca en la pantalla normal con el celular cerrado.
+DADO cualquier jornada de la 1 a la 6 con la computadora abierta ENTONCES no ofrece el botón y Q
+no cambia la pantalla. DADO que pasan los cuadros de una alternancia ENTONCES el turno descuenta
+sólo el tiempo real, sin sumar ni restar nada por el cambio.
+
+### AC-INV-160 — Con mensajes sin leer, el primero queda arriba *(verifica BR-INV-120, BR-INV-022)*
+
+DADO un chat con 30 mensajes de los cuales los 3 últimos están sin leer CUANDO se abre ENTONCES el
+mensaje 28 queda en el borde superior de la lista, el 29 y el 30 debajo, y los no leídos pasan a
+cero. DADO el mismo chat con 40 sin leer, de modo que no entran en pantalla, ENTONCES el primero
+sin leer queda arriba y la rueda alcanza el último.
+
+### AC-INV-161 — Sin mensajes sin leer, se abre al final *(verifica BR-INV-120, BR-INV-022)*
+
+DADO un chat de 30 mensajes sin ninguno sin leer CUANDO se abre ENTONCES muestra el último mensaje
+abajo y la rueda alcanza el primero. DADO el mismo chat cerrado y vuelto a abrir sin que haya
+llegado nada ENTONCES se repite el resultado.
+
+### AC-INV-162 — Un único sin leer que es el último queda arriba, y un chat corto no se desplaza *(verifica BR-INV-120)*
+
+DADO un chat de 30 mensajes con sólo el último sin leer CUANDO se abre ENTONCES ese mensaje queda
+en el borde superior y debajo sobra espacio. DADO un chat de un mensaje sin leer ENTONCES queda a
+la vista sin desplazar, igual que uno con todos sus mensajes dentro de la pantalla.
+
+### AC-INV-163 — En el cierre, el primer mensaje del jefe queda arriba *(verifica BR-INV-120, BR-INV-026)*
+
+DADO el celular fijo en el chat de Enrique con un historial que ocupa más que la pantalla CUANDO
+llega el primer mensaje de la devolución ENTONCES queda en el borde superior. CUANDO llegan el
+segundo y el tercero ENTONCES aparecen debajo y el primero sigue arriba. CUANDO los mensajes y la
+opción ya no entran ENTONCES la lista baja lo justo para ver el último y la opción.
+
+### AC-INV-164 — Un mensaje que llega con el chat abajo baja hasta él *(verifica BR-INV-120)*
+
+DADO un chat libre abierto sin mensajes sin leer y con la lista en su último mensaje CUANDO llega
+un mensaje ENTONCES la lista baja hasta el nuevo. DADO el mismo chat con la lista desplazada hacia
+arriba ENTONCES la lista no se mueve.
 
 ## No objetivos
 
@@ -1573,7 +2090,8 @@ opciones 5B o 5P, y pide «NOCHE 6».
 - **Entrada:** el objeto examinado, la entrada de movimiento y los segundos del cuadro, el
   arrastre del mouse y la conversación abierta; caso, pistas, exigencias y desenlaces,
   expediente recibido, identidades para reconstrucción y gestos de pista con canal y jornada;
-  el camino de cada hipótesis, el azar para sortear y el sorteo guardado;
+  el camino de cada hipótesis, el azar para sortear y el sorteo guardado; el aviso de que la
+  puerta del jefe se abrió con la palanca o con la llave;
   la jornada, Q, el estado del control
   y los pedidos de recibir mensajes, navegar chats, ampliar fotos, fijar y soltar el celular;
   identidad y metadatos temporales de mensajes y el tramo de pista pulsado; continuar, navegar
@@ -1623,6 +2141,12 @@ opciones 5B o 5P, y pide «NOCHE 6».
 
 ## Preguntas abiertas
 
+- **OQ-INV-010 — ¿Qué hay entre abrir la puerta de Enrique y la pantalla del final?**
+  - Por qué sigue abierta: las filas «7B» y «7C» dicen que la jornada termina y «pasa directamente
+    al epílogo», pero el epílogo no tiene contenido en Notion ni frame en Figma. Mientras no lo
+    tenga, la puerta lleva directo a la pantalla del final 4 o del 5 (BR-SHF-060, BR-SHF-061).
+  - Decide: game design con narrativa.
+  - Bloquea: intercalar el epílogo antes de la pantalla; no bloquea la pantalla ni el final.
 - **OQ-INV-007 — ¿Cuánto dura y qué curva tiene el deslizamiento del chat?**
   - Por qué sigue abierta: la ficha «Especificar animaciones» pide que el chat entre desde el
     margen derecho «como Instagram» y no da duración ni curva. El juego usa valores provisionales

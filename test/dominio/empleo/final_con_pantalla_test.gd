@@ -69,24 +69,35 @@ func test_elegir_una_hipotesis_sin_pista_no_cuenta_como_pista() -> void:  # AC-I
 	assert_int(FinalConPantalla.de(partida)).is_equal(FinalConPantalla.Cual.EMPLEADO_ESTRESADO)
 
 
-func test_una_sola_pista_evita_el_final_sin_pistas() -> void:  # AC-SHF-066, AC-INV-127
+func test_una_sola_pista_lleva_al_final_2() -> void:  # AC-SHF-066, AC-INV-190
 	var partida := Partida.nueva()
 	assert_int(partida.expediente.registrar("2A")).is_equal(Expediente.Resultado.ANOTADA)
 	for _jornada in range(ReglasDeLaPartida.JORNADAS_DE_LA_PARTIDA):
 		_impecable(partida)
-	assert_int(partida.final()).is_equal(Partida.Final.CONTRATO_CUMPLIDO)
-	assert_int(FinalConPantalla.de(partida)).is_equal(FinalConPantalla.Cual.NINGUNO)
-	assert_array(_opcion_de(partida)).is_equal([DevolucionDelJefe.Opcion.VOLVER_AL_MENU])
+	assert_int(partida.final()).is_equal(Partida.Final.LOCURA_PARANOICA)
+	assert_int(FinalConPantalla.de(partida)).is_equal(FinalConPantalla.Cual.LOCURA_PARANOICA)
+	assert_array(_opcion_de(partida)).is_equal([DevolucionDelJefe.Opcion.VER_EL_FINAL])
 
 
-func test_la_pista_de_la_ultima_jornada_tambien_evita_el_final_sin_pistas() -> void:  # AC-INV-127
+func test_la_pista_de_la_ultima_jornada_tambien_lleva_al_final_2() -> void:  # AC-INV-190
 	var partida := Partida.nueva()
 	for _jornada in range(ReglasDeLaPartida.JORNADAS_DE_LA_PARTIDA - 1):
 		_impecable(partida)
 	partida.expediente.registrar("2A")
 	_impecable(partida)
-	assert_int(partida.final()).is_equal(Partida.Final.CONTRATO_CUMPLIDO)
-	assert_int(FinalConPantalla.de(partida)).is_equal(FinalConPantalla.Cual.NINGUNO)
+	assert_int(partida.final()).is_equal(Partida.Final.LOCURA_PARANOICA)
+	assert_int(FinalConPantalla.de(partida)).is_equal(FinalConPantalla.Cual.LOCURA_PARANOICA)
+
+
+func test_el_despido_en_la_ultima_jornada_gana_sobre_el_final_2() -> void:  # AC-INV-191
+	var partida := Partida.nueva()
+	partida.expediente.registrar("2A")
+	for _jornada in range(ReglasDeLaPartida.JORNADAS_DE_LA_PARTIDA - 2):
+		_impecable(partida)
+	_jugar(partida, 0)
+	_jugar(partida, 0)
+	assert_int(partida.final()).is_equal(Partida.Final.DESPEDIDO)
+	assert_int(FinalConPantalla.de(partida)).is_equal(FinalConPantalla.Cual.DESPEDIDO)
 
 
 func test_el_despido_gana_sobre_la_falta_de_pistas() -> void:  # AC-SHF-065, AC-INV-128
@@ -103,8 +114,9 @@ func test_el_despido_con_pistas_tiene_la_pantalla_del_despido() -> void:  # AC-S
 	assert_int(FinalConPantalla.de(partida)).is_equal(FinalConPantalla.Cual.DESPEDIDO)
 
 
-func test_una_partida_en_curso_sin_pistas_no_tiene_final() -> void:  # AC-SHF-066, AC-INV-128
+func test_una_partida_en_curso_no_tiene_final() -> void:  # AC-SHF-066, AC-INV-190
 	var partida := Partida.nueva()
+	partida.expediente.registrar("2A")
 	_impecable(partida)
 	assert_bool(partida.terminada()).is_false()
 	assert_int(FinalConPantalla.de(partida)).is_equal(FinalConPantalla.Cual.NINGUNO)

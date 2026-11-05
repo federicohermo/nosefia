@@ -125,6 +125,13 @@ func arrastrar(relativo: Vector2, con_el_clic: bool) -> void:
 	_rotar(giro.x, giro.y)
 
 
+## Gira lo examinado con el joystick derecho, en proporción a su inclinación y a la velocidad a
+## fondo del giro de la vista: `x` a la derecha e `y` hacia abajo, como el arrastre del mouse.
+func girar_con_el_joystick(inclinacion: Vector2, segundos: float) -> void:
+	var giro := inclinacion * ReglasDelJugador.GIRO_DEL_JOYSTICK * segundos
+	_rotar(giro.x, giro.y)
+
+
 ## Sin nada en examen no hace nada: el mouse y las teclas se usan todo el tiempo, también
 ## caminando.
 func _rotar(sobre_el_vertical: float, sobre_el_horizontal: float) -> void:

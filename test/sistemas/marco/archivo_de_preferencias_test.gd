@@ -96,3 +96,36 @@ func test_una_escritura_que_no_llega_al_disco_lo_dice() -> void:
 	var archivo := ArchivoDePreferencias.new()
 	archivo.ruta = "user://carpeta_que_no_existe_%d/preferencias.datos" % OS.get_process_id()
 	assert_bool(archivo.escribir(Preferencias.new())).is_false()
+
+
+func test_las_asignaciones_escritas_vuelven_en_otro_arranque() -> void:  # AC-CFG-022
+	var archivo := _archivo()
+	var asignacion := AsignacionDeControles.new()
+	asignacion.asignar(
+		AsignacionDeControles.EXAMINAR, 0, AsignacionDeControles.TipoDeEntrada.TECLA, KEY_F
+	)
+	var preferencias := Preferencias.new()
+	preferencias.poner(C.MUSICA, 30.0)
+	preferencias.poner_controles(asignacion)
+	assert_bool(archivo.escribir(preferencias)).is_true()
+	var otro_arranque := ArchivoDePreferencias.new()
+	otro_arranque.ruta = archivo.ruta
+	var leidas := otro_arranque.cargar()
+	assert_float(leidas.valor(C.MUSICA)).is_equal_approx(30.0, 1e-6)
+	assert_array(leidas.controles().entradas()).is_equal(asignacion.entradas())
+
+
+func test_un_archivo_sin_asignaciones_deja_el_esquema_de_fabrica() -> void:  # AC-CFG-022
+	var archivo := _archivo()
+	_escribir_crudo(archivo.ruta, var_to_str({"musica": 30.0}))
+	var leidas := archivo.cargar()
+	assert_float(leidas.valor(C.MUSICA)).is_equal_approx(30.0, 1e-6)
+	assert_array(leidas.controles().entradas()).is_equal(AsignacionDeControles.new().entradas())
+
+
+func test_un_archivo_ilegible_deja_el_esquema_de_fabrica() -> void:  # AC-CFG-023
+	var archivo := _archivo()
+	_escribir_crudo(archivo.ruta, "esto no es un diccionario {{{")
+	assert_array(archivo.cargar().controles().entradas()).is_equal(
+		AsignacionDeControles.new().entradas()
+	)

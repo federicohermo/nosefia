@@ -95,6 +95,23 @@ func test_un_dialogo_vacio_o_nulo_no_abre_ni_retiene() -> void:
 	assert_bool(locutor.puede_abandonar()).is_true()
 
 
+func test_x_del_joystick_avanza_el_dialogo_y_otro_boton_no() -> void:  # AC-CFG-029
+	var locutor := _locutor()
+	locutor.abrir(_tres_entradas())
+	locutor.recibir(_boton_del_joystick(JOY_BUTTON_Y, true))
+	locutor.recibir(_boton_del_joystick(JOY_BUTTON_A, false))
+	assert_array(_entradas).is_equal(["Primera"])
+	locutor.recibir(_boton_del_joystick(JOY_BUTTON_A, true))
+	assert_array(_entradas).is_equal(["Primera", "Segunda"])
+
+
+func _boton_del_joystick(indice: int, presionado: bool) -> InputEventJoypadButton:
+	var evento := InputEventJoypadButton.new()
+	evento.button_index = indice as JoyButton
+	evento.pressed = presionado
+	return evento
+
+
 func _locutor() -> Locutor:
 	var locutor: Locutor = auto_free(Locutor.new())
 	locutor.entrada_mostrada.connect(func(entrada: String) -> void: _entradas.append(entrada))

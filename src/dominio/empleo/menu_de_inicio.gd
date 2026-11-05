@@ -4,7 +4,9 @@ extends RefCounted
 
 enum Opcion { NUEVO_JUEGO, CONTINUAR, CONFIGURACIONES, LOGROS, SALIR }
 
-const HABILITADAS: Array[Opcion] = [Opcion.NUEVO_JUEGO, Opcion.CONFIGURACIONES, Opcion.SALIR]
+const HABILITADAS: Array[Opcion] = [
+	Opcion.NUEVO_JUEGO, Opcion.CONFIGURACIONES, Opcion.LOGROS, Opcion.SALIR
+]
 
 var _es_web: bool
 var _hay_guardado: bool

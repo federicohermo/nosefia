@@ -1,0 +1,59 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://src/escenas/objetos/objeto_agarrable.gd" id="objeto"]
+[ext_resource type="Resource" path="res://src/dominio/investigacion/llave.tres" id="datos"]
+
+[sub_resource type="BoxShape3D" id="cuerpo"]
+margin = 0.001
+size = Vector3(0.1, 0.02, 0.036)
+
+[sub_resource type="StandardMaterial3D" id="metal"]
+albedo_color = Color(0.62, 0.6, 0.55, 1)
+metallic = 1.0
+metallic_specular = 0.8
+roughness = 0.35
+
+[sub_resource type="CylinderMesh" id="anillo"]
+top_radius = 0.016
+bottom_radius = 0.016
+height = 0.014
+radial_segments = 16
+
+[sub_resource type="BoxMesh" id="vastago"]
+size = Vector3(0.07, 0.012, 0.012)
+
+[sub_resource type="BoxMesh" id="diente"]
+size = Vector3(0.008, 0.012, 0.012)
+
+[node name="Llave" type="RigidBody3D" groups=["interactuable"]]
+mass = 0.05
+collision_mask = 9
+script = ExtResource("objeto")
+datos = ExtResource("datos")
+
+[node name="Forma" type="CollisionShape3D" parent="."]
+shape = SubResource("cuerpo")
+
+[node name="Anillo" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.034, 0, 0)
+mesh = SubResource("anillo")
+surface_material_override/0 = SubResource("metal")
+gi_mode = 2
+
+[node name="Vastago" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.012, 0, 0)
+mesh = SubResource("vastago")
+surface_material_override/0 = SubResource("metal")
+gi_mode = 2
+
+[node name="DienteA" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.04, 0, 0.01)
+mesh = SubResource("diente")
+surface_material_override/0 = SubResource("metal")
+gi_mode = 2
+
+[node name="DienteB" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.026, 0, 0.01)
+mesh = SubResource("diente")
+surface_material_override/0 = SubResource("metal")
+gi_mode = 2

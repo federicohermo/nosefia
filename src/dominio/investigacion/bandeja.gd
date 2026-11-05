@@ -7,6 +7,7 @@ var _leidos: Dictionary[Conversacion.Interlocutor, int] = {}
 var _recibidos: Dictionary[Conversacion.Interlocutor, Array] = {}
 var _jornada: int = 1
 var _condiciones: Array[StringName] = []
+var _quejas: QuejasDeLaJornada = null
 
 
 func _init(conversaciones: Array[Conversacion]) -> void:
@@ -24,6 +25,12 @@ func _init(conversaciones: Array[Conversacion]) -> void:
 func abrir_jornada(jornada: int, condiciones: Array[StringName] = []) -> void:
 	_jornada = jornada
 	_condiciones = condiciones.duplicate()
+
+
+## Las quejas de la noche: sus mensajes salen de ellas y no de un guión, así que no hay una copia
+## que se desactualice. Sin quejas, los chats de los compradores no tienen mensajes.
+func usar_quejas(quejas: QuejasDeLaJornada) -> void:
+	_quejas = quejas
 
 
 func conversaciones() -> Array[Conversacion]:
@@ -58,6 +65,10 @@ func mensajes_de(quien: Conversacion.Interlocutor) -> Array[Mensaje]:
 	for recibido: Mensaje in _recibidos[quien]:
 		if recibido.jornada <= _jornada:
 			todos.append(recibido)
+	if _quejas != null:
+		for de_la_queja: Mensaje in _quejas.mensajes_de(quien):
+			if de_la_queja.jornada <= _jornada:
+				todos.append(de_la_queja)
 	for posicion: int in todos.size():
 		var mensaje := todos[posicion]
 		if mensaje.momento == Mensaje.Momento.SIN_FECHA:
@@ -108,6 +119,12 @@ func no_leidos_totales() -> int:
 	return sin_leer
 
 
+## El lugar, en `mensajes_de`, del primer mensaje sin leer; -1 si el chat está al día.
+func primer_no_leido(quien: Conversacion.Interlocutor) -> int:
+	var sin_leer := no_leidos(quien)
+	return -1 if sin_leer == 0 else mensajes_de(quien).size() - sin_leer
+
+
 func marcar_leida(quien: Conversacion.Interlocutor) -> bool:
 	if not _leidos.has(quien) or no_leidos(quien) == 0:
 		return false
@@ -123,6 +140,8 @@ func adjunto_de(quien: Conversacion.Interlocutor, indice: int) -> Mensaje:
 	for posicion in range(indice + 1, mensajes.size()):
 		var siguiente := mensajes[posicion]
 		if siguiente.jornada != origen.jornada or siguiente.momento != origen.momento:
+			return null
+		if siguiente.propio:
 			return null
 		if origen.texto.is_empty():
 			if siguiente.foto != null and siguiente.texto.is_empty():

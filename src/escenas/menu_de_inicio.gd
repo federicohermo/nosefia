@@ -38,6 +38,7 @@ const EN_LA_FILA: Array[MenuDeInicio.Opcion] = [
 @export var _marco: Control
 @export var _fila: HBoxContainer
 @export var _configuraciones: PantallaDeConfiguraciones
+@export var _logros_pantalla: PantallaDeLogros
 
 var _guardado := Guardado.new()
 var _ajuste: AjusteDePreferencias
@@ -76,10 +77,16 @@ func _ready() -> void:
 	_configuraciones.preparar(_ajuste.cargar_y_aplicar())
 	_configuraciones.preferencias_cambiadas.connect(_ajuste.previsualizar)
 	_configuraciones.preferencias_confirmadas.connect(_ajuste.cambiar)
+	_configuraciones.controles_cambiados.connect(_ajuste.previsualizar)
 	_configuraciones.preferencias_cambiadas.connect(
 		func(_nuevas: Preferencias) -> void: _copia_con_las_preferencias = false
 	)
+	_configuraciones.controles_cambiados.connect(
+		func(_nuevas: Preferencias) -> void: _copia_con_las_preferencias = false
+	)
 	_configuraciones.cerrada.connect(_al_cerrar_las_configuraciones)
+	_logros_pantalla.preparar(ArchivoDeLogros.new().cargar(), CasoDeInvestigacion.de_la_partida())
+	_logros_pantalla.cerrada.connect(_al_cerrar_los_logros)
 	_sonar_el_tema()
 	var menu := MenuDeInicio.new(OS.has_feature("web"), _guardado.hay_guardado())
 	_pedidos.preparar(menu, _guardado)
@@ -95,9 +102,12 @@ func _ready() -> void:
 			_fila.add_child(boton)
 		else:
 			_opciones.add_child(boton)
+	# El menú arranca con un botón elegido: con joystick no hay otro modo de empezar.
+	FocoDeLaInterfaz.en_el_primero.bind(_marco).call_deferred()
 	_pedidos.nuevo_juego_pedido.connect(empezar_partida_nueva)
 	_pedidos.continuar_pedido.connect(entrar_al_almacen)
 	_pedidos.configuraciones_pedida.connect(_abrir_las_configuraciones)
+	_pedidos.logros_pedida.connect(_abrir_los_logros)
 	# Se crean acá y no al declararlos: una instancia que nunca entra al árbol los dejaría
 	# colgados.
 	_carga = CargaEnSegundoPlano.new()
@@ -160,6 +170,17 @@ func _process(delta: float) -> void:
 func _al_cerrar_las_configuraciones() -> void:
 	_marco.show()
 	_botones[MenuDeInicio.Opcion.CONFIGURACIONES].grab_focus(true)
+
+
+## Esc la cierra sola; el foco vuelve al botón que la abrió.
+func _al_cerrar_los_logros() -> void:
+	_marco.show()
+	_botones[MenuDeInicio.Opcion.LOGROS].grab_focus(true)
+
+
+func _abrir_los_logros() -> void:
+	_marco.hide()
+	_logros_pantalla.abrir()
 
 
 func _abrir_las_configuraciones() -> void:

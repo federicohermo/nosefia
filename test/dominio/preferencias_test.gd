@@ -112,9 +112,9 @@ func test_los_datos_vuelven_con_los_cinco_valores_y_su_tipo() -> void:  # AC-CFG
 	preferencias.poner(C.SENSIBILIDAD, 1.75)
 	preferencias.poner(C.TEXTOS, 0.9)
 	var datos := preferencias.datos()
-	assert_int(datos.size()).is_equal(5)
-	for clave: String in datos:
-		assert_int(typeof(datos[clave])).is_equal(TYPE_FLOAT)
+	assert_int(datos.size()).is_equal(Preferencias.CAMPOS.size() + 1)
+	for campo: Preferencias.Campo in Preferencias.CAMPOS:
+		assert_int(typeof(datos[Preferencias.CLAVES[campo]])).is_equal(TYPE_FLOAT)
 	var leidas := Preferencias.desde(datos)
 	for campo: Preferencias.Campo in Preferencias.CAMPOS:
 		assert_float(leidas.valor(campo)).is_equal_approx(preferencias.valor(campo), TOLERANCIA)
@@ -155,3 +155,50 @@ func test_una_copia_no_comparte_los_valores() -> void:
 	var copia := original.copia()
 	copia.poner(C.MUSICA, 0.0)
 	assert_float(original.valor(C.MUSICA)).is_equal_approx(100.0, TOLERANCIA)
+
+
+func test_las_asignaciones_viajan_con_las_preferencias() -> void:  # AC-CFG-022
+	var asignacion := AsignacionDeControles.new()
+	asignacion.asignar(
+		AsignacionDeControles.EXAMINAR, 0, AsignacionDeControles.TipoDeEntrada.TECLA, KEY_F
+	)
+	var preferencias := Preferencias.new()
+	preferencias.poner(C.MUSICA, 30.0)
+	preferencias.poner_controles(asignacion)
+	var leidas := Preferencias.desde(preferencias.datos())
+	assert_float(leidas.valor(C.MUSICA)).is_equal_approx(30.0, TOLERANCIA)
+	assert_array(leidas.controles().entradas()).is_equal(asignacion.entradas())
+	assert_array(preferencias.copia().controles().entradas()).is_equal(asignacion.entradas())
+
+
+func test_sin_bloque_de_controles_cada_ranura_tiene_la_de_fabrica() -> void:  # AC-CFG-022
+	var leidas := Preferencias.desde({"musica": 30.0})
+	assert_float(leidas.valor(C.MUSICA)).is_equal_approx(30.0, TOLERANCIA)
+	assert_array(leidas.controles().entradas()).is_equal(AsignacionDeControles.new().entradas())
+	var con_otro_tipo := Preferencias.desde({"controles": "no es un diccionario"})
+	assert_array(con_otro_tipo.controles().entradas()).is_equal(
+		AsignacionDeControles.new().entradas()
+	)
+
+
+func test_un_bloque_con_una_tecla_repetida_se_descarta_y_conserva_las_demas() -> void:  # AC-CFG-023
+	var datos := Preferencias.new().datos()
+	datos["musica"] = 30.0
+	var repetida := {"tipo": AsignacionDeControles.TipoDeEntrada.TECLA, "codigo": KEY_F}
+	datos["controles"][String(AsignacionDeControles.EXAMINAR)] = [repetida]
+	datos["controles"][String(AsignacionDeControles.AGACHARSE)] = [repetida]
+	var leidas := Preferencias.desde(datos)
+	assert_float(leidas.valor(C.MUSICA)).is_equal_approx(30.0, TOLERANCIA)
+	assert_array(leidas.controles().entradas()).is_equal(AsignacionDeControles.new().entradas())
+
+
+func test_las_asignaciones_de_una_copia_no_cambian_el_original() -> void:  # AC-CFG-018
+	var original := Preferencias.new()
+	var copia := original.copia()
+	var asignacion := copia.controles()
+	asignacion.asignar(
+		AsignacionDeControles.EXAMINAR, 0, AsignacionDeControles.TipoDeEntrada.TECLA, KEY_F
+	)
+	copia.poner_controles(asignacion)
+	assert_array(original.controles().entradas()).is_equal(AsignacionDeControles.new().entradas())
+	assert_array(copia.controles().entradas()).is_not_equal(original.controles().entradas())

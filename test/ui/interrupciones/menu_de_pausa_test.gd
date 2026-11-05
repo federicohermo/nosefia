@@ -4,7 +4,6 @@ extends GdUnitTestSuite
 const ESCENA := "res://src/ui/interrupciones/menu_de_pausa.tscn"
 const SCRIPT := "res://src/ui/interrupciones/menu_de_pausa.gd"
 const TEXTOS: Array[String] = ["REANUDAR", "CONFIGURACIONES", "LOGROS", "VOLVER AL MENÚ"]
-const HABILITADOS: Array[String] = ["REANUDAR", "CONFIGURACIONES", "VOLVER AL MENÚ"]
 
 var _reanudar: int = 0
 var _volver: int = 0
@@ -42,7 +41,7 @@ func test_arranca_oculto_y_corre_solo_en_pausa() -> void:
 	assert_int(menu.process_mode).is_equal(Node.PROCESS_MODE_WHEN_PAUSED)
 
 
-func test_muestra_los_cuatro_botones_en_orden_y_solo_logros_deshabilitado() -> void:  # AC-SAV-019
+func test_muestra_los_cuatro_botones_en_orden_y_los_cuatro_habilitados() -> void:  # AC-SAV-019
 	var menu := _menu()
 	var textos: Array[String] = []
 	var habilitados: Array[String] = []
@@ -51,7 +50,7 @@ func test_muestra_los_cuatro_botones_en_orden_y_solo_logros_deshabilitado() -> v
 		if not boton.disabled:
 			habilitados.append(boton.text)
 	assert_array(textos).is_equal(TEXTOS)
-	assert_array(habilitados).is_equal(HABILITADOS)
+	assert_array(habilitados).is_equal(TEXTOS)
 
 
 func test_no_ofrece_salir() -> void:  # AC-SAV-019
@@ -120,6 +119,33 @@ func test_ocultar_el_menu_cierra_tambien_configuraciones() -> void:
 	menu.abrir_configuraciones()
 	menu.ocultar()
 	assert_bool(menu.configuraciones().visible).is_false()
+	assert_bool((menu.get_node("Fondo/Panel") as Control).visible).is_true()
+
+
+func test_logros_abre_su_pantalla_en_pausa_y_al_cerrarla_vuelve_el_foco() -> void:  # AC-ACH-014
+	var menu := _menu()
+	get_tree().paused = true
+	menu.mostrar()
+	(menu.get_node("Fondo/Panel/Opciones/Logros") as Button).pressed.emit()
+	var pantalla := menu.pantalla_de_logros()
+	assert_bool(pantalla.visible).is_true()
+	assert_bool(menu.logros_abierta()).is_true()
+	assert_bool((menu.get_node("Fondo/Panel") as Control).visible).is_false()
+	assert_bool(pantalla.can_process()).is_true()
+	assert_bool(get_tree().paused).is_true()
+	menu.cerrar_logros()
+	assert_bool(menu.logros_abierta()).is_false()
+	assert_bool(menu.visible).is_true()
+	assert_bool((menu.get_node("Fondo/Panel/Opciones/Logros") as Button).has_focus()).is_true()
+	assert_int(_reanudar).is_zero()
+
+
+func test_ocultar_el_menu_cierra_tambien_logros() -> void:
+	var menu := _menu()
+	menu.mostrar()
+	menu.abrir_logros()
+	menu.ocultar()
+	assert_bool(menu.logros_abierta()).is_false()
 	assert_bool((menu.get_node("Fondo/Panel") as Control).visible).is_true()
 
 

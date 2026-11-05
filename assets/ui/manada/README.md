@@ -1,5 +1,32 @@
 # Gráfica de la computadora
 
+## Imágenes de logros
+
+Arte original generado con `imagegen` el 2026-11-05 para #814: PNG RGBA de 256 × 256,
+con fondo transparente. Se redujeron las salidas con filtro Lanczos, sin cambiar sus motivos.
+La referencia visual son las siluetas negras angulares de `notificacion_pista.svg` y del
+trofeo `notificacion_logro.svg` de la rama `feature/381-logros` (Figma `480:331`).
+Los motivos fueron aprobados por el coordinador. El único texto dentro del arte es «99»;
+los nombres los dibuja la pantalla. La integración en el menú corresponde a #381.
+
+Prompt común: un solo pictograma negro, grueso y angular; fondo transparente; sin colores,
+sombras ni degradados; centrado con margen del 12 %; legible a 72 px. Cada fila aporta el motivo.
+
+| Recurso | Motivo del prompt | Uso |
+|---|---|---|
+| `logros/rebelde.png` | Ticket que cae en un inodoro de perfil | Rebelde |
+| `logros/y_se_marcho.png` | Caja que sale por una ventana abierta, con flecha | Y se marchó… |
+| `logros/a_la_basura.png` | Caja que cae en un contenedor abierto | A la basura |
+| `logros/estamos_al_pedo.png` | Computadora con un 99 en el registro | Estamos al pedo, ¿no? |
+| `logros/empleado_ejemplar.png` | Medalla con estrella y dos cintas | Empleado ejemplar |
+| `logros/pesima_primera_impresion.png` | Credencial tachada y reloj | Pésima primera impresión |
+| `logros/mi_talon_de_aquiles.png` | Planilla con cuatro cruces | Mi talón de Aquiles |
+| `logros/final_despedido.png` | Contrato partido con desgarro central | Final: despedido |
+| `logros/final_contrato_cumplido.png` | Contrato con una tilde grande | Final: contrato cumplido |
+| `logros/bloqueado.png` | Signo de pregunta grueso con ángulos rectos | Entrada sin desbloquear |
+
+## Recursos de la interfaz
+
 Recursos de [Manada — UI](https://www.figma.com/design/SQEAfczyRvyOHokmzPOee7/Manada---UI),
 extraídos el 22 de septiembre de 2026. Las escenas usan recursos locales; no dependen de Figma
 durante la ejecución.
@@ -28,6 +55,7 @@ comercial. La incorporación al build local no acredita una licencia comercial.
 | `notificacion_cliente.svg` | Figma, grupo `213:191` del frame `243:150` | Símbolo original del aviso «¡HAY UN CLIENTE!» |
 | `notificacion_lectura.svg` | Figma, grupo `480:319` del frame `477:243` | Cruz original del aviso «NO SE PUDO LEER» |
 | `notificacion_pista.svg` | Figma, grupo `480:323` del frame `477:225`, descargado sin editar el 2026-10-18 | Signo de pregunta del aviso «¡NUEVA PISTA!» |
+| `notificacion_logro.svg` | Figma, grupo `480:331` del frame `477:234`, descargado sin editar el 2026-11-04 | Trofeo del aviso de logro ganado |
 | `notificacion_tareas_completadas.svg` | Figma, ícono `1523:452` del frame `1523:451`, descargado sin editar el 2026-11-03 | Puerta principal del aviso «¡TAREAS COMPLETADAS!» |
 | `notificacion_cierre.svg` | Figma, frame `1676:750`: reloj de arena `1676:744` y exclamación `1676:747` / `1676:748`, compuestos en un lienzo de 164 × 154 con sus posiciones relativas del frame; los trazos son los originales, descargados el 2026-11-04 | Reloj de arena con exclamación del aviso «¡HORA DE CIERRE!» |
 | `fondo.png` | Captura histórica de `almacen.tscn` | Recurso conservado; la computadora actual usa un shader |

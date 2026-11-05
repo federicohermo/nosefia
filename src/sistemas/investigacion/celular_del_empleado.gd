@@ -12,8 +12,15 @@ signal no_leidos_cambiados(sin_leer: int)
 signal mensaje_recibido(quien: Conversacion.Interlocutor, mensaje: Mensaje)
 signal nota_recibida(mensaje: Mensaje)
 
-var _bandeja := Bandeja.new(Conversacion.desde_disco())
+var _bandeja := Bandeja.new(_todas_las_conversaciones())
 var _celular := Celular.new(_bandeja)
+
+
+## Los chats del guión y los de los compradores, que sólo tienen mensajes si hay quejas.
+static func _todas_las_conversaciones() -> Array[Conversacion]:
+	var todas := Conversacion.desde_disco()
+	todas.append_array(QuejasDeLaJornada.conversaciones())
+	return todas
 
 
 func celular() -> Celular:
@@ -28,6 +35,12 @@ func abrir_jornada(jornada: int, condiciones: Array[StringName] = []) -> void:
 	cerrar_jornada()
 	_bandeja.abrir_jornada(jornada, condiciones)
 	_celular.habilitar(true)
+	no_leidos_cambiados.emit(_bandeja.no_leidos_totales())
+
+
+## Las quejas de la noche, o ninguna: los chats de los compradores salen de ellas.
+func usar_quejas(quejas: QuejasDeLaJornada) -> void:
+	_bandeja.usar_quejas(quejas)
 	no_leidos_cambiados.emit(_bandeja.no_leidos_totales())
 
 
@@ -101,6 +114,7 @@ func soltar() -> void:
 
 func recibir(quien: Conversacion.Interlocutor, mensaje: Mensaje) -> void:
 	if _bandeja.recibir(quien, mensaje):
+		_celular.llegar(quien, _bandeja.mensajes_de(quien).find(mensaje))
 		mensaje_recibido.emit(quien, mensaje)
 		no_leidos_cambiados.emit(_bandeja.no_leidos_totales())
 

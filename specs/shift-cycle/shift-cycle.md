@@ -3,7 +3,7 @@ schema_version: 1
 capability_id: CAP-SHF
 status: ratified
 owner: por definir
-provenance: GDD «Ciclo de jornadas»; fichas «Pantalla entre jornadas» y «Particulares de cada jornada»; decisiones de #364, #369, #436, #526, #527, #573 y #693; cajas del proveedor de #788, filas «Caja de cartón del proveedor» y «Caja de madera» de «Objetos interactuables» leídas el 2026-11-04; migración de los specs 001, 007, 011, 016, 027, 031
+provenance: GDD «Ciclo de jornadas»; fichas «Pantalla entre jornadas» y «Particulares de cada jornada»; decisiones de #364, #369, #436, #526, #527, #573 y #693; migración de los specs 001, 007, 011, 016, 027, 031; quejas de la jornada 7 de #759, ficha «Particulares de cada jornada»; la ficha «Caminos narrativos y finales» y la fila «7B» de la lista de pistas e hipótesis, de #790; cajas del proveedor de #788, filas «Caja de cartón del proveedor» y «Caja de madera» de «Objetos interactuables» leídas el 2026-11-04
 ---
 
 # Capacidad: el ciclo de la jornada
@@ -69,10 +69,11 @@ son de introducción: las tareas entran de a poco.
 | 3 | las cuatro fijas y ordenar las cajas del depósito |
 | 4 | las cuatro fijas y tirar la basura |
 | 5 | las cuatro fijas y desechar los Cindolor vencidos |
-| 6 y 7 | las cuatro fijas |
+| 6 | las cuatro fijas |
+| 7 | las cuatro fijas y responder a las quejas de los compradores |
 
-Mientras sigue abierta OQ-SHF-006, una jornada sin fila propia DEBE declarar sólo las cuatro
-fijas. Cada apertura DEBE crear tareas nuevas, sin cumplir.
+Mientras sigue abierta OQ-SHF-006, la jornada 6 DEBE declarar sólo las cuatro fijas. Una jornada
+sin fila propia DEBE declarar también sólo las cuatro fijas. Cada apertura DEBE crear tareas nuevas, sin cumplir.
 
 La jornada 1 declara reposición: los casilleros que el jugador vacía al vender son huecos que
 repone. La nota de tareas DEBE listar sólo las obligatorias declaradas para esa noche.
@@ -103,22 +104,60 @@ reponer (BR-STK-052).
 
 ### BR-SHF-027 — Al terminar la partida, la devolución lleva a la pantalla de final
 
-CUANDO la partida termina despedida, o termina con el contrato cumplido y el expediente no
-registró ninguna pista en toda la partida (BR-INV-103), el sistema DEBE llevar la única opción de
-la devolución del cierre a una pantalla de final, y no al menú. La pantalla DEBE mostrar su
-encabezado, su título y un solo botón, «VOLVER AL MENÚ», que sale al menú.
+CUANDO la partida termina despedida, o termina con el contrato cumplido (BR-INV-103), el sistema
+DEBE llevar la única opción de la devolución del cierre a una pantalla de final, y no al menú. La
+pantalla DEBE mostrar su encabezado, su título y un solo botón, «VOLVER AL MENÚ», que sale al menú.
 
 - El despido DEBE llevar el encabezado «/ FIN DEL JUEGO» y el título «DESPEDIDO». Vale para todos
   los despidos, incluido el de la prueba.
 - El contrato cumplido sin ninguna pista DEBE llevar el encabezado «/ FINAL 1» y el título
   «EMPLEADO ESTRESADO».
-- SI la partida termina despedida, ENTONCES la pantalla DEBE ser la del despido aunque no haya
+- El contrato cumplido con al menos una pista, de cualquier jornada, DEBE llevar el encabezado
+  «/ FINAL 2» y el título «LOCURA PARANOICA».
+- SI la partida termina despedida, ENTONCES la pantalla DEBE ser la del despido aunque haya o no
   pistas.
-- Cualquier otro final NO DEBE mostrar pantalla de final: la única opción de la devolución vuelve
-  al menú, como siempre.
+- La partida en curso NO DEBE mostrar pantalla de final: la única opción de la devolución sigue a
+  la jornada siguiente. Los finales 4 y 5 no pasan por la devolución (BR-SHF-060, BR-SHF-061).
 
 Elegir la opción de la devolución o el botón dos veces NO DEBE mostrar dos pantallas ni pedir dos
 veces el menú. El guardado se borra igual que sin la pantalla (BR-SAV-002).
+
+### BR-SHF-060 — Abrir la puerta del jefe con la palanca termina la partida en el final 4
+
+CUANDO la puerta de la oficina de Enrique se abre con la palanca en la jornada 7 (BR-PLY-060,
+BR-INV-142), el sistema DEBE terminar en ese momento la jornada y la partida con el final 4, sin
+devolución del jefe, sin cierre de la jornada y sin elección de hipótesis. La jornada NO DEBE
+evaluarse: las tareas pendientes, el turno que queda y los llamados no deciden nada, y la partida
+no puede terminar despedida ni con el contrato cumplido por esa jornada.
+
+La pantalla de final DEBE mostrarse en ese mismo paso, con el encabezado «/ FINAL 4», el título
+«JEFE SABOTEADOR» y un solo botón, «VOLVER AL MENÚ», que sale al menú. Accionar otra vez la puerta
+o pulsar el botón dos veces NO DEBE mostrar dos pantallas ni pedir dos veces el menú. El guardado se
+borra (BR-SAV-002). Mientras el epílogo no tenga contenido (OQ-INV-010), NO DEBE intercalarse nada
+entre la puerta y la pantalla.
+
+### BR-SHF-061 — Abrir la puerta del jefe con la llave termina la partida en el final 5
+
+CUANDO la puerta de la oficina de Enrique se abre con la llave en la jornada 7 (BR-PLY-060,
+BR-INV-145), el sistema DEBE terminar en ese momento la jornada y la partida con el final 5, con
+las mismas garantías que el final 4 (BR-SHF-060): sin devolución del jefe, sin cierre de la
+jornada, sin elección de hipótesis y sin evaluar la noche.
+
+La pantalla de final DEBE mostrarse en ese mismo paso, con el encabezado «/ FINAL 5», el título
+«JEFE INCOMPETENTE» y un solo botón, «VOLVER AL MENÚ», que sale al menú. Accionar otra vez la
+puerta o pulsar el botón dos veces NO DEBE mostrar dos pantallas ni pedir dos veces el menú. El
+guardado se borra (BR-SAV-002). Mientras el epílogo no tenga contenido (OQ-INV-010), NO DEBE
+intercalarse nada entre la puerta y la pantalla.
+
+### BR-SHF-030 — Responder a las quejas cuenta cuando las cinco tienen respuesta correcta
+
+MIENTRAS queda turno y la jornada declara responder a las quejas, el sistema DEBE contar esa
+obligatoria cuando las cinco quejas de la noche tienen respuesta y todas son correctas
+(BR-INV-112), y no antes. Una queja sin responder o una respuesta equivocada NO DEBE contar:
+una respuesta no se corrige, así que con una equivocada la obligatoria queda sin cumplir hasta
+el cierre. Una jornada que cierra antes de tiempo cuenta las quejas sin responder como falla.
+CUANDO la noche cierra con esta obligatoria sin cumplir, la devolución del jefe DEBE traer su
+Tarea 5 (BR-EMP-027). Las jornadas 1 a 6 NO DEBEN declarar esta obligatoria.
 
 ### BR-SHF-011 — La hora se lee en un solo lugar
 
@@ -261,7 +300,7 @@ está cerrado.
 DADO las jornadas 1 a 7 CUANDO cada una pide sus obligatorias ENTONCES la 1 recibe 3:
 cobrar, registrar y reponer, sin limpiar ni particular; la 2 recibe las 4 fijas; la 3 recibe 5,
 con ordenar las cajas y sin basura; la 4 recibe 5, con basura y sin ordenar; la 5 recibe 5, con
-desechar los Cindolor vencidos y sin ordenar ni basura; la 6 y la 7 reciben las 4 fijas. DADO dos aperturas seguidas CUANDO se comparan sus tareas ENTONCES ninguna instancia se
+desechar los Cindolor vencidos y sin ordenar ni basura; la 6 recibe las 4 fijas; la 7 recibe 5, con responder a las quejas y sin ordenar, basura ni vencidos. DADO dos aperturas seguidas CUANDO se comparan sus tareas ENTONCES ninguna instancia se
 comparte y todas las de la segunda están sin cumplir. DADO la jornada 1 recién abierta ENTONCES la
 nota de tareas lista atención, registro y reposición, sin limpieza.
 
@@ -545,16 +584,18 @@ DADO una partida despedida al cerrar la jornada 4 sin ninguna pista registrada C
 la opción de la devolución ENTONCES la pantalla es la del despido, con «DESPEDIDO», y no la de
 «EMPLEADO ESTRESADO».
 
-### AC-SHF-066 — Otro final sigue como siempre *(verifica BR-SHF-027)*
+### AC-SHF-066 — Con alguna pista aparece el final 2 *(verifica BR-SHF-027)*
 
 DADO la jornada 7 cerrada con el contrato cumplido y una sola pista registrada, en cualquier jornada,
-CUANDO el jugador elige la opción de la devolución ENTONCES no aparece ninguna pantalla de final y se
-pide el menú. DADO una partida en curso ENTONCES la devolución no lleva a ninguna pantalla de final.
+CUANDO el jugador elige la opción de la devolución ENTONCES aparece la pantalla con «/ FINAL 2»,
+«LOCURA PARANOICA» y un solo botón, «VOLVER AL MENÚ», y el menú todavía no se pidió. CUANDO se pulsa
+el botón ENTONCES se pide el menú. DADO una partida en curso ENTONCES la devolución no lleva a ninguna
+pantalla de final.
 
 ### AC-SHF-067 — Elegir dos veces no repite nada *(verifica BR-SHF-027)*
 
-DADO la pantalla de final del despido y la del contrato sin pistas CUANDO se elige dos veces la opción de
-la devolución ENTONCES se muestra una sola pantalla. CUANDO se pulsa dos veces el botón ENTONCES el
+DADO la pantalla de final del despido, la del contrato sin pistas y la del final 2 CUANDO se elige dos
+veces la opción de la devolución ENTONCES se muestra una sola pantalla. CUANDO se pulsa dos veces el botón ENTONCES el
 menú se pide una sola vez.
 
 ### AC-SHF-100 — Las dos cajas del proveedor están sólo en la jornada 7 *(verifica BR-SHF-050)*
@@ -571,6 +612,63 @@ cajas ENTONCES no se mueve ni queda en la mano. DADA una caja levantable CUANDO 
 cada una ENTONCES queda apoyada. CUANDO se las toca ENTONCES no suena ningún sonido. DADA la
 jornada 7 con las dos cajas CUANDO se cuentan las cajas del depósito para ordenar, para reponer
 y para la revisión ENTONCES ninguna de las dos entra en la cuenta.
+
+### AC-SHF-110 — Abrir la puerta con la palanca termina la partida sin devolución *(verifica BR-SHF-060)*
+
+DADO la jornada 7 abierta tras elegir 6B, con tareas pendientes y turno por delante, y la palanca en
+la mano CUANDO se abre la puerta del jefe ENTONCES la partida termina con el final 4, el expediente
+suma 7B, no se arma la devolución del jefe, no hay reflexión de cierre ni elección de hipótesis, y la
+jornada no se evalúa. DADO el mismo caso con todas las obligatorias cumplidas ENTONCES el resultado es
+el mismo, y no termina despedida ni con el contrato cumplido. DADO la jornada 7 sin la palanca en la
+mano CUANDO se acciona la puerta ENTONCES la partida sigue en curso.
+
+### AC-SHF-111 — El final 4 muestra su pantalla *(verifica BR-SHF-060, BR-SHF-027)*
+
+DADO el final 4 CUANDO termina la partida ENTONCES aparece, sin otra pantalla antes, la pantalla con
+«/ FINAL 4», «JEFE SABOTEADOR» y un solo botón, «VOLVER AL MENÚ», y el menú todavía no se pidió.
+CUANDO se pulsa el botón ENTONCES se pide el menú; CUANDO se pulsa dos veces ENTONCES se pide una sola
+vez. CUANDO se acciona otra vez la puerta ENTONCES se sigue mostrando una sola pantalla. DADO el
+despido o el contrato cumplido sin pistas ENTONCES sus pantallas siguen como en AC-SHF-063 y
+AC-SHF-064.
+
+### AC-SHF-112 — Abrir la puerta con la llave termina la partida sin devolución *(verifica BR-SHF-061)*
+
+DADO la jornada 7 abierta tras elegir 6C, con tareas pendientes y turno por delante, y la llave en
+la mano CUANDO se abre la puerta del jefe ENTONCES la partida termina con el final 5, el expediente
+suma 7C, no se arma la devolución del jefe, no hay reflexión de cierre ni elección de hipótesis, y la
+jornada no se evalúa. DADO el mismo caso con todas las obligatorias cumplidas ENTONCES el resultado es
+el mismo, y no termina despedida ni con el contrato cumplido. DADO la jornada 7 sin la llave en la
+mano CUANDO se acciona la puerta ENTONCES la partida sigue en curso.
+
+### AC-SHF-113 — El final 5 muestra su pantalla *(verifica BR-SHF-061, BR-SHF-027)*
+
+DADO el final 5 CUANDO termina la partida ENTONCES aparece, sin otra pantalla antes, la pantalla con
+«/ FINAL 5», «JEFE INCOMPETENTE» y un solo botón, «VOLVER AL MENÚ», y el menú todavía no se pidió.
+CUANDO se pulsa el botón ENTONCES se pide el menú; CUANDO se pulsa dos veces ENTONCES se pide una sola
+vez. CUANDO se acciona otra vez la puerta ENTONCES se sigue mostrando una sola pantalla. Su
+encabezado y su título no son los del final 4 ni los de ningún otro final.
+
+### AC-SHF-080 — La jornada 7 declara responder a las quejas *(verifica BR-SHF-005, BR-SHF-030)*
+
+DADO la jornada 7 recién abierta CUANDO se piden sus obligatorias ENTONCES son las cuatro fijas
+más responder a las quejas, todas sin cumplir, y la nota de tareas lista esa obligatoria con su
+nombre después de las fijas. DADO cada jornada de la 1 a la 6 ENTONCES ninguna declara responder
+a las quejas ni su nota la lista.
+
+### AC-SHF-081 — Cuentan las cinco, y todas correctas *(verifica BR-SHF-030)*
+
+DADO la jornada 7 con las cinco quejas CUANDO se responden bien cuatro ENTONCES la obligatoria
+sigue sin cumplir, y con la quinta correcta queda cumplida. DADO cinco respondidas con una
+equivocada ENTONCES queda sin cumplir, y una respuesta posterior sobre esa queja se rechaza y no la
+cumple. DADO cinco respondidas bien CUANDO el turno ya cerró ENTONCES la obligatoria no se cumple
+ni se descumple después del cierre.
+
+### AC-SHF-082 — Con una queja mal respondida la devolución trae la Tarea 5 *(verifica BR-SHF-030)*
+
+DADO la jornada 7 que cierra con una queja equivocada, o con una sin responder, y las demás
+obligatorias cumplidas CUANDO se arma la devolución del jefe ENTONCES trae como Tarea 5 «Te
+encargué ocuparte de las quejas y ahora recibo quejas sobre la gestión de las quejas.». DADO la
+jornada 7 con las cinco quejas bien respondidas ENTONCES la devolución no trae Tarea 5.
 
 ## No objetivos
 
@@ -614,11 +712,11 @@ y para la revisión ENTONCES ninguna de las dos entra en la cuenta.
 
 ## Preguntas abiertas
 
-- **OQ-SHF-006 — ¿Qué particular declaran las jornadas 6 y 7?**
-  - Por qué sigue abierta: las fichas de la 6 y la 7 no tienen diseño cerrado. La decisión de
-    #369 deja las dos con sólo las cuatro fijas.
-  - Decide: game design, en las fichas e issues de cada jornada.
-  - Bloquea: agregar esas particulares; no bloquea abrir ni cerrar con las cuatro declaradas.
+- **OQ-SHF-006 — ¿Qué particular declara la jornada 6?**
+  - Por qué sigue abierta: la ficha de la 6 no tiene diseño cerrado. La decisión de #369 la deja
+    con sólo las cuatro fijas.
+  - Decide: game design, en la ficha e issue de esa jornada.
+  - Bloquea: agregar esa particular; no bloquea abrir ni cerrar con las cuatro declaradas.
 
 - **OQ-SHF-008 — ¿Qué mensaje lleva la pantalla de final y se puede reintentar la jornada?**
   - Por qué sigue abierta: las pantallas de diseño traen un mensaje del jefe y, la del despido, un botón
