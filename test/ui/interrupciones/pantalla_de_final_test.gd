@@ -62,7 +62,8 @@ func test_tiene_dos_botones_y_el_foco_esta_en_el_de_arriba() -> void:  # AC-SHF-
 		assert_int(botones.size()).is_equal(2)
 		assert_object(botones[0]).is_same(pantalla.boton_de_nueva_partida())
 		assert_object(botones[1]).is_same(pantalla.boton_de_volver())
-		assert_str(botones[0].text).is_not_equal(botones[1].text)
+		assert_str(botones[0].text).is_equal(PantallaDeFinal.TEXTO_DE_NUEVA_PARTIDA)
+		assert_str(botones[1].text).is_equal(PantallaDeFinal.TEXTO_DE_VOLVER)
 		assert_bool(pantalla.boton_de_nueva_partida().has_focus()).is_true()
 
 

@@ -524,6 +524,7 @@ func _hasta_la_pantalla_del_despido(almacen: Node3D, cuentas: Dictionary) -> Pan
 	add_child(almacen)
 	await get_tree().process_frame
 	cuentas.merge({"menus": 0, "partidas": 0, "aperturas": 0}, true)
+	assert_bool(almacen.get("_ir_a_la_partida_nueva") == almacen.abrir_partida_nueva).is_true()
 	almacen.set("_ir_al_menu", func() -> void: cuentas["menus"] += 1)
 	almacen.set("_ir_a_la_partida_nueva", func() -> void: cuentas["partidas"] += 1)
 	var reloj: RelojDelTurno = almacen.get_node("Servicios/RelojDelTurno")
@@ -565,8 +566,12 @@ func test_comenzar_nueva_partida_borra_el_guardado_y_abre_la_jornada_1() -> void
 	var cuentas := {}
 	var final := await _hasta_la_pantalla_del_despido(almacen, cuentas)
 	var guardado := Guardado.new()
-	guardado.escribir(PartidaSerializada.sanear({}))
+	guardado.escribir(
+		PartidaSerializada.sanear({"jornada": ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA})
+	)
 	assert_bool(guardado.hay_guardado()).is_true()
+	var jornada_guardada := Partida.desde(guardado.cargar()).jornada()
+	assert_int(jornada_guardada).is_equal(ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA)
 	final.boton_de_nueva_partida().pressed.emit()
 	final.boton_de_nueva_partida().pressed.emit()
 	assert_int(cuentas["partidas"]).is_equal(1)
