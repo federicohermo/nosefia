@@ -102,6 +102,25 @@ func test_la_pila_no_toca_estanterias_ni_otras_cajas_ni_tapa_el_paso() -> void: 
 			assert_bool(propia.intersects(zona)).is_false()
 
 
+## La palanca de la jornada 7 está contra el mismo fondo (BR-INV-141) y tiene que verse desde la
+## entrada del depósito: la pila ni la pisa ni la tapa.
+func test_la_pila_no_pisa_ni_tapa_la_palanca_desde_la_entrada() -> void:  # AC-STK-130
+	var local := await _abrir(ReglasDeLaPartida.JORNADAS_DE_LA_PARTIDA)
+	var lector: Habitaciones = local.get("_habitaciones")
+	var forma: CollisionShape3D = local.get_node("Objetos/Palanca/Forma")
+	var palanca := forma.global_transform * LimitesDeForma.de(forma.shape)
+	var entrada := lector.to_global(lector.deposito[2].get_center())
+	var pila: Array[AABB] = []
+	for caja in _fondo(local):
+		pila.append(_limites(caja))
+	for pallet: MeshInstance3D in local.get_node("PalletsDelFondo").get_children():
+		pila.append(pallet.global_transform * pallet.get_aabb())
+	assert_int(pila.size()).is_equal(_fondo(local).size() + 2)
+	for volumen in pila:
+		assert_bool(volumen.intersects(palanca)).is_false()
+		assert_bool(volumen.intersects_segment(entrada, palanca.get_center()) == null).is_true()
+
+
 func test_las_siete_amanecen_cada_noche_en_la_pila() -> void:  # AC-STK-130
 	var local := await _abrir()
 	var cajas := _fondo(local)

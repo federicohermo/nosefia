@@ -670,7 +670,9 @@ CUANDO se abre cada jornada desde la primera completa, el sistema DEBE poner las
 BR-STK-054 en una pila contra la pared del fondo del depósito, sobre dos pallets de piso: cuatro
 apoyadas en los pallets y tres encima de ellas, con las etiquetas hacia el interior del depósito.
 La pila NO DEBE ocupar la zona junto al portón, la pared contraria a la del contenedor de basura ni
-el paso hasta la puerta del cuartito, y NO DEBE tocar las estanterías ni otras cajas. Las siete
+el paso hasta la puerta del cuartito, ni el lugar de la palanca de la jornada 7 (BR-INV-141): ni
+la pisa ni la tapa a quien mira desde la entrada del depósito. Tampoco DEBE tocar las estanterías
+ni otras cajas. Las siete
 DEBEN amanecer ahí cada noche aunque el jugador las haya movido: no siguen a BR-STK-051. Las
 demás cajas conservan su lugar.
 
@@ -1478,7 +1480,8 @@ y no como caja agotada.
 DADO la jornada 3 abierta ENTONCES las siete cajas están dentro del depósito: cuatro apoyadas en
 pallets de piso y tres apoyadas encima de otras cajas de la pila. ENTONCES ninguna toca una
 estantería ni una de las otras treinta y dos cajas, y ninguna invade la zona de paso alrededor del
-portón ni de la puerta del cuartito. DADA una de las siete movida de la pila CUANDO se abre la
+portón ni de la puerta del cuartito, y ni ellas ni sus pallets pisan el lugar de la palanca ni la
+tapan desde la entrada del depósito. DADA una de las siete movida de la pila CUANDO se abre la
 noche siguiente ENTONCES las siete amanecen otra vez en su lugar de la pila.
 
 ### AC-STK-131 — Ordenar no cuenta las siete *(verifica BR-STK-056, BR-STK-039)*

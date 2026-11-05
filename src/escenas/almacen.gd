@@ -652,13 +652,23 @@ func _pila_de_las_cajas_del_fondo(jornada: int) -> Dictionary[Producto.Id, Trans
 	_pallets_del_fondo.name = &"PalletsDelFondo"
 	add_child(_pallets_del_fondo)
 	var pallets: Array[MeshInstance3D] = _pallets_del_fondo.call(
-		"disponer_contra_el_fondo", $Estructura/deposito_pallet_piso, $Estructura/SueloSolido/Fondo
+		"disponer_contra_el_fondo",
+		$Estructura/deposito_pallet_piso,
+		$Estructura/SueloSolido/Fondo,
+		_lugar_de_la_palanca()
 	)
 	# Las etiquetas miran hacia el centro del depósito, y la pared del fondo queda a la espalda.
 	var poses := PilaDelDeposito.poses(_cajas_del_fondo, pallets, Vector3.BACK)
 	for caja: CajaDeProductosDelDeposito in poses:
 		pila[caja.producto] = poses[caja]
 	return pila
+
+
+## El piso que ocupa la palanca de la jornada 7 (BR-INV-141), esté o no en el local esa noche: la
+## pila del fondo se corre para dejarlo libre y a la vista desde la entrada.
+func _lugar_de_la_palanca() -> AABB:
+	var forma: CollisionShape3D = _palanca.get_node("Forma")
+	return forma.global_transform * LimitesDeForma.de(forma.shape)
 
 
 ## Las cajas del depósito: las treinta y dos de las estanterías y las siete de la pila del fondo.
