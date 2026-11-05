@@ -862,9 +862,10 @@ la conversación inicial ENTONCES sólo
 cambia una entrada por clic, sin recibir ni rechazar el objeto. Al terminar, manos vacías muestran
 un recordatorio; un objeto correcto se recibe y ese clic no avanza una conversación.
 Reabrir conserva el progreso y los nombres pedidos aparecen con negrita y color.
-DADO Tia CUANDO se inicia su conversación ENTONCES tiene una entrada que nombra sus productos
-resaltados con color y sin negrita. La conversación inicial de Tin conserva sus tres entradas, y
-sus despedidas, una y cuatro.
+DADO Tia CUANDO se inicia su conversación ENTONCES tiene cuatro entradas: las dos primeras son
+sólo silencio, y en la tercera y la cuarta sólo el nombre de cada producto pedido va resaltado con
+color y sin negrita. Su despedida es una sola entrada. La conversación inicial de Tin conserva sus
+tres entradas, y su despedida es una sola entrada, sin acotación ni salto de renglón.
 
 ### AC-CTR-037 — Identidad y sobrantes *(verifica BR-CTR-028, BR-CTR-029)*
 

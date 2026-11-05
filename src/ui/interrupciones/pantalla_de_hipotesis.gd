@@ -71,7 +71,7 @@ func _ready() -> void:
 	_flecha.position = FLECHA
 	_lienzo.add_child(_flecha)
 	_titulo = _etiqueta("Titulo", 36, TINTA, TITULO)
-	_texto = _etiqueta("Texto", 30, Color.WHITE, TEXTO)
+	_texto = _etiqueta("Texto", 27, Color.WHITE, TEXTO)
 	_puntos = HBoxContainer.new()
 	_puntos.name = "Puntos"
 	_puntos.position = PUNTOS

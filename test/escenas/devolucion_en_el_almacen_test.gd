@@ -229,7 +229,7 @@ func test_continuar_dos_veces_abre_una_sola_noche_siguiente() -> void:  # AC-EMP
 	assert_str(historial[-1].identidad).is_equal("J2_CONTENEDOR_TEXTO")
 
 
-func test_despedido_vuelve_al_menu_una_sola_vez() -> void:  # AC-EMP-064, AC-EMP-065, AC-EMP-016
+func test_despedido_sale_al_menu_una_sola_vez_desde_el_final() -> void:  # AC-EMP-064, AC-SHF-067
 	var almacen: Node3D = await _almacen(
 		Partida.desde({"jornada": COMPLETA, "medios": 3 * Reglas.MEDIOS_POR_APERCIBIMIENTO})
 	)
@@ -237,12 +237,17 @@ func test_despedido_vuelve_al_menu_una_sola_vez() -> void:  # AC-EMP-064, AC-EMP
 	almacen.set("_ir_al_menu", func() -> void: menus[0] += 1)
 	var pantalla := await _cerrar(almacen)
 	AvanceDeDevolucion.entregar(pantalla)
-	assert_str(_pantalla_del_celular(almacen).opcion().text).is_equal("VOLVER AL MENÚ")
+	assert_str(_pantalla_del_celular(almacen).opcion().text).is_equal(
+		PantallaDeDevolucion.TEXTOS[DevolucionDelJefe.Opcion.VER_EL_FINAL]
+	)
 	pantalla.elegir()
 	pantalla.elegir()
+	assert_int(menus[0]).is_zero()
+	var final: PantallaDeFinal = almacen.get_node("PantallaDeFinal")
+	assert_bool(final.visible).is_true()
+	final.boton().pressed.emit()
+	final.boton().pressed.emit()
 	assert_int(menus[0]).is_equal(1)
-	var persiana: PersianaDeLaNoche = almacen.get_node("Interfaz/PersianaDeLaNoche")
-	assert_bool(persiana.en_pantalla()).is_false()
 
 
 func test_volver_al_menu_desde_la_pausa_conserva_el_guardado() -> void:  # AC-SAV-020

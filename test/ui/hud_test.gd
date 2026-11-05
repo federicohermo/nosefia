@@ -250,7 +250,7 @@ func test_el_subtitulo_va_abajo_al_centro_y_uno_por_vez() -> void:  # AC-SUB-001
 func _textos_que_se_piensan() -> Array[String]:
 	var textos: Array[String] = []
 	for id: SubtitulosDeLosGestos.Id in SubtitulosDeLosGestos.Id.values():
-		if id not in [SubtitulosDeLosGestos.Id.NINGUNO, SubtitulosDeLosGestos.Id.PRIMERA_PISTA]:
+		if id != SubtitulosDeLosGestos.Id.NINGUNO:
 			textos.append(SubtitulosDeLosGestos.texto(id))
 	for tabla: Dictionary in [
 		SubtitulosAlExaminar.DE_LO_DEMAS,
