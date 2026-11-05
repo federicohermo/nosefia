@@ -498,7 +498,7 @@ legajo y las cuentas son los guardados. DADO el campo con un sorteo de una ident
 hipótesis de la jornada anterior respalda y otro válido ENTONCES sólo el válido se conserva. DADO un
 despido o un contrato cumplido ENTONCES no queda guardado ni sorteos.
 
-### AC-SAV-037 — START pausa y CÍRCULO vuelve atrás *(verifica BR-SAV-024, BR-SAV-016)*
+### AC-SAV-046 — START pausa y CÍRCULO vuelve atrás *(verifica BR-SAV-024, BR-SAV-016)*
 
 DADO la jornada en curso, sin ninguna interfaz abierta, CUANDO se aprieta START ENTONCES el juego
 queda en pausa; CUANDO se aprieta otro START ENTONCES se reanuda. DADO la computadora abierta

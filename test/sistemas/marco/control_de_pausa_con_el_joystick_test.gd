@@ -47,12 +47,12 @@ class InterfazDePrueba:
 		cierres += 1
 
 
-func test_start_es_la_accion_de_cancelar_y_circulo_no() -> void:  # AC-SAV-037
+func test_start_es_la_accion_de_cancelar_y_circulo_no() -> void:  # AC-SAV-046
 	assert_bool(_la_cancelacion_reconoce(_boton(JOY_BUTTON_START))).is_true()
 	assert_bool(_la_cancelacion_reconoce(_boton(JOY_BUTTON_B))).is_false()
 
 
-func test_start_pausa_y_otro_start_reanuda() -> void:  # AC-SAV-037
+func test_start_pausa_y_otro_start_reanuda() -> void:  # AC-SAV-046
 	var control := _control()
 	var start := InputEventAction.new()
 	start.action = &"ui_cancel"
@@ -63,14 +63,14 @@ func test_start_pausa_y_otro_start_reanuda() -> void:  # AC-SAV-037
 	assert_bool(get_tree().paused).is_false()
 
 
-func test_circulo_en_pausa_reanuda() -> void:  # AC-SAV-037
+func test_circulo_en_pausa_reanuda() -> void:  # AC-SAV-046
 	var control := _control()
 	control.pausar()
 	control._input(_boton(JOY_BUTTON_B))
 	assert_bool(get_tree().paused).is_false()
 
 
-func test_circulo_cierra_la_interfaz_abierta_y_no_pausa() -> void:  # AC-SAV-037
+func test_circulo_cierra_la_interfaz_abierta_y_no_pausa() -> void:  # AC-SAV-046
 	var control := _control()
 	var interfaz := InterfazDePrueba.new()
 	control.registrar_interfaz(interfaz.esta_abierta, interfaz.cerrar_con_esc)
@@ -83,7 +83,7 @@ func test_circulo_cierra_la_interfaz_abierta_y_no_pausa() -> void:  # AC-SAV-037
 	assert_int(_pausas).is_zero()
 
 
-func test_circulo_sin_nada_abierto_no_pausa_y_no_se_come_el_evento() -> void:  # AC-SAV-037
+func test_circulo_sin_nada_abierto_no_pausa_y_no_se_come_el_evento() -> void:  # AC-SAV-046
 	var control := _control()
 	control._input(_boton(JOY_BUTTON_B))
 	assert_bool(get_tree().paused).is_false()
@@ -91,7 +91,7 @@ func test_circulo_sin_nada_abierto_no_pausa_y_no_se_come_el_evento() -> void:  #
 	assert_bool(control.get_viewport().is_input_handled()).is_false()
 
 
-func test_circulo_cierra_configuraciones_abierta_desde_la_pausa() -> void:  # AC-SAV-037
+func test_circulo_cierra_configuraciones_abierta_desde_la_pausa() -> void:  # AC-SAV-046
 	var configuraciones: CanvasLayer = auto_free(CanvasLayer.new())
 	configuraciones.visible = true
 	var control := _control()
@@ -102,7 +102,7 @@ func test_circulo_cierra_configuraciones_abierta_desde_la_pausa() -> void:  # AC
 	assert_bool(get_tree().paused).is_true()
 
 
-func test_otro_boton_y_circulo_soltado_no_hacen_nada() -> void:  # AC-SAV-037
+func test_otro_boton_y_circulo_soltado_no_hacen_nada() -> void:  # AC-SAV-046
 	var control := _control()
 	control.pausar()
 	var soltado := _boton(JOY_BUTTON_B)
