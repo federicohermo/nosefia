@@ -90,6 +90,21 @@ func test_el_ultimo_cierre_borra_con_una_sola_llamada() -> void:  # AC-SAV-002
 	assert_bool(FileAccess.file_exists(guardado.ruta)).is_false()
 
 
+func test_el_final_2_tambien_borra_con_una_sola_llamada() -> void:  # AC-SAV-002
+	var guardado := _guardado()
+	guardado.escribir(PartidaSerializada.sanear({}))
+	guardado.escrituras = 0
+	var ultima := ReglasDeLaPartida.PRIMERA_JORNADA + ReglasDeLaPartida.JORNADAS_DE_LA_PARTIDA - 1
+	var partida := _en_la_jornada(ultima)
+	partida.expediente.registrar("2A")
+	_arrancar(partida, guardado)
+	_jugar_la_noche_impecable()
+	assert_int(partida.final()).is_equal(Partida.Final.LOCURA_PARANOICA)
+	assert_int(guardado.llamadas()).is_equal(1)
+	assert_int(guardado.borrados).is_equal(1)
+	assert_bool(FileAccess.file_exists(guardado.ruta)).is_false()
+
+
 func test_dos_noches_graves_seguidas_borran_el_guardado() -> void:  # AC-SAV-003
 	var guardado := _guardado()
 	var partida := _en_la_jornada(ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA)

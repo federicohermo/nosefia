@@ -61,6 +61,8 @@ func test_estamos_al_pedo_pide_el_tope_y_no_una_unidad_antes() -> void:  # AC-AC
 func test_empleado_ejemplar_pide_contrato_cumplido_y_cero_medios() -> void:  # AC-ACH-006
 	assert_bool(Logros.empleado_ejemplar(F.CONTRATO_CUMPLIDO, 0)).is_true()
 	assert_bool(Logros.empleado_ejemplar(F.CONTRATO_CUMPLIDO, 1)).is_false()
+	assert_bool(Logros.empleado_ejemplar(F.LOCURA_PARANOICA, 0)).is_true()
+	assert_bool(Logros.empleado_ejemplar(F.LOCURA_PARANOICA, 1)).is_false()
 	assert_bool(Logros.empleado_ejemplar(F.DESPEDIDO, 0)).is_false()
 	assert_bool(Logros.empleado_ejemplar(F.EN_CURSO, 0)).is_false()
 
@@ -141,6 +143,13 @@ func test_un_final_se_anota_una_vez_y_el_despedido_no_es_el_cumplido() -> void: 
 	assert_bool(logros.alcanzar_final(F.DESPEDIDO)).is_true()
 	assert_bool(logros.alcanzar_final(F.DESPEDIDO)).is_false()
 	assert_bool(logros.final_alcanzado(F.DESPEDIDO)).is_true()
+	assert_bool(logros.final_alcanzado(F.CONTRATO_CUMPLIDO)).is_false()
+
+
+func test_la_locura_paranoica_se_anota_sin_marcar_el_contrato_cumplido() -> void:  # AC-ACH-011
+	var logros := Logros.new()
+	assert_bool(logros.alcanzar_final(F.LOCURA_PARANOICA)).is_true()
+	assert_bool(logros.final_alcanzado(F.LOCURA_PARANOICA)).is_true()
 	assert_bool(logros.final_alcanzado(F.CONTRATO_CUMPLIDO)).is_false()
 
 

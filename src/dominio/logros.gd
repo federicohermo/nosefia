@@ -40,6 +40,7 @@ const _NOMBRES: Dictionary[Logro, String] = {
 const _NOMBRES_DE_LOS_FINALES: Dictionary[Partida.Final, String] = {
 	Partida.Final.DESPEDIDO: "Despedido",
 	Partida.Final.CONTRATO_CUMPLIDO: "Contrato cumplido",
+	Partida.Final.LOCURA_PARANOICA: "Locura paranoica",
 	Partida.Final.JEFE_SABOTEADOR: "Jefe saboteador",
 }
 
@@ -73,7 +74,10 @@ static func estamos_al_pedo(registro: RegistroDeVentas) -> bool:
 
 
 static func empleado_ejemplar(final: Partida.Final, medios: int) -> bool:
-	return final == Partida.Final.CONTRATO_CUMPLIDO and medios == 0
+	var cumplido := (
+		final == Partida.Final.CONTRATO_CUMPLIDO or final == Partida.Final.LOCURA_PARANOICA
+	)
+	return cumplido and medios == 0
 
 
 ## El despido de la prueba: el único que llega antes de la primera jornada completa.
