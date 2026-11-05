@@ -61,6 +61,23 @@ func test_el_texto_de_cada_hipotesis_del_caso_entra_en_el_marco() -> void:
 	assert_array(desbordes).is_empty()
 
 
+func test_un_texto_que_no_entra_baja_la_letra_y_uno_corto_la_conserva() -> void:
+	var pantalla := _pantalla()
+	var reflexion := _reflexion(["2A"])
+	var opcion := reflexion.mostrada()
+	var texto := opcion.texto
+	var etiqueta := pantalla.find_child("Texto", true, false) as Label
+	opcion.texto = "Corto."
+	pantalla.mostrar(reflexion)
+	var con_texto_corto := etiqueta.get_theme_font_size("font_size")
+	opcion.texto = "Un renglón largo que no entra. ".repeat(40)
+	pantalla.mostrar(reflexion)
+	var con_texto_largo := etiqueta.get_theme_font_size("font_size")
+	opcion.texto = texto
+	assert_int(con_texto_corto).is_equal(PantallaDeHipotesis.TAMANO_DEL_TEXTO)
+	assert_int(con_texto_largo).is_less(con_texto_corto)
+
+
 func test_las_comillas_del_dato_se_muestran() -> void:
 	var pantalla := _pantalla()
 	var reflexion := _reflexion(["2A"])

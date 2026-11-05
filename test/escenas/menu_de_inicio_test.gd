@@ -11,7 +11,9 @@ const TEXTOS_FUERA_DE_LA_WEB: Array[String] = [
 	"CONFIGURACIONES",
 	"SALIR",
 ]
-const HABILITADOS_FUERA_DE_LA_WEB: Array[String] = ["NUEVO JUEGO", "CONFIGURACIONES", "SALIR"]
+const HABILITADOS_FUERA_DE_LA_WEB: Array[String] = [
+	"NUEVO JUEGO", "LOGROS", "CONFIGURACIONES", "SALIR"
+]
 
 var _ruta: String
 
@@ -63,7 +65,7 @@ func test_el_juego_abre_en_el_menu() -> void:  # AC-SAV-012
 	assert_object(_menu()).is_not_null()
 
 
-func test_muestra_los_cinco_botones_y_habilita_tres() -> void:  # AC-CFG-010
+func test_muestra_los_cinco_botones_y_habilita_cuatro() -> void:  # AC-CFG-010
 	var textos: Array[String] = []
 	var menu := _menu()
 	for boton: Button in menu.get_node("Marco").find_children("*", "Button", true, false):

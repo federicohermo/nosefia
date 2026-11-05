@@ -1,8 +1,10 @@
-## Qué tecla o qué botón del mouse hace cada acción reasignable.
+## Qué tecla, qué botón del mouse o qué botón del joystick hace cada acción reasignable.
 ##
 ## Cada acción tiene una o más **ranuras** estables: Movimiento tiene dos por dirección, la de WASD
-## y la de flechas, y las demás una. Una entrada es un par de números, el tipo y el código físico
-## de la tecla o el índice del botón: acá no se nombra `InputEvent`.
+## y la de flechas; las cinco acciones de botón tienen la de teclado o mouse y la del joystick; y
+## Pausa una. Una entrada es un par de números, el tipo y el código físico de la tecla o el índice
+## del botón: acá no se nombra `InputEvent`. Una ranura del joystick sólo acepta un botón del
+## joystick, y las demás no lo aceptan.
 ##
 ## **Una entrada nunca está en dos ranuras.** Asignar una que ya tiene otra ranura las intercambia,
 ## y por eso ninguna acción queda sin entrada.
@@ -12,7 +14,7 @@
 class_name AsignacionDeControles
 extends RefCounted
 
-enum TipoDeEntrada { TECLA, BOTON_DEL_MOUSE }
+enum TipoDeEntrada { TECLA, BOTON_DEL_MOUSE, BOTON_DEL_JOYSTICK }
 
 const ADELANTE := &"mover_adelante"
 const ATRAS := &"mover_atras"
@@ -34,6 +36,11 @@ const DIRECCIONES: Array[StringName] = [ADELANTE, ATRAS, IZQUIERDA, DERECHA]
 
 const RANURA_DE_WASD := 0
 const RANURA_DE_FLECHAS := 1
+## Las acciones de botón: las cinco que además tienen un botón de joystick, en esta ranura.
+const ACCIONES_CON_BOTON: Array[StringName] = [CELULAR, EXAMINAR, AGACHARSE, AGARRAR, INTERACTUAR]
+const RANURA_DEL_JOYSTICK := 1
+## START es la pausa del joystick: no se reasigna, y apretarlo cancela la espera de un botón.
+const BOTON_DE_PAUSA := JOY_BUTTON_START
 
 ## Los índices de botón del mouse son los de `MouseButton`: el dominio no nombra el motor.
 const BOTON_IZQUIERDO := 1
@@ -74,17 +81,55 @@ const NOMBRES: Dictionary = {
 	PAUSA: "PAUSA",
 }
 
+## Los botones del joystick, con los nombres de PlayStation de la ficha.
+const NOMBRES_DE_LOS_BOTONES_DEL_JOYSTICK: Dictionary[int, String] = {
+	JOY_BUTTON_A: "X",
+	JOY_BUTTON_B: "CÍRCULO",
+	JOY_BUTTON_X: "CUADRADO",
+	JOY_BUTTON_Y: "TRIÁNGULO",
+	JOY_BUTTON_BACK: "SELECT",
+	JOY_BUTTON_GUIDE: "GUÍA",
+	JOY_BUTTON_LEFT_STICK: "L3",
+	JOY_BUTTON_RIGHT_STICK: "R3",
+	JOY_BUTTON_LEFT_SHOULDER: "L1",
+	JOY_BUTTON_RIGHT_SHOULDER: "R1",
+	JOY_BUTTON_DPAD_UP: "CRUCETA ARRIBA",
+	JOY_BUTTON_DPAD_DOWN: "CRUCETA ABAJO",
+	JOY_BUTTON_DPAD_LEFT: "CRUCETA IZQUIERDA",
+	JOY_BUTTON_DPAD_RIGHT: "CRUCETA DERECHA",
+}
+
 ## Cada entrada es un `Vector2i(tipo, código)`. Las de una acción van por ranura.
 const DE_FABRICA: Dictionary = {
 	ADELANTE: [Vector2i(TipoDeEntrada.TECLA, KEY_W), Vector2i(TipoDeEntrada.TECLA, KEY_UP)],
 	ATRAS: [Vector2i(TipoDeEntrada.TECLA, KEY_S), Vector2i(TipoDeEntrada.TECLA, KEY_DOWN)],
 	IZQUIERDA: [Vector2i(TipoDeEntrada.TECLA, KEY_A), Vector2i(TipoDeEntrada.TECLA, KEY_LEFT)],
 	DERECHA: [Vector2i(TipoDeEntrada.TECLA, KEY_D), Vector2i(TipoDeEntrada.TECLA, KEY_RIGHT)],
-	CELULAR: [Vector2i(TipoDeEntrada.TECLA, KEY_Q)],
-	EXAMINAR: [Vector2i(TipoDeEntrada.TECLA, KEY_E)],
-	AGACHARSE: [Vector2i(TipoDeEntrada.TECLA, KEY_SPACE)],
-	AGARRAR: [Vector2i(TipoDeEntrada.BOTON_DEL_MOUSE, BOTON_IZQUIERDO)],
-	INTERACTUAR: [Vector2i(TipoDeEntrada.BOTON_DEL_MOUSE, BOTON_DERECHO)],
+	CELULAR:
+	[
+		Vector2i(TipoDeEntrada.TECLA, KEY_Q),
+		Vector2i(TipoDeEntrada.BOTON_DEL_JOYSTICK, JOY_BUTTON_B)
+	],
+	EXAMINAR:
+	[
+		Vector2i(TipoDeEntrada.TECLA, KEY_E),
+		Vector2i(TipoDeEntrada.BOTON_DEL_JOYSTICK, JOY_BUTTON_X)
+	],
+	AGACHARSE:
+	[
+		Vector2i(TipoDeEntrada.TECLA, KEY_SPACE),
+		Vector2i(TipoDeEntrada.BOTON_DEL_JOYSTICK, JOY_BUTTON_LEFT_SHOULDER)
+	],
+	AGARRAR:
+	[
+		Vector2i(TipoDeEntrada.BOTON_DEL_MOUSE, BOTON_IZQUIERDO),
+		Vector2i(TipoDeEntrada.BOTON_DEL_JOYSTICK, JOY_BUTTON_A)
+	],
+	INTERACTUAR:
+	[
+		Vector2i(TipoDeEntrada.BOTON_DEL_MOUSE, BOTON_DERECHO),
+		Vector2i(TipoDeEntrada.BOTON_DEL_JOYSTICK, JOY_BUTTON_RIGHT_SHOULDER)
+	],
 	PAUSA: [Vector2i(TipoDeEntrada.TECLA, KEY_ESCAPE)],
 }
 
@@ -97,9 +142,14 @@ var _entradas: Dictionary = DE_FABRICA.duplicate(true)
 
 ## Cuántas ranuras tiene la acción. Una acción que no se reasigna tiene cero.
 static func ranuras_de(accion: StringName) -> int:
-	if accion in DIRECCIONES:
+	if accion in DIRECCIONES or accion in ACCIONES_CON_BOTON:
 		return 2
 	return 1 if accion in ACCIONES else 0
+
+
+## Si esa ranura es la del botón del joystick de una de las cinco acciones de botón.
+static func es_del_joystick(accion: StringName, ranura: int) -> bool:
+	return accion in ACCIONES_CON_BOTON and ranura == RANURA_DEL_JOYSTICK
 
 
 ## El nombre del grupo en pantalla: las cuatro direcciones son un solo «Movimiento».
@@ -111,10 +161,22 @@ static func nombre_de_la_accion(accion: StringName) -> String:
 
 
 ## Si la ranura de esa acción acepta la entrada. En la web, Esc sólo lo acepta Pausa: con el
-## cursor tomado el navegador se come Esc, y cualquier otra acción no se podría hacer.
-static func acepta(accion: StringName, tipo: int, codigo: int, en_la_web: bool = false) -> bool:
+## cursor tomado el navegador se come Esc, y cualquier otra acción no se podría hacer. La ranura
+## del joystick sólo acepta un botón, y START no: es la pausa. Un eje o un gatillo analógico no es
+## un botón.
+static func acepta(
+	accion: StringName, tipo: int, codigo: int, en_la_web: bool = false, ranura: int = 0
+) -> bool:
 	if accion not in ACCIONES:
 		return false
+	if es_del_joystick(accion, ranura) or tipo == TipoDeEntrada.BOTON_DEL_JOYSTICK:
+		return (
+			es_del_joystick(accion, ranura)
+			and tipo == TipoDeEntrada.BOTON_DEL_JOYSTICK
+			and codigo >= JOY_BUTTON_A
+			and codigo < JOY_BUTTON_SDL_MAX
+			and codigo != BOTON_DE_PAUSA
+		)
 	if tipo == TipoDeEntrada.BOTON_DEL_MOUSE:
 		return codigo in BOTONES_ACEPTADOS
 	if tipo != TipoDeEntrada.TECLA or codigo <= KEY_NONE or codigo > KEY_CODE_MASK:
@@ -122,11 +184,15 @@ static func acepta(accion: StringName, tipo: int, codigo: int, en_la_web: bool =
 	return not (en_la_web and codigo == KEY_ESCAPE and accion != PAUSA)
 
 
-## Si apretar esa entrada cancela la espera de una entrada nueva: es la que tiene Pausa. Cancelar
-## no cambia nada, y se distingue de una entrada que no se acepta, que deja seguir esperando.
+## Si apretar esa entrada cancela la espera de una entrada nueva: es la que tiene Pausa, o START.
+## Cancelar no cambia nada, y se distingue de una entrada que no se acepta, que deja seguir
+## esperando.
 func cancela_la_espera(tipo: int, codigo: int) -> bool:
 	var pausa: Vector2i = _entradas[PAUSA][0]
-	return pausa == Vector2i(tipo, codigo)
+	var apretada := Vector2i(tipo, codigo)
+	return (
+		apretada == pausa or apretada == Vector2i(TipoDeEntrada.BOTON_DEL_JOYSTICK, BOTON_DE_PAUSA)
+	)
 
 
 ## Cada entrada con su acción y su ranura, en el orden en que se muestran.
@@ -149,7 +215,11 @@ func entrada(accion: StringName, ranura: int) -> Dictionary:
 func asignar(
 	accion: StringName, ranura: int, tipo: TipoDeEntrada, codigo: int, en_la_web: bool = false
 ) -> bool:
-	if ranura < 0 or ranura >= ranuras_de(accion) or not acepta(accion, tipo, codigo, en_la_web):
+	if (
+		ranura < 0
+		or ranura >= ranuras_de(accion)
+		or not acepta(accion, tipo, codigo, en_la_web, ranura)
+	):
 		return false
 	var nueva := Vector2i(tipo, codigo)
 	var propias: Array = _entradas[accion]
@@ -159,7 +229,7 @@ func asignar(
 	var otra := _ranura_con(nueva)
 	if not otra.is_empty():
 		var de_la_otra: StringName = otra["accion"]
-		if not acepta(de_la_otra, anterior.x, anterior.y, en_la_web):
+		if not acepta(de_la_otra, anterior.x, anterior.y, en_la_web, otra["ranura"]):
 			return false
 		_entradas[de_la_otra][otra["ranura"]] = anterior
 	propias[ranura] = nueva
@@ -194,7 +264,7 @@ static func desde(crudo: Dictionary) -> AsignacionDeControles:
 			continue
 		var guardadas: Array = lista
 		for ranura: int in mini(guardadas.size(), ranuras_de(accion)):
-			var candidata := _leer(accion, guardadas[ranura])
+			var candidata := _leer(accion, ranura, guardadas[ranura])
 			if candidata != ILEGIBLE:
 				leida._entradas[accion][ranura] = candidata
 	if leida._hay_repetidas():
@@ -202,7 +272,7 @@ static func desde(crudo: Dictionary) -> AsignacionDeControles:
 	return leida
 
 
-static func _leer(accion: StringName, crudo: Variant) -> Vector2i:
+static func _leer(accion: StringName, ranura: int, crudo: Variant) -> Vector2i:
 	if crudo is not Dictionary:
 		return ILEGIBLE
 	var campos: Dictionary = crudo
@@ -210,7 +280,7 @@ static func _leer(accion: StringName, crudo: Variant) -> Vector2i:
 	var codigo: Variant = campos.get("codigo")
 	if typeof(tipo) != TYPE_INT or typeof(codigo) != TYPE_INT:
 		return ILEGIBLE
-	if not acepta(accion, int(tipo), int(codigo)):
+	if not acepta(accion, int(tipo), int(codigo), false, ranura):
 		return ILEGIBLE
 	return Vector2i(int(tipo), int(codigo))
 

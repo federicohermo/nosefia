@@ -14,6 +14,7 @@ signal pausado
 signal reanudado
 signal volver_al_menu_pedido
 signal cierre_de_configuraciones_pedido
+signal cierre_de_logros_pedido
 ## Esc cerró la foto o el celular. Quien lo escucha devuelve el cursor al juego. Las demás
 ## interfaces devuelven el cursor ellas mismas, al cerrarse.
 signal esc_atendido_por_el_celular
@@ -24,6 +25,9 @@ signal esc_atendido_por_el_celular
 ## Configuraciones abierta desde la pausa, mirada sólo por si está en pantalla. La cierra quien
 ## la abrió, al recibir `cierre_de_configuraciones_pedido`.
 @export var configuraciones: CanvasLayer
+## La pantalla de logros abierta desde la pausa, igual que configuraciones: Esc la cierra y deja la
+## pausa. La cierra quien la abrió, al recibir `cierre_de_logros_pedido`.
+@export var logros: CanvasLayer
 ## El celular, mirado por si está libre y abierto: entonces Esc lo cierra y no pausa. Lo asigna
 ## quien arma el almacén.
 var celular: CelularDelEmpleado
@@ -61,6 +65,21 @@ func _exit_tree() -> void:
 	get_tree().physics_frame.disconnect(_mirar_el_cursor)
 
 
+## Si el evento es el de volver atrás: la acción de cancelar —Esc o START— o CÍRCULO.
+static func es_volver(evento: InputEvent) -> bool:
+	return evento.is_action_pressed(&"ui_cancel") or _es_circulo(evento)
+
+
+static func _es_circulo(evento: InputEvent) -> bool:
+	var boton := evento as InputEventJoypadButton
+	return (
+		boton != null
+		and boton.pressed
+		and not boton.is_echo()
+		and boton.button_index == Pausa.BOTON_VOLVER
+	)
+
+
 func _input(evento: InputEvent) -> void:
 	if not evento.is_action_pressed("ui_cancel"):
 		return
@@ -70,9 +89,32 @@ func _input(evento: InputEvent) -> void:
 			get_tree().paused,
 			_configuraciones_en_pantalla(),
 			_celular_libre_abierto(),
-			_interfaz_abierta() != null
+			_interfaz_abierta() != null,
+			_logros_en_pantalla()
 		)
 	)
+
+
+## CÍRCULO hace lo de Esc salvo pausar: con nada abierto deja el evento a la acción del celular.
+## Llega por `_unhandled_input` y no por `_input`: la pantalla de controles que espera un botón se
+## lo queda antes, porque CÍRCULO se puede asignar.
+func _unhandled_input(evento: InputEvent) -> void:
+	if _es_circulo(evento):
+		_volver_atras()
+
+
+func _volver_atras() -> void:
+	var accion := Pausa.ante_volver(
+		get_tree().paused,
+		_configuraciones_en_pantalla(),
+		_celular_libre_abierto(),
+		_interfaz_abierta() != null,
+		_logros_en_pantalla()
+	)
+	if accion == Pausa.Accion.NADA:
+		return
+	get_viewport().set_input_as_handled()
+	_hacer(accion)
 
 
 func _physics_process(delta: float) -> void:
@@ -108,6 +150,7 @@ func _hacer(accion: Pausa.Accion) -> void:
 		Pausa.Accion.PAUSAR: pausar,
 		Pausa.Accion.REANUDAR: reanudar,
 		Pausa.Accion.CERRAR_CONFIGURACIONES: cierre_de_configuraciones_pedido.emit,
+		Pausa.Accion.CERRAR_LOGROS: cierre_de_logros_pedido.emit,
 		Pausa.Accion.CERRAR_CELULAR: _cerrar_el_celular,
 		Pausa.Accion.CERRAR_INTERFAZ: _cerrar_la_interfaz,
 	}
@@ -177,6 +220,10 @@ func _placa_en_pantalla() -> bool:
 
 func _configuraciones_en_pantalla() -> bool:
 	return configuraciones != null and configuraciones.visible
+
+
+func _logros_en_pantalla() -> bool:
+	return logros != null and logros.visible
 
 
 func _cursor_tomado() -> bool:

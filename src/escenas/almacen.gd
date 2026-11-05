@@ -41,6 +41,7 @@ const HabitacionesDelAlmacen := preload("res://src/escenas/puestos/habitaciones_
 const NotasDelLocal := preload("res://src/escenas/puestos/notas_del_almacen.gd")
 const PilaDelDeposito := preload("res://src/escenas/puestos/pila_del_deposito.gd")
 const PALLETS_DE_ENTREGA := preload("res://src/escenas/puestos/pallets_de_entrega.tscn")
+const CAJAS_DEL_PROVEEDOR := preload("res://src/escenas/puestos/cajas_del_proveedor.tscn")
 const ReglasDelCierre := preload("res://src/dominio/almacen/reglas_del_cierre.gd")
 
 ## El jugador tampoco declara un `class_name` —es cáscara, como este archivo—, así que el
@@ -117,6 +118,9 @@ var compradores_de_la_apertura: Callable = _compradores_de_la_partida
 ## La partida es de la escena y no del ciclo porque también la lee el parte: el ciclo publica lo
 ## que pasó, y quien quiera un número lo pide acá. Sale del guardado: sin guardado, es nueva.
 var _partida := Partida.desde(Guardado.new().cargar())
+## Lo que dura más que la partida: se lee al abrir y se escribe en el momento de cada desbloqueo.
+var _archivo_de_logros := ArchivoDeLogros.new()
+var _logros := _archivo_de_logros.cargar()
 ## La jornada para la que están preparados los útiles: la de la carga, y después la de cada
 ## transición que los preparó.
 var _jornada_preparada := 0
@@ -136,6 +140,7 @@ var _pedido: PedidoAlProveedor
 var _cajas_vacias: Array[Producto.Id] = []
 var _pallets_de_entrega: Node3D
 var _pallets_del_fondo: Node3D
+var _cajas_del_proveedor: Node3D
 var _presencias_de_las_cajas: Dictionary[Node3D, PresenciaDeCaja] = {}
 
 ## Cómo se sale al menú. Es una variable y no una llamada directa porque un test no puede
@@ -163,6 +168,9 @@ var _hojas_de_entrada: Array[PuertaDelLocal] = []
 @onready var _investigador: Investigador = $Servicios/Investigador
 @onready var _colilla: ObjetoAgarrable = $Objetos/Colilla
 @onready var _nota: ObjetoAgarrable = $Objetos/NotaBajoLaPuerta
+@onready var _documento: ObjetoAgarrable = $Objetos/DocumentoImpreso
+@onready var _palanca: ObjetoAgarrable = $Objetos/Palanca
+@onready var _llave: ObjetoAgarrable = $Objetos/Llave
 
 
 func _compradores_de_la_partida(jornada: int) -> Array[Comprador]:
@@ -209,6 +217,8 @@ func _ready() -> void:
 	_atenciones.entrega_dicha.connect(_decir_entrega)
 	_caja.lectura_rechazada.connect(avisos.avisar_lectura_rechazada)
 	_investigador.pista_nueva.connect(avisos.avisar_pista.unbind(1))
+	_investigador.pista_nueva.connect(_al_descubrir_una_pista)
+	_computadora.registro_actualizado.connect(_al_actualizar_el_registro)
 	_investigador.pista_nueva.connect(
 		func(pista: Pista) -> void:
 			_pensar_gesto(
@@ -254,6 +264,7 @@ func _ready() -> void:
 	_computadora.registro_actualizado.connect(_revisar_la_salida)
 	var ventanilla: PuestoDeVentanilla = $Estructura/Ventanilla
 	ventanilla.comprador_se_fue.connect(avisos.avisar_salida)
+	ventanilla.pista_pedida.connect(_pedir_pista.bind(Pista.Canal.COMPRADOR))
 	ventanilla.entregas_abandonadas.connect(
 		_reposicion_manual.recibir_abandonadas.bind(ventanilla.piso_de_entregas)
 	)
@@ -339,6 +350,12 @@ func _ready() -> void:
 	}
 	for ruta: NodePath in trabadas:
 		(get_node(ruta) as PuertaDelLocal).identidad = trabadas[ruta]
+	# La traba sigue siendo de la puerta del jefe: sólo cede a la palanca o la llave en la mano.
+	var puerta_del_jefe: PuertaDelLocal = $Estructura/puertajefe/CuerpoDeLaHoja
+	puerta_del_jefe.puerta().ceder_a(Partida.PALANCA)
+	puerta_del_jefe.puerta().ceder_a(Partida.LLAVE)
+	puerta_del_jefe.lo_que_se_lleva = func() -> ObjetoDelAlmacen: return _agarre.manos().sostenido()
+	puerta_del_jefe.puerta_forzada.connect(_al_forzar_la_puerta_del_jefe.unbind(1))
 	_jugador.examen.examen_terminado.connect(_hud.vaciar_subtitulo)
 	_cablear_los_gestos()
 	_limpiador.balde_tenido_con.connect(_al_tenir_con)
@@ -369,6 +386,7 @@ func _ready() -> void:
 	pausa.reanudado.connect(_jugador.declarar_la_pausa.bind(false))
 	pausa.volver_al_menu_pedido.connect(func() -> void: _ir_al_menu.call())
 	_cablear_las_preferencias(pausa)
+	_cablear_los_logros(pausa)
 	_arranque = _jugador.global_transform
 	_enlace_de_guardado = EnlaceDeGuardado.new(_ciclo, Guardado.new())
 	add_child(_enlace_de_guardado)
@@ -449,6 +467,16 @@ func _cablear_las_preferencias(pausa: ControlDePausa) -> void:
 	pausa.cierre_de_configuraciones_pedido.connect(menu.cerrar_configuraciones)
 
 
+## Los logros desde la pausa: la pantalla lee la misma instancia que el juego va actualizando. Esc
+## la cierra sin reanudar.
+func _cablear_los_logros(pausa: ControlDePausa) -> void:
+	var menu: MenuDePausa = get_node("Interfaz/MenuDePausa")
+	var pantalla := menu.pantalla_de_logros()
+	pantalla.preparar(_logros, CasoDeInvestigacion.de_la_partida())
+	pausa.logros = pantalla
+	pausa.cierre_de_logros_pedido.connect(menu.cerrar_logros)
+
+
 ## Cada noche arranca sin tareas cumplidas, cada caja del depósito llena y la góndola
 ## completa salvo lo que esa jornada hace faltar.
 ##
@@ -476,7 +504,7 @@ func _al_abrir_la_jornada(jornada: int) -> void:
 	# Un pensamiento a medio desvanecer tampoco pasa a la noche nueva.
 	_hud.vaciar_subtitulo()
 	_agarre.vaciar_las_manos()
-	for de_una_pista: ObjetoAgarrable in [_colilla, _nota]:
+	for de_una_pista: ObjetoAgarrable in [_colilla, _nota, _documento, _palanca, _llave]:
 		_ubicar_lo_de_una_pista(de_una_pista, jornada)
 	_caja.arrancar(GeneradorDeTickets.para_la_jornada(jornada, _partida.numeros_de_ticket))
 	_puesto_de_la_caja.limpiar()
@@ -489,6 +517,8 @@ func _al_abrir_la_jornada(jornada: int) -> void:
 	# dirían números distintos sin que nada se ponga en rojo. Cuántos casilleros tiene la fila
 	# de adelante de cada tanda lo mide el puesto sobre el modelo; cuáles abren vacíos, la jornada.
 	var compradores: Array[Comprador] = compradores_de_la_apertura.call(jornada)
+	for comprador: Comprador in compradores:
+		comprador.pistas_activas = _partida.expediente.pistas_activas(jornada)
 	_cajas_vacias = Apertura.cajas_vacias_de_la_jornada(jornada, compradores, _partida.semilla)
 	_pedido = PedidoAlProveedor.new(jornada)
 	_pantalla_del_celular.usar_el_pedido(_pedido)
@@ -544,6 +574,7 @@ func _al_abrir_la_jornada(jornada: int) -> void:
 			forma.disabled = true
 		var tacho := _tachos()[indice]
 		tacho.mostrar(bolsa as BolsaDeBasura, _recolector.tarea().tiene_bolsa(tacho.tacho))
+	_disponer_las_cajas_del_proveedor(jornada)
 	var poses: Dictionary[Node3D, Transform3D] = {}
 	if is_instance_valid(_pallets_de_entrega):
 		_pallets_de_entrega.queue_free()
@@ -655,6 +686,18 @@ func _cajas_del_deposito(inventario: Inventario) -> Array[OrganizacionDelDeposit
 	return cajas
 
 
+## El proveedor deja sus dos cajas junto al portón sólo en la jornada que lo declara el dominio, y
+## la noche siguiente ya no están.
+func _disponer_las_cajas_del_proveedor(jornada: int) -> void:
+	if is_instance_valid(_cajas_del_proveedor):
+		remove_child(_cajas_del_proveedor)
+		_cajas_del_proveedor.queue_free()
+		_cajas_del_proveedor = null
+	if Apertura.hay_cajas_del_proveedor(jornada):
+		_cajas_del_proveedor = CAJAS_DEL_PROVEEDOR.instantiate()
+		add_child(_cajas_del_proveedor)
+
+
 func _repisas_del_deposito() -> Array[AABB]:
 	var repisas: Array[AABB] = []
 	var pallets := get_node("Estructura").find_children(
@@ -736,6 +779,7 @@ func _salir_por_la_entrada() -> void:
 ## obligatorias son **las mismas instancias** que el turno estuvo contando toda la noche.
 func _al_cerrar_la_jornada(jornada: int, _cumplidas: int) -> void:
 	_jornada_del_celular = jornada
+	_ganar_los_logros_del_cierre(jornada)
 	_gestos.descartar()
 	var persiana: PersianaDeLaNoche = get_node("Interfaz/PersianaDeLaNoche")
 	persiana.bajar()
@@ -805,6 +849,23 @@ func _salir_del_cierre(opcion: DevolucionDelJefe.Opcion) -> void:
 		DevolucionDelJefe.Opcion.VOLVER_AL_MENU: _ir_al_menu,
 	}
 	acciones[opcion].call()
+
+
+## La palanca o la llave abrió la oficina de Enrique: la jornada y la partida terminan en ese
+## momento, sin cierre ni devolución, y el final se muestra en el mismo paso (BR-SHF-060,
+## BR-SHF-061). Si la partida no lo acepta, la puerta ya se abrió y nada más cambia.
+func _al_forzar_la_puerta_del_jefe() -> void:
+	var llevado: ObjetoDelAlmacen = _agarre.manos().sostenido()
+	if llevado == null or not _partida.abrir_la_oficina_del_jefe(llevado.id, _reloj.hora()):
+		return
+	_reloj.retener()
+	_gestos.descartar()
+	_audio.callar_la_musica()
+	_jugador.suspender()
+	_enlace_de_guardado.guardar()
+	_anotar_el_final()
+	(get_node("Interfaz/PersianaDeLaNoche") as PersianaDeLaNoche).mostrar_baja()
+	_mostrar_el_final()
 
 
 ## La persiana sigue baja: la pantalla de final se dibuja encima, y sólo su botón sale al menú.
@@ -1154,8 +1215,15 @@ func _vigilar_si_queda_afuera(nodo: Node3D) -> void:
 			return
 		if cuerpo == null or cuerpo.sleeping or cuerpo.freeze:
 			break
+	if nodo.has_meta(&"recibido_por_comprador"):
+		return
 	# Se piensa cuando lo soltado se aquieta, y el jugador ya pudo irse: no tiene lugar.
-	if _habitaciones.de(nodo.global_position) == ReglasDelCierre.Habitacion.AFUERA:
+	var habitacion := _habitaciones.de(nodo.global_position)
+	var eximido := ReglasDelCierre.esta_eximido(datos, _levanta_una_pista(datos))
+	var sostenido := datos != null and _agarre.manos().sostenido() == datos
+	if Logros.y_se_marcho(habitacion, sostenido, eximido):
+		_desbloquear(Logros.Logro.Y_SE_MARCHO)
+	if habitacion == ReglasDelCierre.Habitacion.AFUERA:
 		while _jugador.examen.esta_examinando() or get_tree().paused:
 			await get_tree().physics_frame
 			if jornada != _partida.jornada() or not _reloj.corriendo():
@@ -1207,6 +1275,7 @@ func _puertas_de_las_heladeras() -> Dictionary[ReglasDelCierre.Heladera, Puerta]
 
 func _al_desechar_un_ticket() -> void:
 	_partida.anotar_llamado(Partida.Llamado.PAPEL_EN_EL_INODORO)
+	_desbloquear(Logros.Logro.REBELDE)
 
 
 ## Lo que se levanta para dar una pista vuelve a su lugar, y queda en el local sólo si el camino
@@ -1230,6 +1299,45 @@ func _al_tirar_un_objeto(nodo: Node3D) -> void:
 	var datos: ObjetoDelAlmacen = nodo.get("datos")
 	if not ReglasDelCierre.esta_eximido(datos, _levanta_una_pista(datos)):
 		_partida.anotar_llamado(Partida.Llamado.OBJETO_TIRADO)
+		_desbloquear(Logros.Logro.A_LA_BASURA)
+
+
+func _al_actualizar_el_registro() -> void:
+	if Logros.estamos_al_pedo(_computadora.registro()):
+		_desbloquear(Logros.Logro.ESTAMOS_AL_PEDO)
+
+
+func _al_descubrir_una_pista(pista: Pista) -> void:
+	if _logros.descubrir_pista(pista.identidad):
+		_archivo_de_logros.escribir(_logros)
+
+
+## Los logros que decide el cierre de la noche, y el final si la partida terminó. Un logro ganado
+## acá se avisa después de que el cierre vació los avisos de la noche.
+func _ganar_los_logros_del_cierre(jornada: int) -> void:
+	if Logros.talon_de_aquiles(_partida.antecedentes()):
+		_desbloquear(Logros.Logro.MI_TALON_DE_AQUILES)
+	if Logros.pesima_primera_impresion(_partida.final(), jornada):
+		_desbloquear(Logros.Logro.PESIMA_PRIMERA_IMPRESION)
+	_anotar_el_final()
+
+
+## Lo que gana toda partida que termina, la cierre la noche o la oficina de Enrique.
+func _anotar_el_final() -> void:
+	var final := _partida.final()
+	if Logros.empleado_ejemplar(final, _partida.legajo().medios()):
+		_desbloquear(Logros.Logro.EMPLEADO_EJEMPLAR)
+	if _logros.alcanzar_final(final):
+		_archivo_de_logros.escribir(_logros)
+
+
+## Una sola vez por logro: lo ya ganado no avisa ni escribe.
+func _desbloquear(logro: Logros.Logro) -> void:
+	if not _logros.desbloquear(logro):
+		return
+	_archivo_de_logros.escribir(_logros)
+	var avisos: PilaDeNotificaciones = get_node("Interfaz/PilaDeNotificaciones")
+	avisos.avisar_logro(logro)
 
 
 func _unhandled_input(evento: InputEvent) -> void:
@@ -1338,17 +1446,13 @@ func _al_recibir_en_el_celular(quien: Conversacion.Interlocutor, mensaje: Mensaj
 func _cablear_la_investigacion() -> void:
 	_investigador.nota_agregada.connect(_celular.recibir_nota)
 	_investigador.usar(_partida.expediente)
-	_celular.tramo_de_pista_pedido.connect(_al_pedir_pista_del_chat)
+	_celular.tramo_de_pista_pedido.connect(_pedir_pista.bind(Pista.Canal.CHAT))
 	_agarre.objeto_agarrado.connect(_al_agarrar_una_pista)
 
 
-func _al_pedir_pista_del_chat(identidad: String) -> void:
+func _pedir_pista(identidad: String, canal: Pista.Canal) -> void:
 	_investigador.pedir_pista(
-		StringName(identidad),
-		Pista.Canal.CHAT,
-		_partida.jornada(),
-		_se_puede_investigar(),
-		_reloj.hora()
+		StringName(identidad), canal, _partida.jornada(), _se_puede_investigar(), _reloj.hora()
 	)
 
 

@@ -103,7 +103,9 @@ func _decir(dialogo: Dialogo, de_entrega: bool) -> void:
 func _inicial() -> Dialogo:
 	if _comprador.dialogos == null:
 		return DialogosDeCompradores.apertura_predeterminada(_comprador.pedido())
-	return _comprador.dialogos.inicial(_comprador.personaje, _comprador.pedido())
+	return _comprador.dialogos.inicial(
+		_comprador.personaje, _comprador.pedido(), _comprador.pistas_activas
+	)
 
 
 func _despedida() -> Dialogo:

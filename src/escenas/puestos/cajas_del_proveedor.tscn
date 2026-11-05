@@ -1,0 +1,40 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://src/escenas/puestos/caja_del_proveedor.gd" id="script"]
+
+[ext_resource type="ArrayMesh" path="res://assets/models/caja_del_proveedor.res" id="carton"]
+[ext_resource type="ConvexPolygonShape3D" path="res://assets/models/caja_del_proveedor_colision.res" id="carton_colision"]
+[ext_resource type="ArrayMesh" path="res://assets/models/caja_de_madera.res" id="madera"]
+[ext_resource type="ConvexPolygonShape3D" path="res://assets/models/caja_de_madera_colision.res" id="madera_colision"]
+
+[node name="CajasDelProveedor" type="Node3D"]
+
+[node name="CajaDeCarton" type="StaticBody3D" parent="." node_paths=PackedStringArray("mallas") groups=["interactuable"]]
+transform = Transform3D(-0.968912, 0, 0.247404, 0, 1, 0, -0.247404, 0, -0.968912, -3.6, 0.102237, -8.84)
+script = ExtResource("script")
+identidad = &"caja_del_proveedor"
+mallas = [NodePath("Malla")]
+
+[node name="Forma" type="CollisionShape3D" parent="CajaDeCarton"]
+transform = Transform3D(0.3037077, 0, 0, 0, 0.3037077, 0, 0, 0, 0.3037077, 0, 0, 0)
+shape = ExtResource("carton_colision")
+
+[node name="Malla" type="MeshInstance3D" parent="CajaDeCarton"]
+transform = Transform3D(0.3037077, 0, 0, 0, 0.3037077, 0, 0, 0, 0.3037077, 0, 0, 0)
+mesh = ExtResource("carton")
+gi_mode = 2
+
+[node name="CajaDeMadera" type="StaticBody3D" parent="." node_paths=PackedStringArray("mallas") groups=["interactuable"]]
+transform = Transform3D(0.990216, 0, 0.139543, 0, 1, 0, -0.139543, 0, 0.990216, -1.9, 0.102237, -8.62)
+script = ExtResource("script")
+identidad = &"caja_de_madera"
+mallas = [NodePath("Malla")]
+
+[node name="Forma" type="CollisionShape3D" parent="CajaDeMadera"]
+transform = Transform3D(0.3037077, 0, 0, 0, 0.3037077, 0, 0, 0, 0.3037077, 0, 0, 0)
+shape = ExtResource("madera_colision")
+
+[node name="Malla" type="MeshInstance3D" parent="CajaDeMadera"]
+transform = Transform3D(0.3037077, 0, 0, 0, 0.3037077, 0, 0, 0, 0.3037077, 0, 0, 0)
+mesh = ExtResource("madera")
+gi_mode = 2

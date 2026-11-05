@@ -20,7 +20,7 @@ func _marcar(pedido: PedidoAlProveedor, ids: Array[Producto.Id]) -> void:
 		pedido.marcar(id)
 
 
-func test_la_lista_ofrece_los_pedibles_todos_desmarcados_y_exige_uno() -> void:  # AC-INV-170
+func test_la_lista_ofrece_los_pedibles_todos_desmarcados_y_exige_uno() -> void:  # AC-INV-192
 	var pedido := _pedido()
 	assert_int(pedido.productos_de_la_lista().size()).is_equal(Producto.Id.size())
 	for producto in pedido.productos_de_la_lista():
@@ -33,7 +33,7 @@ func test_la_lista_ofrece_los_pedibles_todos_desmarcados_y_exige_uno() -> void: 
 	assert_bool(pedido.puede_enviar()).is_false()
 
 
-func test_cerrar_y_reabrir_deja_la_lista_sin_marcados_y_sin_mensajes() -> void:  # AC-INV-170
+func test_cerrar_y_reabrir_deja_la_lista_sin_marcados_y_sin_mensajes() -> void:  # AC-INV-192
 	var pedido := _pedido()
 	pedido.marcar(Producto.Id.POETICO)
 	pedido.marcar(Producto.Id.GRINGO)
@@ -45,7 +45,7 @@ func test_cerrar_y_reabrir_deja_la_lista_sin_marcados_y_sin_mensajes() -> void: 
 	assert_array(pedido.avanzar(100.0, "20:00")).is_empty()
 
 
-func test_enviar_con_wifi_deja_un_mensaje_y_dos_respuestas_a_su_tiempo() -> void:  # AC-INV-171
+func test_enviar_con_wifi_deja_un_mensaje_y_dos_respuestas_a_su_tiempo() -> void:  # AC-INV-193
 	var pedido := _pedido()
 	_marcar(pedido, [Producto.Id.POETICO, Producto.Id.FERNET_GOD, Producto.Id.SEI_TUQUI])
 	var mensaje := pedido.enviar(true, "20:10")
@@ -68,7 +68,7 @@ func test_enviar_con_wifi_deja_un_mensaje_y_dos_respuestas_a_su_tiempo() -> void
 	assert_array(pedido.avanzar(100.0, "20:12")).is_empty()
 
 
-func test_sin_tiempo_positivo_no_llega_nada() -> void:  # AC-INV-171
+func test_sin_tiempo_positivo_no_llega_nada() -> void:  # AC-INV-193
 	var pedido := _pedido()
 	pedido.marcar(Producto.Id.POETICO)
 	pedido.enviar(true, "20:10")
@@ -80,7 +80,7 @@ func test_sin_tiempo_positivo_no_llega_nada() -> void:  # AC-INV-171
 	)
 
 
-func test_enviar_sin_wifi_queda_en_rojo_y_nadie_contesta() -> void:  # AC-INV-172
+func test_enviar_sin_wifi_queda_en_rojo_y_nadie_contesta() -> void:  # AC-INV-194
 	var pedido := _pedido()
 	pedido.marcar(Producto.Id.POETICO)
 	var mensaje := pedido.enviar(false, "20:10")
@@ -91,7 +91,7 @@ func test_enviar_sin_wifi_queda_en_rojo_y_nadie_contesta() -> void:  # AC-INV-17
 	assert_int(pedido.cantidad_de_enviados()).is_equal(1)
 
 
-func test_se_puede_enviar_mas_de_un_pedido_y_cada_uno_se_contesta() -> void:  # AC-INV-173
+func test_se_puede_enviar_mas_de_un_pedido_y_cada_uno_se_contesta() -> void:  # AC-INV-195
 	var pedido := _pedido()
 	pedido.marcar(Producto.Id.POETICO)
 	var primero := pedido.enviar(false, "20:10")
@@ -115,7 +115,7 @@ func test_se_puede_enviar_mas_de_un_pedido_y_cada_uno_se_contesta() -> void:  # 
 	assert_int(identidades.size()).is_equal(todos.size())
 
 
-func test_el_chat_ordena_los_mensajes_del_pedido_y_los_olvida_al_reabrir() -> void:  # AC-INV-173
+func test_el_chat_ordena_los_mensajes_del_pedido_y_los_olvida_al_reabrir() -> void:  # AC-INV-195
 	var bandeja := Bandeja.new(Conversacion.desde_disco())
 	bandeja.abrir_jornada(PEDIDO)
 	var pedido := _pedido()

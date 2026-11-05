@@ -67,6 +67,23 @@ func _nombres_de_los_renglones() -> Array[String]:
 	return nombres
 
 
+## Lo que va después de las teclas: el encabezado, las cinco acciones de botón y los dos joysticks.
+func _nombres_del_joystick() -> Array[String]:
+	var nombres: Array[String] = [PantallaDeControles.TEXTO_DEL_JOYSTICK]
+	for accion: StringName in AsignacionDeControles.ACCIONES_CON_BOTON:
+		nombres.append(AsignacionDeControles.nombre_de_la_accion(accion))
+	nombres.append(PantallaDeControles.TEXTO_DEL_JOYSTICK_IZQUIERDO)
+	nombres.append(PantallaDeControles.TEXTO_DEL_JOYSTICK_DERECHO)
+	return nombres
+
+
+func _boton_del_joystick(indice: int) -> InputEventJoypadButton:
+	var evento := InputEventJoypadButton.new()
+	evento.button_index = indice as JoyButton
+	evento.pressed = true
+	return evento
+
+
 func test_muestra_un_renglon_por_accion_con_sus_teclas() -> void:  # AC-CFG-015, AC-CFG-016
 	var pantalla := _pantalla()
 	var nombres: Array[String] = []
@@ -74,8 +91,9 @@ func test_muestra_un_renglon_por_accion_con_sus_teclas() -> void:  # AC-CFG-015,
 	for fila: HBoxContainer in pantalla.filas():
 		nombres.append((fila.get_child(0) as Label).text)
 		botones += fila.get_child(1).get_child_count()
-	assert_array(nombres).is_equal(_nombres_de_los_renglones())
-	assert_int(botones).is_equal(AsignacionDeControles.new().entradas().size())
+	assert_array(nombres).is_equal(_nombres_de_los_renglones() + _nombres_del_joystick())
+	# Los dos joysticks se muestran con una etiqueta y no tienen botón que reasignar.
+	assert_int(botones).is_equal(AsignacionDeControles.new().entradas().size() + 2)
 	var movimiento: Node = pantalla.filas()[0].get_child(1)
 	var ranuras_de_movimiento: int = 0
 	for direccion: StringName in AsignacionDeControles.DIRECCIONES:
@@ -237,3 +255,62 @@ func test_la_pantalla_usa_el_tema_y_no_declara_estilos() -> void:
 	var texto := FileAccess.get_file_as_string(ESCENA)
 	assert_str(texto).contains("res://assets/ui/manada/tema.tres")
 	assert_str(texto).not_contains("theme_override_")
+
+
+func test_muestra_el_esquema_del_joystick_con_un_boton_por_accion() -> void:  # AC-CFG-026
+	var pantalla := _pantalla()
+	var esperados: Dictionary[StringName, int] = {
+		AsignacionDeControles.AGARRAR: JOY_BUTTON_A,
+		AsignacionDeControles.INTERACTUAR: JOY_BUTTON_RIGHT_SHOULDER,
+		AsignacionDeControles.AGACHARSE: JOY_BUTTON_LEFT_SHOULDER,
+		AsignacionDeControles.CELULAR: JOY_BUTTON_B,
+		AsignacionDeControles.EXAMINAR: JOY_BUTTON_X,
+	}
+	for accion: StringName in esperados:
+		var texto := pantalla.texto_de(accion, AsignacionDeControles.RANURA_DEL_JOYSTICK)
+		assert_str(texto).is_equal(
+			PantallaDeControles.nombre_de_la_entrada(
+				AsignacionDeControles.TipoDeEntrada.BOTON_DEL_JOYSTICK, esperados[accion]
+			)
+		)
+	var nombres: Array[String] = []
+	for accion: StringName in esperados:
+		nombres.append(pantalla.texto_de(accion, AsignacionDeControles.RANURA_DEL_JOYSTICK))
+	assert_int(nombres.size()).is_equal(esperados.size())
+	assert_bool(nombres.has("")).is_false()
+
+
+func test_un_boton_del_joystick_se_asigna_a_la_ranura_y_avisa() -> void:  # AC-CFG-026
+	var pantalla := _pantalla()
+	var ranura := AsignacionDeControles.RANURA_DEL_JOYSTICK
+	pantalla.elegir(AsignacionDeControles.EXAMINAR, ranura)
+	assert_str(pantalla.texto_de(AsignacionDeControles.EXAMINAR, ranura)).is_equal(
+		PantallaDeControles.TEXTO_DE_ESPERA_DEL_JOYSTICK
+	)
+	assert_bool(pantalla.atender(_boton_del_joystick(JOY_BUTTON_Y))).is_true()
+	assert_bool(pantalla.capturando()).is_false()
+	assert_int(_avisos.size()).is_equal(1)
+	var asignacion: AsignacionDeControles = _avisos[0]
+	assert_vector(_entrada(asignacion, AsignacionDeControles.EXAMINAR, ranura)).is_equal(
+		Vector2i(AsignacionDeControles.TipoDeEntrada.BOTON_DEL_JOYSTICK, JOY_BUTTON_Y)
+	)
+	assert_vector(_entrada(asignacion, AsignacionDeControles.EXAMINAR, 0)).is_equal(
+		Vector2i(TECLA, KEY_E)
+	)
+
+
+func test_una_tecla_no_entra_al_boton_y_start_cancela_la_espera() -> void:  # AC-CFG-026
+	var pantalla := _pantalla()
+	var ranura := AsignacionDeControles.RANURA_DEL_JOYSTICK
+	pantalla.elegir(AsignacionDeControles.EXAMINAR, ranura)
+	assert_bool(pantalla.atender(_tecla(KEY_F))).is_true()
+	assert_bool(pantalla.atender(_clic(MOUSE_BUTTON_MIDDLE))).is_true()
+	assert_bool(pantalla.capturando()).is_true()
+	assert_array(_avisos).is_empty()
+	assert_bool(pantalla.atender(_boton_del_joystick(JOY_BUTTON_START))).is_true()
+	assert_bool(pantalla.capturando()).is_false()
+	assert_array(_avisos).is_empty()
+	pantalla.elegir(AsignacionDeControles.EXAMINAR, 0)
+	assert_bool(pantalla.atender(_boton_del_joystick(JOY_BUTTON_START))).is_true()
+	assert_bool(pantalla.capturando()).is_false()
+	assert_array(_avisos).is_empty()

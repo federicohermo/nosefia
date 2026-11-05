@@ -317,3 +317,14 @@ func _mensajes_de_la_primera_jornada() -> Array[Mensaje]:
 
 func _mensajes_de(jornada: int) -> Array[Mensaje]:
 	return InstruccionesDelJefe.de_la_jornada(GUION.mensajes, jornada)
+
+
+func test_las_instrucciones_dejan_el_foco_en_un_boton_habilitado_por_pagina() -> void:  # AC-CFG-028
+	var pantalla := _pantalla()
+	pantalla.mostrar(_mensajes_de_la_primera_jornada())
+	for _pagina in 2:
+		var foco := pantalla.get_viewport().gui_get_focus_owner() as Button
+		assert_object(foco).is_not_null()
+		assert_bool(pantalla.is_ancestor_of(foco)).is_true()
+		assert_bool(foco.disabled).is_false()
+		_boton(pantalla, "_siguiente").pressed.emit()

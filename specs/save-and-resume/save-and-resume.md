@@ -1,9 +1,9 @@
 ---
 schema_version: 1
 capability_id: CAP-SAV
-status: draft
+status: ratified
 owner: por definir
-provenance: GDD «checkpoint al final de cada noche»; ficha «Pantalla entre jornadas» y decisiones de #374; fichas «2. Menú de inicio» y «Pausa y menú de pausa» y decisiones de #378; decisión del 2026-09-28 de #299; decisiones de #375; migración de los specs 019, 020, 036; historial de devoluciones fechado y compatibilidad con textos legados de #430; checkpoint del cierre, expediente, notas y elección de #436; decisión del usuario del 2026-10-18 sobre la reanudación del cierre; ocho jornadas de #526; instrucciones por jornada de #527; pose de las cajas del depósito de #555; mensajes de Yasmín de la jornada 6 de #458; sorteo del camino de #787
+provenance: GDD «checkpoint al final de cada noche»; ficha «Pantalla entre jornadas» y decisiones de #374; fichas «2. Menú de inicio» y «Pausa y menú de pausa» y decisiones de #378 y #381; decisión del 2026-09-28 de #299; decisiones de #375; migración de los specs 019, 020, 036; historial de devoluciones fechado y compatibilidad con textos legados de #430; checkpoint del cierre, expediente, notas y elección de #436; decisión del usuario del 2026-10-18 sobre la reanudación del cierre; ocho jornadas de #526; instrucciones por jornada de #527; pose de las cajas del depósito de #555; mensajes de Yasmín de la jornada 6 de #458; sorteo del camino de #787; pausa con el joystick de #380; el final 4 de #790; el final 5 de #810
 ---
 
 # Capacidad: guardar y retomar
@@ -34,7 +34,7 @@ esos momentos no se escribe.
 
 ### BR-SAV-002 — Un final resetea el progreso
 
-SI la partida terminó —por despido o por contrato cumplido—, ENTONCES el sistema DEBE **borrar el
+SI la partida terminó —por despido, por contrato cumplido, sea el final 1 o el 2 de BR-INV-103, o por los finales 4 y 5 de BR-SHF-060 y BR-SHF-061—, ENTONCES el sistema DEBE **borrar el
 guardado** en vez de escribirlo.
 
 ### BR-SAV-003 — Decidir y escribir son dos cosas
@@ -132,12 +132,14 @@ mostrar el menú de pausa; volver tampoco DEBE abrirlo.
 SI Configuraciones está abierta desde la pausa, ENTONCES Esc DEBE cerrarla y dejar el menú de
 pausa en pantalla, **sin reanudar**; el Esc siguiente reanuda, como siempre. SI Configuraciones
 está abierta desde el menú de inicio, ENTONCES Esc DEBE cerrarla y dejar el menú de inicio.
+Lo mismo vale para la pantalla de logros: abierta desde la pausa, Esc la cierra y deja el menú de
+pausa, sin reanudar; abierta desde el menú de inicio, Esc la cierra y deja el menú de inicio.
 
 ### BR-SAV-017 — El menú de pausa muestra cuatro opciones
 
 El menú de pausa DEBE mostrar cuatro opciones, en este orden: **reanudar, configuraciones, logros
-y volver al menú**. Sólo logros DEBE verse deshabilitada: configuraciones DEBE estar habilitada y
-abrir Configuraciones. El menú de pausa no ofrece salir: el juego se cierra sólo desde el menú de
+y volver al menú**. Las cuatro DEBEN estar habilitadas: configuraciones DEBE abrir Configuraciones
+y logros DEBE abrir la pantalla de logros (BR-ACH-015). El menú de pausa no ofrece salir: el juego se cierra sólo desde el menú de
 inicio.
 
 ### BR-SAV-018 — Volver al menú abandona la jornada
@@ -226,6 +228,16 @@ guardado carga sin fallar. Dentro del campo, un sorteo que ninguna hipótesis de
 respalda DEBE ignorarse sin descartar los demás ni la jornada, el legajo o las cuentas. Sanear NO
 DEBE crear sorteos. Un final que borra el guardado (BR-SAV-002) borra también los sorteos.
 
+### BR-SAV-024 — START pausa y CÍRCULO vuelve atrás
+
+CUANDO el jugador aprieta START del joystick, el sistema DEBE hacer lo mismo que con Esc
+(BR-SAV-016, BR-PLY-054): pausar, reanudar o cerrar la interfaz abierta, según el caso. START NO
+DEBE ser reasignable. CUANDO hay una interfaz abierta o la pausa en pantalla, CÍRCULO DEBE volver
+atrás: hacer lo que Esc hace en ella —cerrar la computadora, la caja o la nota, reanudar desde la
+pausa, cerrar Configuraciones y volver al menú que la abrió, cerrar la pantalla de controles y
+volver a Configuraciones—, sin pausar en ningún caso. Sin ninguna interfaz abierta, CÍRCULO NO DEBE
+pausar. CÍRCULO DEBE volver atrás aunque el celular se haya reasignado a otro botón.
+
 ## Criterios de aceptación
 
 ### AC-SAV-001 — El cierre guarda una vez *(verifica BR-SAV-001)*
@@ -237,7 +249,8 @@ tiene por abrir, y esos apercibimientos.
 ### AC-SAV-002 — El último cierre borra *(verifica BR-SAV-002)*
 
 DADO la última jornada CUANDO cierra ENTONCES hay **una** llamada y no dos, con la partida
-terminada, y el archivo queda borrado.
+terminada, y el archivo queda borrado. Vale con el expediente sin pistas (final 1) y con una pista
+registrada (final 2).
 
 ### AC-SAV-003 — El despido también resetea *(verifica BR-SAV-002)*
 
@@ -333,8 +346,7 @@ CUANDO llega Esc ENTONCES Configuraciones se cierra y el menú de inicio está e
 ### AC-SAV-019 — Los cuatro botones de la pausa *(verifica BR-SAV-017)*
 
 DADO el menú de pausa ENTONCES muestra reanudar, configuraciones, logros y volver al menú, en ese
-orden; reanudar, configuraciones y volver al menú están habilitados, y sólo logros está
-deshabilitado.
+orden, y los cuatro están habilitados.
 
 ### AC-SAV-020 — Volver al menú no guarda *(verifica BR-SAV-018)*
 
@@ -451,6 +463,18 @@ DADO un despido en jornada 5 CUANDO termina la devolución ENTONCES se ofrece un
 (BR-EMP-011), no aparece la reflexión y no hay guardado. CUANDO se vuelve al menú, desde la
 pantalla de final o desde la pausa, ENTONCES continuar sigue deshabilitado.
 
+### AC-SAV-050 — El final 4 también resetea *(verifica BR-SAV-002)*
+
+DADO una partida guardada en la jornada 7 CUANDO se abre la puerta del jefe con la palanca ENTONCES el
+guardado se borra y no se escribe otro. CUANDO se vuelve al menú, desde la pantalla de final o desde la
+pausa, ENTONCES continuar sigue deshabilitado.
+
+### AC-SAV-051 — El final 5 también resetea *(verifica BR-SAV-002)*
+
+DADO una partida guardada en la jornada 7 CUANDO se abre la puerta del jefe con la llave ENTONCES el
+guardado se borra y no se escribe otro. CUANDO se vuelve al menú, desde la pantalla de final o desde la
+pausa, ENTONCES continuar sigue deshabilitado.
+
 ### AC-SAV-033 — Un guardado de otra numeración no se migra *(verifica BR-SAV-007)*
 
 DADO un guardado escrito con las ocho jornadas, en cualquier jornada, CUANDO se carga ENTONCES
@@ -488,6 +512,26 @@ legajo y las cuentas son los guardados. DADO el campo con un sorteo de una ident
 hipótesis de la jornada anterior respalda y otro válido ENTONCES sólo el válido se conserva. DADO un
 despido o un contrato cumplido ENTONCES no queda guardado ni sorteos.
 
+### AC-SAV-037 — Esc cierra la pantalla de logros y deja el menú de donde vino *(verifica BR-SAV-016)*
+
+DADO el menú de pausa CUANDO se elige «logros» y se aprieta Esc ENTONCES la pantalla de logros se
+cierra, el menú de pausa sigue en pantalla y la jornada sigue pausada; el Esc siguiente reanuda.
+DADO el menú de inicio CUANDO se elige «logros» y se aprieta Esc ENTONCES la pantalla se cierra y
+queda el menú de inicio.
+
+### AC-SAV-046 — START pausa y CÍRCULO vuelve atrás *(verifica BR-SAV-024, BR-SAV-016)*
+
+DADO la jornada en curso, sin ninguna interfaz abierta, CUANDO se aprieta START ENTONCES el juego
+queda en pausa; CUANDO se aprieta otro START ENTONCES se reanuda. DADO la computadora abierta
+CUANDO se aprieta START ENTONCES se cierra sin pausa; CUANDO se aprieta otro START ENTONCES el
+juego queda en pausa. DADO el juego en pausa CUANDO se aprieta CÍRCULO ENTONCES se reanuda. DADO
+Configuraciones abierta desde la pausa CUANDO se aprieta CÍRCULO ENTONCES se cierra, el menú de
+pausa está en pantalla y el juego sigue en pausa. DADO la pantalla de controles CUANDO se aprieta
+CÍRCULO ENTONCES vuelve a Configuraciones. DADO la computadora abierta CUANDO se aprieta CÍRCULO
+ENTONCES se cierra sin pausa. DADO ninguna interfaz abierta CUANDO se aprieta CÍRCULO ENTONCES el
+juego no queda en pausa. DADO el celular reasignado a otro botón y Configuraciones abierta CUANDO
+se aprieta CÍRCULO ENTONCES se cierra.
+
 ## No objetivos
 
 - Esta capacidad NO decide **qué** guarda cada sistema: define el sobre. El inventario entra
@@ -496,6 +540,8 @@ despido o un contrato cumplido ENTONCES no queda guardado ni sorteos.
   marcas de lectura; acepta las listas antiguas según BR-SAV-020.
 - Esta capacidad NO ofrece ranuras, autoguardado ni nube.
 - Esta capacidad NO avisa en pantalla que la escritura falló.
+- Esta capacidad NO guarda los logros, los finales alcanzados ni las pistas descubiertas: viven
+  aparte, en [`achievements`](../achievements/achievements.md), y borrar el guardado no los toca.
 - Esta capacidad NO guarda las preferencias del jugador: viven aparte, en
   [`settings`](../settings/settings.md), y borrar el guardado no las toca.
 
@@ -526,6 +572,8 @@ despido o un contrato cumplido ENTONCES no queda guardado ni sorteos.
   reflexión pendiente y elección, que se escriben en cada paso aceptado del cierre.
 - [`settings`](../settings/settings.md) (alimenta): los dos menús abren Configuraciones, y Esc
   la cierra.
+- [`achievements`](../achievements/achievements.md) (alimenta): los dos menús abren la pantalla de
+  logros, y Esc la cierra.
 - [`store-stock`](../store-stock/store-stock.md) (consume y alimenta): la pose de cada caja al
   cierre, y la que la apertura de la jornada siguiente le pide al retomar (BR-STK-051).
 

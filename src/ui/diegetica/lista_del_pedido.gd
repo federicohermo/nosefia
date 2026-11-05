@@ -1,7 +1,7 @@
 ## La lista de productos del pedido al proveedor, dentro del chat de Hernán: un renglón por
 ## producto con su casilla, el texto que la abre y el aviso de que hace falta marcar uno.
 ##
-## **No decide qué está marcado:** eso es del pedido (BR-INV-124). La lista le dice cada casilla que
+## **No decide qué está marcado:** eso es del pedido (BR-INV-147). La lista le dice cada casilla que
 ## cambió y avisa para que quien la muestra actualice «Enviar».
 class_name ListaDelPedido
 extends PanelContainer

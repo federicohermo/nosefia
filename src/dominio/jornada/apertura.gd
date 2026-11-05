@@ -19,6 +19,10 @@ const PRODUCTO_CON_VENCIDOS := Producto.Id.CINDOLOR
 const PRODUCTO_CON_CAJA_VACIA := Producto.Id.FERNET_GOD
 ## Cuántas cajas del depósito abren vacías en esa jornada.
 const CAJAS_VACIAS := 5
+## La jornada en que el proveedor deja sus dos cajas junto al portón.
+const JORNADA_DEL_PROVEEDOR := (
+	ReglasDeLaPartida.PRIMERA_JORNADA + ReglasDeLaPartida.JORNADAS_DE_LA_PARTIDA - 1
+)
 const PARTICULARES := {
 	ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA: [Tarea.Tipo.ORDENAR_LAS_CAJAS],
 	ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA + 1: [Tarea.Tipo.SACAR_LA_BASURA],
@@ -208,6 +212,12 @@ static func vencidos_de_la_jornada(
 
 static func cajas_apiladas(jornada: int) -> bool:
 	return Tarea.Tipo.ORDENAR_LAS_CAJAS in PARTICULARES.get(jornada, [])
+
+
+## Si esa noche están la caja de cartón del proveedor y la de madera. Salen de la jornada, no de
+## un estado: retomar una partida guardada en ella también las trae.
+static func hay_cajas_del_proveedor(jornada: int) -> bool:
+	return jornada == JORNADA_DEL_PROVEEDOR
 
 
 static func productos_con_cajas_apiladas(jornada: int) -> Array[Producto.Id]:
