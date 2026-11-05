@@ -219,8 +219,10 @@ func test_la_hipotesis_5b_trae_el_titulo_y_el_texto_de_su_ficha() -> void:  # AC
 func test_la_hipotesis_5b_depende_de_la_pista_5b() -> void:  # AC-INV-093
 	var caso := CasoDeInvestigacion.de_la_partida()
 	var jornada := GeneradorDeTickets.JORNADA_SIN_LECTOR
-	assert_array(caso.hipotesis_para(jornada, PackedStringArray())).is_empty()
-	assert_array(caso.hipotesis_para(jornada, PackedStringArray(["2A"]))).is_empty()
+	assert_array(_identidades(caso.hipotesis_para(jornada, PackedStringArray()))).is_equal(["5P"])
+	assert_array(_identidades(caso.hipotesis_para(jornada, PackedStringArray(["2A"])))).is_equal(
+		["5P"]
+	)
 	(
 		assert_array(_identidades(caso.hipotesis_para(jornada, PackedStringArray(["2A", "5B"]))))
 		. is_equal(["5B"])
@@ -233,25 +235,21 @@ func _nota() -> StringName:
 	return CasoDeInvestigacion.de_la_partida().pista_de("6C").origen
 
 
-func _la_nota_esta(jornada: int, elecciones: Dictionary, sorteos: Dictionary = {}) -> bool:
-	return CasoDeInvestigacion.de_la_partida().esta_en_el_local(
-		_nota(), jornada, elecciones, sorteos
-	)
+func _la_nota_esta(jornada: int, elecciones: Dictionary) -> bool:
+	return CasoDeInvestigacion.de_la_partida().esta_en_el_local(_nota(), jornada, elecciones, {})
 
 
 func test_la_nota_esta_solo_en_la_jornada_6_y_con_6c_activa() -> void:  # AC-INV-120
 	var cuarta := JORNADA_5 - 1
 	var por_eleccion := {cuarta: "2A", JORNADA_5: "5B"}
-	var por_sorteo := {cuarta: "2A"}
-	var sorteos := {JORNADA_6: "5B"}
 	for jornada in range(
 		ReglasDeLaPartida.PRIMERA_JORNADA, ReglasDeLaPartida.JORNADAS_DE_LA_PARTIDA + 1
 	):
 		var corresponde := jornada == JORNADA_6
 		assert_bool(_la_nota_esta(jornada, por_eleccion)).is_equal(corresponde)
-		assert_bool(_la_nota_esta(jornada, por_sorteo, sorteos)).is_equal(corresponde)
 	assert_bool(_la_nota_esta(JORNADA_6, {cuarta: "2B"})).is_false()
-	assert_bool(_la_nota_esta(JORNADA_6, por_sorteo)).is_false()
+	assert_bool(_la_nota_esta(JORNADA_6, {cuarta: "2A"})).is_false()
+	assert_bool(_la_nota_esta(JORNADA_6, {cuarta: "2A", JORNADA_5: "5P"})).is_false()
 	assert_bool(_la_nota_esta(JORNADA_6, {})).is_false()
 	assert_bool(_la_nota_esta(JORNADA_6, {cuarta: "2P"})).is_false()
 	var caso := CasoDeInvestigacion.de_la_partida()
@@ -318,3 +316,18 @@ func test_la_hipotesis_6c_depende_de_la_pista_6c() -> void:  # AC-INV-124
 		assert_array(_identidades(caso.hipotesis_para(JORNADA_5 - 1, PackedStringArray(["2A"]))))
 		. is_equal(["2A"])
 	)
+
+
+func test_la_hipotesis_5p_no_tiene_pista_ni_exigencias_ni_camino() -> void:  # AC-INV-110
+	var caso := CasoDeInvestigacion.de_la_partida()
+	var ofrecidas := caso.hipotesis_para(GeneradorDeTickets.JORNADA_SIN_LECTOR, PackedStringArray())
+	assert_array(_identidades(ofrecidas)).is_equal(["5P"])
+	if ofrecidas.is_empty():
+		return
+	var quinta := ofrecidas[0]
+	assert_str(quinta.titulo).is_equal("NO HAY PROBLEMA")
+	assert_str(quinta.texto).is_not_empty()
+	assert_array(Array(quinta.exigencias)).is_empty()
+	assert_array(Array(quinta.camino)).is_empty()
+	assert_object(caso.pista_de("5P")).is_null()
+	assert_int(caso.consistencia()).is_equal(CasoDeInvestigacion.Consistencia.VALIDO)

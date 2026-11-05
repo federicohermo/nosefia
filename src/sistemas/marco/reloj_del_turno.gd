@@ -28,6 +28,7 @@ var _ritmo: float = Ritmo.SEGUNDOS_DE_TURNO_POR_SEGUNDO_REAL
 var _ultimo_cuadro_usec: int = 0
 var _retenido := false
 var _cierre_reservado := false
+var _hora_al_cierre: String = ""
 
 
 ## El navegador puede suspender los cuadros de una pestaña oculta. El reloj monotónico sigue
@@ -67,8 +68,20 @@ func avanzar(segundos_reales: float) -> void:
 	_consumir(maxf(0.0, Ritmo.escalar(segundos_reales, _ritmo)))
 
 
+## La hora del reloj del juego ahora, o vacía sin turno.
+func hora() -> String:
+	return Marcador.hora(_turno.tiempo_restante()) if _turno != null else ""
+
+
+## La hora a la que empezó el cierre de este turno: la del reloj al irse antes, o las 08:00 si se
+## cumplió entero. Vacía mientras el cierre no empezó.
+func hora_al_cierre() -> String:
+	return _hora_al_cierre
+
+
 func terminar() -> void:
 	if corriendo() and not _cierre_reservado:
+		_hora_al_cierre = hora()
 		_consumir(_turno.tiempo_restante())
 
 
@@ -82,6 +95,7 @@ func reservar_cierre() -> bool:
 func terminar_cierre_reservado() -> void:
 	if not _cierre_reservado:
 		return
+	_hora_al_cierre = hora()
 	_consumir(_turno.tiempo_restante())
 	_cierre_reservado = false
 
@@ -90,6 +104,8 @@ func _consumir(segundos: float) -> void:
 	if not corriendo():
 		return
 	if _turno.se_agota_con(segundos):
+		if _hora_al_cierre.is_empty():
+			_hora_al_cierre = Marcador.hora(0.0)
 		cierre_iniciado.emit()
 	_turno.consumir(segundos)
 	tiempo_consumido.emit(_turno.tiempo_restante())
@@ -108,6 +124,7 @@ func arrancar(
 ) -> void:
 	_turno = turno
 	_cierre_reservado = false
+	_hora_al_cierre = ""
 	_obligatorias = obligatorias
 	_ritmo = ritmo
 	_ultimo_cuadro_usec = _ahora_usec()

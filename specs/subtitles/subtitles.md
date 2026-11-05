@@ -3,7 +3,7 @@ schema_version: 1
 capability_id: CAP-SUB
 status: ratified
 owner: por definir
-provenance: fichas «Subtítulos», «5. Formas de interacción con objetos», «Interfaces virtuales durante la jornada» y «8. Tarea: Reposición»; columnas «Subtítulo al examinar» de las bases «Productos y cajas contenedoras» y «Otros objetos interactuables»; decisiones de #376; exención de bolsa, producto vencido, ticket y pista de #516; cuartito de limpieza de #541; texto provisorio del depósito trabado de #574; útiles fuera del contenedor de #552, ficha «Subtítulos» revisada el 2026-10-21; pensamiento de la primera pista de #714, ficha «Subtítulos» revisada el 2026-10-30; pensamiento sin luz de #689, ficha «Subtítulos» leída el 2026-11-03; subtítulos de las manchas de #457, ficha «Limpieza» revisada el 2026-10-20; renglones y ancho de #626, ficha «Subtítulos» revisada el 2026-11-03
+provenance: fichas «Subtítulos», «5. Formas de interacción con objetos», «Interfaces virtuales durante la jornada» y «8. Tarea: Reposición»; columnas «Subtítulo al examinar» de las bases «Productos y cajas contenedoras» y «Otros objetos interactuables»; decisiones de #376; exención de bolsa, producto vencido, ticket y pista de #516; cuartito de limpieza de #541; texto provisorio del depósito trabado de #574; útiles fuera del contenedor de #552, ficha «Subtítulos» revisada el 2026-10-21; pensamiento de la primera pista de #714, ficha «Subtítulos» revisada el 2026-10-30; pensamiento sin luz de #689, ficha «Subtítulos» leída el 2026-11-03; subtítulos de las manchas de #457, ficha «Limpieza» revisada el 2026-10-20; renglones y ancho de #626, ficha «Subtítulos» revisada el 2026-11-03; pensamiento de la primera pista por canal de #762, ficha «Subtítulos» leída el 2026-11-03
 ---
 
 # Capacidad: los subtítulos
@@ -267,18 +267,28 @@ exacta ni modificar el desgaste por tiempo y recorrido de
 ### BR-SUB-016 — La primera pista anotada
 
 CUANDO [`investigation`](../investigation/investigation.md) anota la primera pista de la partida,
-por cualquier canal, el sistema DEBE mostrar el pensamiento `PRIMERA_PISTA`, cuyo texto actual es
-«Encontré una pista. ¡Qué extraño! Me parece que está pasando algo.». Las pistas siguientes, en
-esa jornada o en otra, NO DEBEN mostrarlo. Una partida nueva lo vuelve a mostrar una vez. Un
+por cualquier canal, el sistema DEBE mostrar el pensamiento de ese canal. Cada texto tiene dos
+renglones, y el segundo es el mismo:
+
+| Canal por el que se anota | Primer renglón | Segundo renglón |
+|---|---|---|
+| Levantar un objeto | «¿Y esto…? Qué raro…» | «Creo que voy a anotarme estas cosas.» |
+| Examinar un objeto que no se levanta | «Hay algo raro acá…» | «Creo que voy a anotarme estas cosas.» |
+| Diálogo de un comprador | «Ese comentario fue… curioso…» | «Creo que voy a anotarme estas cosas.» |
+| Mensaje en un chat | «Ese mensaje fue… curioso…» | «Creo que voy a anotarme estas cosas.» |
+
+Las pistas siguientes, en esa jornada o en otra, NO DEBEN mostrarlo. Una partida nueva lo vuelve
+a mostrar una vez. Un
 resultado repetido o desconocido NO DEBE mostrarlo, igual que no produce el aviso de
 [`notifications`](../notifications/notifications.md) (BR-NTF-010). Retomar una partida guardada
 que ya tiene una pista NO DEBE mostrarlo: restaurar el expediente no es anotar una pista.
 
 SI el celular está abierto al anotarse la pista, ENTONCES el pensamiento DEBE esperar a que se
-cierre y mostrarse entonces. Recién al mostrarse cuenta como mostrado: si la jornada cierra antes,
-se descarta y la partida sigue sin marca. Anotar otra pista con el pensamiento pendiente NO DEBE
-duplicarlo. SI otro subtítulo reemplaza al pensamiento ya mostrado, ENTONCES el pensamiento cuenta
-como mostrado y NO DEBE volver (BR-SUB-001). El aviso «¡NUEVA PISTA!» NO cambia.
+cierre y mostrarse entonces, con el texto del canal de la primera pista anotada. Recién al
+mostrarse cuenta como mostrado: si la jornada cierra antes, se descarta y la partida sigue sin
+marca. Anotar otra pista con el pensamiento pendiente NO DEBE duplicarlo ni cambiar el texto,
+aunque sea de otro canal. SI otro subtítulo reemplaza al pensamiento ya mostrado, ENTONCES el pensamiento cuenta
+como mostrado y NO DEBE volver (BR-SUB-001). El aviso «Nueva pista desbloqueada» NO cambia.
 
 ### BR-SUB-017 — Los renglones los marca la ficha
 
@@ -513,21 +523,23 @@ ENTONCES dice su texto fijo (BR-SUB-010).
 ### AC-SUB-027 — La primera pista piensa, una vez *(verifica BR-SUB-016, BR-SUB-001)*
 
 DADA una partida sin la marca CUANDO se anota una pista, por cada canal de anotación, ENTONCES se
-muestra `PRIMERA_PISTA` con la duración que le da su largo (BR-SUB-004), y la partida queda
-marcada; CUANDO se anota la segunda pista, en esa jornada o en otra, ENTONCES no se muestra.
+muestra el pensamiento de ese canal (AC-SUB-033) con la duración que le da su largo (BR-SUB-004),
+y la partida queda marcada; CUANDO se anota la segunda pista, en esa jornada o en otra, ENTONCES no se muestra.
 DADO un resultado repetido o desconocido en una partida sin la marca ENTONCES no se muestra y la
 partida sigue sin marca. DADA una partida guardada que ya tiene una pista y la marca CUANDO se
 retoma ENTONCES no se muestra; DADA una partida nueva ENTONCES se muestra una vez más.
 DADO el celular abierto CUANDO se anota la primera pista ENTONCES no se muestra; CUANDO se anota
-otra con el celular abierto ENTONCES sigue habiendo uno solo pendiente; CUANDO se cierra el celular
-ENTONCES se muestra y recién ahí la partida queda marcada. DADO el pensamiento pendiente CUANDO
+otra con el celular abierto, de otro canal, ENTONCES sigue habiendo uno solo pendiente; CUANDO se
+cierra el celular ENTONCES se muestra el texto del canal de la primera, y recién ahí la partida
+queda marcada. DADO el pensamiento pendiente CUANDO
 cierra la jornada ENTONCES se descarta y la partida sigue sin marca. DADO el pensamiento visible
 CUANDO llega otro subtítulo ENTONCES lo reemplaza y el pensamiento no vuelve.
 
-### AC-SUB-028 — Los renglones de cada pensamiento *(verifica BR-SUB-017, BR-SUB-013, BR-SUB-014)*
+### AC-SUB-028 — Los renglones de cada pensamiento *(verifica BR-SUB-017, BR-SUB-013, BR-SUB-014, BR-SUB-016)*
 
-DADO cada pensamiento de la tabla de BR-SUB-013 y `MOPA_BERRETA` ENTONCES su texto tiene los
-renglones de la ficha: dos para `CAJA_EN_EL_CONTENEDOR`, `UTIL_EN_EL_CONTENEDOR`,
+DADO cada pensamiento de la tabla de BR-SUB-013, `MOPA_BERRETA` y el de cada canal de BR-SUB-016
+ENTONCES su texto tiene los renglones de la ficha: dos para el de cada canal de BR-SUB-016,
+`CAJA_EN_EL_CONTENEDOR`, `UTIL_EN_EL_CONTENEDOR`,
 `POR_LA_VENTANA`, `JABON_EQUIVOCADO`, `PUERTA_CON_TAREAS_PENDIENTES` y `SIN_LUZ`, y uno para cada uno de los
 demás. Ningún renglón queda vacío y el texto no empieza ni termina con un salto.
 
@@ -562,6 +574,17 @@ mostrando sólo ese texto, una vez, y empieza de nuevo.
 DADO el corte sin cortar, o restaurado con el tablero, CUANDO se hace clic sobre cualquiera de las
 dos ENTONCES se abre y no hay pensamiento. DADA la computadora abierta CUANDO se corta la luz
 ENTONCES se cierra y no hay pensamiento.
+
+### AC-SUB-033 — Cada canal piensa su texto *(verifica BR-SUB-016, BR-SUB-017)*
+
+DADA una partida sin la marca CUANDO la primera pista se anota levantando un objeto ENTONCES la
+línea muestra los renglones «¿Y esto…? Qué raro…» y «Creo que voy a anotarme estas cosas.»; por
+examinar un objeto que no se levanta, «Hay algo raro acá…» y el mismo segundo renglón; por un
+diálogo de un comprador, «Ese comentario fue… curioso…» y el mismo segundo renglón; por un mensaje
+en un chat, «Ese mensaje fue… curioso…» y el mismo segundo renglón. En los cuatro, «…» es un solo
+carácter. DADO el celular abierto CUANDO se anota una primera pista por un canal y otra por un
+canal distinto, y después se cierra el celular, ENTONCES se muestra el texto del canal de la
+primera.
 
 ## No objetivos
 

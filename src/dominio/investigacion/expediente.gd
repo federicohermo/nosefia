@@ -33,7 +33,8 @@ func esta_en_el_local(origen: StringName, jornada: int) -> bool:
 	return _caso == null or _caso.esta_en_el_local(origen, jornada, _elecciones, _sorteos)
 
 
-func registrar(identidad: String) -> Resultado:
+## `hora` es la del reloj del juego en el momento del hallazgo, y la lleva la nota.
+func registrar(identidad: String, hora: String = "") -> Resultado:
 	if not _consistente:
 		return Resultado.DESCONOCIDA
 	var pista := _caso.pista_de(identidad)
@@ -47,7 +48,7 @@ func registrar(identidad: String) -> Resultado:
 		if not _identidades.has(exigida):
 			return Resultado.DESCONOCIDA
 	_identidades.append(identidad)
-	_agregar_notas(pista)
+	_agregar_notas(pista, hora)
 	pista_nueva.emit(pista)
 	for desenlace: Desenlace in desenlaces_alcanzados():
 		if not _avisados.has(desenlace):
@@ -56,12 +57,14 @@ func registrar(identidad: String) -> Resultado:
 	return Resultado.ANOTADA
 
 
-func registrar_por_canal(origen: StringName, canal: Pista.Canal, jornada: int) -> Resultado:
+func registrar_por_canal(
+	origen: StringName, canal: Pista.Canal, jornada: int, hora: String = ""
+) -> Resultado:
 	if not _consistente:
 		return Resultado.DESCONOCIDA
 	for pista: Pista in _caso.pistas:
 		if pista.se_dispara_con(origen, canal, jornada):
-			return registrar(pista.identidad)
+			return registrar(pista.identidad, hora)
 	return Resultado.DESCONOCIDA
 
 
@@ -119,6 +122,14 @@ func restaurar(
 	_avisados = desenlaces_alcanzados()
 
 
+## Devuelve a las notas restauradas la hora que traía el guardado: se reconstruyen desde sus
+## identidades, y por ahí la hora no viaja.
+func fijar_horas(horas: Dictionary[String, String]) -> void:
+	for nota: Mensaje in _notas:
+		if horas.has(nota.identidad):
+			nota.hora = horas[nota.identidad]
+
+
 ## Una nota que no es de una pista, como un texto de la reflexión. Cada identidad entra una vez.
 func anotar(mensaje: Mensaje) -> bool:
 	if mensaje == null or mensaje.identidad.is_empty() or not mensaje.dice_algo():
@@ -133,7 +144,7 @@ func anotar(mensaje: Mensaje) -> bool:
 
 
 ## Fija la hipótesis de la jornada, una sola vez, si sus pistas la habilitan.
-func elegir(jornada: int, identidad: String) -> Resultado:
+func elegir(jornada: int, identidad: String, hora: String = "") -> Resultado:
 	if _elecciones.has(jornada):
 		return Resultado.REPETIDA
 	for opcion: Hipotesis in hipotesis_para(jornada):
@@ -144,6 +155,7 @@ func elegir(jornada: int, identidad: String) -> Resultado:
 			nota.jornada = jornada
 			nota.momento = Mensaje.Momento.CIERRE
 			nota.texto = opcion.texto
+			nota.hora = hora
 			anotar(nota)
 			return Resultado.ANOTADA
 	return Resultado.DESCONOCIDA
@@ -192,7 +204,7 @@ func desenlaces_alcanzados() -> Array[Desenlace]:
 	return alcanzados
 
 
-func _agregar_notas(pista: Pista) -> void:
+func _agregar_notas(pista: Pista, hora: String = "") -> void:
 	if pista.foto == null or pista.texto.is_empty():
 		return
 	var orden := _orden_siguiente()
@@ -202,6 +214,7 @@ func _agregar_notas(pista: Pista) -> void:
 		mensaje.jornada = pista.jornada
 		mensaje.momento = Mensaje.Momento.CIERRE
 		mensaje.orden = orden
+		mensaje.hora = hora
 		orden += 1
 		mensaje.foto = pista.foto if es_foto else null
 		mensaje.texto = "" if es_foto else pista.texto

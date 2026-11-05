@@ -388,25 +388,30 @@ func test_6c_no_se_registra_fuera_de_su_camino() -> void:  # AC-INV-122
 	assert_int(Expediente.new(caso).registrar("6C")).is_equal(Expediente.Resultado.DESCONOCIDA)
 
 
-func test_sin_pistas_en_la_5_el_sorteo_cae_en_5b_y_activa_6c() -> void:  # AC-INV-125
-	var caso := CasoDeInvestigacion.de_la_partida()
-	for semilla: int in [0, 1, 7, 12345]:
-		var expediente := _con_la_cuarta_elegida(caso, "2A")
-		var azar := RandomNumberGenerator.new()
-		azar.seed = semilla
-		expediente.sortear_camino(JORNADA_6, azar)
-		assert_str(expediente.sorteos().get(JORNADA_6, "")).is_equal("5B")
-		assert_array(Array(expediente.pistas_activas(JORNADA_6))).contains(["6C"])
-		var otro := RandomNumberGenerator.new()
-		otro.seed = semilla + 1
-		expediente.sortear_camino(JORNADA_6, otro)
-		assert_str(expediente.sorteos().get(JORNADA_6, "")).is_equal("5B")
-		assert_bool(expediente.esta_en_el_local(caso.pista_de("6C").origen, JORNADA_6)).is_true()
+## Cierra la quinta jornada con lo que el caso ofrece, sin nombrar la hipótesis.
+func _eligiendo_la_unica_de_la_quinta(expediente: Expediente) -> void:
+	var ofrecidas := expediente.hipotesis_para(JORNADA_5)
+	assert_int(ofrecidas.size()).is_equal(1)
+	if ofrecidas.size() == 1:
+		assert_int(expediente.elegir(JORNADA_5, ofrecidas[0].identidad)).is_equal(
+			Expediente.Resultado.ANOTADA
+		)
 
 
-func test_con_5b_encontrada_no_se_sortea_y_6c_esta_activa() -> void:  # AC-INV-125
+func test_el_recorrido_de_2a_y_5b_activa_6c_y_deja_levantar_la_nota() -> void:  # AC-INV-125
 	var caso := CasoDeInvestigacion.de_la_partida()
-	var expediente := _con_la_quinta_elegida(caso)
-	expediente.sortear_camino(JORNADA_6, RandomNumberGenerator.new())
-	assert_dict(expediente.sorteos()).is_empty()
+	var expediente := _con_la_cuarta_elegida(caso, "2A")
+	assert_int(expediente.registrar("5B")).is_equal(Expediente.Resultado.ANOTADA)
+	_eligiendo_la_unica_de_la_quinta(expediente)
 	assert_array(Array(expediente.pistas_activas(JORNADA_6))).contains(["6C"])
+	assert_bool(expediente.esta_en_el_local(caso.pista_de("6C").origen, JORNADA_6)).is_true()
+	assert_int(expediente.registrar("6C")).is_equal(Expediente.Resultado.ANOTADA)
+
+
+func test_el_recorrido_de_2a_y_5p_no_activa_6c() -> void:  # AC-INV-125
+	var caso := CasoDeInvestigacion.de_la_partida()
+	var expediente := _con_la_cuarta_elegida(caso, "2A")
+	_eligiendo_la_unica_de_la_quinta(expediente)
+	assert_array(Array(expediente.pistas_activas(JORNADA_6))).not_contains(["6C"])
+	assert_bool(expediente.esta_en_el_local(caso.pista_de("6C").origen, JORNADA_6)).is_false()
+	assert_int(expediente.registrar("6C")).is_equal(Expediente.Resultado.DESCONOCIDA)

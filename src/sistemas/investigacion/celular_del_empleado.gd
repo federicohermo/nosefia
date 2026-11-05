@@ -10,6 +10,7 @@ signal foto_cerrada
 signal tramo_de_pista_pedido(identidad: String)
 signal no_leidos_cambiados(sin_leer: int)
 signal mensaje_recibido(quien: Conversacion.Interlocutor, mensaje: Mensaje)
+signal nota_recibida(mensaje: Mensaje)
 
 var _bandeja := Bandeja.new(Conversacion.desde_disco())
 var _celular := Celular.new(_bandeja)
@@ -101,6 +102,14 @@ func soltar() -> void:
 func recibir(quien: Conversacion.Interlocutor, mensaje: Mensaje) -> void:
 	if _bandeja.recibir(quien, mensaje):
 		mensaje_recibido.emit(quien, mensaje)
+		no_leidos_cambiados.emit(_bandeja.no_leidos_totales())
+
+
+## La nota de una pista la anota el jugador: llega al chat de notas sin el aviso de un mensaje
+## recibido.
+func recibir_nota(mensaje: Mensaje) -> void:
+	if _bandeja.recibir(Conversacion.Interlocutor.NOTAS, mensaje):
+		nota_recibida.emit(mensaje)
 		no_leidos_cambiados.emit(_bandeja.no_leidos_totales())
 
 

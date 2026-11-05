@@ -61,3 +61,15 @@ func test_el_cursor_que_suelta_el_esc_del_celular_no_pausa() -> void:  # AC-INV-
 	assert_int(Pausa.ante_el_cursor(false, false, true, false, true, false)).is_equal(
 		Pausa.Accion.PAUSAR
 	)
+
+
+func test_esc_con_una_interfaz_abierta_la_cierra_y_no_pausa() -> void:  # AC-PLY-166, AC-PLY-167
+	assert_int(Pausa.ante_esc(false, false, false, true)).is_equal(Pausa.Accion.CERRAR_INTERFAZ)
+	assert_int(Pausa.ante_esc(false, false, false, false)).is_equal(Pausa.Accion.PAUSAR)
+
+
+func test_en_pausa_o_con_configuraciones_la_interfaz_no_quita_su_turno() -> void:  # AC-PLY-169
+	assert_int(Pausa.ante_esc(true, false, false, true)).is_equal(Pausa.Accion.REANUDAR)
+	assert_int(Pausa.ante_esc(false, true, false, true)).is_equal(
+		Pausa.Accion.CERRAR_CONFIGURACIONES
+	)

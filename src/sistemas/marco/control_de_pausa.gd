@@ -14,7 +14,8 @@ signal pausado
 signal reanudado
 signal volver_al_menu_pedido
 signal cierre_de_configuraciones_pedido
-## Esc cerró la foto o el celular. Quien lo escucha devuelve el cursor al juego.
+## Esc cerró la foto o el celular. Quien lo escucha devuelve el cursor al juego. Las demás
+## interfaces devuelven el cursor ellas mismas, al cerrarse.
 signal esc_atendido_por_el_celular
 
 ## La devolución del cierre, mirada sólo por si está en pantalla: con ella, perder el cursor no
@@ -27,11 +28,21 @@ signal esc_atendido_por_el_celular
 ## quien arma el almacén.
 var celular: CelularDelEmpleado
 
+var _interfaces: Array[Interfaz] = []
+
 var _cursor_antes := false
 var _menu_pedido := false
 var _ventana_activa := true
-## Lo que falta de la gracia que deja un Esc atendido por el celular. Ver `Pausa`.
+## Lo que falta de la gracia que deja un Esc atendido por el celular o por una interfaz del local.
+## Ver `Pausa`.
 var _gracia_tras_esc := 0.0
+
+
+## Una interfaz que Esc cierra: la computadora, la caja o una nota. Cada puesto dice si está
+## abierta y cómo cierra con Esc, que no es siempre cerrar del todo.
+class Interfaz:
+	var abierta: Callable
+	var cerrar_con_esc: Callable
 
 
 func _ready() -> void:
@@ -55,7 +66,12 @@ func _input(evento: InputEvent) -> void:
 		return
 	get_viewport().set_input_as_handled()
 	_hacer(
-		Pausa.ante_esc(get_tree().paused, _configuraciones_en_pantalla(), _celular_libre_abierto())
+		Pausa.ante_esc(
+			get_tree().paused,
+			_configuraciones_en_pantalla(),
+			_celular_libre_abierto(),
+			_interfaz_abierta() != null
+		)
 	)
 
 
@@ -93,6 +109,7 @@ func _hacer(accion: Pausa.Accion) -> void:
 		Pausa.Accion.REANUDAR: reanudar,
 		Pausa.Accion.CERRAR_CONFIGURACIONES: cierre_de_configuraciones_pedido.emit,
 		Pausa.Accion.CERRAR_CELULAR: _cerrar_el_celular,
+		Pausa.Accion.CERRAR_INTERFAZ: _cerrar_la_interfaz,
 	}
 	acciones[accion].call()
 
@@ -123,6 +140,25 @@ func pedir_volver_al_menu() -> void:
 	_menu_pedido = true
 	get_tree().paused = false
 	volver_al_menu_pedido.emit()
+
+
+func registrar_interfaz(abierta: Callable, cerrar_con_esc: Callable) -> void:
+	var interfaz := Interfaz.new()
+	interfaz.abierta = abierta
+	interfaz.cerrar_con_esc = cerrar_con_esc
+	_interfaces.append(interfaz)
+
+
+func _cerrar_la_interfaz() -> void:
+	_gracia_tras_esc = Pausa.GRACIA_TRAS_ESC
+	_interfaz_abierta().cerrar_con_esc.call()
+
+
+func _interfaz_abierta() -> Interfaz:
+	for interfaz in _interfaces:
+		if interfaz.abierta.call():
+			return interfaz
+	return null
 
 
 func _cerrar_el_celular() -> void:

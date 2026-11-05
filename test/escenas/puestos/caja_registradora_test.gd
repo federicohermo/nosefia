@@ -170,7 +170,7 @@ func test_el_reloj_corre_la_pausa_real_va_encima_y_el_turno_cierra() -> void:  #
 	var evento := InputEventAction.new()
 	evento.action = &"ui_cancel"
 	evento.pressed = true
-	pausa.call("_input", evento)
+	pausa.pausar()
 	var menu: CanvasLayer = almacen.get_node("Interfaz/MenuDePausa")
 	assert_bool(get_tree().paused).is_true()
 	assert_bool(menu.visible).is_true()

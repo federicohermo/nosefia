@@ -6,7 +6,7 @@ const TEXTOS := {
 	Notificaciones.Tipo.LECTURA_FALLIDA: "NO SE PUDO LEER",
 	Notificaciones.Tipo.CLIENTE_CANSADO: "EL CLIENTE SE CANSÓ DE ESPERAR.",
 	Notificaciones.Tipo.CIERRE_PROXIMO: "QUEDA POCO TIEMPO PARA QUE\nSE TERMINE LA JORNADA.",
-	Notificaciones.Tipo.PISTA: "¡NUEVA PISTA!",
+	Notificaciones.Tipo.PISTA: "Nueva pista desbloqueada",
 	Notificaciones.Tipo.TAREAS_TERMINADAS: "YA PODÉS RETIRARTE\nPOR LA PUERTA PRINCIPAL.",
 	Notificaciones.Tipo.CLIENTE_CANSADO_CON_PRODUCTOS:
 	"EL CLIENTE SE CANSÓ DE ESPERAR Y DEJÓ LOS PRODUCTOS.",
