@@ -22,7 +22,7 @@ const CELULAR := &"celular"
 const EXAMINAR := &"examinar"
 const AGACHARSE := &"agacharse"
 const AGARRAR := &"agarrar"
-const INTERACTUAR := &"usar"
+const INTERACTUAR := ReglasDelJugador.ACCION_USAR
 ## Pausa es la acción con la que el motor cierra: Configuraciones y las listas desplegables.
 const PAUSA := &"ui_cancel"
 
@@ -35,13 +35,20 @@ const DIRECCIONES: Array[StringName] = [ADELANTE, ATRAS, IZQUIERDA, DERECHA]
 const RANURA_DE_WASD := 0
 const RANURA_DE_FLECHAS := 1
 
+## Los índices de botón del mouse son los de `MouseButton`: el dominio no nombra el motor.
+const BOTON_IZQUIERDO := 1
+const BOTON_DERECHO := 2
+const BOTON_CENTRAL := 3
+const BOTON_LATERAL_ATRAS := 8
+const BOTON_LATERAL_ADELANTE := 9
+
 ## Mover el mouse y la rueda no son entradas: la rueda es un botón con índice, y queda afuera.
 const BOTONES_ACEPTADOS: Array[int] = [
-	MOUSE_BUTTON_LEFT,
-	MOUSE_BUTTON_RIGHT,
-	MOUSE_BUTTON_MIDDLE,
-	MOUSE_BUTTON_XBUTTON1,
-	MOUSE_BUTTON_XBUTTON2,
+	BOTON_IZQUIERDO,
+	BOTON_DERECHO,
+	BOTON_CENTRAL,
+	BOTON_LATERAL_ATRAS,
+	BOTON_LATERAL_ADELANTE,
 ]
 
 const NOMBRES: Dictionary = {
@@ -67,8 +74,8 @@ const DE_FABRICA: Dictionary = {
 	CELULAR: [Vector2i(TipoDeEntrada.TECLA, KEY_Q)],
 	EXAMINAR: [Vector2i(TipoDeEntrada.TECLA, KEY_E)],
 	AGACHARSE: [Vector2i(TipoDeEntrada.TECLA, KEY_SPACE)],
-	AGARRAR: [Vector2i(TipoDeEntrada.BOTON_DEL_MOUSE, MOUSE_BUTTON_LEFT)],
-	INTERACTUAR: [Vector2i(TipoDeEntrada.BOTON_DEL_MOUSE, MOUSE_BUTTON_RIGHT)],
+	AGARRAR: [Vector2i(TipoDeEntrada.BOTON_DEL_MOUSE, BOTON_IZQUIERDO)],
+	INTERACTUAR: [Vector2i(TipoDeEntrada.BOTON_DEL_MOUSE, BOTON_DERECHO)],
 	PAUSA: [Vector2i(TipoDeEntrada.TECLA, KEY_ESCAPE)],
 }
 
