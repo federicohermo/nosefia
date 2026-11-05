@@ -146,7 +146,7 @@ func test_la_hipotesis_6b_trae_su_titulo_y_la_5a_abre_su_camino() -> void:  # AC
 	assert_array(Array(caso.opcion(JORNADA_5, "5A").camino)).is_equal(["6A", "6B"])
 	assert_array(Array(caso.opcion(JORNADA_5, "5B").camino)).is_equal(["6C", "6D"])
 	assert_array(Array(caso.opcion(CUARTA, "2A").camino)).is_equal(["5A", "5B"])
-	assert_array(Array(caso.opcion(JORNADA_6, "6C").camino)).is_empty()
+	assert_array(Array(caso.opcion(JORNADA_6, "6C").camino)).is_equal(["7C"])
 
 
 func test_con_la_6b_la_sexta_ofrece_solo_la_6b() -> void:  # AC-INV-174

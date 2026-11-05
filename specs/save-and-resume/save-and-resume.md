@@ -3,7 +3,7 @@ schema_version: 1
 capability_id: CAP-SAV
 status: ratified
 owner: por definir
-provenance: GDD «checkpoint al final de cada noche»; ficha «Pantalla entre jornadas» y decisiones de #374; fichas «2. Menú de inicio» y «Pausa y menú de pausa» y decisiones de #378 y #381; decisión del 2026-09-28 de #299; decisiones de #375; migración de los specs 019, 020, 036; historial de devoluciones fechado y compatibilidad con textos legados de #430; checkpoint del cierre, expediente, notas y elección de #436; decisión del usuario del 2026-10-18 sobre la reanudación del cierre; ocho jornadas de #526; instrucciones por jornada de #527; pose de las cajas del depósito de #555; mensajes de Yasmín de la jornada 6 de #458; sorteo del camino de #787; pausa con el joystick de #380; el final 4 de #790
+provenance: GDD «checkpoint al final de cada noche»; ficha «Pantalla entre jornadas» y decisiones de #374; fichas «2. Menú de inicio» y «Pausa y menú de pausa» y decisiones de #378 y #381; decisión del 2026-09-28 de #299; decisiones de #375; migración de los specs 019, 020, 036; historial de devoluciones fechado y compatibilidad con textos legados de #430; checkpoint del cierre, expediente, notas y elección de #436; decisión del usuario del 2026-10-18 sobre la reanudación del cierre; ocho jornadas de #526; instrucciones por jornada de #527; pose de las cajas del depósito de #555; mensajes de Yasmín de la jornada 6 de #458; sorteo del camino de #787; pausa con el joystick de #380; el final 4 de #790; el final 5 de #810
 ---
 
 # Capacidad: guardar y retomar
@@ -34,8 +34,7 @@ esos momentos no se escribe.
 
 ### BR-SAV-002 — Un final resetea el progreso
 
-SI la partida terminó —por despido, por contrato cumplido, sea el final 1 o el 2 de BR-INV-103, o por
-el final 4 de BR-SHF-060—, ENTONCES el sistema DEBE **borrar el
+SI la partida terminó —por despido, por contrato cumplido, sea el final 1 o el 2 de BR-INV-103, o por los finales 4 y 5 de BR-SHF-060 y BR-SHF-061—, ENTONCES el sistema DEBE **borrar el
 guardado** en vez de escribirlo.
 
 ### BR-SAV-003 — Decidir y escribir son dos cosas
@@ -467,6 +466,12 @@ pantalla de final o desde la pausa, ENTONCES continuar sigue deshabilitado.
 ### AC-SAV-050 — El final 4 también resetea *(verifica BR-SAV-002)*
 
 DADO una partida guardada en la jornada 7 CUANDO se abre la puerta del jefe con la palanca ENTONCES el
+guardado se borra y no se escribe otro. CUANDO se vuelve al menú, desde la pantalla de final o desde la
+pausa, ENTONCES continuar sigue deshabilitado.
+
+### AC-SAV-051 — El final 5 también resetea *(verifica BR-SAV-002)*
+
+DADO una partida guardada en la jornada 7 CUANDO se abre la puerta del jefe con la llave ENTONCES el
 guardado se borra y no se escribe otro. CUANDO se vuelve al menú, desde la pantalla de final o desde la
 pausa, ENTONCES continuar sigue deshabilitado.
 
