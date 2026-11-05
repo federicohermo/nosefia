@@ -114,7 +114,7 @@ func _pintar() -> void:
 	for lista: VBoxContainer in _listas.values():
 		for entrada: Node in lista.get_children():
 			lista.remove_child(entrada)
-			entrada.queue_free()
+			entrada.free()
 	if _caso != null:
 		for pista: Pista in _caso.pistas:
 			var descubierta := _logros.pista_descubierta(pista.identidad)
