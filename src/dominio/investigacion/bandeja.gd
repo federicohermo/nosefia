@@ -24,7 +24,6 @@ func _init(conversaciones: Array[Conversacion]) -> void:
 func abrir_jornada(jornada: int, condiciones: Array[StringName] = []) -> void:
 	_jornada = jornada
 	_condiciones = condiciones.duplicate()
-	_dar_por_leidas_las_devoluciones()
 
 
 func conversaciones() -> Array[Conversacion]:
@@ -145,21 +144,6 @@ func pista_de(quien: Conversacion.Interlocutor, identidad: String, tramo: String
 		if mensaje.identidad == identidad:
 			return mensaje.pista_del_tramo(tramo)
 	return ""
-
-
-## Las devoluciones de Enrique llegan al cierre, con su chat a la vista: al abrir la jornada ya
-## las abrió. Lo que está antes de la última queda leído, porque lo leído se cuenta desde el final.
-func _dar_por_leidas_las_devoluciones() -> void:
-	var jefe := Conversacion.Interlocutor.JEFE
-	if not _recibidos.has(jefe):
-		return
-	var mensajes := mensajes_de(jefe)
-	var ultima := -1
-	for posicion in mensajes.size():
-		var mensaje := mensajes[posicion]
-		if mensaje.jornada < _jornada and _recibidos[jefe].has(mensaje):
-			ultima = posicion
-	_leidos[jefe] = maxi(_leidos[jefe], ultima + 1)
 
 
 static func _antes(a: Dictionary, b: Dictionary) -> bool:

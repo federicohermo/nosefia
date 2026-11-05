@@ -766,11 +766,6 @@ persiana termine de subir y aparecer entonces. MIENTRAS la persiana no terminó 
 cambio del total DEBE pintarse ni vibrar. CUANDO la persiana termina de subir, el círculo DEBE
 mostrar el total vigente, y el ícono DEBE vibrar sólo si ese total supera el que el jugador veía.
 
-### BR-INV-133 — La devolución de Enrique no cuenta como nueva
-CUANDO se abre una jornada, los mensajes de devolución de Enrique de las noches anteriores NO DEBEN
-contar como sin leer: el protagonista ya los abrió durante el cierre. Los mensajes que Enrique
-manda al abrir esa jornada SÍ DEBEN contar como sin leer.
-
 ### BR-INV-105 — El deslizamiento no deja la pantalla a medias
 MIENTRAS un chat se desliza, un pedido de volver o de abrir otro chat NO DEBE dejar la pantalla
 a medio camino ni abrir dos chats: el celular DEBE terminar mostrando un solo destino, el último
@@ -1655,12 +1650,6 @@ DADO que la jornada abre con 2 mensajes sin leer CUANDO la persiana todavía no 
 ENTONCES el círculo no se ve y el ícono no vibra. CUANDO la persiana termina de subir ENTONCES el
 círculo muestra 2 y el ícono vibra una vez. DADO que el jugador veía 2 y la jornada siguiente abre
 con esos mismos 2 ENTONCES al subir la persiana el ícono no vibra.
-
-### AC-INV-183 — Las devoluciones de Enrique no cuentan como nuevas al abrir la jornada *(verifica BR-INV-133, BR-INV-009)*
-
-DADO que se cerró la jornada 1 y Enrique mandó su devolución CUANDO se abre la jornada 2 ENTONCES
-la devolución no cuenta como sin leer, y sí cuentan los mensajes que Enrique manda al abrir la
-jornada 2. DADO una partida retomada con devoluciones guardadas ENTONCES se cumple lo mismo.
 
 ## No objetivos
 
