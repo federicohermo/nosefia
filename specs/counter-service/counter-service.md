@@ -3,7 +3,7 @@ schema_version: 1
 capability_id: CAP-CTR
 status: ratified
 owner: por definir
-provenance: GDD «Atención por ventanilla»; fichas «Atención al cliente» y «Diálogos de compradores»; base «Productos y cajas contenedoras»; decisiones de #365, #366, #429, #433, #444 y #694; pedidos fijos y guiones de jornada 2 decididos el 15 de octubre de 2026; migración de los specs 013, 035; ocho jornadas de #526; horarios de Tin y Tia en la jornada 1 y de Fede y Mía en la jornada 2 de «Atención al cliente» del 21 de octubre de 2026 (#605); agenda de compradores de las jornadas 3 a 5 de «Atención al cliente» y textos predeterminados de «Diálogos de compradores» del 21 de octubre de 2026 (#459); diálogos de entrega como subtítulo de GJ-57 (#564); agendas de la noche del corte de luz y de la última noche de «Atención al cliente» del 30 de octubre de 2026, con las decisiones de Mía y de Durextra (#694); ficha «Llamados de atención extra», llamado 3, y GJ-70 sobre soltar un producto en el hueco con un comprador (#521); guiones de Cami, Tin y Tia de las jornadas 3 a 6 de «Diálogos de compradores» del 3 y 4 de noviembre de 2026 (#784)
+provenance: GDD «Atención por ventanilla»; fichas «Atención al cliente» y «Diálogos de compradores»; base «Productos y cajas contenedoras»; decisiones de #365, #366, #429, #433, #444 y #694; pedidos fijos y guiones de jornada 2 decididos el 15 de octubre de 2026; migración de los specs 013, 035; ocho jornadas de #526; horarios de Tin y Tia en la jornada 1 y de Fede y Mía en la jornada 2 de «Atención al cliente» del 21 de octubre de 2026 (#605); agenda de compradores de las jornadas 3 a 5 de «Atención al cliente» y textos predeterminados de «Diálogos de compradores» del 21 de octubre de 2026 (#459); diálogos de entrega como subtítulo de GJ-57 (#564); agendas de la noche del corte de luz y de la última noche de «Atención al cliente» del 30 de octubre de 2026, con las decisiones de Mía y de Durextra (#694); ficha «Llamados de atención extra», llamado 3, y GJ-70 sobre soltar un producto en el hueco con un comprador (#521); guiones de Cami, Tin y Tia de las jornadas 3 a 6 de «Diálogos de compradores» del 3 y 4 de noviembre de 2026 (#784); frase del ticket de Tin de «Diálogos de compradores» del 5 de noviembre de 2026 (#825)
 ---
 
 # Capacidad: la atención por la ventanilla
@@ -389,7 +389,9 @@ orden del pedido, con los textos comunes de la ficha «Diálogos de compradores�
 anteponer su prefijo y enumerar los productos que todavía faltan, no los ya recibidos. Con todos
 los productos recibidos y sólo el ticket pendiente DEBE pedir el ticket, y un rechazo en ese
 estado DEBE anteponerle el prefijo a ese pedido. CUANDO recibe un producto, el comprador DEBE agradecer
-nombrando lo que todavía falta, o pedir el ticket si ya recibió todos. Ese agradecimiento NO
+nombrando lo que todavía falta, o pedir el ticket si ya recibió todos. Tin DEBE pedir el ticket
+con su frase propia de la ficha, en vez de la común, al recibir el último producto, al
+recordarlo y en el rechazo, que se la antepone; los demás compradores DEBEN conservar la común. Ese agradecimiento NO
 DEBE retener el clic siguiente con un objeto ni impedir dejar la ventanilla.
 Para una unidad, cada marcador DEBE usar el subtítulo del producto con primera letra minúscula
 y sin punto final. Para más de una DEBE usar «dos» o «tres» seguido del nombre del producto.
@@ -550,8 +552,10 @@ Cami en las jornadas 3 y 5, Tin en la 3 y Tia en la 4 y en la 6. Los demás comp
 noches y los de la jornada 7 usan la apertura y la despedida predeterminadas, y el sistema NO DEBE
 inventarles guion. Un guion propio DEBE decir sus entradas de apertura en el orden de la ficha, una
 por una, y después sus entradas de despedida, también en su orden; la ficha no tiene un mensaje 9
-de Cami y el sistema NO DEBE inventarlo. Cami dice en la jornada 5 los dos mensajes 3 y 4 de la
-ficha. El mensaje de «actitudes extrañas de Peldaño» de la jornada 5 sólo se dice SI la pista 5A
+de Cami y el sistema NO DEBE inventarlo. Cami dice en la jornada 5 un solo mensaje 3, según el
+camino de la jornada 4: SI la pista 5A está activa por el camino abierto (hipótesis 2A), ENTONCES
+dice el de «¿No es un amor de persona?»; SI no lo está (hipótesis 2B, o ningún camino definido),
+ENTONCES dice el de «¿No es muy capa ella?». NO DEBE decir los dos. El mensaje de «actitudes extrañas de Peldaño» de la jornada 5 sólo se dice SI la pista 5A
 está activa por el camino abierto (BR-INV-050); SI no lo está, ENTONCES el sistema NO DEBE decirlo y
 las demás entradas DEBEN conservar su orden. Una entrada puede nombrar el pedido de esa noche: «[pedido]» es el pedido entero con la
 enumeración de BR-CTR-039 («a», «a y b» o «a, b y c»), y «[producto1]», «[producto2]» y
@@ -1017,8 +1021,8 @@ DADO pedidos A/A/A, A/A/B y A/B/C CUANDO se consulta recordatorio ENTONCES se us
 la forma de uno, dos y tres marcadores, sin marcadores sin reemplazar. A/A/A usa «tres» y el
 nombre A; A/A/B usa «dos» y el nombre A, y para B el subtítulo con inicial minúscula y sin punto
 final. Un rechazo antepone exactamente «Yo no pedí esto. ». Los productos llevan amarillo y
-ningún fragmento se ofrece como pista. Con los tres productos y sin ticket el texto es
-exactamente «Gracias. Me das el ticket, ¿por favor?».
+ningún fragmento se ofrece como pista. Con los tres productos y sin ticket, un comprador que no
+es Tin dice exactamente «Gracias. Me das el ticket, ¿por favor?».
 DADO un pedido de dos unidades de A y una de B, con una unidad de A ya entregada, CUANDO se
 ofrece un objeto ajeno ENTONCES el rechazo es el prefijo seguido de «Quiero» con una unidad de A
 y B, en el orden del pedido. Con dos y tres productos distintos faltantes el rechazo usa su forma de
@@ -1401,12 +1405,20 @@ despedida.
 
 ### AC-CTR-157 — Cami en la jornada 5 dice su guion y nombra el pedido entero *(verifica BR-CTR-048)*
 
-DADO la jornada 5 con la pista 5A activa CUANDO se le habla a Cami por primera vez ENTONCES dice 10
-entradas de apertura en el orden de la ficha, los mensajes 1 a 8 y 10 y 11, con los mensajes 3 y 4
-los dos; la del mensaje 10 nombra el pedido entero. DADO la jornada 5 sin la pista 5A activa
-ENTONCES dice 9 entradas: las mismas, sin la de «actitudes extrañas de Peldaño», en su orden y con
-la del pedido entero como penúltima. CUANDO se completa su compra ENTONCES vende una sola vez, dice
+DADO la jornada 5 con la pista 5A activa CUANDO se le habla a Cami por primera vez ENTONCES dice 9
+entradas de apertura en el orden de la ficha, los mensajes 1 a 8 y 11; la del mensaje 8 nombra el
+pedido entero. DADO la jornada 5 sin la pista 5A activa ENTONCES dice 8 entradas: las mismas, sin
+la de «actitudes extrañas de Peldaño», en su orden y con la del pedido entero como penúltima. CUANDO se completa su compra ENTONCES vende una sola vez, dice
 3 entradas de despedida y no se retira hasta terminarlas.
+
+### AC-CTR-170 — Cami en la jornada 5 dice un solo mensaje 3, según el camino *(verifica BR-CTR-048)*
+
+DADO la jornada 5 con la pista 5A activa (camino de la hipótesis 2A) CUANDO se le habla a Cami
+por primera vez ENTONCES en el lugar del mensaje 3 dice sólo el de «¿No es un amor de persona?» y
+no el de «¿No es muy capa ella?». DADO la jornada 5 sin la pista 5A activa (camino de la
+hipótesis 2B) ENTONCES dice sólo el de «¿No es muy capa ella?» y no el de «¿No es un amor de
+persona?». DADO la jornada 5 sin camino definido ENTONCES dice lo mismo que por el camino de la
+2B. En los tres casos el resto de las entradas conserva su orden.
 
 ### AC-CTR-158 — Los demás compradores usan el guion predeterminado *(verifica BR-CTR-048)*
 
@@ -1421,6 +1433,24 @@ ofrece un objeto ajeno, se les entrega un producto que falta o ya recibieron, o 
 pedido sin ticket ENTONCES responden con el recordatorio, el rechazo, el agradecimiento y el aviso
 de ticket comunes, y no repiten la apertura. DADO una partida CUANDO se reabre o se reintenta la
 jornada ENTONCES el pedido y los textos que lo nombran son los mismos.
+
+### AC-CTR-160 — Tin pide el ticket con su propia frase *(verifica BR-CTR-039)*
+
+DADO Tin en la jornada 1 o en la 3, con todos sus productos recibidos y sin ticket CUANDO recibe
+el último producto, o se le habla ENTONCES dice «Joyaaa. ¿Me darías el ticket antes de que me
+vaya? Es que sino mi vieja cree me que compro birra con su plata.» y no la frase común.
+
+### AC-CTR-161 — El rechazo de Tin antepone su frase del ticket *(verifica BR-CTR-039)*
+
+DADO Tin con todos sus productos recibidos y sin ticket CUANDO se le ofrece un objeto ajeno
+ENTONCES dice el prefijo del rechazo seguido de su frase del ticket. DADO Tin con un producto
+todavía pendiente ENTONCES el rechazo sigue nombrando lo que falta, sin frase del ticket.
+
+### AC-CTR-162 — Los demás compradores conservan la frase común del ticket *(verifica BR-CTR-039)*
+
+DADO un comprador que no es Tin con todos sus productos recibidos y sin ticket CUANDO recibe el
+último producto, se le habla o se le ofrece un objeto ajeno ENTONCES dice, respectivamente, la
+frase común, la frase común y el prefijo del rechazo seguido de «Me das el ticket, ¿por favor?».
 
 ### AC-CTR-133 — Sólo el nombre propio va en amarillo *(verifica BR-CTR-039)*
 

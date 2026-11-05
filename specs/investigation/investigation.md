@@ -3,7 +3,7 @@ schema_version: 1
 capability_id: CAP-INV
 status: draft
 owner: por definir
-provenance: GDD «Investigación» y «La computadora»; ficha «Interfaces virtuales durante la jornada» y decisiones de #373, #375 y #376; migración de los specs 006, 009, 018; fichas Chat con el jefe, Chat con compañera y 2A revisadas el 2026-10-15; decisiones de #430; «Sistema de investigación», fichas 2A/2B/2P y decisiones de #22 del 2026-10-15; decisión del usuario del 2026-10-18 de usar la captura del mensaje de Yasmín como foto de 2A; decisión del usuario del 2026-10-17 de retirar las notas de la computadora y usar el diseño del registro de productos; ficha «Pantalla entre jornadas», reflexión de jornada 1, encabezado de jornada 2 y decisiones de #436; decisiones del usuario del 2026-10-18 sobre el recorrido lateral, la elección sin límite de tiempo, la reanudación del cierre y la espera de 1 segundo; ocho jornadas de #526; instrucciones por jornada de #527; la colilla sólo en su jornada, de #536; ficha Chat con compañera, jornada 5, de #458; ficha «Caminos narrativos y finales» y cuadro de pistas e hipótesis de #766 y la ficha «5B» de la lista de pistas e hipótesis y decisiones del usuario del 2026-10-30 sobre su foto y su texto, de #731; la fila «6C» de la lista de pistas e hipótesis, la ficha «Caminos narrativos y finales» y decisiones del usuario del 2026-11-03 sobre Yasmín y la textura de la nota, de #741; encabezado de la jornada 5 y ficha «5P» de la lista de pistas e hipótesis y decisión del usuario del 2026-11-04 sobre la 5L, de #740; quejas de la jornada 7, captura de la transferencia y pantalla conjunta de #759, ficha «Particulares de cada jornada» y comentario de Notion del 2026-11-04; ficha «Especificar animaciones», el chat que entra y sale deslizándose, de #627; GJ-62, el chat que abre en el primer mensaje sin leer, de #568; encabezado de la jornada 6 y fichas «6P» y «6L» de la lista de pistas e hipótesis, de #742; la fila «5A» de la lista de pistas e hipótesis y el mensaje de Cami de «Diálogos de compradores», de #785; la fila «6B» de la lista de pistas e hipótesis y la fila «Documento impreso» de «Objetos interactuables», de #789; la fila «7B» de la lista de pistas e hipótesis, la fila «Palanca» de «Objetos interactuables» y la ficha «Caminos narrativos y finales», de #790; la fila «7C» de la lista de pistas e hipótesis, la fila «Llave» de «Objetos interactuables» y la ficha «Caminos narrativos y finales», de #810; el círculo de mensajes nuevos y la vibración del ícono del HUD, ficha «Interfaces virtuales durante la jornada», de #662; el chat de Hernán y el pedido al proveedor, de #691
+provenance: GDD «Investigación» y «La computadora»; ficha «Interfaces virtuales durante la jornada» y decisiones de #373, #375 y #376; migración de los specs 006, 009, 018; fichas Chat con el jefe, Chat con compañera y 2A revisadas el 2026-10-15; decisiones de #430; «Sistema de investigación», fichas 2A/2B/2P y decisiones de #22 del 2026-10-15; decisión del usuario del 2026-10-18 de usar la captura del mensaje de Yasmín como foto de 2A; decisión del usuario del 2026-10-17 de retirar las notas de la computadora y usar el diseño del registro de productos; ficha «Pantalla entre jornadas», reflexión de jornada 1, encabezado de jornada 2 y decisiones de #436; decisiones del usuario del 2026-10-18 sobre el recorrido lateral, la elección sin límite de tiempo, la reanudación del cierre y la espera de 1 segundo; ocho jornadas de #526; instrucciones por jornada de #527; la colilla sólo en su jornada, de #536; ficha Chat con compañera, jornada 5, de #458; ficha «Caminos narrativos y finales» y cuadro de pistas e hipótesis de #766 y la ficha «5B» de la lista de pistas e hipótesis y decisiones del usuario del 2026-10-30 sobre su foto y su texto, de #731; la fila «6C» de la lista de pistas e hipótesis, la ficha «Caminos narrativos y finales» y decisiones del usuario del 2026-11-03 sobre Yasmín y la textura de la nota, de #741; encabezado de la jornada 5 y ficha «5P» de la lista de pistas e hipótesis y decisión del usuario del 2026-11-04 sobre la 5L, de #740; quejas de la jornada 7, captura de la transferencia y pantalla conjunta de #759, ficha «Particulares de cada jornada» y comentario de Notion del 2026-11-04; ficha «Especificar animaciones», el chat que entra y sale deslizándose, de #627; GJ-62, el chat que abre en el primer mensaje sin leer, de #568; encabezado de la jornada 6 y fichas «6P» y «6L» de la lista de pistas e hipótesis, de #742; la fila «5A» de la lista de pistas e hipótesis y el mensaje de Cami de «Diálogos de compradores», de #785; la fila «6B» de la lista de pistas e hipótesis y la fila «Documento impreso» de «Objetos interactuables», de #789; la fila «7B» de la lista de pistas e hipótesis, la fila «Palanca» de «Objetos interactuables» y la ficha «Caminos narrativos y finales», de #790; la fila «7C» de la lista de pistas e hipótesis, la fila «Llave» de «Objetos interactuables» y la ficha «Caminos narrativos y finales», de #810; el círculo de mensajes nuevos y la vibración del ícono del HUD, ficha «Interfaces virtuales durante la jornada», de #662; hora y wifi de la barra de estado del celular de #613, frames «Estado celular / Hora y wifi» de Manada — UI; el chat de Hernán y el pedido al proveedor, de #691
 ---
 
 # Capacidad: la investigación
@@ -917,6 +917,13 @@ persiana termine de subir y aparecer entonces. MIENTRAS la persiana no terminó 
 cambio del total DEBE pintarse ni vibrar. CUANDO la persiana termina de subir, el círculo DEBE
 mostrar el total vigente, y el ícono DEBE vibrar sólo si ese total supera el que el jugador veía.
 
+### BR-INV-146 — La barra de estado del celular lleva la hora y el wifi
+El celular DEBE mostrar arriba a la derecha de su pantalla una barra de estado con la hora de la
+noche (BR-SHF-040, BR-SHF-041) y, a su derecha, el ícono de wifi conectado. La barra DEBE verse
+igual en el menú de chats, en un chat libre y en el modo fijo. CUANDO no hay wifi (BR-ANO-019), el
+ícono de sin conexión DEBE ocupar el lugar del de conectado, y la hora NO DEBE cambiar. La barra
+NO DEBE recibir clics ni descontar turno.
+
 ### BR-INV-105 — El deslizamiento no deja la pantalla a medias
 MIENTRAS un chat se desliza, un pedido de volver o de abrir otro chat NO DEBE dejar la pantalla
 a medio camino ni abrir dos chats: el celular DEBE terminar mostrando un solo destino, el último
@@ -995,7 +1002,7 @@ arrancar en la pantalla normal, y al cerrarla el celular DEBE cerrarse con ella.
 jornadas 1 a 6 NO DEBE haber botón, y Q con la computadora abierta NO DEBE cambiar la pantalla
 (BR-INV-021). Pasar de una pantalla a la otra NO DEBE descontar tiempo (BR-INV-006).
 
-### BR-INV-146 — Desde la jornada 6 el celular tiene el chat de Hernán
+### BR-INV-147 — Desde la jornada 6 el celular tiene el chat de Hernán
 
 CUANDO se abre la jornada 6, por transición o desde un checkpoint, el celular DEBE listar el chat
 del proveedor, Hernán, después del de Enrique y con su foto, y NO DEBE listarlo en las jornadas 1
@@ -1003,7 +1010,7 @@ a 5. El chat DEBE abrir sin ningún mensaje previo y DEBE tener un botón «Hace
 mensaje. Un chat sin mensajes NO DEBE contar como no leído. Leerlo y volver al menú se rige por
 BR-INV-009.
 
-### BR-INV-147 — El botón abre la lista de productos
+### BR-INV-148 — El botón abre la lista de productos
 
 CUANDO el jugador pulsa «Hacer pedido», el sistema DEBE abrir una lista con los treinta y nueve
 productos pedibles: los treinta y dos del catálogo y los siete que existen sólo como caja
@@ -2031,14 +2038,14 @@ DADO el cierre de la jornada 3 ENTONCES sigue con su encabezado y sus tres texto
 DADO el cierre de la jornada 4 ENTONCES sigue con su encabezado y las cuatro combinaciones de
 BR-INV-039, y pide «NOCHE 5». DADO el cierre de la jornada 5 ENTONCES sigue con su encabezado y sus
 opciones 5B o 5P, y pide «NOCHE 6».
-### AC-INV-169 — El chat de Hernán aparece en la jornada 6 *(verifica BR-INV-146)*
+### AC-INV-169 — El chat de Hernán aparece en la jornada 6 *(verifica BR-INV-147)*
 
 DADO el celular de cada jornada de la 1 a la 5 ENTONCES el menú no lista a Hernán. DADO la
 jornada 6, por transición y por separado desde un checkpoint, ENTONCES lo lista después de
 Enrique, su chat no tiene ningún mensaje y su contador de no leídos no se muestra. DADO esa
 jornada ENTONCES el botón «Hacer pedido» existe en su chat.
 
-### AC-INV-192 — La lista tiene los treinta y nueve y exige uno marcado *(verifica BR-INV-147)*
+### AC-INV-192 — La lista tiene los treinta y nueve y exige uno marcado *(verifica BR-INV-148)*
 
 DADO la lista abierta ENTONCES muestra treinta y nueve productos distintos, los treinta y dos del
 catálogo y los siete que existen sólo como caja, todos desmarcados, con «Enviar» deshabilitado. CUANDO se marca uno
@@ -2059,14 +2066,14 @@ DADO el wifi apagado y un producto marcado CUANDO se envía ENTONCES el mensaje 
 en rojo con «Error en la red» y, pasados 10 segundos de juego, Hernán no respondió. CUANDO el wifi
 vuelve ENTONCES el mensaje sigue en rojo y sigue sin respuesta.
 
-### AC-INV-195 — Se puede enviar más de un pedido *(verifica BR-INV-125)*
+### AC-INV-197 — Se puede enviar más de un pedido *(verifica BR-INV-125)*
 
 DADO un pedido enviado sin wifi CUANDO el wifi vuelve y se abre la lista y se envía otro pedido
 ENTONCES hay dos mensajes del jugador, el primero en rojo y el segundo normal con sus dos
 respuestas. DADO un pedido enviado con wifi CUANDO se envía otro ENTONCES el chat tiene dos
 mensajes del jugador y cada uno recibe sus respuestas.
 
-### AC-INV-196 — La sexta jornada abre con la foto y el aviso *(verifica BR-INV-126, BR-INV-025, BR-INV-101)*
+### AC-INV-198 — La sexta jornada abre con la foto y el aviso *(verifica BR-INV-126, BR-INV-025, BR-INV-101)*
 
 DADO la apertura de la jornada 6 por transición y, por separado, desde un checkpoint CUANDO se
 recorre Enrique ENTONCES, después de la devolución de la jornada 5, hay exactamente dos mensajes
@@ -2205,6 +2212,20 @@ ENTONCES el círculo no se ve y el ícono no vibra. CUANDO la persiana termina d
 círculo muestra 2 y el ícono vibra una vez. DADO que el jugador veía 2 y la jornada siguiente abre
 con esos mismos 2 ENTONCES al subir la persiana el ícono no vibra.
 
+### AC-INV-195 — La barra lleva la hora y el wifi conectado *(verifica BR-INV-146)*
+
+DADO el celular abierto con wifi CUANDO se ve el menú de chats, un chat libre y el modo fijo
+ENTONCES en los tres la barra de estado está arriba, muestra la hora y, a su derecha, el ícono de
+wifi conectado, y el ícono de sin conexión no se ve. DADO que el turno avanza ENTONCES la hora de
+la barra cambia con él. CUANDO se hace clic sobre la barra ENTONCES no cambia nada y el turno no
+descuenta.
+
+### AC-INV-196 — Sin wifi el ícono de sin conexión ocupa el lugar del conectado *(verifica BR-INV-146)*
+
+DADO el celular abierto con wifi CUANDO el router deja de dar wifi ENTONCES se ve el ícono de sin
+conexión en el lugar del de conectado, que deja de verse, y la hora de la barra es la misma. CUANDO
+vuelve el wifi ENTONCES se ve el de conectado y no el de sin conexión.
+
 ## No objetivos
 
 - Esta capacidad NO inventa el contenido: consume los guiones decididos; la apertura de
@@ -2222,7 +2243,7 @@ con esos mismos 2 ENTONCES al subir la persiana el ícono no vibra.
   expediente recibido, identidades para reconstrucción y gestos de pista con canal y jornada;
   el camino de cada hipótesis, el azar para sortear y el sorteo guardado; el aviso de que la
   puerta del jefe se abrió con la palanca o con la llave;
-  la jornada, Q, el estado del control
+  la jornada, Q, el estado del control, el tiempo restante del turno, el estado del wifi
   y los pedidos de recibir mensajes, navegar chats, ampliar fotos, fijar y soltar el celular;
   identidad y metadatos temporales de mensajes y el tramo de pista pulsado; continuar, navegar
   y elegir en la reflexión de cierre, y la reflexión y la elección restauradas.

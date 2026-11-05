@@ -91,7 +91,7 @@ func test_enviar_sin_wifi_queda_en_rojo_y_nadie_contesta() -> void:  # AC-INV-19
 	assert_int(pedido.cantidad_de_enviados()).is_equal(1)
 
 
-func test_se_puede_enviar_mas_de_un_pedido_y_cada_uno_se_contesta() -> void:  # AC-INV-195
+func test_se_puede_enviar_mas_de_un_pedido_y_cada_uno_se_contesta() -> void:  # AC-INV-197
 	var pedido := _pedido()
 	pedido.marcar(Producto.Id.POETICO)
 	var primero := pedido.enviar(false, "20:10")
@@ -115,7 +115,7 @@ func test_se_puede_enviar_mas_de_un_pedido_y_cada_uno_se_contesta() -> void:  # 
 	assert_int(identidades.size()).is_equal(todos.size())
 
 
-func test_el_chat_ordena_los_mensajes_del_pedido_y_los_olvida_al_reabrir() -> void:  # AC-INV-195
+func test_el_chat_ordena_los_mensajes_del_pedido_y_los_olvida_al_reabrir() -> void:  # AC-INV-197
 	var bandeja := Bandeja.new(Conversacion.desde_disco())
 	bandeja.abrir_jornada(PEDIDO)
 	var pedido := _pedido()

@@ -8,6 +8,10 @@ const FALTA := "Gracias. Falta que me des "
 const YA_ENTREGADO := "Gracias, pero ya me habías dado esto."
 const PEDIDO_DEL_TICKET := "Me das el ticket, ¿por favor?"
 const PIDE_EL_TICKET := "Gracias. " + PEDIDO_DEL_TICKET
+const PIDE_EL_TICKET_DE_TIN := (
+	"Joyaaa. ¿Me darías el ticket antes de que me vaya? "
+	+ "Es que sino mi vieja cree me que compro birra con su plata."
+)
 const RECHAZO := "Yo no pedí esto. "
 const SALUDO := "Buenas noches. "
 const DESPEDIDA := "Muchas gracias."
@@ -15,6 +19,8 @@ const DESPEDIDA := "Muchas gracias."
 const LILA := "#c9a0ff"
 ## Una entrada que empieza con `[solo:ID]` sólo se dice si esa pista está activa.
 const ABRE_CONDICION := "[solo:"
+## Una entrada que empieza con `[salvo:ID]` se dice siempre que esa pista NO esté activa.
+const ABRE_NEGACION := "[salvo:"
 ## `[pista=ID]texto[/pista]` marca el fragmento que se pulsa para pedir esa pista.
 const ABRE_PISTA := "[pista="
 const CIERRA_PISTA := "[/pista]"
@@ -81,10 +87,11 @@ static func _crear_dialogo(
 	var resueltas := PackedStringArray()
 	for entrada: String in entradas:
 		var texto := entrada
-		if texto.begins_with(ABRE_CONDICION):
-			var inicio := ABRE_CONDICION.length()
+		if texto.begins_with(ABRE_CONDICION) or texto.begins_with(ABRE_NEGACION):
+			var pide_activa := texto.begins_with(ABRE_CONDICION)
+			var inicio := (ABRE_CONDICION if pide_activa else ABRE_NEGACION).length()
 			var cierre := texto.find("]")
-			if not pistas_activas.has(texto.substr(inicio, cierre - inicio)):
+			if pistas_activas.has(texto.substr(inicio, cierre - inicio)) != pide_activa:
 				continue
 			texto = texto.substr(cierre + 1)
 		resueltas.append(_con_los_fragmentos(texto.format(nombres)))
@@ -108,18 +115,39 @@ static func _con_los_fragmentos(texto: String) -> String:
 ## Lo que dice cualquier comprador al hablarle: lo que todavía le falta, o el ticket si sólo falta
 ## él. Al rechazar, antepone el rechazo a lo que todavía le falta.
 static func recordatorio(
-	pedido: Venta, recepcion: RecepcionDeCompra, rechazo: bool = false
+	pedido: Venta,
+	recepcion: RecepcionDeCompra,
+	rechazo: bool = false,
+	personaje: int = Personaje.NINGUNO
 ) -> Dialogo:
 	var faltan := _enumeracion(pedido, recepcion.pendientes)
 	if rechazo:
-		return una(RECHAZO + (PEDIDO_DEL_TICKET if faltan.is_empty() else "Quiero " + faltan + "."))
-	return una(PIDE_EL_TICKET if faltan.is_empty() else "Quiero " + faltan + ".")
+		return una(
+			(
+				RECHAZO
+				+ (
+					_ticket_de(personaje, PEDIDO_DEL_TICKET)
+					if faltan.is_empty()
+					else "Quiero " + faltan + "."
+				)
+			)
+		)
+	return una(
+		_ticket_de(personaje, PIDE_EL_TICKET) if faltan.is_empty() else "Quiero " + faltan + "."
+	)
 
 
 ## Lo que dice al recibir un producto: agradece y nombra lo que falta, o pide el ticket.
-static func agradecimiento(pedido: Venta, recepcion: RecepcionDeCompra) -> Dialogo:
+static func agradecimiento(
+	pedido: Venta, recepcion: RecepcionDeCompra, personaje: int = Personaje.NINGUNO
+) -> Dialogo:
 	var faltan := _enumeracion(pedido, recepcion.pendientes)
-	return una(PIDE_EL_TICKET if faltan.is_empty() else FALTA + faltan + ".")
+	return una(_ticket_de(personaje, PIDE_EL_TICKET) if faltan.is_empty() else FALTA + faltan + ".")
+
+
+## Tin pide el ticket con su frase propia; los demás, con la común.
+static func _ticket_de(personaje: int, comun: String) -> String:
+	return PIDE_EL_TICKET_DE_TIN if personaje == Personaje.TIN else comun
 
 
 ## Lo que dice al atenderlo quien no trae guion propio: saluda y nombra su pedido entero.

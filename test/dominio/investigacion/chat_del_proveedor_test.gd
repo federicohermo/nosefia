@@ -1,5 +1,5 @@
 ## El chat de Hernán aparece en la jornada del pedido, sin historial. Enrique abre esa noche con
-## la foto de las estanterías y el aviso del pedido (BR-INV-146, BR-INV-126).
+## la foto de las estanterías y el aviso del pedido (BR-INV-147, BR-INV-126).
 extends GdUnitTestSuite
 
 const JEFE := Conversacion.Interlocutor.JEFE
@@ -55,7 +55,7 @@ func test_abrir_el_chat_de_hernan_vacio_es_posible() -> void:  # AC-INV-169
 	assert_int(celular.chat()).is_equal(PROVEEDOR)
 
 
-func test_enrique_abre_la_jornada_del_pedido_con_la_foto_y_el_aviso() -> void:  # AC-INV-196
+func test_enrique_abre_la_jornada_del_pedido_con_la_foto_y_el_aviso() -> void:  # AC-INV-198
 	var del_pedido: Array[Mensaje] = []
 	for mensaje in _bandeja(PEDIDO).mensajes_de(JEFE):
 		if mensaje.jornada == PEDIDO:
@@ -73,7 +73,7 @@ func test_enrique_abre_la_jornada_del_pedido_con_la_foto_y_el_aviso() -> void:  
 	assert_int(_identidades(bandeja.mensajes_de(JEFE)).count(del_pedido[1].identidad)).is_equal(1)
 
 
-func test_antes_de_la_jornada_del_pedido_enrique_no_los_trae() -> void:  # AC-INV-196
+func test_antes_de_la_jornada_del_pedido_enrique_no_los_trae() -> void:  # AC-INV-198
 	var guion := Conversacion.de(JEFE)
 	var del_pedido: Array[String] = []
 	for mensaje in guion.mensajes:

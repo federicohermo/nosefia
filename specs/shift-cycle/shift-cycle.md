@@ -3,7 +3,7 @@ schema_version: 1
 capability_id: CAP-SHF
 status: ratified
 owner: por definir
-provenance: GDD «Ciclo de jornadas»; fichas «Pantalla entre jornadas» y «Particulares de cada jornada»; decisiones de #364, #369, #436, #526, #527, #573, #691 y #693; migración de los specs 001, 007, 011, 016, 027, 031; quejas de la jornada 7 de #759, ficha «Particulares de cada jornada»; la ficha «Caminos narrativos y finales» y la fila «7B» de la lista de pistas e hipótesis, de #790; cajas del proveedor de #788, filas «Caja de cartón del proveedor» y «Caja de madera» de «Objetos interactuables» leídas el 2026-11-04
+provenance: GDD «Ciclo de jornadas»; fichas «Pantalla entre jornadas» y «Particulares de cada jornada»; decisiones de #364, #369, #436, #526, #527, #573, #691 y #693; migración de los specs 001, 007, 011, 016, 027, 031; quejas de la jornada 7 de #759, ficha «Particulares de cada jornada»; la ficha «Caminos narrativos y finales» y la fila «7B» de la lista de pistas e hipótesis, de #790; cajas del proveedor de #788, filas «Caja de cartón del proveedor» y «Caja de madera» de «Objetos interactuables» leídas el 2026-11-04; hora del celular de #613, decisiones del 2026-10-29, 2026-10-30 y 2026-11-02
 ---
 
 # Capacidad: el ciclo de la jornada
@@ -23,7 +23,7 @@ minuto investigando es un minuto que no se dedica a las tareas**.
 | **Obligatoria** | una de las tareas que el jefe pide esta noche | misión, objetivo |
 | **Ritmo** | cuántos segundos de turno consume un segundo real | escala, velocidad |
 | **Hora** | la hora de ficción de la noche, de la apertura al cierre | tiempo restante, cuenta regresiva |
-| **Reloj** | el reloj de pared del local, el único lugar donde se lee la hora | HUD |
+| **Reloj** | el reloj de pared del local; con la barra de estado del celular, los dos únicos lugares donde se lee la hora en vivo (el ticket guarda la hora en que se imprimió) | HUD |
 
 ## Comportamiento normativo
 
@@ -175,10 +175,11 @@ el cierre. Una jornada que cierra antes de tiempo cuenta las quejas sin responde
 CUANDO la noche cierra con esta obligatoria sin cumplir, la devolución del jefe DEBE traer su
 Tarea 5 (BR-EMP-027). Las jornadas 1 a 6 NO DEBEN declarar esta obligatoria.
 
-### BR-SHF-011 — La hora se lee en un solo lugar
+### BR-SHF-011 — La hora se lee en el reloj de pared y en el celular
 
-El sistema DEBE mostrar la hora sólo en el reloj de pared del local: ni en el HUD, ni en la
-computadora, ni en otro objeto del local. SI es la sexta jornada y la hora de ficción alcanzó las
+El sistema DEBE mostrar la hora del turno en vivo sólo en el reloj de pared del local y en la barra
+de estado del celular (BR-SHF-040): ni en el HUD, ni en la computadora. El ticket impreso conserva
+la hora de su impresión (AC-PLY-107). SI es la sexta jornada y la hora de ficción alcanzó las
 20:58, ENTONCES el reloj DEBE leer `20:58` hasta el cierre, también después de restablecer la
 electricidad, y el turno DEBE seguir descontando con su presupuesto y su ritmo. El reloj NO DEBE
 quedar en blanco en ningún momento de ninguna noche. Las otras jornadas, incluida la que todavía
@@ -194,6 +195,20 @@ o menos de turno, DEBE leer la hora de cierre: nunca una hora pasada del cierre.
 CUANDO se lee el reloj, el sistema DEBE contestar la hora de apertura más lo que ya pasó del
 turno, en `HH:MM` de 24 horas. La hora de apertura y la duración viven una sola vez en las
 reglas del juego.
+
+### BR-SHF-040 — El celular lee la hora del turno y no se detiene con el reloj
+
+MIENTRAS el turno corre, el celular DEBE leer la hora de la noche con la misma lectura que el
+reloj de pared (BR-SHF-012 y BR-SHF-014): truncada al minuto y en `HH:MM` de 24 horas, sin saltos
+al pasar la medianoche. La hora del celular NO DEBE detenerse con el reloj de pared: la sexta
+noche, con el reloj leyendo `20:58` hasta el cierre (BR-SHF-011), el celular DEBE seguir
+avanzando con el turno. MIENTRAS el turno no descuenta (BR-SHF-003), la hora del celular NO DEBE
+cambiar.
+
+### BR-SHF-041 — Entre jornadas el celular lee la hora de cierre
+
+CUANDO el turno cierra, y hasta que se abre otra jornada, el celular DEBE leer la hora de cierre
+(BR-SHF-012), y NO DEBE quedar en blanco ni leer la hora en que el jugador se fue.
 
 ### BR-SHF-019 — La persiana anuncia la noche antes de jugar
 
@@ -377,8 +392,9 @@ DADO una jornada que no es la sexta CUANDO se lee el reloj ENTONCES:
 
 ### AC-SHF-017 — Un solo reloj *(verifica BR-SHF-011)*
 
-DADO el local armado CUANDO se recorren sus nodos ENTONCES hay exactamente una lectura de la
-hora, cuelga del reloj de pared y no gira hacia la cámara.
+DADO el local armado CUANDO se recorren los nodos del local ENTONCES hay exactamente una lectura
+de la hora, cuelga del reloj de pared y no gira hacia la cámara. La otra lectura de la hora es la
+barra de estado del celular (AC-SHF-120).
 
 ### AC-SHF-018 — Cumplir no mueve el turno *(verifica BR-SHF-003)*
 
@@ -579,6 +595,31 @@ reloj lee la hora, y no `""`.
 DADO la jornada 6 con el corte cortado y con el corte restaurado, a las 22:00 y a las 01:00
 CUANDO se lee el reloj ENTONCES lee `"20:58"` en los dos estados. Hacer clic sobre el
 panel otra vez no cambia la lectura, y el turno descuenta lo mismo que antes de la hora del corte.
+
+### AC-SHF-120 — El celular lee la hora de la noche *(verifica BR-SHF-040, BR-SHF-012, BR-SHF-014)*
+
+DADO una jornada que no es la sexta con el turno corriendo CUANDO quedan `43200.0`, `43141.0`,
+`43140.0`, `28801.0`, `28799.0` y `14400.0` segundos ENTONCES el celular lee `"20:00"`, `"20:00"`,
+`"20:01"`, `"23:59"`, `"00:00"` y `"04:00"`, y en cada caso lo mismo que el reloj de pared.
+
+### AC-SHF-121 — La sexta noche el celular sigue andando con el reloj detenido *(verifica BR-SHF-040, BR-SHF-011)*
+
+DADO la jornada 6 CUANDO han transcurrido 58 minutos exactos ENTONCES el reloj y el celular leen
+`"20:58"`. CUANDO han transcurrido 2 horas ENTONCES el reloj sigue leyendo `"20:58"` y el celular
+lee `"22:00"`, con el corte cortado y con el corte restaurado. CUANDO quedan `14400.0` segundos
+ENTONCES el reloj lee `"20:58"` y el celular `"04:00"`.
+
+### AC-SHF-122 — En pausa la hora del celular no cambia *(verifica BR-SHF-040, BR-SHF-003)*
+
+DADO el celular leyendo una hora CUANDO se pausa y pasa tiempo real ENTONCES el turno conserva su
+tiempo restante y el celular lee la misma hora. CUANDO se reanuda ENTONCES sigue desde esa hora.
+
+### AC-SHF-123 — Entre jornadas el celular lee la hora de cierre *(verifica BR-SHF-041, BR-SHF-012)*
+
+DADO un turno agotado ENTONCES el celular lee la hora de cierre, `"08:00"`. DADO un turno que el
+jugador cierra antes de tiempo ENTONCES el celular lee también la hora de cierre y no la de
+su salida. DADO la jornada 6 con el reloj leyendo `"20:58"` CUANDO el turno cierra ENTONCES el
+celular lee la hora de cierre. La hora sigue siendo ésa hasta que se abre otra jornada.
 
 ### AC-SHF-063 — El despido muestra su pantalla *(verifica BR-SHF-027)*
 
