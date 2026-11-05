@@ -51,6 +51,9 @@ const TAMANO_DEL_ICONO_DE_WIFI := Vector2(28.0, 24.0)
 const RETRATO_ENRIQUE := "res://assets/ui/manada/enrique.png"
 const BUSCAR := "Buscar contacto..."
 const ROJO := Color("cc0d08")
+const NARANJA_DEL_AVISO := Color("ffa024")
+const DIAMETRO_DEL_AVISO := 30.0
+const TAMANO_DEL_NUMERO_DEL_AVISO := 20
 const FOTO := "Foto"
 const MENSAJE := "Mensaje..."
 const AYUDA := "ARRASTRÁ EL FONDO O USÁ LA RUEDA"
@@ -105,6 +108,12 @@ var _relleno: Control
 var _burbujas: Array[PanelContainer] = []
 var _recordatorio_pedido: bool = false
 var _recordatorio_cubierto: bool = false
+var _aviso: PanelContainer
+var _estado_del_aviso := AvisoDeMensajesNuevos.new()
+var _vibracion: Tween
+var _duracion_de_la_vibracion: float = -1.0
+var _base_del_recordatorio := Vector2.ZERO
+var _desplazamiento_de_la_vibracion := Vector2.ZERO
 var _sin_wifi: TextureRect
 var _arrastrando: bool = false
 var _posicion_del_arrastre: float = 0.0
@@ -151,6 +160,7 @@ func _ready() -> void:
 				_terminar_arrastre()
 	)
 	(_recordatorio.get_node("Tecla") as Label).text = TEXTO_DEL_RECORDATORIO
+	_crear_el_aviso()
 	_foto_ampliada.hide()
 	_recordatorio.hide()
 	_telefono.hide()
@@ -370,6 +380,95 @@ func cubrir_recordatorio(cubierto: bool) -> void:
 	_recordatorio.visible = _recordatorio_pedido and not _recordatorio_cubierto
 
 
+## El total de mensajes sin leer, tal como lo cuenta la bandeja. Sube: el ícono vibra.
+func mostrar_no_leidos(cuantos: int) -> void:
+	var vibra := _estado_del_aviso.cambiar(cuantos)
+	_pintar_el_aviso()
+	if vibra and _recordatorio.is_visible_in_tree():
+		_vibrar()
+
+
+## Mientras la persiana está baja, el total se junta y no se pinta.
+func retener_los_no_leidos() -> void:
+	_estado_del_aviso.retener()
+
+
+func soltar_los_no_leidos() -> void:
+	var vibra := _estado_del_aviso.soltar()
+	_pintar_el_aviso()
+	if vibra and _recordatorio.is_visible_in_tree():
+		_vibrar()
+
+
+func vibrando() -> bool:
+	return _vibracion != null and _vibracion.is_valid()
+
+
+func _pintar_la_vibracion(transcurrido: float) -> void:
+	_desplazamiento_de_la_vibracion = AvisoDeMensajesNuevos.desplazamiento(
+		transcurrido, _duracion_del_sonido()
+	)
+	_posar_el_recordatorio()
+
+
+func _terminar_la_vibracion() -> void:
+	if _vibracion != null:
+		_vibracion.kill()
+	_desplazamiento_de_la_vibracion = Vector2.ZERO
+	_posar_el_recordatorio()
+
+
+func _vibrar() -> void:
+	var duracion := _duracion_del_sonido()
+	if duracion <= 0.0:
+		return
+	if _vibracion != null:
+		_vibracion.kill()
+	_vibracion = create_tween()
+	_vibracion.tween_method(_pintar_la_vibracion, 0.0, duracion, duracion)
+	_vibracion.tween_callback(_terminar_la_vibracion)
+
+
+func _duracion_del_sonido() -> float:
+	if _duracion_de_la_vibracion < 0.0:
+		_duracion_de_la_vibracion = AvisoDeMensajesNuevos.duracion_de_la_vibracion(
+			TablaDeSonidos.desde_disco()
+		)
+	return _duracion_de_la_vibracion
+
+
+func _posar_el_recordatorio() -> void:
+	_recordatorio.position = (
+		_base_del_recordatorio + _desplazamiento_de_la_vibracion * _recordatorio.scale
+	)
+
+
+func _pintar_el_aviso() -> void:
+	_aviso.visible = _estado_del_aviso.se_ve()
+	(_aviso.get_node("Numero") as Label).text = str(_estado_del_aviso.numero())
+
+
+## El círculo cuelga del ícono y no del contenedor: un hijo de `HBoxContainer` se reacomoda.
+func _crear_el_aviso() -> void:
+	var icono: Control = _recordatorio.get_node("Icono")
+	_aviso = PanelContainer.new()
+	_aviso.name = "Aviso"
+	_aviso.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_aviso.custom_minimum_size = Vector2(DIAMETRO_DEL_AVISO, DIAMETRO_DEL_AVISO)
+	_aviso.size = _aviso.custom_minimum_size
+	_aviso.position = Vector2(icono.custom_minimum_size.x, 0.0) - _aviso.size / 2.0
+	_aviso.add_theme_stylebox_override(
+		"panel", _estilo(NARANJA_DEL_AVISO, int(DIAMETRO_DEL_AVISO / 2.0))
+	)
+	var numero := _etiqueta("0", TINTA, TAMANO_DEL_NUMERO_DEL_AVISO)
+	numero.name = "Numero"
+	numero.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	numero.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	_aviso.add_child(numero)
+	icono.add_child(_aviso)
+	_aviso.hide()
+
+
 func _input(evento: InputEvent) -> void:
 	if _arrastrando:
 		_arrastrar(evento)
@@ -572,7 +671,8 @@ func _ajustar() -> void:
 	LienzoDeManada.ajustar(_lienzo, encuadre)
 	# El recordatorio pertenece al borde de la ventana, no al lienzo centrado del teléfono.
 	_recordatorio.scale = _lienzo.scale
-	_recordatorio.position = Vector2(36.0, -130.0) * _lienzo.scale + Vector2(0, encuadre.y)
+	_base_del_recordatorio = Vector2(36.0, -130.0) * _lienzo.scale + Vector2(0, encuadre.y)
+	_posar_el_recordatorio()
 	_pintar_posicion()
 
 
