@@ -135,7 +135,7 @@ var _lugar_del_pensamiento := Vector3.INF
 var _distancia_al_pensar := 0.0
 var _jornada_del_celular: int = 0
 ## Lo crea el cableado del celular: `almacen.tscn` no se mergea y no se toca a mano.
-var _respondedor := RespondedorDeQuejas.new()
+var _respondedor: RespondedorDeQuejas
 var _devolucion_en_espera: DevolucionDelJefe
 var _espera_del_celular := 0.0
 var _enlace_de_guardado: EnlaceDeGuardado
@@ -1167,6 +1167,7 @@ func _cablear_el_celular() -> void:
 	_pantalla_del_celular.tramo_pedido.connect(_celular.pedir_tramo)
 	_pantalla_del_celular.cierre_de_foto_pedido.connect(_celular.pedir_cerrar_foto)
 	_pantalla.preparar(_celular, _pantalla_del_celular)
+	_respondedor = RespondedorDeQuejas.new()
 	_respondedor.reloj = _reloj
 	_respondedor.celular = _celular
 	add_child(_respondedor)

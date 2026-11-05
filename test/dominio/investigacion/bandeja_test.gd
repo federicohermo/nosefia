@@ -63,10 +63,13 @@ func test_la_primera_jornada_solo_ofrece_la_introduccion_documentada() -> void: 
 	assert_array(restaurada.conversaciones()).is_equal(bandeja.conversaciones())
 	assert_int(restaurada.no_leidos_totales()).is_equal(mensajes.size())
 	# Los bloques documentados siguen disponibles; no aparecen contactos sin guion.
-	restaurada.abrir_jornada(5)
+	var jornada := 5
+	restaurada.abrir_jornada(jornada)
 	assert_int(restaurada.conversaciones().size()).is_equal(2)
 	assert_array(restaurada.mensajes_de(quien)).is_equal(
-		Conversacion.de(quien).mensajes.filter(func(m: Mensaje) -> bool: return m.vale_para([]))
+		Conversacion.de(quien).mensajes.filter(
+			func(m: Mensaje) -> bool: return m.jornada <= jornada and m.vale_para([])
+		)
 	)
 
 
