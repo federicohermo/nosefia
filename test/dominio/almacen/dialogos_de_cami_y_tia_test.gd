@@ -8,6 +8,8 @@ const SEPTIMA := ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA + 4
 const PERSONAJE := DialogosDeCompradores.Personaje
 const AMARILLO := "[color=#e4f850]"
 const SEMILLAS := 40
+## La marca del fragmento que el jugador pulsa en el mensaje de Cami.
+const MARCA_DE_LA_PISTA := "[url=5A]"
 
 ## Cuántas entradas de apertura y de despedida trae cada guion propio.
 const ENTRADAS := {
@@ -30,6 +32,14 @@ func _comprador(jornada: int, personaje: int, semilla: int = 5) -> Comprador:
 	return null
 
 
+## Cami de la quinta con las pistas activas que se le dan: con 5A activa dice el mensaje de
+## «actitudes extrañas de Peldaño», y sin ella no.
+func _cami_de_la_quinta(semilla: int = 5, activas := PackedStringArray(["5A"])) -> Comprador:
+	var cami := _comprador(QUINTA, PERSONAJE.CAMI, semilla)
+	cami.pistas_activas = activas
+	return cami
+
+
 func _entradas(dialogo: Dialogo) -> PackedStringArray:
 	var entradas := PackedStringArray()
 	while not dialogo.terminado():
@@ -39,7 +49,11 @@ func _entradas(dialogo: Dialogo) -> PackedStringArray:
 
 
 func _apertura(comprador: Comprador) -> PackedStringArray:
-	return _entradas(comprador.dialogos.inicial(comprador.personaje, comprador.pedido()))
+	return _entradas(
+		comprador.dialogos.inicial(
+			comprador.personaje, comprador.pedido(), comprador.pistas_activas
+		)
+	)
 
 
 func _despedida(comprador: Comprador) -> PackedStringArray:
@@ -159,7 +173,7 @@ func test_tia_de_la_cuarta_y_la_sexta_nombran_el_pedido_entero() -> void:  # AC-
 
 func test_cami_de_la_quinta_dice_sus_entradas_y_nombra_el_pedido_entero() -> void:  # AC-CTR-157
 	for semilla in range(1, SEMILLAS + 1):
-		var cami := _comprador(QUINTA, PERSONAJE.CAMI, semilla)
+		var cami := _cami_de_la_quinta(semilla)
 		var entradas := _entradas_de(cami, "cami_quinta")
 		assert_int(entradas[0].size()).is_equal(entradas[1])
 		assert_int(entradas[2].size()).is_equal(entradas[3])
@@ -170,7 +184,7 @@ func test_cami_de_la_quinta_dice_sus_entradas_y_nombra_el_pedido_entero() -> voi
 
 
 func test_cami_de_la_quinta_dice_el_mensaje_3_y_el_4_distintos() -> void:  # AC-CTR-157
-	var apertura := _apertura(_comprador(QUINTA, PERSONAJE.CAMI))
+	var apertura := _apertura(_cami_de_la_quinta())
 	assert_str(apertura[2]).is_not_equal(apertura[3])
 	assert_str(apertura[2]).is_not_empty()
 	assert_str(apertura[3]).is_not_empty()
@@ -229,3 +243,47 @@ func test_la_misma_partida_repite_pedido_y_textos() -> void:  # AC-CTR-159
 		var otra := _comprador(caso[0], caso[1], 11)
 		assert_array(Array(_apertura(una))).is_equal(Array(_apertura(otra)))
 		assert_array(Array(_despedida(una))).is_equal(Array(_despedida(otra)))
+
+
+func test_cami_de_la_quinta_dice_el_mensaje_de_5a_solo_con_la_5a_activa() -> void:  # AC-CTR-157
+	for semilla in range(1, SEMILLAS + 1):
+		var con := _apertura(_cami_de_la_quinta(semilla))
+		var sin := _apertura(_cami_de_la_quinta(semilla, PackedStringArray()))
+		assert_int(con.size()).is_equal(ENTRADAS["cami_quinta"][0])
+		assert_int(sin.size()).is_equal(ENTRADAS["cami_quinta"][0] - 1)
+		var del_mensaje := -1
+		for indice in con.size():
+			if con[indice].contains(MARCA_DE_LA_PISTA):
+				assert_int(del_mensaje).is_equal(-1)
+				del_mensaje = indice
+		assert_int(del_mensaje).is_greater_equal(0)
+		var resto := Array(con)
+		resto.remove_at(del_mensaje)
+		assert_array(Array(sin)).is_equal(resto)
+		_sin_marcadores(sin)
+
+
+func test_el_fragmento_de_la_pista_5a_va_en_lila_y_con_su_identidad() -> void:  # AC-INV-165
+	var apertura := _apertura(_cami_de_la_quinta())
+	var del_mensaje: Array[String] = []
+	for texto: String in apertura:
+		if texto.contains("[url="):
+			del_mensaje.append(texto)
+	assert_array(del_mensaje).has_size(1)
+	if del_mensaje.is_empty():
+		return
+	var entrada := del_mensaje[0]
+	assert_int(entrada.count(MARCA_DE_LA_PISTA)).is_equal(1)
+	assert_int(entrada.count("[color=" + DialogosDeCompradores.LILA + "]")).is_equal(1)
+	assert_int(entrada.count(AMARILLO)).is_zero()
+
+
+func test_la_atencion_pasa_las_pistas_activas_del_comprador_a_su_apertura() -> void:  # AC-CTR-157
+	for activas: PackedStringArray in [PackedStringArray(["5A"]), PackedStringArray()]:
+		var cami := _cami_de_la_quinta(5, activas)
+		var atencion := _atencion(cami)
+		atencion.interactuar(null)
+		var dicha := _entradas(atencion.dialogo())
+		assert_array(Array(dicha)).is_equal(Array(_apertura(cami)))
+		var con_fragmento := dicha.size() == ENTRADAS["cami_quinta"][0]
+		assert_bool(con_fragmento).is_equal(not activas.is_empty())
