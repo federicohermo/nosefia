@@ -263,7 +263,7 @@ func test_el_despido_en_la_primera_noche_completa() -> void:  # AC-EMP-061
 	assert_array(devolucion.mensajes()).is_equal(
 		["Che", DevolucionDelJefe.PAPEL_1, DevolucionDelJefe.CIERRE_DEL_DESPIDO]
 	)
-	assert_array(devolucion.opciones()).is_equal([DevolucionDelJefe.Opcion.VOLVER_AL_MENU])
+	assert_array(devolucion.opciones()).is_equal([DevolucionDelJefe.Opcion.VER_EL_FINAL])
 
 
 func test_el_despido_ordena_las_tareas_y_los_retos() -> void:  # AC-EMP-061
@@ -310,7 +310,7 @@ func test_la_prueba_perdida_termina_con_el_mensaje_del_despido() -> void:  # AC-
 		+ "llegó mi paciencia. Suerte consiguiendo otro trabajo."
 	)
 	assert_array(devolucion.mensajes()).is_equal([despido])
-	assert_array(devolucion.opciones()).is_equal([DevolucionDelJefe.Opcion.VOLVER_AL_MENU])
+	assert_array(devolucion.opciones()).is_equal([DevolucionDelJefe.Opcion.VER_EL_FINAL])
 	assert_object(perdida.abrir_la_jornada()).is_null()
 	var textos_de_la_segunda: Array[String] = []
 	for mensaje: Mensaje in perdida.devoluciones_del_jefe():

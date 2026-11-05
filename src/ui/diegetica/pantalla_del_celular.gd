@@ -1,4 +1,8 @@
 ## El dibujo conserva el scroll al ampliar: la foto se superpone al chat, no lo reconstruye.
+##
+## El chat entra y sale deslizándose por la derecha. La vista de destino se arma de una vez en los
+## nodos reales; lo que se desliza es el chat, y lo que queda quieto debajo es la lista. Una copia
+## congelada de la vista que se va ocupa el lugar que los nodos reales ya no pueden tener.
 class_name PantallaDelCelular
 extends CanvasLayer
 
@@ -12,6 +16,8 @@ signal opcion_elegida
 signal celular_bajado
 ## Llegó a la mitad izquierda del encuadre, para la reflexión de cierre.
 signal celular_desplazado
+
+enum Vista { NINGUNA, MENU, CHAT, CHAT_FIJO }
 
 const RECORRIDO_COMPLETO := RecorridoDelCelular.DURACION
 const PASO_MAXIMO := CabeceraConSolapa.PASO_MAXIMO
@@ -39,6 +45,9 @@ const MASCARA_DEL_AVATAR := preload("res://assets/ui/manada/celular/avatar.tres"
 const AVATAR_ENRIQUE := preload("res://assets/ui/manada/celular/enrique.png")
 const AVATAR_ENRIQUE_MENU := preload("res://assets/ui/manada/celular/enrique_menu.png")
 const SIMBOLOS_DE_CHAT := preload("res://assets/ui/manada/celular/simbolos_de_chat.ttf")
+const ICONO_SIN_WIFI := preload("res://assets/ui/manada/celular/wifi_sin_conexion.svg")
+## El lugar del ícono de wifi en la barra de estado: lo que mide el dibujo de la ficha de diseño.
+const TAMANO_DEL_ICONO_DE_WIFI := Vector2(28.0, 24.0)
 const RETRATO_ENRIQUE := "res://assets/ui/manada/enrique.png"
 const BUSCAR := "Buscar contacto..."
 const ROJO := Color("cc0d08")
@@ -75,6 +84,8 @@ const DIAS: Array[String] = [
 @export var _pie: VBoxContainer
 @export var _entrada: LineEdit
 @export var _ayuda: Label
+@export var _capa: Control
+@export var _contenido: VBoxContainer
 
 var _recorrido := RecorridoDelCelular.new()
 var _lateral: float = 0.0
@@ -89,13 +100,22 @@ var _fuente_del_chat: FontVariation
 var _jornada_de_referencia: int = 0
 var _chat_de_notas: bool = false
 var _historial: Array[Mensaje] = []
+var _ancla: int = Celular.AL_FINAL
+var _relleno: Control
 var _burbujas: Array[PanelContainer] = []
 var _recordatorio_pedido: bool = false
 var _recordatorio_cubierto: bool = false
+var _sin_wifi: TextureRect
 var _arrastrando: bool = false
 var _posicion_del_arrastre: float = 0.0
 var _desplazamiento_del_arrastre: float = 0.0
 var _umbral_de_arrastre_superado: bool = false
+var _vista: Vista = Vista.NINGUNA
+## Con la misma curva y duración que sube el celular. Su avance es cuánto del chat se ve:
+## 0 es fuera del borde derecho y 1, en su lugar.
+var _deslizamiento := RecorridoDelCelular.new()
+var _lista_quieta: Control
+var _chat_saliente: Control
 
 
 func _ready() -> void:
@@ -121,6 +141,7 @@ func _ready() -> void:
 	_entrada.placeholder_text = MENSAJE
 	_agregar_la_flecha_del_campo()
 	_agregar_la_funda()
+	_agregar_la_barra_de_estado()
 	_ayuda.text = AYUDA
 	_scroll.gui_input.connect(_al_tocar_el_historial)
 	_scroll.get_v_scroll_bar().changed.connect(_actualizar_desplazamiento)
@@ -153,12 +174,16 @@ func _process(_delta: float) -> void:
 	var llegaba := is_equal_approx(_lateral, _destino_lateral)
 	var puede_correrse := _sube_antes_de_correrse()
 	_recorrido.avanzar(segundos)
+	_deslizamiento.avanzar(segundos)
 	if puede_correrse:
 		_lateral = move_toward(_lateral, _destino_lateral, segundos / RECORRIDO_COMPLETO)
 	_pintar_posicion()
+	_pintar_deslizamiento()
+	if _desliza() and _deslizamiento.llego():
+		_asentar(_hay_chat())
 	if not llegaba and is_equal_approx(_lateral, 1.0):
 		celular_desplazado.emit()
-	if _recorrido.llego() and is_equal_approx(_lateral, _destino_lateral):
+	if _recorrido.llego() and is_equal_approx(_lateral, _destino_lateral) and not _desliza():
 		set_process(false)
 		if _recorrido.destino() == 0.0:
 			_lateral = 0.0
@@ -173,6 +198,8 @@ func subir() -> void:
 
 
 func bajar() -> void:
+	if _desliza():
+		_asentar(_hay_chat())
 	_mover_hacia(0.0)
 
 
@@ -188,6 +215,11 @@ func desplazar_a_la_izquierda() -> void:
 
 
 func mostrar_menu(bandeja: Bandeja) -> void:
+	if _vista == Vista.CHAT and _puede_deslizar():
+		_empezar_salida()
+	elif _vista != Vista.MENU:
+		_asentar(false)
+	_vista = Vista.MENU
 	_bandeja = bandeja
 	_foto_ampliada.hide()
 	_volver.hide()
@@ -203,9 +235,19 @@ func mostrar_menu(bandeja: Bandeja) -> void:
 	_filtrar("")
 
 
+## `primer_nuevo` es el lugar del mensaje con el que empieza el chat; sin él, abre en el último.
 func mostrar_chat(
-	conversacion: Conversacion, mensajes: Array[Mensaje], fijo: bool, jornada: int
+	conversacion: Conversacion,
+	mensajes: Array[Mensaje],
+	fijo: bool,
+	jornada: int,
+	primer_nuevo: int = Celular.AL_FINAL
 ) -> void:
+	if _vista == Vista.MENU and not fijo and _puede_deslizar():
+		_empezar_entrada()
+	else:
+		_asentar(true)
+	_vista = Vista.CHAT_FIJO if fijo else Vista.CHAT
 	_jornada_de_referencia = jornada
 	_foto_ampliada.hide()
 	_volver.visible = not fijo
@@ -230,6 +272,7 @@ func mostrar_chat(
 	_chat_de_notas = conversacion.interlocutor == Conversacion.Interlocutor.NOTAS
 	_componer(false, _chat_de_notas)
 	_limpiar()
+	_ancla = primer_nuevo
 	_historial = mensajes.duplicate()
 	for indice in mensajes.size():
 		var burbuja := _burbuja_de(mensajes[indice], indice)
@@ -237,7 +280,7 @@ func mostrar_chat(
 		_mensajes.add_child(burbuja)
 	_ordenar_el_historial()
 	_agregar_la_opcion()
-	_ir_al_ultimo.call_deferred()
+	_acomodar_la_lectura.call_deferred(false)
 
 
 ## Ofrece una opción debajo del último mensaje. Sobrevive a que el chat se vuelva a dibujar.
@@ -245,13 +288,15 @@ func mostrar_opcion(texto: String) -> void:
 	_texto_de_la_opcion = texto
 	_agregar_la_opcion()
 	if not _foto_ampliada.visible:
-		_ir_al_ultimo.call_deferred()
+		_acomodar_la_lectura.call_deferred(true)
 
 
 ## La llegada no reconstruye el historial: conserva la foto ampliada y lo que se estaba leyendo.
-func recibir(mensaje: Mensaje, indice: int) -> void:
+func recibir(mensaje: Mensaje, indice: int, primer_nuevo: int = Celular.AL_FINAL) -> void:
 	var barra := _scroll.get_v_scroll_bar()
 	var al_final := _scroll.scroll_vertical >= int(barra.max_value - barra.page) - 1
+	if primer_nuevo != Celular.AL_FINAL:
+		_ancla = primer_nuevo
 	var burbuja := _burbuja_de(mensaje, indice)
 	var lugar := clampi(indice, 0, _historial.size())
 	_historial.insert(lugar, mensaje)
@@ -261,7 +306,7 @@ func recibir(mensaje: Mensaje, indice: int) -> void:
 	if opcion() != null:
 		_mensajes.move_child(_opcion, _mensajes.get_child_count() - 1)
 	if al_final and not _foto_ampliada.visible:
-		_ir_al_ultimo.call_deferred()
+		_acomodar_la_lectura.call_deferred(true)
 
 
 func quitar_opcion() -> void:
@@ -308,6 +353,11 @@ func ampliar(foto: Mensaje, adjunto: Mensaje) -> void:
 func cerrar_foto() -> void:
 	_foto_ampliada.hide()
 	_actualizar_desplazamiento()
+
+
+## El ícono de sin conexión se ve mientras no hay wifi.
+func mostrar_el_wifi(hay_wifi: bool) -> void:
+	_sin_wifi.visible = not hay_wifi
 
 
 func mostrar_recordatorio(se_ve: bool) -> void:
@@ -430,6 +480,91 @@ func _mover_hacia(destino: float) -> void:
 		_velo.show()
 	set_process(true)
 	_pintar_posicion()
+
+
+## Con el celular arriba y quieto, cambiar de vista se desliza. Si sube o baja, es inmediato.
+func _puede_deslizar() -> bool:
+	return _recorrido.destino() == 1.0 and _recorrido.llego() and _telefono.is_visible_in_tree()
+
+
+func _desliza() -> bool:
+	return _lista_quieta != null or _chat_saliente != null
+
+
+func _hay_chat() -> bool:
+	return _vista == Vista.CHAT or _vista == Vista.CHAT_FIJO
+
+
+## El chat entra sobre la lista, que queda quieta debajo en una copia.
+func _empezar_entrada() -> void:
+	_asentar(false)
+	_lista_quieta = _copiar_contenido()
+	_capa.add_child(_lista_quieta)
+	_capa.move_child(_lista_quieta, 0)
+	_deslizamiento.ir_a(1.0)
+	_comenzar_a_deslizar()
+
+
+## El chat sale sobre la lista, que ya es la vista real. Parte de donde estaba el chat.
+func _empezar_salida() -> void:
+	_quitar_las_copias()
+	_chat_saliente = _copiar_contenido()
+	_contenido.offset_left = 0.0
+	_contenido.offset_right = 0.0
+	_capa.add_child(_chat_saliente)
+	_deslizamiento.ir_a(0.0)
+	_comenzar_a_deslizar()
+
+
+func _comenzar_a_deslizar() -> void:
+	_pintar_deslizamiento()
+	_ultimo = _ahora.call()
+	set_process(true)
+
+
+## Termina cualquier deslizamiento en su estado final: el chat en su lugar, o la lista sola.
+func _asentar(hay_chat: bool) -> void:
+	_quitar_las_copias()
+	_contenido.offset_left = 0.0
+	_contenido.offset_right = 0.0
+	_deslizamiento.ir_a(1.0 if hay_chat else 0.0)
+	_deslizamiento.avanzar(RecorridoDelCelular.DURACION)
+
+
+func _quitar_las_copias() -> void:
+	if _lista_quieta != null:
+		_lista_quieta.free()
+		_lista_quieta = null
+	if _chat_saliente != null:
+		_chat_saliente.free()
+		_chat_saliente = null
+
+
+func _pintar_deslizamiento() -> void:
+	if not _desliza():
+		return
+	var avance := clampf(_deslizamiento.posicion(), 0.0, 1.0)
+	var corrimiento := (1.0 - avance) * _telefono.size.x
+	var deslizante: Control = _chat_saliente if _chat_saliente != null else _contenido
+	deslizante.offset_left = corrimiento
+	deslizante.offset_right = corrimiento
+
+
+## Una foto fija de lo que se ve ahora. No recibe clics ni foco: la vista real queda debajo.
+func _copiar_contenido() -> Control:
+	var copia := _contenido.duplicate(0) as Control
+	copia.name = "Copia"
+	copia.offset_left = 0.0
+	copia.offset_right = 0.0
+	copia.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	for hijo: Node in copia.find_children("*", "Control", true, false):
+		var control := hijo as Control
+		control.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		control.focus_mode = Control.FOCUS_NONE
+	# El scroll no se aplica hasta que el contenedor mide; se pide para ese mismo cuadro.
+	var historial := copia.find_child("Scroll", true, false) as ScrollContainer
+	historial.set_deferred("scroll_vertical", _scroll.scroll_vertical)
+	return copia
 
 
 func _ajustar() -> void:
@@ -669,6 +804,28 @@ func _agregar_la_funda() -> void:
 	_telefono.move_child(funda, 0)
 
 
+## La barra de estado ocupa la fila de arriba del teléfono, a la derecha. Hoy sólo guarda el ícono
+## de sin conexión, que aparece cuando el router no da wifi; con wifi la fila queda vacía.
+func _agregar_la_barra_de_estado() -> void:
+	var barra := HBoxContainer.new()
+	barra.name = "BarraDeEstado"
+	barra.alignment = BoxContainer.ALIGNMENT_END
+	barra.custom_minimum_size = Vector2(0.0, TAMANO_DEL_ICONO_DE_WIFI.y)
+	barra.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_sin_wifi = TextureRect.new()
+	_sin_wifi.name = "SinWifi"
+	_sin_wifi.texture = ICONO_SIN_WIFI
+	_sin_wifi.custom_minimum_size = TAMANO_DEL_ICONO_DE_WIFI
+	_sin_wifi.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	_sin_wifi.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	_sin_wifi.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_sin_wifi.visible = false
+	barra.add_child(_sin_wifi)
+	var contenido := _cabecera.get_parent()
+	contenido.add_child(barra)
+	contenido.move_child(barra, 0)
+
+
 func _ordenar_el_historial() -> void:
 	# Reordenar sólo la composición conserva las burbujas y la foto que se esté leyendo.
 	for hijo: Node in _mensajes.get_children():
@@ -699,14 +856,49 @@ func _ordenar_el_historial() -> void:
 	_actualizar_desplazamiento.call_deferred()
 
 
-func _ir_al_ultimo() -> void:
+## Sin primer mensaje nuevo, lleva la lista al último mensaje. Con uno, lo deja en el borde
+## superior; `siguiendo` baja además lo necesario para que el último quede a la vista.
+func _acomodar_la_lectura(siguiendo: bool) -> void:
 	# El contenedor debe terminar de medir los mensajes antes de pedir el extremo del scroll.
 	await get_tree().process_frame
-	_scroll.scroll_vertical = int(_scroll.get_v_scroll_bar().max_value)
+	var barra := _scroll.get_v_scroll_bar()
+	if _ancla < 0 or _ancla >= _burbujas.size():
+		_scroll.scroll_vertical = int(barra.max_value)
+		return
+	var inicio := _burbujas[_ancla].position.y
+	var fin := _fin_de_los_mensajes()
+	var falta := barra.page - (fin - inicio) - float(_mensajes.get_theme_constant("separation"))
+	_poner_el_relleno(falta if fin > barra.page else 0.0)
+	await get_tree().process_frame
+	var destino := maxf(inicio, fin - barra.page) if siguiendo else inicio
+	_scroll.scroll_vertical = int(destino)
+
+
+func _fin_de_los_mensajes() -> float:
+	var fin := 0.0
+	for hijo: Node in _mensajes.get_children():
+		var control := hijo as Control
+		if control != _relleno and control.visible:
+			fin = maxf(fin, control.position.y + control.size.y)
+	return fin
+
+
+## Deja bajo el último mensaje el espacio que hace falta para poder subir el primer nuevo hasta el
+## borde superior.
+func _poner_el_relleno(alto: float) -> void:
+	if _relleno == null or _relleno.get_parent() != _mensajes:
+		_relleno = Control.new()
+		_relleno.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		_mensajes.add_child(_relleno)
+	_mensajes.move_child(_relleno, -1)
+	_relleno.custom_minimum_size.y = maxf(alto, 0.0)
+	_relleno.visible = alto > 0.0
 
 
 func _limpiar() -> void:
 	_terminar_arrastre()
+	_ancla = Celular.AL_FINAL
+	_relleno = null
 	_historial.clear()
 	_burbujas.clear()
 	# Lo viejo espera su liberación dentro del árbol, en un nodo oculto: sacado del árbol y

@@ -39,6 +39,8 @@ func _probar_cierre(nombre: String) -> Array[Input.MouseMode]:
 	if nombre.ends_with("Ventanilla"):
 		derecho.button_index = MOUSE_BUTTON_LEFT
 	puesto.call("_input", derecho)
+	while nombre.ends_with("Ventanilla") and jugador.call("suspendido"):
+		puesto.call("_input", derecho)
 	assert_bool(jugador.call("suspendido")).is_false()
 	for cuadro: int in 3:
 		jugador.call("_aplicar_el_modo_del_cursor")

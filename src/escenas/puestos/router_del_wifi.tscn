@@ -1,0 +1,23 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://src/escenas/puestos/router_del_wifi.gd" id="script"]
+
+[ext_resource type="ArrayMesh" path="res://assets/models/router.res" id="modelo"]
+[ext_resource type="ConvexPolygonShape3D" path="res://assets/models/router_colision.res" id="colision"]
+[ext_resource type="Texture2D" path="res://assets/models/router/router_prendido.png" id="verde"]
+[ext_resource type="Texture2D" path="res://assets/models/router/router_apagado.png" id="apagada"]
+[ext_resource type="Texture2D" path="res://assets/models/router/router_descompuesto.png" id="roja"]
+
+[node name="Router" type="StaticBody3D" node_paths=PackedStringArray("mallas") groups=["interactuable"]]
+script = ExtResource("script")
+mallas = [NodePath("Malla")]
+textura_verde = ExtResource("verde")
+textura_apagada = ExtResource("apagada")
+textura_roja = ExtResource("roja")
+
+[node name="Forma" type="CollisionShape3D" parent="."]
+shape = ExtResource("colision")
+
+[node name="Malla" type="MeshInstance3D" parent="."]
+mesh = ExtResource("modelo")
+gi_mode = 2

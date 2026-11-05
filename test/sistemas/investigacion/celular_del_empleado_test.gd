@@ -66,6 +66,30 @@ func test_recibir_cerrado_y_en_chat_avisa_una_vez() -> void:  # AC-INV-029, AC-I
 	assert_int(nueva.bandeja().no_leidos_totales()).is_equal(antes)
 
 
+func test_una_nota_propia_llega_sin_el_aviso_de_mensaje_recibido() -> void:  # AC-AMB-029
+	var sistema: CelularDelEmpleado = auto_free(CelularDelEmpleado.new())
+	sistema.abrir_jornada(ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA + 1)
+	var recibidos: Array[Mensaje] = []
+	var notas: Array[Mensaje] = []
+	var cuentas: Array[int] = []
+	sistema.mensaje_recibido.connect(
+		func(_quien: Conversacion.Interlocutor, mensaje: Mensaje) -> void: recibidos.append(mensaje)
+	)
+	sistema.nota_recibida.connect(func(mensaje: Mensaje) -> void: notas.append(mensaje))
+	sistema.no_leidos_cambiados.connect(func(cuenta: int) -> void: cuentas.append(cuenta))
+	var nota := Mensaje.new()
+	nota.identidad = "nota_propia"
+	var antes := sistema.bandeja().no_leidos(Conversacion.Interlocutor.NOTAS)
+	sistema.recibir_nota(nota)
+	sistema.recibir_nota(nota)
+	sistema.recibir_nota(null)
+	assert_array(notas).is_equal([nota])
+	assert_array(recibidos).is_empty()
+	assert_int(cuentas.size()).is_equal(1)
+	assert_int(sistema.bandeja().no_leidos(Conversacion.Interlocutor.NOTAS)).is_equal(antes + 1)
+	assert_bool(sistema.bandeja().mensajes_de(Conversacion.Interlocutor.NOTAS).has(nota)).is_true()
+
+
 func test_modo_fijo_y_foto_publican_los_datos_y_un_solo_cierre() -> void:  # AC-INV-031, AC-INV-032
 	var sistema: CelularDelEmpleado = auto_free(CelularDelEmpleado.new())
 	var foto := Mensaje.new()
@@ -218,3 +242,18 @@ func test_esc_con_el_celular_fijo_no_emite_nada() -> void:  # AC-INV-072
 	assert_bool(sistema.pedir_esc()).is_false()
 	assert_array(cierres).is_empty()
 	assert_bool(sistema.celular().abierto()).is_true()
+
+
+func test_el_primer_mensaje_que_llega_al_fijo_es_el_primero_nuevo() -> void:  # AC-INV-163
+	var sistema: CelularDelEmpleado = auto_free(CelularDelEmpleado.new())
+	sistema.abrir_jornada(1)
+	sistema.mostrar_fijo(Conversacion.Interlocutor.JEFE)
+	var antes := sistema.bandeja().mensajes_de(Conversacion.Interlocutor.JEFE).size()
+	var apuntados: Array[int] = []
+	sistema.mensaje_recibido.connect(
+		func(_quien: Conversacion.Interlocutor, _mensaje: Mensaje) -> void:
+			apuntados.append(sistema.celular().primer_nuevo())
+	)
+	sistema.recibir(Conversacion.Interlocutor.JEFE, Mensaje.new())
+	sistema.recibir(Conversacion.Interlocutor.JEFE, Mensaje.new())
+	assert_array(apuntados).is_equal([antes, antes])
