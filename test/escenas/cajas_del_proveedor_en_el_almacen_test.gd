@@ -5,6 +5,7 @@ extends GdUnitTestSuite
 
 const ALMACEN := preload("res://src/escenas/almacen.tscn")
 const CajaDeProductosDelDeposito := preload("res://src/escenas/objetos/caja_de_productos.gd")
+const ReglasDelCierre := preload("res://src/dominio/almacen/reglas_del_cierre.gd")
 
 const CAJAS: Array[StringName] = [
 	SubtitulosAlExaminar.CAJA_DEL_PROVEEDOR, SubtitulosAlExaminar.CAJA_DE_MADERA
@@ -115,7 +116,7 @@ func test_no_son_cajas_del_deposito() -> void:  # AC-SHF-101
 	var almacen := await _almacen(_ultima())
 	var de_productos: Array = almacen.get("_cajas_de_productos")
 	assert_array(de_productos).is_not_empty()
-	for caja: StaticBody3D in _cajas(almacen).values():
+	for caja: Node3D in _cajas(almacen).values():
 		assert_bool(caja is CajaDeProductosDelDeposito).is_false()
 		assert_bool(caja in de_productos).is_false()
 	var cajas_del_cierre := 0
