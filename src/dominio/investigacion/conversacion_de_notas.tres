@@ -6,4 +6,4 @@
 script = ExtResource("conversacion")
 interlocutor = 4
 nombre = "Notas"
-jornada_de_menu = 5
+jornada_de_menu = 4
