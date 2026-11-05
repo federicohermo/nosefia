@@ -20,6 +20,7 @@ func test_registrar_7b_no_publica_pista_nueva_ni_notas() -> void:  # AC-INV-179
 	var expediente := _por_la_5a()
 	var investigador: Investigador = auto_free(Investigador.new())
 	investigador.usar(expediente)
+	var al_empezar := expediente.mensajes_de_notas().size()
 	var nuevas: Array[Pista] = []
 	var notas: Array[Mensaje] = []
 	investigador.pista_nueva.connect(func(pista: Pista) -> void: nuevas.append(pista))
@@ -38,7 +39,7 @@ func test_registrar_7b_no_publica_pista_nueva_ni_notas() -> void:  # AC-INV-179
 	assert_array(Array(expediente.identidades())).contains(["6B", "7B"])
 	assert_int(nuevas.size()).is_equal(1)
 	# La nota de la hipótesis 6B sale junto con esta pista; la 7B no agrega ninguna propia.
-	assert_int(notas.size()).is_equal(expediente.mensajes_de_notas().size())
+	assert_int(notas.size()).is_equal(expediente.mensajes_de_notas().size() - al_empezar)
 	for nota: Mensaje in notas:
 		assert_str(nota.identidad).not_contains("7B")
 
