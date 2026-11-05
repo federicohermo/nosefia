@@ -522,7 +522,7 @@ func _al_abrir_la_jornada(jornada: int) -> void:
 	for comprador: Comprador in compradores:
 		comprador.pistas_activas = _partida.expediente.pistas_activas(jornada)
 	_cajas_vacias = Apertura.cajas_vacias_de_la_jornada(jornada, compradores, _partida.semilla)
-	_pedido = PedidoAlProveedor.new(jornada)
+	_pedido = PedidoAlProveedor.new(jornada, _partida.expediente.pistas_activas(jornada))
 	_pantalla_del_celular.pedido = _pedido
 	_reposicion_manual.limpiar()
 	_reposicion_manual.seleccionar_disposicion(jornada)
