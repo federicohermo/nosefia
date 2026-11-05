@@ -31,14 +31,16 @@ func test_registrar_7b_no_publica_pista_nueva_ni_notas() -> void:  # AC-INV-179
 	assert_int(nuevas.size()).is_equal(1)
 	assert_int(notas.size()).is_equal(2)
 	expediente.elegir(JORNADA_6, "6B")
-	var notas_antes := notas.size()
 	var con_la_palanca := investigador.pedir_pista(
 		Partida.PALANCA, Pista.Canal.ACCION, JORNADA_7, true
 	)
 	assert_int(con_la_palanca).is_equal(Expediente.Resultado.ANOTADA)
 	assert_array(Array(expediente.identidades())).contains(["6B", "7B"])
 	assert_int(nuevas.size()).is_equal(1)
-	assert_int(notas.size()).is_equal(notas_antes)
+	# La nota de la hipótesis 6B sale junto con esta pista; la 7B no agrega ninguna propia.
+	assert_int(notas.size()).is_equal(expediente.mensajes_de_notas().size())
+	for nota: Mensaje in notas:
+		assert_str(nota.identidad).not_contains("7B")
 
 
 func test_una_pista_de_accion_pedida_sin_permiso_no_registra() -> void:  # AC-INV-179
