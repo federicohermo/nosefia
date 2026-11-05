@@ -54,9 +54,23 @@ func test_el_pedido_y_los_nombres_destacados_salen_de_la_ficha() -> void:  # AC-
 		tin.avanzar()
 	assert_bool(tin.terminado()).is_true()
 	_resaltados(entradas, compradores[0].pedido().productos().size())
+	assert_array(_en_amarillo(entradas)).is_equal(_nombres(compradores[0].pedido()))
+
+
+func test_tia_pide_en_silencio_y_nombra_un_producto_por_entrada() -> void:  # AC-CTR-036
+	var pedido := Compradores.de_la_jornada(ReglasDeLaPartida.PRIMERA_JORNADA)[1].pedido()
+	var nombres := _nombres(pedido)
 	var tia: Dialogo = TEXTOS.inicial(DialogosDeCompradores.Personaje.TIA)
-	_resaltados(tia.entrada_actual(), compradores[1].pedido().productos().size())
-	tia.avanzar()
+	var silencio := RegEx.create_from_string("^[….]+$")
+	for _entrada in 2:
+		assert_object(silencio.search(tia.entrada_actual())).is_not_null()
+		assert_array(_en_amarillo(tia.entrada_actual())).is_empty()
+		tia.avanzar()
+	for indice in nombres.size():
+		assert_bool(tia.terminado()).is_false()
+		_resaltados(tia.entrada_actual(), 1)
+		assert_array(_en_amarillo(tia.entrada_actual())).is_equal([nombres[indice]])
+		tia.avanzar()
 	assert_bool(tia.terminado()).is_true()
 
 
@@ -104,14 +118,16 @@ func test_el_recordatorio_y_el_rechazo_nombran_lo_que_falta() -> void:  # AC-CTR
 	)
 
 
-func test_las_despedidas_y_tin_conservan_sus_entradas() -> void:  # AC-CTR-036 AC-CTR-039
+func test_las_despedidas_de_tin_y_tia_son_una_sola_entrada() -> void:  # AC-CTR-036 AC-CTR-039
 	assert_int(TEXTOS.tin.size()).is_equal(3)
-	assert_int(TEXTOS.despedida_tin.size()).is_equal(1)
-	var dialogo: Dialogo = TEXTOS.despedida(DialogosDeCompradores.Personaje.TIA)
-	for _entrada in 4:
+	for personaje: int in [
+		DialogosDeCompradores.Personaje.TIN, DialogosDeCompradores.Personaje.TIA
+	]:
+		var dialogo: Dialogo = TEXTOS.despedida(personaje)
 		assert_bool(dialogo.terminado()).is_false()
+		assert_str(dialogo.entrada_actual()).not_contains("\n").not_contains("[i]")
 		dialogo.avanzar()
-	assert_bool(dialogo.terminado()).is_true()
+		assert_bool(dialogo.terminado()).is_true()
 
 
 func test_con_una_unidad_solo_el_nombre_va_en_amarillo() -> void:  # AC-CTR-133

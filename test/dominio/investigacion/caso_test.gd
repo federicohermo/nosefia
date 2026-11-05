@@ -300,8 +300,11 @@ func test_6c_no_cambia_lo_anterior_y_5b_abre_su_camino() -> void:  # AC-INV-123
 
 func test_la_hipotesis_6c_depende_de_la_pista_6c() -> void:  # AC-INV-124
 	var caso := CasoDeInvestigacion.de_la_partida()
-	assert_array(caso.hipotesis_para(JORNADA_6, PackedStringArray())).is_empty()
-	assert_array(caso.hipotesis_para(JORNADA_6, PackedStringArray(["2A", "5B"]))).is_empty()
+	assert_array(_identidades(caso.hipotesis_para(JORNADA_6, PackedStringArray()))).is_equal(["6P"])
+	(
+		assert_array(_identidades(caso.hipotesis_para(JORNADA_6, PackedStringArray(["2A", "5B"]))))
+		. is_equal(["6L"])
+	)
 	(
 		assert_array(
 			_identidades(caso.hipotesis_para(JORNADA_6, PackedStringArray(["2A", "5B", "6C"])))

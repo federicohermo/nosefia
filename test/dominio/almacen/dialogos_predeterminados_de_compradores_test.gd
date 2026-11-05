@@ -110,9 +110,11 @@ func test_repetir_la_entrega_no_vende_ni_retira_otra_vez() -> void:  # AC-CTR-07
 	assert_bool(atencion.vendida()).is_true()
 
 
-func test_la_apertura_de_las_jornadas_3_a_5_es_la_predeterminada() -> void:  # AC-CTR-070
-	for jornada in range(TERCERA, QUINTA + 1):
-		for comprador in Compradores.de_la_jornada(jornada, 3):
+func test_la_apertura_de_quien_no_tiene_guion_propio_es_la_predeterminada() -> void:  # AC-CTR-070
+	for caso: Array in [[TERCERA + 1, "Fede"], [QUINTA, "Mía"]]:
+		for comprador in Compradores.de_la_jornada(caso[0], 3):
+			if comprador.nombre() != caso[1]:
+				continue
 			var atencion := Atencion.new(comprador, _inventario())
 			atencion.interactuar(null)
 			assert_str(atencion.dialogo().entrada_actual()).starts_with("Buenas noches. Quiero ")

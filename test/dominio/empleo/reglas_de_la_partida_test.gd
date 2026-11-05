@@ -35,7 +35,7 @@ func test_lo_atado_a_un_numero_de_jornada_se_cuenta_desde_la_primera_completa() 
 	assert_int(GeneradorDeTickets.JORNADA_SIN_LECTOR).is_equal(completa + 2)
 	assert_int(ReflexionDeCierre.JORNADA_DE_LOS_TEXTOS).is_equal(completa)
 	assert_array(ReflexionDeCierre.ENCABEZADOS.keys()).contains_exactly(
-		[completa, completa + 1, completa + 2]
+		[completa, completa + 1, completa + 2, completa + 3]
 	)
 	assert_array(Apertura.PARTICULARES.keys()).contains_exactly(
 		[completa, completa + 1, completa + 2]

@@ -214,7 +214,9 @@ func _restaurar_la_investigacion(saneado: Dictionary) -> void:
 		if dato is String:
 			identidades.append(dato)
 	_expediente.restaurar(
-		identidades, saneado[PartidaSerializada.clave(PartidaSerializada.Campo.ELECCIONES)]
+		identidades,
+		saneado[PartidaSerializada.clave(PartidaSerializada.Campo.ELECCIONES)],
+		saneado[PartidaSerializada.clave(PartidaSerializada.Campo.SORTEOS)]
 	)
 	_expediente.fijar_horas(horas)
 	var pendiente: int = saneado[PartidaSerializada.clave(
@@ -346,6 +348,7 @@ func abrir_la_jornada() -> Turno:
 	vencido_en_el_local = false
 	vencido_afuera = false
 	_obligatorias = Apertura.obligatorias(_jornada)
+	_expediente.sortear_camino(_jornada, _azar_del_camino())
 	_jornada_abierta = true
 	return Apertura.turno_de_la_jornada(_obligatorias)
 
@@ -400,6 +403,13 @@ func cerrar_la_jornada(
 	)
 	# Después de anotar la noche: la devolución lee las cuentas que ya la incluyen.
 	_devoluciones.append_array(DevolucionDelJefe.new(cerrada, self).mensajes_fechados())
+
+
+## El azar de esta jornada sale de la semilla de la partida: con la misma, sale el mismo camino.
+func _azar_del_camino() -> RandomNumberGenerator:
+	var azar := RandomNumberGenerator.new()
+	azar.seed = hash([_semilla, _jornada])
+	return azar
 
 
 func _despedido_al_cerrar(cerrada: int) -> bool:

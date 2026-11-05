@@ -50,3 +50,39 @@ Los colores salen de una paleta de 16 px, con un color por celda. Su textura no 
 la del frente del lector: así los dos materiales comparten el programa del shader, y la jornada 6
 no compila uno nuevo en la web. El hueco es redondo, como la base del lector, y su forma de
 choque es un cilindro del mismo radio, en `lector.tscn`. `importar_caja.gd` guarda sólo la malla.
+
+## El router del wifi
+
+Sale de `modelossupermercado`, revisión `4eb137ae44684b0e23ca509a611dc2d660afee53`, archivo
+`assets/source/SEPT_JUEGOS_PROTOTIPO.blend` (blob `abcf9bb192ad765c57b666a89cf32bd78119a410`). Son
+cinco objetos del artista: `router-col`, `antenas-col`, `luces_botones-col`, `patasrouter-col` y
+`powerrouter_col`. El cuerpo, las antenas y las luces comparten un solo atlas pixelado; las patas
+y el botón de encendido llevan un color.
+
+Las tres imágenes del atlas son las del artista, una por estado, en `assets/models/router/`:
+
+| Estado | Archivo | Origen en la rama (blob) |
+|---|---|---|
+| Con wifi: luces verdes | `router_prendido.png` | `router estilo.png` (`67315810`) |
+| Apagado o sin energía: luces apagadas | `router_apagado.png` | `router apagado.png` (`fa4d0c8c`) |
+| Descompuesto con luz: luces rojas | `router_descompuesto.png` | `router luz roja (sin señal).png` (`3caf6246`) |
+
+`textura router`, la versión sin pixelar, no se usa. Las imágenes conservan su tamaño: el atlas
+tiene píxeles de 6 px y reducirlo los deforma.
+
+`router.blend` deja sólo esos cinco objetos, con el atlas empaquetado. Se arma desde el `.blend`
+del artista en esa revisión, y se exporta con Blender 5.2:
+
+```powershell
+blender SEPT_JUEGOS_PROTOTIPO.blend --background --python-exit-code 1 --python .claude/scripts/blender/extraer_router.py -- assets/source/puestos/router.blend
+blender assets/source/puestos/router.blend --background --python-exit-code 1 --python .claude/scripts/blender/exportar_router.py -- assets/models
+```
+
+La exportación une las cinco piezas en una sola malla con un material por pieza, con la misma
+correspondencia que la caja registradora. El GLB no lleva imágenes: el estado del router cambia la
+textura de los tres materiales con luces (`router_cuerpo`, `router_antenas` y `router_luces`) y no
+la malla. `importar_caja.gd` guarda `router.res` y su colisión convexa al importar.
+
+El router va donde lo dejó el artista, sobre el escritorio, con la correspondencia de la caja
+registradora y el corrimiento del escritorio vigente: la computadora y el teclado están
+`(0.25, 0.2269, 0)` más allá que en la fuente. El cuerpo queda en `(1.4774, 1.2071, 5.0256)`.
