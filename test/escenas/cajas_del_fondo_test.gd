@@ -5,6 +5,7 @@ extends GdUnitTestSuite
 const AvanceDeDevolucion := preload("res://test/avance_de_devolucion.gd")
 const ReglasDelCierre := preload("res://src/dominio/almacen/reglas_del_cierre.gd")
 const RelojDePrueba := preload("res://test/reloj_de_prueba.gd")
+const Habitaciones := preload("res://src/escenas/puestos/habitaciones_del_almacen.gd")
 const ALMACEN := preload("res://src/escenas/almacen.tscn")
 const Caja := preload("res://src/escenas/objetos/caja_de_productos.gd")
 const COMPLETA := ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA
@@ -106,7 +107,7 @@ func test_la_pila_no_toca_estanterias_ni_otras_cajas_ni_tapa_el_paso() -> void: 
 ## entrada del depósito: la pila ni la pisa ni la tapa.
 func test_la_pila_no_pisa_ni_tapa_la_palanca_desde_la_entrada() -> void:  # AC-STK-130
 	var local := await _abrir(ReglasDeLaPartida.JORNADAS_DE_LA_PARTIDA)
-	var lector: Habitaciones = local.get("_habitaciones")
+	var lector := local.get("_habitaciones") as Habitaciones
 	var forma: CollisionShape3D = local.get_node("Objetos/Palanca/Forma")
 	var palanca := forma.global_transform * LimitesDeForma.de(forma.shape)
 	var entrada := lector.to_global(lector.deposito[2].get_center())

@@ -37,32 +37,28 @@ func disponer(
 	return pallets
 
 
-## Dos pallets contra la pared del fondo, hacia la esquina del cuartito pero con paso hasta su
-## puerta. Salen de las medidas del piso y no de coordenadas copiadas. El pallet que caería sobre
-## `libre` se corre hacia la izquierda y lo deja pasar.
+## Dos pallets contra la pared del fondo: uno hacia la esquina del cuartito, con paso hasta su
+## puerta, y el otro del otro lado de la estantería del fondo. Salen de las medidas del piso y no de
+## coordenadas copiadas. Entre los dos queda el piso de la pared, con la palanca y una mancha.
 func disponer_contra_el_fondo(
-	plantilla: MeshInstance3D, piso: CollisionShape3D, libre: AABB
+	plantilla: MeshInstance3D, piso: CollisionShape3D, estanteria: AABB
 ) -> Array[MeshInstance3D]:
 	var madera := plantilla.get_aabb()
 	var forma := piso.shape as BoxShape3D
 	var limites := piso.global_transform * AABB(-forma.size / 2.0, forma.size)
 	var largo := madera.size.x * ESCALA
 	var ancho := madera.size.z * ESCALA
+	var derechas: Array[float] = [
+		limites.end.x - PASO_AL_CUARTITO, estanteria.position.x - SEPARACION_CON_LA_ESTANTERIA
+	]
 	var pallets: Array[MeshInstance3D] = []
-	var derecha := limites.end.x - PASO_AL_CUARTITO
 	for lugar: int in GIROS_DEL_FONDO.size():
-		if (
-			derecha > libre.position.x - HOLGURA_CON_LA_PARED
-			and derecha - largo < libre.end.x + HOLGURA_CON_LA_PARED
-		):
-			derecha = libre.position.x - HOLGURA_CON_LA_PARED
 		var centro := Vector3(
-			derecha - largo / 2.0,
+			derechas[lugar] - largo / 2.0,
 			limites.end.y,
 			limites.position.z + HOLGURA_CON_LA_PARED + ancho / 2.0
 		)
 		pallets.append(_crear(plantilla, centro, ESCALA, GIROS_DEL_FONDO[lugar]))
-		derecha -= largo + SEPARACION_DEL_FONDO
 	return pallets
 
 
