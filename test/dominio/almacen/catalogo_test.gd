@@ -145,7 +145,9 @@ func test_hay_exactamente_una_fila_por_cada_valor_del_enum() -> void:  # AC-STK-
 
 func test_hay_exactamente_un_producto_por_cada_valor_del_enum() -> void:  # AC-STK-002
 	# El AC que se pone en rojo el día que alguien agregue un producto al enum sin darle fila.
-	assert_array(Catalogo.todos()).has_size(Producto.Id.size())
+	# `todos()` es lo que tiene góndola y venta: los siete que existen sólo como caja no están.
+	assert_array(Catalogo.todos()).has_size(Producto.Id.size() - Catalogo.SOLO_CAJAS.size())
+	assert_array(Catalogo.pedibles()).has_size(Producto.Id.size())
 
 
 func test_el_catalogo_lista_los_productos_en_el_orden_del_enum() -> void:
@@ -154,7 +156,11 @@ func test_el_catalogo_lista_los_productos_en_el_orden_del_enum() -> void:
 	var ids: Array[int] = []
 	for producto in Catalogo.todos():
 		ids.append(producto.id)
-	assert_array(ids).contains_exactly(Producto.Id.values())
+	var esperados: Array[int] = []
+	for id: Producto.Id in Producto.Id.values():
+		if not Catalogo.SOLO_CAJAS.has(id):
+			esperados.append(id)
+	assert_array(ids).contains_exactly(esperados)
 
 
 func test_cada_producto_del_catalogo_esta_completo() -> void:  # AC-STK-002

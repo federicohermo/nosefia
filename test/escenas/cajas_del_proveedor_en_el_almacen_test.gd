@@ -123,7 +123,7 @@ func test_no_son_cajas_del_deposito() -> void:  # AC-SHF-101
 	for estado: ReglasDelCierre.Estado in almacen.call("_estados_del_cierre"):
 		if estado.clase == ReglasDelCierre.Clase.CAJA:
 			cajas_del_cierre += 1
-	assert_int(cajas_del_cierre).is_equal(de_productos.size())
+	assert_int(cajas_del_cierre).is_equal(almacen.call("_todas_las_cajas").size())
 
 
 func test_examinarlas_piensa_su_texto_con_las_manos_vacias() -> void:  # AC-SUB-050

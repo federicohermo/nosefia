@@ -77,6 +77,9 @@ class PresenciaDeCaja:
 @export var _repositor: Repositor
 @export var _estante: EstanteDelLocal
 @export var _cajas_de_productos: Array[Node3D]
+## Las siete que existen sólo como caja (BR-STK-054): van aparte para que ordenar las cajas y
+## las estanterías no las cuenten.
+@export var _cajas_del_fondo: Array[Node3D]
 @export var _jugador: Jugador
 @export var _atenciones: Ventanilla
 @export var _computadora: ComputadoraDeEscritorio
@@ -130,7 +133,13 @@ var _router: RouterDelWifi
 ## porque lo que la escena declara cuelga de la raíz; los servicios se crean en el cableado.
 var _arranque: Transform3D
 var _acomodador: AcomodadorDelDeposito
+var _gestor_del_pedido: GestorDelPedido
+## El pedido al proveedor de la noche y las cajas que abrieron vacías: lo que se pide
+## es lo que la apertura vació.
+var _pedido: PedidoAlProveedor
+var _cajas_vacias: Array[Producto.Id] = []
 var _pallets_de_entrega: Node3D
+var _pallets_del_fondo: Node3D
 var _cajas_del_proveedor: Node3D
 var _presencias_de_las_cajas: Dictionary[Node3D, PresenciaDeCaja] = {}
 
@@ -224,6 +233,9 @@ func _ready() -> void:
 	_acomodador = AcomodadorDelDeposito.new()
 	_acomodador.reloj = _reloj
 	add_child(_acomodador)
+	_gestor_del_pedido = GestorDelPedido.new()
+	_gestor_del_pedido.reloj = _reloj
+	add_child(_gestor_del_pedido)
 	_agarre.objeto_agarrado.connect(_pedir_revision_del_deposito.unbind(1))
 	_agarre.objeto_soltado.connect(_pedir_revision_del_deposito.unbind(1))
 	_agarre.objeto_entregado.connect(_pedir_revision_del_deposito.unbind(1))
@@ -237,10 +249,12 @@ func _ready() -> void:
 	_jugador.objetivo_perdido.connect(_hud.ocultar_foco)
 	for mueble in _muebles_con_contorno:
 		_jugador.ignorar_el_detalle(mueble)
-	# La hora se lee en el local y no en la pantalla: enterarse cuesta caminar hasta el reloj de
-	# mesa, y la noche en que falla, ni caminar alcanza. La jornada se declara antes de arrancar
+	# La hora en vivo se lee en el reloj de pared y en la barra de estado del celular, y no en el
+	# HUD: enterarse cuesta caminar hasta el reloj o abrir el celular. El celular no depende del reloj:
+	# la noche del corte sigue andando con el turno. La jornada se declara antes de arrancar
 	# porque el ciclo abre la primera adentro de `arrancar()`.
 	_reloj.tiempo_consumido.connect(_reloj_de_mesa.mostrar_tiempo)
+	_reloj.tiempo_consumido.connect(_pantalla_del_celular.barra_de_estado().mostrar_tiempo)
 	_reloj.tiempo_consumido.connect(avisos.actualizar_tiempo)
 	_ciclo.jornada_abierta.connect(_reloj_de_mesa.declarar_jornada)
 	_cablear_el_corte_de_luz()
@@ -354,7 +368,7 @@ func _ready() -> void:
 		if "observador" in util.malla:
 			util.malla.set("observador", _jugador)
 	# El motor no despierta lo que está sobre una caja empujada. Lo hace el puesto.
-	for caja: CajaDeProductosDelDeposito in _cajas_de_productos:
+	for caja: CajaDeProductosDelDeposito in _todas_las_cajas():
 		_presencias_de_las_cajas[caja] = PresenciaDeCaja.new(caja)
 		caja.empujada.connect(_reposicion_manual.despertar_lo_de_arriba)
 		caja.sleeping_state_changed.connect(_pedir_revision_del_deposito)
@@ -433,7 +447,7 @@ func _cablear_el_router(corte: CorteDeLuz) -> void:
 
 func _mostrar_el_wifi() -> void:
 	_router.mostrar(_wifi.luces())
-	_pantalla_del_celular.mostrar_el_wifi(_wifi.hay_wifi())
+	_pantalla_del_celular.barra_de_estado().mostrar_el_wifi(_wifi.hay_wifi())
 
 
 func _cablear_las_preferencias(pausa: ControlDePausa) -> void:
@@ -507,6 +521,9 @@ func _al_abrir_la_jornada(jornada: int) -> void:
 	var compradores: Array[Comprador] = compradores_de_la_apertura.call(jornada)
 	for comprador: Comprador in compradores:
 		comprador.pistas_activas = _partida.expediente.pistas_activas(jornada)
+	_cajas_vacias = Apertura.cajas_vacias_de_la_jornada(jornada, compradores, _partida.semilla)
+	_pedido = PedidoAlProveedor.new(jornada)
+	_pantalla_del_celular.pedido = _pedido
 	_reposicion_manual.limpiar()
 	_reposicion_manual.seleccionar_disposicion(jornada)
 	mostrar_las_bandejas(get_node("Estructura"), _reposicion_manual.es_de_prueba())
@@ -517,10 +534,14 @@ func _al_abrir_la_jornada(jornada: int) -> void:
 		compradores,
 		_reposicion_manual.tandas(),
 		azar_de_la_apertura,
-		_reposicion_manual.posiciones()
+		_reposicion_manual.posiciones(),
+		_cajas_vacias
 	)
 	var inventario := Apertura.inventario_con_faltantes(
-		Apertura.faltantes_de(vacios), _reposicion_manual.casilleros(), productos
+		Apertura.faltantes_de(vacios),
+		_reposicion_manual.casilleros(),
+		Catalogo.con_caja_de_la_jornada(jornada),
+		_cajas_vacias
 	)
 	_repositor.arrancar(
 		Estante.new(
@@ -582,10 +603,11 @@ func _al_abrir_la_jornada(jornada: int) -> void:
 	var fijas: Dictionary[Producto.Id, Transform3D] = {}
 	for caja: CajaDeProductosDelDeposito in poses:
 		fijas[caja.producto] = poses[caja]
+	fijas.merge(_pila_de_las_cajas_del_fondo(jornada))
 	var organizadas := OrganizacionDelDeposito.abrir(
 		_cajas_del_deposito(inventario), _partida.poses_de_las_cajas, _repisas_del_deposito(), fijas
 	)
-	for caja: CajaDeProductosDelDeposito in _cajas_de_productos:
+	for caja: CajaDeProductosDelDeposito in _todas_las_cajas():
 		caja.declarar_origen(organizadas[caja.producto])
 		caja.volver_a_su_lugar()
 		_mostrar_caja(caja, _hay_en_el_deposito(inventario, caja))
@@ -616,13 +638,56 @@ func _al_abrir_la_jornada(jornada: int) -> void:
 	_revisar_la_salida()
 
 
+## Las siete cajas que sólo existen como caja (BR-STK-054) abren cada noche en dos tramos contra el
+## fondo del depósito, sobre dos pallets de piso: cuatro abajo y tres arriba. Con los pallets y las
+## poses a la vista, la apertura las trata como fijas.
+func _pila_de_las_cajas_del_fondo(jornada: int) -> Dictionary[Producto.Id, Transform3D]:
+	var pila: Dictionary[Producto.Id, Transform3D] = {}
+	if is_instance_valid(_pallets_del_fondo):
+		_pallets_del_fondo.queue_free()
+		_pallets_del_fondo = null
+	if jornada < ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA:
+		return pila
+	_pallets_del_fondo = PALLETS_DE_ENTREGA.instantiate()
+	_pallets_del_fondo.name = &"PalletsDelFondo"
+	add_child(_pallets_del_fondo)
+	var pallets: Array[MeshInstance3D] = _pallets_del_fondo.call(
+		"disponer_contra_el_fondo",
+		$Estructura/deposito_pallet_piso,
+		$Estructura/SueloSolido/Fondo,
+		_limites_de(get_node("Estructura/gondola_deposito03_001"))
+	)
+	# Las etiquetas miran hacia el centro del depósito, y la pared del fondo queda a la espalda.
+	var poses := PilaDelDeposito.poses(_cajas_del_fondo, pallets, Vector3.BACK)
+	for caja: CajaDeProductosDelDeposito in poses:
+		pila[caja.producto] = poses[caja]
+	return pila
+
+
+func _limites_de(nodo: Node3D) -> AABB:
+	var total := AABB()
+	var primera := true
+	for malla: MeshInstance3D in nodo.find_children("*", "MeshInstance3D", true, false):
+		var suyos := malla.global_transform * malla.get_aabb()
+		total = suyos if primera else total.merge(suyos)
+		primera = false
+	return total
+
+
+## Las cajas del depósito: las treinta y dos de las estanterías y las siete de los tramos del fondo.
+func _todas_las_cajas() -> Array[Node3D]:
+	return _cajas_de_productos + _cajas_del_fondo
+
+
 func _hay_en_el_deposito(inventario: Inventario, caja: CajaDeProductosDelDeposito) -> bool:
+	if caja.producto in _cajas_vacias:
+		return true
 	return inventario.unidades(Catalogo.de(caja.producto), Inventario.Ubicacion.DEPOSITO) > 0
 
 
 func _cajas_del_deposito(inventario: Inventario) -> Array[OrganizacionDelDeposito.Caja]:
 	var cajas: Array[OrganizacionDelDeposito.Caja] = []
-	for caja: CajaDeProductosDelDeposito in _cajas_de_productos:
+	for caja: CajaDeProductosDelDeposito in _todas_las_cajas():
 		cajas.append(
 			OrganizacionDelDeposito.Caja.new(
 				caja.producto,
@@ -659,7 +724,7 @@ func _repisas_del_deposito() -> Array[AABB]:
 
 func _poses_de_las_cajas() -> Dictionary[Producto.Id, Transform3D]:
 	var poses: Dictionary[Producto.Id, Transform3D] = {}
-	for caja: CajaDeProductosDelDeposito in _cajas_de_productos:
+	for caja: CajaDeProductosDelDeposito in _todas_las_cajas():
 		poses[caja.producto] = caja.global_transform
 	return poses
 
@@ -1012,7 +1077,7 @@ func volver_al_menu() -> void:
 
 func _estados_del_cierre() -> Array[ReglasDelCierre.Estado]:
 	var candidatos: Array[Node3D] = []
-	candidatos.append_array(_cajas_de_productos)
+	candidatos.append_array(_todas_las_cajas())
 	for util: ObjetoAgarrable in _utiles_de_limpieza:
 		if AnomaliasDeLaJornada.util_disponible(util.datos.id, _limpiador.piso().jornada()):
 			candidatos.append(util)
@@ -1130,6 +1195,9 @@ func _decir_entrega(texto: String) -> void:
 
 
 func _process(delta: float) -> void:
+	if _pedido != null and not get_tree().paused:
+		for respuesta: Mensaje in _pedido.avanzar(delta, _reloj.hora()):
+			_celular.recibir(Conversacion.Interlocutor.PROVEEDOR, respuesta)
 	if _partida.reflexion != null and _partida.reflexion.avanzar(delta):
 		_terminar_la_reflexion()
 	if _devolucion_en_espera != null and not get_tree().paused:
@@ -1178,6 +1246,15 @@ func _vigilar_si_queda_afuera(nodo: Node3D) -> void:
 		_pensar_gesto(SubtitulosDeLosGestos.al_quedar_afuera(datos))
 
 
+## El jugador pulsó «Enviar»: el pedido sale con el wifi de ahora, y la tarea mira el último con
+## wifi. Lo que se pide y cuándo cuenta lo decide `PedidoAlProveedor`.
+func _al_enviar_el_pedido() -> void:
+	var mensaje := _pedido.enviar(_wifi.hay_wifi(), _reloj.hora())
+	if mensaje != null:
+		_celular.recibir(Conversacion.Interlocutor.PROVEEDOR, mensaje)
+		_gestor_del_pedido.revisar(_pedido, _cajas_vacias)
+
+
 func _al_agotar_el_turno(_jornada: int) -> void:
 	_partida.poses_de_las_cajas = _poses_de_las_cajas()
 	var estados := _estados_del_cierre()
@@ -1190,6 +1267,7 @@ func _al_agotar_el_turno(_jornada: int) -> void:
 		estados, _repositor.estante().vencidos.cuantos()
 	)
 	_partida.vencido_afuera = ReglasDelCierre.hay_vencido_afuera(estados)
+	_partida.pedido_equivocado = _pedido != null and _pedido.equivocado(_cajas_vacias)
 	if ReglasDelCierre.hay_heladera_abierta(_puertas_de_las_heladeras()):
 		_partida.anotar_llamado(Partida.Llamado.HELADERAS_ABIERTAS)
 
@@ -1307,6 +1385,7 @@ func _cablear_el_celular() -> void:
 			_al_recibir_en_el_celular(Conversacion.Interlocutor.NOTAS, mensaje)
 	)
 	_pantalla_del_celular.chat_pedido.connect(_celular.pedir_chat)
+	_pantalla_del_celular.envio_del_pedido_pedido.connect(_al_enviar_el_pedido)
 	_pantalla_del_celular.volver_pedido.connect(_celular.pedir_volver)
 	_pantalla_del_celular.foto_pedida.connect(_celular.pedir_foto)
 	_pantalla_del_celular.tramo_pedido.connect(_celular.pedir_tramo)

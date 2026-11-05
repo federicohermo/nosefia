@@ -6,7 +6,7 @@ const ALMACEN := preload("res://src/escenas/almacen.tscn")
 const AperturaConLugar := preload("res://test/escenas/apertura_con_lugar.gd")
 
 ## Piso libre del depósito, lejos de los estantes.
-const PISO_LIBRE_DEL_DEPOSITO := Vector3(4.49, 0.102, -10.0)
+const PISO_LIBRE_DEL_DEPOSITO := Vector3(5.5, 0.102, -11.0)
 
 ## El producto cuya unidad se patea: uno cualquiera con unidades en la góndola.
 const PRODUCTO_QUE_SE_PATEA := Producto.Id.MALBARDO

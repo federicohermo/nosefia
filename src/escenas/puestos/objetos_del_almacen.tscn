@@ -383,6 +383,34 @@ metadata/soporte_del_modelo = "gondola_deposito03_001/deposito_pallet_fondo_1_1"
 metadata/desplazamiento_sobre_tabla = Vector3(0.324,0,0)
 transform = Transform3D(0.0,0.0,-1.0,0.0,1.0,0.0,1.0,0.0,0.0,2.8140000499999998,1.66370769404686,-14.95129715)
 
+[node name="CajaDeSeiTuqui" parent="." instance=ExtResource("11_caja_de_productos")]
+producto = 32
+transform = Transform3D(1.0,0.0,0.0,0.0,1.0,0.0,0.0,0.0,1.0,4.9,0.3,-14.84)
+
+[node name="CajaDeLaMonteloca" parent="." instance=ExtResource("11_caja_de_productos")]
+producto = 33
+transform = Transform3D(1.0,0.0,0.0,0.0,1.0,0.0,0.0,0.0,1.0,5.6000000000000005,0.3,-14.84)
+
+[node name="CajaDeFrigordo" parent="." instance=ExtResource("11_caja_de_productos")]
+producto = 34
+transform = Transform3D(1.0,0.0,0.0,0.0,1.0,0.0,0.0,0.0,1.0,6.300000000000001,0.4037,-14.84)
+
+[node name="CajaDeGringo" parent="." instance=ExtResource("11_caja_de_productos")]
+producto = 35
+transform = Transform3D(1.0,0.0,0.0,0.0,1.0,0.0,0.0,0.0,1.0,7.0,0.4037,-14.84)
+
+[node name="CajaDeMasticul" parent="." instance=ExtResource("11_caja_de_productos")]
+producto = 36
+transform = Transform3D(1.0,0.0,0.0,0.0,1.0,0.0,0.0,0.0,1.0,4.9,0.3,-14.14)
+
+[node name="CajaDeCofloco" parent="." instance=ExtResource("11_caja_de_productos")]
+producto = 37
+transform = Transform3D(1.0,0.0,0.0,0.0,1.0,0.0,0.0,0.0,1.0,5.6000000000000005,0.3,-14.14)
+
+[node name="CajaDeChocolocas" parent="." instance=ExtResource("11_caja_de_productos")]
+producto = 38
+transform = Transform3D(1.0,0.0,0.0,0.0,1.0,0.0,0.0,0.0,1.0,6.300000000000001,0.4037,-14.14)
+
 [node name="Colilla" parent="." instance=ExtResource("colilla")]
 position = Vector3(-3.75, 0.12, -11.20)
 

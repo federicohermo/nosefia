@@ -12,7 +12,7 @@
 [ext_resource type="PackedScene" path="res://src/escenas/puestos/reposicion_manual.tscn" id="reposicion_manual"]
 [ext_resource type="PackedScene" path="res://src/escenas/puestos/exterior_del_almacen.tscn" id="exterior"]
 
-[node name="Almacen" type="Node3D" unique_id=999617316 node_paths=PackedStringArray("_hud", "_reloj", "_ciclo", "_pantalla", "_reloj_de_mesa", "_repositor", "_estante", "_cajas_de_productos", "_jugador", "_atenciones", "_computadora", "_limpiador", "_limpieza", "_recolector", "_audio", "_reposicion_manual", "_agarre", "_bolsas", "_muebles_con_contorno", "_puertas", "_utiles_de_limpieza", "_manija_del_balde", "_tapa_del_contenedor", "_contenedor", "_caja", "_puesto_de_la_caja", "_programa_de_tickets", "_habitaciones")]
+[node name="Almacen" type="Node3D" unique_id=999617316 node_paths=PackedStringArray("_hud", "_reloj", "_ciclo", "_pantalla", "_reloj_de_mesa", "_repositor", "_estante", "_cajas_de_productos", "_cajas_del_fondo", "_jugador", "_atenciones", "_computadora", "_limpiador", "_limpieza", "_recolector", "_audio", "_reposicion_manual", "_agarre", "_bolsas", "_muebles_con_contorno", "_puertas", "_utiles_de_limpieza", "_manija_del_balde", "_tapa_del_contenedor", "_contenedor", "_caja", "_puesto_de_la_caja", "_programa_de_tickets", "_habitaciones")]
 script = ExtResource("4_almacen")
 _hud = NodePath("Interfaz/Hud")
 _reloj = NodePath("Servicios/RelojDelTurno")
@@ -22,6 +22,7 @@ _reloj_de_mesa = NodePath("Estructura/reloj/Hora")
 _repositor = NodePath("Servicios/Repositor")
 _estante = NodePath("Estructura/gondolanueva/StaticBody3D")
 _cajas_de_productos = [NodePath("Objetos/CajaDeActroncito"), NodePath("Objetos/CajaDeDurextra"), NodePath("Objetos/CajaDeBurbaloo"), NodePath("Objetos/CajaDeZucarachas"), NodePath("Objetos/CajaDeLaysntt"), NodePath("Objetos/CajaDeMalbardo"), NodePath("Objetos/CajaDeProngles"), NodePath("Objetos/CajaDeJorgillo"), NodePath("Objetos/CajaDeArvejas"), NodePath("Objetos/CajaDeChisitos"), NodePath("Objetos/CajaDeOremos"), NodePath("Objetos/CajaDePepitos"), NodePath("Objetos/CajaDeSaladik"), NodePath("Objetos/CajaDeUakas"), NodePath("Objetos/CajaDeCoracola"), NodePath("Objetos/CajaDeFrotlups"), NodePath("Objetos/CajaDeMarolini"), NodePath("Objetos/CajaDeAmargadito"), NodePath("Objetos/CajaDeCindolor"), NodePath("Objetos/CajaDeFlinpuf"), NodePath("Objetos/CajaDeDonsaturados"), NodePath("Objetos/CajaDePetisas"), NodePath("Objetos/CajaDeMacumbas"), NodePath("Objetos/CajaDeCosaDeMani"), NodePath("Objetos/CajaDeDuronga"), NodePath("Objetos/CajaDeFernetGod"), NodePath("Objetos/CajaDeMayonchis"), NodePath("Objetos/CajaDeOaaaa"), NodePath("Objetos/CajaDeTerminator"), NodePath("Objetos/CajaDeMarranos"), NodePath("Objetos/CajaDeFeelRickyFort"), NodePath("Objetos/CajaDePoetico")]
+_cajas_del_fondo = [NodePath("Objetos/CajaDeSeiTuqui"), NodePath("Objetos/CajaDeLaMonteloca"), NodePath("Objetos/CajaDeFrigordo"), NodePath("Objetos/CajaDeGringo"), NodePath("Objetos/CajaDeMasticul"), NodePath("Objetos/CajaDeCofloco"), NodePath("Objetos/CajaDeChocolocas")]
 _jugador = NodePath("Jugador")
 _atenciones = NodePath("Servicios/Atenciones")
 _computadora = NodePath("Servicios/Computadora")
