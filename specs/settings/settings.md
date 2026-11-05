@@ -34,13 +34,14 @@ impide jugar.
 
 ## Comportamiento normativo
 
-### BR-CFG-001 — Seis filas, en un orden fijo
+### BR-CFG-001 — Siete filas, en un orden fijo
 
-Configuraciones DEBE mostrar seis filas, en este orden: **efectos, música, brillo,
-sensibilidad, textos y lenguaje**. Las cinco primeras DEBEN ser una barra con un botón − a la
+Configuraciones DEBE mostrar siete filas, en este orden: **efectos, música, brillo,
+sensibilidad, textos, lenguaje y controles**. Las cinco primeras DEBEN ser una barra con un botón − a la
 izquierda y un botón + a la derecha. Lenguaje DEBE mostrar el idioma elegido entre un botón < a
 la izquierda y un botón > a la derecha, que pasan al idioma anterior y al siguiente. Hoy hay un
-solo idioma, «ESPAÑOL», y por eso los dos botones DEBEN estar deshabilitados.
+solo idioma, «ESPAÑOL», y por eso los dos botones DEBEN estar deshabilitados. Controles DEBE
+mostrar un botón «AJUSTAR» (`BR-CFG-015`).
 
 ### BR-CFG-002 — Rango, paso y defecto de cada preferencia
 
@@ -140,8 +141,8 @@ no hay archivo, ENTONCES DEBE usar todos los defectos.
 
 ### BR-CFG-015 — La fila «CONTROLES» abre la pantalla de controles
 
-Configuraciones DEBE mostrar, debajo de lenguaje, la fila «CONTROLES» con un botón «AJUSTAR».
-CUANDO se aprieta, el sistema DEBE abrir la pantalla de controles, que DEBE ser una lista con un
+CUANDO se aprieta el botón «AJUSTAR» de la fila «CONTROLES», que está debajo de lenguaje, el
+sistema DEBE abrir la pantalla de controles, que DEBE ser una lista con un
 renglón por entrada: el nombre de su acción y la tecla o el botón que tiene. CUANDO llega la
 tecla de Pausa, el sistema DEBE cerrar la pantalla de controles y volver a Configuraciones.
 Abierta desde la pausa, el juego DEBE seguir en pausa y el cursor suelto, igual que
@@ -162,7 +163,8 @@ Agarrar / Soltar; el clic derecho en Interactuar; Esc en Pausa.
 CUANDO el jugador elige una entrada de la pantalla de controles y aprieta una tecla o un botón
 del mouse, el sistema DEBE asignársela a esa ranura. Toda acción DEBE aceptar las dos clases:
 un clic se puede pasar a una tecla, y una tecla a un clic. Mover el mouse y la rueda NO DEBEN
-ser entradas aceptadas: apretarlos NO DEBE cambiar nada. EN LA WEB, el sistema NO DEBE aceptar
+ser entradas aceptadas: apretarlos NO DEBE cambiar nada. CUANDO el jugador aprieta la tecla de
+Pausa mientras espera una entrada, el sistema DEBE cancelar la espera sin cambiar nada. EN LA WEB, el sistema NO DEBE aceptar
 Esc en ninguna acción que no sea Pausa: con el cursor tomado el navegador se come Esc y esa
 acción no se podría hacer.
 
@@ -209,7 +211,7 @@ juego, el sistema DEBE aplicarlas antes de que el jugador pueda usar una (`BR-CF
 CUANDO el sistema lee las asignaciones, DEBE cargarlas sobre las ranuras de fábrica y validar el
 conjunto resultante. SI una asignación es ilegible, o es de una acción o una ranura que no
 existe, ENTONCES DEBE ignorarla y esa ranura DEBE volver a su entrada de fábrica. SI el conjunto
-resultante deja una entrada en dos ranuras, o una entrada que la ranura no acepta, ENTONCES el
+resultante deja una entrada en dos ranuras, ENTONCES el
 sistema DEBE descartar el bloque de controles completo y restaurar el esquema de fábrica. NO
 DEBE aplicar nunca un esquema parcial con entradas repetidas o con una acción sin entrada. Las
 demás preferencias del archivo DEBEN conservarse (`BR-CFG-014`).
@@ -223,11 +225,12 @@ ahora.
 
 ## Criterios de aceptación
 
-### AC-CFG-001 — Las seis filas *(verifica BR-CFG-001)*
+### AC-CFG-001 — Las siete filas *(verifica BR-CFG-001)*
 
-DADO Configuraciones abierta ENTONCES muestra efectos, música, brillo, sensibilidad, textos y
-lenguaje, en ese orden; cada una de las cinco primeras tiene un − a la izquierda de su barra y un
-+ a la derecha; lenguaje muestra «ESPAÑOL» entre un < y un >, y los dos están deshabilitados.
+DADO Configuraciones abierta ENTONCES muestra efectos, música, brillo, sensibilidad, textos,
+lenguaje y controles, en ese orden; cada una de las cinco primeras tiene un − a la izquierda de su barra y un
++ a la derecha; lenguaje muestra «ESPAÑOL» entre un < y un >, y los dos están deshabilitados; controles muestra
+un botón «AJUSTAR».
 
 ### AC-CFG-002 — La tabla de valores *(verifica BR-CFG-002)*
 
@@ -346,7 +349,8 @@ entradas de cada acción en el motor son esas.
 
 DADO Agarrar / Soltar en el clic izquierdo CUANDO se elige y se aprieta F ENTONCES queda en F;
 DADO Examinar en E CUANDO se elige y se aprieta el clic central ENTONCES queda en el clic
-central. DADO Examinar elegida CUANDO se mueve el mouse o se gira la rueda ENTONCES sigue en E.
+central. DADO Examinar elegida CUANDO se mueve el mouse o se gira la rueda ENTONCES sigue en E y espera
+otra entrada; CUANDO llega la tecla de Pausa ENTONCES la espera se cancela y sigue en E.
 DADO la web CUANDO se elige Examinar y se aprieta Esc ENTONCES sigue en E; DADO la web CUANDO se
 elige Pausa y se aprieta Esc ENTONCES sigue en Esc. DADO el juego de escritorio CUANDO se asigna
 Esc a Examinar ENTONCES queda en Esc, y Pausa recibe E.
