@@ -16,6 +16,7 @@ const RelojDeMesaDelLocal := preload("res://src/escenas/puestos/reloj_de_mesa.gd
 const CorteDeLuz := preload("res://src/escenas/puestos/corte_de_luz.gd")
 const EscritorioDelLocal := preload("res://src/escenas/puestos/escritorio.gd")
 const TableroElectrico := preload("res://src/escenas/puestos/tablero_electrico.gd")
+const RouterDelWifi := preload("res://src/escenas/puestos/router_del_wifi.gd")
 
 ## Los scripts de `escenas/` se preloadean por el mismo motivo que el del reloj de mesa:
 ## son cáscara y no declaran `class_name`, así que sin esto el tipo estático del `@export` sería
@@ -117,6 +118,8 @@ var _partida := Partida.desde(Guardado.new().cargar())
 ## transición que los preparó.
 var _jornada_preparada := 0
 var _corte: CorteDeLuz
+var _wifi := WifiDelLocal.new()
+var _router: RouterDelWifi
 
 ## Donde el jugador arranca cada noche: el lugar del nodo `Jugador` en la escena, leído antes de
 ## la primera apertura. Es geometría de la escena y no un número del dominio. No es un nodo propio
@@ -391,6 +394,28 @@ func _cablear_el_corte_de_luz() -> void:
 				escritorio.cerrar()
 				_puesto_de_la_caja.cerrar()
 	)
+	_cablear_el_router(corte)
+
+
+## El router sigue al corte, y el clic lo apaga o lo prende. Qué estado tiene y qué piensa el
+## protagonista lo decide el dominio; acá se lo cuenta al router y al celular. Abrir la jornada va
+## después de que el corte abre la suya, para que el wifi parta siempre de «con wifi».
+func _cablear_el_router(corte: CorteDeLuz) -> void:
+	_router = $Estructura/Router
+	corte.luz_cambiada.connect(func(_hay_luz: bool) -> void: _wifi.seguir_al_corte(corte.estado()))
+	_ciclo.jornada_abierta.connect(func(_jornada: int) -> void: _wifi.abrir_jornada())
+	_wifi.estado_cambiado.connect(func(_estado: WifiDelLocal.Estado) -> void: _mostrar_el_wifi())
+	_router.accionado.connect(
+		func() -> void:
+			_pensar_gesto(SubtitulosDeLosGestos.al_usar_el_router(corte.estado(), _wifi.estado()))
+			_wifi.accionar()
+	)
+	_mostrar_el_wifi()
+
+
+func _mostrar_el_wifi() -> void:
+	_router.mostrar(_wifi.luces())
+	_pantalla_del_celular.mostrar_el_wifi(_wifi.hay_wifi())
 
 
 func _cablear_las_preferencias(pausa: ControlDePausa) -> void:

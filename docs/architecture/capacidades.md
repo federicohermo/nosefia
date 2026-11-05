@@ -149,6 +149,9 @@ Estos pares se confunden seguido, y cada uno tiene su regla escrita en los dos s
 - **`anomalies` y `store-stock`.** La última noche la anomalía permuta qué producto trae cada
   caja del depósito. La mercadería decide cuánto entra, sale y se vende, sobre ese contenido real
   y sin crear identidades nuevas.
+- **`anomalies`, `subtitles` e `investigation`.** El corte de luz de la sexta noche deja el
+  router sin wifi, y apagarlo y prenderlo lo devuelve. La anomalía decide ese estado; subtítulos
+  decide qué piensa el protagonista al hacerle clic, y el celular dibuja su ícono de wifi con él.
 - **`employment-record` e `investigation`.** Cada partida posee un único expediente y sus notas.
   Investigación recibe ese estado, registra pistas y consulta hipótesis, sin escribir disco.
   Las revelaciones por examen conservan su cuenta independiente de las pistas por jornada.

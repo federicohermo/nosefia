@@ -169,10 +169,11 @@ func test_el_despido_gana_sobre_la_reflexion() -> void:  # AC-SAV-032, AC-INV-05
 	assert_int(PoliticaDeGuardado.accion(despedida)).is_equal(PoliticaDeGuardado.Accion.BORRAR)
 
 
-func test_solo_de_la_tercera_a_la_quinta_dejan_reflexion() -> void:  # AC-INV-058
+func test_solo_de_la_tercera_a_la_sexta_dejan_reflexion() -> void:  # AC-INV-058
 	assert_object(_cerrada(1, 0, []).reflexion).is_null()
 	assert_object(_cerrada(2, 0, []).reflexion).is_null()
 	assert_object(_cerrada(3, 0, []).reflexion).is_not_null()
 	assert_object(_cerrada(4, 0, []).reflexion).is_not_null()
 	assert_object(_cerrada(5, 0, []).reflexion).is_not_null()
-	assert_object(_cerrada(6, 0, []).reflexion).is_null()
+	assert_object(_cerrada(6, 0, []).reflexion).is_not_null()
+	assert_object(_cerrada(7, 0, []).reflexion).is_null()

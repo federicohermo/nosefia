@@ -3,7 +3,7 @@ schema_version: 1
 capability_id: CAP-ANO
 status: ratified
 owner: game design
-provenance: ficha «11. Anomalías», «9. Tarea Limpieza», fichas Poético y bidón azul; decisiones de #432, 15 de octubre de 2026; ocho jornadas de #526; siete jornadas de #693; corte de luz de #454; decisiones de #455
+provenance: ficha «11. Anomalías», «9. Tarea Limpieza», fichas Poético y bidón azul; decisiones de #432, 15 de octubre de 2026; ocho jornadas de #526; siete jornadas de #693; corte de luz de #454; decisiones de #455; router del wifi de #690, fichas «Wifi y router» y «Formas de interacción con objetos» leídas el 2026-11-04
 ---
 
 # Capacidad: las anomalías de la jornada
@@ -12,7 +12,8 @@ provenance: ficha «11. Anomalías», «9. Tarea Limpieza», fichas Poético y b
 
 Alterar las condiciones de una tarea rutinaria según la jornada. La cuarta noche exige buscar
 un sustituto vendible del jabón que falta, conservando las reglas de preparación y limpieza. La
-sexta noche corta la luz a las 20:58 y deja el reloj de pared detenido hasta el cierre. La
+sexta noche corta la luz a las 20:58, deja el reloj de pared detenido hasta el cierre y
+descompone el router del wifi, que el jugador arregla apagándolo y prendiéndolo. La
 última noche cambia qué trae cada caja del depósito, sin cambiar qué productos existen.
 
 ## Lenguaje de la capacidad
@@ -29,6 +30,9 @@ sexta noche corta la luz a las 20:58 y deja el reloj de pared detenido hasta el 
 | **Corte** | estado de la sexta noche: sin corte, cortado o restaurado | apagón aleatorio |
 | **Panel eléctrico** | el tablero de electricidad del depósito, que se acciona con un clic | fusible, llave |
 | **Luz de emergencia** | la única luz que queda encendida sobre el panel durante el corte | linterna |
+| **Router** | el objeto fijo junto a la computadora que da el wifi del local; no se levanta | módem |
+| **Wifi** | estado del router: con wifi, sin energía, apagado o descompuesto | conexión, internet |
+| **Luces del router** | verdes con wifi; rojas descompuesto con luz; apagadas sin energía o apagado | led |
 
 ## Comportamiento normativo
 
@@ -114,6 +118,41 @@ reloj normal desde las 20:00. Pausar y reanudar DEBE conservar el estado y NO DE
 El corte NO DEBE escribir ni cargar guardado alguno: abandonar la jornada 6 al menú y continuar
 la abre desde su apertura, según BR-SAV-015 y BR-SAV-018 de
 [`save-and-resume`](../save-and-resume/save-and-resume.md).
+
+### BR-ANO-015 — El corte descompone el router y la luz no lo arregla
+
+El wifi DEBE seguir al corte de BR-ANO-011. Sin corte, el router DEBE estar con wifi y sus luces
+verdes. CUANDO el corte pasa a cortado, el router DEBE quedar sin energía: sin wifi y con las luces
+apagadas. CUANDO el corte pasa a restaurado, el router DEBE quedar descompuesto: sin wifi y con las
+luces rojas. Restablecer la luz NO DEBE devolver el wifi. Las demás jornadas NO DEBEN quitar el
+wifi en ningún momento de la noche.
+
+### BR-ANO-016 — Apagar y prender el router devuelve el wifi
+
+CUANDO el jugador hace clic izquierdo sobre el router descompuesto, el sistema DEBE apagarlo: sin
+wifi y con las luces apagadas. CUANDO hace clic izquierdo sobre el router apagado, el sistema DEBE
+prenderlo: con wifi y con las luces verdes. El router apagado NO DEBE volver solo: sin un segundo
+clic sigue sin wifi. Prenderlo es la única manera de recuperar el wifi después del corte.
+
+### BR-ANO-017 — Los demás clics sobre el router no lo cambian
+
+Un clic izquierdo sobre el router NO DEBE cambiar su estado en cualquiera de estos casos: con el
+corte cortado, con el corte sin corte —antes de las 20:58 de la jornada 6 o en cualquier otra
+jornada— y con el wifi ya devuelto después del corte. En cada uno el sistema DEBE avisarlo como
+pide [`subtitles`](../subtitles/subtitles.md).
+
+### BR-ANO-018 — El wifi vive sólo en la jornada en memoria
+
+CUANDO se abre cualquier jornada, por cualquier camino, el sistema DEBE dejar el router con wifi,
+como en BR-ANO-014. Pausar y reanudar DEBE conservar el estado y NO DEBE consumir turno. El wifi
+NO DEBE escribir ni cargar guardado alguno.
+
+### BR-ANO-019 — El ícono de wifi del celular sigue al wifi
+
+MIENTRAS no hay wifi —router sin energía, apagado o descompuesto—, el ícono de wifi de la barra
+de estado del celular DEBE ser el de sin conexión: tachado y en rojo. CUANDO hay wifi, la barra
+NO DEBE mostrar ese ícono, y CUANDO vuelve el wifi, DEBE quitarlo. El ícono NO DEBE cambiar ni el
+chat ni el reloj del celular.
 
 ## Criterios de aceptación
 
@@ -223,6 +262,43 @@ turno no descuenta durante la pausa. CUANDO se abandona al menú y se continúa 
 intermedio. Abrir la jornada 6 desde el guardado del cierre de la jornada 5 deja el corte sin
 corte.
 
+### AC-ANO-021 — El router sigue al corte *(verifica BR-ANO-015)*
+
+DADO la jornada 6 CUANDO el corte es sin corte ENTONCES el router tiene wifi y las luces verdes;
+cortado, sin wifi y las luces apagadas; restaurado, sin wifi y las luces rojas. DADO el corte
+restaurado CUANDO pasan 2 horas y la noche entera ENTONCES sigue sin wifi y con las luces rojas.
+DADA cada jornada de 1 a 5 y la 7 CUANDO han transcurrido 58 minutos, 2 horas y la noche entera
+ENTONCES el router tiene wifi y las luces verdes.
+
+### AC-ANO-022 — Apagar y prender devuelve el wifi *(verifica BR-ANO-016)*
+
+DADO el router descompuesto CUANDO se hace clic izquierdo ENTONCES queda apagado: sin wifi y con
+las luces apagadas. CUANDO pasan 2 horas sin otro clic ENTONCES sigue apagado y sin wifi. CUANDO se
+hace un segundo clic ENTONCES queda con wifi y las luces verdes.
+
+### AC-ANO-023 — Los demás clics no lo cambian *(verifica BR-ANO-017, BR-ANO-016)*
+
+DADA cada jornada de 1 a 5 y la 7, y la jornada 6 con el corte sin corte, CUANDO se hace clic
+izquierdo sobre el router con wifi ENTONCES sigue con wifi y las luces verdes. DADO el corte
+cortado CUANDO se hace clic ENTONCES queda sin wifi y las luces apagadas. DADO el router con el
+wifi devuelto, con el corte restaurado, CUANDO se hace clic una y otra vez ENTONCES sigue con wifi
+y las luces verdes. Cada uno de esos clics avisa lo que dice
+[`subtitles`](../subtitles/subtitles.md) y ninguno suma ni resta turno.
+
+### AC-ANO-024 — El wifi no se guarda *(verifica BR-ANO-018)*
+
+DADO el router descompuesto o apagado CUANDO se pausa y se reanuda ENTONCES conserva el estado y el
+turno no descuenta durante la pausa. CUANDO se abandona al menú y se continúa ENTONCES la jornada
+6 abre con wifi y las luces verdes, y no se escribió ni se cargó un guardado intermedio. Abrir la
+jornada 7 después de una noche 6 sin wifi deja el router con wifi.
+
+### AC-ANO-025 — El ícono del celular sigue al wifi *(verifica BR-ANO-019)*
+
+DADO el router sin energía, apagado o descompuesto CUANDO se mira la barra de estado del celular
+ENTONCES el ícono de wifi es el de sin conexión. DADO el router con wifi ENTONCES la barra no
+muestra el de sin conexión, también en las jornadas 1 a 5 y 7. CUANDO el router vuelve a tener
+wifi ENTONCES el ícono de sin conexión se quita sin abrir ni cerrar el celular.
+
 ## No objetivos
 
 - Esta capacidad NO decide mezclas, carga de la mopa, manchas, ventas ni consecuencias laborales.
@@ -241,7 +317,8 @@ corte.
   cajas, la etiqueta de la caja; para el corte, además, la hora de ficción y el estado vigente.
 - **Salida:** útiles disponibles y permiso de sustituir azul con Poético durante esa jornada; el
   contenido real de la caja de cada etiqueta; y, para el corte, su estado —sin corte, cortado o
-  restaurado— y si las interfaces están accesibles.
+  restaurado— y si las interfaces están accesibles; y el estado del wifi —con wifi, sin energía,
+  apagado o descompuesto— con el color de las luces del router.
 - **Falla:** una identidad distinta de Poético no recibe permiso; una apertura repetida
   conserva la disponibilidad y no duplica cuerpos ni descartes; una unidad que no es el
   contenido real de una caja no entra en ella. Un corte repetido o un clic de más sobre el panel
@@ -252,6 +329,7 @@ corte.
 - La disponibilidad preparada al abrir la jornada. Consultar permisos o contenidos no publica uso
   ni hallazgo.
 - El estado del corte de la sexta noche, que el local aplica a su luz y a sus interfaces.
+- El estado del wifi, que el router aplica a sus luces y el celular a su ícono.
 
 ## Dependencias
 
@@ -259,6 +337,10 @@ corte.
   Su reloj de pared consume la sexta noche detenida desde las 20:58.
 - [`ambience`](../ambience/ambience.md) (alimenta): el estado del corte, que decide qué luces
   quedan encendidas.
+- [`subtitles`](../subtitles/subtitles.md) (alimenta): el estado del router, que decide qué
+  piensa el protagonista al hacerle clic.
+- [`investigation`](../investigation/investigation.md) (alimenta): si hay wifi, que decide el
+  ícono de la barra de estado del celular.
 - [`save-and-resume`](../save-and-resume/save-and-resume.md) (consume): la apertura de la jornada
   7 siempre parte de las 20:00; el corte no se guarda.
 - [`store-cleanup`](../store-cleanup/store-cleanup.md) (alimenta): útiles disponibles y permiso

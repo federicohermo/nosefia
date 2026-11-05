@@ -17,6 +17,7 @@ const LAVATORIO := ReglasDeLaLimpieza.ID_DEL_LAVATORIO
 const COMPUTADORA := &"computadora"
 const CAJA_REGISTRADORA := &"caja_registradora"
 const LECTOR := &"lector"
+const ROUTER := &"router"
 const ENTRADA_PRINCIPAL := &"entrada_principal"
 const PUERTA_DEL_JEFE := &"puerta_del_jefe"
 const CUARTITO_CERRADO := &"cuartito_cerrado"
@@ -88,6 +89,7 @@ const DE_LO_DEMAS := {
 		"El lector de código de barras. Si le paso un producto,\n"
 		+ "lo va a anotar en el programa de la caja."
 	),
+	ROUTER: "El router del WiFi. Anda más o menos.",
 	ENTRADA_PRINCIPAL:
 	"La entrada principal al local. Queda cerrada\ncon llave durante el turno nocturno.",
 	PUERTA_DEL_JEFE:

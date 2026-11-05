@@ -1,0 +1,10 @@
+[gd_resource type="Resource" script_class="Hipotesis" format=3]
+
+[ext_resource type="Script" path="res://src/dominio/investigacion/hipotesis.gd" id="hipotesis"]
+
+[resource]
+script = ExtResource("hipotesis")
+identidad = "6P"
+jornada = 6
+titulo = "NADA DE OTRO MUNDO"
+texto = "Seguramente fue una sobrecarga o algún cortocircuito de una instalación defectuosa que hizo saltar una térmica. Tengo que dejar de sobrepensar estos asuntos de una vez por todas."

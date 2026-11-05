@@ -188,7 +188,8 @@ func test_vender_al_ultimo_con_el_anterior_mal_atendido_deja_salir() -> void:  #
 	assert_bool(CierreAnticipado.corresponde(jornada, obligatorias, atender, registro)).is_false()
 	var atencion := atender.atencion()
 	atencion.interactuar(null)
-	atencion.interactuar(null)
+	while atencion.abre_la_ventanilla():
+		atencion.interactuar(null)
 	var productos: Array[Producto] = []
 	for producto in compradores[1].pedido().productos():
 		atencion.interactuar(Estante.new(inventario, Catalogo.todos()).retirar(producto))
