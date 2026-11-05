@@ -415,3 +415,17 @@ func test_el_recorrido_de_2a_y_5p_no_activa_6c() -> void:  # AC-INV-125
 	assert_array(Array(expediente.pistas_activas(JORNADA_6))).not_contains(["6C"])
 	assert_bool(expediente.esta_en_el_local(caso.pista_de("6C").origen, JORNADA_6)).is_false()
 	assert_int(expediente.registrar("6C")).is_equal(Expediente.Resultado.DESCONOCIDA)
+
+
+func test_con_2a_y_la_5_sin_pistas_el_sorteo_de_la_6_deja_levantar_la_nota() -> void:  # AC-INV-125
+	var caso := CasoDeInvestigacion.de_la_partida()
+	var nota := caso.pista_de("6C").origen
+	var expediente := _con_la_cuarta_elegida(caso, "2A")
+	_eligiendo_la_unica_de_la_quinta(expediente)
+	assert_bool(expediente.esta_en_el_local(nota, JORNADA_6)).is_false()
+	var azar := RandomNumberGenerator.new()
+	azar.seed = 1
+	expediente.sortear_camino(JORNADA_6, azar)
+	assert_array(Array(expediente.pistas_activas(JORNADA_6))).contains(["6C"])
+	assert_bool(expediente.esta_en_el_local(nota, JORNADA_6)).is_true()
+	assert_int(expediente.registrar("6C")).is_equal(Expediente.Resultado.ANOTADA)

@@ -649,8 +649,9 @@ de las demás pistas. Registrar 5A NO DEBE cambiar lo que hacen 5B y 5P. Las pis
 CUANDO se registra 6C con la jornada 6 abierta y el canal de levantar, el sistema DEBE contestar
 ANOTADA y agregar al chat de notas primero su foto y después su texto (BR-INV-040). La pista 6C
 DEBE ser de la jornada 6, del canal de levantar y del camino de la hipótesis 5B (BR-INV-049,
-BR-INV-050): está activa si la 5B se eligió en la jornada 5. Con la 5P elegida no lo está
-(BR-INV-062). La hipótesis 6C DEBE estar disponible al cierre de la
+BR-INV-050): está activa si la 5B se eligió en la jornada 5, o si la 5 terminó sin pistas y el sorteo de la 6
+(BR-INV-051) cayó en el camino de la 5B. Con la 5P elegida y sin sorteo, o con un sorteo que cayó en
+otro camino, no lo está (BR-INV-062). La hipótesis 6C DEBE estar disponible al cierre de la
 jornada 6 si y sólo si 6C está registrada. Los datos DEBEN ser, según la fila «6C» de la lista de
 pistas e hipótesis:
 
@@ -1501,14 +1502,16 @@ se ve la lista sola.
 
 DADO el caso de la partida CUANDO se consulta si la nota está en el local ENTONCES contesta que
 sí sólo en la jornada 6 y sólo con 6C entre las pistas activas: con 2A elegida en la jornada 4 y
-5B elegida en la 5. Contesta que no en las demás jornadas con esas mismas elecciones; con 2B
-elegida en la 4; con 2A elegida en la 4 y 5P elegida en la 5; con 2A elegida en la 4 y ninguna
+5B elegida en la 5, o con 2A elegida en la 4, la 5 sin pistas y el sorteo de la 6 en el camino de la
+5B. Contesta que no en las demás jornadas con esas mismas elecciones; con 2B elegida en la 4; con 2A
+elegida en la 4 y 5P elegida en la 5 sin sorteo de la 6; con 2A elegida en la 4 y ninguna
 elección en la 5; con ninguna elección en la 4 ni en la 5; y con 2P elegida en la 4, que no abre
 ningún camino. Los objetos que no levantan una pista siguen en el local.
 
 ### AC-INV-121 — Fuera de su condición la nota no se ve ni se levanta *(verifica BR-INV-071)*
 
-DADO una partida que eligió 2A en la 4 y 5B en la 5 CUANDO se abre la jornada 6 ENTONCES la nota
+DADO una partida que eligió 2A en la 4 y 5B en la 5, o que eligió 2A en la 4 y no encontró pistas
+en la 5 (el sorteo de la 6 cae en el camino de la 5B) CUANDO se abre la jornada 6 ENTONCES la nota
 es visible, la mira la enfoca y se puede levantar. CUANDO se abre cualquier otra jornada, o la
 jornada 6 con otra elección, ENTONCES la nota no es visible, no tiene colisión, la mira no la
 enfoca ni la mano la sostiene. CUANDO se la deja en la mano y se abre la jornada 7 ENTONCES sale de
@@ -1539,13 +1542,15 @@ ENTONCES devuelve exactamente la hipótesis 6C; con el expediente vacío o con s
 ninguna. DADO las jornadas 4 y 5 CUANDO se consultan las hipótesis ENTONCES las combinaciones de
 BR-INV-039 y BR-INV-061 no cambian.
 
-### AC-INV-125 — Con 2A y 5B elegidas la nota se levanta; con 2A y 5P, no *(verifica BR-INV-070, BR-INV-062)*
+### AC-INV-125 — Con 2A y 5B elegidas, o con la 5 sin pistas y el sorteo de la 6, la nota se levanta; con 2A y 5P sin sorteo, no *(verifica BR-INV-070, BR-INV-062, BR-INV-051)*
 
 DADO el caso de la partida con 2A registrada y elegida en la jornada 4, 5B registrada y la única
 hipótesis ofrecida en la 5 elegida CUANDO se consultan las pistas activas de la 6 ENTONCES incluyen
 6C, la nota está en el local y registrar 6C contesta ANOTADA. DADO el mismo caso sin 5B y con la
-única hipótesis ofrecida en la 5 elegida (5P) ENTONCES las pistas activas de la 6 no incluyen 6C, la
-nota no está en el local y registrar 6C contesta DESCONOCIDA.
+única hipótesis ofrecida en la 5 elegida (5P) y sin sorteo de la 6 ENTONCES las pistas activas de la
+6 no incluyen 6C, la nota no está en el local y registrar 6C contesta DESCONOCIDA. CUANDO, en ese
+mismo caso, se sortea la 6 con una semilla fija ENTONCES las pistas activas de la 6 incluyen 6C, la
+nota está en el local y registrar 6C contesta ANOTADA.
 
 ### AC-INV-126 — La nota es un papel manuscrito propio *(verifica BR-INV-071)*
 

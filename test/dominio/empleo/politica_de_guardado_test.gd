@@ -66,3 +66,15 @@ func test_la_politica_es_pura() -> void:
 	assert_str(texto).contains("extends RefCounted")
 	for patron: String in ["FileAccess", "get_tree(", "_process(", "await"]:
 		assert_str(texto).not_contains(patron)
+
+
+func test_los_datos_llevan_el_camino_sorteado() -> void:  # AC-SAV-036
+	var clave := PartidaSerializada.clave(PartidaSerializada.Campo.SORTEOS)
+	var partida := Partida.desde({"jornada": 5, "semilla": 7})
+	partida.abrir_la_jornada()
+	var sorteados := partida.expediente.sorteos()
+	assert_array(sorteados.keys()).contains_exactly([5])
+	partida.cerrar_la_jornada(0)
+	var datos := PoliticaDeGuardado.datos(partida)
+	assert_dict(datos[clave]).is_equal(sorteados)
+	assert_dict(Partida.desde(datos).expediente.sorteos()).is_equal(sorteados)

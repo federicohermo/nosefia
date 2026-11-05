@@ -3,7 +3,7 @@ schema_version: 1
 capability_id: CAP-SAV
 status: draft
 owner: por definir
-provenance: GDD «checkpoint al final de cada noche»; ficha «Pantalla entre jornadas» y decisiones de #374; fichas «2. Menú de inicio» y «Pausa y menú de pausa» y decisiones de #378; decisión del 2026-09-28 de #299; decisiones de #375; migración de los specs 019, 020, 036; historial de devoluciones fechado y compatibilidad con textos legados de #430; checkpoint del cierre, expediente, notas y elección de #436; decisión del usuario del 2026-10-18 sobre la reanudación del cierre; ocho jornadas de #526; instrucciones por jornada de #527; pose de las cajas del depósito de #555; mensajes de Yasmín de la jornada 6 de #458
+provenance: GDD «checkpoint al final de cada noche»; ficha «Pantalla entre jornadas» y decisiones de #374; fichas «2. Menú de inicio» y «Pausa y menú de pausa» y decisiones de #378; decisión del 2026-09-28 de #299; decisiones de #375; migración de los specs 019, 020, 036; historial de devoluciones fechado y compatibilidad con textos legados de #430; checkpoint del cierre, expediente, notas y elección de #436; decisión del usuario del 2026-10-18 sobre la reanudación del cierre; ocho jornadas de #526; instrucciones por jornada de #527; pose de las cajas del depósito de #555; mensajes de Yasmín de la jornada 6 de #458; sorteo del camino de #787
 ---
 
 # Capacidad: guardar y retomar
@@ -214,6 +214,17 @@ cada caja abre en su lugar de fábrica. Dentro del campo, una caja desconocida, 
 no es una pose, DEBE ignorarse sin descartar las demás ni la jornada, el legajo o las cuentas.
 Una partida nueva NO DEBE traer poses. Un final que borra el guardado (BR-SAV-002) borra
 también las poses.
+
+### BR-SAV-023 — Los sorteos del camino cruzan la sesión
+
+CUANDO se guarda, el sistema DEBE escribir, además de BR-SAV-021, el camino que sorteó el
+expediente para cada jornada (BR-INV-051), por jornada. CUANDO se retoma, DEBE restaurarlos: la
+jornada sorteada abre con el mismo camino que tenía, sin sortear otra vez.
+
+SI falta ese campo o tiene otro tipo, ENTONCES DEBE sanearse (BR-SAV-006) sin ningún sorteo, y el
+guardado carga sin fallar. Dentro del campo, un sorteo que ninguna hipótesis de la jornada anterior
+respalda DEBE ignorarse sin descartar los demás ni la jornada, el legajo o las cuentas. Sanear NO
+DEBE crear sorteos. Un final que borra el guardado (BR-SAV-002) borra también los sorteos.
 
 ## Criterios de aceptación
 
@@ -465,6 +476,17 @@ retoma ENTONCES abre la jornada 5 y el chat de Yasmín tiene J2_1 a J2_16 y desp
 una sola vez, todos sin leer, y el chat de Enrique conserva sus devoluciones intactas. CUANDO se
 cierra la 5 y se repite guardar y retomar ENTONCES el guardado no contiene mensajes del guion de
 Yasmín y la jornada 6 abre con las mismas 26 identidades, sin duplicar ninguna.
+
+### AC-SAV-036 — El camino sorteado sobrevive al guardado *(verifica BR-SAV-023, BR-SAV-005, BR-SAV-006)*
+
+DADO la jornada 4 cerrada sin ninguna pista y la jornada 5 abierta, con un camino sorteado entre
+las hipótesis de la 4, CUANDO se cierra la 5, se guarda, se lee el archivo y se retoma ENTONCES el
+guardado devuelve ese sorteo con la misma jornada y la misma identidad, y la jornada 6 abre con las
+pistas activas del camino que la partida tenía antes de guardar. DADO un guardado de la jornada 5 sin
+el campo, o con un número en él, ENTONCES se retoma sin ningún sorteo, sin fallar, y la jornada, el
+legajo y las cuentas son los guardados. DADO el campo con un sorteo de una identidad que ninguna
+hipótesis de la jornada anterior respalda y otro válido ENTONCES sólo el válido se conserva. DADO un
+despido o un contrato cumplido ENTONCES no queda guardado ni sorteos.
 
 ## No objetivos
 
