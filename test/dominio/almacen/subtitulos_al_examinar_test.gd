@@ -20,6 +20,8 @@ const NOTA_DE_YASMIN := "res://src/dominio/investigacion/nota_bajo_la_puerta.tre
 
 const PALANCA := "res://src/dominio/investigacion/palanca.tres"
 
+const LLAVE := "res://src/dominio/investigacion/llave.tres"
+
 ## Cuántos renglones tiene el texto de examinar de cada objeto en su ficha de Notion. Los que no
 ## figuran se ven en un solo renglón.
 const DE_DOS_RENGLONES: Array[StringName] = [
@@ -115,6 +117,7 @@ func _textos_de_examinar() -> Dictionary:
 	textos[&"colilla"] = (load(COLILLA) as ObjetoDelAlmacen).texto_al_examinar()
 	textos[&"documento_impreso"] = (load(DOCUMENTO) as ObjetoDelAlmacen).texto_al_examinar()
 	textos[&"palanca"] = (load(PALANCA) as ObjetoDelAlmacen).texto_al_examinar()
+	textos[&"llave"] = (load(LLAVE) as ObjetoDelAlmacen).texto_al_examinar()
 	for producto: Producto in Catalogo.todos():
 		textos[StringName(producto.nombre)] = SubtitulosAlExaminar.de_producto(producto.id)
 	return textos
@@ -155,3 +158,18 @@ func test_la_palanca_dice_su_texto_en_dos_renglones() -> void:  # AC-SUB-052
 		var del_otro := (load(otro) as ObjetoDelAlmacen).texto_al_examinar()
 		assert_str(texto).is_not_equal(del_otro)
 		assert_bool(load(otro).id != palanca.id).is_true()
+
+
+func test_la_llave_dice_su_texto_en_un_renglon() -> void:  # AC-SUB-053
+	var llave := load(LLAVE) as ObjetoDelAlmacen
+	assert_object(llave).is_not_null()
+	assert_str(String(llave.id)).is_equal(String(Partida.LLAVE))
+	assert_bool(llave.levantable).is_true()
+	var texto := llave.texto_al_examinar()
+	assert_str(texto).is_not_empty()
+	assert_array(texto.split("\n")).has_size(1)
+	assert_str(texto).not_contains("...")
+	for otro: String in [PALANCA, COLILLA, DOCUMENTO, NOTA_DE_YASMIN]:
+		var del_otro := load(otro) as ObjetoDelAlmacen
+		assert_str(texto).is_not_equal(del_otro.texto_al_examinar())
+		assert_bool(del_otro.id != llave.id).is_true()

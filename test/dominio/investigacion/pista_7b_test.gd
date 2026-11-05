@@ -56,7 +56,7 @@ func test_7b_esta_activa_solo_con_la_6b_elegida() -> void:  # AC-INV-176
 	por_la_6c.elegir(JORNADA_5, "5B")
 	por_la_6c.registrar("6C")
 	por_la_6c.elegir(JORNADA_6, "6C")
-	assert_array(Array(por_la_6c.pistas_activas(JORNADA_7))).is_empty()
+	assert_array(Array(por_la_6c.pistas_activas(JORNADA_7))).not_contains(["7B"])
 	var sin_pista_en_la_6 := _expediente(false)
 	var predeterminada := sin_pista_en_la_6.hipotesis_para(JORNADA_6)[0].identidad
 	sin_pista_en_la_6.elegir(JORNADA_6, predeterminada)

@@ -21,7 +21,7 @@ var _abierta := false
 var _angulo := 0.0
 var _quieta := true
 var _trabada := false
-var _cede_a: StringName = ObjetoDelAlmacen.SIN_ID
+var _cede_a: Array[StringName] = []
 
 
 ## Trabada es de nacimiento: ninguna puerta se traba ni se destraba en juego.
@@ -44,18 +44,17 @@ func trabada() -> bool:
 	return _trabada
 
 
-## Qué objeto, llevado en la mano, abre esta puerta aunque esté trabada (BR-PLY-060). Sin declarar,
-## ninguno la abre.
+## Suma un objeto que, llevado en la mano, abre esta puerta aunque esté trabada (BR-PLY-060). Sin
+## declarar ninguno, ninguno la abre.
 func ceder_a(id: StringName) -> void:
-	_cede_a = id
+	if id != ObjetoDelAlmacen.SIN_ID and not _cede_a.has(id):
+		_cede_a.append(id)
 
 
 ## Abre una trabada con lo que se lleva en la mano, si es lo que declaró `ceder_a()`. La traba
 ## sigue siendo suya: lo único que cambia es la excepción por objeto. Devuelve si la abrió.
 func forzar(con: ObjetoDelAlmacen) -> bool:
-	if not _trabada or _abierta or con == null or _cede_a == ObjetoDelAlmacen.SIN_ID:
-		return false
-	if con.id != _cede_a:
+	if not _trabada or _abierta or con == null or not _cede_a.has(con.id):
 		return false
 	_abierta = true
 	return true

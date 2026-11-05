@@ -3,7 +3,7 @@ schema_version: 1
 capability_id: CAP-ACH
 status: ratified
 owner: por definir
-provenance: fichas «Logros», «2. Menú de inicio» (sección «Interfaz de logros») y «Pausa y menú de pausa»; decisiones de #381
+provenance: fichas «Logros», «2. Menú de inicio» (sección «Interfaz de logros») y «Pausa y menú de pausa»; decisiones de #381; el final 5 de #810
 ---
 
 # Capacidad: logros
@@ -21,14 +21,14 @@ noche.
 | **Logro** | uno de los nueve premios del catálogo cerrado, con nombre fijo | medalla, trofeo |
 | **Desbloquear** | ganar un logro por primera vez; ocurre una sola vez en la vida del archivo | completar, activar |
 | **Catalogado** | el logro existe y se muestra, aunque nada lo desbloquee todavía | implementado |
-| **Final alcanzado** | un final de la partida que el jugador vio alguna vez: despedido, contrato cumplido o jefe saboteador | final desbloqueado |
+| **Final alcanzado** | un final de la partida que el jugador vio alguna vez: despedido, contrato cumplido, jefe saboteador o jefe incompetente | final desbloqueado |
 | **Pista descubierta** | una pista que la investigación aceptó alguna vez, en cualquier partida | pista vista |
 | **Pantalla de logros** | la pantalla de tres columnas —pistas, finales y logros— que abren el menú de inicio y la pausa | galería |
 
 Los nueve logros y su nombre en pantalla son: **Obelisco de cartón**, **Rebelde**, **Y se marchó…**,
 **A la basura**, **Estamos al pedo, ¿no?**, **Empleado ejemplar**, **Pésima primera impresión**,
-**Mi talón de Aquiles** y **Elemental, mi querida Yasmín**. Los tres finales y su nombre en pantalla
-son **Despedido**, **Contrato cumplido** y **Jefe saboteador**.
+**Mi talón de Aquiles** y **Elemental, mi querida Yasmín**. Los cuatro finales y su nombre en pantalla
+son **Despedido**, **Contrato cumplido**, **Jefe saboteador** y **Jefe incompetente**.
 
 ## Comportamiento normativo
 
@@ -104,7 +104,7 @@ conoce, ENTONCES el sistema DEBE ignorarlo y conservar los demás.
 ### BR-ACH-012 — Los finales y las pistas también duran
 
 CUANDO la partida termina, el sistema DEBE anotar en el mismo archivo el final alcanzado: despedido,
-contrato cumplido o jefe saboteador. CUANDO la investigación acepta una pista nueva (BR-NTF-010), el sistema DEBE
+contrato cumplido, jefe saboteador o jefe incompetente. CUANDO la investigación acepta una pista nueva (BR-NTF-010), el sistema DEBE
 anotarla como descubierta en el mismo archivo. Las dos anotaciones DEBEN cruzar partidas como los
 logros, y repetirlas no cambia nada. SI el archivo nombra una pista o un final que el juego no
 conoce, ENTONCES el sistema DEBE ignorarlo.

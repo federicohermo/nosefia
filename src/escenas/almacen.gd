@@ -159,6 +159,7 @@ var _hojas_de_entrada: Array[PuertaDelLocal] = []
 @onready var _nota: ObjetoAgarrable = $Objetos/NotaBajoLaPuerta
 @onready var _documento: ObjetoAgarrable = $Objetos/DocumentoImpreso
 @onready var _palanca: ObjetoAgarrable = $Objetos/Palanca
+@onready var _llave: ObjetoAgarrable = $Objetos/Llave
 
 
 func _compradores_de_la_partida(jornada: int) -> Array[Comprador]:
@@ -335,9 +336,10 @@ func _ready() -> void:
 	}
 	for ruta: NodePath in trabadas:
 		(get_node(ruta) as PuertaDelLocal).identidad = trabadas[ruta]
-	# La traba sigue siendo de la puerta del jefe: sólo cede a la palanca en la mano.
+	# La traba sigue siendo de la puerta del jefe: sólo cede a la palanca o la llave en la mano.
 	var puerta_del_jefe: PuertaDelLocal = $Estructura/puertajefe/CuerpoDeLaHoja
 	puerta_del_jefe.puerta().ceder_a(Partida.PALANCA)
+	puerta_del_jefe.puerta().ceder_a(Partida.LLAVE)
 	puerta_del_jefe.lo_que_se_lleva = func() -> ObjetoDelAlmacen: return _agarre.manos().sostenido()
 	puerta_del_jefe.puerta_forzada.connect(_al_forzar_la_puerta_del_jefe.unbind(1))
 	_jugador.examen.examen_terminado.connect(_hud.vaciar_subtitulo)
@@ -488,7 +490,7 @@ func _al_abrir_la_jornada(jornada: int) -> void:
 	# Un pensamiento a medio desvanecer tampoco pasa a la noche nueva.
 	_hud.vaciar_subtitulo()
 	_agarre.vaciar_las_manos()
-	for de_una_pista: ObjetoAgarrable in [_colilla, _nota, _documento, _palanca]:
+	for de_una_pista: ObjetoAgarrable in [_colilla, _nota, _documento, _palanca, _llave]:
 		_ubicar_lo_de_una_pista(de_una_pista, jornada)
 	_caja.arrancar(GeneradorDeTickets.para_la_jornada(jornada, _partida.numeros_de_ticket))
 	_puesto_de_la_caja.limpiar()
@@ -782,11 +784,12 @@ func _salir_del_cierre(opcion: DevolucionDelJefe.Opcion) -> void:
 	acciones[opcion].call()
 
 
-## La palanca abrió la oficina de Enrique: la jornada y la partida terminan en ese momento, sin
-## cierre ni devolución, y el final se muestra en el mismo paso (BR-SHF-060). Si la partida no lo
-## acepta, la puerta ya se abrió y nada más cambia.
+## La palanca o la llave abrió la oficina de Enrique: la jornada y la partida terminan en ese
+## momento, sin cierre ni devolución, y el final se muestra en el mismo paso (BR-SHF-060,
+## BR-SHF-061). Si la partida no lo acepta, la puerta ya se abrió y nada más cambia.
 func _al_forzar_la_puerta_del_jefe() -> void:
-	if not _partida.abrir_la_oficina_del_jefe(_reloj.hora()):
+	var llevado: ObjetoDelAlmacen = _agarre.manos().sostenido()
+	if llevado == null or not _partida.abrir_la_oficina_del_jefe(llevado.id, _reloj.hora()):
 		return
 	_reloj.retener()
 	_gestos.descartar()
