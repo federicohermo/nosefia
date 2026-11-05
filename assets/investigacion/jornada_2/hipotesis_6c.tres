@@ -1,0 +1,11 @@
+[gd_resource type="Resource" script_class="Hipotesis" format=3]
+
+[ext_resource type="Script" path="res://src/dominio/investigacion/hipotesis.gd" id="hipotesis"]
+
+[resource]
+script = ExtResource("hipotesis")
+identidad = "6C"
+jornada = 6
+titulo = "NOTA BAJO LA PUERTA"
+texto = "Me siento mal por haber dudado de Yasmín. Está claro que los dos somos víctimas de la ineptitud de nuestro jefe y que, sin nuestro trabajo, la estación se caería a pedazos. ¿Qué otras cosas estará descuidando Enrique? Seguramente encuentre más información si consigo acceder a su oficina."
+exigencias = PackedStringArray("6C")

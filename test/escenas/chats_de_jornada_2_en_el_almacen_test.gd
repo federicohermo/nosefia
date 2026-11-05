@@ -44,6 +44,15 @@ func _cuadros(cuantos: int) -> void:
 		await get_tree().process_frame
 
 
+## El chat que se abre con el celular arriba entra deslizándose: los clics esperan a que llegue.
+func _esperar_el_deslizamiento() -> void:
+	var pantalla := _pantalla()
+	for _cuadro: int in 600:
+		if pantalla.get("_lista_quieta") == null and pantalla.get("_chat_saliente") == null:
+			return
+		await get_tree().process_frame
+
+
 func _abrir(partida: Partida = null) -> void:
 	var escena := load("res://src/escenas/almacen.tscn") as PackedScene
 	_almacen = escena.instantiate()
@@ -130,6 +139,7 @@ func test_checkpoint_real_abre_dos_chats_sin_intro_y_con_devolucion_fechada() ->
 		str(_guion_de_la_apertura())
 	)
 	await _clic((lista.get_child(1) as Button).get_global_rect().get_center())
+	await _esperar_el_deslizamiento()
 	assert_int(_celular().celular().chat()).is_equal(YASMIN)
 	assert_int(bandeja.no_leidos(YASMIN)).is_zero()
 	assert_int(bandeja.no_leidos(JEFE)).is_equal(jefe.size())
@@ -149,6 +159,7 @@ func test_solo_el_tramo_real_pide_pista_y_foto_vuelve_al_mismo_scroll() -> void:
 	await _q()
 	var lista: VBoxContainer = _pantalla().get("_mensajes")
 	await _clic((lista.get_child(1) as Button).get_global_rect().get_center())
+	await _esperar_el_deslizamiento()
 	var texto := _burbuja(5).find_children("*", "RichTextLabel", true, false)[0] as RichTextLabel
 	var scroll: ScrollContainer = _pantalla().get("_scroll")
 	scroll.ensure_control_visible(texto)

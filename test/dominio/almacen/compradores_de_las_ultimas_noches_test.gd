@@ -162,7 +162,8 @@ func test_ninguna_noche_activa_el_padron_ni_los_guiones_de_las_primeras() -> voi
 	for jornada: int in NOCHES:
 		for comprador in Compradores.de_la_jornada(jornada, 1):
 			assert_array(del_padron).not_contains([comprador.nombre()])
-			assert_object(comprador.dialogos).is_null()
+			assert_object(comprador.dialogos).is_not_same(Compradores.DIALOGOS)
+			assert_object(comprador.dialogos).is_not_same(Compradores.DIALOGOS_SEGUNDA)
 
 
 func test_cada_pedido_es_de_dos_o_tres_tipos_de_su_grupo() -> void:  # AC-CTR-129
