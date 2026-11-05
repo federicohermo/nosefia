@@ -649,6 +649,14 @@ devolución es de la mañana siguiente a su jornada, así que su día es el de l
 Una tanda cuyo primer mensaje no tiene hora DEBE rotularse sin hora. Un mensaje legado sin
 jornada NO DEBE abrir una tanda ni aportar hora.
 
+### BR-INV-103 — Sin ninguna pista en toda la partida, el final es «Empleado estresado»
+
+SI la partida termina con el contrato cumplido y el expediente no registró ninguna pista en
+ninguna jornada, ENTONCES el final DEBE ser «Empleado estresado» (final 1) y la devolución DEBE
+llevar a su pantalla (BR-SHF-027). Una sola pista registrada, de cualquier jornada, DEBE bastar para
+que no lo sea. Elegir una hipótesis sin pista, P o L, NO DEBE contar como pista. SI la partida termina
+despedida, ENTONCES el final NO DEBE ser éste, aunque no haya pistas.
+
 ### BR-INV-104 — El chat entra y sale deslizándose
 CUANDO el jugador abre un chat desde el menú de chats, el chat DEBE entrar desde el borde derecho
 del teléfono y tapar la lista hasta quedar en su lugar. CUANDO el jugador vuelve al menú desde
@@ -1379,6 +1387,18 @@ DADO un chat que está entrando CUANDO el celular baja ENTONCES el deslizamiento
 estado final, y CUANDO el celular vuelve a subir ENTONCES se ve el estado que le toca, sin el
 deslizamiento a medias. DADO un chat que está saliendo CUANDO el celular baja ENTONCES, al subir,
 se ve la lista sola.
+
+### AC-INV-127 — Sin ninguna pista, estresado *(verifica BR-INV-103)*
+
+DADO la jornada 7 cerrada con el contrato cumplido y el expediente sin pistas, aunque la hipótesis P
+se haya elegido en las jornadas 4 a 6, ENTONCES el final es «Empleado estresado». DADO el mismo
+cierre con la pista 4A registrada en la jornada 4 y ninguna otra ENTONCES no lo es. DADO el mismo
+cierre con una única pista registrada en la jornada 7 ENTONCES tampoco.
+
+### AC-INV-128 — El despido no es estresado *(verifica BR-INV-103)*
+
+DADO una partida despedida al cerrar la jornada 5 con el expediente sin pistas ENTONCES el final es
+el despido y no «Empleado estresado». DADO una partida en curso sin pistas ENTONCES no hay final.
 
 ## No objetivos
 

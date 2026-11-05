@@ -15,6 +15,7 @@ signal devolucion_despachada(opcion: DevolucionDelJefe.Opcion)
 const TEXTOS: Dictionary[DevolucionDelJefe.Opcion, String] = {
 	DevolucionDelJefe.Opcion.CONTINUAR: "CONTINUAR",
 	DevolucionDelJefe.Opcion.VOLVER_AL_MENU: MenuDePausa.TEXTO_DE_VOLVER_AL_MENU,
+	DevolucionDelJefe.Opcion.VER_EL_FINAL: "CONTINUAR",
 }
 
 var _celular: CelularDelEmpleado
