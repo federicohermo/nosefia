@@ -1395,7 +1395,8 @@ ningún camino. Los objetos que no levantan una pista siguen en el local.
 
 ### AC-INV-121 — Fuera de su condición la nota no se ve ni se levanta *(verifica BR-INV-071)*
 
-DADO una partida que eligió 2A en la 4 y 5B en la 5 CUANDO se abre la jornada 6 ENTONCES la nota
+DADO una partida que eligió 2A en la 4 y 5B en la 5, o que eligió 2A en la 4 y no encontró pistas
+en la 5 (el sorteo de la 6 cae en el camino de la 5B) CUANDO se abre la jornada 6 ENTONCES la nota
 es visible, la mira la enfoca y se puede levantar. CUANDO se abre cualquier otra jornada, o la
 jornada 6 con otra elección, ENTONCES la nota no es visible, no tiene colisión, la mira no la
 enfoca ni la mano la sostiene. CUANDO se la deja en la mano y se abre la jornada 7 ENTONCES sale de
