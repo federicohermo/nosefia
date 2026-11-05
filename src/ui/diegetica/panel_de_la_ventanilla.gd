@@ -17,6 +17,8 @@ extends CanvasLayer
 
 signal cobro_pedido
 signal despacho_pedido
+## El jugador pulsó un fragmento del diálogo que es una pista: sale con su identidad.
+signal pista_pedida(identidad: String)
 
 ## Lo único propio de esta capa son las palabras de los botones y el cartel de la ventanilla
 ## vacía. Viven acá y **no** además en el `.tscn`: un texto en los dos lados se cambia en uno solo
@@ -43,6 +45,8 @@ const TEXTO_SIN_NADIE := "No hay nadie en la ventanilla."
 @export var _texto: RichTextLabel
 
 var _version_fisica: bool = false
+## Si el cursor está sobre un fragmento de pista: ese clic es de la pista y no avanza el diálogo.
+var _sobre_un_fragmento: bool = false
 
 
 ## Arranca invisible: la ventanilla se abre cuando el jugador va, no cuando empieza la noche.
@@ -60,6 +64,11 @@ func _ready() -> void:
 	_cobrar.pressed.connect(cobro_pedido.emit)
 	_despachar.pressed.connect(despacho_pedido.emit)
 	_blanco.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_texto.mouse_filter = Control.MOUSE_FILTER_STOP
+	_texto.meta_underlined = false
+	_texto.meta_clicked.connect(func(identidad: Variant) -> void: pista_pedida.emit(str(identidad)))
+	_texto.meta_hover_started.connect(func(_identidad: Variant) -> void: _sobre_un_fragmento = true)
+	_texto.meta_hover_ended.connect(func(_identidad: Variant) -> void: _sobre_un_fragmento = false)
 
 
 func preparar(fisica: bool) -> void:
@@ -99,6 +108,11 @@ func mostrar_sin_nadie() -> void:
 
 func ocultar() -> void:
 	visible = false
+	_sobre_un_fragmento = false
+
+
+func fragmento_bajo_el_cursor() -> bool:
+	return visible and _burbuja.visible and _sobre_un_fragmento
 
 
 func _mostrar_comprador(atencion: Atencion) -> void:
@@ -108,6 +122,7 @@ func _mostrar_comprador(atencion: Atencion) -> void:
 	_blanco.hide()
 	_burbuja.visible = atencion.abre_la_ventanilla()
 	if _burbuja.visible:
+		_sobre_un_fragmento = false
 		_texto.text = atencion.dialogo().entrada_actual()
 		_acomodar_dialogo.call_deferred()
 	visible = true

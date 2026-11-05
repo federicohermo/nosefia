@@ -14,6 +14,7 @@ signal pausado
 signal reanudado
 signal volver_al_menu_pedido
 signal cierre_de_configuraciones_pedido
+signal cierre_de_logros_pedido
 ## Esc cerró la foto o el celular. Quien lo escucha devuelve el cursor al juego. Las demás
 ## interfaces devuelven el cursor ellas mismas, al cerrarse.
 signal esc_atendido_por_el_celular
@@ -24,6 +25,9 @@ signal esc_atendido_por_el_celular
 ## Configuraciones abierta desde la pausa, mirada sólo por si está en pantalla. La cierra quien
 ## la abrió, al recibir `cierre_de_configuraciones_pedido`.
 @export var configuraciones: CanvasLayer
+## La pantalla de logros abierta desde la pausa, igual que configuraciones: Esc la cierra y deja la
+## pausa. La cierra quien la abrió, al recibir `cierre_de_logros_pedido`.
+@export var logros: CanvasLayer
 ## El celular, mirado por si está libre y abierto: entonces Esc lo cierra y no pausa. Lo asigna
 ## quien arma el almacén.
 var celular: CelularDelEmpleado
@@ -88,7 +92,8 @@ func _input(evento: InputEvent) -> void:
 			get_tree().paused,
 			_configuraciones_en_pantalla(),
 			_celular_libre_abierto(),
-			_interfaz_abierta() != null
+			_interfaz_abierta() != null,
+			_logros_en_pantalla()
 		)
 	)
 
@@ -102,7 +107,8 @@ func _volver_atras() -> void:
 		get_tree().paused,
 		_configuraciones_en_pantalla(),
 		_celular_libre_abierto(),
-		_interfaz_abierta() != null
+		_interfaz_abierta() != null,
+		_logros_en_pantalla()
 	)
 	if accion == Pausa.Accion.NADA:
 		return
@@ -143,6 +149,7 @@ func _hacer(accion: Pausa.Accion) -> void:
 		Pausa.Accion.PAUSAR: pausar,
 		Pausa.Accion.REANUDAR: reanudar,
 		Pausa.Accion.CERRAR_CONFIGURACIONES: cierre_de_configuraciones_pedido.emit,
+		Pausa.Accion.CERRAR_LOGROS: cierre_de_logros_pedido.emit,
 		Pausa.Accion.CERRAR_CELULAR: _cerrar_el_celular,
 		Pausa.Accion.CERRAR_INTERFAZ: _cerrar_la_interfaz,
 	}
@@ -220,6 +227,10 @@ func _configuraciones_esperando_un_boton() -> bool:
 		and configuraciones.has_method(&"capturando")
 		and configuraciones.call(&"capturando")
 	)
+
+
+func _logros_en_pantalla() -> bool:
+	return logros != null and logros.visible
 
 
 func _cursor_tomado() -> bool:
