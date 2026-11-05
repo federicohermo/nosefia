@@ -58,11 +58,12 @@ func test_estamos_al_pedo_pide_el_tope_y_no_una_unidad_antes() -> void:  # AC-AC
 	assert_bool(Logros.estamos_al_pedo(registro)).is_false()
 
 
-func test_empleado_ejemplar_pide_contrato_cumplido_y_cero_medios() -> void:  # AC-ACH-006
-	assert_bool(Logros.empleado_ejemplar(F.CONTRATO_CUMPLIDO, 0)).is_true()
-	assert_bool(Logros.empleado_ejemplar(F.CONTRATO_CUMPLIDO, 1)).is_false()
-	assert_bool(Logros.empleado_ejemplar(F.LOCURA_PARANOICA, 0)).is_true()
-	assert_bool(Logros.empleado_ejemplar(F.LOCURA_PARANOICA, 1)).is_false()
+func test_empleado_ejemplar_pide_un_final_sin_despido_y_cero_medios() -> void:  # AC-ACH-006
+	for final: F in Logros.finales():
+		if final == F.DESPEDIDO:
+			continue
+		assert_bool(Logros.empleado_ejemplar(final, 0)).is_true()
+		assert_bool(Logros.empleado_ejemplar(final, 1)).is_false()
 	assert_bool(Logros.empleado_ejemplar(F.DESPEDIDO, 0)).is_false()
 	assert_bool(Logros.empleado_ejemplar(F.EN_CURSO, 0)).is_false()
 

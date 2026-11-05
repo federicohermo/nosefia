@@ -27,7 +27,7 @@ noche.
 
 Los nueve logros y su nombre en pantalla son: **Obelisco de cartón**, **Rebelde**, **Y se marchó…**,
 **A la basura**, **Estamos al pedo, ¿no?**, **Empleado ejemplar**, **Pésima primera impresión**,
-**Mi talón de Aquiles** y **Elemental, mi querida Yasmín**. Los cuatro finales y su nombre en pantalla
+**Mi talón de Aquiles** y **Elemental, mi querida Yasmín**. Los finales y su nombre en pantalla
 son **Despedido**, **Contrato cumplido**, **Locura paranoica**, **Jefe saboteador** y **Jefe incompetente**.
 
 ## Comportamiento normativo
@@ -70,9 +70,9 @@ bajar y volver a llegar NO DEBE avisar otra vez (BR-ACH-002).
 
 ### BR-ACH-007 — Empleado ejemplar
 
-CUANDO la partida termina con contrato cumplido (BR-EMP-004), sea con el final «Contrato cumplido» o
-con «Locura paranoica» (BR-INV-103), y el legajo no suma ningún medio apercibimiento, el sistema DEBE
-desbloquear Empleado ejemplar. Un solo medio apercibimiento en el legajo NO DEBE desbloquearlo.
+CUANDO la partida termina con cualquier final que no sea el despido, y el legajo no suma ningún medio
+apercibimiento, el sistema DEBE desbloquear Empleado ejemplar. Un solo medio apercibimiento en el
+legajo NO DEBE desbloquearlo.
 
 ### BR-ACH-008 — Pésima primera impresión
 
@@ -163,9 +163,9 @@ CUANDO se baja y se vuelve al tope ENTONCES no hay otro aviso.
 
 ### AC-ACH-006 — Empleado ejemplar pide cero medios *(verifica BR-ACH-007)*
 
-DADO una partida con contrato cumplido y el legajo en cero medios ENTONCES se desbloquea Empleado
-ejemplar, también si el final es «Locura paranoica». DADO la misma partida con un medio apercibimiento
-ENTONCES no. DADO una partida despedida ENTONCES no.
+DADO una partida terminada con cada final que no es el despido y el legajo en cero medios ENTONCES se
+desbloquea Empleado ejemplar. DADO la misma partida con un medio apercibimiento ENTONCES no. DADO una
+partida despedida ENTONCES no.
 
 ### AC-ACH-007 — Pésima primera impresión sólo en la prueba *(verifica BR-ACH-008)*
 

@@ -75,10 +75,8 @@ static func estamos_al_pedo(registro: RegistroDeVentas) -> bool:
 
 
 static func empleado_ejemplar(final: Partida.Final, medios: int) -> bool:
-	var cumplido := (
-		final == Partida.Final.CONTRATO_CUMPLIDO or final == Partida.Final.LOCURA_PARANOICA
-	)
-	return cumplido and medios == 0
+	var terminada := final != Partida.Final.EN_CURSO and final != Partida.Final.DESPEDIDO
+	return terminada and medios == 0
 
 
 ## El despido de la prueba: el único que llega antes de la primera jornada completa.
