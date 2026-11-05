@@ -59,6 +59,40 @@ func test_un_logro_desbloqueado_muestra_su_nombre_y_los_demas_no() -> void:  # A
 	assert_str(_texto(entradas[L.REBELDE])).is_equal(PantallaDeLogros.TEXTO_BLOQUEADO)
 
 
+func test_cada_entrada_alcanzada_muestra_una_imagen_propia() -> void:  # AC-ACH-013
+	var logros := Logros.new()
+	var desbloqueables: Array[L] = []
+	for logro: L in L.values():
+		if logro != L.OBELISCO_DE_CARTON and logro != L.ELEMENTAL:
+			logros.desbloquear(logro)
+			desbloqueables.append(logro)
+	for final: F in Logros.finales():
+		logros.alcanzar_final(final)
+	var pantalla := _pantalla(logros)
+	var imagenes: Array[Texture2D] = []
+	for logro: L in desbloqueables:
+		imagenes.append(_imagen(pantalla.entradas(LOGROS)[logro]))
+	for entrada: HBoxContainer in pantalla.entradas(FINALES):
+		imagenes.append(_imagen(entrada))
+	assert_int(imagenes.size()).is_equal(desbloqueables.size() + Logros.finales().size())
+	var vistas: Array[Texture2D] = [PantallaDeLogros.IMAGEN_BLOQUEADA]
+	for imagen: Texture2D in imagenes:
+		assert_object(imagen).is_not_null()
+		assert_bool(vistas.has(imagen)).is_false()
+		vistas.append(imagen)
+
+
+func test_obelisco_y_elemental_se_ven_bloqueados() -> void:  # AC-ACH-013
+	var logros := Logros.new()
+	for logro: L in L.values():
+		if logro != L.OBELISCO_DE_CARTON and logro != L.ELEMENTAL:
+			logros.desbloquear(logro)
+	var entradas := _pantalla(logros).entradas(LOGROS)
+	for logro: L in [L.OBELISCO_DE_CARTON, L.ELEMENTAL]:
+		assert_str(_texto(entradas[logro])).is_equal(PantallaDeLogros.TEXTO_BLOQUEADO)
+		assert_object(_imagen(entradas[logro])).is_same(PantallaDeLogros.IMAGEN_BLOQUEADA)
+
+
 func test_un_final_alcanzado_muestra_su_nombre_y_el_otro_pregunta() -> void:  # AC-ACH-013
 	var logros := Logros.new()
 	logros.alcanzar_final(F.DESPEDIDO)

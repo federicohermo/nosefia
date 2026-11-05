@@ -16,10 +16,25 @@ const TEXTO_DE_LOS_FINALES := "FINALES"
 const TEXTO_DE_LOS_LOGROS := "LOGROS"
 const TEXTO_BLOQUEADO := "?????"
 
-## El signo de pregunta del diseño: es el mismo del aviso de pista.
-const IMAGEN_BLOQUEADA := preload("res://assets/ui/manada/notificacion_pista.svg")
-## El trofeo del aviso de logro, hasta que cada entrada tenga su imagen propia.
-const IMAGEN_DEL_TROFEO := preload("res://assets/ui/manada/notificacion_logro.svg")
+const IMAGEN_BLOQUEADA := preload("res://assets/ui/manada/logros/bloqueado.png")
+
+## Obelisco de cartón y Elemental no están: se ven bloqueados y no tienen imagen propia todavía.
+const _IMAGEN_DE_LOS_LOGROS: Dictionary[Logros.Logro, Texture2D] = {
+	Logros.Logro.REBELDE: preload("res://assets/ui/manada/logros/rebelde.png"),
+	Logros.Logro.Y_SE_MARCHO: preload("res://assets/ui/manada/logros/y_se_marcho.png"),
+	Logros.Logro.A_LA_BASURA: preload("res://assets/ui/manada/logros/a_la_basura.png"),
+	Logros.Logro.ESTAMOS_AL_PEDO: preload("res://assets/ui/manada/logros/estamos_al_pedo.png"),
+	Logros.Logro.EMPLEADO_EJEMPLAR: preload("res://assets/ui/manada/logros/empleado_ejemplar.png"),
+	Logros.Logro.PESIMA_PRIMERA_IMPRESION:
+	preload("res://assets/ui/manada/logros/pesima_primera_impresion.png"),
+	Logros.Logro.MI_TALON_DE_AQUILES:
+	preload("res://assets/ui/manada/logros/mi_talon_de_aquiles.png"),
+}
+const _IMAGEN_DE_LOS_FINALES: Dictionary[Partida.Final, Texture2D] = {
+	Partida.Final.DESPEDIDO: preload("res://assets/ui/manada/logros/final_despedido.png"),
+	Partida.Final.CONTRATO_CUMPLIDO:
+	preload("res://assets/ui/manada/logros/final_contrato_cumplido.png"),
+}
 
 ## Medidas del lienzo de 1920 × 1080.
 const LADO_DE_LA_IMAGEN := 72.0
@@ -123,14 +138,14 @@ func _pintar() -> void:
 		_agregar(
 			TEXTO_DE_LOS_FINALES,
 			_logros.final_alcanzado(final),
-			IMAGEN_DEL_TROFEO,
+			_IMAGEN_DE_LOS_FINALES[final],
 			Logros.nombre_del_final(final)
 		)
 	for logro: Logros.Logro in Logros.Logro.values():
 		_agregar(
 			TEXTO_DE_LOS_LOGROS,
 			_logros.desbloqueado(logro),
-			IMAGEN_DEL_TROFEO,
+			_IMAGEN_DE_LOS_LOGROS.get(logro),
 			Logros.nombre(logro)
 		)
 
