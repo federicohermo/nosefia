@@ -21,14 +21,14 @@ noche.
 | **Logro** | uno de los nueve premios del catálogo cerrado, con nombre fijo | medalla, trofeo |
 | **Desbloquear** | ganar un logro por primera vez; ocurre una sola vez en la vida del archivo | completar, activar |
 | **Catalogado** | el logro existe y se muestra, aunque nada lo desbloquee todavía | implementado |
-| **Final alcanzado** | un final de la partida que el jugador vio alguna vez: despedido, contrato cumplido o jefe saboteador | final desbloqueado |
+| **Final alcanzado** | un final de la partida que el jugador vio alguna vez: despedido, contrato cumplido, locura paranoica o jefe saboteador | final desbloqueado |
 | **Pista descubierta** | una pista que la investigación aceptó alguna vez, en cualquier partida | pista vista |
 | **Pantalla de logros** | la pantalla de tres columnas —pistas, finales y logros— que abren el menú de inicio y la pausa | galería |
 
 Los nueve logros y su nombre en pantalla son: **Obelisco de cartón**, **Rebelde**, **Y se marchó…**,
 **A la basura**, **Estamos al pedo, ¿no?**, **Empleado ejemplar**, **Pésima primera impresión**,
-**Mi talón de Aquiles** y **Elemental, mi querida Yasmín**. Los tres finales y su nombre en pantalla
-son **Despedido**, **Contrato cumplido** y **Jefe saboteador**.
+**Mi talón de Aquiles** y **Elemental, mi querida Yasmín**. Los cuatro finales y su nombre en pantalla
+son **Despedido**, **Contrato cumplido**, **Locura paranoica** y **Jefe saboteador**.
 
 ## Comportamiento normativo
 
@@ -70,9 +70,9 @@ bajar y volver a llegar NO DEBE avisar otra vez (BR-ACH-002).
 
 ### BR-ACH-007 — Empleado ejemplar
 
-CUANDO la partida termina con contrato cumplido (BR-EMP-004) y el legajo no suma ningún medio
-apercibimiento, el sistema DEBE desbloquear Empleado ejemplar. Un solo medio apercibimiento en el
-legajo NO DEBE desbloquearlo.
+CUANDO la partida termina con contrato cumplido (BR-EMP-004), sea con el final «Contrato cumplido» o
+con «Locura paranoica» (BR-INV-103), y el legajo no suma ningún medio apercibimiento, el sistema DEBE
+desbloquear Empleado ejemplar. Un solo medio apercibimiento en el legajo NO DEBE desbloquearlo.
 
 ### BR-ACH-008 — Pésima primera impresión
 
@@ -104,7 +104,7 @@ conoce, ENTONCES el sistema DEBE ignorarlo y conservar los demás.
 ### BR-ACH-012 — Los finales y las pistas también duran
 
 CUANDO la partida termina, el sistema DEBE anotar en el mismo archivo el final alcanzado: despedido,
-contrato cumplido o jefe saboteador. CUANDO la investigación acepta una pista nueva (BR-NTF-010), el sistema DEBE
+contrato cumplido, locura paranoica o jefe saboteador. CUANDO la investigación acepta una pista nueva (BR-NTF-010), el sistema DEBE
 anotarla como descubierta en el mismo archivo. Las dos anotaciones DEBEN cruzar partidas como los
 logros, y repetirlas no cambia nada. SI el archivo nombra una pista o un final que el juego no
 conoce, ENTONCES el sistema DEBE ignorarlo.
@@ -114,7 +114,7 @@ conoce, ENTONCES el sistema DEBE ignorarlo.
 La pantalla de logros DEBE mostrar tres columnas, en este orden: **pistas, finales y logros**. La de
 pistas DEBE listar las pistas del caso que dejan una nota, con foto y texto: una pista de acción,
 sin foto ni texto, NO DEBE aparecer, porque nunca se descubre como las demás. La de finales DEBE
-listar todos los finales de la partida. La de logros DEBE listar los nueve.
+listar todos los finales de la partida, entre ellos «Locura paranoica», con su nombre. La de logros DEBE listar los nueve.
 
 ### BR-ACH-014 — Una entrada desbloqueada muestra, una bloqueada pregunta
 
@@ -164,8 +164,8 @@ CUANDO se baja y se vuelve al tope ENTONCES no hay otro aviso.
 ### AC-ACH-006 — Empleado ejemplar pide cero medios *(verifica BR-ACH-007)*
 
 DADO una partida con contrato cumplido y el legajo en cero medios ENTONCES se desbloquea Empleado
-ejemplar. DADO la misma partida con un medio apercibimiento ENTONCES no. DADO una partida despedida
-ENTONCES no.
+ejemplar, también si el final es «Locura paranoica». DADO la misma partida con un medio apercibimiento
+ENTONCES no. DADO una partida despedida ENTONCES no.
 
 ### AC-ACH-007 — Pésima primera impresión sólo en la prueba *(verifica BR-ACH-008)*
 
@@ -195,14 +195,15 @@ desconocido y uno válido ENTONCES sólo el válido queda desbloqueado.
 ### AC-ACH-011 — Finales y pistas duran *(verifica BR-ACH-012)*
 
 DADO una partida que termina despedida ENTONCES el final despedido queda alcanzado y el de contrato
-cumplido no. DADO una pista nueva aceptada ENTONCES queda descubierta, también en la partida
+cumplido no. DADO una partida que termina con el final 2 ENTONCES queda alcanzado «Locura paranoica»
+y «Contrato cumplido» no. DADO una pista nueva aceptada ENTONCES queda descubierta, también en la partida
 siguiente. DADO el mismo final o la misma pista otra vez ENTONCES el archivo queda igual. DADO un
 final o una pista desconocidos en el archivo ENTONCES se ignoran.
 
 ### AC-ACH-012 — Tres columnas en orden *(verifica BR-ACH-013, BR-ACH-014)*
 
 DADO la pantalla de logros ENTONCES hay tres columnas, en este orden: pistas, finales y logros. La
-de logros lista nueve entradas, la de finales una por cada final de la partida, y la de pistas una
+de logros lista nueve entradas, la de finales una por cada final de la partida, «Locura paranoica» incluido, y la de pistas una
 por cada pista del caso que deja nota: una pista sin foto ni texto no tiene entrada.
 
 ### AC-ACH-013 — Desbloqueada nombra, bloqueada pregunta *(verifica BR-ACH-014)*

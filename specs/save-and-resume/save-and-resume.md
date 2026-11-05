@@ -34,7 +34,8 @@ esos momentos no se escribe.
 
 ### BR-SAV-002 — Un final resetea el progreso
 
-SI la partida terminó —por despido, por contrato cumplido o por el final 4 de BR-SHF-060—, ENTONCES el sistema DEBE **borrar el
+SI la partida terminó —por despido, por contrato cumplido, sea el final 1 o el 2 de BR-INV-103, o por
+el final 4 de BR-SHF-060—, ENTONCES el sistema DEBE **borrar el
 guardado** en vez de escribirlo.
 
 ### BR-SAV-003 — Decidir y escribir son dos cosas
@@ -249,7 +250,8 @@ tiene por abrir, y esos apercibimientos.
 ### AC-SAV-002 — El último cierre borra *(verifica BR-SAV-002)*
 
 DADO la última jornada CUANDO cierra ENTONCES hay **una** llamada y no dos, con la partida
-terminada, y el archivo queda borrado.
+terminada, y el archivo queda borrado. Vale con el expediente sin pistas (final 1) y con una pista
+registrada (final 2).
 
 ### AC-SAV-003 — El despido también resetea *(verifica BR-SAV-002)*
 
