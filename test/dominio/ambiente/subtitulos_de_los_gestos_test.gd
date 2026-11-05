@@ -17,7 +17,7 @@ const RENGLONES_DE_LA_FICHA: Dictionary[SubtitulosDeLosGestos.Id, int] = {
 	SubtitulosDeLosGestos.Id.JABON_EQUIVOCADO: 2,
 	SubtitulosDeLosGestos.Id.MOPA_SIN_MOJAR: 1,
 	SubtitulosDeLosGestos.Id.MOPA_YA_SECA: 1,
-	SubtitulosDeLosGestos.Id.MOPA_BERRETA: 1,
+	SubtitulosDeLosGestos.Id.MOPA_BERRETA: 2,
 	SubtitulosDeLosGestos.Id.PARED_DEL_OTRO_INODORO: 1,
 	SubtitulosDeLosGestos.Id.PISO_DE_LAS_ESTANTERIAS_DEL_FONDO: 1,
 	SubtitulosDeLosGestos.Id.TECHO_SOBRE_UN_CUBICULO: 1,
