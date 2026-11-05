@@ -17,7 +17,7 @@ extends RefCounted
 
 ## Los estados en los que puede estar una partida. Es un conjunto cerrado y por eso es un
 ## `enum`: un `String` suelto dejaría al `if` del menú sin entrar nunca, sin decir una palabra.
-enum Final { EN_CURSO, CONTRATO_CUMPLIDO, DESPEDIDO, JEFE_SABOTEADOR }
+enum Final { EN_CURSO, CONTRATO_CUMPLIDO, DESPEDIDO, JEFE_SABOTEADOR, JEFE_INCOMPETENTE }
 enum Llamado {
 	LOCAL_DESORDENADO,
 	OBJETO_AFUERA,
@@ -30,8 +30,15 @@ enum RegistroDePoetico { RECHAZADO, ANOTADO, REPETIDO }
 const ReglasDelCierre := preload("res://src/dominio/almacen/reglas_del_cierre.gd")
 
 ## Con qué objeto en la mano se abre la puerta de la oficina del jefe, y de qué pista es la acción
-## de abrirla (BR-PLY-060, BR-INV-142).
+## de abrirla (BR-PLY-060, BR-INV-142, BR-INV-145).
 const PALANCA := &"palanca"
+const LLAVE := &"llave"
+
+## A qué final lleva abrir la oficina del jefe con cada objeto (BR-SHF-060, BR-SHF-061).
+const _FINAL_DE_LA_OFICINA: Dictionary[StringName, Final] = {
+	PALANCA: Final.JEFE_SABOTEADOR,
+	LLAVE: Final.JEFE_INCOMPETENTE,
+}
 
 ## La última noche de la prueba: de ahí sale el resultado que la primera jornada completa hereda.
 const _ULTIMA_DE_LA_PRUEBA := ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA - 1
@@ -410,19 +417,19 @@ func cerrar_la_jornada(
 	_devoluciones.append_array(DevolucionDelJefe.new(cerrada, self).mensajes_fechados())
 
 
-## La puerta de la oficina del jefe se abrió con la palanca en la jornada 7 (BR-SHF-060): registra
-## la 7B y termina la jornada y la partida en ese momento, sin cierre, sin devolución y sin
-## evaluar la noche. Devuelve si terminó; sin la 7B activa, o con la jornada cerrada, no cambia
-## nada.
-func abrir_la_oficina_del_jefe(hora: String = "") -> bool:
-	if terminada() or not _jornada_abierta:
+## La puerta de la oficina del jefe se abrió en la jornada 7 con `con` en la mano, la palanca o la
+## llave (BR-SHF-060, BR-SHF-061): registra su pista y termina la jornada y la partida en ese
+## momento, sin cierre, sin devolución y sin evaluar la noche. Devuelve si terminó; con otro objeto,
+## sin la pista activa o con la jornada cerrada, no cambia nada.
+func abrir_la_oficina_del_jefe(con: StringName, hora: String = "") -> bool:
+	if terminada() or not _jornada_abierta or not _FINAL_DE_LA_OFICINA.has(con):
 		return false
-	var resultado := _expediente.registrar_por_canal(PALANCA, Pista.Canal.ACCION, _jornada, hora)
+	var resultado := _expediente.registrar_por_canal(con, Pista.Canal.ACCION, _jornada, hora)
 	if resultado == Expediente.Resultado.DESCONOCIDA:
 		return false
 	_jornada_abierta = false
 	_reflexion = null
-	_final = Final.JEFE_SABOTEADOR
+	_final = _FINAL_DE_LA_OFICINA[con]
 	return true
 
 

@@ -1,4 +1,4 @@
-## La puerta trabada que cede a un solo objeto en la mano: la traba sigue siendo suya.
+## La puerta trabada que cede a ciertos objetos en la mano: la traba sigue siendo suya.
 extends GdUnitTestSuite
 
 
@@ -44,3 +44,35 @@ func test_forzar_una_puerta_ya_abierta_o_sin_traba_no_hace_nada() -> void:  # AC
 	libre.ceder_a(Partida.PALANCA)
 	assert_bool(libre.forzar(_objeto(Partida.PALANCA))).is_false()
 	assert_bool(libre.abierta()).is_false()
+
+
+func _puerta_que_cede_a_la_palanca_y_a_la_llave() -> Puerta:
+	var puerta := _puerta_que_cede_a_la_palanca()
+	puerta.ceder_a(Partida.LLAVE)
+	return puerta
+
+
+func test_con_la_llave_en_la_mano_la_trabada_abre_y_sigue_trabada() -> void:  # AC-PLY-191
+	var puerta := _puerta_que_cede_a_la_palanca_y_a_la_llave()
+	assert_bool(puerta.forzar(_objeto(Partida.LLAVE))).is_true()
+	assert_bool(puerta.abierta()).is_true()
+	assert_bool(puerta.trabada()).is_true()
+
+
+func test_ceder_a_la_llave_no_quita_la_palanca() -> void:  # AC-PLY-190
+	var puerta := _puerta_que_cede_a_la_palanca_y_a_la_llave()
+	assert_bool(puerta.forzar(_objeto(Partida.PALANCA))).is_true()
+
+
+func test_sin_la_llave_la_trabada_no_cede() -> void:  # AC-PLY-191
+	var puerta := _puerta_que_cede_a_la_palanca_y_a_la_llave()
+	assert_bool(puerta.forzar(_objeto(&"mopa"))).is_false()
+	assert_bool(puerta.abierta()).is_false()
+
+
+func test_una_puerta_que_no_declaro_la_llave_no_cede_a_ella() -> void:  # AC-PLY-191
+	var oficina := _puerta_que_cede_a_la_palanca()
+	assert_bool(oficina.forzar(_objeto(Partida.LLAVE))).is_false()
+	var porton := Puerta.new(true)
+	assert_bool(porton.forzar(_objeto(Partida.LLAVE))).is_false()
+	assert_bool(porton.abierta()).is_false()
