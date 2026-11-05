@@ -3,7 +3,7 @@ schema_version: 1
 capability_id: CAP-INV
 status: draft
 owner: por definir
-provenance: GDD «Investigación» y «La computadora»; ficha «Interfaces virtuales durante la jornada» y decisiones de #373, #375 y #376; migración de los specs 006, 009, 018; fichas Chat con el jefe, Chat con compañera y 2A revisadas el 2026-10-15; decisiones de #430; «Sistema de investigación», fichas 2A/2B/2P y decisiones de #22 del 2026-10-15; decisión del usuario del 2026-10-18 de usar la captura del mensaje de Yasmín como foto de 2A; decisión del usuario del 2026-10-17 de retirar las notas de la computadora y usar el diseño del registro de productos; ficha «Pantalla entre jornadas», reflexión de jornada 1, encabezado de jornada 2 y decisiones de #436; decisiones del usuario del 2026-10-18 sobre el recorrido lateral, la elección sin límite de tiempo, la reanudación del cierre y la espera de 1 segundo; ocho jornadas de #526; instrucciones por jornada de #527; la colilla sólo en su jornada, de #536; ficha Chat con compañera, jornada 5, de #458; ficha «Caminos narrativos y finales» y cuadro de pistas e hipótesis de #766 y la ficha «5B» de la lista de pistas e hipótesis y decisiones del usuario del 2026-10-30 sobre su foto y su texto, de #731; la fila «6C» de la lista de pistas e hipótesis, la ficha «Caminos narrativos y finales» y decisiones del usuario del 2026-11-03 sobre Yasmín y la textura de la nota, de #741; encabezado de la jornada 5 y ficha «5P» de la lista de pistas e hipótesis y decisión del usuario del 2026-11-04 sobre la 5L, de #740; ficha «Especificar animaciones», el chat que entra y sale deslizándose, de #627
+provenance: GDD «Investigación» y «La computadora»; ficha «Interfaces virtuales durante la jornada» y decisiones de #373, #375 y #376; migración de los specs 006, 009, 018; fichas Chat con el jefe, Chat con compañera y 2A revisadas el 2026-10-15; decisiones de #430; «Sistema de investigación», fichas 2A/2B/2P y decisiones de #22 del 2026-10-15; decisión del usuario del 2026-10-18 de usar la captura del mensaje de Yasmín como foto de 2A; decisión del usuario del 2026-10-17 de retirar las notas de la computadora y usar el diseño del registro de productos; ficha «Pantalla entre jornadas», reflexión de jornada 1, encabezado de jornada 2 y decisiones de #436; decisiones del usuario del 2026-10-18 sobre el recorrido lateral, la elección sin límite de tiempo, la reanudación del cierre y la espera de 1 segundo; ocho jornadas de #526; instrucciones por jornada de #527; la colilla sólo en su jornada, de #536; ficha Chat con compañera, jornada 5, de #458; ficha «Caminos narrativos y finales» y cuadro de pistas e hipótesis de #766 y la ficha «5B» de la lista de pistas e hipótesis y decisiones del usuario del 2026-10-30 sobre su foto y su texto, de #731; la fila «6C» de la lista de pistas e hipótesis, la ficha «Caminos narrativos y finales» y decisiones del usuario del 2026-11-03 sobre Yasmín y la textura de la nota, de #741; encabezado de la jornada 5 y ficha «5P» de la lista de pistas e hipótesis y decisión del usuario del 2026-11-04 sobre la 5L, de #740; ficha «Especificar animaciones», el chat que entra y sale deslizándose, de #627; la fila «5A» de la lista de pistas e hipótesis y el mensaje de Cami de «Diálogos de compradores», de #785
 ---
 
 # Capacidad: la investigación
@@ -595,9 +595,10 @@ y las hipótesis 2A, 2B y 2P NO DEBEN cambiar.
 ### BR-INV-062 — La quinta jornada se cierra eligiendo una hipótesis
 
 La reflexión de jornada 5 DEBE mostrar el encabezado «Esta vez desapareció el lector de la
-caja…». SI se registró 5B, ENTONCES la única opción DEBE ser la hipótesis 5B (BR-INV-061), sin
-la predeterminada. SI no se registró 5B, ENTONCES la única opción DEBE ser la hipótesis 5P, haya o
-no pistas en noches anteriores (BR-INV-053). Los datos de 5P DEBEN ser, según la ficha «5P» de la
+caja…». SI se registró 5A o 5B, ENTONCES las opciones DEBEN ser las hipótesis de las pistas
+registradas (BR-INV-122, BR-INV-061), en el orden 5A, 5B y sin la predeterminada. SI no se registró
+ninguna, ENTONCES la única opción DEBE ser la hipótesis 5P, haya o no pistas en noches anteriores
+(BR-INV-053). Los datos de 5P DEBEN ser, según la ficha «5P» de la
 lista de pistas e hipótesis:
 
 | Identidad | Título de hipótesis | Texto de hipótesis |
@@ -611,6 +612,37 @@ BR-INV-045 y entonces pedir una sola entrada a «NOCHE 6» (BR-SHF-019). Antes d
 aceptada, NO DEBE empezar ninguna entrada. Una reflexión restaurada a mitad de la elección DEBE
 volver a la elección, y pausar o salir al menú NO DEBE elegir por el jugador. La 5L sigue sin
 texto: queda en OQ-INV-004.
+
+### BR-INV-121 — «actitudes extrañas de Peldaño» es el tramo de la pista 5A
+
+MIENTRAS la ventanilla muestra el mensaje de Cami que dice «actitudes extrañas de Peldaño»
+(BR-CTR-048), el sistema DEBE mostrar sólo ese fragmento en lila, el color de pista, y el resto del
+mensaje en el color normal del diálogo. CUANDO se pulsa el fragmento, DEBE emitir un pedido
+identificado con 5A por el canal de comprador (BR-INV-037), sin deducir la identidad del texto
+visible, y NO DEBE avanzar el diálogo. Leer el mensaje, avanzar el diálogo con otro gesto y pulsar
+otra parte del texto NO DEBEN emitir ese pedido. Repetir el clic válido PUEDE repetir el pedido; la
+aceptación e idempotencia del hallazgo corresponden a quien registra la pista (BR-INV-032).
+
+### BR-INV-122 — El contenido de 5A procede de su ficha
+
+CUANDO se registra 5A con la jornada 5 abierta y el canal de comprador, el sistema DEBE contestar
+ANOTADA y agregar al chat de notas primero su foto y después su texto (BR-INV-040). La pista 5A
+DEBE ser de la jornada 5, del canal de comprador y del camino de la hipótesis 2A (BR-INV-049,
+BR-INV-050): por el camino de 2B no está activa. La hipótesis 5A DEBE estar disponible al cierre de
+la jornada 5 si y sólo si 5A está registrada (BR-INV-062). Los datos DEBEN ser, según la ficha
+«5A» de la lista de pistas e hipótesis:
+
+| Identidad | Foto de pista | Texto de pista | Título de hipótesis |
+|---|---|---|---|
+| 5A | la imagen del comprador Cami | Una compradora mencionó que los empleados de la estación de servicio no duran mucho por las “actitudes extrañas” de Enrique. | ACTITUDES EXTRAÑAS |
+
+El texto de la hipótesis 5A DEBE ser: «¿Qué habrá querido decir con "actitudes extrañas"? ¿Será que
+Enrique maltrató de alguna forma a sus antiguos empleados? ¿Tendrá que ver con estas cosas raras que
+están pasando? Debería buscar algún registro sobre actitudes peculiares de Enrique.»
+
+La ficha no dice cuál imagen de Cami es la foto: DEBE ser un retrato de Cami, distinto de las fotos
+de las demás pistas. Registrar 5A NO DEBE cambiar lo que hacen 5B y 5P. Las pistas y las hipótesis
+2A, 2B, 2P, 5B y 6C NO DEBEN cambiar.
 
 ### BR-INV-070 — El contenido de 6C procede de su ficha
 
@@ -1323,6 +1355,42 @@ vuelve a la elección. Pasa igual con 5B elegida.
 DADO el cierre de la jornada 3 ENTONCES sigue con su encabezado y sus tres textos, y pide «NOCHE 4».
 DADO el cierre de la jornada 4 ENTONCES sigue con su encabezado y las cuatro combinaciones de
 BR-INV-039, y pide «NOCHE 5». DADO el cierre de la jornada 6 o 7 ENTONCES no hay reflexión.
+
+### AC-INV-165 — Sólo el fragmento de Cami pide 5A *(verifica BR-INV-121, BR-INV-037)*
+
+DADO la jornada 5 abierta y la ventanilla con el mensaje de «actitudes extrañas de Peldaño» CUANDO
+se muestra ENTONCES esas palabras, y sólo ellas, van en lila; pulsarlas emite exactamente un
+pedido con la identidad 5A por el canal de comprador, no avanza el diálogo, y pulsarlas dos veces
+emite dos pedidos iguales. DADO el mismo mensaje CUANDO se lee, se avanza el diálogo o se pulsa otra
+parte del texto ENTONCES se emiten cero pedidos y el expediente queda intacto. DADO el pedido con
+el reloj detenido, el juego en pausa o un examen en curso ENTONCES no registra nada.
+
+### AC-INV-166 — Registrar 5A agrega foto y texto una vez *(verifica BR-INV-122, BR-INV-032, BR-INV-040, BR-INV-037, BR-INV-050)*
+
+DADO el caso de la partida con 2A registrada y elegida en la jornada 4 CUANDO se pide 5A por el
+canal de comprador en la jornada 5 ENTONCES contesta ANOTADA, el expediente es [2A, 5A], se publica
+una pista nueva de jornada 5 con su foto y su texto, y el chat de notas recibe primero la foto y
+después el texto, sin cambiar las notas de 2A. CUANDO se repite el pedido ENTONCES contesta
+REPETIDA y no agrega mensajes ni publica otra pista. CUANDO se pide 5A por el canal de comprador en
+la jornada 4, o por otro canal en la 5, ENTONCES contesta DESCONOCIDA y el expediente queda
+intacto. DADO 2B elegida en la jornada 4, o ninguna elección, CUANDO se pide 5A ENTONCES contesta
+DESCONOCIDA, porque 5A es del camino de 2A (BR-INV-049, BR-INV-050). DADO 5A registrada CUANDO se
+pide 5B por el canal de chat ENTONCES contesta ANOTADA y el expediente es [2A, 5A, 5B].
+
+### AC-INV-167 — El contenido de 5A es el de su ficha *(verifica BR-INV-122)*
+
+DADO el caso de la partida CUANDO se consulta 5A ENTONCES su texto de pista, su título de hipótesis
+y su texto de hipótesis coinciden con BR-INV-122, y su foto es una imagen distinta de la de 2A, la
+de 2B, la de 5B y la de 6C. Las identidades 2A, 2B, 2P, 5B y 6C conservan sus datos.
+
+### AC-INV-168 — Con la pista 5A se ofrece su hipótesis *(verifica BR-INV-062, BR-INV-122, BR-INV-039)*
+
+DADO 2A elegida en la jornada 4 y 5A registrada en la 5, sin 5B, ENTONCES la única opción del cierre
+es 5A «ACTITUDES EXTRAÑAS», sin 5P. DADO 5A y 5B registradas ENTONCES las opciones son 5A y 5B, en
+ese orden, sin 5P. DADO sólo 5B registrada ENTONCES la única opción sigue siendo 5B. DADO el
+expediente sin 5A CUANDO se pide elegir 5A ENTONCES contesta NO_DISPONIBLE, sin nota ni elección.
+CUANDO se elige 5A con 5A registrada ENTONCES contesta ACEPTADA, las notas reciben su texto una
+sola vez, la elección de la jornada 5 es 5A y la reflexión pide «NOCHE 6» como con 5B (AC-INV-112).
 
 ### AC-INV-100 — La apertura de la jornada 4 saluda de tarde *(verifica BR-INV-029, BR-INV-030)*
 
