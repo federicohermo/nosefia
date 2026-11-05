@@ -732,6 +732,7 @@ func _al_cerrar_la_jornada(jornada: int, _cumplidas: int) -> void:
 	var persiana: PersianaDeLaNoche = get_node("Interfaz/PersianaDeLaNoche")
 	persiana.bajar()
 	_celular.cerrar_jornada()
+	_pantalla_del_celular.retener_los_no_leidos()
 	_pantalla_del_celular.mostrar_recordatorio(false)
 	_audio.callar_la_musica()
 	var devolucion := DevolucionDelJefe.new(jornada, _partida)
@@ -999,6 +1000,7 @@ func anunciar_la_noche() -> void:
 
 
 func _al_subir_la_persiana(_jornada: int) -> void:
+	_pantalla_del_celular.soltar_los_no_leidos()
 	_reloj.soltar()
 	_jugador.reanudar()
 
@@ -1299,6 +1301,7 @@ func _cablear_el_celular() -> void:
 	_celular.foto_ampliada.connect(_pantalla_del_celular.ampliar)
 	_celular.foto_cerrada.connect(_pantalla_del_celular.cerrar_foto)
 	_celular.mensaje_recibido.connect(_al_recibir_en_el_celular)
+	_celular.no_leidos_cambiados.connect(_pantalla_del_celular.mostrar_no_leidos)
 	_celular.nota_recibida.connect(
 		func(mensaje: Mensaje) -> void:
 			_al_recibir_en_el_celular(Conversacion.Interlocutor.NOTAS, mensaje)
