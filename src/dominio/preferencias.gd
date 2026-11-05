@@ -7,6 +7,8 @@
 ##
 ## Cada defecto es el juego de hoy: ningún volumen pasa de 0 dB, y la sensibilidad y la letra de
 ## fábrica se multiplican por uno.
+##
+## Las asignaciones de teclas y botones viajan con ellas, en el mismo archivo y con su propia clave.
 class_name Preferencias
 extends RefCounted
 
@@ -49,6 +51,9 @@ const DEFECTOS: Dictionary[Campo, float] = {
 	Campo.TEXTOS: 1.0,
 }
 
+## La clave del bloque de las asignaciones de controles.
+const CLAVE_DE_CONTROLES := "controles"
+
 ## Las claves del archivo. Son texto y no el número del `enum`: reordenarlo no puede cambiar qué
 ## valor se lee en cada campo.
 const CLAVES: Dictionary[Campo, String] = {
@@ -67,6 +72,7 @@ const DECIBELIOS_DEL_SILENCIO := -80.0
 const TOLERANCIA := 1e-4
 
 var _pasos: Dictionary[Campo, int] = {}
+var _controles := AsignacionDeControles.new()
 
 
 func _init() -> void:
@@ -133,14 +139,26 @@ func sensibilidad_del_giro() -> float:
 func copia() -> Preferencias:
 	var otra := Preferencias.new()
 	otra._pasos = _pasos.duplicate()
+	otra._controles = _controles.copia()
 	return otra
 
 
-## Los cinco valores, cada uno como número decimal y con su clave de texto.
+## Una copia: quien la recibe la cambia y la devuelve con `poner_controles`.
+func controles() -> AsignacionDeControles:
+	return _controles.copia()
+
+
+func poner_controles(asignacion: AsignacionDeControles) -> void:
+	_controles = asignacion.copia()
+
+
+## Los cinco valores, cada uno como número decimal y con su clave de texto, y el bloque de las
+## asignaciones.
 func datos() -> Dictionary:
 	var salida := {}
 	for campo: Campo in CAMPOS:
 		salida[CLAVES[campo]] = valor(campo)
+	salida[CLAVE_DE_CONTROLES] = _controles.datos()
 	return salida
 
 
@@ -153,6 +171,9 @@ static func desde(crudo: Dictionary) -> Preferencias:
 		var leido: Variant = crudo.get(CLAVES[campo])
 		if _legible(campo, leido):
 			preferencias.poner(campo, float(leido))
+	var controles: Variant = crudo.get(CLAVE_DE_CONTROLES)
+	if controles is Dictionary:
+		preferencias._controles = AsignacionDeControles.desde(controles)
 	return preferencias
 
 

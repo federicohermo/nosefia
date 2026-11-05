@@ -137,6 +137,8 @@ var _gestos := SubtitulosDeLosGestos.new()
 var _lugar_del_pensamiento := Vector3.INF
 var _distancia_al_pensar := 0.0
 var _jornada_del_celular: int = 0
+## Lo crea el cableado del celular: `almacen.tscn` no se mergea y no se toca a mano.
+var _respondedor: RespondedorDeQuejas
 var _devolucion_en_espera: DevolucionDelJefe
 var _espera_del_celular := 0.0
 var _enlace_de_guardado: EnlaceDeGuardado
@@ -147,6 +149,7 @@ var _hojas_de_entrada: Array[PuertaDelLocal] = []
 @onready var _instrucciones: PantallaDeInstrucciones = $Interfaz/PantallaDeInstrucciones
 @onready var _celular: CelularDelEmpleado = $Interfaz/CelularDelEmpleado
 @onready var _pantalla_del_celular: PantallaDelCelular = $Interfaz/PantallaDelCelular
+@onready var _pantalla_de_la_computadora: PantallaDeComputadora = $Interfaz/PantallaDeComputadora
 @onready var _hipotesis: PantallaDeHipotesis = $Interfaz/PantallaDeHipotesis
 @onready var _investigador: Investigador = $Servicios/Investigador
 @onready var _colilla: ObjetoAgarrable = $Objetos/Colilla
@@ -426,6 +429,7 @@ func _cablear_las_preferencias(pausa: ControlDePausa) -> void:
 	configuraciones.preparar(preferencias)
 	configuraciones.preferencias_cambiadas.connect(ajuste.previsualizar)
 	configuraciones.preferencias_confirmadas.connect(ajuste.cambiar)
+	configuraciones.controles_cambiados.connect(ajuste.previsualizar)
 	configuraciones.preferencias_cambiadas.connect(
 		func(nuevas: Preferencias) -> void:
 			_jugador.ajustar_sensibilidad(nuevas.sensibilidad_del_giro())
@@ -448,6 +452,9 @@ func _al_abrir_la_jornada(jornada: int) -> void:
 	(get_node("Interfaz/PilaDeNotificaciones") as PilaDeNotificaciones).vaciar()
 	_jornada_del_celular = jornada
 	_celular.abrir_jornada(jornada, _condiciones_del_jefe())
+	var con_quejas := Apertura.pide(jornada, Tarea.Tipo.RESPONDER_QUEJAS)
+	_respondedor.arrancar(QuejasDeLaJornada.de_la_partida(_partida.semilla) if con_quejas else null)
+	_pantalla_de_la_computadora.ofrecer_el_celular(con_quejas)
 	_pantalla_del_celular.mostrar_recordatorio(true)
 	# Primero que nada, y por eso antes de `limpiar()`: lo que quedó en la mano cuelga del
 	# jugador, así que devolverlo a su lugar le escribiría la posición relativa a la mano y la
@@ -503,7 +510,9 @@ func _al_abrir_la_jornada(jornada: int) -> void:
 	_contenedor.reiniciar()
 	var atender := TareaDeAtender.new(compradores, inventario)
 	_atenciones.arrancar(atender)
-	_computadora.arrancar(RegistroDeVentas.new(Catalogo.de_la_jornada(jornada), atender))
+	_computadora.arrancar(
+		RegistroDeVentas.new(Catalogo.de_la_jornada(jornada), atender), con_quejas
+	)
 	# El piso se rehace cada noche: guardar el estado entre jornadas está fuera de alcance, y una
 	# sola instancia dejaría el local limpio de anoche y la obligatoria cumplida sola.
 	_limpiador.arrancar(PisoDelLocal.de_la_jornada(jornada))
@@ -1167,6 +1176,10 @@ func _unhandled_input(evento: InputEvent) -> void:
 
 
 func _alternar_el_celular() -> void:
+	# Con la computadora abierta, Q alterna la pantalla conjunta y no el celular suelto.
+	if _computadora.computadora().abierta():
+		_computadora.pedir_alternar_la_conjunta()
+		return
 	_celular.pedir_alternar(_jugador.suspendido() or _jugador.examen.esta_examinando())
 	_jugador.tomar_el_cursor_desde_entrada()
 
@@ -1191,6 +1204,15 @@ func _cablear_el_celular() -> void:
 	_pantalla_del_celular.tramo_pedido.connect(_celular.pedir_tramo)
 	_pantalla_del_celular.cierre_de_foto_pedido.connect(_celular.pedir_cerrar_foto)
 	_pantalla.preparar(_celular, _pantalla_del_celular)
+	_respondedor = RespondedorDeQuejas.new()
+	_respondedor.reloj = _reloj
+	_respondedor.celular = _celular
+	add_child(_respondedor)
+	_respondedor.queja_respondida.connect(_mostrar_el_chat_del_celular)
+	_pantalla_del_celular.respuesta_pedida.connect(_respondedor.pedir_responder)
+	_pantalla_de_la_computadora.conjunta_pedida.connect(_computadora.pedir_alternar_la_conjunta)
+	_computadora.pantalla_conjunta_cambiada.connect(_al_cambiar_la_pantalla_conjunta)
+	_celular.celular_cerrado.connect(_computadora.pedir_volver_a_la_normal)
 	_hipotesis.continuacion_pedida.connect(_al_continuar_la_reflexion)
 	_hipotesis.eleccion_pedida.connect(_al_elegir_la_hipotesis)
 	_hipotesis.siguiente_pedido.connect(_navegar_las_hipotesis.bind(true))
@@ -1201,13 +1223,24 @@ func _cablear_el_celular() -> void:
 
 
 func _al_abrir_el_celular() -> void:
+	if _computadora.computadora().conjunta():
+		_pantalla_del_celular.abrir_en_la_conjunta()
+		return
 	_jugador.suspender()
 	_pantalla_del_celular.subir()
 
 
+## El registro y el celular a la vez: el celular se abre o se cierra con la pantalla.
+func _al_cambiar_la_pantalla_conjunta(activa: bool) -> void:
+	_pantalla_de_la_computadora.mostrar_conjunta(activa)
+	if activa != _celular.celular().abierto():
+		_celular.pedir_alternar(false)
+
+
 func _al_cerrar_el_celular() -> void:
 	_pensar_gesto(_gestos.al_cerrar_el_celular(_partida))
-	_jugador.reanudar()
+	if not _computadora.computadora().abierta():
+		_jugador.reanudar()
 	_pantalla_del_celular.bajar()
 
 
@@ -1221,7 +1254,8 @@ func _mostrar_el_chat_del_celular(quien: Conversacion.Interlocutor) -> void:
 		_celular.bandeja().mensajes_de(quien),
 		_celular.celular().fijo(),
 		_jornada_del_celular,
-		_celular.celular().primer_nuevo()
+		_celular.celular().primer_nuevo(),
+		_respondedor.admite_respuesta(quien)
 	)
 
 

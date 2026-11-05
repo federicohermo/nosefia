@@ -66,3 +66,19 @@ func test_cambiar_una_preferencia_no_toca_el_archivo_del_usuario() -> void:
 
 func test_el_caso_siguiente_arranca_sin_preferencias() -> void:
 	assert_bool(FileAccess.file_exists(ArchivoDePreferencias.ruta_por_defecto)).is_false()
+
+
+func test_cambiar_los_controles_no_toca_el_archivo_del_usuario() -> void:
+	var antes := _preferencias_del_usuario()
+	var ajuste: AjusteDePreferencias = auto_free(AjusteDePreferencias.new())
+	add_child(ajuste)
+	var asignacion := AsignacionDeControles.new()
+	asignacion.asignar(
+		AsignacionDeControles.EXAMINAR, 0, AsignacionDeControles.TipoDeEntrada.TECLA, KEY_F
+	)
+	var preferencias := Preferencias.new()
+	preferencias.poner_controles(asignacion)
+	assert_bool(ajuste.cambiar(preferencias)).is_true()
+	ajuste.aplicar(Preferencias.new())
+	assert_str(_preferencias_del_usuario()).is_equal(antes)
+	assert_bool(FileAccess.file_exists(ArchivoDePreferencias.ruta_por_defecto)).is_true()

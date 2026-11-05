@@ -1,5 +1,9 @@
-## Aplica unas `Preferencias` al motor: el volumen de los cuatro buses, el brillo y la letra de la
-## interfaz. Escribe cada cambio al disco en el momento.
+## Aplica unas `Preferencias` al motor: el volumen de los cuatro buses, el brillo, la letra de la
+## interfaz y la tecla o el botón de cada acción. Escribe cada cambio al disco en el momento.
+##
+## **El `InputMap` es de todo el proceso.** Las asignaciones reemplazan sólo las teclas y los
+## botones del mouse de cada acción reasignable: el joystick y las demás acciones quedan como en
+## `project.godot`.
 ##
 ## **El volumen y la letra son de todo el proceso**: los buses del `AudioServer` y el tema de
 ## Manada, que el motor carga una sola vez. El brillo, en cambio, es de cada pantalla: se
@@ -15,6 +19,7 @@ extends Node
 const TEMA := preload("res://assets/ui/manada/tema.tres")
 const TAMANOS_PROPIOS := &"tamanos_antes_de_las_preferencias"
 const BRILLO_PROPIO := &"brillo_antes_de_las_preferencias"
+const SIN_ENTRADA := Vector2i(-1, -1)
 
 ## Los buses que regula cada barra de volumen.
 const BUSES: Dictionary[Preferencias.Campo, Array] = {
@@ -67,8 +72,49 @@ func previsualizar(preferencias: Preferencias) -> bool:
 	return archivo.escribir(preferencias)
 
 
+## La entrada de un evento, como `Vector2i(tipo, código)`, o `SIN_ENTRADA` si no es una tecla ni un
+## botón del mouse. La tecla se lee por su código físico, igual que `project.godot`.
+static func entrada_de(evento: InputEvent) -> Vector2i:
+	var tecla := evento as InputEventKey
+	if tecla != null:
+		var codigo: int = tecla.physical_keycode
+		if codigo == KEY_NONE:
+			codigo = tecla.keycode
+		return Vector2i(AsignacionDeControles.TipoDeEntrada.TECLA, codigo)
+	var boton := evento as InputEventMouseButton
+	if boton != null:
+		return Vector2i(AsignacionDeControles.TipoDeEntrada.BOTON_DEL_MOUSE, boton.button_index)
+	return SIN_ENTRADA
+
+
+## Reemplaza en el `InputMap` las teclas y los botones de cada acción asignada. Si ya son las
+## pedidas no toca nada.
+func aplicar_controles(asignacion: AsignacionDeControles) -> void:
+	for accion: StringName in AsignacionDeControles.ACCIONES:
+		if not InputMap.has_action(accion):
+			continue
+		var pedidas: Array[Vector2i] = []
+		for guardada: Dictionary in asignacion.entradas():
+			if guardada["accion"] == accion:
+				pedidas.append(Vector2i(guardada["tipo"], guardada["codigo"]))
+		var propios: Array[InputEvent] = []
+		var tienen: Array[Vector2i] = []
+		for evento: InputEvent in InputMap.action_get_events(accion):
+			var entrada := entrada_de(evento)
+			if entrada != SIN_ENTRADA:
+				propios.append(evento)
+				tienen.append(entrada)
+		if _son_las_mismas(tienen, pedidas):
+			continue
+		for evento: InputEvent in propios:
+			InputMap.action_erase_event(accion, evento)
+		for entrada: Vector2i in pedidas:
+			InputMap.action_add_event(accion, _evento_de(entrada))
+
+
 func aplicar(preferencias: Preferencias) -> void:
 	_actuales = preferencias.copia()
+	aplicar_controles(preferencias.controles())
 	for campo: Preferencias.Campo in BUSES:
 		for bus: String in BUSES[campo]:
 			var indice := AudioServer.get_bus_index(bus)
@@ -81,6 +127,25 @@ func aplicar(preferencias: Preferencias) -> void:
 
 func actuales() -> Preferencias:
 	return _actuales.copia()
+
+
+static func _son_las_mismas(tienen: Array[Vector2i], pedidas: Array[Vector2i]) -> bool:
+	if tienen.size() != pedidas.size():
+		return false
+	for entrada: Vector2i in pedidas:
+		if entrada not in tienen:
+			return false
+	return true
+
+
+static func _evento_de(entrada: Vector2i) -> InputEvent:
+	if entrada.x == AsignacionDeControles.TipoDeEntrada.TECLA:
+		var tecla := InputEventKey.new()
+		tecla.physical_keycode = entrada.y as Key
+		return tecla
+	var boton := InputEventMouseButton.new()
+	boton.button_index = entrada.y as MouseButton
+	return boton
 
 
 func _al_entrar_un_nodo(nodo: Node) -> void:

@@ -3,7 +3,7 @@ schema_version: 1
 capability_id: CAP-INV
 status: draft
 owner: por definir
-provenance: GDD «Investigación» y «La computadora»; ficha «Interfaces virtuales durante la jornada» y decisiones de #373, #375 y #376; migración de los specs 006, 009, 018; fichas Chat con el jefe, Chat con compañera y 2A revisadas el 2026-10-15; decisiones de #430; «Sistema de investigación», fichas 2A/2B/2P y decisiones de #22 del 2026-10-15; decisión del usuario del 2026-10-18 de usar la captura del mensaje de Yasmín como foto de 2A; decisión del usuario del 2026-10-17 de retirar las notas de la computadora y usar el diseño del registro de productos; ficha «Pantalla entre jornadas», reflexión de jornada 1, encabezado de jornada 2 y decisiones de #436; decisiones del usuario del 2026-10-18 sobre el recorrido lateral, la elección sin límite de tiempo, la reanudación del cierre y la espera de 1 segundo; ocho jornadas de #526; instrucciones por jornada de #527; la colilla sólo en su jornada, de #536; ficha Chat con compañera, jornada 5, de #458; ficha «Caminos narrativos y finales» y cuadro de pistas e hipótesis de #766 y la ficha «5B» de la lista de pistas e hipótesis y decisiones del usuario del 2026-10-30 sobre su foto y su texto, de #731; la fila «6C» de la lista de pistas e hipótesis, la ficha «Caminos narrativos y finales» y decisiones del usuario del 2026-11-03 sobre Yasmín y la textura de la nota, de #741; encabezado de la jornada 5 y ficha «5P» de la lista de pistas e hipótesis y decisión del usuario del 2026-11-04 sobre la 5L, de #740; ficha «Especificar animaciones», el chat que entra y sale deslizándose, de #627; GJ-62, el chat que abre en el primer mensaje sin leer, de #568; encabezado de la jornada 6 y fichas «6P» y «6L» de la lista de pistas e hipótesis, de #742; la fila «5A» de la lista de pistas e hipótesis y el mensaje de Cami de «Diálogos de compradores», de #785
+provenance: GDD «Investigación» y «La computadora»; ficha «Interfaces virtuales durante la jornada» y decisiones de #373, #375 y #376; migración de los specs 006, 009, 018; fichas Chat con el jefe, Chat con compañera y 2A revisadas el 2026-10-15; decisiones de #430; «Sistema de investigación», fichas 2A/2B/2P y decisiones de #22 del 2026-10-15; decisión del usuario del 2026-10-18 de usar la captura del mensaje de Yasmín como foto de 2A; decisión del usuario del 2026-10-17 de retirar las notas de la computadora y usar el diseño del registro de productos; ficha «Pantalla entre jornadas», reflexión de jornada 1, encabezado de jornada 2 y decisiones de #436; decisiones del usuario del 2026-10-18 sobre el recorrido lateral, la elección sin límite de tiempo, la reanudación del cierre y la espera de 1 segundo; ocho jornadas de #526; instrucciones por jornada de #527; la colilla sólo en su jornada, de #536; ficha Chat con compañera, jornada 5, de #458; ficha «Caminos narrativos y finales» y cuadro de pistas e hipótesis de #766 y la ficha «5B» de la lista de pistas e hipótesis y decisiones del usuario del 2026-10-30 sobre su foto y su texto, de #731; la fila «6C» de la lista de pistas e hipótesis, la ficha «Caminos narrativos y finales» y decisiones del usuario del 2026-11-03 sobre Yasmín y la textura de la nota, de #741; encabezado de la jornada 5 y ficha «5P» de la lista de pistas e hipótesis y decisión del usuario del 2026-11-04 sobre la 5L, de #740; quejas de la jornada 7, captura de la transferencia y pantalla conjunta de #759, ficha «Particulares de cada jornada» y comentario de Notion del 2026-11-04; ficha «Especificar animaciones», el chat que entra y sale deslizándose, de #627; GJ-62, el chat que abre en el primer mensaje sin leer, de #568; encabezado de la jornada 6 y fichas «6P» y «6L» de la lista de pistas e hipótesis, de #742; la fila «5A» de la lista de pistas e hipótesis y el mensaje de Cami de «Diálogos de compradores», de #785
 ---
 
 # Capacidad: la investigación
@@ -128,7 +128,8 @@ modo libre, Esc DEBE cerrar primero la foto; el Esc siguiente cierra el celular 
 siguiente pausa. Con el turno cerrado, otra interfaz al control, un examen o una
 pausa, Q NO DEBE abrirlo ni alterar el estado existente. Abrir o cerrar NO DEBE cambiar lo que
 se lleva en la mano. Otro Q o Esc durante la subida DEBE iniciar la bajada desde la posición
-actual, sin duplicar el celular ni dejarlo detenido a mitad de camino.
+actual, sin duplicar el celular ni dejarlo detenido a mitad de camino. La pantalla conjunta de la jornada 7 es la excepción: con la computadora
+abierta, Q DEBE alternarla (BR-INV-115).
 
 ### BR-INV-022 — Cada apertura libre empieza en el menú
 
@@ -781,6 +782,77 @@ a medio camino ni abrir dos chats: el celular DEBE terminar mostrando un solo de
 pedido. CUANDO el celular baja o se cierra con un deslizamiento en curso, el deslizamiento DEBE
 saltar a su estado final, de modo que la próxima apertura empiece desde el menú o desde el chat
 que le toque y no desde un punto intermedio.
+
+### BR-INV-110 — La séptima jornada trae cinco chats de compradores que se quejan de un cobro
+
+CUANDO abre la jornada 7, por transición o desde un checkpoint, el sistema DEBE ofrecer, además de
+los chats de Enrique y Yasmín, un chat por cada uno de cinco compradores, con su nombre: El Seba,
+Suko Yañez, Lucas Ortega, Flavio Balbín y Myriam Melano. Cada chat DEBE tener un solo mensaje del
+comprador, con el texto de la ficha «Jornada 7: Responder a quejas» de «Particulares de cada
+jornada» y la captura de una transferencia bancaria (BR-INV-113), sin leer. Los mensajes de El
+Seba, Suko Yañez y Lucas Ortega DEBEN nombrar el valor cobrado de su queja; los de Flavio Balbín y
+Myriam Melano NO DEBEN nombrarlo: sólo la captura lo dice. El valor del texto y el de la captura
+DEBEN ser el mismo. Los productos de cada compra son fijos: El Seba, un Amargadito y un Oremos;
+Suko Yañez, dos Poético, un Laysnnt y un Zucarachas; Lucas Ortega, una Pura-Cola, un Arvecor y
+dos Durextra; Flavio Balbín, un Fernet God, un Burbaloo, un Progres y un Cindolor; Myriam Melano,
+un Terminator, un Actroncito y un Marolini. El total correcto de cada compra DEBE salir de los
+precios del catálogo. Las jornadas 1 a 6 NO DEBEN mostrar estos chats.
+
+### BR-INV-111 — El valor cobrado se sortea al abrir la noche y la semilla de la partida lo conserva
+
+CUANDO abre la jornada 7, el sistema DEBE sortear el valor cobrado de cada queja. Entre una y
+cuatro de las cinco quejas DEBEN tener un valor incorrecto; las otras DEBEN tener exactamente el
+total correcto de su compra. Un valor incorrecto DEBE ser el total de la misma compra con uno o
+dos de sus productos reemplazados por otros productos del catálogo de esa noche, elegidos al
+azar, y NO DEBE coincidir nunca con el total correcto. El sorteo DEBE depender sólo de la semilla
+de la partida y de la jornada: con la misma semilla DEBE dar los mismos valores, y retomar un
+guardado NO DEBE volver a sortear. Una partida nueva DEBE sortear con su propia semilla.
+
+### BR-INV-112 — Cada queja se responde una vez, dándole la razón o rechazándola
+
+MIENTRAS una queja no tiene respuesta, su chat DEBE ofrecer dos botones: «DARLE LA RAZÓN» y
+«RECHAZAR QUEJA». CUANDO el jugador pulsa uno, el chat DEBE mostrar la respuesta del jugador y
+retirar los dos botones. Darle la razón DEBE responder, letra por letra de la ficha: «Mil
+disculpas. Está claro que hubo un error de nuestra parte. Te descontamos la diferencia en tu
+próxima compra». Rechazar DEBE responder: «Perdón, pero no hubo ningún error. El valor que se
+cobró coincide con los precios de los productos. Buenas noches». La respuesta DEBE aparecer como
+mensaje del jugador, sin el aviso ni el sonido de un mensaje recibido. Una queja respondida NO DEBE
+poder responderse otra vez. La respuesta es correcta SI el jugador le da la razón a una queja con
+valor incorrecto, o rechaza una con el valor correcto. Responder NO DEBE descontar tiempo
+(BR-INV-006). La jornada que se retoma empieza con las cinco sin respuesta.
+
+### BR-INV-113 — La captura de la transferencia lleva el valor y las cuentas
+
+La captura de cada queja DEBE seguir el diseño «Captura de transferencia (jornada 7)» de Figma:
+un comprobante del banco ABBA, con el importe en la forma `$ 30.000` (punto de mil), el destino
+«ENRIQUE PELDAÑO S.A. ****4689» y el origen «Cuenta de ahorro ****NNNN». El importe DEBE ser el
+valor cobrado de esa queja. Los cuatro dígitos del origen DEBEN ser fijos, distintos para cada
+uno de los cinco compradores, y NO DEBEN sortearse. Ampliar la captura DEBE mostrarla entera,
+como cualquier foto (BR-INV-025).
+
+### BR-INV-114 — Enrique avisa de las quejas al abrir la jornada 7
+
+CUANDO abre la jornada 7, por transición o desde un checkpoint, Enrique DEBE incorporar, a
+continuación de la devolución de la jornada 6, tres mensajes de apertura con identidades
+estables, en este orden y letra por letra de la ficha «Chat con el jefe»: «Hola, flaco.»; «Mirá,
+hay algunos compradores diurnos que están dele que dele insistiendo con que les cobraron mal. No
+tengo mucho tiempo para contestarles, así que puse tu número como contacto para quejas.»; y
+«Fijate bien si los reclamos tienen sentido o no. A veces les gusta quejarse porque sí.». Las
+jornadas 1 a 6 NO DEBEN mostrarlos, y retomar una partida en la jornada 7 DEBE mostrarlos una sola
+vez, sin leer.
+
+### BR-INV-115 — La pantalla conjunta muestra el registro y el celular juntos
+
+MIENTRAS la computadora está abierta en la jornada 7, el sistema DEBE ofrecer un botón arriba a
+la derecha de su pantalla que abre la pantalla conjunta: el registro de ventas y el celular, lado
+a lado y a la vez, cada uno con su propio desplazamiento. En la pantalla conjunta el botón DEBE
+volver a la pantalla normal. Apretar Q con la computadora abierta DEBE hacer lo mismo que el
+botón, en un sentido y en el otro. La pantalla conjunta DEBE mostrar el menú de chats al abrir. El
+celular de la pantalla conjunta NO DEBE tapar ni desenfocar el registro, y el registro DEBE
+conservar sus unidades al pasar de una pantalla a la otra. CUANDO la computadora se abre, DEBE
+arrancar en la pantalla normal, y al cerrarla el celular DEBE cerrarse con ella. En las
+jornadas 1 a 6 NO DEBE haber botón, y Q con la computadora abierta NO DEBE cambiar la pantalla
+(BR-INV-021). Pasar de una pantalla a la otra NO DEBE descontar tiempo (BR-INV-006).
 
 ## Criterios de aceptación
 
@@ -1641,6 +1713,82 @@ DADO el cierre de la jornada 3 ENTONCES sigue con su encabezado y sus tres texto
 DADO el cierre de la jornada 4 ENTONCES sigue con su encabezado y las cuatro combinaciones de
 BR-INV-039, y pide «NOCHE 5». DADO el cierre de la jornada 5 ENTONCES sigue con su encabezado y sus
 opciones 5B o 5P, y pide «NOCHE 6».
+
+### AC-INV-140 — Enrique avisa de las quejas en la jornada 7 *(verifica BR-INV-114)*
+
+DADO la jornada 7 abierta CUANDO se recorre el chat de Enrique ENTONCES, a continuación de la
+devolución de la jornada 6, hay tres mensajes de apertura, en el orden de BR-INV-114 y con las
+horas 15:57, 15:58 y 15:59. DADO cada jornada de la 1 a la 6 ENTONCES ninguno de los tres está en
+su chat. DADO una partida retomada en la jornada 7 ENTONCES aparecen una sola vez y el contador
+de Enrique cuenta sólo los que no leyó.
+
+### AC-INV-141 — Los cinco chats de compradores *(verifica BR-INV-110)*
+
+DADO la jornada 7 abierta CUANDO se lista el menú del celular ENTONCES hay un chat por cada uno
+de los cinco compradores, con su nombre, cada uno con un solo mensaje sin leer del comprador que
+trae la captura de BR-INV-113. DADO cada jornada de la 1 a la 6 ENTONCES ninguno de esos cinco
+chats está en el menú. DADO la compra de cada comprador ENTONCES su total correcto es la suma de los
+precios del catálogo de sus productos fijos.
+
+### AC-INV-142 — El valor del texto es el de la captura *(verifica BR-INV-110, BR-INV-113)*
+
+DADO el mensaje de El Seba, el de Suko Yañez y el de Lucas Ortega CUANDO se lee su texto ENTONCES
+contiene el valor cobrado con el formato de la captura, y la captura lleva el mismo importe.
+DADO el mensaje de Flavio Balbín y el de Myriam Melano ENTONCES su texto no contiene ningún
+importe y la captura lleva el valor cobrado.
+
+### AC-INV-143 — Entre una y cuatro quejas incorrectas, y nunca el total correcto *(verifica BR-INV-111)*
+
+DADO 200 semillas distintas CUANDO se sortea la jornada 7 ENTONCES en cada una entre 1 y 4
+quejas tienen un valor incorrecto y las otras tienen el total correcto; se observan cantidades
+de 1 y de 4 incorrectas. DADO cada queja incorrecta ENTONCES su valor es el total de su compra con
+uno o dos productos reemplazados por otros del catálogo de la noche, y nunca es el total
+correcto.
+
+### AC-INV-144 — La semilla fija el sorteo *(verifica BR-INV-111)*
+
+DADO la misma semilla y la jornada 7 CUANDO se sortea dos veces ENTONCES los cinco valores son
+iguales. DADO semillas distintas ENTONCES los valores difieren en alguna de las quejas.
+
+### AC-INV-145 — Dar la razón o rechazar *(verifica BR-INV-112)*
+
+DADO una queja con valor incorrecto CUANDO el jugador le da la razón ENTONCES la respuesta es
+correcta, y rechazarla es incorrecta. DADO una con el valor correcto ENTONCES rechazarla es
+correcto y darle la razón es incorrecto. DADO una queja ya respondida CUANDO se responde otra vez,
+en cualquier sentido, ENTONCES se rechaza y la respuesta anterior no cambia. DADO un índice que no
+existe ENTONCES se rechaza sin cambiar nada.
+
+### AC-INV-146 — La respuesta aparece en el chat y retira los botones *(verifica BR-INV-112)*
+
+DADO el chat de una queja sin responder CUANDO se abre ENTONCES ofrece los dos botones. CUANDO el
+jugador pulsa uno ENTONCES el chat muestra una respuesta del jugador con el texto de ese botón
+tras el mensaje del comprador, sin los botones y sin avisar un mensaje recibido, y los
+no leídos de los demás chats no cambian. DADO el chat respondido CUANDO se vuelve a abrir
+ENTONCES no ofrece los botones.
+
+### AC-INV-147 — Sin respuestas no se cumple y lo respondido no se retoma *(verifica BR-INV-112, BR-INV-111)*
+
+DADO las cinco quejas CUANDO ninguna tiene respuesta ENTONCES no está cumplida. DADO cuatro
+respondidas bien ENTONCES no está cumplida; con las cinco bien, sí; con una equivocada, no.
+DADO la jornada 7 retomada de un guardado ENTONCES los valores son los de la partida y las cinco
+quejas empiezan sin respuesta.
+
+### AC-INV-148 — La captura lleva el diseño y cuentas fijas *(verifica BR-INV-113)*
+
+DADO los cinco compradores CUANDO se leen los cuatro dígitos de la cuenta de origen ENTONCES son
+cinco números distintos, iguales en todo sorteo, y el destino de Enrique es siempre el mismo. DADO
+un valor de 4200 ENTONCES el importe se escribe `$ 4.200`, y uno de 30000 se escribe `$ 30.000`.
+
+### AC-INV-149 — La pantalla conjunta alterna con el botón y con Q *(verifica BR-INV-115)*
+
+DADO la jornada 7 con la computadora recién abierta CUANDO se mira ENTONCES está en la pantalla
+normal y ofrece el botón. CUANDO se pulsa el botón ENTONCES pasa a la conjunta, con el celular
+abierto en el menú, y pulsarlo otra vez la devuelve a la normal con el celular cerrado. DADO la
+computadora abierta CUANDO se aprieta Q ENTONCES alterna igual. DADO la conjunta CUANDO se cierra la
+computadora y se vuelve a abrir ENTONCES arranca en la pantalla normal con el celular cerrado.
+DADO cualquier jornada de la 1 a la 6 con la computadora abierta ENTONCES no ofrece el botón y Q
+no cambia la pantalla. DADO que pasan los cuadros de una alternancia ENTONCES el turno descuenta
+sólo el tiempo real, sin sumar ni restar nada por el cambio.
 
 ### AC-INV-160 — Con mensajes sin leer, el primero queda arriba *(verifica BR-INV-120, BR-INV-022)*
 
