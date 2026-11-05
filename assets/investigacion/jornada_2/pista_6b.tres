@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="Pista" format=3]
+
+[ext_resource type="Script" path="res://src/dominio/investigacion/pista.gd" id="pista"]
+[ext_resource type="Texture2D" path="res://assets/ui/manada/pistas/documento-examinado.png" id="foto"]
+
+[resource]
+script = ExtResource("pista")
+identidad = "6B"
+jornada = 6
+canal = 0
+origen = &"documento_impreso"
+foto = ExtResource("foto")
+texto = "Encontré un papel asomando por la puerta de la oficina de Enrique. Parece como… ¿una especie de documento?"
