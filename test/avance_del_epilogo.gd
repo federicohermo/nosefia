@@ -15,7 +15,11 @@ static func de(almacen: Node) -> PantallaDeEpilogo:
 
 ## Cuántos epílogos hay a la vez en el almacén.
 static func cuantos(almacen: Node) -> int:
-	return almacen.find_children("*", "PantallaDeEpilogo", true, false).size()
+	var vivos := 0
+	for epilogo: Node in almacen.find_children("*", "PantallaDeEpilogo", true, false):
+		if not epilogo.is_queued_for_deletion():
+			vivos += 1
+	return vivos
 
 
 ## Las placas que se vieron, en orden. Termina con la pantalla liberada.

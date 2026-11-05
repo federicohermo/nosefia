@@ -38,7 +38,7 @@ func _leyendo(cantidad: int = 3) -> PantallaDeEpilogo:
 
 func _teclado() -> Array[InputEvent]:
 	var eventos: Array[InputEvent] = []
-	for pulsado in [true, false]:
+	for pulsado: bool in [true, false]:
 		var tecla := InputEventKey.new()
 		tecla.keycode = KEY_ENTER
 		tecla.physical_keycode = KEY_ENTER
@@ -49,7 +49,7 @@ func _teclado() -> Array[InputEvent]:
 
 func _joystick() -> Array[InputEvent]:
 	var eventos: Array[InputEvent] = []
-	for pulsado in [true, false]:
+	for pulsado: bool in [true, false]:
 		var boton := InputEventJoypadButton.new()
 		boton.button_index = JOY_BUTTON_A
 		boton.pressed = pulsado
@@ -60,7 +60,7 @@ func _joystick() -> Array[InputEvent]:
 func _mouse(boton: Button) -> Array[InputEvent]:
 	var eventos: Array[InputEvent] = []
 	var centro := boton.get_global_transform_with_canvas() * (boton.size / 2.0)
-	for pulsado in [true, false]:
+	for pulsado: bool in [true, false]:
 		var clic := InputEventMouseButton.new()
 		clic.button_index = MOUSE_BUTTON_LEFT
 		clic.position = centro
@@ -138,12 +138,11 @@ func test_siguiente_se_acciona_con_el_mouse() -> void:  # AC-SHF-140
 
 
 func test_dos_gestos_seguidos_pasan_una_sola_placa() -> void:  # AC-SHF-140
-	var placas := _placas(3)
 	var pantalla := _leyendo()
 	_accionar(_teclado())
 	_accionar(_teclado())
 	pantalla.avanzar(2.0 * FUNDIDO)
-	assert_object(pantalla.placa_a_la_vista()).is_same(placas[1])
+	assert_str(pantalla.placa_a_la_vista().texto).is_equal("placa 1")
 	assert_int(_cerrados).is_zero()
 
 

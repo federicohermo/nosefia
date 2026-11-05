@@ -890,6 +890,8 @@ func _mostrar_el_final() -> void:
 	if placas.is_empty():
 		_mostrar_la_pantalla_del_final()
 		return
+	# La devolución suelta el celular antes de llegar acá, y eso reanuda al jugador.
+	_jugador.suspender()
 	var epilogo: PantallaDeEpilogo = PANTALLA_DE_EPILOGO.instantiate()
 	add_child(epilogo)
 	(get_node("Interfaz/ControlDePausa") as ControlDePausa).epilogo = epilogo
