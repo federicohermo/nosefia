@@ -4,6 +4,7 @@
 [ext_resource type="Script" path="res://src/escenas/objetos/fibras_de_la_mopa.gd" id="fibras"]
 [ext_resource type="Script" path="res://src/escenas/objetos/manija_del_balde.gd" id="manija"]
 [ext_resource type="PackedScene" path="res://src/escenas/objetos/colilla.tscn" id="colilla"]
+[ext_resource type="PackedScene" path="res://src/escenas/objetos/nota_bajo_la_puerta.tscn" id="nota_bajo_la_puerta"]
 
 [ext_resource type="PackedScene" path="res://src/escenas/objetos/caja_de_productos.tscn" id="11_caja_de_productos"]
 [ext_resource type="PackedScene" path="res://src/escenas/objetos/objeto_agarrable.tscn" id="22_agarrable"]
@@ -381,3 +382,6 @@ transform = Transform3D(0.0,0.0,-1.0,0.0,1.0,0.0,1.0,0.0,0.0,2.8140000499999998,
 
 [node name="Colilla" parent="." instance=ExtResource("colilla")]
 position = Vector3(-3.75, 0.12, -11.20)
+
+[node name="NotaBajoLaPuerta" parent="." instance=ExtResource("nota_bajo_la_puerta")]
+position = Vector3(7.804, 0.117, -10.18)

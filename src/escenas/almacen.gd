@@ -147,6 +147,7 @@ var _hojas_de_entrada: Array[PuertaDelLocal] = []
 @onready var _hipotesis: PantallaDeHipotesis = $Interfaz/PantallaDeHipotesis
 @onready var _investigador: Investigador = $Servicios/Investigador
 @onready var _colilla: ObjetoAgarrable = $Objetos/Colilla
+@onready var _nota: ObjetoAgarrable = $Objetos/NotaBajoLaPuerta
 
 
 func _compradores_de_la_partida(jornada: int) -> Array[Comprador]:
@@ -431,14 +432,8 @@ func _al_abrir_la_jornada(jornada: int) -> void:
 	# Un pensamiento a medio desvanecer tampoco pasa a la noche nueva.
 	_hud.vaciar_subtitulo()
 	_agarre.vaciar_las_manos()
-	_colilla.volver_a_su_lugar()
-	if CasoDeInvestigacion.de_la_partida().esta_en_el_local(_colilla.datos.id, jornada):
-		_colilla.process_mode = Node.PROCESS_MODE_INHERIT
-	else:
-		_colilla.hide()
-		_colilla.collision_layer = 0
-		_colilla.collision_mask = 0
-		_colilla.process_mode = Node.PROCESS_MODE_DISABLED
+	for de_una_pista: ObjetoAgarrable in [_colilla, _nota]:
+		_ubicar_lo_de_una_pista(de_una_pista, jornada)
 	_caja.arrancar(GeneradorDeTickets.para_la_jornada(jornada, _partida.numeros_de_ticket))
 	_puesto_de_la_caja.limpiar()
 	_jugador.ubicar(_arranque)
@@ -1112,6 +1107,19 @@ func _puertas_de_las_heladeras() -> Dictionary[ReglasDelCierre.Heladera, Puerta]
 
 func _al_desechar_un_ticket() -> void:
 	_partida.anotar_llamado(Partida.Llamado.PAPEL_EN_EL_INODORO)
+
+
+## Lo que se levanta para dar una pista vuelve a su lugar, y queda en el local sólo si el camino
+## de esa noche lo activa.
+func _ubicar_lo_de_una_pista(objeto: ObjetoAgarrable, jornada: int) -> void:
+	objeto.volver_a_su_lugar()
+	if _partida.expediente.esta_en_el_local(objeto.datos.id, jornada):
+		objeto.process_mode = Node.PROCESS_MODE_INHERIT
+	else:
+		objeto.hide()
+		objeto.collision_layer = 0
+		objeto.collision_mask = 0
+		objeto.process_mode = Node.PROCESS_MODE_DISABLED
 
 
 func _levanta_una_pista(datos: ObjetoDelAlmacen) -> bool:
