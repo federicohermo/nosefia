@@ -242,6 +242,7 @@ func _ready() -> void:
 	_computadora.registro_actualizado.connect(_revisar_la_salida)
 	var ventanilla: PuestoDeVentanilla = $Estructura/Ventanilla
 	ventanilla.comprador_se_fue.connect(avisos.avisar_salida)
+	ventanilla.pista_pedida.connect(_pedir_pista.bind(Pista.Canal.COMPRADOR))
 	ventanilla.entregas_abandonadas.connect(
 		_reposicion_manual.recibir_abandonadas.bind(ventanilla.piso_de_entregas)
 	)
@@ -477,6 +478,8 @@ func _al_abrir_la_jornada(jornada: int) -> void:
 	# dirían números distintos sin que nada se ponga en rojo. Cuántos casilleros tiene la fila
 	# de adelante de cada tanda lo mide el puesto sobre el modelo; cuáles abren vacíos, la jornada.
 	var compradores: Array[Comprador] = compradores_de_la_apertura.call(jornada)
+	for comprador: Comprador in compradores:
+		comprador.pistas_activas = _partida.expediente.pistas_activas(jornada)
 	_reposicion_manual.limpiar()
 	_reposicion_manual.seleccionar_disposicion(jornada)
 	mostrar_las_bandejas(get_node("Estructura"), _reposicion_manual.es_de_prueba())
@@ -1271,17 +1274,13 @@ func _al_recibir_en_el_celular(quien: Conversacion.Interlocutor, mensaje: Mensaj
 func _cablear_la_investigacion() -> void:
 	_investigador.nota_agregada.connect(_celular.recibir_nota)
 	_investigador.usar(_partida.expediente)
-	_celular.tramo_de_pista_pedido.connect(_al_pedir_pista_del_chat)
+	_celular.tramo_de_pista_pedido.connect(_pedir_pista.bind(Pista.Canal.CHAT))
 	_agarre.objeto_agarrado.connect(_al_agarrar_una_pista)
 
 
-func _al_pedir_pista_del_chat(identidad: String) -> void:
+func _pedir_pista(identidad: String, canal: Pista.Canal) -> void:
 	_investigador.pedir_pista(
-		StringName(identidad),
-		Pista.Canal.CHAT,
-		_partida.jornada(),
-		_se_puede_investigar(),
-		_reloj.hora()
+		StringName(identidad), canal, _partida.jornada(), _se_puede_investigar(), _reloj.hora()
 	)
 
 

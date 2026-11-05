@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="Pista" format=3]
+
+[ext_resource type="Script" path="res://src/dominio/investigacion/pista.gd" id="pista"]
+[ext_resource type="Texture2D" path="res://assets/characters/cami/01.png" id="foto"]
+
+[resource]
+script = ExtResource("pista")
+identidad = "5A"
+jornada = 5
+canal = 3
+origen = &"5A"
+foto = ExtResource("foto")
+texto = "Una compradora mencionó que los empleados de la estación de servicio no duran mucho por las “actitudes extrañas” de Enrique."

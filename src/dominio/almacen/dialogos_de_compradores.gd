@@ -11,6 +11,13 @@ const PIDE_EL_TICKET := "Gracias. " + PEDIDO_DEL_TICKET
 const RECHAZO := "Yo no pedí esto. "
 const SALUDO := "Buenas noches. "
 const DESPEDIDA := "Muchas gracias."
+## El color con que se resalta lo que el jugador puede pulsar como pista.
+const LILA := "#c9a0ff"
+## Una entrada que empieza con `[solo:ID]` sólo se dice si esa pista está activa.
+const ABRE_CONDICION := "[solo:"
+## `[pista=ID]texto[/pista]` marca el fragmento que se pulsa para pedir esa pista.
+const ABRE_PISTA := "[pista="
+const CIERRA_PISTA := "[/pista]"
 
 @export var tin := PackedStringArray()
 @export var tia := PackedStringArray()
@@ -24,9 +31,12 @@ const DESPEDIDA := "Muchas gracias."
 @export var despedida_cami := PackedStringArray()
 
 
-## Con el pedido, las entradas pueden escribir `{pedido}` y `{producto1}`, `{producto2}`, etc.
-func inicial(personaje: int, pedido: Venta = null) -> Dialogo:
-	return _crear_dialogo(_entradas_de(personaje, false), pedido)
+## Con el pedido, las entradas pueden escribir `{pedido}` y `{producto1}`, `{producto2}`, etc. Las
+## `pistas_activas` deciden qué entradas condicionadas se dicen.
+func inicial(
+	personaje: int, pedido: Venta = null, pistas_activas: PackedStringArray = PackedStringArray()
+) -> Dialogo:
+	return _crear_dialogo(_entradas_de(personaje, false), pedido, pistas_activas)
 
 
 func despedida(personaje: int, pedido: Venta = null) -> Dialogo:
@@ -54,7 +64,11 @@ func _entradas_de(personaje: int, de_despedida: bool) -> PackedStringArray:
 
 ## Las referencias a un producto fijo guardan el número de Producto.Id para sobrevivir a cualquier
 ## renombre.
-static func _crear_dialogo(entradas: PackedStringArray, pedido: Venta) -> Dialogo:
+static func _crear_dialogo(
+	entradas: PackedStringArray,
+	pedido: Venta,
+	pistas_activas: PackedStringArray = PackedStringArray()
+) -> Dialogo:
 	var nombres: Dictionary[String, String] = {}
 	for producto: Producto in Catalogo.todos():
 		nombres[str(producto.id)] = producto.nombre
@@ -66,8 +80,29 @@ static func _crear_dialogo(entradas: PackedStringArray, pedido: Venta) -> Dialog
 			numero += 1
 	var resueltas := PackedStringArray()
 	for entrada: String in entradas:
-		resueltas.append(entrada.format(nombres))
+		var texto := entrada
+		if texto.begins_with(ABRE_CONDICION):
+			var inicio := ABRE_CONDICION.length()
+			var cierre := texto.find("]")
+			if not pistas_activas.has(texto.substr(inicio, cierre - inicio)):
+				continue
+			texto = texto.substr(cierre + 1)
+		resueltas.append(_con_los_fragmentos(texto.format(nombres)))
 	return Dialogo.new(resueltas)
+
+
+## Cada fragmento de pista queda en lila y con su identidad como enlace.
+static func _con_los_fragmentos(texto: String) -> String:
+	var abre := texto.find(ABRE_PISTA)
+	while abre >= 0:
+		var inicio := abre + ABRE_PISTA.length()
+		var cierre := texto.find("]", abre)
+		var identidad := texto.substr(inicio, cierre - inicio)
+		texto = (
+			texto.left(abre) + "[url=%s][color=%s]" % [identidad, LILA] + texto.substr(cierre + 1)
+		)
+		abre = texto.find(ABRE_PISTA)
+	return texto.replace(CIERRA_PISTA, "[/color][/url]")
 
 
 ## Lo que dice cualquier comprador al hablarle: lo que todavía le falta, o el ticket si sólo falta
