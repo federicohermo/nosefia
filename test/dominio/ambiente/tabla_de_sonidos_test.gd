@@ -274,6 +274,7 @@ func test_las_tres_senales_llegan_de_una_fuente_del_audio() -> void:
 		"boton_pulsado": ["res://src/ui/diegetica/programa_de_tickets.gd", "_programa_de_tickets"],
 		"mensaje_recibido":
 		["res://src/sistemas/investigacion/celular_del_empleado.gd", "_celular"],
+		"pista_nueva": ["res://src/sistemas/investigacion/investigador.gd", "_investigador"],
 	}
 	var almacen := FileAccess.get_file_as_string("res://src/escenas/almacen.gd")
 	var lista := RegEx.create_from_string("(?s)_audio\\s*\\.\\s*enlazar\\(\\s*\\[([^\\]]*)\\]")
