@@ -8,7 +8,7 @@
 class_name DevolucionDelJefe
 extends RefCounted
 
-enum Opcion { CONTINUAR, VOLVER_AL_MENU }
+enum Opcion { CONTINUAR, VOLVER_AL_MENU, VER_EL_FINAL }
 
 const ReglasDelCierre := preload("res://src/dominio/almacen/reglas_del_cierre.gd")
 
@@ -356,7 +356,7 @@ var _opciones: Array[Opcion] = []
 ## son los de la noche cerrada. Las jornadas de introducción cierran sin mensajes.
 func _init(jornada: int, partida: Partida) -> void:
 	_jornada = jornada
-	_opciones.append(Opcion.VOLVER_AL_MENU if partida.terminada() else Opcion.CONTINUAR)
+	_opciones.append(_opcion_de(partida))
 	# El despido de la prueba no abre la jornada siguiente: la partida sigue en la prueba.
 	if partida.terminada() and partida.jornada() < ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA:
 		_mensajes = [DESPIDO_DE_LA_PRUEBA]
@@ -379,6 +379,16 @@ func _init(jornada: int, partida: Partida) -> void:
 		partida.vencido_en_el_local,
 		partida.vencido_afuera
 	)
+
+
+## Al terminar la partida la única salida lleva a la pantalla de final si el final la tiene, y si no
+## vuelve al menú.
+static func _opcion_de(partida: Partida) -> Opcion:
+	if not partida.terminada():
+		return Opcion.CONTINUAR
+	if FinalConPantalla.de(partida) != FinalConPantalla.Cual.NINGUNO:
+		return Opcion.VER_EL_FINAL
+	return Opcion.VOLVER_AL_MENU
 
 
 ## Las noches de prueba cierran sin celular: sigue la pantalla de inicio de la noche siguiente.

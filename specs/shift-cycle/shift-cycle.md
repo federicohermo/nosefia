@@ -102,6 +102,25 @@ llamado que eso suma es de [`employment-record`](../employment-record/employment
 Reponer los casilleros que dejaron los vencidos no interviene en esta obligatoria, pero sí en
 reponer (BR-STK-052).
 
+### BR-SHF-027 — Al terminar la partida, la devolución lleva a la pantalla de final
+
+CUANDO la partida termina despedida, o termina con el contrato cumplido y el expediente no
+registró ninguna pista en toda la partida (BR-INV-103), el sistema DEBE llevar la única opción de
+la devolución del cierre a una pantalla de final, y no al menú. La pantalla DEBE mostrar su
+encabezado, su título y un solo botón, «VOLVER AL MENÚ», que sale al menú.
+
+- El despido DEBE llevar el encabezado «/ FIN DEL JUEGO» y el título «DESPEDIDO». Vale para todos
+  los despidos, incluido el de la prueba.
+- El contrato cumplido sin ninguna pista DEBE llevar el encabezado «/ FINAL 1» y el título
+  «EMPLEADO ESTRESADO».
+- SI la partida termina despedida, ENTONCES la pantalla DEBE ser la del despido aunque no haya
+  pistas.
+- Cualquier otro final NO DEBE mostrar pantalla de final: la única opción de la devolución vuelve
+  al menú, como siempre.
+
+Elegir la opción de la devolución o el botón dos veces NO DEBE mostrar dos pantallas ni pedir dos
+veces el menú. El guardado se borra igual que sin la pantalla (BR-SAV-002).
+
 ### BR-SHF-030 — Responder a las quejas cuenta cuando las cinco tienen respuesta correcta
 
 MIENTRAS queda turno y la jornada declara responder a las quejas, el sistema DEBE contar esa
@@ -498,6 +517,38 @@ DADO la jornada 6 con el corte cortado y con el corte restaurado, a las 22:00 y 
 CUANDO se lee el reloj ENTONCES lee `"20:58"` en los dos estados. Hacer clic sobre el
 panel otra vez no cambia la lectura, y el turno descuenta lo mismo que antes de la hora del corte.
 
+### AC-SHF-063 — El despido muestra su pantalla *(verifica BR-SHF-027)*
+
+DADO una partida despedida al cerrar la jornada 5 CUANDO el jugador elige la opción de la devolución
+ENTONCES aparece la pantalla con «/ FIN DEL JUEGO», «DESPEDIDO» y un solo botón, «VOLVER AL MENÚ», y
+el menú todavía no se pidió. CUANDO se pulsa el botón ENTONCES se pide el menú. DADO el despido de la
+prueba, en la jornada 1 o en la 2, ENTONCES la pantalla es la misma.
+
+### AC-SHF-064 — El contrato cumplido sin pistas muestra su pantalla *(verifica BR-SHF-027)*
+
+DADO la jornada 7 cerrada con el contrato cumplido y ninguna pista registrada en toda la partida
+CUANDO el jugador elige la opción de la devolución ENTONCES aparece la pantalla con «/ FINAL 1»,
+«EMPLEADO ESTRESADO» y un solo botón, «VOLVER AL MENÚ». CUANDO se pulsa el botón ENTONCES se pide el
+menú.
+
+### AC-SHF-065 — El despido gana sobre la falta de pistas *(verifica BR-SHF-027)*
+
+DADO una partida despedida al cerrar la jornada 4 sin ninguna pista registrada CUANDO el jugador elige
+la opción de la devolución ENTONCES la pantalla es la del despido, con «DESPEDIDO», y no la de
+«EMPLEADO ESTRESADO».
+
+### AC-SHF-066 — Otro final sigue como siempre *(verifica BR-SHF-027)*
+
+DADO la jornada 7 cerrada con el contrato cumplido y una sola pista registrada, en cualquier jornada,
+CUANDO el jugador elige la opción de la devolución ENTONCES no aparece ninguna pantalla de final y se
+pide el menú. DADO una partida en curso ENTONCES la devolución no lleva a ninguna pantalla de final.
+
+### AC-SHF-067 — Elegir dos veces no repite nada *(verifica BR-SHF-027)*
+
+DADO la pantalla de final del despido y la del contrato sin pistas CUANDO se elige dos veces la opción de
+la devolución ENTONCES se muestra una sola pantalla. CUANDO se pulsa dos veces el botón ENTONCES el
+menú se pide una sola vez.
+
 ### AC-SHF-080 — La jornada 7 declara responder a las quejas *(verifica BR-SHF-005, BR-SHF-030)*
 
 DADO la jornada 7 recién abierta CUANDO se piden sus obligatorias ENTONCES son las cuatro fijas
@@ -525,7 +576,8 @@ jornada 7 con las cinco quejas bien respondidas ENTONCES la devolución no trae 
 - Esta capacidad NO decide **cómo** se cumple cada obligatoria: eso es de la capacidad de cada
   tarea.
 - Esta capacidad NO anota la noche en el legajo ni decide el final: eso es de
-  [`employment-record`](../employment-record/employment-record.md).
+  [`employment-record`](../employment-record/employment-record.md). Sí decide qué pantalla
+  muestra cada final (BR-SHF-027).
 - Esta capacidad NO cobra tiempo por ninguna acción: ni por cumplir ni por investigar. Todo
   cuesta porque el reloj no se detiene, no porque alguien descuente. La pausa y la preparación
   previa al juego excluyen sus intervalos.
@@ -566,3 +618,10 @@ jornada 7 con las cinco quejas bien respondidas ENTONCES la devolución no trae 
     con sólo las cuatro fijas.
   - Decide: game design, en la ficha e issue de esa jornada.
   - Bloquea: agregar esa particular; no bloquea abrir ni cerrar con las cuatro declaradas.
+
+- **OQ-SHF-008 — ¿Qué mensaje lleva la pantalla de final y se puede reintentar la jornada?**
+  - Por qué sigue abierta: las pantallas de diseño traen un mensaje del jefe y, la del despido, un botón
+    «REINTENTAR JORNADA». Ninguna ficha define el texto de ningún final. Reintentar choca con
+    BR-SAV-002, que borra el guardado al terminar la partida.
+  - Decide: game design, en la ficha de los finales.
+  - Bloquea: mostrar un mensaje y ofrecer el reintento; no bloquea la pantalla de BR-SHF-027.

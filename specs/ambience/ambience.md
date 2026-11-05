@@ -180,6 +180,14 @@ apagadas, y el local DEBE recibir sólo la luz exterior tenue. CUANDO el corte p
 con el corte sin corte, el sistema DEBE devolver la iluminación normal. NO DEBE haber una luz de
 emergencia encendida fuera del corte además de la del panel.
 
+### BR-AMB-023 — Anotar una pista suena como un mensaje enviado
+
+CUANDO se anota una pista nueva, el sistema DEBE sonar el audio de mensaje enviado una vez, plano
+y por el bus de interfaz, aunque la pista agregue más de una nota al chat de notas. Las notas de
+una pista NO DEBEN sonar como mensaje recibido. Los mensajes de los demás chats DEBEN seguir
+sonando como mensaje recibido. SI la pista es repetida o desconocida, o el expediente se
+restaura al retomar una partida, ENTONCES el sistema NO DEBE sonar.
+
 ## Criterios de aceptación
 
 ### AC-AMB-001 — Un evento, una fila *(verifica BR-AMB-001, BR-AMB-005)*
@@ -345,6 +353,24 @@ DADO el corte cortado ENTONCES la luz sobre el panel está encendida y ninguna o
 lo está. DADO el corte sin corte ENTONCES todas las luces normales están encendidas. DADO el corte
 restaurado ENTONCES la iluminación es la misma que sin corte. Pasar de cortado a restaurado
 enciende todas las luces normales de una vez.
+
+### AC-AMB-029 — Anotar una pista suena enviado una vez *(verifica BR-AMB-023)*
+
+DADO una pista nueva que agrega dos notas, la foto y el texto, CUANDO se anota ENTONCES suena el
+mensaje enviado una vez, plano y por el bus de interfaz, y el mensaje recibido no suena. DADO dos
+pistas nuevas anotadas una tras otra ENTONCES el mensaje enviado suena dos veces.
+
+### AC-AMB-030 — Sin pista nueva no suena *(verifica BR-AMB-023)*
+
+DADO una pista ya anotada CUANDO se la anota otra vez ENTONCES no suena. DADO una identidad que el
+caso no conoce CUANDO se la anota ENTONCES no suena. DADO un expediente con pistas ya anotadas
+CUANDO se retoma la partida ENTONCES no suena nada y las notas siguen en el chat.
+
+### AC-AMB-031 — Los demás mensajes siguen sonando recibidos *(verifica BR-AMB-023)*
+
+DADO un mensaje de Enrique o de Yasmín CUANDO llega al celular ENTONCES suena el mensaje recibido
+una vez, y el enviado no suena. DADO la tabla del juego ENTONCES la fila de la nota anotada usa el
+audio de mensaje enviado y la del mensaje del celular usa el de recibido.
 
 ## No objetivos
 

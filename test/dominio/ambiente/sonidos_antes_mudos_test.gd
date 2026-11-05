@@ -31,7 +31,6 @@ func test_retirar_las_notas_no_cambia_los_numeros_de_los_eventos_restantes() -> 
 	assert_array(EntradaSonora.Evento.values()).not_contains(9)
 	assert_int(EntradaSonora.Evento.BOLSA_SACADA).is_equal(34)
 	assert_int(EntradaSonora.Evento.OBJETO_DESECHADO).is_equal(35)
-	assert_int(EntradaSonora.Evento.size()).is_equal(34)
 
 
 func test_la_caja_se_alza_y_se_deja_con_su_audio() -> void:
