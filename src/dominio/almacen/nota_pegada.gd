@@ -15,6 +15,7 @@ const TAREAS_EN_ORDEN := [
 	Tarea.Tipo.ORDENAR_LAS_CAJAS,
 	Tarea.Tipo.DESECHAR_VENCIDOS,
 	Tarea.Tipo.PEDIR_AL_PROVEEDOR,
+	Tarea.Tipo.RESPONDER_QUEJAS,
 ]
 const NOMBRES_DE_LAS_TAREAS := {
 	Tarea.Tipo.CAJA: "Atención al cliente",
@@ -25,6 +26,7 @@ const NOMBRES_DE_LAS_TAREAS := {
 	Tarea.Tipo.ORDENAR_LAS_CAJAS: "Ordenar cajas en el depósito",
 	Tarea.Tipo.DESECHAR_VENCIDOS: "Desechar los productos vencidos",
 	Tarea.Tipo.PEDIR_AL_PROVEEDOR: "Hacerle un pedido al proveedor",
+	Tarea.Tipo.RESPONDER_QUEJAS: "Responder a quejas",
 }
 
 var _titulo: String

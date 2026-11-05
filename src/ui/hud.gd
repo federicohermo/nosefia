@@ -23,13 +23,6 @@
 class_name Hud
 extends CanvasLayer
 
-## Cómo se lee cada botón del mouse, por su máscara. Los demás botones no tienen nombre: la línea
-## de un gesto que sólo tiene uno de ésos no se pinta.
-const NOMBRES_DE_LOS_BOTONES := {
-	MOUSE_BUTTON_MASK_LEFT: "Click Izq",
-	MOUSE_BUTTON_MASK_RIGHT: "Click Der",
-}
-
 @export var _subtitulo: Label
 
 ## La referencia de controles, una línea por renglón.
@@ -138,7 +131,9 @@ static func _nombre_del_evento(evento: InputEvent) -> String:
 	if boton != null:
 		if boton.button_index <= 0:
 			return ""
-		var nombre: String = NOMBRES_DE_LOS_BOTONES.get(1 << (boton.button_index - 1), "")
+		var nombre: String = AsignacionDeControles.NOMBRES_DE_LOS_BOTONES.get(
+			boton.button_index, ""
+		)
 		return nombre
 	var tecla := evento as InputEventKey
 	if tecla == null:

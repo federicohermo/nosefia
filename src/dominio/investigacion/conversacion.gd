@@ -16,7 +16,18 @@ extends Resource
 
 ## Identidades admitidas por la bandeja. Sólo las que tienen guion documentado se registran
 ## en ARCHIVOS: declarar una identidad no autoriza a inventarle mensajes.
-enum Interlocutor { JEFE, PROVEEDOR, DESCONOCIDO, YASMIN, NOTAS }
+enum Interlocutor {
+	JEFE,
+	PROVEEDOR,
+	DESCONOCIDO,
+	YASMIN,
+	NOTAS,
+	EL_SEBA,
+	SUKO_YANEZ,
+	LUCAS_ORTEGA,
+	FLAVIO_BALBIN,
+	MYRIAM_MELANO
+}
 
 const CARPETA := "res://src/dominio/investigacion/"
 

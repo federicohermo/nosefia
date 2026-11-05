@@ -100,6 +100,10 @@ const VENCIDO_EN_EL_LOCAL_Y_POR_LA_VENTANA := (
 	+ "al contenedor, NO POR LA VENTANA."
 )
 
+const QUEJAS_SIN_RESOLVER := (
+	"Te encargué ocuparte de las quejas y ahora recibo " + "quejas sobre la gestión de las quejas."
+)
+
 ## La Tarea 5 sale de la jornada: sólo las que declaran una particular tienen texto.
 const PARTICULARES: Dictionary[int, String] = {
 	ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA:
@@ -113,6 +117,7 @@ const PARTICULARES: Dictionary[int, String] = {
 	"De verdad era tan difícil tirar tres bolsas de basura?",
 	ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA + 2: VENCIDO_EN_EL_LOCAL,
 	ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA + 3: PEDIDO_SIN_HACER,
+	ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA + 4: QUEJAS_SIN_RESOLVER,
 }
 
 ## La variante de la Tarea 5 cuando una bolsa quedó afuera: reemplaza a la de `PARTICULARES`.

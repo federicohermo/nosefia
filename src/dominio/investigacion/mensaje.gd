@@ -26,9 +26,6 @@ const TANDAS_POR_DIA := 2
 
 @export var de_quien: String = ""
 
-## Lo escribió el jugador: va del lado de quien lee, y no es contenido del guión.
-@export var propio: bool = false
-
 ## Salió sin red: el chat lo muestra en rojo y nadie lo contestó.
 @export var con_error: bool = false
 
@@ -41,6 +38,14 @@ const TANDAS_POR_DIA := 2
 ## Vacía en un mensaje fijo. Con valor, el mensaje sale sólo si la partida eligió esa condición.
 @export var condicion: StringName = &""
 
+## Lo que escribió el jugador, y no lo que le llegó: se lee del lado de las notas propias.
+@export var propio: bool = false
+
+## Sobre la foto de una transferencia se escriben el importe y los cuatro dígitos de la cuenta de
+## origen. Vacíos en un mensaje sin captura.
+@export var importe_de_la_captura: String = ""
+@export var origen_de_la_captura: String = ""
+
 ## El cuerpo va como texto multilínea porque un chat del GDD es un párrafo, no un renglón.
 @export_multiline var texto: String = ""
 
@@ -52,6 +57,10 @@ const TANDAS_POR_DIA := 2
 ## turno y no le devuelve nada.
 func dice_algo() -> bool:
 	return foto != null or not texto.strip_edges().is_empty()
+
+
+func tiene_captura() -> bool:
+	return foto != null and not importe_de_la_captura.is_empty()
 
 
 func vale_para(condiciones: Array[StringName]) -> bool:

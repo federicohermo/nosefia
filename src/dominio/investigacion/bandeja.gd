@@ -7,6 +7,7 @@ var _leidos: Dictionary[Conversacion.Interlocutor, int] = {}
 var _recibidos: Dictionary[Conversacion.Interlocutor, Array] = {}
 var _jornada: int = 1
 var _condiciones: Array[StringName] = []
+var _quejas: QuejasDeLaJornada = null
 
 
 func _init(conversaciones: Array[Conversacion]) -> void:
@@ -30,6 +31,12 @@ func abrir_jornada(jornada: int, condiciones: Array[StringName] = []) -> void:
 			if not recibido.de_la_noche:
 				siguen.append(recibido)
 		_recibidos[quien] = siguen
+
+
+## Las quejas de la noche: sus mensajes salen de ellas y no de un guión, así que no hay una copia
+## que se desactualice. Sin quejas, los chats de los compradores no tienen mensajes.
+func usar_quejas(quejas: QuejasDeLaJornada) -> void:
+	_quejas = quejas
 
 
 func conversaciones() -> Array[Conversacion]:
@@ -67,6 +74,10 @@ func mensajes_de(quien: Conversacion.Interlocutor) -> Array[Mensaje]:
 	for recibido: Mensaje in _recibidos[quien]:
 		if recibido.jornada <= _jornada:
 			todos.append(recibido)
+	if _quejas != null:
+		for de_la_queja: Mensaje in _quejas.mensajes_de(quien):
+			if de_la_queja.jornada <= _jornada:
+				todos.append(de_la_queja)
 	for posicion: int in todos.size():
 		var mensaje := todos[posicion]
 		if mensaje.momento == Mensaje.Momento.SIN_FECHA:
@@ -138,6 +149,8 @@ func adjunto_de(quien: Conversacion.Interlocutor, indice: int) -> Mensaje:
 	for posicion in range(indice + 1, mensajes.size()):
 		var siguiente := mensajes[posicion]
 		if siguiente.jornada != origen.jornada or siguiente.momento != origen.momento:
+			return null
+		if siguiente.propio:
 			return null
 		if origen.texto.is_empty():
 			if siguiente.foto != null and siguiente.texto.is_empty():

@@ -93,6 +93,19 @@ func test_la_jornada_sin_particular_enumera_solo_las_fijas() -> void:  # AC-PLY-
 	)
 
 
+func test_la_septima_lista_responder_a_quejas_despues_de_las_fijas() -> void:  # AC-SHF-080
+	var nota := NotaPegada.tareas_a_realizar(Apertura.obligatorias(QuejasDeLaJornada.JORNADA))
+	var fijas := NotaPegada.tareas_a_realizar(Apertura.obligatorias(QuejasDeLaJornada.JORNADA - 1))
+	assert_int(nota.renglones().size()).is_equal(fijas.renglones().size() + 1)
+	assert_array(nota.renglones().slice(0, fijas.renglones().size())).is_equal(fijas.renglones())
+	assert_str(nota.renglones()[-1]).is_equal(
+		NotaPegada.NOMBRES_DE_LAS_TAREAS[Tarea.Tipo.RESPONDER_QUEJAS]
+	)
+	for jornada in range(ReglasDeLaPartida.PRIMERA_JORNADA, QuejasDeLaJornada.JORNADA):
+		var de_la_noche := NotaPegada.tareas_a_realizar(Apertura.obligatorias(jornada))
+		assert_array(de_la_noche.renglones()).not_contains([nota.renglones()[-1]])
+
+
 func test_la_tarea_cumplida_marca_su_renglon_y_al_descumplirse_lo_pierde() -> void:  # AC-PLY-165
 	var limpiar := Tarea.new(Tarea.Tipo.LIMPIAR)
 	var basura := Tarea.new(Tarea.Tipo.SACAR_LA_BASURA)

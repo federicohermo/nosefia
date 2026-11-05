@@ -3,7 +3,7 @@ schema_version: 1
 capability_id: CAP-SHF
 status: ratified
 owner: por definir
-provenance: GDD «Ciclo de jornadas»; fichas «Pantalla entre jornadas» y «Particulares de cada jornada»; decisiones de #364, #369, #436, #526, #527, #573, #691 y #693; migración de los specs 001, 007, 011, 016, 027, 031
+provenance: GDD «Ciclo de jornadas»; fichas «Pantalla entre jornadas» y «Particulares de cada jornada»; decisiones de #364, #369, #436, #526, #527, #573, #691 y #693; migración de los specs 001, 007, 011, 016, 027, 031; quejas de la jornada 7 de #759, ficha «Particulares de cada jornada»
 ---
 
 # Capacidad: el ciclo de la jornada
@@ -70,10 +70,10 @@ son de introducción: las tareas entran de a poco.
 | 4 | las cuatro fijas y tirar la basura |
 | 5 | las cuatro fijas y desechar los Cindolor vencidos |
 | 6 | las cuatro fijas y hacerle un pedido al proveedor |
-| 7 | las cuatro fijas |
+| 7 | las cuatro fijas y responder a las quejas de los compradores |
 
-Mientras sigue abierta OQ-SHF-006, una jornada sin fila propia DEBE declarar sólo las cuatro
-fijas. Cada apertura DEBE crear tareas nuevas, sin cumplir.
+Una jornada sin fila propia DEBE declarar sólo las cuatro fijas. Cada apertura DEBE crear tareas
+nuevas, sin cumplir.
 
 La jornada 1 declara reposición: los casilleros que el jugador vacía al vender son huecos que
 repone. La nota de tareas DEBE listar sólo las obligatorias declaradas para esa noche.
@@ -136,6 +136,16 @@ encabezado, su título y un solo botón, «VOLVER AL MENÚ», que sale al menú.
 
 Elegir la opción de la devolución o el botón dos veces NO DEBE mostrar dos pantallas ni pedir dos
 veces el menú. El guardado se borra igual que sin la pantalla (BR-SAV-002).
+
+### BR-SHF-030 — Responder a las quejas cuenta cuando las cinco tienen respuesta correcta
+
+MIENTRAS queda turno y la jornada declara responder a las quejas, el sistema DEBE contar esa
+obligatoria cuando las cinco quejas de la noche tienen respuesta y todas son correctas
+(BR-INV-112), y no antes. Una queja sin responder o una respuesta equivocada NO DEBE contar:
+una respuesta no se corrige, así que con una equivocada la obligatoria queda sin cumplir hasta
+el cierre. Una jornada que cierra antes de tiempo cuenta las quejas sin responder como falla.
+CUANDO la noche cierra con esta obligatoria sin cumplir, la devolución del jefe DEBE traer su
+Tarea 5 (BR-EMP-027). Las jornadas 1 a 6 NO DEBEN declarar esta obligatoria.
 
 ### BR-SHF-011 — La hora se lee en un solo lugar
 
@@ -259,8 +269,7 @@ está cerrado.
 DADO las jornadas 1 a 7 CUANDO cada una pide sus obligatorias ENTONCES la 1 recibe 3:
 cobrar, registrar y reponer, sin limpiar ni particular; la 2 recibe las 4 fijas; la 3 recibe 5,
 con ordenar las cajas y sin basura; la 4 recibe 5, con basura y sin ordenar; la 5 recibe 5, con
-desechar los Cindolor vencidos y sin ordenar ni basura; la 6 recibe 5, con el pedido al proveedor
-y sin ordenar, basura ni vencidos; la 7 recibe las 4 fijas. DADO dos aperturas seguidas CUANDO se comparan sus tareas ENTONCES ninguna instancia se
+desechar los Cindolor vencidos y sin ordenar ni basura; la 6 recibe 5, con el pedido al proveedor y sin ordenar, basura ni vencidos; la 7 recibe 5, con responder a las quejas y sin ordenar, basura ni vencidos. DADO dos aperturas seguidas CUANDO se comparan sus tareas ENTONCES ninguna instancia se
 comparte y todas las de la segunda están sin cumplir. DADO la jornada 1 recién abierta ENTONCES la
 nota de tareas lista atención, registro y reposición, sin limpieza.
 
@@ -556,6 +565,28 @@ DADO la pantalla de final del despido y la del contrato sin pistas CUANDO se eli
 la devolución ENTONCES se muestra una sola pantalla. CUANDO se pulsa dos veces el botón ENTONCES el
 menú se pide una sola vez.
 
+### AC-SHF-080 — La jornada 7 declara responder a las quejas *(verifica BR-SHF-005, BR-SHF-030)*
+
+DADO la jornada 7 recién abierta CUANDO se piden sus obligatorias ENTONCES son las cuatro fijas
+más responder a las quejas, todas sin cumplir, y la nota de tareas lista esa obligatoria con su
+nombre después de las fijas. DADO cada jornada de la 1 a la 6 ENTONCES ninguna declara responder
+a las quejas ni su nota la lista.
+
+### AC-SHF-081 — Cuentan las cinco, y todas correctas *(verifica BR-SHF-030)*
+
+DADO la jornada 7 con las cinco quejas CUANDO se responden bien cuatro ENTONCES la obligatoria
+sigue sin cumplir, y con la quinta correcta queda cumplida. DADO cinco respondidas con una
+equivocada ENTONCES queda sin cumplir, y una respuesta posterior sobre esa queja se rechaza y no la
+cumple. DADO cinco respondidas bien CUANDO el turno ya cerró ENTONCES la obligatoria no se cumple
+ni se descumple después del cierre.
+
+### AC-SHF-082 — Con una queja mal respondida la devolución trae la Tarea 5 *(verifica BR-SHF-030)*
+
+DADO la jornada 7 que cierra con una queja equivocada, o con una sin responder, y las demás
+obligatorias cumplidas CUANDO se arma la devolución del jefe ENTONCES trae como Tarea 5 «Te
+encargué ocuparte de las quejas y ahora recibo quejas sobre la gestión de las quejas.». DADO la
+jornada 7 con las cinco quejas bien respondidas ENTONCES la devolución no trae Tarea 5.
+
 ### AC-SHF-083 — El pedido exacto con wifi cumple *(verifica BR-SHF-032)*
 
 DADO la jornada 6 con las cinco cajas vacías de la noche CUANDO se envía con wifi un pedido con
@@ -631,12 +662,6 @@ instancia nueva y sin cumplir.
   noche tiene el reloj detenido.
 
 ## Preguntas abiertas
-
-- **OQ-SHF-006 — ¿Qué particular declara la jornada 7?**
-  - Por qué sigue abierta: la ficha de la 7 no tiene diseño cerrado. La decisión de #369 la deja
-    con sólo las cuatro fijas.
-  - Decide: game design, en las fichas e issues de cada jornada.
-  - Bloquea: agregar esa particular; no bloquea abrir ni cerrar con las cuatro declaradas.
 
 - **OQ-SHF-008 — ¿Qué mensaje lleva la pantalla de final y se puede reintentar la jornada?**
   - Por qué sigue abierta: las pantallas de diseño traen un mensaje del jefe y, la del despido, un botón

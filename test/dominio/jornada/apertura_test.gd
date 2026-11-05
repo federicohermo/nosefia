@@ -18,7 +18,7 @@ func test_cada_jornada_declara_sus_fijas_y_su_particular() -> void:  # AC-SHF-00
 		4: fijas + [Tarea.Tipo.SACAR_LA_BASURA],
 		5: fijas + [Tarea.Tipo.DESECHAR_VENCIDOS],
 		6: fijas + [Tarea.Tipo.PEDIR_AL_PROVEEDOR],
-		7: fijas,
+		7: fijas + [Tarea.Tipo.RESPONDER_QUEJAS],
 	}
 	for jornada: int in tabla:
 		var tipos: Array = []
@@ -36,6 +36,18 @@ func test_cada_jornada_declara_sus_fijas_y_su_particular() -> void:  # AC-SHF-00
 		assert_bool(Apertura.pide(jornada, Tarea.Tipo.DESECHAR_VENCIDOS)).is_equal(
 			jornada == ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA + 2
 		)
+
+
+func test_solo_la_septima_declara_responder_a_las_quejas() -> void:  # AC-SHF-080
+	for jornada in range(ReglasDeLaPartida.PRIMERA_JORNADA, QuejasDeLaJornada.JORNADA + 1):
+		var tipos: Array[Tarea.Tipo] = []
+		for tarea in Apertura.obligatorias(jornada):
+			tipos.append(tarea.tipo())
+		var declarada := jornada == QuejasDeLaJornada.JORNADA
+		assert_bool(tipos.has(Tarea.Tipo.RESPONDER_QUEJAS)).is_equal(declarada)
+		assert_bool(Apertura.pide(jornada, Tarea.Tipo.RESPONDER_QUEJAS)).is_equal(declarada)
+		for tarea in Apertura.obligatorias(jornada):
+			assert_bool(tarea.completada()).is_false()
 
 
 func test_el_turno_de_la_jornada_nace_con_el_presupuesto_entero() -> void:  # AC-SHF-001

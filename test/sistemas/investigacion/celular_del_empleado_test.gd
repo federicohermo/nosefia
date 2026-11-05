@@ -129,13 +129,18 @@ func test_modo_fijo_y_foto_publican_los_datos_y_un_solo_cierre() -> void:  # AC-
 func test_otra_jornada_cierra_el_fijo_y_conserva_lecturas() -> void:  # AC-INV-036, AC-INV-037
 	var sistema: CelularDelEmpleado = auto_free(CelularDelEmpleado.new())
 	sistema.mostrar_fijo(Conversacion.Interlocutor.JEFE)
-	sistema.abrir_jornada(6)
+	var jornada := 6
+	sistema.abrir_jornada(jornada)
 	assert_bool(sistema.celular().abierto()).is_false()
 	assert_bool(sistema.celular().fijo()).is_false()
 	# Lo leído en la primera sigue leído; lo de las jornadas siguientes es nuevo.
 	var nuevos := Conversacion.de(Conversacion.Interlocutor.JEFE).mensajes.filter(
 		func(mensaje: Mensaje) -> bool:
-			return mensaje.jornada > ReglasDeLaPartida.PRIMERA_JORNADA and mensaje.vale_para([])
+			return (
+				mensaje.jornada > ReglasDeLaPartida.PRIMERA_JORNADA
+				and mensaje.jornada <= jornada
+				and mensaje.vale_para([])
+			)
 	)
 	assert_array(nuevos).is_not_empty()
 	assert_int(sistema.bandeja().no_leidos(Conversacion.Interlocutor.JEFE)).is_equal(nuevos.size())
