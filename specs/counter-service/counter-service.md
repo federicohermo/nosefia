@@ -1416,7 +1416,7 @@ por primera vez ENTONCES en el lugar del mensaje 3 dice sólo el de «¿No es un
 no el de «¿No es muy capa ella?». DADO la jornada 5 sin la pista 5A activa (camino de la
 hipótesis 2B) ENTONCES dice sólo el de «¿No es muy capa ella?» y no el de «¿No es un amor de
 persona?». DADO la jornada 5 sin camino definido ENTONCES dice lo mismo que por el camino de la
-4B. En los tres casos el resto de las entradas conserva su orden.
+2B. En los tres casos el resto de las entradas conserva su orden.
 
 ### AC-CTR-158 — Los demás compradores usan el guion predeterminado *(verifica BR-CTR-048)*
 

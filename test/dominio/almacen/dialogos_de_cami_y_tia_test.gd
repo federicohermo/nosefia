@@ -11,8 +11,8 @@ const SEMILLAS := 40
 ## La marca del fragmento que el jugador pulsa en el mensaje de Cami.
 const MARCA_DE_LA_PISTA := "[url=5A]"
 ## Lo que distingue a cada versión del mensaje 3 de Cami en la quinta.
-const DEL_CAMINO_4A := "amor de persona"
-const DEL_CAMINO_4B := "muy capa"
+const DEL_CAMINO_2A := "amor de persona"
+const DEL_CAMINO_2B := "muy capa"
 ## La posición del mensaje 3 en la apertura de Cami de la quinta.
 const MENSAJE_3_DE_CAMI := 2
 
@@ -207,16 +207,16 @@ func test_cami_de_la_quinta_dice_sus_entradas_y_nombra_el_pedido_entero() -> voi
 
 func test_cami_de_la_quinta_dice_un_solo_mensaje_3_segun_el_camino() -> void:  # AC-CTR-170
 	for semilla in range(1, SEMILLAS + 1):
-		var por_4a := _apertura(_cami_de_la_quinta(semilla, _activas_por_el_camino("2A")))
-		var por_4b := _apertura(_cami_de_la_quinta(semilla, _activas_por_el_camino("2B")))
+		var por_2a := _apertura(_cami_de_la_quinta(semilla, _activas_por_el_camino("2A")))
+		var por_2b := _apertura(_cami_de_la_quinta(semilla, _activas_por_el_camino("2B")))
 		var sin_camino := _apertura(_cami_de_la_quinta(semilla, _activas_por_el_camino("")))
-		assert_str(por_4a[MENSAJE_3_DE_CAMI]).contains(DEL_CAMINO_4A)
-		assert_int(_cuantas_dicen(por_4a, DEL_CAMINO_4A)).is_equal(1)
-		assert_int(_cuantas_dicen(por_4a, DEL_CAMINO_4B)).is_zero()
-		assert_str(por_4b[MENSAJE_3_DE_CAMI]).contains(DEL_CAMINO_4B)
-		assert_int(_cuantas_dicen(por_4b, DEL_CAMINO_4B)).is_equal(1)
-		assert_int(_cuantas_dicen(por_4b, DEL_CAMINO_4A)).is_zero()
-		assert_array(Array(sin_camino)).is_equal(Array(por_4b))
+		assert_str(por_2a[MENSAJE_3_DE_CAMI]).contains(DEL_CAMINO_2A)
+		assert_int(_cuantas_dicen(por_2a, DEL_CAMINO_2A)).is_equal(1)
+		assert_int(_cuantas_dicen(por_2a, DEL_CAMINO_2B)).is_zero()
+		assert_str(por_2b[MENSAJE_3_DE_CAMI]).contains(DEL_CAMINO_2B)
+		assert_int(_cuantas_dicen(por_2b, DEL_CAMINO_2B)).is_equal(1)
+		assert_int(_cuantas_dicen(por_2b, DEL_CAMINO_2A)).is_zero()
+		assert_array(Array(sin_camino)).is_equal(Array(por_2b))
 
 
 func test_solo_ellos_tienen_guion_propio_y_los_demas_usan_el_predeterminado() -> void:  # AC-CTR-158
