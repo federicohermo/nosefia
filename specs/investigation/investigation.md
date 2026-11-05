@@ -724,7 +724,7 @@ BR-INV-009.
 ### BR-INV-124 — El botón abre la lista de productos
 
 CUANDO el jugador pulsa «Hacer pedido», el sistema DEBE abrir una lista con los treinta y nueve
-productos pedibles: los treinta y dos del catálogo y los siete que sólo se piden
+productos pedibles: los treinta y dos del catálogo y los siete que existen sólo como caja
 (BR-STK-054), cada uno con una casilla para marcarlo. La lista DEBE llevar el texto
 «Seleccioná los productos que faltan.», el aviso «* Seleccioná uno o varios productos para enviar.»
 y el botón «Enviar». Marcar y desmarcar un producto DEBE ser libre. «Enviar» DEBE estar
@@ -1554,7 +1554,7 @@ jornada ENTONCES el botón «Hacer pedido» existe en su chat.
 ### AC-INV-170 — La lista tiene los treinta y nueve y exige uno marcado *(verifica BR-INV-124)*
 
 DADO la lista abierta ENTONCES muestra treinta y nueve productos distintos, los treinta y dos del
-catálogo y los siete que sólo se piden, todos desmarcados, con «Enviar» deshabilitado. CUANDO se marca uno
+catálogo y los siete que existen sólo como caja, todos desmarcados, con «Enviar» deshabilitado. CUANDO se marca uno
 ENTONCES «Enviar» se habilita, y CUANDO se lo desmarca ENTONCES se deshabilita. CUANDO se cierra la
 lista y se reabre ENTONCES no hay ninguno marcado y el chat no recibió ningún mensaje.
 

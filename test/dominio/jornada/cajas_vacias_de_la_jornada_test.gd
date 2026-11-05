@@ -48,7 +48,7 @@ func test_la_sexta_noche_abre_con_cinco_cajas_vacias_una_de_fernet() -> void:  #
 func test_el_inventario_deja_en_cero_esas_cajas_y_llena_las_demas() -> void:  # AC-STK-126
 	for semilla in SEMILLAS:
 		var vacias := _vacias(semilla + 1)
-		var productos := Catalogo.de_la_jornada(PEDIDO)
+		var productos := Catalogo.con_caja_de_la_jornada(PEDIDO)
 		var inventario := Apertura.inventario_con_faltantes({}, {}, productos, vacias)
 		var en_cero := 0
 		for producto in productos:
@@ -59,6 +59,14 @@ func test_el_inventario_deja_en_cero_esas_cajas_y_llena_las_demas() -> void:  # 
 			else:
 				assert_int(unidades).is_equal(ReglasDelEstante.UNIDADES_POR_CAJA)
 		assert_int(en_cero).is_equal(Apertura.CAJAS_VACIAS)
+
+
+func test_entre_varias_semillas_alguna_vacia_sale_de_los_siete_de_caja() -> void:  # AC-STK-126
+	var alguna := false
+	for semilla in SEMILLAS:
+		for id in _vacias(semilla + 1):
+			alguna = alguna or Catalogo.SOLO_CAJAS.has(id)
+	assert_bool(alguna).is_true()
 
 
 func test_las_vacias_no_son_faltantes_ni_las_piden_los_compradores() -> void:  # AC-STK-127
@@ -92,7 +100,7 @@ func test_ninguna_otra_jornada_abre_cajas_vacias() -> void:  # AC-STK-128
 		if jornada == PEDIDO:
 			continue
 		assert_array(_vacias(1, jornada)).is_empty()
-		var productos := Catalogo.de_la_jornada(jornada)
+		var productos := Catalogo.con_caja_de_la_jornada(jornada)
 		var inventario := Apertura.inventario_con_faltantes({}, {}, productos, _vacias(1, jornada))
 		for producto in productos:
 			assert_int(inventario.unidades(producto, Inventario.Ubicacion.DEPOSITO)).is_equal(

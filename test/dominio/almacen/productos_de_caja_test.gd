@@ -1,5 +1,5 @@
-## Los siete productos que sólo se piden por el chat (BR-STK-054): están en el catálogo con su
-## caja y su sonido, y no entran a la góndola, a la venta ni al pedido de un comprador.
+## Los siete productos que existen sólo como caja del depósito (BR-STK-054): están en el catálogo
+## con su caja y su sonido, y no entran a la góndola, a la venta ni al pedido de un comprador.
 extends GdUnitTestSuite
 
 const COMPLETA := ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA
@@ -59,14 +59,25 @@ func test_el_pedido_ofrece_los_siete_junto_a_los_demas() -> void:  # AC-STK-124
 		assert_bool(ofrecidos.has(nombre)).override_failure_message(nombre).is_true()
 
 
-func test_ninguna_noche_los_deja_con_unidades_ni_faltantes() -> void:  # AC-STK-124
-	for jornada in range(ReglasDeLaPartida.PRIMERA_JORNADA, ULTIMA + 1):
-		var inventario := Apertura.inventario_con_faltantes({}, {}, Catalogo.de_la_jornada(jornada))
+func test_desde_la_primera_completa_abren_con_su_caja_llena_y_sin_faltante() -> void:  # AC-STK-124
+	for jornada: int in [COMPLETA, COMPLETA + 1, COMPLETA + 2, ULTIMA]:
+		var inventario := Apertura.inventario_con_faltantes(
+			{}, {}, Catalogo.con_caja_de_la_jornada(jornada)
+		)
 		var faltan := _nombres(inventario.faltantes())
 		for producto in Catalogo.solo_cajas():
-			for ubicacion: Inventario.Ubicacion in Inventario.Ubicacion.values():
-				assert_int(inventario.unidades(producto, ubicacion)).is_zero()
+			assert_int(inventario.unidades(producto, Inventario.Ubicacion.DEPOSITO)).is_equal(
+				ReglasDelEstante.UNIDADES_POR_CAJA
+			)
+			assert_int(inventario.unidades(producto, Inventario.Ubicacion.GONDOLA)).is_zero()
 			assert_bool(faltan.has(producto.nombre)).is_false()
+
+
+func test_antes_de_la_primera_completa_no_existen() -> void:  # AC-STK-124
+	for jornada in range(ReglasDeLaPartida.PRIMERA_JORNADA, COMPLETA):
+		var nombres := _nombres(Catalogo.con_caja_de_la_jornada(jornada))
+		for nombre in NOMBRES:
+			assert_bool(nombres.has(nombre)).override_failure_message(nombre).is_false()
 
 
 func test_los_compradores_nunca_piden_los_siete() -> void:  # AC-STK-125

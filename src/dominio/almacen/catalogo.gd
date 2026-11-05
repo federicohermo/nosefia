@@ -13,8 +13,8 @@ extends RefCounted
 ## Los dos tamaños de caja que guarda el depósito.
 enum TamanoDeCaja { CHICA, GRANDE }
 
-## Los siete productos que existen sólo en la lista del pedido al proveedor (BR-STK-054): sin
-## góndola, sin venta, sin comprador y sin caja física en el depósito. `todos()` no los lista.
+## Los siete productos que existen sólo como caja del depósito (BR-STK-054): sin góndola, sin
+## venta y sin comprador. `todos()` no los lista.
 const SOLO_CAJAS: Array[Producto.Id] = [
 	Producto.Id.SEI_TUQUI,
 	Producto.Id.LA_MONTELOCA,
@@ -338,7 +338,7 @@ static func todos() -> Array[Producto]:
 	return productos
 
 
-## Los siete que existen sólo en la lista del pedido, en el orden del enum (BR-STK-054).
+## Los siete que existen sólo como caja, en el orden del enum (BR-STK-054).
 static func solo_cajas() -> Array[Producto]:
 	var productos: Array[Producto] = []
 	for id: Producto.Id in SOLO_CAJAS:
@@ -348,14 +348,23 @@ static func solo_cajas() -> Array[Producto]:
 	return productos
 
 
-## Los treinta y nueve de la lista de pedido: los de la góndola y los siete que sólo se piden,
-## en el orden del enum.
+## Los treinta y nueve de la lista de pedido: los de la góndola y los siete que existen sólo como
+## caja, en el orden del enum.
 static func pedibles() -> Array[Producto]:
 	var productos: Array[Producto] = []
 	for id: Producto.Id in Producto.Id.values():
 		var producto := de(id)
 		if producto != null:
 			productos.append(producto)
+	return productos
+
+
+## Los productos que tienen caja en el depósito esa jornada: los de la jornada y, desde la primera
+## completa, los siete que existen sólo como caja (BR-STK-054).
+static func con_caja_de_la_jornada(jornada: int) -> Array[Producto]:
+	var productos := de_la_jornada(jornada)
+	if jornada >= ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA:
+		productos.append_array(solo_cajas())
 	return productos
 
 

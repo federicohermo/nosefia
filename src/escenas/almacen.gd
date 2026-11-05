@@ -76,6 +76,9 @@ class PresenciaDeCaja:
 @export var _repositor: Repositor
 @export var _estante: EstanteDelLocal
 @export var _cajas_de_productos: Array[Node3D]
+## Las siete que existen sólo como caja (BR-STK-054): van aparte para que ordenar las cajas y
+## las estanterías no las cuenten.
+@export var _cajas_del_fondo: Array[Node3D]
 @export var _jugador: Jugador
 @export var _atenciones: Ventanilla
 @export var _computadora: ComputadoraDeEscritorio
@@ -132,6 +135,7 @@ var _gestor_del_pedido: GestorDelPedido
 var _pedido: PedidoAlProveedor
 var _cajas_vacias: Array[Producto.Id] = []
 var _pallets_de_entrega: Node3D
+var _pallets_del_fondo: Node3D
 var _presencias_de_las_cajas: Dictionary[Node3D, PresenciaDeCaja] = {}
 
 ## Cómo se sale al menú. Es una variable y no una llamada directa porque un test no puede
@@ -342,7 +346,7 @@ func _ready() -> void:
 		if "observador" in util.malla:
 			util.malla.set("observador", _jugador)
 	# El motor no despierta lo que está sobre una caja empujada. Lo hace el puesto.
-	for caja: CajaDeProductosDelDeposito in _cajas_de_productos:
+	for caja: CajaDeProductosDelDeposito in _todas_las_cajas():
 		_presencias_de_las_cajas[caja] = PresenciaDeCaja.new(caja)
 		caja.empujada.connect(_reposicion_manual.despertar_lo_de_arriba)
 		caja.sleeping_state_changed.connect(_pedir_revision_del_deposito)
@@ -495,7 +499,10 @@ func _al_abrir_la_jornada(jornada: int) -> void:
 		_cajas_vacias
 	)
 	var inventario := Apertura.inventario_con_faltantes(
-		Apertura.faltantes_de(vacios), _reposicion_manual.casilleros(), productos, _cajas_vacias
+		Apertura.faltantes_de(vacios),
+		_reposicion_manual.casilleros(),
+		Catalogo.con_caja_de_la_jornada(jornada),
+		_cajas_vacias
 	)
 	_repositor.arrancar(
 		Estante.new(
@@ -554,10 +561,11 @@ func _al_abrir_la_jornada(jornada: int) -> void:
 	var fijas: Dictionary[Producto.Id, Transform3D] = {}
 	for caja: CajaDeProductosDelDeposito in poses:
 		fijas[caja.producto] = poses[caja]
+	fijas.merge(_pila_de_las_cajas_del_fondo(jornada))
 	var organizadas := OrganizacionDelDeposito.abrir(
 		_cajas_del_deposito(inventario), _partida.poses_de_las_cajas, _repisas_del_deposito(), fijas
 	)
-	for caja: CajaDeProductosDelDeposito in _cajas_de_productos:
+	for caja: CajaDeProductosDelDeposito in _todas_las_cajas():
 		caja.declarar_origen(organizadas[caja.producto])
 		caja.volver_a_su_lugar()
 		_mostrar_caja(caja, _hay_en_el_deposito(inventario, caja))
@@ -590,6 +598,34 @@ func _al_abrir_la_jornada(jornada: int) -> void:
 
 ## Una caja se ve si tiene unidades, o si abrió vacía a propósito: la del pedido al proveedor
 ## está ahí para que el jugador la revise.
+## Las siete cajas que sólo existen como caja (BR-STK-054) abren cada noche en una pila contra el
+## fondo del depósito, sobre dos pallets de piso: cuatro abajo y tres arriba. Con los pallets y las
+## poses a la vista, la apertura las trata como fijas.
+func _pila_de_las_cajas_del_fondo(jornada: int) -> Dictionary[Producto.Id, Transform3D]:
+	var pila: Dictionary[Producto.Id, Transform3D] = {}
+	if is_instance_valid(_pallets_del_fondo):
+		_pallets_del_fondo.queue_free()
+		_pallets_del_fondo = null
+	if jornada < ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA:
+		return pila
+	_pallets_del_fondo = PALLETS_DE_ENTREGA.instantiate()
+	_pallets_del_fondo.name = &"PalletsDelFondo"
+	add_child(_pallets_del_fondo)
+	var pallets: Array[MeshInstance3D] = _pallets_del_fondo.call(
+		"disponer_contra_el_fondo", $Estructura/deposito_pallet_piso, $Estructura/SueloSolido/Fondo
+	)
+	# Las etiquetas miran hacia el centro del depósito, y la pared del fondo queda a la espalda.
+	var poses := PilaDelDeposito.poses(_cajas_del_fondo, pallets, Vector3.BACK)
+	for caja: CajaDeProductosDelDeposito in poses:
+		pila[caja.producto] = poses[caja]
+	return pila
+
+
+## Las cajas del depósito: las treinta y dos de las estanterías y las siete de la pila del fondo.
+func _todas_las_cajas() -> Array[Node3D]:
+	return _cajas_de_productos + _cajas_del_fondo
+
+
 func _hay_en_el_deposito(inventario: Inventario, caja: CajaDeProductosDelDeposito) -> bool:
 	if caja.producto in _cajas_vacias:
 		return true
@@ -598,7 +634,7 @@ func _hay_en_el_deposito(inventario: Inventario, caja: CajaDeProductosDelDeposit
 
 func _cajas_del_deposito(inventario: Inventario) -> Array[OrganizacionDelDeposito.Caja]:
 	var cajas: Array[OrganizacionDelDeposito.Caja] = []
-	for caja: CajaDeProductosDelDeposito in _cajas_de_productos:
+	for caja: CajaDeProductosDelDeposito in _todas_las_cajas():
 		cajas.append(
 			OrganizacionDelDeposito.Caja.new(
 				caja.producto,
@@ -623,7 +659,7 @@ func _repisas_del_deposito() -> Array[AABB]:
 
 func _poses_de_las_cajas() -> Dictionary[Producto.Id, Transform3D]:
 	var poses: Dictionary[Producto.Id, Transform3D] = {}
-	for caja: CajaDeProductosDelDeposito in _cajas_de_productos:
+	for caja: CajaDeProductosDelDeposito in _todas_las_cajas():
 		poses[caja.producto] = caja.global_transform
 	return poses
 

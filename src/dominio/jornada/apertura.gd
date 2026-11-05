@@ -135,8 +135,9 @@ static func faltantes_de(vacios: Dictionary[Producto.Id, Array]) -> Dictionary[P
 
 
 ## Cuáles son las cajas del depósito que abren vacías esa noche (BR-STK-055): la de Fernet God y
-## cuatro sorteadas con la semilla de la partida entre las cajas del depósito, sin contar las de un
-## producto que piden los compradores. **Sale de la semilla y no del azar de la sesión**:
+## cuatro sorteadas con la semilla de la partida entre las cajas que tiene el depósito, siete de
+## ellas sin góndola, sin contar las de un producto que piden los compradores.
+## **Sale de la semilla y no del azar de la sesión**:
 ## abrir de nuevo o retomar la jornada da las mismas cinco. Los faltantes de la noche se sortean
 ## después, sin tocar estas cajas. Las demás jornadas no abren ninguna vacía.
 static func cajas_vacias_de_la_jornada(
@@ -148,7 +149,7 @@ static func cajas_vacias_de_la_jornada(
 	vacias.append(PRODUCTO_CON_CAJA_VACIA)
 	var pedidos := pedidos_de(compradores)
 	var elegibles: Array[Producto.Id] = []
-	for producto in Catalogo.de_la_jornada(jornada):
+	for producto in Catalogo.con_caja_de_la_jornada(jornada):
 		if producto.id != PRODUCTO_CON_CAJA_VACIA and not pedidos.has(producto.id):
 			elegibles.append(producto.id)
 	var azar := RandomNumberGenerator.new()
