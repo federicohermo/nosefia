@@ -3,7 +3,7 @@ schema_version: 1
 capability_id: CAP-INV
 status: draft
 owner: por definir
-provenance: GDD «Investigación» y «La computadora»; ficha «Interfaces virtuales durante la jornada» y decisiones de #373, #375 y #376; migración de los specs 006, 009, 018; fichas Chat con el jefe, Chat con compañera y 2A revisadas el 2026-10-15; decisiones de #430; «Sistema de investigación», fichas 2A/2B/2P y decisiones de #22 del 2026-10-15; decisión del usuario del 2026-10-18 de usar la captura del mensaje de Yasmín como foto de 2A; decisión del usuario del 2026-10-17 de retirar las notas de la computadora y usar el diseño del registro de productos; ficha «Pantalla entre jornadas», reflexión de jornada 1, encabezado de jornada 2 y decisiones de #436; decisiones del usuario del 2026-10-18 sobre el recorrido lateral, la elección sin límite de tiempo, la reanudación del cierre y la espera de 1 segundo; ocho jornadas de #526; instrucciones por jornada de #527; la colilla sólo en su jornada, de #536; ficha Chat con compañera, jornada 5, de #458; ficha «Caminos narrativos y finales» y cuadro de pistas e hipótesis de #766 y la ficha «5B» de la lista de pistas e hipótesis y decisiones del usuario del 2026-10-30 sobre su foto y su texto, de #731; la fila «6C» de la lista de pistas e hipótesis, la ficha «Caminos narrativos y finales» y decisiones del usuario del 2026-11-03 sobre Yasmín y la textura de la nota, de #741; encabezado de la jornada 5 y ficha «5P» de la lista de pistas e hipótesis y decisión del usuario del 2026-11-04 sobre la 5L, de #740; ficha «Especificar animaciones», el chat que entra y sale deslizándose, de #627; encabezado de la jornada 6 y fichas «6P» y «6L» de la lista de pistas e hipótesis, de #742; el chat de Hernán y el pedido al proveedor, de #691
+provenance: GDD «Investigación» y «La computadora»; ficha «Interfaces virtuales durante la jornada» y decisiones de #373, #375 y #376; migración de los specs 006, 009, 018; fichas Chat con el jefe, Chat con compañera y 2A revisadas el 2026-10-15; decisiones de #430; «Sistema de investigación», fichas 2A/2B/2P y decisiones de #22 del 2026-10-15; decisión del usuario del 2026-10-18 de usar la captura del mensaje de Yasmín como foto de 2A; decisión del usuario del 2026-10-17 de retirar las notas de la computadora y usar el diseño del registro de productos; ficha «Pantalla entre jornadas», reflexión de jornada 1, encabezado de jornada 2 y decisiones de #436; decisiones del usuario del 2026-10-18 sobre el recorrido lateral, la elección sin límite de tiempo, la reanudación del cierre y la espera de 1 segundo; ocho jornadas de #526; instrucciones por jornada de #527; la colilla sólo en su jornada, de #536; ficha Chat con compañera, jornada 5, de #458; ficha «Caminos narrativos y finales» y cuadro de pistas e hipótesis de #766 y la ficha «5B» de la lista de pistas e hipótesis y decisiones del usuario del 2026-10-30 sobre su foto y su texto, de #731; la fila «6C» de la lista de pistas e hipótesis, la ficha «Caminos narrativos y finales» y decisiones del usuario del 2026-11-03 sobre Yasmín y la textura de la nota, de #741; encabezado de la jornada 5 y ficha «5P» de la lista de pistas e hipótesis y decisión del usuario del 2026-11-04 sobre la 5L, de #740; ficha «Especificar animaciones», el chat que entra y sale deslizándose, de #627; GJ-62, el chat que abre en el primer mensaje sin leer, de #568; encabezado de la jornada 6 y fichas «6P» y «6L» de la lista de pistas e hipótesis, de #742; el chat de Hernán y el pedido al proveedor, de #691
 ---
 
 # Capacidad: la investigación
@@ -134,8 +134,9 @@ actual, sin duplicar el celular ni dejarlo detenido a mitad de camino.
 
 CUANDO se abre el celular en modo libre, el sistema DEBE mostrar el menú de chats, aunque se
 haya cerrado viendo un chat o una foto. Clic izquierdo en un botón DEBE abrir su chat y marcarlo
-leído; la flecha del encabezado DEBE volver al menú. Abrir un chat DEBE mostrar su último mensaje
-y permitir desplazarlo con la rueda hacia los anteriores. Un menú sin chats DEBE verse vacío,
+leído; la flecha del encabezado DEBE volver al menú. Abrir un chat sin mensajes sin leer DEBE
+mostrar su último mensaje y permitir desplazarlo con la rueda hacia los anteriores; con mensajes
+sin leer, BR-INV-120 decide dónde empieza. Un menú sin chats DEBE verse vacío,
 sin error; un chat de un solo mensaje NO DEBE exigir desplazamiento para verlo.
 
 ### BR-INV-023 — La jornada decide los mensajes disponibles
@@ -728,6 +729,20 @@ un chat, el chat DEBE salir hacia la derecha y descubrir la lista, que DEBE qued
 Un chat en modo fijo (BR-INV-026) NO DEBE deslizarse: aparece en su lugar. La duración y la curva
 del deslizamiento DEBEN ser las mismas en la entrada y en la salida (OQ-INV-007).
 
+### BR-INV-120 — Un chat se abre en su primer mensaje sin leer
+CUANDO se abre un chat en modo libre con uno o más mensajes sin leer, el primero de ellos DEBE
+quedar en el borde superior de la lista visible y los demás debajo, en su orden. Los que no
+entren DEBEN alcanzarse con la rueda. SI el primero sin leer es el último mensaje, ENTONCES DEBE
+quedar arriba aunque debajo sobra espacio. SI todo el chat entra a la vista, ENTONCES NO DEBE
+exigir desplazamiento. CUANDO el chat no tiene mensajes sin leer, DEBE abrirse en su último
+mensaje (BR-INV-022).
+
+CUANDO el celular está fijo en el chat de Enrique durante el cierre de la jornada (BR-INV-026),
+el primer mensaje que llega DEBE quedar en el borde superior y cada siguiente DEBE aparecer
+debajo. La lista DEBE bajar sólo lo necesario para que el último mensaje, y la opción que lo
+sigue, queden a la vista. CUANDO llega un mensaje a un chat libre que se abrió sin mensajes sin
+leer y la lista está en su último mensaje, la lista DEBE bajar hasta el nuevo.
+
 ### BR-INV-105 — El deslizamiento no deja la pantalla a medias
 MIENTRAS un chat se desliza, un pedido de volver o de abrir otro chat NO DEBE dejar la pantalla
 a medio camino ni abrir dos chats: el celular DEBE terminar mostrando un solo destino, el último
@@ -880,8 +895,9 @@ en menú, cerrado, cerrado con la otra interfaz intacta, cerrado con el examen i
 ### AC-INV-027 — Reabrir y navegar *(verifica BR-INV-022)*
 
 DADO el celular cerrado desde un chat y, por separado, desde una foto CUANDO se reabre ENTONCES
-ambas veces muestra el menú. CUANDO se pulsa un botón ENTONCES abre ese chat en su último
-mensaje y con cero no leídos; la rueda permite llegar al primero y la flecha vuelve al menú.
+ambas veces muestra el menú. CUANDO se pulsa un botón ENTONCES abre ese chat con cero no leídos y,
+si no tenía ninguno sin leer, en su último mensaje (BR-INV-120); la rueda permite llegar al primero
+y la flecha vuelve al menú.
 DADO un menú sin chats ENTONCES no hay botones ni error; con un chat de un mensaje, éste queda
 a la vista sin desplazar.
 
@@ -1642,6 +1658,38 @@ nuevos, sin leer, ambos a las 19:48: una foto de las estanterías del depósito 
 BR-INV-126, en ese orden, sin un tercero. CUANDO se amplía la foto ENTONCES muestra ese texto como
 adjunto. DADO cada jornada de la 1 a la 5 ENTONCES ninguno de los dos está en su chat. Retomar la
 jornada 6 los muestra una sola vez.
+
+### AC-INV-160 — Con mensajes sin leer, el primero queda arriba *(verifica BR-INV-120, BR-INV-022)*
+
+DADO un chat con 30 mensajes de los cuales los 3 últimos están sin leer CUANDO se abre ENTONCES el
+mensaje 28 queda en el borde superior de la lista, el 29 y el 30 debajo, y los no leídos pasan a
+cero. DADO el mismo chat con 40 sin leer, de modo que no entran en pantalla, ENTONCES el primero
+sin leer queda arriba y la rueda alcanza el último.
+
+### AC-INV-161 — Sin mensajes sin leer, se abre al final *(verifica BR-INV-120, BR-INV-022)*
+
+DADO un chat de 30 mensajes sin ninguno sin leer CUANDO se abre ENTONCES muestra el último mensaje
+abajo y la rueda alcanza el primero. DADO el mismo chat cerrado y vuelto a abrir sin que haya
+llegado nada ENTONCES se repite el resultado.
+
+### AC-INV-162 — Un único sin leer que es el último queda arriba, y un chat corto no se desplaza *(verifica BR-INV-120)*
+
+DADO un chat de 30 mensajes con sólo el último sin leer CUANDO se abre ENTONCES ese mensaje queda
+en el borde superior y debajo sobra espacio. DADO un chat de un mensaje sin leer ENTONCES queda a
+la vista sin desplazar, igual que uno con todos sus mensajes dentro de la pantalla.
+
+### AC-INV-163 — En el cierre, el primer mensaje del jefe queda arriba *(verifica BR-INV-120, BR-INV-026)*
+
+DADO el celular fijo en el chat de Enrique con un historial que ocupa más que la pantalla CUANDO
+llega el primer mensaje de la devolución ENTONCES queda en el borde superior. CUANDO llegan el
+segundo y el tercero ENTONCES aparecen debajo y el primero sigue arriba. CUANDO los mensajes y la
+opción ya no entran ENTONCES la lista baja lo justo para ver el último y la opción.
+
+### AC-INV-164 — Un mensaje que llega con el chat abajo baja hasta él *(verifica BR-INV-120)*
+
+DADO un chat libre abierto sin mensajes sin leer y con la lista en su último mensaje CUANDO llega
+un mensaje ENTONCES la lista baja hasta el nuevo. DADO el mismo chat con la lista desplazada hacia
+arriba ENTONCES la lista no se mueve.
 
 ## No objetivos
 
