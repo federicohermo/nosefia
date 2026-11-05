@@ -807,9 +807,9 @@ El final al que lleva es el de BR-SHF-061.
 La pista 6A DEBE ser de la jornada 6, del canal de chat y del camino de la hipótesis 5A
 (BR-INV-049, BR-INV-050): está activa en las mismas condiciones que 6B (BR-INV-123). CUANDO llega
 la primera respuesta de Hernán (BR-INV-125) con 6A activa, el sistema DEBE mostrar sólo el
-fragmento «Qué lindo no tener que hablar directamente con Enrique» en lila, el color de pista, y el
-resto del mensaje en el color normal. CUANDO se pulsa el fragmento, DEBE emitir un pedido de la
-pista 6A por el canal de chat, como los demás fragmentos de chat (BR-INV-121). SI 6A no está
+fragmento «Qué lindo no tener que hablar directamente con Enrique» en rojo y el resto del mensaje
+en el color normal. CUANDO se pulsa el fragmento, DEBE emitir un pedido de la pista 6A por el
+canal de chat, como los demás fragmentos de chat (BR-INV-031, BR-INV-060). SI 6A no está
 activa, ENTONCES la respuesta DEBE ser texto normal, sin fragmento pulsable, y pulsar la frase NO
 DEBE registrar nada. La segunda respuesta de Hernán NO DEBE ser nunca una pista. SI el pedido salió
 sin wifi, ENTONCES no hay respuesta (BR-INV-125) y por lo tanto 6A no tiene de dónde registrarse.
