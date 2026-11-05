@@ -259,6 +259,7 @@ func mostrar_menu(bandeja: Bandeja) -> void:
 	_pie.hide()
 	_componer(true)
 	_filtrar("")
+	_enfocar_el_primero.call_deferred()
 
 
 ## `primer_nuevo` es el lugar del mensaje con el que empieza el chat; sin él, abre en el último.
@@ -309,6 +310,17 @@ func mostrar_chat(
 	_agregar_la_opcion()
 	_ofrecer_las_respuestas(con_respuestas)
 	_acomodar_la_lectura.call_deferred(false)
+	_enfocar_el_primero.call_deferred()
+
+
+## Deja el foco en el primer control apretable del teléfono: un chat del menú, una respuesta, la
+## opción o el botón de volver. Sin foco, la cruceta no tiene por dónde empezar.
+func _enfocar_el_primero() -> void:
+	if not _telefono.is_visible_in_tree():
+		return
+	if is_instance_valid(_respuestas) and FocoDeLaInterfaz.en_el_primero(_respuestas) != null:
+		return
+	FocoDeLaInterfaz.en_el_primero(_telefono)
 
 
 ## Ofrece una opción debajo del último mensaje. Sobrevive a que el chat se vuelva a dibujar.
@@ -873,7 +885,6 @@ func _boton_de_respuesta(texto: String, da_la_razon: bool, fondo: Color, letra: 
 	boton.text = texto
 	boton.custom_minimum_size = Vector2(0, 58)
 	boton.alignment = HORIZONTAL_ALIGNMENT_LEFT
-	boton.focus_mode = Control.FOCUS_NONE
 	boton.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
 	boton.add_theme_font_override("font", _fuente_del_chat)
 	boton.add_theme_font_size_override("font_size", 26)

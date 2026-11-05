@@ -99,6 +99,8 @@ func _ready() -> void:
 			_fila.add_child(boton)
 		else:
 			_opciones.add_child(boton)
+	# El menú arranca con un botón elegido: con joystick no hay otro modo de empezar.
+	FocoDeLaInterfaz.en_el_primero.bind(_marco).call_deferred()
 	_pedidos.nuevo_juego_pedido.connect(empezar_partida_nueva)
 	_pedidos.continuar_pedido.connect(entrar_al_almacen)
 	_pedidos.configuraciones_pedida.connect(_abrir_las_configuraciones)

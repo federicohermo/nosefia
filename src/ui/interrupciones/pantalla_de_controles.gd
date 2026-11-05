@@ -1,6 +1,8 @@
 ## Controles: un renglón por acción, con su nombre y la tecla o el botón de cada una de sus ranuras.
 ## Movimiento es un solo renglón con sus ocho teclas. Elegir una y apretar una tecla o un botón del
-## mouse se la asigna. Dibuja lo que contesta
+## mouse se la asigna. Debajo va el esquema del joystick: un renglón por cada acción de botón, que
+## se reasigna igual con un botón del joystick, y los dos joysticks, que sólo se muestran. Dibuja lo
+## que contesta
 ## `AsignacionDeControles` y avisa cada asignación que cambió algo. No escribe ni aplica nada: eso
 ## lo cablea quien la abre.
 ##
@@ -17,6 +19,12 @@ signal cerrada
 const TEXTO_DEL_TITULO := "/ CONTROLES:"
 const TEXTO_DE_VOLVER := "VOLVER"
 const TEXTO_DE_ESPERA := "PRESIONÁ UNA TECLA"
+const TEXTO_DE_ESPERA_DEL_JOYSTICK := "PRESIONÁ UN BOTÓN"
+const TEXTO_DEL_JOYSTICK := "/ JOYSTICK:"
+const TEXTO_DEL_JOYSTICK_IZQUIERDO := "JOYSTICK IZQUIERDO"
+const TEXTO_DEL_JOYSTICK_DERECHO := "JOYSTICK DERECHO"
+const TEXTO_DE_MOVIMIENTO := "MOVIMIENTO"
+const TEXTO_DE_VISION := "VISIÓN"
 const ANCHO_DEL_NOMBRE := 760.0
 const NOMBRES_DE_LAS_TECLAS: Dictionary = {
 	KEY_ESCAPE: "ESC",
@@ -53,6 +61,11 @@ func _ready() -> void:
 		grupo.append(accion)
 	for nombre: String in grupos:
 		_filas.add_child(_fila_de(nombre, grupos[nombre]))
+	_filas.add_child(_fila_con_celdas(TEXTO_DEL_JOYSTICK))
+	for accion: StringName in AsignacionDeControles.ACCIONES_CON_BOTON:
+		_filas.add_child(_fila_del_joystick(accion))
+	_filas.add_child(_fila_de_lectura(TEXTO_DEL_JOYSTICK_IZQUIERDO, TEXTO_DE_MOVIMIENTO))
+	_filas.add_child(_fila_de_lectura(TEXTO_DEL_JOYSTICK_DERECHO, TEXTO_DE_VISION))
 	get_viewport().size_changed.connect(_ajustar_al_viewport)
 	_ajustar_al_viewport()
 
@@ -60,6 +73,11 @@ func _ready() -> void:
 ## Cómo se lee una entrada. El nombre de una tecla lo da el motor, y sin traducir a la
 ## distribución del teclado: se lee el código físico como está.
 static func nombre_de_la_entrada(tipo: int, codigo: int) -> String:
+	if tipo == AsignacionDeControles.TipoDeEntrada.BOTON_DEL_JOYSTICK:
+		var del_joystick: String = AsignacionDeControles.NOMBRES_DE_LOS_BOTONES_DEL_JOYSTICK.get(
+			codigo, "BOTÓN %d" % codigo
+		)
+		return del_joystick
 	if tipo == AsignacionDeControles.TipoDeEntrada.BOTON_DEL_MOUSE:
 		var nombre: String = AsignacionDeControles.NOMBRES_DE_LOS_BOTONES.get(codigo, "")
 		return nombre.to_upper()
@@ -142,7 +160,9 @@ func atender(evento: InputEvent) -> bool:
 		_cancelar_la_espera()
 		_pintar()
 		return true
-	if not AsignacionDeControles.acepta(_esperando_accion, entrada.x, entrada.y, en_la_web):
+	if not AsignacionDeControles.acepta(
+		_esperando_accion, entrada.x, entrada.y, en_la_web, _esperando_ranura
+	):
 		return true
 	var cambio := _asignacion.asignar(
 		_esperando_accion,
@@ -163,7 +183,8 @@ func _input(evento: InputEvent) -> void:
 		get_viewport().set_input_as_handled()
 
 
-func _fila_de(nombre: String, acciones: Array) -> HBoxContainer:
+## La fila con el nombre a la izquierda y, a la derecha, una columna vacía para sus celdas.
+func _fila_con_celdas(nombre: String) -> HBoxContainer:
 	var fila := HBoxContainer.new()
 	fila.theme_type_variation = &"FilaDeConfiguraciones"
 	var etiqueta := Label.new()
@@ -175,9 +196,35 @@ func _fila_de(nombre: String, acciones: Array) -> HBoxContainer:
 	celdas.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	fila.add_child(etiqueta)
 	fila.add_child(celdas)
+	return fila
+
+
+func _fila_de(nombre: String, acciones: Array) -> HBoxContainer:
+	var fila := _fila_con_celdas(nombre)
+	var celdas: VBoxContainer = fila.get_child(1)
 	for accion: StringName in acciones:
 		for ranura: int in AsignacionDeControles.ranuras_de(accion):
-			celdas.add_child(_boton_de_la_ranura(accion, ranura))
+			if not AsignacionDeControles.es_del_joystick(accion, ranura):
+				celdas.add_child(_boton_de_la_ranura(accion, ranura))
+	return fila
+
+
+## El renglón de una acción de botón: su nombre y el botón del joystick que tiene.
+func _fila_del_joystick(accion: StringName) -> HBoxContainer:
+	var fila := _fila_con_celdas(AsignacionDeControles.nombre_de_la_accion(accion))
+	var celdas: VBoxContainer = fila.get_child(1)
+	celdas.add_child(_boton_de_la_ranura(accion, AsignacionDeControles.RANURA_DEL_JOYSTICK))
+	return fila
+
+
+## Un joystick no es un botón: se muestra qué hace y no se elige.
+func _fila_de_lectura(nombre: String, funcion: String) -> HBoxContainer:
+	var fila := _fila_con_celdas(nombre)
+	var celdas: VBoxContainer = fila.get_child(1)
+	var texto := Label.new()
+	texto.text = funcion
+	texto.theme_type_variation = &"TextoDelMenu"
+	celdas.add_child(texto)
 	return fila
 
 
@@ -207,7 +254,11 @@ func _pintar() -> void:
 		var ranura: int = guardada["ranura"]
 		var boton: Button = _botones[_clave(accion, ranura)]
 		if capturando() and accion == _esperando_accion and ranura == _esperando_ranura:
-			boton.text = TEXTO_DE_ESPERA
+			boton.text = (
+				TEXTO_DE_ESPERA_DEL_JOYSTICK
+				if AsignacionDeControles.es_del_joystick(accion, ranura)
+				else TEXTO_DE_ESPERA
+			)
 		else:
 			boton.text = nombre_de_la_entrada(guardada["tipo"], guardada["codigo"])
 			if accion in AsignacionDeControles.DIRECCIONES:

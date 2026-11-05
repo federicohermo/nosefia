@@ -48,7 +48,7 @@ const ANCHO_DEL_BOTON := 72.0
 
 var _preferencias := Preferencias.new()
 var _barras: Dictionary[Preferencias.Campo, HSlider] = {}
-var _primer_boton: Button
+var _primer_boton: Control
 var _ajustar_controles: Button
 
 
@@ -104,7 +104,7 @@ func marco() -> Control:
 
 
 func _unhandled_input(evento: InputEvent) -> void:
-	if visible and evento.is_action_pressed("ui_cancel"):
+	if visible and ControlDePausa.es_volver(evento):
 		get_viewport().set_input_as_handled()
 		cerrar()
 
@@ -128,8 +128,12 @@ func _fila_de(campo: Preferencias.Campo) -> HBoxContainer:
 	fila.add_child(menos)
 	fila.add_child(barra)
 	fila.add_child(mas)
+	# Con el joystick se elige la barra: la izquierda y la derecha mueven un paso. Los botones − y +
+	# siguen siendo del clic.
+	menos.focus_mode = Control.FOCUS_NONE
+	mas.focus_mode = Control.FOCUS_NONE
 	if _primer_boton == null:
-		_primer_boton = menos
+		_primer_boton = barra
 	return fila
 
 

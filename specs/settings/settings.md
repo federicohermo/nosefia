@@ -264,7 +264,8 @@ DEBE hacer nada, igual que un clic. El joystick derecho NO DEBE girar la vista m
 CUANDO se abre una interfaz, el sistema DEBE dejar el foco en uno de sus controles habilitados,
 para que la cruceta tenga por dónde empezar. Son interfaces: el menú de inicio, la pausa,
 Configuraciones, la pantalla de controles, la computadora y sus programas, el programa de tickets y
-sus listas, la ventanilla, la nota encuadrada, la pantalla de devolución y el celular.
+sus listas, la ventanilla, la pantalla de devolución y el celular. La nota encuadrada no tiene
+ningún control que elegir.
 
 ### BR-CFG-029 — Los tres gestos del botón izquierdo tienen su equivalente en el joystick
 
@@ -272,8 +273,8 @@ Avanzar un diálogo DEBE poder hacerse con X. Pulsar al comprador en la ventanil
 botón de Agarrar / Soltar, que de fábrica es X. Girar lo examinado DEBE poder hacerse con el
 joystick derecho mientras se examina, en proporción a la inclinación y a la velocidad a fondo del
 giro de la vista (`BR-PLY-056`); la sensibilidad de Configuraciones es sólo del mouse. CUANDO hay
-una nota encuadrada abierta, X DEBE cerrarla, como el clic izquierdo, y NO DEBE apretar además el
-control que tenga el foco.
+una nota encuadrada abierta, X NO DEBE cerrarla, como el clic izquierdo (`BR-PLY-029`), y NO DEBE
+apretar el control que tenga el foco; la cierra Interactuar.
 
 ### BR-CFG-030 — Los botones del joystick se guardan como números
 
@@ -522,8 +523,8 @@ DADO un diálogo en pantalla CUANDO se aprieta X ENTONCES avanza, igual que el c
 un comprador en la ventanilla CUANDO se aprieta X ENTONCES se lo pulsa; con Agarrar / Soltar
 reasignada a L1, L1 lo pulsa y X no. DADO un objeto examinado CUANDO se inclina el joystick
 derecho hacia la derecha ENTONCES el objeto gira, y a inclinación cero no gira. DADO una nota
-encuadrada abierta con un botón con el foco CUANDO se aprieta X ENTONCES la nota se cierra y el
-botón no se aprieta.
+encuadrada abierta con un botón con el foco CUANDO se aprieta X ENTONCES la nota sigue abierta y
+el botón no se aprieta; CUANDO se aprieta Interactuar ENTONCES la nota se cierra.
 
 ### AC-CFG-030 — Los botones del joystick se guardan y se validan *(verifica BR-CFG-030, BR-CFG-022, BR-CFG-023)*
 

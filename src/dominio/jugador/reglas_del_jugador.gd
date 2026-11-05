@@ -81,6 +81,12 @@ const ACCION_DERECHA := "mover_derecha"
 
 const ACCION_USAR: StringName = &"usar"
 
+## Las cuatro direcciones del joystick derecho, que gira la vista.
+const ACCION_MIRAR_IZQUIERDA: StringName = &"mirar_izquierda"
+const ACCION_MIRAR_DERECHA: StringName = &"mirar_derecha"
+const ACCION_MIRAR_ARRIBA: StringName = &"mirar_arriba"
+const ACCION_MIRAR_ABAJO: StringName = &"mirar_abajo"
+
 ## Se mantiene apretada: soltarla levanta la vista.
 const ACCION_AGACHARSE: StringName = &"agacharse"
 
