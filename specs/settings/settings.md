@@ -143,7 +143,7 @@ no hay archivo, ENTONCES DEBE usar todos los defectos.
 
 CUANDO se aprieta el botón «AJUSTAR» de la fila «CONTROLES», que está debajo de lenguaje, el
 sistema DEBE abrir la pantalla de controles, que DEBE ser una lista con un
-renglón por entrada: el nombre de su acción y la tecla o el botón que tiene. CUANDO llega la
+renglón por acción: su nombre y la tecla o el botón de cada una de sus entradas. CUANDO llega la
 tecla de Pausa, el sistema DEBE cerrar la pantalla de controles y volver a Configuraciones.
 Abierta desde la pausa, el juego DEBE seguir en pausa y el cursor suelto, igual que
 Configuraciones.
@@ -152,9 +152,10 @@ Configuraciones.
 
 El jugador DEBE poder reasignar siete acciones, con estos nombres en pantalla: **Movimiento**,
 **Abrir la interfaz del celular**, **Examinar**, **Agacharse**, **Agarrar / Soltar**,
-**Interactuar** y **Pausa**. Ninguna otra acción se reasigna. Movimiento DEBE mostrar ocho
-entradas, dos por cada dirección —adelante, atrás, izquierda y derecha—, una de WASD y otra de
-flechas. Las demás DEBEN mostrar una. El esquema de fábrica DEBE ser: W, A, S, D y las cuatro
+**Interactuar** y **Pausa**. Ninguna otra acción se reasigna. Movimiento DEBE mostrar, en
+su único renglón, ocho entradas, dos por cada dirección —adelante, atrás, izquierda y
+derecha—, una de WASD y otra de flechas, y cada una DEBE poder reasignarse desde ese renglón. Las
+demás DEBEN mostrar una en su renglón. El esquema de fábrica DEBE ser: W, A, S, D y las cuatro
 flechas en Movimiento; Q en celular; E en Examinar; Espacio en Agacharse; el clic izquierdo en
 Agarrar / Soltar; el clic derecho en Interactuar; Esc en Pausa.
 
@@ -331,15 +332,15 @@ defecto.
 
 DADO Configuraciones abierta ENTONCES la fila «CONTROLES», con el botón «AJUSTAR», está debajo de
 lenguaje. CUANDO se aprieta «AJUSTAR» ENTONCES la pantalla de controles está en pantalla, con un
-renglón por entrada; CUANDO llega Esc ENTONCES vuelve Configuraciones y la pantalla de controles
-ya no está. DADO Configuraciones abierta desde la pausa CUANDO se abre y se cierra la pantalla de
+renglón por acción; CUANDO llega la tecla de Pausa ENTONCES vuelve Configuraciones y la pantalla
+de controles ya no está. DADO Configuraciones abierta desde la pausa CUANDO se abre y se cierra la pantalla de
 controles ENTONCES el juego sigue en pausa y el cursor sigue suelto.
 
 ### AC-CFG-016 — Las siete acciones y su esquema de fábrica *(verifica BR-CFG-016)*
 
-DADO ninguna asignación guardada ENTONCES la pantalla muestra siete acciones con estos nombres:
-Movimiento, Abrir la interfaz del celular, Examinar, Agacharse, Agarrar / Soltar, Interactuar y
-Pausa. Movimiento tiene ocho entradas: adelante en W y en la flecha arriba, atrás en S y en la
+DADO ninguna asignación guardada ENTONCES la pantalla muestra siete renglones, uno por acción, con
+estos nombres: Movimiento, Abrir la interfaz del celular, Examinar, Agacharse, Agarrar / Soltar,
+Interactuar y Pausa. El renglón de Movimiento tiene ocho entradas: adelante en W y en la flecha arriba, atrás en S y en la
 flecha abajo, izquierda en A y en la flecha izquierda, derecha en D y en la flecha derecha. El
 celular está en Q, Examinar en E, Agacharse en Espacio, Agarrar / Soltar en el clic izquierdo,
 Interactuar en el clic derecho y Pausa en Esc. DADO la partida recién abierta ENTONCES las

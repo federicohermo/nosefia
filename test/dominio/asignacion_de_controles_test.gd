@@ -68,13 +68,23 @@ func test_el_esquema_de_fabrica_es_el_de_la_ficha() -> void:  # AC-CFG-016
 		)
 
 
-func test_cada_renglon_tiene_un_nombre_distinto() -> void:  # AC-CFG-016
+func test_cada_boton_aceptado_tiene_un_nombre_distinto() -> void:  # AC-CFG-016
 	var nombres: Dictionary = {}
-	for entrada: Dictionary in AsignacionDeControles.new().entradas():
-		var nombre := AsignacionDeControles.nombre_en_pantalla(entrada["accion"], entrada["ranura"])
+	for boton: int in AsignacionDeControles.BOTONES_ACEPTADOS:
+		var nombre: String = AsignacionDeControles.NOMBRES_DE_LOS_BOTONES.get(boton, "")
 		assert_str(nombre).is_not_empty()
 		assert_bool(nombres.has(nombre)).is_false()
 		nombres[nombre] = true
+
+
+func test_la_entrada_de_pausa_cancela_la_espera_y_las_demas_no() -> void:  # AC-CFG-017
+	var asignacion := AsignacionDeControles.new()
+	assert_bool(asignacion.cancela_la_espera(TECLA, KEY_ESCAPE)).is_true()
+	assert_bool(asignacion.cancela_la_espera(TECLA, KEY_E)).is_false()
+	assert_bool(asignacion.cancela_la_espera(BOTON, MOUSE_BUTTON_LEFT)).is_false()
+	asignacion.asignar(AsignacionDeControles.PAUSA, 0, TECLA, KEY_P)
+	assert_bool(asignacion.cancela_la_espera(TECLA, KEY_P)).is_true()
+	assert_bool(asignacion.cancela_la_espera(TECLA, KEY_ESCAPE)).is_false()
 
 
 func test_una_accion_acepta_una_tecla_y_una_tecla_acepta_un_clic() -> void:  # AC-CFG-017

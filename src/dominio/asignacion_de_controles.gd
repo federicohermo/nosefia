@@ -51,11 +51,21 @@ const BOTONES_ACEPTADOS: Array[int] = [
 	BOTON_LATERAL_ADELANTE,
 ]
 
+## Cómo se lee cada botón aceptado. Lo leen la pantalla de controles y la referencia del HUD.
+const NOMBRES_DE_LOS_BOTONES: Dictionary[int, String] = {
+	BOTON_IZQUIERDO: "Click Izq",
+	BOTON_DERECHO: "Click Der",
+	BOTON_CENTRAL: "Click Central",
+	BOTON_LATERAL_ATRAS: "Click Atrás",
+	BOTON_LATERAL_ADELANTE: "Click Adelante",
+}
+
+## Las cuatro direcciones se nombran por la dirección: juntas son un solo «Movimiento».
 const NOMBRES: Dictionary = {
-	ADELANTE: "MOVIMIENTO ADELANTE",
-	ATRAS: "MOVIMIENTO ATRÁS",
-	IZQUIERDA: "MOVIMIENTO IZQUIERDA",
-	DERECHA: "MOVIMIENTO DERECHA",
+	ADELANTE: "ADELANTE",
+	ATRAS: "ATRÁS",
+	IZQUIERDA: "IZQUIERDA",
+	DERECHA: "DERECHA",
 	CELULAR: "ABRIR LA INTERFAZ DEL CELULAR",
 	EXAMINAR: "EXAMINAR",
 	AGACHARSE: "AGACHARSE",
@@ -63,7 +73,6 @@ const NOMBRES: Dictionary = {
 	INTERACTUAR: "INTERACTUAR",
 	PAUSA: "PAUSA",
 }
-const NOMBRES_DE_LAS_RANURAS: Array[String] = ["WASD", "FLECHAS"]
 
 ## Cada entrada es un `Vector2i(tipo, código)`. Las de una acción van por ranura.
 const DE_FABRICA: Dictionary = {
@@ -101,14 +110,6 @@ static func nombre_de_la_accion(accion: StringName) -> String:
 	return nombre
 
 
-## El nombre del renglón: el de la acción, y en Movimiento también la ranura.
-static func nombre_en_pantalla(accion: StringName, ranura: int) -> String:
-	var nombre: String = NOMBRES.get(accion, "")
-	if accion in DIRECCIONES:
-		return "%s (%s)" % [nombre, NOMBRES_DE_LAS_RANURAS[ranura]]
-	return nombre
-
-
 ## Si la ranura de esa acción acepta la entrada. En la web, Esc sólo lo acepta Pausa: con el
 ## cursor tomado el navegador se come Esc, y cualquier otra acción no se podría hacer.
 static func acepta(accion: StringName, tipo: int, codigo: int, en_la_web: bool = false) -> bool:
@@ -119,6 +120,13 @@ static func acepta(accion: StringName, tipo: int, codigo: int, en_la_web: bool =
 	if tipo != TipoDeEntrada.TECLA or codigo <= KEY_NONE or codigo > KEY_CODE_MASK:
 		return false
 	return not (en_la_web and codigo == KEY_ESCAPE and accion != PAUSA)
+
+
+## Si apretar esa entrada cancela la espera de una entrada nueva: es la que tiene Pausa. Cancelar
+## no cambia nada, y se distingue de una entrada que no se acepta, que deja seguir esperando.
+func cancela_la_espera(tipo: int, codigo: int) -> bool:
+	var pausa: Vector2i = _entradas[PAUSA][0]
+	return pausa == Vector2i(tipo, codigo)
 
 
 ## Cada entrada con su acción y su ranura, en el orden en que se muestran.

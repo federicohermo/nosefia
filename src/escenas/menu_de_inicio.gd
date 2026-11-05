@@ -80,6 +80,9 @@ func _ready() -> void:
 	_configuraciones.preferencias_cambiadas.connect(
 		func(_nuevas: Preferencias) -> void: _copia_con_las_preferencias = false
 	)
+	_configuraciones.controles_cambiados.connect(
+		func(_nuevas: Preferencias) -> void: _copia_con_las_preferencias = false
+	)
 	_configuraciones.cerrada.connect(_al_cerrar_las_configuraciones)
 	_sonar_el_tema()
 	var menu := MenuDeInicio.new(OS.has_feature("web"), _guardado.hay_guardado())

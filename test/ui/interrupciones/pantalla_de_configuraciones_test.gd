@@ -20,6 +20,7 @@ func before_test() -> void:
 
 
 func after_test() -> void:
+	get_tree().paused = false
 	var ajuste: AjusteDePreferencias = auto_free(AjusteDePreferencias.new())
 	add_child(ajuste)
 	ajuste.aplicar(Preferencias.new())
@@ -195,11 +196,15 @@ func _ajustar(pantalla: PantallaDeConfiguraciones) -> PantallaDeControles:
 	return pantalla.get_node("Controles")
 
 
-func _esc() -> InputEventAction:
-	var esc := InputEventAction.new()
-	esc.action = &"ui_cancel"
-	esc.pressed = true
-	return esc
+func _tecla(codigo: int) -> InputEventKey:
+	var tecla := InputEventKey.new()
+	tecla.physical_keycode = codigo as Key
+	tecla.pressed = true
+	return tecla
+
+
+func _esc() -> InputEventKey:
+	return _tecla(KEY_ESCAPE)
 
 
 func test_ajustar_abre_los_controles_y_esc_vuelve_a_configuraciones() -> void:  # AC-CFG-015
@@ -244,3 +249,38 @@ func test_una_asignacion_avisa_por_su_propia_senal_y_viaja_al_cerrar() -> void: 
 	assert_int(confirmadas.size()).is_equal(1)
 	examinar = confirmadas[0].controles().entrada(AsignacionDeControles.EXAMINAR, 0)
 	assert_int(examinar["codigo"]).is_equal(KEY_F)
+
+
+func test_con_pausa_en_p_la_tecla_nueva_cierra_configuraciones_y_esc_no() -> void:  # AC-CFG-020
+	var pantalla := _pantalla()
+	var asignacion := AsignacionDeControles.new()
+	asignacion.asignar(
+		AsignacionDeControles.PAUSA, 0, AsignacionDeControles.TipoDeEntrada.TECLA, KEY_P
+	)
+	var preferencias := Preferencias.new()
+	preferencias.poner_controles(asignacion)
+	var ajuste: AjusteDePreferencias = auto_free(AjusteDePreferencias.new())
+	add_child(ajuste)
+	ajuste.aplicar(preferencias)
+	pantalla._unhandled_input(_esc())
+	assert_bool(pantalla.visible).is_true()
+	assert_int(_cierres).is_equal(0)
+	pantalla._unhandled_input(_tecla(KEY_P))
+	assert_bool(pantalla.visible).is_false()
+	assert_int(_cierres).is_equal(1)
+
+
+func test_los_controles_desde_la_pausa_dejan_pausa_y_cursor_suelto() -> void:  # AC-CFG-015
+	get_tree().paused = true
+	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
+	var pantalla := _pantalla()
+	var controles := _ajustar(pantalla)
+	assert_bool(controles.visible).is_true()
+	assert_bool(controles.can_process()).is_true()
+	assert_bool(get_tree().paused).is_true()
+	assert_int(Input.mouse_mode).is_equal(Input.MOUSE_MODE_VISIBLE)
+	pantalla._unhandled_input(_esc())
+	assert_bool(controles.visible).is_false()
+	assert_bool(pantalla.visible).is_true()
+	assert_bool(get_tree().paused).is_true()
+	assert_int(Input.mouse_mode).is_equal(Input.MOUSE_MODE_VISIBLE)

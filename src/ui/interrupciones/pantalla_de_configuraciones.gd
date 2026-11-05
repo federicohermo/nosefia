@@ -11,8 +11,9 @@ extends CanvasLayer
 ## Una vez por gesto que cambia un valor, con una copia: quien la recibe puede guardarla.
 signal preferencias_cambiadas(preferencias: Preferencias)
 signal preferencias_confirmadas(preferencias: Preferencias)
-## Una asignación de controles cambió algo. Va aparte de `preferencias_cambiadas`: sólo reasigna el
-## `InputMap`, que es de todo el proceso, y no obliga a recalcular nada de lo ya dibujado.
+## Una asignación de controles cambió algo. Va aparte de `preferencias_cambiadas`: ésa recalcula
+## el volumen, el brillo y las letras de lo ya dibujado, y reasignar no toca nada de eso. Sí
+## invalida la copia del almacén, que dibuja el esquema en su pantalla de controles.
 signal controles_cambiados(preferencias: Preferencias)
 signal cerrada
 

@@ -1,5 +1,5 @@
-## La pantalla de controles: un renglón por entrada, y elegir uno y apretar una tecla o un botón
-## del mouse se la asigna.
+## La pantalla de controles: un renglón por acción, y elegir una ranura y apretar una tecla o un
+## botón del mouse se la asigna.
 extends GdUnitTestSuite
 
 const ESCENA := "res://src/ui/interrupciones/pantalla_de_controles.tscn"
@@ -52,29 +52,35 @@ func _clic(boton: int) -> InputEventMouseButton:
 	return evento
 
 
-func _pausa() -> InputEventAction:
-	var evento := InputEventAction.new()
-	evento.action = AsignacionDeControles.PAUSA
-	evento.pressed = true
-	return evento
-
-
 func _entrada(asignacion: AsignacionDeControles, accion: StringName, ranura: int) -> Vector2i:
 	var entrada := asignacion.entrada(accion, ranura)
 	return Vector2i(entrada["tipo"], entrada["codigo"])
 
 
-func _boton_de(pantalla: PantallaDeControles, accion: StringName, ranura: int) -> Button:
-	var entradas := AsignacionDeControles.new().entradas()
-	for indice: int in entradas.size():
-		if entradas[indice]["accion"] == accion and entradas[indice]["ranura"] == ranura:
-			return pantalla.filas()[indice].get_child(1)
-	return null
+## Los nombres de las acciones, uno por renglón: las cuatro direcciones son un solo Movimiento.
+func _nombres_de_los_renglones() -> Array[String]:
+	var nombres: Array[String] = []
+	for accion: StringName in AsignacionDeControles.ACCIONES:
+		var nombre := AsignacionDeControles.nombre_de_la_accion(accion)
+		if nombre not in nombres:
+			nombres.append(nombre)
+	return nombres
 
 
-func test_muestra_un_renglon_por_entrada_con_su_tecla() -> void:  # AC-CFG-015, AC-CFG-016
+func test_muestra_un_renglon_por_accion_con_sus_teclas() -> void:  # AC-CFG-015, AC-CFG-016
 	var pantalla := _pantalla()
-	assert_int(pantalla.filas().size()).is_equal(AsignacionDeControles.new().entradas().size())
+	var nombres: Array[String] = []
+	var botones: int = 0
+	for fila: HBoxContainer in pantalla.filas():
+		nombres.append((fila.get_child(0) as Label).text)
+		botones += fila.get_child(1).get_child_count()
+	assert_array(nombres).is_equal(_nombres_de_los_renglones())
+	assert_int(botones).is_equal(AsignacionDeControles.new().entradas().size())
+	var movimiento: Node = pantalla.filas()[0].get_child(1)
+	var ranuras_de_movimiento: int = 0
+	for direccion: StringName in AsignacionDeControles.DIRECCIONES:
+		ranuras_de_movimiento += AsignacionDeControles.ranuras_de(direccion)
+	assert_int(movimiento.get_child_count()).is_equal(ranuras_de_movimiento)
 	assert_str(pantalla.texto_de(AsignacionDeControles.EXAMINAR, 0)).is_equal(
 		PantallaDeControles.nombre_de_la_entrada(TECLA, KEY_E)
 	)
@@ -84,15 +90,31 @@ func test_muestra_un_renglon_por_entrada_con_su_tecla() -> void:  # AC-CFG-015, 
 	assert_str(pantalla.texto_de(AsignacionDeControles.AGARRAR, 0)).is_not_equal(
 		pantalla.texto_de(AsignacionDeControles.INTERACTUAR, 0)
 	)
-	for fila: HBoxContainer in pantalla.filas():
-		assert_str((fila.get_child(0) as Label).text).is_not_empty()
-		assert_str((fila.get_child(1) as Button).text).is_not_empty()
+	for entrada: Dictionary in AsignacionDeControles.new().entradas():
+		assert_str(pantalla.texto_de(entrada["accion"], entrada["ranura"])).is_not_empty()
+
+
+func test_movimiento_se_reasigna_desde_su_renglon() -> void:  # AC-CFG-016, AC-CFG-019
+	var pantalla := _pantalla()
+	var renglon := pantalla.filas()[0]
+	for direccion: StringName in AsignacionDeControles.DIRECCIONES:
+		for ranura: int in AsignacionDeControles.ranuras_de(direccion):
+			assert_bool(renglon.is_ancestor_of(pantalla.boton_de(direccion, ranura))).is_true()
+	pantalla.boton_de(AsignacionDeControles.ADELANTE, 1).pressed.emit()
+	assert_bool(pantalla.atender(_tecla(KEY_H))).is_true()
+	assert_int(_avisos.size()).is_equal(1)
+	assert_vector(_entrada(_avisos[0], AsignacionDeControles.ADELANTE, 1)).is_equal(
+		Vector2i(TECLA, KEY_H)
+	)
+	assert_vector(_entrada(_avisos[0], AsignacionDeControles.ADELANTE, 0)).is_equal(
+		_entrada(AsignacionDeControles.new(), AsignacionDeControles.ADELANTE, 0)
+	)
 
 
 func test_apretar_el_renglon_espera_la_entrada() -> void:  # AC-CFG-017
 	var pantalla := _pantalla()
 	assert_bool(pantalla.capturando()).is_false()
-	_boton_de(pantalla, AsignacionDeControles.EXAMINAR, 0).pressed.emit()
+	pantalla.boton_de(AsignacionDeControles.EXAMINAR, 0).pressed.emit()
 	assert_bool(pantalla.capturando()).is_true()
 	assert_str(pantalla.texto_de(AsignacionDeControles.EXAMINAR, 0)).is_equal(
 		PantallaDeControles.TEXTO_DE_ESPERA
@@ -141,7 +163,7 @@ func test_la_rueda_y_el_movimiento_del_mouse_no_son_entradas() -> void:  # AC-CF
 func test_la_tecla_de_pausa_cancela_la_espera_sin_cambiar_nada() -> void:  # AC-CFG-017
 	var pantalla := _pantalla()
 	pantalla.elegir(AsignacionDeControles.EXAMINAR, 0)
-	assert_bool(pantalla.atender(_pausa())).is_true()
+	assert_bool(pantalla.atender(_tecla(KEY_ESCAPE))).is_true()
 	assert_bool(pantalla.capturando()).is_false()
 	assert_array(_avisos).is_empty()
 	assert_str(pantalla.texto_de(AsignacionDeControles.EXAMINAR, 0)).is_equal(
