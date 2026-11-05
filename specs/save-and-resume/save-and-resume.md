@@ -3,7 +3,7 @@ schema_version: 1
 capability_id: CAP-SAV
 status: draft
 owner: por definir
-provenance: GDD «checkpoint al final de cada noche»; ficha «Pantalla entre jornadas» y decisiones de #374; fichas «2. Menú de inicio» y «Pausa y menú de pausa» y decisiones de #378; decisión del 2026-09-28 de #299; decisiones de #375; migración de los specs 019, 020, 036; historial de devoluciones fechado y compatibilidad con textos legados de #430; checkpoint del cierre, expediente, notas y elección de #436; decisión del usuario del 2026-10-18 sobre la reanudación del cierre; ocho jornadas de #526; instrucciones por jornada de #527; pose de las cajas del depósito de #555; mensajes de Yasmín de la jornada 6 de #458; sorteo del camino de #787
+provenance: GDD «checkpoint al final de cada noche»; ficha «Pantalla entre jornadas» y decisiones de #374; fichas «2. Menú de inicio» y «Pausa y menú de pausa» y decisiones de #378; decisión del 2026-09-28 de #299; decisiones de #375; migración de los specs 019, 020, 036; historial de devoluciones fechado y compatibilidad con textos legados de #430; checkpoint del cierre, expediente, notas y elección de #436; decisión del usuario del 2026-10-18 sobre la reanudación del cierre; ocho jornadas de #526; instrucciones por jornada de #527; pose de las cajas del depósito de #555; mensajes de Yasmín de la jornada 6 de #458; sorteo del camino de #787; pausa con el joystick de #380
 ---
 
 # Capacidad: guardar y retomar
@@ -225,6 +225,16 @@ SI falta ese campo o tiene otro tipo, ENTONCES DEBE sanearse (BR-SAV-006) sin ni
 guardado carga sin fallar. Dentro del campo, un sorteo que ninguna hipótesis de la jornada anterior
 respalda DEBE ignorarse sin descartar los demás ni la jornada, el legajo o las cuentas. Sanear NO
 DEBE crear sorteos. Un final que borra el guardado (BR-SAV-002) borra también los sorteos.
+
+### BR-SAV-024 — START pausa y CÍRCULO vuelve atrás
+
+CUANDO el jugador aprieta START del joystick, el sistema DEBE hacer lo mismo que con Esc
+(BR-SAV-016, BR-PLY-054): pausar, reanudar o cerrar la interfaz abierta, según el caso. START NO
+DEBE ser reasignable. CUANDO hay una interfaz abierta o la pausa en pantalla, CÍRCULO DEBE volver
+atrás: hacer lo que Esc hace en ella —cerrar la computadora, la caja o la nota, reanudar desde la
+pausa, cerrar Configuraciones y volver al menú que la abrió, cerrar la pantalla de controles y
+volver a Configuraciones—, sin pausar en ningún caso. Sin ninguna interfaz abierta, CÍRCULO NO DEBE
+pausar. CÍRCULO DEBE volver atrás aunque el celular se haya reasignado a otro botón.
 
 ## Criterios de aceptación
 
@@ -487,6 +497,19 @@ el campo, o con un número en él, ENTONCES se retoma sin ningún sorteo, sin fa
 legajo y las cuentas son los guardados. DADO el campo con un sorteo de una identidad que ninguna
 hipótesis de la jornada anterior respalda y otro válido ENTONCES sólo el válido se conserva. DADO un
 despido o un contrato cumplido ENTONCES no queda guardado ni sorteos.
+
+### AC-SAV-037 — START pausa y CÍRCULO vuelve atrás *(verifica BR-SAV-024, BR-SAV-016)*
+
+DADO la jornada en curso, sin ninguna interfaz abierta, CUANDO se aprieta START ENTONCES el juego
+queda en pausa; CUANDO se aprieta otro START ENTONCES se reanuda. DADO la computadora abierta
+CUANDO se aprieta START ENTONCES se cierra sin pausa; CUANDO se aprieta otro START ENTONCES el
+juego queda en pausa. DADO el juego en pausa CUANDO se aprieta CÍRCULO ENTONCES se reanuda. DADO
+Configuraciones abierta desde la pausa CUANDO se aprieta CÍRCULO ENTONCES se cierra, el menú de
+pausa está en pantalla y el juego sigue en pausa. DADO la pantalla de controles CUANDO se aprieta
+CÍRCULO ENTONCES vuelve a Configuraciones. DADO la computadora abierta CUANDO se aprieta CÍRCULO
+ENTONCES se cierra sin pausa. DADO ninguna interfaz abierta CUANDO se aprieta CÍRCULO ENTONCES el
+juego no queda en pausa. DADO el celular reasignado a otro botón y Configuraciones abierta CUANDO
+se aprieta CÍRCULO ENTONCES se cierra.
 
 ## No objetivos
 
