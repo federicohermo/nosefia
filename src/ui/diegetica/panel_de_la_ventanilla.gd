@@ -89,6 +89,7 @@ func mostrar(atencion: Atencion) -> void:
 	_aviso.text = atencion.aviso()
 	_botones(true)
 	visible = true
+	FocoDeLaInterfaz.en_el_primero(self)
 
 
 ## El cartel de que no queda nadie por atender.

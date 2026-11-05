@@ -3,7 +3,7 @@ schema_version: 1
 capability_id: CAP-CFG
 status: ratified
 owner: por definir
-provenance: fichas «2. Menú de inicio» (sección «Interfaz de configuraciones») y «Pausa y menú de pausa»; rangos, pasos y defectos decididos por el dueño en #378, provisorios hasta que el testing los ajuste; «Controles» (esquema de teclado y mouse) de la ficha «2. Menú de inicio», #379
+provenance: fichas «2. Menú de inicio» (sección «Interfaz de configuraciones») y «Pausa y menú de pausa»; rangos, pasos y defectos decididos por el dueño en #378, provisorios hasta que el testing los ajuste; «Controles» (esquema de teclado y mouse) de la ficha «2. Menú de inicio», #379; esquema de joystick de la misma ficha y decisión del dueño del 2026-11-04, #380
 ---
 
 # Capacidad: configuraciones
@@ -29,6 +29,8 @@ impide jugar.
 | **Sensibilidad de fábrica** | los radianes por píxel que el dominio del jugador declara para el giro de la vista y el del examen | — |
 | **Acción reasignable** | una de las siete que el jugador puede cambiar de tecla: movimiento, celular, examinar, agacharse, agarrar / soltar, interactuar y pausa | comando, bind |
 | **Entrada** | una tecla o un botón del mouse. Mover el mouse y la rueda no lo son | evento, input |
+| **Botón de joystick** | un botón del joystick, nombrado como en PlayStation: X, CÍRCULO, CUADRADO, L1, R1. Los ejes y los gatillos analógicos no lo son | — |
+| **Esquema de joystick** | el botón que cada acción de botón tiene en el joystick, aparte de su tecla o clic | — |
 | **Ranura** | el lugar fijo de una entrada dentro de una acción: Movimiento tiene ocho, dos por dirección —la de WASD y la de flechas—, y cada una de las demás tiene una | slot, alias |
 | **Esquema de fábrica** | la entrada que cada ranura tiene mientras nadie la cambió. Son las teclas que nombran los demás contratos | por omisión |
 
@@ -224,6 +226,65 @@ Las teclas que nombran los otros contratos —«clic derecho», «clic izquierdo
 «E», «Q»— DEBEN leerse como las del esquema de fábrica de la acción. Una asignación las
 reemplaza: lo que un contrato atribuye a una tecla lo hace la entrada que la acción tiene
 ahora.
+
+### BR-CFG-025 — El joystick tiene su esquema de fábrica
+
+Cinco de las siete acciones reasignables DEBEN tener además un botón de joystick, el de fábrica:
+**X** en Agarrar / Soltar, **R1** en Interactuar, **L1** en Agacharse, **CÍRCULO** en Abrir la
+interfaz del celular y **CUADRADO** en Examinar. Movimiento y Pausa NO DEBEN tener botón de
+joystick reasignable: el joystick izquierdo camina y el derecho mira (`BR-PLY-055`, `BR-PLY-056`), y
+Pausa en el joystick es START (`BR-SAV-024`). La cruceta, el joystick derecho y X en las interfaces
+(`BR-CFG-027`) tampoco se reasignan.
+
+### BR-CFG-026 — La pantalla de controles reasigna los botones del joystick
+
+La pantalla de controles DEBE sumar el esquema del joystick: un renglón por cada una de las cinco
+acciones de botón, con su botón, y dos renglones que sólo se muestran —joystick izquierdo,
+Movimiento, y joystick derecho, Visión—, que NO DEBEN poder reasignarse. CUANDO el jugador elige el
+botón de un renglón y aprieta un botón de joystick, el sistema DEBE asignárselo a esa acción, con el
+intercambio de `BR-CFG-018` dentro del joystick: ninguna acción queda sin botón y ningún botón
+está en dos acciones. Una ranura de teclado o mouse NO DEBE aceptar un botón de joystick, y una de
+joystick NO DEBE aceptar una tecla ni un clic: apretarlos no cambia nada. START no se acepta, porque
+es la pausa; un eje o un gatillo analógico tampoco. CUANDO el jugador aprieta Pausa —la tecla o
+START— mientras espera un botón, el sistema DEBE cancelar la espera sin cambiar nada. Cada
+asignación DEBE valer en el momento, como `BR-CFG-020`, y NO DEBE cambiar la tecla ni el clic de la
+acción.
+
+### BR-CFG-027 — En las interfaces, la cruceta y el joystick derecho eligen, y X aprieta
+
+MIENTRAS hay una interfaz abierta, la cruceta y el joystick derecho DEBEN elegir, y X DEBE apretar
+lo elegido. Arriba y abajo DEBEN pasar de renglón. Hacia los costados, sobre una fila con + y −,
+DEBEN sumar o restar una unidad —la planilla de ventas de la computadora y las barras de
+Configuraciones—; sobre una fila sin + ni −, NO DEBEN hacer nada. X sobre un botón deshabilitado NO
+DEBE hacer nada, igual que un clic. El joystick derecho NO DEBE girar la vista mientras elige
+(`BR-PLY-056`).
+
+### BR-CFG-028 — Cada interfaz que se abre deja el foco en un control
+
+CUANDO se abre una interfaz, el sistema DEBE dejar el foco en uno de sus controles habilitados,
+para que la cruceta tenga por dónde empezar. Son interfaces: el menú de inicio, la pausa,
+Configuraciones, la pantalla de controles, la computadora y sus programas, el programa de tickets y
+sus listas, la ventanilla, la pantalla de devolución, las instrucciones del jefe y el celular. La
+nota encuadrada no tiene ningún control que elegir, y en la pantalla de devolución el foco llega
+con su opción, que aparece cuando llega el último mensaje.
+
+### BR-CFG-029 — Los tres gestos del botón izquierdo tienen su equivalente en el joystick
+
+Avanzar un diálogo DEBE poder hacerse con X. Pulsar al comprador en la ventanilla DEBE seguir al
+botón de Agarrar / Soltar, que de fábrica es X. Girar lo examinado DEBE poder hacerse con el
+joystick derecho mientras se examina, en proporción a la inclinación y a la velocidad a fondo del
+giro de la vista (`BR-PLY-056`); la sensibilidad de Configuraciones es sólo del mouse. CUANDO hay
+una nota encuadrada abierta, X NO DEBE cerrarla, como el clic izquierdo (`BR-PLY-029`), y NO DEBE
+apretar el control que tenga el foco; la cierra Interactuar.
+
+### BR-CFG-030 — Los botones del joystick se guardan como números
+
+El sistema DEBE guardar los botones del joystick en el mismo archivo y el mismo bloque de controles
+que las teclas, cada uno como el número del botón (`BR-CFG-022`). CUANDO lee las asignaciones, DEBE
+validarlas como `BR-CFG-023`: un botón ilegible, que no es un botón, que es START, o de una acción
+sin botón de joystick, se ignora y esa acción vuelve a su botón de fábrica; dos acciones con el
+mismo botón descartan el bloque de controles completo, también las teclas. SI el archivo no guarda
+botones de joystick, ENTONCES cada acción DEBE tener su botón de fábrica.
 
 ## Criterios de aceptación
 
@@ -423,11 +484,65 @@ DADO Interactuar asignada a G ENTONCES lo que el contrato de las acciones del ju
 clic derecho lo hace G, y el clic derecho no lo hace. DADO Pausa asignada a P ENTONCES lo que
 `BR-SAV-016` atribuye a Esc lo hace P.
 
+### AC-CFG-025 — El esquema de fábrica del joystick *(verifica BR-CFG-025)*
+
+DADO ninguna asignación guardada ENTONCES Agarrar / Soltar está en X, Interactuar en R1, Agacharse
+en L1, Abrir la interfaz del celular en CÍRCULO y Examinar en CUADRADO, y cada acción conserva su
+tecla o clic de fábrica. DADO Movimiento o Pausa ENTONCES ninguna tiene botón de joystick que se
+pueda reasignar.
+
+### AC-CFG-026 — La pantalla de controles reasigna el joystick *(verifica BR-CFG-026)*
+
+DADO la pantalla de controles ENTONCES muestra cinco renglones de botón, cada uno con el suyo, y
+los dos joysticks, que no se pueden elegir para reasignar. DADO Examinar en CUADRADO CUANDO se
+elige su botón y se aprieta L1 ENTONCES Examinar queda en L1, Agacharse en CUADRADO, y las teclas
+de las dos no cambian. DADO Examinar eligiendo su botón CUANDO se aprieta una tecla o un clic
+ENTONCES no cambia nada; DADO Examinar eligiendo su tecla CUANDO se aprieta un botón de joystick
+ENTONCES no cambia nada. DADO esperando un botón CUANDO se aprieta START o Esc ENTONCES la espera
+se cancela y no cambia nada; CUANDO se aprieta un gatillo analógico ENTONCES no cambia nada. DADO
+Examinar en L1 CUANDO llega L1 con algo al alcance ENTONCES la mano lo examina y CUADRADO ya no.
+
+### AC-CFG-027 — Cruceta y joystick derecho eligen, y X aprieta *(verifica BR-CFG-027)*
+
+DADO Configuraciones abierta CUANDO se aprieta abajo en la cruceta ENTONCES el foco pasa al
+renglón siguiente; CUANDO se inclina el joystick derecho hacia arriba, al anterior. DADO el foco
+en la barra de efectos al 50 % CUANDO se aprieta a la derecha ENTONCES sube un paso, y a la
+izquierda baja un paso. DADO el foco en el renglón de lenguaje, con los botones deshabilitados,
+CUANDO se aprieta a la derecha ENTONCES no cambia nada. DADO la planilla de ventas con una fila
+elegida CUANDO se aprieta a los costados ENTONCES suma o resta una unidad. DADO el foco en un botón
+CUANDO se aprieta X ENTONCES se aprieta; si está deshabilitado, no pasa nada. DADO una interfaz
+abierta y el joystick derecho a fondo ENTONCES la vista no gira.
+
+### AC-CFG-028 — Cada interfaz deja el foco *(verifica BR-CFG-028)*
+
+DADO cada interfaz de la lista, CUANDO se abre ENTONCES el foco está en un control habilitado, y
+CUANDO se aprieta abajo en la cruceta ENTONCES el foco se mueve o queda en el último renglón.
+
+### AC-CFG-029 — Los gestos del botón izquierdo con el joystick *(verifica BR-CFG-029)*
+
+DADO un diálogo en pantalla CUANDO se aprieta X ENTONCES avanza, igual que el clic izquierdo. DADO
+un comprador en la ventanilla CUANDO se aprieta X ENTONCES se lo pulsa; con Agarrar / Soltar
+reasignada a L1, L1 lo pulsa y X no. DADO un objeto examinado CUANDO se inclina el joystick
+derecho hacia la derecha ENTONCES el objeto gira, y a inclinación cero no gira. DADO una nota
+encuadrada abierta con un botón con el foco CUANDO se aprieta X ENTONCES la nota sigue abierta y
+el botón no se aprieta; CUANDO se aprieta Interactuar ENTONCES la nota se cierra.
+
+### AC-CFG-030 — Los botones del joystick se guardan y se validan *(verifica BR-CFG-030, BR-CFG-022, BR-CFG-023)*
+
+DADO Examinar asignada a L1 CUANDO se lee el archivo del disco ENTONCES guarda el número del botón
+de L1 junto a las teclas, sin nombrar ningún evento. DADO eso CUANDO se vuelve al menú y se entra
+otra vez ENTONCES sigue en L1. DADO Examinar con un botón ilegible y Agacharse en R1 ENTONCES
+Examinar vuelve a CUADRADO y Agacharse conserva R1. DADO Examinar con el botón de START ENTONCES
+vuelve a CUADRADO. DADO Examinar y Agacharse guardadas las dos en L1 ENTONCES se descarta el bloque
+completo: el joystick y las teclas tienen su entrada de fábrica y una música guardada en 30 % sigue
+en 30 %. DADO un archivo sin botones de joystick ENTONCES cada acción tiene su botón de fábrica.
+
 ## No objetivos
 
 - Esta capacidad NO ajusta el contraste, ni ofrece otro idioma que el español.
-- Esta capacidad NO reasigna el joystick, NO ofrece un botón que restablezca el esquema de fábrica
-  y NO acepta como entrada mover el mouse ni la rueda.
+- Esta capacidad NO ofrece una sensibilidad ni una vibración del joystick, NO muestra íconos de los
+  botones, NO ofrece un botón que restablezca el esquema de fábrica y NO acepta como entrada mover
+  el mouse ni la rueda.
 - Esta capacidad NO guarda ni borra la partida: eso es de
   [`save-and-resume`](../save-and-resume/save-and-resume.md).
 - Esta capacidad NO decide qué suena ni por qué bus: eso es de
@@ -465,7 +580,7 @@ clic derecho lo hace G, y el clic derecho no lo hace. DADO Pausa asignada a P EN
 - [`investigation`](../investigation/investigation.md) (alimenta): el factor de giro de lo que
   se examina.
 - [`save-and-resume`](../save-and-resume/save-and-resume.md) (consume): los dos menús desde
-  desde donde se abre, y la tecla de Pausa para cerrarla; en la web, Esc sigue pausando
+  desde donde se abre, y la tecla de Pausa y START para cerrarla; en la web, Esc sigue pausando
   (`BR-CFG-021`). Borrar su guardado no toca las preferencias ni las asignaciones.
 
 ## Preguntas abiertas

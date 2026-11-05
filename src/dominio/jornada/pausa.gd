@@ -17,6 +17,9 @@ enum Accion {
 	CERRAR_INTERFAZ,
 }
 
+## CÍRCULO del joystick: vuelve atrás en lo que está abierto, y no pausa nunca.
+const BOTON_VOLVER := JOY_BUTTON_B
+
 ## Cuánto después de un Esc que cerró una interfaz no cuenta un cursor perdido. En la web, Esc
 ## siempre suelta el cursor, y el aviso del navegador llega unos cuadros más tarde.
 const GRACIA_TRAS_ESC := 0.5
@@ -41,6 +44,21 @@ static func ante_esc(
 	if celular_libre_abierto:
 		return Accion.CERRAR_CELULAR
 	return Accion.CERRAR_INTERFAZ if interfaz_abierta else Accion.PAUSAR
+
+
+## CÍRCULO vuelve atrás igual que Esc, salvo que no pausa: sin nada abierto no hace nada, y el
+## celular lo atiende su propia acción.
+static func ante_volver(
+	en_pausa: bool,
+	configuraciones_abierta: bool = false,
+	celular_libre_abierto: bool = false,
+	interfaz_abierta: bool = false,
+	logros_abierta: bool = false
+) -> Accion:
+	var accion := ante_esc(
+		en_pausa, configuraciones_abierta, celular_libre_abierto, interfaz_abierta, logros_abierta
+	)
+	return Accion.NADA if accion == Accion.PAUSAR else accion
 
 
 ## Pausa sólo si el cursor estaba tomado y quedó suelto sin que el juego lo soltara. Quien pregunta

@@ -3,7 +3,7 @@ schema_version: 1
 capability_id: CAP-PLY
 status: ratified
 owner: por definir
-provenance: GDD «Controles»; fichas «8. Tarea: Reposición», «Notas», «Interfaces virtuales durante la jornada» y «Referencia de controles»; decisiones de #368, #369, #370, #373 y #382; migración de los specs 003, 004, 006, 014, 034, 043; fichas de interacción, limpieza y basura revisadas el 2026-10-15; decisiones de #425, bordes de GJ-52 (#428) e interacción directa con compradores (#429); ocho jornadas de #526; cuartito de limpieza de #541; depósito trabado en la jornada 1 y baño abierto en todas de #574; salida voluntaria de #573; ticket escrito de #580; agacharse de #177; empuje de útiles y bolsas de #563; hoja que se frena con lo pesado de #218; patada a la unidad de #219; compuerta del mostrador empujada de #695; Esc que sale de las interfaces de #607; la fila «7B» de la lista de pistas e hipótesis y la fila «Palanca» de «Objetos interactuables», de #790
+provenance: GDD «Controles»; fichas «8. Tarea: Reposición», «Notas», «Interfaces virtuales durante la jornada» y «Referencia de controles»; decisiones de #368, #369, #370, #373 y #382; migración de los specs 003, 004, 006, 014, 034, 043; fichas de interacción, limpieza y basura revisadas el 2026-10-15; decisiones de #425, bordes de GJ-52 (#428) e interacción directa con compradores (#429); ocho jornadas de #526; cuartito de limpieza de #541; depósito trabado en la jornada 1 y baño abierto en todas de #574; salida voluntaria de #573; ticket escrito de #580; agacharse de #177; empuje de útiles y bolsas de #563; hoja que se frena con lo pesado de #218; patada a la unidad de #219; compuerta del mostrador empujada de #695; Esc que sale de las interfaces de #607; joystick de #380; la fila «7B» de la lista de pistas e hipótesis y la fila «Palanca» de «Objetos interactuables», de #790
 ---
 
 # Capacidad: lo que el empleado puede hacer
@@ -624,6 +624,26 @@ que cierra una interfaz no pausa, y el siguiente sí.
 MIENTRAS el programa de la caja tiene una lista de productos desplegada, Esc DEBE cerrar esa
 lista y dejar la caja abierta y sin pausa; el Esc siguiente DEBE cerrar la caja. La
 ventanilla con un comprador hablando NO DEBE cerrarse con Esc: ahí Esc pausa (BR-PLY-034).
+
+### BR-PLY-055 — El joystick izquierdo camina
+
+CUANDO el jugador inclina el joystick izquierdo, el sistema DEBE caminar hacia esa dirección,
+igual que con las cuatro direcciones del teclado: la dirección sigue a la vista (BR-PLY-002), la
+diagonal no corre más (BR-PLY-001) y la velocidad nunca pasa de la de caminata. MIENTRAS la
+inclinación está dentro de la zona muerta de la entrada, **0,2**, el sistema NO DEBE caminar. SI no
+hay joystick —nunca se conectó, se desconectó en medio de la noche o el navegador todavía no lo
+entrega—, ENTONCES el sistema NO DEBE fallar ni mover al jugador, y el teclado y el mouse DEBEN
+seguir funcionando.
+
+### BR-PLY-056 — El joystick derecho gira la vista
+
+CUANDO el jugador inclina el joystick derecho, el sistema DEBE girar la vista en proporción a la
+inclinación: a fondo gira **180 grados por segundo**. De costado gira en horizontal, y hacia
+arriba o abajo en vertical. A inclinación cero, y dentro de la zona muerta (BR-PLY-055), NO DEBE
+girar. El vertical DEBE respetar BR-PLY-003: a fondo hacia arriba la vista llega a +1,4 radianes y
+se queda ahí. CUANDO el mouse y el joystick giran en el mismo paso, el sistema DEBE sumar los dos
+giros; ninguno DEBE anular al otro. MIENTRAS el control está suspendido (BR-PLY-006), el joystick
+izquierdo NO DEBE caminar y el derecho NO DEBE girar la vista.
 
 ## Criterios de aceptación
 
@@ -1638,6 +1658,36 @@ DADO la computadora, la caja o una nota abiertas y el cursor tomado, CUANDO lleg
 queda suelto sin que el juego lo suelte ENTONCES la interfaz se cierra y el juego no queda en
 pausa.
 
+### AC-PLY-171 — El izquierdo camina, y su zona muerta no *(verifica BR-PLY-055)*
+
+DADO el joystick izquierdo a fondo hacia adelante y la vista de frente ENTONCES la velocidad es la
+de caminata, hacia adelante. DADO a fondo en una diagonal ENTONCES el módulo es la velocidad de
+caminata y no más. DADO una inclinación de 0,19 ENTONCES la velocidad es cero; DADO 0,21 ENTONCES
+camina. DADO la vista girada un cuarto de vuelta y el izquierdo hacia adelante ENTONCES camina hacia
+donde mira. DADO ningún joystick ENTONCES el juego no falla y el teclado camina.
+
+### AC-PLY-172 — El derecho gira 180 grados por segundo a fondo *(verifica BR-PLY-056)*
+
+DADO el joystick derecho a fondo hacia la derecha CUANDO pasa 1 segundo ENTONCES la vista gira 180
+grados hacia la derecha; CUANDO pasa medio segundo, 90. DADO la inclinación a la mitad CUANDO pasa
+1 segundo ENTONCES gira 90 grados. DADO inclinación cero ENTONCES no gira. DADO una inclinación de
+0,19 ENTONCES no gira; DADO 0,21 ENTONCES gira.
+
+### AC-PLY-173 — El vertical del joystick se clava *(verifica BR-PLY-056, BR-PLY-003)*
+
+DADO el joystick derecho a fondo hacia arriba CUANDO pasan 2 segundos ENTONCES el ángulo vertical
+queda en `1.4`; DADO hacia abajo, en `-1.4`. CUANDO sigue inclinado otro paso ENTONCES no cambia.
+
+### AC-PLY-174 — Mouse y joystick se suman *(verifica BR-PLY-056)*
+
+DADO un movimiento del mouse que gira la vista un ángulo A y el joystick derecho que gira otro B en
+el mismo paso ENTONCES el giro total es A más B.
+
+### AC-PLY-175 — Suspendido, el joystick no camina ni gira *(verifica BR-PLY-056, BR-PLY-055, BR-PLY-006)*
+
+DADO la computadora abierta y los dos joysticks a fondo ENTONCES el jugador no camina y la vista
+no gira. CUANDO se cierra la computadora y los joysticks siguen a fondo ENTONCES camina y gira.
+
 ### AC-PLY-190 — La palanca en la mano abre la oficina del jefe *(verifica BR-PLY-060, BR-PLY-020, BR-PLY-026)*
 
 DADO la jornada 7 con la palanca en la mano CUANDO se pulsa el primario sobre la puerta de la oficina
@@ -1660,7 +1710,7 @@ del depósito o sobre la entrada ENTONCES avisan de trabada como siempre y no gi
 
 ## Contratos
 
-- **Entrada:** el vector de movimiento, el delta del mouse, el yaw del arranque, los candidatos
+- **Entrada:** el vector de movimiento, el delta del mouse, la inclinación del joystick derecho, el yaw del arranque, los candidatos
   que el rayo encontró, el objeto que se quiere agarrar, la superficie que la mira toca, los
   casilleros vacíos y ocupados de cada producto, los segundos del cuadro y el nombre del control
   asignado a cada gesto; la acción primaria o secundaria y el contexto declarado del par

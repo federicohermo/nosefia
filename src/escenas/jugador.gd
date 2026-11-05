@@ -358,6 +358,7 @@ func _process(delta: float) -> void:
 	# Lo examinado cuelga de la cámara, que no se interpola: girarlo en el paso de física lo
 	# dibujaría a saltos.
 	examen.girar(_entrada(), delta)
+	_mirar_con_el_joystick(delta)
 	_acomodar_la_vista(delta)
 	_control.avanzar_el_dibujo(delta)
 	var atrasado := _control.giro_atrasado()
@@ -379,6 +380,25 @@ func _entrada() -> Vector2:
 		ReglasDelJugador.ACCION_ATRAS,
 		ReglasDelJugador.ACCION_ADELANTE
 	)
+
+
+## El joystick derecho gira la vista, o lo examinado cuando el cursor está suelto: el mismo reparto
+## que el mouse. La inclinación ya sale con la zona muerta de las acciones, y cuánto gira lo decide
+## el dominio. En la `y` positiva se mira hacia abajo, como el delta del mouse.
+func _mirar_con_el_joystick(delta: float) -> void:
+	var inclinacion := Input.get_vector(
+		ReglasDelJugador.ACCION_MIRAR_IZQUIERDA,
+		ReglasDelJugador.ACCION_MIRAR_DERECHA,
+		ReglasDelJugador.ACCION_MIRAR_ARRIBA,
+		ReglasDelJugador.ACCION_MIRAR_ABAJO
+	)
+	if inclinacion == Vector2.ZERO:
+		return
+	if _el_cursor_esta_tomado():
+		_control.girar_con_el_joystick(inclinacion, delta)
+		_aplicar_la_rotacion()
+	else:
+		examen.girar_con_el_joystick(inclinacion, delta)
 
 
 ## Le pasa a lo chocado el paso que no se pudo dar, para que se corra en vez de tapar el paso.

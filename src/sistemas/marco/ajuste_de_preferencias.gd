@@ -1,9 +1,9 @@
 ## Aplica unas `Preferencias` al motor: el volumen de los cuatro buses, el brillo, la letra de la
 ## interfaz y la tecla o el botón de cada acción. Escribe cada cambio al disco en el momento.
 ##
-## **El `InputMap` es de todo el proceso.** Las asignaciones reemplazan sólo las teclas y los
-## botones del mouse de cada acción reasignable: el joystick y las demás acciones quedan como en
-## `project.godot`.
+## **El `InputMap` es de todo el proceso.** Las asignaciones reemplazan sólo las teclas, los
+## botones del mouse y los botones de joystick de cada acción reasignable: los ejes del joystick,
+## START y las demás acciones quedan como en `project.godot`.
 ##
 ## **El volumen y la letra son de todo el proceso**: los buses del `AudioServer` y el tema de
 ## Manada, que el motor carga una sola vez. El brillo, en cambio, es de cada pantalla: se
@@ -73,7 +73,7 @@ func previsualizar(preferencias: Preferencias) -> bool:
 
 
 ## La entrada de un evento, como `Vector2i(tipo, código)`, o `SIN_ENTRADA` si no es una tecla ni un
-## botón del mouse. La tecla se lee por su código físico, igual que `project.godot`.
+## botón del mouse o del joystick. La tecla se lee por su código físico, igual que `project.godot`.
 static func entrada_de(evento: InputEvent) -> Vector2i:
 	var tecla := evento as InputEventKey
 	if tecla != null:
@@ -84,7 +84,23 @@ static func entrada_de(evento: InputEvent) -> Vector2i:
 	var boton := evento as InputEventMouseButton
 	if boton != null:
 		return Vector2i(AsignacionDeControles.TipoDeEntrada.BOTON_DEL_MOUSE, boton.button_index)
+	var del_joystick := evento as InputEventJoypadButton
+	if del_joystick != null:
+		return Vector2i(
+			AsignacionDeControles.TipoDeEntrada.BOTON_DEL_JOYSTICK, del_joystick.button_index
+		)
 	return SIN_ENTRADA
+
+
+## Si la asignación maneja esa entrada en esa acción. Un botón de joystick sólo lo maneja una de las
+## cinco acciones de botón: START, en la pausa, no lo reemplaza ninguna asignación.
+static func es_de_la_asignacion(accion: StringName, entrada: Vector2i) -> bool:
+	if entrada == SIN_ENTRADA:
+		return false
+	return (
+		entrada.x != AsignacionDeControles.TipoDeEntrada.BOTON_DEL_JOYSTICK
+		or accion in AsignacionDeControles.ACCIONES_CON_BOTON
+	)
 
 
 ## Reemplaza en el `InputMap` las teclas y los botones de cada acción asignada. Si ya son las
@@ -101,7 +117,7 @@ func aplicar_controles(asignacion: AsignacionDeControles) -> void:
 		var tienen: Array[Vector2i] = []
 		for evento: InputEvent in InputMap.action_get_events(accion):
 			var entrada := entrada_de(evento)
-			if entrada != SIN_ENTRADA:
+			if es_de_la_asignacion(accion, entrada):
 				propios.append(evento)
 				tienen.append(entrada)
 		if _son_las_mismas(tienen, pedidas):
@@ -143,6 +159,12 @@ static func _evento_de(entrada: Vector2i) -> InputEvent:
 		var tecla := InputEventKey.new()
 		tecla.physical_keycode = entrada.y as Key
 		return tecla
+	if entrada.x == AsignacionDeControles.TipoDeEntrada.BOTON_DEL_JOYSTICK:
+		var del_joystick := InputEventJoypadButton.new()
+		del_joystick.button_index = entrada.y as JoyButton
+		# Todos los joysticks, como los eventos de `project.godot`.
+		del_joystick.device = -1
+		return del_joystick
 	var boton := InputEventMouseButton.new()
 	boton.button_index = entrada.y as MouseButton
 	return boton
