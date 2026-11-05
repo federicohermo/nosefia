@@ -16,43 +16,54 @@ const DESPEDIDA := "Muchas gracias."
 @export var tia := PackedStringArray()
 @export var fede := PackedStringArray()
 @export var mia := PackedStringArray()
+@export var cami := PackedStringArray()
 @export var despedida_tin := PackedStringArray()
 @export var despedida_tia := PackedStringArray()
 @export var despedida_fede := PackedStringArray()
 @export var despedida_mia := PackedStringArray()
+@export var despedida_cami := PackedStringArray()
 
 
-func inicial(personaje: int) -> Dialogo:
+## Con el pedido, las entradas pueden escribir `{pedido}` y `{producto1}`, `{producto2}`, etc.
+func inicial(personaje: int, pedido: Venta = null) -> Dialogo:
+	return _crear_dialogo(_entradas_de(personaje, false), pedido)
+
+
+func despedida(personaje: int, pedido: Venta = null) -> Dialogo:
+	return _crear_dialogo(_entradas_de(personaje, true), pedido)
+
+
+func tiene_guion(personaje: int) -> bool:
+	return not _entradas_de(personaje, false).is_empty()
+
+
+func _entradas_de(personaje: int, de_despedida: bool) -> PackedStringArray:
 	match personaje:
 		Personaje.TIN:
-			return _crear_dialogo(tin)
+			return despedida_tin if de_despedida else tin
 		Personaje.TIA:
-			return _crear_dialogo(tia)
+			return despedida_tia if de_despedida else tia
 		Personaje.FEDE:
-			return _crear_dialogo(fede)
+			return despedida_fede if de_despedida else fede
 		Personaje.MIA:
-			return _crear_dialogo(mia)
-	return Dialogo.new()
+			return despedida_mia if de_despedida else mia
+		Personaje.CAMI:
+			return despedida_cami if de_despedida else cami
+	return PackedStringArray()
 
 
-func despedida(personaje: int) -> Dialogo:
-	match personaje:
-		Personaje.TIN:
-			return _crear_dialogo(despedida_tin)
-		Personaje.TIA:
-			return _crear_dialogo(despedida_tia)
-		Personaje.FEDE:
-			return _crear_dialogo(despedida_fede)
-		Personaje.MIA:
-			return _crear_dialogo(despedida_mia)
-	return Dialogo.new()
-
-
-## Las referencias guardan el número de Producto.Id para sobrevivir a cualquier renombre.
-static func _crear_dialogo(entradas: PackedStringArray) -> Dialogo:
+## Las referencias a un producto fijo guardan el número de Producto.Id para sobrevivir a cualquier
+## renombre.
+static func _crear_dialogo(entradas: PackedStringArray, pedido: Venta) -> Dialogo:
 	var nombres: Dictionary[String, String] = {}
 	for producto: Producto in Catalogo.todos():
 		nombres[str(producto.id)] = producto.nombre
+	if pedido != null:
+		nombres["pedido"] = _enumeracion(pedido, pedido.unidades_de)
+		var numero := 1
+		for producto: Producto in pedido.productos():
+			nombres["producto%d" % numero] = _presentado(producto, pedido.unidades_de(producto))
+			numero += 1
 	var resueltas := PackedStringArray()
 	for entrada: String in entradas:
 		resueltas.append(entrada.format(nombres))
@@ -95,15 +106,18 @@ static func _enumeracion(pedido: Venta, cantidad: Callable) -> String:
 	var marcadores: PackedStringArray = []
 	for producto in pedido.productos():
 		var cuantas: int = cantidad.call(producto)
-		if cuantas <= 0:
-			continue
-		var nombre := "[color=#e4f850]" + producto.nombre + "[/color]"
-		if cuantas > 1:
-			marcadores.append(("dos" if cuantas == 2 else "tres") + " " + nombre)
-			continue
-		var texto := SubtitulosAlExaminar.de_producto(producto.id).trim_suffix(".")
-		texto = texto.left(1).to_lower() + texto.substr(1)
-		marcadores.append(texto.replace(producto.nombre, nombre))
+		if cuantas > 0:
+			marcadores.append(_presentado(producto, cuantas))
 	if marcadores.size() < 2:
 		return "".join(marcadores)
 	return ", ".join(marcadores.slice(0, -1)) + " y " + marcadores[-1]
+
+
+## Un producto como lo nombra el pedido, con sólo su nombre en amarillo.
+static func _presentado(producto: Producto, cuantas: int) -> String:
+	var nombre := "[color=#e4f850]" + producto.nombre + "[/color]"
+	if cuantas > 1:
+		return ("dos" if cuantas == 2 else "tres") + " " + nombre
+	var texto := SubtitulosAlExaminar.de_producto(producto.id).trim_suffix(".")
+	texto = texto.left(1).to_lower() + texto.substr(1)
+	return texto.replace(producto.nombre, nombre)

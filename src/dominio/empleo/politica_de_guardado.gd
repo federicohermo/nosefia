@@ -52,6 +52,8 @@ static func datos(partida: Partida) -> Dictionary:
 				PartidaSerializada.clave(PartidaSerializada.Campo.SEMILLA): partida.semilla,
 				PartidaSerializada.clave(PartidaSerializada.Campo.POSES_DE_LAS_CAJAS):
 				_poses_de(partida),
+				PartidaSerializada.clave(PartidaSerializada.Campo.SORTEOS):
+				partida.expediente.sorteos(),
 			}
 		)
 	)
