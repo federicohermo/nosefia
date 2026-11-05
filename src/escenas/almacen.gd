@@ -796,8 +796,7 @@ func _al_forzar_la_puerta_del_jefe() -> void:
 	_audio.callar_la_musica()
 	_jugador.suspender()
 	_enlace_de_guardado.guardar()
-	if _logros.alcanzar_final(_partida.final()):
-		_archivo_de_logros.escribir(_logros)
+	_anotar_el_final()
 	(get_node("Interfaz/PersianaDeLaNoche") as PersianaDeLaNoche).mostrar_baja()
 	_mostrar_el_final()
 
@@ -1235,13 +1234,18 @@ func _al_descubrir_una_pista(pista: Pista) -> void:
 ## Los logros que decide el cierre de la noche, y el final si la partida terminó. Un logro ganado
 ## acá se avisa después de que el cierre vació los avisos de la noche.
 func _ganar_los_logros_del_cierre(jornada: int) -> void:
-	var final := _partida.final()
 	if Logros.talon_de_aquiles(_partida.antecedentes()):
 		_desbloquear(Logros.Logro.MI_TALON_DE_AQUILES)
+	if Logros.pesima_primera_impresion(_partida.final(), jornada):
+		_desbloquear(Logros.Logro.PESIMA_PRIMERA_IMPRESION)
+	_anotar_el_final()
+
+
+## Lo que gana toda partida que termina, la cierre la noche o la oficina de Enrique.
+func _anotar_el_final() -> void:
+	var final := _partida.final()
 	if Logros.empleado_ejemplar(final, _partida.legajo().medios()):
 		_desbloquear(Logros.Logro.EMPLEADO_EJEMPLAR)
-	if Logros.pesima_primera_impresion(final, jornada):
-		_desbloquear(Logros.Logro.PESIMA_PRIMERA_IMPRESION)
 	if _logros.alcanzar_final(final):
 		_archivo_de_logros.escribir(_logros)
 

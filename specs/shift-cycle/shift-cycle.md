@@ -104,20 +104,20 @@ reponer (BR-STK-052).
 
 ### BR-SHF-027 — Al terminar la partida, la devolución lleva a la pantalla de final
 
-CUANDO la partida termina despedida, o termina con el contrato cumplido y el expediente no
-registró ninguna pista en toda la partida (BR-INV-103), el sistema DEBE llevar la única opción de
-la devolución del cierre a una pantalla de final, y no al menú. La pantalla DEBE mostrar su
-encabezado, su título y un solo botón, «VOLVER AL MENÚ», que sale al menú.
+CUANDO la partida termina despedida, o termina con el contrato cumplido (BR-INV-103), el sistema
+DEBE llevar la única opción de la devolución del cierre a una pantalla de final, y no al menú. La
+pantalla DEBE mostrar su encabezado, su título y un solo botón, «VOLVER AL MENÚ», que sale al menú.
 
 - El despido DEBE llevar el encabezado «/ FIN DEL JUEGO» y el título «DESPEDIDO». Vale para todos
   los despidos, incluido el de la prueba.
 - El contrato cumplido sin ninguna pista DEBE llevar el encabezado «/ FINAL 1» y el título
   «EMPLEADO ESTRESADO».
-- SI la partida termina despedida, ENTONCES la pantalla DEBE ser la del despido aunque no haya
+- El contrato cumplido con al menos una pista, de cualquier jornada, DEBE llevar el encabezado
+  «/ FINAL 2» y el título «LOCURA PARANOICA».
+- SI la partida termina despedida, ENTONCES la pantalla DEBE ser la del despido aunque haya o no
   pistas.
-- Cualquier otro final que cierre con la devolución NO DEBE mostrar pantalla de final: la única
-  opción de la devolución vuelve al menú, como siempre. Los finales 4 y 5 no pasan por la
-  devolución (BR-SHF-060, BR-SHF-061).
+- La partida en curso NO DEBE mostrar pantalla de final: la única opción de la devolución sigue a
+  la jornada siguiente. Los finales 4 y 5 no pasan por la devolución (BR-SHF-060, BR-SHF-061).
 
 Elegir la opción de la devolución o el botón dos veces NO DEBE mostrar dos pantallas ni pedir dos
 veces el menú. El guardado se borra igual que sin la pantalla (BR-SAV-002).
@@ -565,16 +565,18 @@ DADO una partida despedida al cerrar la jornada 4 sin ninguna pista registrada C
 la opción de la devolución ENTONCES la pantalla es la del despido, con «DESPEDIDO», y no la de
 «EMPLEADO ESTRESADO».
 
-### AC-SHF-066 — Otro final sigue como siempre *(verifica BR-SHF-027)*
+### AC-SHF-066 — Con alguna pista aparece el final 2 *(verifica BR-SHF-027)*
 
 DADO la jornada 7 cerrada con el contrato cumplido y una sola pista registrada, en cualquier jornada,
-CUANDO el jugador elige la opción de la devolución ENTONCES no aparece ninguna pantalla de final y se
-pide el menú. DADO una partida en curso ENTONCES la devolución no lleva a ninguna pantalla de final.
+CUANDO el jugador elige la opción de la devolución ENTONCES aparece la pantalla con «/ FINAL 2»,
+«LOCURA PARANOICA» y un solo botón, «VOLVER AL MENÚ», y el menú todavía no se pidió. CUANDO se pulsa
+el botón ENTONCES se pide el menú. DADO una partida en curso ENTONCES la devolución no lleva a ninguna
+pantalla de final.
 
 ### AC-SHF-067 — Elegir dos veces no repite nada *(verifica BR-SHF-027)*
 
-DADO la pantalla de final del despido y la del contrato sin pistas CUANDO se elige dos veces la opción de
-la devolución ENTONCES se muestra una sola pantalla. CUANDO se pulsa dos veces el botón ENTONCES el
+DADO la pantalla de final del despido, la del contrato sin pistas y la del final 2 CUANDO se elige dos
+veces la opción de la devolución ENTONCES se muestra una sola pantalla. CUANDO se pulsa dos veces el botón ENTONCES el
 menú se pide una sola vez.
 
 ### AC-SHF-110 — Abrir la puerta con la palanca termina la partida sin devolución *(verifica BR-SHF-060)*

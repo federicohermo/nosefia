@@ -17,7 +17,14 @@ extends RefCounted
 
 ## Los estados en los que puede estar una partida. Es un conjunto cerrado y por eso es un
 ## `enum`: un `String` suelto dejaría al `if` del menú sin entrar nunca, sin decir una palabra.
-enum Final { EN_CURSO, CONTRATO_CUMPLIDO, DESPEDIDO, JEFE_SABOTEADOR, JEFE_INCOMPETENTE }
+enum Final {
+	EN_CURSO,
+	CONTRATO_CUMPLIDO,
+	DESPEDIDO,
+	JEFE_SABOTEADOR,
+	JEFE_INCOMPETENTE,
+	LOCURA_PARANOICA,
+}
 enum Llamado {
 	LOCAL_DESORDENADO,
 	OBJETO_AFUERA,
@@ -405,7 +412,7 @@ func cerrar_la_jornada(
 	if _despedido_al_cerrar(cerrada):
 		_final = Final.DESPEDIDO
 	elif es_la_ultima_jornada():
-		_final = Final.CONTRATO_CUMPLIDO
+		_final = _final_del_contrato_cumplido()
 	else:
 		if cerrada == _ULTIMA_DE_LA_PRUEBA:
 			_legajo.empezar_las_jornadas_completas()
@@ -438,6 +445,14 @@ func _azar_del_camino() -> RandomNumberGenerator:
 	var azar := RandomNumberGenerator.new()
 	azar.seed = hash([_semilla, _jornada])
 	return azar
+
+
+## Con el contrato cumplido, una sola pista en toda la partida basta para que la investigación quede
+## incompleta (BR-INV-103). Elegir una hipótesis sin pista no cuenta: no entra en `identidades()`.
+func _final_del_contrato_cumplido() -> Final:
+	if _expediente.identidades().is_empty():
+		return Final.CONTRATO_CUMPLIDO
+	return Final.LOCURA_PARANOICA
 
 
 func _despedido_al_cerrar(cerrada: int) -> bool:

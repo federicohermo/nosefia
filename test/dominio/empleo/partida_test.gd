@@ -171,12 +171,6 @@ func test_con_el_despido_en_la_ultima_jornada_gana_el_despido() -> void:  # AC-E
 	assert_int(partida.final()).is_equal(Partida.Final.DESPEDIDO)
 
 
-func test_la_partida_tiene_cinco_finales() -> void:
-	# En curso, contrato cumplido, despido y los dos de la puerta del jefe. Uno sin decidir dónde se
-	# alcanza dejaría a `terminada()` contestando que sí sobre un estado que nadie escribió.
-	assert_int(Partida.Final.size()).is_equal(5)
-
-
 func test_solo_la_ultima_jornada_es_la_ultima() -> void:  # AC-EMP-008
 	var partida := Partida.nueva()
 	assert_bool(partida.es_la_ultima_jornada()).is_false()

@@ -862,13 +862,16 @@ devolución es de la mañana siguiente a su jornada, así que su día es el de l
 Una tanda cuyo primer mensaje no tiene hora DEBE rotularse sin hora. Un mensaje legado sin
 jornada NO DEBE abrir una tanda ni aportar hora.
 
-### BR-INV-103 — Sin ninguna pista en toda la partida, el final es «Empleado estresado»
+### BR-INV-103 — Al cumplir el contrato, las pistas deciden entre el final 1 y el final 2
 
 SI la partida termina con el contrato cumplido y el expediente no registró ninguna pista en
-ninguna jornada, ENTONCES el final DEBE ser «Empleado estresado» (final 1) y la devolución DEBE
-llevar a su pantalla (BR-SHF-027). Una sola pista registrada, de cualquier jornada, DEBE bastar para
-que no lo sea. Elegir una hipótesis sin pista, P o L, NO DEBE contar como pista. SI la partida termina
-despedida, ENTONCES el final NO DEBE ser éste, aunque no haya pistas.
+ninguna jornada, ENTONCES el final DEBE ser «Empleado estresado» (final 1). SI registró al menos
+una, de cualquier jornada, ENTONCES el final DEBE ser «Locura paranoica» (final 2): la
+investigación quedó incompleta. En los dos casos la devolución DEBE llevar a la pantalla de su
+final (BR-SHF-027). Una sola pista registrada DEBE bastar para el final 2. Elegir una hipótesis sin
+pista, P o L, NO DEBE contar como pista. SI la partida termina despedida, ENTONCES el final NO DEBE
+ser ninguno de los dos, aunque haya o no pistas. SI la puerta del jefe se abre con la palanca
+(BR-INV-142) o con la llave (BR-INV-145), ENTONCES el final DEBE ser el 4 o el 5 y NO DEBE ser el 2.
 
 ### BR-INV-104 — El chat entra y sale deslizándose
 CUANDO el jugador abre un chat desde el menú de chats, el chat DEBE entrar desde el borde derecho
@@ -1914,6 +1917,21 @@ cierre con una única pista registrada en la jornada 7 ENTONCES tampoco.
 
 DADO una partida despedida al cerrar la jornada 5 con el expediente sin pistas ENTONCES el final es
 el despido y no «Empleado estresado». DADO una partida en curso sin pistas ENTONCES no hay final.
+
+### AC-INV-190 — Con alguna pista, locura paranoica *(verifica BR-INV-103)*
+
+DADO la jornada 7 cerrada con el contrato cumplido y una única pista registrada, en cualquier
+jornada de la 1 a la 7, ENTONCES el final es «Locura paranoica» y no «Empleado estresado». DADO el
+mismo cierre sin pistas y con la hipótesis P o L elegida en alguna jornada ENTONCES el final es
+«Empleado estresado». DADO una partida en curso con pistas ENTONCES no hay final.
+
+### AC-INV-191 — El despido y la puerta del jefe ganan sobre la locura paranoica *(verifica BR-INV-103)*
+
+DADO una partida con pistas registradas despedida al cerrar la jornada 5, o al cerrar la 7,
+ENTONCES el final es el despido y no «Locura paranoica». DADO la jornada 7 con la pista 7B activa y
+otras pistas registradas CUANDO se abre la puerta del jefe con la palanca ENTONCES el final es el 4 y
+no «Locura paranoica». DADO la 7C activa CUANDO se abre con la llave ENTONCES el final es el 5 y no
+«Locura paranoica».
 
 ### AC-INV-150 — Con la pista 6C se ofrece sólo 6C *(verifica BR-INV-116, BR-INV-070)*
 

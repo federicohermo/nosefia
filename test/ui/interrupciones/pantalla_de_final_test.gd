@@ -5,6 +5,7 @@ const ESCENA := "res://src/ui/interrupciones/pantalla_de_final.tscn"
 const FINALES: Array[FinalConPantalla.Cual] = [
 	FinalConPantalla.Cual.DESPEDIDO,
 	FinalConPantalla.Cual.EMPLEADO_ESTRESADO,
+	FinalConPantalla.Cual.LOCURA_PARANOICA,
 	FinalConPantalla.Cual.JEFE_SABOTEADOR,
 	FinalConPantalla.Cual.JEFE_INCOMPETENTE,
 ]
@@ -34,7 +35,8 @@ func test_arranca_oculta() -> void:
 	assert_bool(_pantalla().visible).is_false()
 
 
-func test_cada_final_dibuja_su_texto() -> void:  # AC-SHF-063 AC-SHF-064 AC-SHF-111 AC-SHF-113
+func test_cada_final_tiene_texto() -> void:  # AC-SHF-063 AC-SHF-064 AC-SHF-066 AC-SHF-111
+	# AC-SHF-113
 	var pantalla := _pantalla()
 	var titulos: Array[String] = []
 	for final: FinalConPantalla.Cual in FINALES:
@@ -49,7 +51,7 @@ func test_cada_final_dibuja_su_texto() -> void:  # AC-SHF-063 AC-SHF-064 AC-SHF-
 		assert_int(titulos.count(titulo)).is_equal(1)
 
 
-func test_tiene_un_solo_boton() -> void:  # AC-SHF-063 AC-SHF-064 AC-SHF-111 AC-SHF-113
+func test_tiene_un_solo_boton() -> void:  # AC-SHF-063 AC-SHF-064 AC-SHF-066 AC-SHF-111 AC-SHF-113
 	var pantalla := _pantalla()
 	for final: FinalConPantalla.Cual in FINALES:
 		pantalla.mostrar(final)

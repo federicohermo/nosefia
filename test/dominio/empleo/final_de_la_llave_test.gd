@@ -42,6 +42,7 @@ func test_con_todas_las_obligatorias_cumplidas_el_final_es_el_mismo() -> void:  
 	assert_bool(partida.abrir_la_oficina_del_jefe(Partida.LLAVE)).is_true()
 	assert_int(partida.final()).is_equal(Partida.Final.JEFE_INCOMPETENTE)
 	assert_int(partida.final()).is_not_equal(Partida.Final.CONTRATO_CUMPLIDO)
+	assert_int(partida.final()).is_not_equal(Partida.Final.LOCURA_PARANOICA)  # AC-INV-191
 	assert_int(partida.final()).is_not_equal(Partida.Final.DESPEDIDO)
 
 

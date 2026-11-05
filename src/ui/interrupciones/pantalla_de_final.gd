@@ -11,12 +11,14 @@ signal volver_al_menu_pedido
 const ENCABEZADOS: Dictionary[FinalConPantalla.Cual, String] = {
 	FinalConPantalla.Cual.DESPEDIDO: "/ FIN DEL JUEGO",
 	FinalConPantalla.Cual.EMPLEADO_ESTRESADO: "/ FINAL 1",
+	FinalConPantalla.Cual.LOCURA_PARANOICA: "/ FINAL 2",
 	FinalConPantalla.Cual.JEFE_SABOTEADOR: "/ FINAL 4",
 	FinalConPantalla.Cual.JEFE_INCOMPETENTE: "/ FINAL 5",
 }
 const TITULOS: Dictionary[FinalConPantalla.Cual, String] = {
 	FinalConPantalla.Cual.DESPEDIDO: "DESPEDIDO",
 	FinalConPantalla.Cual.EMPLEADO_ESTRESADO: "EMPLEADO ESTRESADO",
+	FinalConPantalla.Cual.LOCURA_PARANOICA: "LOCURA PARANOICA",
 	FinalConPantalla.Cual.JEFE_SABOTEADOR: "JEFE SABOTEADOR",
 	FinalConPantalla.Cual.JEFE_INCOMPETENTE: "JEFE INCOMPETENTE",
 }
