@@ -121,3 +121,40 @@ func test_una_partida_en_curso_no_tiene_final() -> void:  # AC-SHF-066, AC-INV-1
 	assert_bool(partida.terminada()).is_false()
 	assert_int(FinalConPantalla.de(partida)).is_equal(FinalConPantalla.Cual.NINGUNO)
 	assert_array(_opcion_de(partida)).is_equal([DevolucionDelJefe.Opcion.CONTINUAR])
+
+
+func _azar(semilla: int) -> RandomNumberGenerator:
+	var azar := RandomNumberGenerator.new()
+	azar.seed = semilla
+	return azar
+
+
+func test_el_despido_muestra_un_tip_y_con_el_tiempo_sale_cada_uno() -> void:  # AC-SHF-124
+	var vistos: Dictionary[String, bool] = {}
+	var azar := _azar(827)
+	for _vez in range(200):
+		var mensaje := FinalConPantalla.mensaje(FinalConPantalla.Cual.DESPEDIDO, azar)
+		assert_array(FinalConPantalla.TIPS).contains([mensaje])
+		vistos[mensaje] = true
+	assert_int(vistos.size()).is_equal(FinalConPantalla.TIPS.size())
+
+
+func test_los_finales_1_y_2_muestran_su_cierre_y_ningun_tip() -> void:  # AC-SHF-125
+	for final: FinalConPantalla.Cual in FinalConPantalla.CIERRES:
+		for semilla: int in [1, 2, 3]:
+			var mensaje := FinalConPantalla.mensaje(final, _azar(semilla))
+			assert_str(mensaje).is_equal(FinalConPantalla.CIERRES[final])
+			assert_str(mensaje).is_not_empty()
+			assert_array(FinalConPantalla.TIPS).not_contains([mensaje])
+	assert_array(FinalConPantalla.CIERRES.keys()).contains_exactly_in_any_order(
+		[FinalConPantalla.Cual.EMPLEADO_ESTRESADO, FinalConPantalla.Cual.LOCURA_PARANOICA]
+	)
+	var cierre_del_1 := FinalConPantalla.CIERRES[FinalConPantalla.Cual.EMPLEADO_ESTRESADO]
+	assert_int(cierre_del_1.split("\n").size()).is_equal(2)
+
+
+func test_los_finales_4_y_5_dejan_el_espacio_vacio() -> void:  # AC-SHF-126
+	for final: FinalConPantalla.Cual in [
+		FinalConPantalla.Cual.JEFE_SABOTEADOR, FinalConPantalla.Cual.JEFE_INCOMPETENTE
+	]:
+		assert_str(FinalConPantalla.mensaje(final, _azar(827))).is_empty()
