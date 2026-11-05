@@ -5,6 +5,7 @@
 extends GdUnitTestSuite
 
 const ALMACEN := preload("res://src/escenas/almacen.tscn")
+const APP_CAJA := preload("res://src/ui/diegetica/app_caja.tscn")
 
 var _entradas: Array[String] = []
 
@@ -82,3 +83,18 @@ func test_con_agarrar_en_f_arrastrar_con_el_clic_izquierdo_gira_el_examen() -> v
 	assert_bool(balde.global_basis.is_equal_approx(antes)).is_false()
 	jugador.call("_unhandled_input", examinar)
 	agarre.soltar(true)
+
+
+func test_con_agarrar_en_f_el_clic_izquierdo_sigue_arrastrando_la_planilla() -> void:  # AC-CFG-020
+	_agarrar_en_f()
+	var caja: AppCaja = auto_free(APP_CAJA.instantiate())
+	add_child(caja)
+	var lista: ScrollContainer = caja.get("_scroll")
+	var clic := InputEventMouseButton.new()
+	clic.button_index = MOUSE_BUTTON_LEFT
+	clic.pressed = true
+	lista.gui_input.emit(clic)
+	assert_int(lista.mouse_default_cursor_shape).is_equal(Control.CURSOR_DRAG)
+	clic.pressed = false
+	caja.call("_input", clic)
+	assert_int(lista.mouse_default_cursor_shape).is_equal(Control.CURSOR_POINTING_HAND)
