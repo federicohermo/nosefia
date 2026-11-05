@@ -28,7 +28,7 @@ noche.
 Los nueve logros y su nombre en pantalla son: **Obelisco de cartón**, **Rebelde**, **Y se marchó…**,
 **A la basura**, **Estamos al pedo, ¿no?**, **Empleado ejemplar**, **Pésima primera impresión**,
 **Mi talón de Aquiles** y **Elemental, mi querida Yasmín**. Los finales y su nombre en pantalla
-son **Despedido**, **Contrato cumplido**, **Locura paranoica**, **Jefe saboteador** y **Jefe incompetente**.
+son **Despedido**, **Empleado explotado**, **Locura paranoica**, **Jefe saboteador** y **Jefe incompetente**.
 
 ## Comportamiento normativo
 
@@ -196,7 +196,7 @@ desconocido y uno válido ENTONCES sólo el válido queda desbloqueado.
 
 DADO una partida que termina despedida ENTONCES el final despedido queda alcanzado y el de contrato
 cumplido no. DADO una partida que termina con el final 2 ENTONCES queda alcanzado «Locura paranoica»
-y «Contrato cumplido» no. DADO una pista nueva aceptada ENTONCES queda descubierta, también en la partida
+y «Empleado explotado» no. DADO una pista nueva aceptada ENTONCES queda descubierta, también en la partida
 siguiente. DADO el mismo final o la misma pista otra vez ENTONCES el archivo queda igual. DADO un
 final o una pista desconocidos en el archivo ENTONCES se ignoran.
 
