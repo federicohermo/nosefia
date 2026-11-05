@@ -3721,9 +3721,6 @@ points = PackedVector3Array(0.490000010, -0.356467366, -1.575000048, 0.490000010
 margin = 0.002
 points = PackedVector3Array(0.490000010, 0.043536782, -1.575000048, 0.490000010, 0.127364278, -1.916019678, 0.490000010, 0.127364278, -1.572909594, 0.500000000, 0.043536782, -1.575000048, 0.500000000, 0.127364278, -1.916019678, 0.500000000, 0.127364278, -1.572909594)
 
-[sub_resource type="BoxShape3D" id="volumen_notas_tablero"]
-size = Vector3(2, 0.03, 2)
-
 [node name="Estructura" instance=ExtResource("modelo")]
 
 [node name="cuartito_cuerpo" parent="."]
@@ -4419,10 +4416,6 @@ renglones_del_papel = NodePath("../TextoDeLaNota/Renglones")
 grafica_de_tareas = NodePath("../TextoDeLaNota/Tareas")
 grafica_de_orden = NodePath("../TextoDeLaNota/Orden")
 
-[node name="VolumenNotas" type="CollisionShape3D" parent="board tareas/board de tareas_002/StaticBody3D"]
-position = Vector3(0, -0.015, 0)
-shape = SubResource("volumen_notas_tablero")
-
 [node name="TextoDeLaNota" parent="board tareas/board de tareas_002" instance=ExtResource("texto_nota")]
 
 [node name="StaticBody3D" parent="board tareas/board de tareas_001" node_paths=PackedStringArray("mallas", "titulo_del_papel", "renglones_del_papel", "grafica_de_tareas", "grafica_de_orden") groups=["interactuable"]]
@@ -4433,10 +4426,6 @@ titulo_del_papel = NodePath("../TextoDeLaNota/Titulo")
 renglones_del_papel = NodePath("../TextoDeLaNota/Renglones")
 grafica_de_tareas = NodePath("../TextoDeLaNota/Tareas")
 grafica_de_orden = NodePath("../TextoDeLaNota/Orden")
-
-[node name="VolumenNotas" type="CollisionShape3D" parent="board tareas/board de tareas_001/StaticBody3D"]
-position = Vector3(0, -0.015, 0)
-shape = SubResource("volumen_notas_tablero")
 
 [node name="TextoDeLaNota" parent="board tareas/board de tareas_001" instance=ExtResource("texto_nota")]
 

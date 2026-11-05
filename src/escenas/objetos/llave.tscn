@@ -6,7 +6,7 @@
 
 [sub_resource type="BoxShape3D" id="cuerpo"]
 margin = 0.001
-size = Vector3(0.064, 0.0064, 0.02)
+size = Vector3(0.064, 0.02, 0.02)
 
 [node name="Llave" type="RigidBody3D" groups=["interactuable"]]
 mass = 0.05
