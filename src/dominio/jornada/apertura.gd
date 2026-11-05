@@ -15,10 +15,15 @@ const INTRODUCCION := {1: [Tarea.Tipo.CAJA, Tarea.Tipo.REGISTRAR, Tarea.Tipo.REP
 const HOLGURA_DE_COLUMNA := 0.01
 ## El producto cuya góndola abre completa y con unidades vencidas en la jornada que lo pide.
 const PRODUCTO_CON_VENCIDOS := Producto.Id.CINDOLOR
+## El producto cuya caja abre siempre vacía en la jornada del pedido al proveedor (BR-STK-055).
+const PRODUCTO_CON_CAJA_VACIA := Producto.Id.FERNET_GOD
+## Cuántas cajas del depósito abren vacías en esa jornada.
+const CAJAS_VACIAS := 5
 const PARTICULARES := {
 	ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA: [Tarea.Tipo.ORDENAR_LAS_CAJAS],
 	ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA + 1: [Tarea.Tipo.SACAR_LA_BASURA],
 	ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA + 2: [Tarea.Tipo.DESECHAR_VENCIDOS],
+	ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA + 3: [Tarea.Tipo.PEDIR_AL_PROVEEDOR],
 }
 
 
@@ -87,7 +92,8 @@ static func vacios_de_la_jornada(
 	compradores: Array[Comprador],
 	tandas: Dictionary[Producto.Id, Array],
 	azar: RandomNumberGenerator,
-	posiciones: Dictionary[Producto.Id, Array] = {}
+	posiciones: Dictionary[Producto.Id, Array] = {},
+	cajas_vacias_de_la_noche: Array[Producto.Id] = []
 ) -> Dictionary[Producto.Id, Array]:
 	var vacios: Dictionary[Producto.Id, Array] = {}
 	if jornada == ReglasDeLaPartida.PRIMERA_JORNADA:
@@ -98,6 +104,8 @@ static func vacios_de_la_jornada(
 		presentes[producto.id] = vaciables.get(producto.id, 0)
 	if pide(jornada, Tarea.Tipo.DESECHAR_VENCIDOS):
 		presentes[PRODUCTO_CON_VENCIDOS] = 0
+	for id in cajas_vacias_de_la_noche:
+		presentes[id] = 0
 	var faltantes := faltantes_al_azar(pedidos_de(compradores), presentes, azar)
 	for id: Producto.Id in faltantes:
 		vacios[id] = _sortear_vacios(tandas[id], faltantes[id], azar, posiciones.get(id, []))
@@ -126,8 +134,34 @@ static func faltantes_de(vacios: Dictionary[Producto.Id, Array]) -> Dictionary[P
 	return faltantes
 
 
+## Cuáles son las cajas del depósito que abren vacías esa noche (BR-STK-055): la de Fernet God y
+## cuatro sorteadas con la semilla de la partida entre las cajas del depósito, sin contar las de un
+## producto que piden los compradores. **Sale de la semilla y no del azar de la sesión**:
+## abrir de nuevo o retomar la jornada da las mismas cinco. Los faltantes de la noche se sortean
+## después, sin tocar estas cajas. Las demás jornadas no abren ninguna vacía.
+static func cajas_vacias_de_la_jornada(
+	jornada: int, compradores: Array[Comprador], semilla: int
+) -> Array[Producto.Id]:
+	var vacias: Array[Producto.Id] = []
+	if not pide(jornada, Tarea.Tipo.PEDIR_AL_PROVEEDOR):
+		return vacias
+	vacias.append(PRODUCTO_CON_CAJA_VACIA)
+	var pedidos := pedidos_de(compradores)
+	var elegibles: Array[Producto.Id] = []
+	for producto in Catalogo.de_la_jornada(jornada):
+		if producto.id != PRODUCTO_CON_CAJA_VACIA and not pedidos.has(producto.id):
+			elegibles.append(producto.id)
+	var azar := RandomNumberGenerator.new()
+	azar.seed = hash([semilla, jornada, &"cajas_vacias"])
+	while vacias.size() < CAJAS_VACIAS and not elegibles.is_empty():
+		vacias.append(elegibles.pop_at(azar.randi_range(0, elegibles.size() - 1)))
+	vacias.sort()
+	return vacias
+
+
 ## La mercadería de una noche con esos faltantes: el depósito de cada producto del catálogo con
-## su caja llena, y su góndola con los casilleros de su fila menos lo que le falta.
+## su caja llena, y su góndola con los casilleros de su fila menos lo que le falta. Las cajas
+## vacías de la noche abren con 0 unidades.
 ##
 ## **Un faltante más grande que la caja no se acomoda**: la caja trae lo que trae, y reponer ese
 ## producto no se podría terminar. Es un error de los datos, y lo detecta el test que recorre
@@ -136,13 +170,15 @@ static func faltantes_de(vacios: Dictionary[Producto.Id, Array]) -> Dictionary[P
 static func inventario_con_faltantes(
 	faltantes: Dictionary[Producto.Id, int],
 	casilleros: Dictionary[Producto.Id, int],
-	productos: Array[Producto]
+	productos: Array[Producto],
+	cajas_vacias_de_la_noche: Array[Producto.Id] = []
 ) -> Inventario:
 	var inventario := Inventario.new(productos, casilleros)
 	for producto in productos:
-		inventario.ingresar(
-			producto, Inventario.Ubicacion.DEPOSITO, ReglasDelEstante.UNIDADES_POR_CAJA
-		)
+		if not cajas_vacias_de_la_noche.has(producto.id):
+			inventario.ingresar(
+				producto, Inventario.Ubicacion.DEPOSITO, ReglasDelEstante.UNIDADES_POR_CAJA
+			)
 		var falta: int = faltantes.get(producto.id, 0)
 		inventario.ingresar(
 			producto, Inventario.Ubicacion.GONDOLA, inventario.casilleros(producto) - falta

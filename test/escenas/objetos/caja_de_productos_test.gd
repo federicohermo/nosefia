@@ -69,6 +69,13 @@ const ORIGEN_DE_CADA_ETIQUETA := {
 	Producto.Id.PETISAS: "CAJA PETISAS.png",
 	Producto.Id.TERMINATOR: "CAJA TERMINATOR.png",
 	Producto.Id.ZUCARACHAS: "CAJA ZUCARACHAS.png",
+	Producto.Id.SEI_TUQUI: "CAJA SEI TUQUI.png",
+	Producto.Id.LA_MONTELOCA: "CAJA MONTELOCA.png",
+	Producto.Id.FRIGORDO: "CAJA FRIGORDO.png",
+	Producto.Id.GRINGO: "CAJA GRINGO.png",
+	Producto.Id.MASTICUL: "CAJA MASTICUL.png",
+	Producto.Id.COFLOCO: "CAJA CHOCOFLOCO.png",
+	Producto.Id.CHOCOLOCAS: "CAJA CHOCOLOCAS.png",
 }
 
 ## Los que el artista no dibujó: su caja lleva el logo del envase en tinta.
@@ -289,7 +296,8 @@ func test_la_etiqueta_de_cada_producto_es_una_linea_del_script() -> void:
 			. is_equal(1)
 		)
 	var cajas := _nombres_de_las_cajas()
-	assert_int(cajas.size()).is_equal(ORIGEN_DE_CADA_ETIQUETA.size() + DEL_ENVASE.size())
+	# Los siete que sólo se piden tienen etiqueta y no tienen caja física en el depósito.
+	assert_int(cajas.size()).is_equal(Catalogo.todos().size())
 	for ruta: String in ESCENAS_CON_CAJAS + [ESCENA]:
 		var escena := FileAccess.get_file_as_string(ruta)
 		assert_str(escena).is_not_empty()

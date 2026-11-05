@@ -76,6 +76,12 @@ var vencido_afuera := false:
 	set(valor):
 		vencido_afuera = valor and _jornada_abierta and not terminada()
 
+## Si el último pedido enviado con wifi al proveedor no era el de las cajas vacías: cambia la Tarea
+## 5 de la devolución. Como los llamados, sólo se anota con la jornada abierta.
+var pedido_equivocado := false:
+	set(valor):
+		pedido_equivocado = valor and _jornada_abierta and not terminada()
+
 ## Las clases de desorden con que cerró la noche. Asignarlas anota el llamado por desorden; sin
 ## clases no hay desorden. Como los llamados, sólo se anotan con la jornada abierta.
 var clases_de_desorden: Array[ReglasDelCierre.Clase]:
@@ -347,6 +353,7 @@ func abrir_la_jornada() -> Turno:
 	bolsa_afuera = false
 	vencido_en_el_local = false
 	vencido_afuera = false
+	pedido_equivocado = false
 	_obligatorias = Apertura.obligatorias(_jornada)
 	_expediente.sortear_camino(_jornada, _azar_del_camino())
 	_jornada_abierta = true

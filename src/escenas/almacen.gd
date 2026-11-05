@@ -126,6 +126,11 @@ var _router: RouterDelWifi
 ## porque lo que la escena declara cuelga de la raíz; los servicios se crean en el cableado.
 var _arranque: Transform3D
 var _acomodador: AcomodadorDelDeposito
+var _gestor_del_pedido: GestorDelPedido
+## El pedido al proveedor de la noche y las cajas que abrieron vacías: lo que se pide
+## es lo que la apertura vació.
+var _pedido: PedidoAlProveedor
+var _cajas_vacias: Array[Producto.Id] = []
 var _pallets_de_entrega: Node3D
 var _presencias_de_las_cajas: Dictionary[Node3D, PresenciaDeCaja] = {}
 
@@ -211,6 +216,9 @@ func _ready() -> void:
 	_acomodador = AcomodadorDelDeposito.new()
 	_acomodador.reloj = _reloj
 	add_child(_acomodador)
+	_gestor_del_pedido = GestorDelPedido.new()
+	_gestor_del_pedido.reloj = _reloj
+	add_child(_gestor_del_pedido)
 	_agarre.objeto_agarrado.connect(_pedir_revision_del_deposito.unbind(1))
 	_agarre.objeto_soltado.connect(_pedir_revision_del_deposito.unbind(1))
 	_agarre.objeto_entregado.connect(_pedir_revision_del_deposito.unbind(1))
@@ -470,6 +478,9 @@ func _al_abrir_la_jornada(jornada: int) -> void:
 	# dirían números distintos sin que nada se ponga en rojo. Cuántos casilleros tiene la fila
 	# de adelante de cada tanda lo mide el puesto sobre el modelo; cuáles abren vacíos, la jornada.
 	var compradores: Array[Comprador] = compradores_de_la_apertura.call(jornada)
+	_cajas_vacias = Apertura.cajas_vacias_de_la_jornada(jornada, compradores, _partida.semilla)
+	_pedido = PedidoAlProveedor.new(jornada)
+	_pantalla_del_celular.usar_el_pedido(_pedido)
 	_reposicion_manual.limpiar()
 	_reposicion_manual.seleccionar_disposicion(jornada)
 	mostrar_las_bandejas(get_node("Estructura"), _reposicion_manual.es_de_prueba())
@@ -480,10 +491,11 @@ func _al_abrir_la_jornada(jornada: int) -> void:
 		compradores,
 		_reposicion_manual.tandas(),
 		azar_de_la_apertura,
-		_reposicion_manual.posiciones()
+		_reposicion_manual.posiciones(),
+		_cajas_vacias
 	)
 	var inventario := Apertura.inventario_con_faltantes(
-		Apertura.faltantes_de(vacios), _reposicion_manual.casilleros(), productos
+		Apertura.faltantes_de(vacios), _reposicion_manual.casilleros(), productos, _cajas_vacias
 	)
 	_repositor.arrancar(
 		Estante.new(
@@ -576,7 +588,11 @@ func _al_abrir_la_jornada(jornada: int) -> void:
 	_revisar_la_salida()
 
 
+## Una caja se ve si tiene unidades, o si abrió vacía a propósito: la del pedido al proveedor
+## está ahí para que el jugador la revise.
 func _hay_en_el_deposito(inventario: Inventario, caja: CajaDeProductosDelDeposito) -> bool:
+	if caja.producto in _cajas_vacias:
+		return true
 	return inventario.unidades(Catalogo.de(caja.producto), Inventario.Ubicacion.DEPOSITO) > 0
 
 
@@ -1058,6 +1074,9 @@ func _decir_entrega(texto: String) -> void:
 
 
 func _process(delta: float) -> void:
+	if _pedido != null and not get_tree().paused:
+		for respuesta: Mensaje in _pedido.avanzar(delta, _reloj.hora()):
+			_celular.recibir(Conversacion.Interlocutor.PROVEEDOR, respuesta)
 	if _partida.reflexion != null and _partida.reflexion.avanzar(delta):
 		_terminar_la_reflexion()
 	if _devolucion_en_espera != null and not get_tree().paused:
@@ -1099,6 +1118,16 @@ func _vigilar_si_queda_afuera(nodo: Node3D) -> void:
 		_pensar_gesto(SubtitulosDeLosGestos.al_quedar_afuera(datos))
 
 
+## El jugador pulsó «Enviar»: el pedido sale con el wifi de ahora, y la tarea mira el último con
+## wifi. Lo que se pide y cuándo cuenta lo decide `PedidoAlProveedor`.
+func _al_enviar_el_pedido() -> void:
+	var mensaje := _pedido.enviar(_wifi.hay_wifi(), _reloj.hora())
+	if mensaje != null:
+		_celular.recibir(Conversacion.Interlocutor.PROVEEDOR, mensaje)
+		_gestor_del_pedido.revisar(_pedido, _cajas_vacias)
+	_pantalla_del_celular.actualizar_el_pedido()
+
+
 func _al_agotar_el_turno(_jornada: int) -> void:
 	_partida.poses_de_las_cajas = _poses_de_las_cajas()
 	var estados := _estados_del_cierre()
@@ -1111,6 +1140,7 @@ func _al_agotar_el_turno(_jornada: int) -> void:
 		estados, _repositor.estante().vencidos.cuantos()
 	)
 	_partida.vencido_afuera = ReglasDelCierre.hay_vencido_afuera(estados)
+	_partida.pedido_equivocado = _pedido != null and _pedido.equivocado(_cajas_vacias)
 	if ReglasDelCierre.hay_heladera_abierta(_puertas_de_las_heladeras()):
 		_partida.anotar_llamado(Partida.Llamado.HELADERAS_ABIERTAS)
 
@@ -1183,6 +1213,7 @@ func _cablear_el_celular() -> void:
 			_al_recibir_en_el_celular(Conversacion.Interlocutor.NOTAS, mensaje)
 	)
 	_pantalla_del_celular.chat_pedido.connect(_celular.pedir_chat)
+	_pantalla_del_celular.envio_del_pedido_pedido.connect(_al_enviar_el_pedido)
 	_pantalla_del_celular.volver_pedido.connect(_celular.pedir_volver)
 	_pantalla_del_celular.foto_pedida.connect(_celular.pedir_foto)
 	_pantalla_del_celular.tramo_pedido.connect(_celular.pedir_tramo)

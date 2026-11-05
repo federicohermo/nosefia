@@ -633,28 +633,28 @@ subconjunto presente esa noche (BR-STK-046). Dos nombres que sólo difieren en m
 tildes DEBEN conservar el orden del catálogo entre sí. Ordenar la planilla NO DEBE cambiar
 qué productos tiene, sus precios ni lo anotado en cada fila.
 
-### BR-STK-054 — Siete productos existen sólo como caja del depósito
+### BR-STK-054 — Siete productos existen sólo en la lista del pedido al proveedor
 
 El catálogo DEBE tener, además de los treinta y dos productos de BR-STK-046, siete productos que
-existen sólo como caja del depósito: Sei Tuqui, La Monteloca, Frigordo, Gringo, Masticul, Cofloco
-y Chocolocas. Cada uno DEBE tener su fila (BR-STK-002), su tamaño de caja y su sonoridad
-(BR-STK-023): chica y envoltorio plástico Sei Tuqui, La Monteloca, Masticul y Cofloco; grande y
-caja Frigordo, Gringo y Chocolocas. Desde la primera jornada completa, cada uno DEBE abrir con una
-caja llena en el depósito (BR-STK-004), apoyada en una estantería, con la etiqueta de su producto.
+sólo se piden por el chat del proveedor (BR-INV-124): Sei Tuqui, La Monteloca, Frigordo, Gringo,
+Masticul, Cofloco y Chocolocas. Cada uno DEBE tener su fila (BR-STK-002), su tamaño de caja y su
+sonoridad (BR-STK-023): chica y envoltorio plástico Sei Tuqui, La Monteloca, Masticul y Cofloco;
+grande y caja Frigordo, Gringo y Chocolocas. Cada uno DEBE tener la etiqueta de su caja con el
+arte de la ficha.
 
-Estos siete NO DEBEN tener góndola, unidades sueltas, cupo ni casilleros; NO DEBEN aparecer en la
-lista de ventas ni en el programa de la caja; NO DEBEN entrar en el pedido de ningún comprador ni
-en los faltantes de ninguna noche. Hasta la jornada anterior a la primera completa NO DEBEN
-existir (BR-STK-046).
+Estos siete NO DEBEN tener caja física en el depósito, góndola, unidades, cupo ni casilleros; NO
+DEBEN aparecer en la lista de ventas ni en el programa de la caja; NO DEBEN entrar en el pedido de
+ningún comprador ni en los faltantes de ninguna noche. Dónde se ponen físicamente, si alguna vez
+se ponen, queda abierto (OQ-STK-011).
 
 ### BR-STK-055 — La jornada 6 abre con cinco cajas vacías
 
 CUANDO se abre la jornada 6, el sistema DEBE abrir exactamente cinco cajas del depósito con 0
 unidades. Una DEBE ser la de Fernet God. Las otras cuatro DEBEN salir de un sorteo con la semilla
-de la partida entre todas las cajas del depósito —las treinta y dos y las siete de BR-STK-054—,
-sin contar las de un producto que falte esa noche (BR-STK-007) ni las de uno que pidan los
-compradores de esa noche. Abrir la jornada otra vez o retomarla desde su apertura DEBE dar las
-mismas cinco cajas. Las demás cajas DEBEN abrir como en BR-STK-004.
+de la partida entre las cajas del depósito de esa noche (BR-STK-046), sin contar las de un
+producto que falte esa noche (BR-STK-007) ni las de uno que pidan los compradores de esa noche.
+Abrir la jornada otra vez o retomarla desde su apertura DEBE dar las mismas cinco cajas. Las demás
+cajas DEBEN abrir como en BR-STK-004.
 
 Una de las cinco permanece en el depósito, visible, apoyada donde le toca, y DEBE poder
 agarrarse y examinarse como cualquier caja del depósito: examinarla dice que tiene 0 (BR-STK-031)
@@ -1414,15 +1414,15 @@ casillero vacío. DADO dos casilleros vacíos de ese producto, o uno vacío de o
 además del suyo, CUANDO se cierra con esa unidad en la mano ENTONCES reponer no cuenta cumplida. DADO la
 unidad en la mano que se suelta antes del cierre ENTONCES reponer no cuenta cumplida.
 
-### AC-STK-124 — Los siete existen sólo como caja *(verifica BR-STK-054)*
+### AC-STK-124 — Los siete sólo se piden *(verifica BR-STK-054)*
 
 DADO el catálogo de la etapa completa CUANDO se consulta cada uno de Sei Tuqui, La Monteloca,
 Frigordo, Gringo, Masticul, Cofloco y Chocolocas ENTONCES tiene fila con nombre y precio entero
-positivo, su caja es chica en Sei Tuqui, La Monteloca, Masticul y Cofloco y grande en los otros tres, y su
-sonoridad es la de BR-STK-054. CUANDO se pide la lista de ventas, el programa de la caja o los
-productos con góndola ENTONCES ninguno de los siete está. DADO la apertura de las jornadas 3, 4, 5
-y 7 ENTONCES cada uno de los siete tiene 8 unidades en el depósito y 0 en la góndola, y
-ninguno es faltante. DADO la etapa de prueba ENTONCES ninguno existe.
+positivo, su caja es chica en Sei Tuqui, La Monteloca, Masticul y Cofloco y grande en los otros
+tres, y su sonoridad es la de BR-STK-054. CUANDO se pide la lista de ventas, el programa de la caja
+o los productos con góndola ENTONCES ninguno de los siete está. CUANDO se abre cada jornada de la
+1 a la 7 ENTONCES ninguno de los siete tiene unidades en el depósito ni en la góndola, y ninguno
+es faltante.
 
 ### AC-STK-125 — Los compradores nunca piden los siete *(verifica BR-STK-054)*
 
@@ -1432,8 +1432,8 @@ CUANDO se leen sus pedidos ENTONCES ninguno incluye alguno de los siete.
 ### AC-STK-126 — La jornada 6 abre con cinco cajas vacías, una de Fernet God *(verifica BR-STK-055)*
 
 DADO la apertura de la jornada 6 con cualquiera de veinte semillas ENTONCES hay exactamente cinco
-cajas con 0 unidades en el depósito, entre ellas la de Fernet God, y las otras treinta y cuatro
-tienen 8. ENTONCES entre las veinte semillas, en alguna, una de las cajas vacías es de uno de los siete.
+cajas con 0 unidades en el depósito, entre ellas la de Fernet God, y las demás tienen todas las
+unidades de una caja.
 
 ### AC-STK-127 — Las vacías no son faltantes ni se piden *(verifica BR-STK-055)*
 
@@ -1537,6 +1537,13 @@ solo de sus consumidores.
   (BR-ANO-004, BR-ANO-005, BR-ANO-006).
 
 ## Preguntas abiertas
+
+- **OQ-STK-011 — ¿Dónde se ponen físicamente las cajas de los siete productos que sólo se piden?**
+  - Por qué sigue abierta: las fichas les dan caja, sonido y subtítulo, pero el depósito no tiene
+    lugar libre para siete cajas más sin cambiar las estanterías, y ninguna ficha dice dónde van.
+  - Decide: game design, con arte.
+  - Bloquea: que estas cajas se vean, se agarren y se examinen en el depósito; no bloquea
+    pedirlas por el chat.
 
 - **OQ-STK-009 — ¿Sobre qué caja y cuántas encima cuando no hay hueco libre?**
   - Por qué sigue abierta: la ficha dice «arriba de otra caja en los estantes» y no precisa si

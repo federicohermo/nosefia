@@ -112,6 +112,7 @@ const PARTICULARES: Dictionary[int, String] = {
 	ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA + 1:
 	"De verdad era tan difícil tirar tres bolsas de basura?",
 	ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA + 2: VENCIDO_EN_EL_LOCAL,
+	ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA + 3: PEDIDO_SIN_HACER,
 }
 
 ## La variante de la Tarea 5 cuando una bolsa quedó afuera: reemplaza a la de `PARTICULARES`.
@@ -122,6 +123,18 @@ const PARTICULARES_CON_BOLSA_AFUERA: Dictionary[int, String] = {
 		+ "Te imaginás ir a comprar y tener BASURA A TUS PIES?"
 	),
 }
+
+## Los dos textos de la Tarea 5 del pedido al proveedor: el que no se hizo bien con wifi, y el que
+## se hizo con wifi pero equivocado.
+const PEDIDO_SIN_HACER := (
+	"Era muy importante que le hicieras ese pedido al proveedor anoche. Nos quedamos cortos de "
+	+ "productos durante el día. Encima tuve que hacer el pedido yo y fumarme el carácter de "
+	+ "mierda del flaco ese. Muchas gracias..."
+)
+const PEDIDO_EQUIVOCADO := (
+	"El pedido que le hiciste al proveedor no estaba bien… Tuve que ir personalmente a corregir "
+	+ "tu error y fumarme el carácter de mierda del flaco ese. Muchas gracias..."
+)
 
 ## La fila de la ficha que termina la prueba: Enrique no dice nada más (BR-EMP-043).
 const DESPIDO_DE_LA_PRUEBA := (
@@ -372,7 +385,8 @@ func _init(jornada: int, partida: Partida) -> void:
 		partida.bolsa_afuera,
 		partida.clases_de_desorden,
 		partida.vencido_en_el_local,
-		partida.vencido_afuera
+		partida.vencido_afuera,
+		partida.pedido_equivocado
 	)
 
 
@@ -462,7 +476,8 @@ static func armar(
 	bolsa_afuera: bool = false,
 	desorden: Array[ReglasDelCierre.Clase] = [],
 	vencido_en_el_local: bool = false,
-	vencido_afuera: bool = false
+	vencido_afuera: bool = false,
+	pedido_equivocado: bool = false
 ) -> Array[String]:
 	var mensajes: Array[String] = [_saludo(medios)]
 	for tipo: Tarea.Tipo in Antecedentes.FIJAS:
@@ -472,7 +487,11 @@ static func armar(
 	if uso_de_poetico:
 		mensajes.append(POETICO_EN_EL_DESPIDO if medios >= MEDIOS_DEL_DESPIDO else POETICO)
 	if PARTICULARES.has(jornada) and _alguna_particular(sin_cumplir):
-		mensajes.append(_particular(jornada, bolsa_afuera, vencido_en_el_local, vencido_afuera))
+		mensajes.append(
+			_particular(
+				jornada, bolsa_afuera, vencido_en_el_local, vencido_afuera, pedido_equivocado
+			)
+		)
 	for motivo: Partida.Llamado in retos():
 		if llamados.has(motivo):
 			mensajes.append(_reto(motivo, antecedentes.llamados(motivo), jornada, medios, desorden))
@@ -486,8 +505,14 @@ static func _saludo(medios: int) -> String:
 
 
 static func _particular(
-	jornada: int, bolsa_afuera: bool, vencido_en_el_local: bool, vencido_afuera: bool
+	jornada: int,
+	bolsa_afuera: bool,
+	vencido_en_el_local: bool,
+	vencido_afuera: bool,
+	pedido_equivocado: bool
 ) -> String:
+	if pedido_equivocado and Apertura.pide(jornada, Tarea.Tipo.PEDIR_AL_PROVEEDOR):
+		return PEDIDO_EQUIVOCADO
 	if bolsa_afuera and PARTICULARES_CON_BOLSA_AFUERA.has(jornada):
 		return PARTICULARES_CON_BOLSA_AFUERA[jornada]
 	if vencido_afuera and Apertura.pide(jornada, Tarea.Tipo.DESECHAR_VENCIDOS):

@@ -17,7 +17,7 @@ func test_cada_jornada_declara_sus_fijas_y_su_particular() -> void:  # AC-SHF-00
 		3: fijas + [Tarea.Tipo.ORDENAR_LAS_CAJAS],
 		4: fijas + [Tarea.Tipo.SACAR_LA_BASURA],
 		5: fijas + [Tarea.Tipo.DESECHAR_VENCIDOS],
-		6: fijas,
+		6: fijas + [Tarea.Tipo.PEDIR_AL_PROVEEDOR],
 		7: fijas,
 	}
 	for jornada: int in tabla:

@@ -10,7 +10,7 @@ const CONVERSACION := "res://src/dominio/investigacion/conversacion.gd"
 
 func test_el_catalogo_carga_las_conversaciones_documentadas() -> void:
 	var todas := Conversacion.desde_disco()
-	assert_int(todas.size()).is_equal(3)
+	assert_int(todas.size()).is_equal(Conversacion.ARCHIVOS.size())
 	assert_int(todas[0].interlocutor).is_equal(Conversacion.Interlocutor.JEFE)
 	assert_str(todas[0].nombre).is_equal("Enrique Peldaño")
 
@@ -27,7 +27,6 @@ func test_cada_conversacion_documentada_es_de_su_interlocutor() -> void:
 
 
 func test_un_interlocutor_sin_guion_documentado_no_carga_textos_inventados() -> void:
-	assert_object(Conversacion.de(Conversacion.Interlocutor.PROVEEDOR)).is_null()
 	assert_object(Conversacion.de(Conversacion.Interlocutor.DESCONOCIDO)).is_null()
 
 
@@ -37,6 +36,10 @@ func test_guiones_fijos_tienen_texto_y_notas_recibe_su_contenido() -> void:
 	for conversacion in Conversacion.desde_disco():
 		assert_object(conversacion).is_not_null()
 		if conversacion.interlocutor == Conversacion.Interlocutor.NOTAS:
+			assert_array(conversacion.mensajes).is_empty()
+			continue
+		# El proveedor abre vacío: es el chat donde el jugador escribe primero.
+		if conversacion.abre_sin_mensajes:
 			assert_array(conversacion.mensajes).is_empty()
 			continue
 		(
