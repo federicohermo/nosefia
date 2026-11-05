@@ -20,6 +20,8 @@ signal entregas_abandonadas(cuerpos: Array[Node3D])
 ## Sale una vez por compra vencida, con lo que el comprador ya había recibido: el aviso de salida
 ## espera a saber si quedaron productos en el piso.
 signal comprador_se_fue(comprador: Comprador, dejo_productos: bool)
+## Sale con la identidad de la pista cuando el jugador pulsa su fragmento en el diálogo.
+signal pista_pedida(identidad: String)
 
 ## El script del jugador se preloadea para poder tiparlo: los scripts de `escenas/` son cáscara y
 ## no declaran `class_name`, así que sin esto el tipo estático sería `CharacterBody3D` y llamarle
@@ -72,6 +74,7 @@ func _ready() -> void:
 	reloj.turno_cerrado.connect(_al_cerrar_el_turno)
 	panel.cobro_pedido.connect(atenciones.pedir_cobrar)
 	panel.despacho_pedido.connect(atenciones.pedir_despachar_sin_vender)
+	panel.pista_pedida.connect(pista_pedida.emit)
 	atenciones.comprador_llegado.connect(_al_llegar_un_comprador)
 	atenciones.cobro_rechazado.connect(_al_rechazarse_el_cobro)
 	atenciones.atencion_despachada.connect(_al_despacharse)
@@ -320,6 +323,8 @@ func _input(evento: InputEvent) -> void:
 	if not _abierta:
 		return
 	if atenciones.tarea().fisica():
+		if evento is InputEventMouseButton and panel.fragmento_bajo_el_cursor():
+			return
 		if evento.is_action_pressed(ReglasDeLosObjetos.ACCION_AGARRAR):
 			get_viewport().set_input_as_handled()
 			_al_pulsar()

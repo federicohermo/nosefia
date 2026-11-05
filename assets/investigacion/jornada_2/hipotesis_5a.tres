@@ -1,0 +1,12 @@
+[gd_resource type="Resource" script_class="Hipotesis" format=3]
+
+[ext_resource type="Script" path="res://src/dominio/investigacion/hipotesis.gd" id="hipotesis"]
+
+[resource]
+script = ExtResource("hipotesis")
+identidad = "5A"
+jornada = 5
+titulo = "ACTITUDES EXTRAÑAS"
+texto = "¿Qué habrá querido decir con \"actitudes extrañas\"? ¿Será que Enrique maltrató de alguna forma a sus antiguos empleados? ¿Tendrá que ver con estas cosas raras que están pasando? Debería buscar algún registro sobre actitudes peculiares de Enrique."
+exigencias = PackedStringArray("5A")
+camino = PackedStringArray("6A", "6B")
