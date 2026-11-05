@@ -5,11 +5,12 @@ extends RefCounted
 
 
 ## El primer control habilitado de `raiz` que acepta el foco, en el orden del árbol. Si el foco ya
-## está adentro de `raiz` lo respeta: repintar una interfaz no se lo quita al jugador. Contesta
-## el control con el foco, o `null` si `raiz` no tiene ninguno.
+## está adentro de `raiz` y lo acepta lo respeta: repintar una interfaz no se lo quita al jugador.
+## Un botón que se deshabilita conserva el foco del motor, y la cruceta no lo puede soltar.
+## Contesta el control con el foco, o `null` si `raiz` no tiene ninguno.
 static func en_el_primero(raiz: Node) -> Control:
 	var actual := raiz.get_viewport().gui_get_focus_owner() if raiz.is_inside_tree() else null
-	if actual != null and raiz.is_ancestor_of(actual) and actual.is_visible_in_tree():
+	if actual != null and raiz.is_ancestor_of(actual) and _acepta_el_foco(actual):
 		return actual
 	for hijo: Node in raiz.find_children("*", "Control", true, false):
 		var control := hijo as Control

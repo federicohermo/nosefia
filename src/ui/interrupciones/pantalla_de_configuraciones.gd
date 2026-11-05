@@ -151,6 +151,8 @@ func _fila_del_lenguaje() -> HBoxContainer:
 	idioma.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	anterior.disabled = IDIOMAS.size() < 2
 	siguiente.disabled = anterior.disabled
+	_sin_costados(anterior)
+	_sin_costados(siguiente)
 	fila.add_child(anterior)
 	fila.add_child(idioma)
 	fila.add_child(siguiente)
@@ -163,6 +165,7 @@ func _fila_de_los_controles() -> HBoxContainer:
 	_ajustar_controles.custom_minimum_size.x = 0.0
 	_ajustar_controles.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	_ajustar_controles.pressed.connect(_abrir_los_controles)
+	_sin_costados(_ajustar_controles)
 	fila.add_child(_ajustar_controles)
 	return fila
 
@@ -183,6 +186,13 @@ func _al_cerrar_los_controles() -> void:
 func _al_cambiar_los_controles(asignacion: AsignacionDeControles) -> void:
 	_preferencias.poner_controles(asignacion)
 	controles_cambiados.emit(_preferencias.copia())
+
+
+## En una fila sin + ni −, la izquierda y la derecha no hacen nada: tampoco llevan el foco a otra
+## fila.
+static func _sin_costados(control: Control) -> void:
+	control.focus_neighbor_left = NodePath(".")
+	control.focus_neighbor_right = NodePath(".")
 
 
 func _fila_con_nombre(texto: String) -> HBoxContainer:

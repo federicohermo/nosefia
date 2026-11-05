@@ -75,7 +75,7 @@ func test_las_seis_hojas_abren_su_propio_dato_y_cierran_con_el_derecho() -> void
 	assert_array(ids).contains_exactly_in_any_order(_ids_de_las_seis_hojas())
 
 
-func test_x_no_cierra_la_nota_ni_aprieta_el_boton_con_el_foco_y_interactuar_la_cierra() -> void:  # AC-CFG-029
+func test_x_no_cierra_la_nota_ni_aprieta_el_foco_e_interactuar_la_cierra() -> void:  # AC-CFG-029
 	var almacen := await _abrir()
 	var jugador: Node3D = almacen.get_node("Jugador")
 	var puesto: Node = almacen.get_node("Estructura/NotasDelAlmacen")

@@ -37,13 +37,15 @@ func _boton(indice: JoyButton) -> InputEventJoypadButton:
 
 ## Un gesto entra por el viewport y se suelta: el motor entrega siempre la pareja.
 func _gesto(evento: InputEvent) -> void:
-	get_viewport().push_input(evento)
+	Input.parse_input_event(evento)
+	Input.flush_buffered_events()
 	var soltado := evento.duplicate() as InputEvent
 	if soltado is InputEventJoypadButton:
 		(soltado as InputEventJoypadButton).pressed = false
 	elif soltado is InputEventJoypadMotion:
 		(soltado as InputEventJoypadMotion).axis_value = 0.0
-	get_viewport().push_input(soltado)
+	Input.parse_input_event(soltado)
+	Input.flush_buffered_events()
 
 
 func _foco() -> Control:
@@ -84,6 +86,59 @@ func test_configuraciones_elige_una_barra_con_el_paso_de_su_preferencia() -> voi
 	# Los botones − y + son del clic: la barra es lo único que se elige en su fila.
 	for boton: Button in barra.get_parent().find_children("*", "Button", true, false):
 		assert_int(boton.focus_mode).is_equal(Control.FOCUS_NONE)
+
+
+## Configuraciones abierta con los efectos a mitad de la barra, y lo que avisa al cambiar un valor.
+func _configuraciones_a_mitad() -> Array:
+	var pantalla: PantallaDeConfiguraciones = auto_free(load(CONFIGURACIONES).instantiate())
+	add_child(pantalla)
+	var preferencias := Preferencias.new()
+	preferencias.poner(
+		C.EFECTOS, (Preferencias.minimo(C.EFECTOS) + Preferencias.maximo(C.EFECTOS)) / 2.0
+	)
+	var avisos: Array[Preferencias] = []
+	pantalla.preferencias_cambiadas.connect(
+		func(nuevas: Preferencias) -> void: avisos.append(nuevas)
+	)
+	pantalla.preparar(preferencias)
+	pantalla.abrir()
+	return [pantalla, preferencias, avisos]
+
+
+func test_los_costados_suben_y_bajan_la_barra_un_paso() -> void:  # AC-CFG-027
+	var armado := _configuraciones_a_mitad()
+	var mitad: float = (armado[1] as Preferencias).valor(C.EFECTOS)
+	var avisos: Array[Preferencias] = armado[2]
+	_gesto(_boton(JOY_BUTTON_DPAD_RIGHT))
+	assert_float(avisos[-1].valor(C.EFECTOS)).is_equal_approx(
+		mitad + Preferencias.paso(C.EFECTOS), 1e-5
+	)
+	_gesto(_eje(JOY_AXIS_RIGHT_X, -1.0))
+	assert_float(avisos[-1].valor(C.EFECTOS)).is_equal_approx(mitad, 1e-5)
+
+
+## Baja con la cruceta hasta que el foco entra a `fila`, y contesta si llegó.
+func _bajar_hasta(pantalla: PantallaDeConfiguraciones, fila: Container) -> bool:
+	for _paso in pantalla.filas().size():
+		if _foco_adentro_de(fila):
+			break
+		_gesto(_boton(JOY_BUTTON_DPAD_DOWN))
+	return _foco_adentro_de(fila)
+
+
+func test_en_las_filas_sin_mas_ni_menos_los_costados_no_hacen_nada() -> void:  # AC-CFG-027
+	var armado := _configuraciones_a_mitad()
+	await await_idle_frame()
+	var pantalla: PantallaDeConfiguraciones = armado[0]
+	var avisos: Array[Preferencias] = armado[2]
+	for fila: Container in pantalla.filas().slice(Preferencias.CAMPOS.size()):
+		assert_bool(_bajar_hasta(pantalla, fila)).is_true()
+		var foco := _foco()
+		_gesto(_boton(JOY_BUTTON_DPAD_RIGHT))
+		_gesto(_eje(JOY_AXIS_RIGHT_X, 1.0))
+		_gesto(_boton(JOY_BUTTON_DPAD_LEFT))
+		assert_object(_foco()).is_same(foco)
+	assert_array(avisos).is_empty()
 
 
 func test_la_planilla_elige_por_fila_y_los_costados_suman_y_restan() -> void:  # AC-CFG-027
@@ -161,3 +216,16 @@ func test_el_celular_deja_el_foco_en_un_chat_al_aparecer() -> void:  # AC-CFG-02
 	await await_idle_frame()
 	assert_object(_foco()).is_instanceof(Button)
 	assert_bool(_foco_adentro_de(pantalla.get("_mensajes"))).is_true()
+
+
+func test_el_foco_no_se_queda_en_un_boton_que_se_deshabilita() -> void:  # AC-CFG-028
+	var raiz: Control = auto_free(Control.new())
+	var primero := Button.new()
+	var segundo := Button.new()
+	raiz.add_child(primero)
+	raiz.add_child(segundo)
+	add_child(raiz)
+	segundo.grab_focus()
+	segundo.disabled = true
+	assert_object(FocoDeLaInterfaz.en_el_primero(raiz)).is_same(primero)
+	assert_object(_foco()).is_same(primero)

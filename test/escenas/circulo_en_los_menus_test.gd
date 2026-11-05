@@ -56,7 +56,7 @@ func _controles_de(configuraciones: PantallaDeConfiguraciones) -> PantallaDeCont
 	return configuraciones.get("_controles")
 
 
-func test_circulo_durante_la_captura_desde_la_pausa_se_asigna_y_no_cancela() -> void:  # AC-SAV-046, AC-CFG-026
+func test_circulo_en_la_captura_desde_la_pausa_se_asigna() -> void:  # AC-SAV-046, AC-CFG-026
 	var almacen := await _almacen()
 	var pausa: ControlDePausa = almacen.get_node("Interfaz/ControlDePausa")
 	var configuraciones: PantallaDeConfiguraciones = (
@@ -84,7 +84,7 @@ func test_circulo_durante_la_captura_desde_la_pausa_se_asigna_y_no_cancela() -> 
 	)
 
 
-func test_circulo_desde_la_pausa_vuelve_de_controles_a_configuraciones_y_al_menu() -> void:  # AC-SAV-046
+func test_circulo_desde_la_pausa_vuelve_un_paso_a_la_vez() -> void:  # AC-SAV-046
 	var almacen := await _almacen()
 	var pausa: ControlDePausa = almacen.get_node("Interfaz/ControlDePausa")
 	var configuraciones: PantallaDeConfiguraciones = (
@@ -115,7 +115,7 @@ func test_circulo_en_el_menu_de_inicio_vuelve_un_paso_a_la_vez() -> void:  # AC-
 	assert_bool((menu.get("_marco") as Control).visible).is_true()
 
 
-func test_circulo_en_el_menu_de_inicio_durante_la_captura_de_una_tecla_no_cierra() -> void:  # AC-SAV-046
+func test_circulo_en_el_menu_durante_la_captura_no_cierra() -> void:  # AC-SAV-046
 	var menu := _menu()
 	var configuraciones: PantallaDeConfiguraciones = menu.get("_configuraciones")
 	_boton(menu, "CONFIGURACIONES").pressed.emit()
