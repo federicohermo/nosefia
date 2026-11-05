@@ -551,8 +551,8 @@ noches y los de la jornada 7 usan la apertura y la despedida predeterminadas, y 
 inventarles guion. Un guion propio DEBE decir sus entradas de apertura en el orden de la ficha, una
 por una, y después sus entradas de despedida, también en su orden; la ficha no tiene un mensaje 9
 de Cami y el sistema NO DEBE inventarlo. Cami dice en la jornada 5 un solo mensaje 3, según el
-camino de la jornada 4: SI la pista 5A está activa por el camino abierto (hipótesis 4A), ENTONCES
-dice el de «¿No es un amor de persona?»; SI no lo está (hipótesis 4B, o ningún camino definido),
+camino de la jornada 4: SI la pista 5A está activa por el camino abierto (hipótesis 2A), ENTONCES
+dice el de «¿No es un amor de persona?»; SI no lo está (hipótesis 2B, o ningún camino definido),
 ENTONCES dice el de «¿No es muy capa ella?». NO DEBE decir los dos. El mensaje de «actitudes extrañas de Peldaño» de la jornada 5 sólo se dice SI la pista 5A
 está activa por el camino abierto (BR-INV-050); SI no lo está, ENTONCES el sistema NO DEBE decirlo y
 las demás entradas DEBEN conservar su orden. Una entrada puede nombrar el pedido de esa noche: «[pedido]» es el pedido entero con la
@@ -1411,10 +1411,10 @@ la de «actitudes extrañas de Peldaño», en su orden y con la del pedido enter
 
 ### AC-CTR-170 — Cami en la jornada 5 dice un solo mensaje 3, según el camino *(verifica BR-CTR-048)*
 
-DADO la jornada 5 con la pista 5A activa (camino de la hipótesis 4A) CUANDO se le habla a Cami
+DADO la jornada 5 con la pista 5A activa (camino de la hipótesis 2A) CUANDO se le habla a Cami
 por primera vez ENTONCES en el lugar del mensaje 3 dice sólo el de «¿No es un amor de persona?» y
 no el de «¿No es muy capa ella?». DADO la jornada 5 sin la pista 5A activa (camino de la
-hipótesis 4B) ENTONCES dice sólo el de «¿No es muy capa ella?» y no el de «¿No es un amor de
+hipótesis 2B) ENTONCES dice sólo el de «¿No es muy capa ella?» y no el de «¿No es un amor de
 persona?». DADO la jornada 5 sin camino definido ENTONCES dice lo mismo que por el camino de la
 4B. En los tres casos el resto de las entradas conserva su orden.
 
