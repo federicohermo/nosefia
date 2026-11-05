@@ -34,6 +34,7 @@ flowchart TD
   NTF["notifications<br/><i>qué se avisa</i>"]
   CFG["settings<br/><i>cómo suena, se ve y responde</i>"]
   SUB["subtitles<br/><i>qué piensa el protagonista</i>"]
+  ACH["achievements<br/><i>lo que se gana y dura entre partidas</i>"]
 
   CTR -- "obligatoria cumplida" --> SHF
   STK -- "obligatorias cumplidas y descumplidas" --> SHF
@@ -74,11 +75,18 @@ flowchart TD
   CFG -- "volumen de cada bus" --> AMB
   CFG -- "factor de giro de la vista" --> PLY
   CFG -- "factor de giro del examen" --> INV
+  CLN -- "ticket al inodoro, cuerpo afuera y objeto tirado" --> ACH
+  STK -- "el tope de la planilla" --> ACH
+  EMP -- "final, legajo y fallas por tarea" --> ACH
+  INV -- "pista aceptada" --> ACH
+  ACH -- "logro ganado" --> NTF
+  SAV -- "los dos menús abren la pantalla de logros" --> ACH
 ```
 
 La línea punteada expresa escucha sin respuesta. `ambience` escucha las señales de las demás.
 El contrato de `notifications` incluye llegada, vencimiento, rechazo del lector, pista nueva
-anotada, salida habilitada o trabada de nuevo, tiempo restante y cierre del turno.
+anotada y logro ganado. Incluye también salida habilitada o trabada de nuevo, tiempo restante y
+cierre del turno.
 Ninguna contesta a quien publica el suceso.
 Por eso la tabla de sonidos es un archivo y no un `match`:
 agregar un sonido no toca a quien lo emite.
@@ -94,6 +102,7 @@ es la resta**, y las capacidades que le apuntan son lo que cada lado compra.
 | **Lo que el jugador elige** | `investigation` | consume tiempo y **no cumple nada** |
 | **El cuerpo** | `player-actions`, `subtitles` | no consume por sí mismo: el precio son los metros |
 | **Lo que dura más que la noche** | `employment-record`, `save-and-resume` | no consumen: reciben el cierre |
+| **Lo que dura entre partidas** | `achievements` | no consume ni cumple: premia lo hecho, nunca cambia el resultado de una noche |
 | **Lo que ajusta el jugador** | `settings` | no consume ni cumple: cambia cómo se oye, se ve y se gira, nunca la resta |
 
 Al evaluar una feature, la pregunta es de qué lado cae. Una que no toca esa resta es contenido,

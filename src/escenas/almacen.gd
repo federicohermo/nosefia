@@ -112,6 +112,9 @@ var compradores_de_la_apertura: Callable = _compradores_de_la_partida
 ## La partida es de la escena y no del ciclo porque también la lee el parte: el ciclo publica lo
 ## que pasó, y quien quiera un número lo pide acá. Sale del guardado: sin guardado, es nueva.
 var _partida := Partida.desde(Guardado.new().cargar())
+## Lo que dura más que la partida: se lee al abrir y se escribe en el momento de cada desbloqueo.
+var _archivo_de_logros := ArchivoDeLogros.new()
+var _logros := _archivo_de_logros.cargar()
 ## La jornada para la que están preparados los útiles: la de la carga, y después la de cada
 ## transición que los preparó.
 var _jornada_preparada := 0
@@ -192,6 +195,8 @@ func _ready() -> void:
 	_atenciones.entrega_dicha.connect(_decir_entrega)
 	_caja.lectura_rechazada.connect(avisos.avisar_lectura_rechazada)
 	_investigador.pista_nueva.connect(avisos.avisar_pista.unbind(1))
+	_investigador.pista_nueva.connect(_al_descubrir_una_pista)
+	_computadora.registro_actualizado.connect(_al_actualizar_el_registro)
 	_investigador.pista_nueva.connect(
 		func(pista: Pista) -> void:
 			_pensar_gesto(
@@ -349,6 +354,7 @@ func _ready() -> void:
 	pausa.reanudado.connect(_jugador.declarar_la_pausa.bind(false))
 	pausa.volver_al_menu_pedido.connect(func() -> void: _ir_al_menu.call())
 	_cablear_las_preferencias(pausa)
+	_cablear_los_logros(pausa)
 	_arranque = _jugador.global_transform
 	_enlace_de_guardado = EnlaceDeGuardado.new(_ciclo, Guardado.new())
 	add_child(_enlace_de_guardado)
@@ -404,6 +410,16 @@ func _cablear_las_preferencias(pausa: ControlDePausa) -> void:
 	)
 	pausa.configuraciones = configuraciones
 	pausa.cierre_de_configuraciones_pedido.connect(menu.cerrar_configuraciones)
+
+
+## Los logros desde la pausa: la pantalla lee la misma instancia que el juego va actualizando. Esc
+## la cierra sin reanudar.
+func _cablear_los_logros(pausa: ControlDePausa) -> void:
+	var menu: MenuDePausa = get_node("Interfaz/MenuDePausa")
+	var pantalla := menu.pantalla_de_logros()
+	pantalla.preparar(_logros, CasoDeInvestigacion.de_la_partida())
+	pausa.logros = pantalla
+	pausa.cierre_de_logros_pedido.connect(menu.cerrar_logros)
 
 
 ## Cada noche arranca sin tareas cumplidas, cada caja del depósito llena y la góndola
@@ -654,6 +670,7 @@ func _salir_por_la_entrada() -> void:
 ## obligatorias son **las mismas instancias** que el turno estuvo contando toda la noche.
 func _al_cerrar_la_jornada(jornada: int, _cumplidas: int) -> void:
 	_jornada_del_celular = jornada
+	_ganar_los_logros_del_cierre(jornada)
 	_gestos.descartar()
 	var persiana: PersianaDeLaNoche = get_node("Interfaz/PersianaDeLaNoche")
 	persiana.bajar()
@@ -1050,7 +1067,12 @@ func _vigilar_si_queda_afuera(nodo: Node3D) -> void:
 		if cuerpo == null or cuerpo.sleeping or cuerpo.freeze:
 			break
 	# Se piensa cuando lo soltado se aquieta, y el jugador ya pudo irse: no tiene lugar.
-	if _habitaciones.de(nodo.global_position) == ReglasDelCierre.Habitacion.AFUERA:
+	var habitacion := _habitaciones.de(nodo.global_position)
+	var eximido := ReglasDelCierre.esta_eximido(datos, _levanta_una_pista(datos))
+	var sostenido := datos != null and _agarre.manos().sostenido() == datos
+	if Logros.y_se_marcho(habitacion, sostenido, eximido):
+		_desbloquear(Logros.Logro.Y_SE_MARCHO)
+	if habitacion == ReglasDelCierre.Habitacion.AFUERA:
 		while _jugador.examen.esta_examinando() or get_tree().paused:
 			await get_tree().physics_frame
 			if jornada != _partida.jornada() or not _reloj.corriendo():
@@ -1091,6 +1113,7 @@ func _puertas_de_las_heladeras() -> Dictionary[ReglasDelCierre.Heladera, Puerta]
 
 func _al_desechar_un_ticket() -> void:
 	_partida.anotar_llamado(Partida.Llamado.PAPEL_EN_EL_INODORO)
+	_desbloquear(Logros.Logro.REBELDE)
 
 
 func _levanta_una_pista(datos: ObjetoDelAlmacen) -> bool:
@@ -1101,6 +1124,40 @@ func _al_tirar_un_objeto(nodo: Node3D) -> void:
 	var datos: ObjetoDelAlmacen = nodo.get("datos")
 	if not ReglasDelCierre.esta_eximido(datos, _levanta_una_pista(datos)):
 		_partida.anotar_llamado(Partida.Llamado.OBJETO_TIRADO)
+		_desbloquear(Logros.Logro.A_LA_BASURA)
+
+
+func _al_actualizar_el_registro() -> void:
+	if Logros.estamos_al_pedo(_computadora.registro()):
+		_desbloquear(Logros.Logro.ESTAMOS_AL_PEDO)
+
+
+func _al_descubrir_una_pista(pista: Pista) -> void:
+	if _logros.descubrir_pista(pista.identidad):
+		_archivo_de_logros.escribir(_logros)
+
+
+## Los logros que decide el cierre de la noche, y el final si la partida terminó. Un logro ganado
+## acá se avisa después de que el cierre vació los avisos de la noche.
+func _ganar_los_logros_del_cierre(jornada: int) -> void:
+	var final := _partida.final()
+	if Logros.talon_de_aquiles(_partida.antecedentes()):
+		_desbloquear(Logros.Logro.MI_TALON_DE_AQUILES)
+	if Logros.empleado_ejemplar(final, _partida.legajo().medios()):
+		_desbloquear(Logros.Logro.EMPLEADO_EJEMPLAR)
+	if Logros.pesima_primera_impresion(final, jornada):
+		_desbloquear(Logros.Logro.PESIMA_PRIMERA_IMPRESION)
+	if _logros.alcanzar_final(final):
+		_archivo_de_logros.escribir(_logros)
+
+
+## Una sola vez por logro: lo ya ganado no avisa ni escribe.
+func _desbloquear(logro: Logros.Logro) -> void:
+	if not _logros.desbloquear(logro):
+		return
+	_archivo_de_logros.escribir(_logros)
+	var avisos: PilaDeNotificaciones = get_node("Interfaz/PilaDeNotificaciones")
+	avisos.avisar_logro(logro)
 
 
 func _unhandled_input(evento: InputEvent) -> void:

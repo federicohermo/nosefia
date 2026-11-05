@@ -7,23 +7,35 @@
 class_name Pausa
 extends RefCounted
 
-enum Accion { NADA, PAUSAR, REANUDAR, CERRAR_CONFIGURACIONES, CERRAR_CELULAR, CERRAR_INTERFAZ }
+enum Accion {
+	NADA,
+	PAUSAR,
+	REANUDAR,
+	CERRAR_CONFIGURACIONES,
+	CERRAR_LOGROS,
+	CERRAR_CELULAR,
+	CERRAR_INTERFAZ,
+}
 
 ## Cuánto después de un Esc que cerró una interfaz no cuenta un cursor perdido. En la web, Esc
 ## siempre suelta el cursor, y el aviso del navegador llega unos cuadros más tarde.
 const GRACIA_TRAS_ESC := 0.5
 
 
-## Con configuraciones abierta desde la pausa, Esc la cierra y deja la pausa: el Esc siguiente
-## reanuda. Con el celular libre o con otra interfaz abierta, Esc la cierra a ella y no pausa.
+## Con configuraciones o logros abierta desde la pausa, Esc la cierra y deja la pausa: el Esc
+## siguiente reanuda. Con el celular libre o con otra interfaz abierta, Esc la cierra a ella y no
+## pausa.
 static func ante_esc(
 	en_pausa: bool,
 	configuraciones_abierta: bool = false,
 	celular_libre_abierto: bool = false,
-	interfaz_abierta: bool = false
+	interfaz_abierta: bool = false,
+	logros_abierta: bool = false
 ) -> Accion:
 	if configuraciones_abierta:
 		return Accion.CERRAR_CONFIGURACIONES
+	if logros_abierta:
+		return Accion.CERRAR_LOGROS
 	if en_pausa:
 		return Accion.REANUDAR
 	if celular_libre_abierto:

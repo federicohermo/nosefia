@@ -28,6 +28,7 @@ comercial. La incorporación al build local no acredita una licencia comercial.
 | `notificacion_cliente.svg` | Figma, grupo `213:191` del frame `243:150` | Símbolo original del aviso «¡HAY UN CLIENTE!» |
 | `notificacion_lectura.svg` | Figma, grupo `480:319` del frame `477:243` | Cruz original del aviso «NO SE PUDO LEER» |
 | `notificacion_pista.svg` | Figma, grupo `480:323` del frame `477:225`, descargado sin editar el 2026-10-18 | Signo de pregunta del aviso «¡NUEVA PISTA!» |
+| `notificacion_logro.svg` | Figma, grupo `480:331` del frame `477:234`, descargado sin editar el 2026-11-04 | Trofeo del aviso de logro ganado |
 | `notificacion_tareas_completadas.svg` | Figma, ícono `1523:452` del frame `1523:451`, descargado sin editar el 2026-11-03 | Puerta principal del aviso «¡TAREAS COMPLETADAS!» |
 | `notificacion_cierre.svg` | Figma, frame `1676:750`: reloj de arena `1676:744` y exclamación `1676:747` / `1676:748`, compuestos en un lienzo de 164 × 154 con sus posiciones relativas del frame; los trazos son los originales, descargados el 2026-11-04 | Reloj de arena con exclamación del aviso «¡HORA DE CIERRE!» |
 | `fondo.png` | Captura histórica de `almacen.tscn` | Recurso conservado; la computadora actual usa un shader |

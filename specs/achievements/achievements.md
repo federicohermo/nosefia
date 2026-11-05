@@ -1,7 +1,7 @@
 ---
 schema_version: 1
 capability_id: CAP-ACH
-status: draft
+status: ratified
 owner: por definir
 provenance: fichas «Logros», «2. Menú de inicio» (sección «Interfaz de logros») y «Pausa y menú de pausa»; decisiones de #381
 ---
@@ -27,7 +27,8 @@ noche.
 
 Los nueve logros y su nombre en pantalla son: **Obelisco de cartón**, **Rebelde**, **Y se marchó…**,
 **A la basura**, **Estamos al pedo, ¿no?**, **Empleado ejemplar**, **Pésima primera impresión**,
-**Mi talón de Aquiles** y **Elemental, mi querida Yasmín**.
+**Mi talón de Aquiles** y **Elemental, mi querida Yasmín**. Los dos finales y su nombre en pantalla
+son **Despedido** y **Contrato cumplido**.
 
 ## Comportamiento normativo
 

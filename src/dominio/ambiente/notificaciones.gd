@@ -9,9 +9,12 @@ enum Tipo {
 	PISTA,
 	TAREAS_TERMINADAS,
 	CLIENTE_CANSADO_CON_PRODUCTOS,
+	LOGRO,
 }
 
 const DURACION := 3.0
+## Cada logro es su propio aviso: la clave de un logro empieza donde terminan los valores de `Tipo`.
+const _CLAVE_DEL_PRIMER_LOGRO := 1000
 const HORA_DEL_AVISO := 7
 const UMBRAL_DEL_AVISO := (
 	Reglas.DURACION_DEL_TURNO
@@ -24,12 +27,26 @@ const UMBRAL_DEL_AVISO := (
 
 var _compradores: Array[Comprador] = []
 var _salidos: Array[Comprador] = []
-var _orden: Array[Tipo] = []
-var _transcurrido: Dictionary[Tipo, float] = {}
+var _orden: Array[int] = []
+var _transcurrido: Dictionary[int, float] = {}
 var _esperando: Comprador = null
 var _cierre_avisado := false
 var _permiso := false
 var _en_la_computadora := false
+
+
+## La clave de un aviso: el valor del tipo, o el del logro desde `_CLAVE_DEL_PRIMER_LOGRO`.
+static func clave_del_logro(logro: Logros.Logro) -> int:
+	return _CLAVE_DEL_PRIMER_LOGRO + logro
+
+
+static func tipo_de(clave: int) -> Tipo:
+	return Tipo.LOGRO if clave >= _CLAVE_DEL_PRIMER_LOGRO else clave as Tipo
+
+
+## Sólo vale para la clave de un aviso de logro.
+static func logro_de(clave: int) -> Logros.Logro:
+	return (clave - _CLAVE_DEL_PRIMER_LOGRO) as Logros.Logro
 
 
 func actualizar_tiempo(restante: float) -> void:
@@ -72,6 +89,11 @@ func pista_anotada() -> void:
 	_avisar(Tipo.PISTA)
 
 
+## Un logro nunca avisa dos veces: el dominio lo desbloquea una sola.
+func logro_desbloqueado(logro: Logros.Logro) -> void:
+	_avisar_clave(clave_del_logro(logro))
+
+
 func actualizar_salida(disponible: bool) -> void:
 	_permiso = disponible
 	if disponible and _en_la_computadora:
@@ -88,16 +110,24 @@ func actualizar_computadora(abierta: bool) -> void:
 func avanzar(segundos: float) -> void:
 	if segundos <= 0.0:
 		return
-	for tipo in visibles():
-		if _persiste(tipo):
+	for clave in avisos():
+		if _persiste(tipo_de(clave)):
 			continue
-		_transcurrido[tipo] += segundos
-		if _transcurrido[tipo] >= DURACION:
-			_orden.erase(tipo)
-			_transcurrido.erase(tipo)
+		_transcurrido[clave] += segundos
+		if _transcurrido[clave] >= DURACION:
+			_orden.erase(clave)
+			_transcurrido.erase(clave)
 
 
 func visibles() -> Array[Tipo]:
+	var tipos: Array[Tipo] = []
+	for clave in _orden:
+		tipos.append(tipo_de(clave))
+	return tipos
+
+
+## Lo mismo que `visibles`, con la identidad de cada logro: dos logros son dos avisos.
+func avisos() -> Array[int]:
 	return _orden.duplicate()
 
 
@@ -121,9 +151,13 @@ func _retirar(tipo: Tipo) -> void:
 
 
 func _avisar(tipo: Tipo) -> void:
-	_orden.erase(tipo)
-	_orden.push_front(tipo)
-	_transcurrido[tipo] = 0.0
+	_avisar_clave(tipo)
+
+
+func _avisar_clave(clave: int) -> void:
+	_orden.erase(clave)
+	_orden.push_front(clave)
+	_transcurrido[clave] = 0.0
 
 
 func _avisar_salida(disponible: bool) -> void:
