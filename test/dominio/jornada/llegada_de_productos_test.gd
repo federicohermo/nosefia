@@ -4,7 +4,7 @@ extends GdUnitTestSuite
 func test_la_primera_completa_apila_exactamente_los_dieciseis_ausentes() -> void:  # AC-STK-077
 	var ausentes: Array[Producto.Id] = []
 	for id: Producto.Id in Producto.Id.values():
-		if id not in Catalogo.PRODUCTOS_DE_PRUEBA:
+		if id not in Catalogo.PRODUCTOS_DE_PRUEBA and id not in Catalogo.SOLO_CAJAS:
 			ausentes.append(id)
 	(
 		assert_array(

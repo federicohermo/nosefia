@@ -26,6 +26,12 @@ const TANDAS_POR_DIA := 2
 
 @export var de_quien: String = ""
 
+## Salió sin red: el chat lo muestra en rojo y nadie lo contestó.
+@export var con_error: bool = false
+
+## Lo creó la noche y se pierde al volver a abrirla: lo enviado y su respuesta no son del guión.
+@export var de_la_noche: bool = false
+
 ## `H:MM` o `HH:MM`. Vacía cuando nadie la fijó: un dato guardado antes de que existiera carga así.
 @export var hora: String = ""
 

@@ -19,6 +19,10 @@ signal celular_desplazado
 ## El jugador pulsó uno de los dos botones de una queja: darle la razón o rechazarla.
 signal respuesta_pedida(da_la_razon: bool)
 
+## El jugador pulsó «Enviar» en la lista del pedido. Quien escucha lo envía, y la pantalla se
+## repinta sola.
+signal envio_del_pedido_pedido
+
 enum Vista { NINGUNA, MENU, CHAT, CHAT_FIJO }
 
 const RECORRIDO_COMPLETO := RecorridoDelCelular.DURACION
@@ -62,6 +66,9 @@ const SIMBOLOS_DE_CHAT := preload("res://assets/ui/manada/celular/simbolos_de_ch
 const RETRATO_ENRIQUE := "res://assets/ui/manada/enrique.png"
 const BUSCAR := "Buscar contacto..."
 const ROJO := Color("cc0d08")
+const BURBUJA_CON_ERROR := Color("f7c9cc")
+const TEXTO_DE_HACER_PEDIDO := "Hacer pedido"
+const TEXTO_DE_ENVIAR := "Enviar"
 const NARANJA_DEL_AVISO := Color("ffa024")
 const DIAMETRO_DEL_AVISO := 30.0
 const TAMANO_DEL_NUMERO_DEL_AVISO := 20
@@ -100,6 +107,13 @@ const DIAS: Array[String] = [
 @export var _ayuda: Label
 @export var _capa: Control
 @export var _contenido: VBoxContainer
+## El pedido de la noche: lo que el jugador marca en la lista de Hernán vive en él. Cambiarlo
+## empieza de nuevo el chat.
+var pedido: PedidoAlProveedor:
+	set(valor):
+		pedido = valor
+		_chat_del_pedido = false
+		_pintar_el_pedido()
 
 var _recorrido := RecorridoDelCelular.new()
 var _lateral: float = 0.0
@@ -125,6 +139,10 @@ var _vibracion: Tween
 var _duracion_de_la_vibracion: float = -1.0
 var _base_del_recordatorio := Vector2.ZERO
 var _desplazamiento_de_la_vibracion := Vector2.ZERO
+var _chat_del_pedido: bool = false
+var _lista_del_pedido: ListaDelPedido
+var _hacer_pedido: Button
+var _enviar_pedido: Button
 var _barra_de_estado: BarraDeEstadoDelCelular
 var _arrastrando: bool = false
 var _posicion_del_arrastre: float = 0.0
@@ -163,6 +181,7 @@ func _ready() -> void:
 	_opciones.text = "..."
 	_entrada.placeholder_text = MENSAJE
 	_agregar_la_flecha_del_campo()
+	_agregar_los_botones_del_pedido()
 	_agregar_la_funda()
 	_agregar_la_barra_de_estado()
 	_ayuda.text = AYUDA
@@ -307,6 +326,7 @@ func mostrar_chat(
 	_busqueda.release_focus()
 	_pie.show()
 	_chat_de_notas = conversacion.interlocutor == Conversacion.Interlocutor.NOTAS
+	_chat_del_pedido = conversacion.ofrece_pedido and pedido != null
 	_componer(false, _chat_de_notas)
 	_limpiar()
 	_ancla = primer_nuevo
@@ -317,6 +337,7 @@ func mostrar_chat(
 		_mensajes.add_child(burbuja)
 	_ordenar_el_historial()
 	_agregar_la_opcion()
+	_pintar_el_pedido()
 	_ofrecer_las_respuestas(con_respuestas)
 	_acomodar_la_lectura.call_deferred(false)
 	_enfocar_el_primero.call_deferred()
@@ -354,6 +375,7 @@ func recibir(mensaje: Mensaje, indice: int, primer_nuevo: int = Celular.AL_FINAL
 	_ordenar_el_historial()
 	if opcion() != null:
 		_mensajes.move_child(_opcion, _mensajes.get_child_count() - 1)
+	_pintar_el_pedido()
 	if al_final and not _foto_ampliada.visible:
 		_acomodar_la_lectura.call_deferred(true)
 
@@ -769,8 +791,9 @@ func _filtrar(busqueda: String) -> void:
 		):
 			continue
 		var mensajes := _bandeja.mensajes_de(conversacion.interlocutor)
-		var ultimo := mensajes[-1]
-		var resumen := ultimo.texto if not ultimo.texto.is_empty() else FOTO
+		var resumen := ""
+		if not mensajes.is_empty():
+			resumen = mensajes[-1].texto if not mensajes[-1].texto.is_empty() else FOTO
 		_mensajes.add_child(
 			_boton_de(conversacion, _bandeja.no_leidos(conversacion.interlocutor), resumen)
 		)
@@ -851,12 +874,13 @@ func _avatar(imagen: Texture2D) -> PanelContainer:
 
 func _burbuja_de(mensaje: Mensaje, indice: int) -> PanelContainer:
 	var propia := _chat_de_notas or mensaje.propio
+	var color := BURBUJA_PROPIA if propia else BURBUJA_RECIBIDA
+	if mensaje.con_error:
+		color = BURBUJA_CON_ERROR
 	var panel := PanelContainer.new()
 	panel.set_meta("indice_de_mensaje", indice)
 	panel.size_flags_horizontal = Control.SIZE_SHRINK_END if propia else Control.SIZE_SHRINK_BEGIN
-	panel.add_theme_stylebox_override(
-		"panel", _estilo(BURBUJA_PROPIA if propia else BURBUJA_RECIBIDA, 16, 16)
-	)
+	panel.add_theme_stylebox_override("panel", _estilo(color, 16, 16))
 	panel.mouse_filter = Control.MOUSE_FILTER_PASS
 	panel.mouse_default_cursor_shape = _scroll.mouse_default_cursor_shape
 	var contenido := VBoxContainer.new()
@@ -899,6 +923,10 @@ func _burbuja_de(mensaje: Mensaje, indice: int) -> PanelContainer:
 				func(tramo: Variant) -> void: tramo_pedido.emit(mensaje.identidad, str(tramo))
 			)
 		contenido.add_child(texto)
+	if mensaje.con_error:
+		var aviso := _etiqueta(PedidoAlProveedor.ERROR_DE_RED, ROJO, TAMANO_DE_LA_HORA)
+		aviso.name = "ErrorDeRed"
+		contenido.add_child(aviso)
 	if not mensaje.hora.is_empty():
 		var hora := _etiqueta(mensaje.hora, GRIS_DE_LA_HORA, TAMANO_DE_LA_HORA)
 		hora.name = "Hora"
@@ -1166,3 +1194,76 @@ func _texto(texto: String, color: Color, tamano: int) -> RichTextLabel:
 	etiqueta.add_theme_font_override("bold_font", _adjunto.get_theme_font("bold_font"))
 	etiqueta.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	return etiqueta
+
+
+## «Hacer pedido» y «Enviar» ocupan el lugar de la entrada de mensaje en el chat de Hernán.
+func _agregar_los_botones_del_pedido() -> void:
+	_hacer_pedido = _boton_del_pie(TEXTO_DE_HACER_PEDIDO, Color("f3f3ef"), TINTA)
+	_hacer_pedido.name = "HacerPedido"
+	_hacer_pedido.pressed.connect(
+		func() -> void:
+			pedido.abrir_lista()
+			_pintar_el_pedido()
+	)
+	_enviar_pedido = _boton_del_pie(TEXTO_DE_ENVIAR, Color("0b343d"), PAPEL)
+	_enviar_pedido.name = "EnviarPedido"
+	_enviar_pedido.pressed.connect(
+		func() -> void:
+			envio_del_pedido_pedido.emit()
+			_pintar_el_pedido()
+	)
+	for boton: Button in [_hacer_pedido, _enviar_pedido]:
+		boton.hide()
+		_pie.add_child(boton)
+		_pie.move_child(boton, 0)
+
+
+func _boton_del_pie(texto: String, fondo: Color, tinta: Color) -> Button:
+	var boton := Button.new()
+	boton.text = texto
+	boton.alignment = HORIZONTAL_ALIGNMENT_LEFT
+	boton.custom_minimum_size = Vector2(0.0, 62.0)
+	boton.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
+	boton.add_theme_font_override("font", _fuente_del_chat)
+	boton.add_theme_font_size_override("font_size", TAMANO_DEL_TEXTO)
+	for color: String in [
+		"font_color", "font_hover_color", "font_pressed_color", "font_focus_color"
+	]:
+		boton.add_theme_color_override(color, tinta)
+	boton.add_theme_color_override("font_disabled_color", GRIS)
+	for estado: String in ["normal", "hover", "pressed", "focus"]:
+		boton.add_theme_stylebox_override(estado, _estilo(fondo, 12, 16))
+	boton.add_theme_stylebox_override("disabled", _estilo(fondo.darkened(0.15), 12, 16))
+	var flecha := _etiqueta(">", tinta, 30)
+	flecha.set_anchors_and_offsets_preset(Control.PRESET_RIGHT_WIDE)
+	flecha.offset_left = -48.0
+	flecha.offset_right = -14.0
+	flecha.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	flecha.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	boton.add_child(flecha)
+	return boton
+
+
+## El chat de Hernán cambia el pie: con la lista cerrada ofrece «Hacer pedido», y con la lista
+## abierta, «Enviar», que sólo se habilita con algo marcado. En los demás chats todo queda como
+## estaba. La lista se arma de nuevo cada vez que se abre.
+func _pintar_el_pedido() -> void:
+	if _hacer_pedido == null:
+		return
+	var abierta := _chat_del_pedido and pedido != null and pedido.lista_abierta()
+	_entrada.visible = not _chat_del_pedido
+	_hacer_pedido.visible = _chat_del_pedido and not abierta
+	_enviar_pedido.visible = abierta
+	if abierta:
+		_enviar_pedido.disabled = not pedido.puede_enviar()
+		if not is_instance_valid(_lista_del_pedido) or _lista_del_pedido.get_parent() != _mensajes:
+			_lista_del_pedido = ListaDelPedido.new()
+			_lista_del_pedido.armar(pedido, BURBUJA_PROPIA, TINTA, _fuente_del_chat)
+			_lista_del_pedido.seleccion_cambiada.connect(_pintar_el_pedido)
+			_mensajes.add_child(_lista_del_pedido)
+			_acomodar_la_lectura.call_deferred(true)
+		else:
+			_mensajes.move_child(_lista_del_pedido, _mensajes.get_child_count() - 1)
+	elif is_instance_valid(_lista_del_pedido):
+		_lista_del_pedido.queue_free()
+		_lista_del_pedido = null

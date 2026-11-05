@@ -53,13 +53,13 @@ static func _copia(origen: Vector3) -> PackedFloat32Array:
 
 ## El puesto indexa `principales` por `Producto.Id`. Un producto sin bloque revienta al preparar.
 func test_hay_un_bloque_principal_por_producto() -> void:
-	assert_int(_disposicion().principales.size()).is_equal(Producto.Id.size())
+	assert_int(_disposicion().principales.size()).is_equal(Catalogo.todos().size())
 
 
 ## El cupo de cada producto sale de acá: un producto sin su número deja a la jornada sin saber
 ## cuántos casilleros tiene.
 func test_cada_producto_declara_su_fila_de_adelante() -> void:
-	assert_int(_disposicion().filas_de_adelante.size()).is_equal(Producto.Id.size())
+	assert_int(_disposicion().filas_de_adelante.size()).is_equal(Catalogo.todos().size())
 
 
 ## Las últimas copias de cada bloque, tantas como su fila de adelante, son los casilleros. Un

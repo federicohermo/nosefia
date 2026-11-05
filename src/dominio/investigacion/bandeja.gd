@@ -25,6 +25,12 @@ func _init(conversaciones: Array[Conversacion]) -> void:
 func abrir_jornada(jornada: int, condiciones: Array[StringName] = []) -> void:
 	_jornada = jornada
 	_condiciones = condiciones.duplicate()
+	for quien: Conversacion.Interlocutor in _recibidos:
+		var siguen: Array = []
+		for recibido: Mensaje in _recibidos[quien]:
+			if not recibido.de_la_noche:
+				siguen.append(recibido)
+		_recibidos[quien] = siguen
 
 
 ## Las quejas de la noche: sus mensajes salen de ellas y no de un guión, así que no hay una copia
@@ -38,7 +44,10 @@ func conversaciones() -> Array[Conversacion]:
 	for conversacion in _conversaciones:
 		if (
 			conversacion.jornada_de_menu <= _jornada
-			and not mensajes_de(conversacion.interlocutor).is_empty()
+			and (
+				conversacion.abre_sin_mensajes
+				or not mensajes_de(conversacion.interlocutor).is_empty()
+			)
 		):
 			visibles.append(conversacion)
 	return visibles
