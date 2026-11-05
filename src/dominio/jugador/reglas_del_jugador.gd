@@ -16,6 +16,10 @@ const VELOCIDAD_DE_CAMINATA := 3.5
 ## un radián» sin una conversión escondida en el medio.
 const SENSIBILIDAD_DEL_MOUSE := 0.003
 
+## Radianes por segundo con el joystick derecho a fondo: 180 grados. Lo decidió el dueño, y gira
+## en proporción a la inclinación.
+const GIRO_DEL_JOYSTICK := deg_to_rad(180.0)
+
 ## Metros, medidos desde el origen del `CharacterBody3D` que está apoyado en el piso.
 const ALTURA_DE_LA_CAMARA := 1.7
 

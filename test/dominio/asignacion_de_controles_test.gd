@@ -4,8 +4,9 @@ extends GdUnitTestSuite
 
 const TECLA := AsignacionDeControles.TipoDeEntrada.TECLA
 const BOTON := AsignacionDeControles.TipoDeEntrada.BOTON_DEL_MOUSE
+const JOYSTICK := AsignacionDeControles.TipoDeEntrada.BOTON_DEL_JOYSTICK
 
-## Las catorce ranuras del esquema de fábrica: la acción, la ranura y su entrada.
+## Las ranuras del esquema de fábrica: la acción, la ranura y su entrada.
 const DE_FABRICA: Array = [
 	[AsignacionDeControles.ADELANTE, 0, TECLA, KEY_W],
 	[AsignacionDeControles.ADELANTE, 1, TECLA, KEY_UP],
@@ -16,10 +17,15 @@ const DE_FABRICA: Array = [
 	[AsignacionDeControles.DERECHA, 0, TECLA, KEY_D],
 	[AsignacionDeControles.DERECHA, 1, TECLA, KEY_RIGHT],
 	[AsignacionDeControles.CELULAR, 0, TECLA, KEY_Q],
+	[AsignacionDeControles.CELULAR, 1, JOYSTICK, JOY_BUTTON_B],
 	[AsignacionDeControles.EXAMINAR, 0, TECLA, KEY_E],
+	[AsignacionDeControles.EXAMINAR, 1, JOYSTICK, JOY_BUTTON_X],
 	[AsignacionDeControles.AGACHARSE, 0, TECLA, KEY_SPACE],
+	[AsignacionDeControles.AGACHARSE, 1, JOYSTICK, JOY_BUTTON_LEFT_SHOULDER],
 	[AsignacionDeControles.AGARRAR, 0, BOTON, MOUSE_BUTTON_LEFT],
+	[AsignacionDeControles.AGARRAR, 1, JOYSTICK, JOY_BUTTON_A],
 	[AsignacionDeControles.INTERACTUAR, 0, BOTON, MOUSE_BUTTON_RIGHT],
+	[AsignacionDeControles.INTERACTUAR, 1, JOYSTICK, JOY_BUTTON_RIGHT_SHOULDER],
 	[AsignacionDeControles.PAUSA, 0, TECLA, KEY_ESCAPE],
 ]
 
@@ -47,7 +53,7 @@ func _de_fabrica(asignacion: AsignacionDeControles) -> bool:
 	return asignacion.datos() == AsignacionDeControles.new().datos()
 
 
-func test_son_siete_acciones_y_catorce_ranuras() -> void:  # AC-CFG-016
+func test_son_siete_acciones_y_una_ranura_por_entrada_del_esquema() -> void:  # AC-CFG-016
 	var nombres: Dictionary = {}
 	for accion: StringName in AsignacionDeControles.ACCIONES:
 		var nombre := AsignacionDeControles.nombre_de_la_accion(accion)

@@ -78,3 +78,20 @@ func test_cambiar_la_sensibilidad_escala_el_giro_sin_rearmar() -> void:  # AC-CF
 	mirada.cambiar_sensibilidad(SENSIBILIDAD * 0.25)
 	mirada.girar(Vector2(100.0, 0.0))
 	assert_float(mirada.yaw()).is_equal_approx(-0.25, 1e-5)
+
+
+func test_un_giro_en_radianes_a_la_derecha_gira_el_yaw_como_el_mouse() -> void:  # AC-PLY-172
+	var mirada := Mirada.new(SENSIBILIDAD, MINIMO, MAXIMO)
+	mirada.girar_en_radianes(Vector2(1.0, 0.0))
+	assert_float(mirada.yaw()).is_equal_approx(-1.0, 1e-5)
+	assert_float(mirada.pitch()).is_equal(0.0)
+
+
+func test_un_giro_en_radianes_hacia_arriba_sube_el_pitch_y_se_clava() -> void:  # AC-PLY-173
+	var mirada := Mirada.new(SENSIBILIDAD, MINIMO, MAXIMO)
+	mirada.girar_en_radianes(Vector2(0.0, -1.0))
+	assert_float(mirada.pitch()).is_equal_approx(1.0, 1e-5)
+	mirada.girar_en_radianes(Vector2(0.0, -10.0))
+	assert_float(mirada.pitch()).is_equal(MAXIMO)
+	mirada.girar_en_radianes(Vector2(0.0, 100.0))
+	assert_float(mirada.pitch()).is_equal(MINIMO)
