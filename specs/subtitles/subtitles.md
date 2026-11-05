@@ -555,8 +555,8 @@ CUANDO llega otro subtítulo ENTONCES lo reemplaza y el pensamiento no vuelve.
 DADO cada pensamiento de la tabla de BR-SUB-013, `MOPA_BERRETA` y el de cada canal de BR-SUB-016
 ENTONCES su texto tiene los renglones de la ficha: dos para el de cada canal de BR-SUB-016,
 `CAJA_EN_EL_CONTENEDOR`, `UTIL_EN_EL_CONTENEDOR`,
-`POR_LA_VENTANA`, `JABON_EQUIVOCADO`, `PUERTA_CON_TAREAS_PENDIENTES`, `SIN_LUZ`,
-`ROUTER_ANTES_DEL_CORTE` y `ROUTER_YA_RESTAURADO`, y uno para cada uno de los
+`POR_LA_VENTANA`, `JABON_EQUIVOCADO`, `MOPA_BERRETA`, `PUERTA_CON_TAREAS_PENDIENTES`,
+`SIN_LUZ`, `ROUTER_ANTES_DEL_CORTE` y `ROUTER_YA_RESTAURADO`, y uno para cada uno de los
 demás. Ningún renglón queda vacío y el texto no empieza ni termina con un salto.
 
 ### AC-SUB-029 — Los mismos renglones en pantalla *(verifica BR-SUB-017, BR-SUB-001)*
