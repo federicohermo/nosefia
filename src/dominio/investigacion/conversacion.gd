@@ -44,6 +44,9 @@ const ARCHIVOS := {
 ## Se lista en el menú aunque todavía no tenga ningún mensaje: es el chat donde el jugador escribe
 ## primero.
 @export var abre_sin_mensajes: bool = false
+
+## Ofrece «Hacer pedido»: el chat del proveedor, donde el jugador escribe la lista de lo que falta.
+@export var ofrece_pedido: bool = false
 @export var jornada_de_menu: int = 1
 
 

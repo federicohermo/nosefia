@@ -66,7 +66,9 @@ func test_la_primera_jornada_solo_ofrece_la_introduccion_documentada() -> void: 
 	restaurada.abrir_jornada(5)
 	assert_int(restaurada.conversaciones().size()).is_equal(2)
 	assert_array(restaurada.mensajes_de(quien)).is_equal(
-		Conversacion.de(quien).mensajes.filter(func(m: Mensaje) -> bool: return m.vale_para([]))
+		Conversacion.de(quien).mensajes.filter(
+			func(m: Mensaje) -> bool: return m.jornada <= 5 and m.vale_para([])
+		)
 	)
 
 

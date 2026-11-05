@@ -3,6 +3,7 @@
 extends GdUnitTestSuite
 
 const PEDIDO := ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA + 3
+const ReglasDelCierre := preload("res://src/dominio/almacen/reglas_del_cierre.gd")
 const T := Tarea.Tipo
 
 

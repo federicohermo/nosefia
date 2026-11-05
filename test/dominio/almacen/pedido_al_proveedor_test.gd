@@ -6,7 +6,7 @@ const PEDIDO := ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA + 3
 const PROVEEDOR := Conversacion.Interlocutor.PROVEEDOR
 
 ## Una fracción de segundo: lo que falta para que una respuesta todavía no llegue.
-const UN_INSTANTE := 0.1
+const UN_INSTANTE := 0.125
 
 
 func _pedido() -> PedidoAlProveedor:

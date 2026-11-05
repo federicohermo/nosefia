@@ -11,3 +11,4 @@ nombre = "Hernán"
 rol = "Proveedor"
 jornada_de_menu = 6
 abre_sin_mensajes = true
+ofrece_pedido = true

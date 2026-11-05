@@ -5,7 +5,7 @@ extends Node3D
 
 ## Cuánto queda libre entre los pallets del fondo y la pared del cuartito, por donde se llega a su
 ## puerta, y entre los pallets y la pared de atrás.
-const PASO_AL_CUARTITO := 1.0
+const PASO_AL_CUARTITO := 0.5
 const HOLGURA_CON_LA_PARED := 0.1
 const ESCALA := 1.15
 const GIROS_DEL_FONDO: Array[float] = [0.012, -0.015]

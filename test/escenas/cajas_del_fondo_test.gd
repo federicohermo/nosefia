@@ -10,7 +10,7 @@ const Caja := preload("res://src/escenas/objetos/caja_de_productos.gd")
 const COMPLETA := ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA
 
 ## Cuánto se mira alrededor del portón y de la puerta del cuartito: lo que la pila no puede tapar.
-const PASO := 0.9
+const PASO := 0.4
 const TOLERANCIA := 0.02
 
 
@@ -76,7 +76,7 @@ func test_las_siete_estan_en_una_pila_de_cuatro_abajo_y_tres_arriba() -> void:  
 		if apoyo is Caja:
 			arriba += 1
 		else:
-			assert_str(str(apoyo.get_parent().name)).begins_with("PalletDeEntrega")
+			assert_str(str(apoyo.get_parent().name)).starts_with("PalletDeEntrega")
 			abajo += 1
 	assert_int(abajo).is_equal(4)
 	assert_int(arriba).is_equal(3)

@@ -276,9 +276,7 @@ func mostrar_chat(
 	_busqueda.release_focus()
 	_pie.show()
 	_chat_de_notas = conversacion.interlocutor == Conversacion.Interlocutor.NOTAS
-	_chat_del_pedido = (
-		conversacion.interlocutor == Conversacion.Interlocutor.PROVEEDOR and _pedido != null
-	)
+	_chat_del_pedido = conversacion.ofrece_pedido and _pedido != null
 	_componer(false, _chat_de_notas)
 	_limpiar()
 	_historial = mensajes.duplicate()
