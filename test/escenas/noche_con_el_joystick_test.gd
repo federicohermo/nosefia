@@ -5,6 +5,7 @@
 ## acciones de `project.godot`, que es lo que este issue agrega.
 extends GdUnitTestSuite
 
+const ALMACEN := preload("res://src/escenas/almacen.tscn")
 const COMPUTADORA := preload("res://src/ui/diegetica/pantalla_de_computadora.tscn")
 const PROGRAMA_DE_TICKETS := preload("res://src/ui/diegetica/programa_de_tickets.tscn")
 const CELULAR := preload("res://src/ui/diegetica/pantalla_del_celular.tscn")
@@ -141,7 +142,8 @@ func test_en_las_filas_sin_mas_ni_menos_los_costados_no_hacen_nada() -> void:  #
 	assert_array(avisos).is_empty()
 
 
-func test_la_planilla_elige_por_fila_y_los_costados_suman_y_restan() -> void:  # AC-CFG-027
+## La planilla de ventas abierta, con su registro: lo que suman y restan sus filas queda ahí.
+func _planilla() -> Array:
 	var pantalla: PantallaDeComputadora = auto_free(COMPUTADORA.instantiate())
 	add_child(pantalla)
 	pantalla.mostrar()
@@ -153,6 +155,13 @@ func test_la_planilla_elige_por_fila_y_los_costados_suman_y_restan() -> void:  #
 	caja.suma_pedida.connect(func(producto: Producto) -> void: registro.sumar(producto))
 	caja.resta_pedida.connect(func(producto: Producto) -> void: registro.restar(producto))
 	caja.mostrar(registro)
+	return [caja, registro]
+
+
+func test_la_planilla_elige_por_fila_y_los_costados_suman_y_restan() -> void:  # AC-CFG-027
+	var planilla := _planilla()
+	var caja: AppCaja = planilla[0]
+	var registro: RegistroDeVentas = planilla[1]
 	var filas := caja.get("_filas") as Container
 	var primera := filas.get_child(0) as Control
 	var producto: Producto = registro.productos()[0]
@@ -169,6 +178,16 @@ func test_la_planilla_elige_por_fila_y_los_costados_suman_y_restan() -> void:  #
 	filas.get_child(1).grab_focus()
 	caja.mostrar(registro)
 	assert_object(_foco()).is_same(filas.get_child(1))
+
+
+func test_a_la_izquierda_en_cero_la_planilla_no_resta() -> void:  # AC-CFG-027
+	var planilla := _planilla()
+	var registro: RegistroDeVentas = planilla[1]
+	var producto: Producto = registro.productos()[0]
+	assert_int(registro.unidades_de(producto)).is_zero()
+	_gesto(_boton(JOY_BUTTON_DPAD_LEFT))
+	_gesto(_eje(JOY_AXIS_RIGHT_X, -1.0))
+	assert_int(registro.unidades_de(producto)).is_zero()
 
 
 func test_la_pausa_deja_el_foco_en_un_boton_que_x_aprieta() -> void:  # AC-CFG-027
@@ -229,3 +248,43 @@ func test_el_foco_no_se_queda_en_un_boton_que_se_deshabilita() -> void:  # AC-CF
 	segundo.disabled = true
 	assert_object(FocoDeLaInterfaz.en_el_primero(raiz)).is_same(primero)
 	assert_object(_foco()).is_same(primero)
+
+
+func test_con_una_interfaz_abierta_el_joystick_derecho_no_gira_la_vista() -> void:  # AC-CFG-027
+	var almacen: Node3D = auto_free(ALMACEN.instantiate())
+	add_child(almacen)
+	var jugador: Node3D = almacen.get_node("Jugador")
+	jugador.set_physics_process(false)
+	for _cuadro in 4:
+		await get_tree().physics_frame
+	var control: ControlDelJugador = jugador.get("_control")
+	var puesto: Node3D = almacen.get_node("Estructura/base compu/StaticBody3D")
+	Input.action_press(&"mirar_derecha", 1.0)
+	puesto.call("abrir")
+	var yaw := control.yaw()
+	jugador.call("_mirar_con_el_joystick", 0.5)
+	assert_float(control.yaw()).is_equal(yaw)
+	# La premisa: el mismo joystick, con la interfaz cerrada, sí gira la vista.
+	puesto.call("cerrar")
+	jugador.call("_mirar_con_el_joystick", 0.5)
+	assert_float(control.yaw()).is_not_equal(yaw)
+
+
+func test_la_lista_de_tickets_enfoca_un_item_y_el_foco_vuelve_al_selector() -> void:  # AC-CFG-028
+	for elegir_con_x: bool in [true, false]:
+		var vista: ProgramaDeTickets = auto_free(PROGRAMA_DE_TICKETS.instantiate())
+		add_child(vista)
+		vista.mostrar(GeneradorDeTickets.para_la_jornada(6))
+		var selector := vista.selectores[0]
+		var cabecera: Button = selector.get_node("Cabecera")
+		cabecera.pressed.emit()
+		assert_bool(selector.esta_abierta()).is_true()
+		assert_bool(_foco_adentro_de(selector.get_node("Lista"))).is_true()
+		if elegir_con_x:
+			_gesto(_boton(JOY_BUTTON_A))
+		else:
+			assert_bool(vista.cerrar_las_listas_abiertas()).is_true()
+		assert_bool(selector.esta_abierta()).is_false()
+		assert_object(_foco()).is_same(cabecera)
+		vista.ocultar()
+		remove_child(vista)
