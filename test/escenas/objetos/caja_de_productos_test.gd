@@ -296,8 +296,7 @@ func test_la_etiqueta_de_cada_producto_es_una_linea_del_script() -> void:
 			. is_equal(1)
 		)
 	var cajas := _nombres_de_las_cajas()
-	# Los siete que sólo se piden tienen etiqueta y no tienen caja física en el depósito.
-	assert_int(cajas.size()).is_equal(Catalogo.todos().size())
+	assert_int(cajas.size()).is_equal(Catalogo.pedibles().size())
 	for ruta: String in ESCENAS_CON_CAJAS + [ESCENA]:
 		var escena := FileAccess.get_file_as_string(ruta)
 		assert_str(escena).is_not_empty()
@@ -332,13 +331,14 @@ static func _secciones_de_cajas(
 	return de_cajas
 
 
-## Los nombres de las cajas, de la lista que el almacén exporta.
+## Los nombres de las cajas, de las dos listas que el almacén exporta.
 static func _nombres_de_las_cajas() -> Array[String]:
 	var almacen := FileAccess.get_file_as_string(CAJAS_DEL_ALMACEN)
-	var lista := almacen.get_slice("_cajas_de_productos = [", 1).get_slice("]", 0)
 	var nombres: Array[String] = []
-	for camino in RegEx.create_from_string('NodePath\\("([^"]*)"\\)').search_all(lista):
-		nombres.append(camino.get_string(1).get_file())
+	for lista in ["_cajas_de_productos = [", "_cajas_del_fondo = ["]:
+		var cuerpo := almacen.get_slice(lista, 1).get_slice("]", 0)
+		for camino in RegEx.create_from_string('NodePath\\("([^"]*)"\\)').search_all(cuerpo):
+			nombres.append(camino.get_string(1).get_file())
 	return nombres
 
 

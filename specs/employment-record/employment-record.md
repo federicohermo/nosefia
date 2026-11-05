@@ -1284,9 +1284,8 @@ la devolución no trae ninguno de los dos.
   el celular es de [`investigation`](../investigation/investigation.md).
 - Esta capacidad NO muestra la reflexión de cierre que sigue a «continuar» en las jornadas 3 y
   4: es de [`investigation`](../investigation/investigation.md).
-- Esta capacidad NO trae la Tarea 5 de las jornadas 1 y 2 ni de la 6 y la 7: esas noches no
-  declaran particular (BR-SHF-005). Los textos de la 6 y la 7 esperan en la ficha mientras siga
-  abierta OQ-SHF-006.
+- Esta capacidad NO trae la Tarea 5 de las jornadas 1 y 2: esas noches no declaran particular
+  (BR-SHF-005).
 - Esta capacidad NO redacta mensajes de apertura: `investigation` consume el guion de cada
   contacto, incluida la apertura de la jornada 4. Entrega a ese historial las devoluciones fechadas.
 

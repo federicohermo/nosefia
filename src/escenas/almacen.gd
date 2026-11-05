@@ -1001,7 +1001,7 @@ func volver_al_menu() -> void:
 
 func _estados_del_cierre() -> Array[ReglasDelCierre.Estado]:
 	var candidatos: Array[Node3D] = []
-	candidatos.append_array(_cajas_de_productos)
+	candidatos.append_array(_todas_las_cajas())
 	for util: ObjetoAgarrable in _utiles_de_limpieza:
 		if AnomaliasDeLaJornada.util_disponible(util.datos.id, _limpiador.piso().jornada()):
 			candidatos.append(util)
