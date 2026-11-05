@@ -17,6 +17,8 @@ extends Node
 signal computadora_abierta
 signal computadora_cerrada
 signal registro_actualizado
+## La pantalla conjunta del registro y el celular se abrió o se cerró.
+signal pantalla_conjunta_cambiada(activa: bool)
 
 ## Entra por `@export` y no como autoload ni por `get_node()` hacia arriba: está medido que
 ## `gate_de_capas.py` no ve un autoload nombrado por su nombre global.
@@ -31,8 +33,9 @@ var _registro: RegistroDeVentas = null
 ##
 ## La planilla se recibe y no se construye acá porque compara contra las ventas de la jornada, que
 ## son las de la ventanilla: una segunda atención daría otra noche sin ventas.
-func arrancar(registro: RegistroDeVentas) -> void:
+func arrancar(registro: RegistroDeVentas, con_la_conjunta: bool = false) -> void:
 	_registro = registro
+	_computadora.ofrecer_la_conjunta(con_la_conjunta)
 	if reloj != null and not reloj.cierre_iniciado.is_connected(_al_iniciar_el_cierre):
 		reloj.cierre_iniciado.connect(_al_iniciar_el_cierre)
 	revisar_registro()
@@ -54,9 +57,24 @@ func pedir_abrir() -> void:
 
 
 func pedir_cerrar() -> void:
+	var estaba_en_la_conjunta := _computadora.conjunta()
 	if not _computadora.cerrar():
 		return
+	if estaba_en_la_conjunta:
+		pantalla_conjunta_cambiada.emit(false)
 	computadora_cerrada.emit()
+
+
+## El botón de la pantalla y Q piden lo mismo. No cobra tiempo: sólo el reloj descuenta.
+func pedir_alternar_la_conjunta() -> void:
+	if _computadora.alternar_la_conjunta():
+		pantalla_conjunta_cambiada.emit(_computadora.conjunta())
+
+
+## El celular se cerró por su cuenta, con Esc: la conjunta vuelve a la pantalla normal.
+func pedir_volver_a_la_normal() -> void:
+	if _computadora.volver_a_la_normal():
+		pantalla_conjunta_cambiada.emit(false)
 
 
 func pedir_sumar(producto: Producto) -> void:

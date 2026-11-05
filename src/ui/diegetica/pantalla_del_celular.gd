@@ -12,12 +12,26 @@ signal opcion_elegida
 signal celular_bajado
 ## Llegó a la mitad izquierda del encuadre, para la reflexión de cierre.
 signal celular_desplazado
+## El jugador pulsó uno de los dos botones de una queja: darle la razón o rechazarla.
+signal respuesta_pedida(da_la_razon: bool)
 
 const RECORRIDO_COMPLETO := RecorridoDelCelular.DURACION
 const PASO_MAXIMO := CabeceraConSolapa.PASO_MAXIMO
 const TAMANO := Vector2(522.0, 928.0)
 const CENTRO := Vector2(960.0, 540.0)
 const CENTRO_A_LA_IZQUIERDA := Vector2(356.0, 540.0)
+## Dónde queda el celular al lado del registro, en la pantalla conjunta.
+const CENTRO_A_LA_DERECHA := Vector2(1624.0, 540.0)
+const TEXTO_DE_DAR_LA_RAZON := "DARLE LA RAZÓN"
+const TEXTO_DE_RECHAZAR := "RECHAZAR QUEJA"
+## La captura de la transferencia: el tamaño del diseño y dónde va cada texto sobre la imagen.
+const TAMANO_DE_LA_CAPTURA := Vector2i(736, 922)
+const ZONA_DEL_IMPORTE := Rect2(0.0, 295.0, 736.0, 187.0)
+const ZONA_DEL_DESTINO := Rect2(173.0, 511.0, 487.0, 113.0)
+const ZONA_DEL_ORIGEN := Rect2(173.0, 742.0, 487.0, 113.0)
+const TAMANO_DEL_IMPORTE := 96
+const TAMANO_DE_LA_CUENTA := 36
+const ALTO_DE_LA_CAPTURA_EN_EL_CHAT := 420.0
 const FONDO_DE_NOTAS := Color("f0f4d1")
 const TEXTO_DEL_MENU := "CHATS"
 const TEXTO_DEL_RECORDATORIO := "Q"
@@ -96,6 +110,9 @@ var _arrastrando: bool = false
 var _posicion_del_arrastre: float = 0.0
 var _desplazamiento_del_arrastre: float = 0.0
 var _umbral_de_arrastre_superado: bool = false
+var _con_velo: bool = true
+var _respuestas: VBoxContainer = null
+var _capturas: Dictionary[String, Texture2D] = {}
 
 
 func _ready() -> void:
@@ -163,6 +180,7 @@ func _process(_delta: float) -> void:
 		if _recorrido.destino() == 0.0:
 			_lateral = 0.0
 			_destino_lateral = 0.0
+			_con_velo = true
 			_telefono.hide()
 			_velo.hide()
 			celular_bajado.emit()
@@ -178,6 +196,14 @@ func bajar() -> void:
 
 func centrado() -> bool:
 	return _recorrido.destino() == 1.0 and _recorrido.llego() and _destino_lateral == 0.0
+
+
+## Sube el celular a la derecha, al lado del registro, sin velo que lo tape ni lo desenfoque.
+func abrir_en_la_conjunta() -> void:
+	_con_velo = false
+	_lateral = -1.0
+	_destino_lateral = -1.0
+	subir()
 
 
 ## Lleva el teléfono, ya arriba o subiendo, hasta la mitad izquierda sin bajarlo.
@@ -204,7 +230,11 @@ func mostrar_menu(bandeja: Bandeja) -> void:
 
 
 func mostrar_chat(
-	conversacion: Conversacion, mensajes: Array[Mensaje], fijo: bool, jornada: int
+	conversacion: Conversacion,
+	mensajes: Array[Mensaje],
+	fijo: bool,
+	jornada: int,
+	con_respuestas: bool = false
 ) -> void:
 	_jornada_de_referencia = jornada
 	_foto_ampliada.hide()
@@ -237,6 +267,7 @@ func mostrar_chat(
 		_mensajes.add_child(burbuja)
 	_ordenar_el_historial()
 	_agregar_la_opcion()
+	_ofrecer_las_respuestas(con_respuestas)
 	_ir_al_ultimo.call_deferred()
 
 
@@ -293,7 +324,7 @@ func _agregar_la_opcion() -> void:
 
 
 func ampliar(foto: Mensaje, adjunto: Mensaje) -> void:
-	_imagen.texture = foto.foto
+	_imagen.texture = _textura_de(foto)
 	# La primera leyenda se mide con su ancho final aun cuando el panel sigue oculto.
 	# Medirla con ancho cero agrandaba el teléfono y recortaba el scroll del chat.
 	var marco := _telefono.get_theme_stylebox("panel").get_minimum_size()
@@ -427,7 +458,7 @@ func _mover_hacia(destino: float) -> void:
 	_ultimo = _ahora.call()
 	if destino == 1.0:
 		_telefono.show()
-		_velo.show()
+		_velo.visible = _con_velo
 	set_process(true)
 	_pintar_posicion()
 
@@ -444,7 +475,11 @@ func _ajustar() -> void:
 func _pintar_posicion() -> void:
 	_telefono.size = TAMANO
 	var arriba := CENTRO.y - TAMANO.y / 2.0
-	var centro := lerpf(CENTRO.x, CENTRO_A_LA_IZQUIERDA.x, _lateral)
+	var centro := (
+		lerpf(CENTRO.x, CENTRO_A_LA_IZQUIERDA.x, _lateral)
+		if _lateral >= 0.0
+		else lerpf(CENTRO.x, CENTRO_A_LA_DERECHA.x, -_lateral)
+	)
 	_telefono.position = Vector2(
 		centro - TAMANO.x / 2.0, lerpf(1080.0, arriba, _recorrido.posicion())
 	)
@@ -572,7 +607,7 @@ func _avatar(imagen: Texture2D) -> PanelContainer:
 
 
 func _burbuja_de(mensaje: Mensaje, indice: int) -> PanelContainer:
-	var propia := _chat_de_notas
+	var propia := _chat_de_notas or mensaje.propio
 	var panel := PanelContainer.new()
 	panel.set_meta("indice_de_mensaje", indice)
 	panel.size_flags_horizontal = Control.SIZE_SHRINK_END if propia else Control.SIZE_SHRINK_BEGIN
@@ -588,10 +623,13 @@ func _burbuja_de(mensaje: Mensaje, indice: int) -> PanelContainer:
 	panel.add_child(contenido)
 	if mensaje.foto != null:
 		var foto := TextureButton.new()
-		foto.texture_normal = mensaje.foto
+		foto.texture_normal = _textura_de(mensaje)
 		foto.ignore_texture_size = true
 		foto.stretch_mode = TextureButton.STRETCH_KEEP_ASPECT_CENTERED
-		foto.custom_minimum_size = Vector2(ANCHO_MAXIMO_DEL_TEXTO, 240)
+		foto.custom_minimum_size = Vector2(
+			ANCHO_MAXIMO_DEL_TEXTO,
+			ALTO_DE_LA_CAPTURA_EN_EL_CHAT if mensaje.tiene_captura() else 240
+		)
 		foto.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
 		foto.pressed.connect(
 			func() -> void: foto_pedida.emit(int(panel.get_meta("indice_de_mensaje")))
@@ -624,6 +662,95 @@ func _burbuja_de(mensaje: Mensaje, indice: int) -> PanelContainer:
 		hora.size_flags_horizontal = Control.SIZE_SHRINK_END
 		contenido.add_child(hora)
 	return panel
+
+
+## La foto que se dibuja: la de la transferencia lleva escritos el importe y la cuenta de origen.
+func _textura_de(mensaje: Mensaje) -> Texture2D:
+	if not mensaje.tiene_captura():
+		return mensaje.foto
+	var clave := mensaje.identidad + mensaje.importe_de_la_captura
+	if not _capturas.has(clave):
+		_capturas[clave] = _componer_la_captura(mensaje)
+	return _capturas[clave]
+
+
+## La imagen base y tres textos, dibujados una sola vez en un `SubViewport`.
+func _componer_la_captura(mensaje: Mensaje) -> Texture2D:
+	var lienzo := SubViewport.new()
+	lienzo.size = TAMANO_DE_LA_CAPTURA
+	lienzo.disable_3d = true
+	lienzo.render_target_update_mode = SubViewport.UPDATE_ONCE
+	var base := TextureRect.new()
+	base.texture = mensaje.foto
+	base.size = Vector2(TAMANO_DE_LA_CAPTURA)
+	base.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	lienzo.add_child(base)
+	var importe := _texto_de_la_captura(
+		mensaje.importe_de_la_captura, ZONA_DEL_IMPORTE, TAMANO_DEL_IMPORTE
+	)
+	importe.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	lienzo.add_child(importe)
+	lienzo.add_child(
+		_texto_de_la_captura(
+			QuejasDeLaJornada.DESTINO.replace(" ****", "\n****"),
+			ZONA_DEL_DESTINO,
+			TAMANO_DE_LA_CUENTA
+		)
+	)
+	lienzo.add_child(
+		_texto_de_la_captura(
+			QuejasDeLaJornada.ORIGEN.replace(" ****", "\n****") + mensaje.origen_de_la_captura,
+			ZONA_DEL_ORIGEN,
+			TAMANO_DE_LA_CUENTA
+		)
+	)
+	add_child(lienzo)
+	return lienzo.get_texture()
+
+
+func _texto_de_la_captura(texto: String, zona: Rect2, tamano: int) -> Label:
+	var etiqueta := _etiqueta(texto, TINTA, tamano)
+	etiqueta.position = zona.position
+	etiqueta.size = zona.size
+	etiqueta.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
+	etiqueta.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	return etiqueta
+
+
+## Los dos botones de una queja sin responder toman el lugar del campo del mensaje.
+func _ofrecer_las_respuestas(se_ofrecen: bool) -> void:
+	if is_instance_valid(_respuestas):
+		_pie.remove_child(_respuestas)
+		_respuestas.queue_free()
+	_respuestas = null
+	_entrada.visible = not se_ofrecen
+	if not se_ofrecen:
+		return
+	_respuestas = VBoxContainer.new()
+	_respuestas.name = "Respuestas"
+	_respuestas.add_theme_constant_override("separation", 10)
+	_respuestas.add_child(_boton_de_respuesta(TEXTO_DE_DAR_LA_RAZON, true, BURBUJA, PAPEL))
+	_respuestas.add_child(_boton_de_respuesta(TEXTO_DE_RECHAZAR, false, PAPEL, BURBUJA))
+	_pie.add_child(_respuestas)
+	_pie.move_child(_respuestas, 0)
+
+
+func _boton_de_respuesta(texto: String, da_la_razon: bool, fondo: Color, letra: Color) -> Button:
+	var boton := Button.new()
+	boton.name = "DarLaRazon" if da_la_razon else "Rechazar"
+	boton.text = texto
+	boton.custom_minimum_size = Vector2(0, 58)
+	boton.alignment = HORIZONTAL_ALIGNMENT_LEFT
+	boton.focus_mode = Control.FOCUS_NONE
+	boton.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
+	boton.add_theme_font_override("font", _fuente_del_chat)
+	boton.add_theme_font_size_override("font_size", 26)
+	for estado: String in ["font_color", "font_hover_color", "font_pressed_color"]:
+		boton.add_theme_color_override(estado, letra)
+	for estado: String in ["normal", "hover", "pressed"]:
+		boton.add_theme_stylebox_override(estado, _estilo(fondo, 12, 16))
+	boton.pressed.connect(func() -> void: respuesta_pedida.emit(da_la_razon))
+	return boton
 
 
 ## El ancho que pide el texto en una línea, sin pasar del máximo: la burbuja se ajusta al texto.
