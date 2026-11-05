@@ -171,3 +171,82 @@ func test_el_rechazo_y_el_agradecimiento_resaltan_solo_lo_que_falta() -> void:  
 	for texto: String in [rechazo.entrada_actual(), gracias.entrada_actual()]:
 		assert_array(_en_amarillo(texto)).is_equal([pedido.productos()[1].nombre])
 		assert_str(_sin_color(texto)).contains(_subtitulo(pedido.productos()[1]))
+
+
+## La atención de un comprador con todos sus productos ya recibidos y sólo el ticket pendiente.
+func _atencion_sin_ticket(comprador: Comprador) -> Atencion:
+	var inventario := Inventario.new(Catalogo.todos())
+	for producto in Catalogo.todos():
+		inventario.ingresar(producto, Inventario.Ubicacion.DEPOSITO, 12)
+	var atencion := Atencion.new(comprador, inventario)
+	atencion.interactuar(null)
+	while not atencion.dialogo().terminado():
+		atencion.interactuar(null)
+	var estante := Estante.new(inventario, Catalogo.todos())
+	for producto in comprador.pedido().productos():
+		for _unidad in comprador.pedido().unidades_de(producto):
+			atencion.interactuar(estante.retirar(producto))
+	return atencion
+
+
+static func _comprador(jornada: int, personaje: int) -> Comprador:
+	for comprador in Compradores.de_la_jornada(jornada):
+		if comprador.personaje == personaje:
+			return comprador
+	return null
+
+
+func test_tin_pide_el_ticket_con_su_frase_en_las_dos_noches() -> void:  # AC-CTR-160
+	for jornada: int in [ReglasDeLaPartida.PRIMERA_JORNADA, ReglasDeLaPartida.PRIMERA_JORNADA + 2]:
+		var atencion := _atencion_sin_ticket(
+			_comprador(jornada, DialogosDeCompradores.Personaje.TIN)
+		)
+		assert_str(atencion.dialogo().entrada_actual()).is_equal(
+			DialogosDeCompradores.PIDE_EL_TICKET_DE_TIN
+		)
+		atencion.interactuar(null)
+		assert_str(atencion.dialogo().entrada_actual()).is_equal(
+			DialogosDeCompradores.PIDE_EL_TICKET_DE_TIN
+		)
+	assert_str(DialogosDeCompradores.PIDE_EL_TICKET_DE_TIN).is_not_equal(
+		DialogosDeCompradores.PIDE_EL_TICKET
+	)
+
+
+func test_el_rechazo_de_tin_antepone_su_frase_del_ticket() -> void:  # AC-CTR-161
+	var atencion := _atencion_sin_ticket(
+		_comprador(ReglasDeLaPartida.PRIMERA_JORNADA, DialogosDeCompradores.Personaje.TIN)
+	)
+	atencion.interactuar(Ticket.new([]))
+	assert_str(atencion.dialogo().entrada_actual()).is_equal(
+		DialogosDeCompradores.RECHAZO + DialogosDeCompradores.PIDE_EL_TICKET_DE_TIN
+	)
+	var tin := _comprador(ReglasDeLaPartida.PRIMERA_JORNADA, DialogosDeCompradores.Personaje.TIN)
+	var rechazo := DialogosDeCompradores.recordatorio(
+		tin.pedido(), RecepcionDeCompra.new(tin.pedido()), true, tin.personaje
+	)
+	assert_str(rechazo.entrada_actual()).starts_with(DialogosDeCompradores.RECHAZO + "Quiero ")
+	assert_str(rechazo.entrada_actual()).not_contains(DialogosDeCompradores.PIDE_EL_TICKET_DE_TIN)
+
+
+func test_los_demas_compradores_conservan_la_frase_comun_del_ticket() -> void:  # AC-CTR-162
+	for personaje: int in [
+		DialogosDeCompradores.Personaje.TIA, DialogosDeCompradores.Personaje.FEDE
+	]:
+		var jornada := (
+			ReglasDeLaPartida.PRIMERA_JORNADA
+			if personaje == DialogosDeCompradores.Personaje.TIA
+			else ReglasDeLaPartida.PRIMERA_JORNADA + 3
+		)
+		var atencion := _atencion_sin_ticket(_comprador(jornada, personaje))
+		assert_str(atencion.dialogo().entrada_actual()).is_equal(
+			DialogosDeCompradores.PIDE_EL_TICKET
+		)
+		atencion.interactuar(null)
+		assert_str(atencion.dialogo().entrada_actual()).is_equal(
+			DialogosDeCompradores.PIDE_EL_TICKET
+		)
+		atencion.interactuar(Ticket.new([]))
+		assert_str(atencion.dialogo().entrada_actual()).is_equal(
+			DialogosDeCompradores.RECHAZO + DialogosDeCompradores.PEDIDO_DEL_TICKET
+		)
