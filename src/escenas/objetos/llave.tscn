@@ -5,7 +5,7 @@
 
 [sub_resource type="BoxShape3D" id="cuerpo"]
 margin = 0.001
-size = Vector3(0.1, 0.014, 0.034)
+size = Vector3(0.1, 0.02, 0.036)
 
 [sub_resource type="StandardMaterial3D" id="metal"]
 albedo_color = Color(0.62, 0.6, 0.55, 1)
@@ -16,14 +16,14 @@ roughness = 0.35
 [sub_resource type="CylinderMesh" id="anillo"]
 top_radius = 0.016
 bottom_radius = 0.016
-height = 0.01
+height = 0.014
 radial_segments = 16
 
 [sub_resource type="BoxMesh" id="vastago"]
-size = Vector3(0.07, 0.008, 0.008)
+size = Vector3(0.07, 0.012, 0.012)
 
 [sub_resource type="BoxMesh" id="diente"]
-size = Vector3(0.008, 0.008, 0.012)
+size = Vector3(0.008, 0.012, 0.012)
 
 [node name="Llave" type="RigidBody3D" groups=["interactuable"]]
 mass = 0.05
