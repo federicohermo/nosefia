@@ -132,6 +132,18 @@ func test_lo_soltado_que_queda_afuera_gana_y_se_marcho_al_instante() -> void:  #
 	assert_bool(_en_el_disco().desbloqueado(L.Y_SE_MARCHO)).is_true()
 
 
+func test_lo_entregado_a_un_comprador_no_gana_y_se_marcho() -> void:  # AC-ACH-004
+	_abrir()
+	var entregado: RigidBody3D = _almacen.get("_cajas_de_productos")[Producto.Id.MARRANOS]
+	entregado.global_position = Vector3.ONE * 100.0
+	entregado.freeze = true
+	entregado.set_meta(&"recibido_por_comprador", true)
+	_almacen.call("_vigilar_si_queda_afuera", entregado)
+	await get_tree().physics_frame
+	await get_tree().physics_frame
+	assert_bool(_logros().desbloqueado(L.Y_SE_MARCHO)).is_false()
+
+
 func test_un_ticket_que_queda_afuera_no_gana_y_se_marcho() -> void:  # AC-ACH-004
 	_abrir()
 	var papel := _ticket()

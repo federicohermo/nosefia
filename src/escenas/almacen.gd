@@ -1066,6 +1066,8 @@ func _vigilar_si_queda_afuera(nodo: Node3D) -> void:
 			return
 		if cuerpo == null or cuerpo.sleeping or cuerpo.freeze:
 			break
+	if nodo.has_meta(&"recibido_por_comprador"):
+		return
 	# Se piensa cuando lo soltado se aquieta, y el jugador ya pudo irse: no tiene lugar.
 	var habitacion := _habitaciones.de(nodo.global_position)
 	var eximido := ReglasDelCierre.esta_eximido(datos, _levanta_una_pista(datos))
