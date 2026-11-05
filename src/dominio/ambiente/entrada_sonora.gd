@@ -56,6 +56,7 @@ enum Evento {
 	AMBIENTE_EXTERIOR,
 	BOLSA_SACADA,
 	OBJETO_DESECHADO,
+	NOTA_ANOTADA,
 }
 
 ## Cómo suena una cosa al agarrarla o al dejarla. Los valores salen de la ficha de sonido.
