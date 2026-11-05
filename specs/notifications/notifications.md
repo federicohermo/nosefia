@@ -172,8 +172,9 @@ ENTONCES salir de ella NO DEBE mostrar un aviso pendiente.
 
 ### BR-NTF-017 — Un logro ganado avisa su nombre
 
-CUANDO se desbloquea un logro (BR-ACH-002), el sistema DEBE mostrar su nombre en mayúsculas, en un
-solo renglón, con el trofeo a la izquierda. El aviso DEBE usar la duración, la pausa, el orden, el
+CUANDO se desbloquea un logro (BR-ACH-002), el sistema DEBE mostrar «NUEVO LOGRO:» seguido de su
+nombre en mayúsculas, en un solo renglón, con el trofeo a la izquierda. El aviso del nombre más
+largo DEBE caber entero en el cartel. El aviso DEBE usar la duración, la pausa, el orden, el
 borde derecho, el fondo y el clic atravesado de BR-NTF-003, BR-NTF-005 y BR-NTF-007. La identidad
 del aviso es el logro: dos logros distintos ganados a la vez DEBEN dejar dos avisos, el más nuevo
 primero, y un logro nunca avisa dos veces (BR-ACH-002). El nombre con «¿», «¡» o «…» DEBE verse
@@ -431,8 +432,8 @@ dejaron nada, en la misma jornada, dejan dos avisos, uno de cada texto.
 
 ### AC-NTF-046 — El logro avisa su nombre y no se repite *(verifica BR-NTF-017, BR-NTF-003, BR-NTF-005, BR-NTF-006)*
 
-DADO cero avisos CUANDO se desbloquea un logro ENTONCES hay un aviso con su nombre en mayúsculas,
-en un solo renglón, con el trofeo a la izquierda, que sigue visible a los 2,9 segundos y desaparece
+DADO cero avisos CUANDO se desbloquea un logro ENTONCES hay un aviso con «NUEVO LOGRO:» y su nombre
+en mayúsculas, en un solo renglón, con el trofeo a la izquierda, que sigue visible a los 2,9 segundos y desaparece
 al completar 3,0. DADO dos logros distintos desbloqueados en el mismo cuadro ENTONCES hay dos avisos,
 el más nuevo primero. DADO un logro ya ganado CUANDO se cumple otra vez su condición ENTONCES no hay
 aviso. DADO un aviso de logro y otro de pista ENTONCES conviven en el orden de BR-NTF-005. A 1920 × 1080
