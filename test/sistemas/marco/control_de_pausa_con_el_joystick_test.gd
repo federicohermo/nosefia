@@ -66,7 +66,7 @@ func test_start_pausa_y_otro_start_reanuda() -> void:  # AC-SAV-046
 func test_circulo_en_pausa_reanuda() -> void:  # AC-SAV-046
 	var control := _control()
 	control.pausar()
-	control._input(_boton(JOY_BUTTON_B))
+	control._unhandled_input(_boton(JOY_BUTTON_B))
 	assert_bool(get_tree().paused).is_false()
 
 
@@ -74,11 +74,11 @@ func test_circulo_cierra_la_interfaz_abierta_y_no_pausa() -> void:  # AC-SAV-046
 	var control := _control()
 	var interfaz := InterfazDePrueba.new()
 	control.registrar_interfaz(interfaz.esta_abierta, interfaz.cerrar_con_esc)
-	control._input(_boton(JOY_BUTTON_B))
+	control._unhandled_input(_boton(JOY_BUTTON_B))
 	assert_int(interfaz.cierres).is_equal(1)
 	assert_bool(get_tree().paused).is_false()
 	assert_int(_pausas).is_zero()
-	control._input(_boton(JOY_BUTTON_B))
+	control._unhandled_input(_boton(JOY_BUTTON_B))
 	assert_bool(get_tree().paused).is_false()
 	assert_int(_pausas).is_zero()
 
@@ -87,7 +87,7 @@ func test_circulo_sin_nada_abierto_no_pausa_y_no_se_come_el_evento() -> void:  #
 	var control := _control()
 	# Un evento nuevo limpia el «atendido» que dejó el caso anterior en el viewport.
 	control.get_viewport().push_input(InputEventAction.new())
-	control._input(_boton(JOY_BUTTON_B))
+	control._unhandled_input(_boton(JOY_BUTTON_B))
 	assert_bool(get_tree().paused).is_false()
 	assert_int(_pausas).is_zero()
 	assert_bool(control.get_viewport().is_input_handled()).is_false()
@@ -99,7 +99,7 @@ func test_circulo_cierra_configuraciones_abierta_desde_la_pausa() -> void:  # AC
 	var control := _control()
 	control.configuraciones = configuraciones
 	control.pausar()
-	control._input(_boton(JOY_BUTTON_B))
+	control._unhandled_input(_boton(JOY_BUTTON_B))
 	assert_int(_cierres).is_equal(1)
 	assert_bool(get_tree().paused).is_true()
 
@@ -109,6 +109,6 @@ func test_otro_boton_y_circulo_soltado_no_hacen_nada() -> void:  # AC-SAV-046
 	control.pausar()
 	var soltado := _boton(JOY_BUTTON_B)
 	soltado.pressed = false
-	control._input(soltado)
-	control._input(_boton(JOY_BUTTON_Y))
+	control._unhandled_input(soltado)
+	control._unhandled_input(_boton(JOY_BUTTON_Y))
 	assert_bool(get_tree().paused).is_true()

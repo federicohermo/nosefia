@@ -81,9 +81,6 @@ static func _es_circulo(evento: InputEvent) -> bool:
 
 
 func _input(evento: InputEvent) -> void:
-	if _es_circulo(evento):
-		_volver_atras()
-		return
 	if not evento.is_action_pressed("ui_cancel"):
 		return
 	get_viewport().set_input_as_handled()
@@ -99,10 +96,14 @@ func _input(evento: InputEvent) -> void:
 
 
 ## CÍRCULO hace lo de Esc salvo pausar: con nada abierto deja el evento a la acción del celular.
-## Mientras la pantalla de controles espera un botón no vuelve: CÍRCULO se puede asignar.
+## Llega por `_unhandled_input` y no por `_input`: la pantalla de controles que espera un botón se
+## lo queda antes, porque CÍRCULO se puede asignar.
+func _unhandled_input(evento: InputEvent) -> void:
+	if _es_circulo(evento):
+		_volver_atras()
+
+
 func _volver_atras() -> void:
-	if _configuraciones_esperando_un_boton():
-		return
 	var accion := Pausa.ante_volver(
 		get_tree().paused,
 		_configuraciones_en_pantalla(),
@@ -219,14 +220,6 @@ func _placa_en_pantalla() -> bool:
 
 func _configuraciones_en_pantalla() -> bool:
 	return configuraciones != null and configuraciones.visible
-
-
-func _configuraciones_esperando_un_boton() -> bool:
-	return (
-		_configuraciones_en_pantalla()
-		and configuraciones.has_method(&"capturando")
-		and configuraciones.call(&"capturando")
-	)
 
 
 func _logros_en_pantalla() -> bool:

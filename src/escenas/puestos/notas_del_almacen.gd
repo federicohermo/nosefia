@@ -51,6 +51,9 @@ func cerrar_con_esc() -> void:
 func _input(evento: InputEvent) -> void:
 	if not _abierta:
 		return
+	# X no cierra la nota, y tampoco llega al control que tenga el foco debajo.
+	if evento.is_action(&"ui_accept"):
+		get_viewport().set_input_as_handled()
 	if evento.is_action_pressed(ReglasDelJugador.ACCION_USAR):
 		get_viewport().set_input_as_handled()
 		cerrar()
