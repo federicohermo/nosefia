@@ -3,7 +3,7 @@ schema_version: 1
 capability_id: CAP-STK
 status: ratified
 owner: por definir
-provenance: GDD «Reponer» y «Registrar»; fichas «7. Tarea: Registro de productos vendidos», «8. Tarea: Reposición», «5. Formas de interacción con objetos» y «Particulares de cada jornada»; decisiones de #366, #367, #369, #376 y #425; base «Productos y cajas contenedoras»; migración de los specs 005, 008, 033, 042, 047; Mapa de góndolas y comentario de Tiago del 2026-10-15 a las 18:25 UTC que conserva Duronga en exhibición provisional (#434); decisión del dueño de #434 — Actroncito y Prongles conservan dos hileras y rige la lista de cinco del arte vigente; pedidos fijos y activación J2 de #433 y #444; ocho jornadas de #526; mapas de prueba y completo del 20/10/2026 (#575); Duronga en lugar de Durextra en las jornadas de prueba y compras de Fede en la jornada 2 (#605); decisión del dueño de #645 — sólo los productos de una sola fila conservan una unidad y pasan el vacío al estante vecino; correcciones y protección del aire y de los márgenes de cabeceras y laterales pedidas por el dueño en #621; paso uniforme entre productos de un estante y aire de Terminator pedidos por el dueño tras probar #621; compras físicas, pedidos sorteados y registro de las jornadas 3 a 5 de #459; registro de las noches de prueba con sólo los productos presentes (#625); cajas que amanecen donde el jugador las dejó, de la ficha «8. Tarea: Reposición» (#555); la unidad en la mano al cierre cuenta como puesta (#386); planilla en orden alfabético (#567)
+provenance: GDD «Reponer» y «Registrar»; fichas «7. Tarea: Registro de productos vendidos», «8. Tarea: Reposición», «5. Formas de interacción con objetos» y «Particulares de cada jornada»; decisiones de #366, #367, #369, #376 y #425; base «Productos y cajas contenedoras»; migración de los specs 005, 008, 033, 042, 047; Mapa de góndolas y comentario de Tiago del 2026-10-15 a las 18:25 UTC que conserva Duronga en exhibición provisional (#434); decisión del dueño de #434 — Actroncito y Prongles conservan dos hileras y rige la lista de cinco del arte vigente; pedidos fijos y activación J2 de #433 y #444; ocho jornadas de #526; mapas de prueba y completo del 20/10/2026 (#575); Duronga en lugar de Durextra en las jornadas de prueba y compras de Fede en la jornada 2 (#605); decisión del dueño de #645 — sólo los productos de una sola fila conservan una unidad y pasan el vacío al estante vecino; correcciones y protección del aire y de los márgenes de cabeceras y laterales pedidas por el dueño en #621; paso uniforme entre productos de un estante y aire de Terminator pedidos por el dueño tras probar #621; compras físicas, pedidos sorteados y registro de las jornadas 3 a 5 de #459; registro de las noches de prueba con sólo los productos presentes (#625); cajas que amanecen donde el jugador las dejó, de la ficha «8. Tarea: Reposición» (#555); la unidad en la mano al cierre cuenta como puesta (#386); planilla en orden alfabético (#567); las cajas del pedido al proveedor, de #691
 ---
 
 # Capacidad: la mercadería del almacén
@@ -632,6 +632,35 @@ depender sólo del nombre: no del orden en que el catálogo declara los producto
 subconjunto presente esa noche (BR-STK-046). Dos nombres que sólo difieren en mayúsculas o
 tildes DEBEN conservar el orden del catálogo entre sí. Ordenar la planilla NO DEBE cambiar
 qué productos tiene, sus precios ni lo anotado en cada fila.
+
+### BR-STK-054 — Siete productos existen sólo como caja del depósito
+
+El catálogo DEBE tener, además de los treinta y dos productos de BR-STK-046, siete productos que
+existen sólo como caja del depósito: Sei Tuqui, La Monteloca, Frigordo, Gringo, Masticul, Cofloco
+y Chocolocas. Cada uno DEBE tener su fila (BR-STK-002), su tamaño de caja y su sonoridad
+(BR-STK-023): chica y envoltorio plástico Sei Tuqui, La Monteloca, Masticul y Cofloco; grande y
+caja Frigordo, Gringo y Chocolocas. Desde la primera jornada completa, cada uno DEBE abrir con una
+caja llena en el depósito (BR-STK-004), apoyada en una estantería, con la etiqueta de su producto.
+
+Estos siete NO DEBEN tener góndola, unidades sueltas, cupo ni casilleros; NO DEBEN aparecer en la
+lista de ventas ni en el programa de la caja; NO DEBEN entrar en el pedido de ningún comprador ni
+en los faltantes de ninguna noche. Hasta la jornada anterior a la primera completa NO DEBEN
+existir (BR-STK-046).
+
+### BR-STK-055 — La jornada 6 abre con cinco cajas vacías
+
+CUANDO se abre la jornada 6, el sistema DEBE abrir exactamente cinco cajas del depósito con 0
+unidades. Una DEBE ser la de Fernet God. Las otras cuatro DEBEN salir de un sorteo con la semilla
+de la partida entre todas las cajas del depósito —las treinta y dos y las siete de BR-STK-054—,
+sin contar las de un producto que falte esa noche (BR-STK-007) ni las de uno que pidan los
+compradores de esa noche. Abrir la jornada otra vez o retomarla desde su apertura DEBE dar las
+mismas cinco cajas. Las demás cajas DEBEN abrir como en BR-STK-004.
+
+Una de las cinco permanece en el depósito, visible, apoyada donde le toca, y DEBE poder
+agarrarse y examinarse como cualquier caja del depósito: examinarla dice que tiene 0 (BR-STK-031)
+y pedirle una unidad no entrega nada (BR-STK-016). Durante la jornada 6, Fernet God NO DEBE
+faltar en su góndola ni entrar en el pedido de ningún comprador, tampoco en los pedidos al azar.
+Las demás jornadas NO DEBEN abrir ninguna caja vacía por esta regla.
 
 ## Criterios de aceptación
 
@@ -1384,6 +1413,48 @@ cuenta cumplida. DADO el mismo caso durante la noche ENTONCES reponer sigue sin 
 casillero vacío. DADO dos casilleros vacíos de ese producto, o uno vacío de otro producto
 además del suyo, CUANDO se cierra con esa unidad en la mano ENTONCES reponer no cuenta cumplida. DADO la
 unidad en la mano que se suelta antes del cierre ENTONCES reponer no cuenta cumplida.
+
+### AC-STK-124 — Los siete existen sólo como caja *(verifica BR-STK-054)*
+
+DADO el catálogo de la etapa completa CUANDO se consulta cada uno de Sei Tuqui, La Monteloca,
+Frigordo, Gringo, Masticul, Cofloco y Chocolocas ENTONCES tiene fila con nombre y precio entero
+positivo, su caja es chica en Sei Tuqui, La Monteloca, Masticul y Cofloco y grande en los otros tres, y su
+sonoridad es la de BR-STK-054. CUANDO se pide la lista de ventas, el programa de la caja o los
+productos con góndola ENTONCES ninguno de los siete está. DADO la apertura de las jornadas 3, 4, 5
+y 7 ENTONCES cada uno de los siete tiene 8 unidades en el depósito y 0 en la góndola, y
+ninguno es faltante. DADO la etapa de prueba ENTONCES ninguno existe.
+
+### AC-STK-125 — Los compradores nunca piden los siete *(verifica BR-STK-054)*
+
+DADO los compradores de cada jornada de la 1 a la 7, y por cada una veinte semillas distintas,
+CUANDO se leen sus pedidos ENTONCES ninguno incluye alguno de los siete.
+
+### AC-STK-126 — La jornada 6 abre con cinco cajas vacías, una de Fernet God *(verifica BR-STK-055)*
+
+DADO la apertura de la jornada 6 con cualquiera de veinte semillas ENTONCES hay exactamente cinco
+cajas con 0 unidades en el depósito, entre ellas la de Fernet God, y las otras treinta y cuatro
+tienen 8. ENTONCES entre las veinte semillas, en alguna, una de las cajas vacías es de uno de los siete.
+
+### AC-STK-127 — Las vacías no son faltantes ni se piden *(verifica BR-STK-055)*
+
+DADO la apertura de la jornada 6 con cualquiera de veinte semillas CUANDO se comparan las cinco
+cajas vacías con los faltantes de la noche y con los productos que piden sus compradores ENTONCES
+no comparten ningún producto. CUANDO se cuentan los faltantes y los pedidos de la noche ENTONCES
+Fernet God no está en ninguno.
+
+### AC-STK-128 — La misma semilla da las mismas cinco, y otra noche ninguna *(verifica BR-STK-055)*
+
+DADO la jornada 6 y una semilla CUANDO se abre dos veces ENTONCES salen las mismas cinco cajas.
+DADO dos semillas distintas ENTONCES salen conjuntos distintos para al menos un par de entre
+veinte. DADO cada jornada distinta de la 6 CUANDO se abre ENTONCES ninguna caja del depósito abre
+con 0 unidades por esta regla.
+
+### AC-STK-129 — Una caja vacía se examina en 0 y no entrega nada *(verifica BR-STK-055)*
+
+DADO la jornada 6 con una de las cinco cajas vacías CUANDO se la examina ENTONCES dice que tiene 0
+y cuántas le entran: una caja entera. CUANDO el jugador le pide una unidad ENTONCES no recibe
+nada y el depósito sigue en 0. DADO esa caja ENTONCES la apertura la deja presente en el depósito
+y no como caja agotada.
 
 ## No objetivos
 
