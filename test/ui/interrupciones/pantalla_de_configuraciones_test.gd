@@ -198,6 +198,7 @@ func _ajustar(pantalla: PantallaDeConfiguraciones) -> PantallaDeControles:
 
 func _tecla(codigo: int) -> InputEventKey:
 	var tecla := InputEventKey.new()
+	tecla.keycode = codigo as Key
 	tecla.physical_keycode = codigo as Key
 	tecla.pressed = true
 	return tecla
