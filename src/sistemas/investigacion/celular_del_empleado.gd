@@ -114,6 +114,7 @@ func soltar() -> void:
 
 func recibir(quien: Conversacion.Interlocutor, mensaje: Mensaje) -> void:
 	if _bandeja.recibir(quien, mensaje):
+		_celular.llegar(quien, _bandeja.mensajes_de(quien).find(mensaje))
 		mensaje_recibido.emit(quien, mensaje)
 		no_leidos_cambiados.emit(_bandeja.no_leidos_totales())
 

@@ -119,6 +119,12 @@ func no_leidos_totales() -> int:
 	return sin_leer
 
 
+## El lugar, en `mensajes_de`, del primer mensaje sin leer; -1 si el chat está al día.
+func primer_no_leido(quien: Conversacion.Interlocutor) -> int:
+	var sin_leer := no_leidos(quien)
+	return -1 if sin_leer == 0 else mensajes_de(quien).size() - sin_leer
+
+
 func marcar_leida(quien: Conversacion.Interlocutor) -> bool:
 	if not _leidos.has(quien) or no_leidos(quien) == 0:
 		return false

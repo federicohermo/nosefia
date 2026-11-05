@@ -100,6 +100,14 @@ func test_responder_avisa_una_vez_y_deja_la_respuesta_en_el_chat() -> void:  # A
 	assert_int(_celular.bandeja().no_leidos(COMPRADORES[2])).is_equal(sin_leer_de_otro)
 
 
+func test_el_chat_de_una_queja_abre_en_su_primer_mensaje_sin_leer() -> void:  # AC-INV-160
+	for quien in COMPRADORES:
+		_abrir(quien)
+		var lugar := _celular.celular().primer_nuevo()
+		assert_int(lugar).is_not_equal(Celular.AL_FINAL)
+		assert_bool(_celular.bandeja().mensajes_de(quien)[lugar].propio).is_false()
+
+
 func test_sin_el_chat_de_una_queja_abierto_no_se_responde_nada() -> void:  # AC-INV-146
 	_celular.pedir_volver()
 	_respondedor.pedir_responder(true)
