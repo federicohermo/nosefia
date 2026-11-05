@@ -237,8 +237,8 @@ func _ready() -> void:
 	_jugador.objetivo_perdido.connect(_hud.ocultar_foco)
 	for mueble in _muebles_con_contorno:
 		_jugador.ignorar_el_detalle(mueble)
-	# La hora se lee en el reloj de pared y en la barra de estado del celular, y no en el HUD:
-	# enterarse cuesta caminar hasta el reloj o abrir el celular. El celular no depende del reloj:
+	# La hora en vivo se lee en el reloj de pared y en la barra de estado del celular, y no en el
+	# HUD: enterarse cuesta caminar hasta el reloj o abrir el celular. El celular no depende del reloj:
 	# la noche del corte sigue andando con el turno. La jornada se declara antes de arrancar
 	# porque el ciclo abre la primera adentro de `arrancar()`.
 	_reloj.tiempo_consumido.connect(_reloj_de_mesa.mostrar_tiempo)

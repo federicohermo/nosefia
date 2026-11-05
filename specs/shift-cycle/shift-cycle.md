@@ -23,7 +23,7 @@ minuto investigando es un minuto que no se dedica a las tareas**.
 | **Obligatoria** | una de las tareas que el jefe pide esta noche | misión, objetivo |
 | **Ritmo** | cuántos segundos de turno consume un segundo real | escala, velocidad |
 | **Hora** | la hora de ficción de la noche, de la apertura al cierre | tiempo restante, cuenta regresiva |
-| **Reloj** | el reloj de pared del local; con la barra de estado del celular, los dos únicos lugares donde se lee la hora | HUD |
+| **Reloj** | el reloj de pared del local; con la barra de estado del celular, los dos únicos lugares donde se lee la hora en vivo (el ticket guarda la hora en que se imprimió) | HUD |
 
 ## Comportamiento normativo
 
@@ -161,9 +161,9 @@ Tarea 5 (BR-EMP-027). Las jornadas 1 a 6 NO DEBEN declarar esta obligatoria.
 
 ### BR-SHF-011 — La hora se lee en el reloj de pared y en el celular
 
-El sistema DEBE mostrar la hora sólo en el reloj de pared del local y en la barra de estado del
-celular (BR-SHF-040): ni en el HUD, ni en la computadora, ni en otro objeto del local. SI es la
-sexta jornada y la hora de ficción alcanzó las
+El sistema DEBE mostrar la hora del turno en vivo sólo en el reloj de pared del local y en la barra
+de estado del celular (BR-SHF-040): ni en el HUD, ni en la computadora. El ticket impreso conserva
+la hora de su impresión (AC-PLY-107). SI es la sexta jornada y la hora de ficción alcanzó las
 20:58, ENTONCES el reloj DEBE leer `20:58` hasta el cierre, también después de restablecer la
 electricidad, y el turno DEBE seguir descontando con su presupuesto y su ritmo. El reloj NO DEBE
 quedar en blanco en ningún momento de ninguna noche. Las otras jornadas, incluida la que todavía
