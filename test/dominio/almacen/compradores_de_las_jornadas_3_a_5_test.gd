@@ -136,11 +136,12 @@ func test_cada_pedido_son_dos_o_tres_tipos_de_su_grupo_y_de_lo_que_se_vende() ->
 				var pedido := comprador.pedido()
 				var ids: Array[Producto.Id] = []
 				var fijo := jornada == QUINTA and comprador.personaje == PERSONAJE.MIA
+				var con_durextra := jornada == CUARTA and comprador.personaje == PERSONAJE.FEDE
 				for producto in pedido.productos():
 					ids.append(producto.id)
 					assert_int(pedido.unidades_de(producto)).is_equal(1)
 					assert_array(vendibles).contains([producto.id])
-					if not fijo:
+					if not fijo and not (con_durextra and producto.id == Producto.Id.DUREXTRA):
 						assert_array(Compradores.GRUPOS[comprador.personaje]).contains(
 							[producto.id]
 						)
@@ -161,13 +162,6 @@ func test_la_tercera_pide_de_todo_su_grupo() -> void:  # AC-CTR-107
 		)
 
 
-func test_fede_nunca_pide_durextra() -> void:  # AC-CTR-107
-	for semilla in range(1, SEMILLAS + 1):
-		for comprador in Compradores.de_la_jornada(CUARTA, semilla):
-			for producto in comprador.pedido().productos():
-				assert_int(producto.id).is_not_equal(Producto.Id.DUREXTRA)
-
-
 func test_los_pedidos_son_de_dos_y_de_tres_con_frecuencias_parecidas() -> void:  # AC-CTR-108
 	var por_cantidad := {2: 0, 3: 0}
 	for jornada: int in [CUARTA, QUINTA]:
@@ -175,9 +169,11 @@ func test_los_pedidos_son_de_dos_y_de_tres_con_frecuencias_parecidas() -> void: 
 			for comprador in Compradores.de_la_jornada(jornada, semilla):
 				if jornada == QUINTA and comprador.personaje == PERSONAJE.MIA:
 					continue
+				if jornada == CUARTA and comprador.personaje == PERSONAJE.FEDE:
+					continue
 				por_cantidad[comprador.pedido().productos().size()] += 1
 	var total: int = por_cantidad[2] + por_cantidad[3]
-	assert_int(total).is_equal(3 * SEMILLAS)
+	assert_int(total).is_equal(2 * SEMILLAS)
 	assert_int(por_cantidad[2]).is_greater(total / 4)
 	assert_int(por_cantidad[3]).is_greater(total / 4)
 

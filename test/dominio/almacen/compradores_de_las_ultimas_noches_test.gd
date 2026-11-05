@@ -251,7 +251,8 @@ func test_nadie_mas_pide_durextra() -> void:  # AC-CTR-130
 	for jornada: int in noches_al_azar:
 		for semilla in range(1, SEMILLAS + 1):
 			for comprador in Compradores.de_la_jornada(jornada, semilla):
-				if jornada == ULTIMA and comprador.personaje == PERSONAJE.FEDE:
+				var cuarta := jornada == ReglasDeLaPartida.PRIMERA_JORNADA + 3
+				if comprador.personaje == PERSONAJE.FEDE and (cuarta or jornada == ULTIMA):
 					continue
 				assert_array(_ids_de(comprador)).not_contains([Producto.Id.DUREXTRA])
 

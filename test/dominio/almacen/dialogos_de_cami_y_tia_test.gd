@@ -238,7 +238,7 @@ func test_cami_de_la_quinta_dice_un_solo_mensaje_3_segun_el_camino() -> void:  #
 func test_solo_ellos_tienen_guion_propio_y_los_demas_usan_el_predeterminado() -> void:  # AC-CTR-158
 	var con_guion := {
 		TERCERA: [PERSONAJE.CAMI, PERSONAJE.TIN],
-		CUARTA: [PERSONAJE.TIA],
+		CUARTA: [PERSONAJE.TIA, PERSONAJE.FEDE],
 		QUINTA: [PERSONAJE.CAMI, PERSONAJE.MIA],
 		SEXTA: [PERSONAJE.TIA],
 		SEPTIMA: [],
