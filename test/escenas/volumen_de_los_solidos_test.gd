@@ -314,7 +314,8 @@ func test_el_nuevo_corte_conserva_volumen_sin_rellenar_huecos() -> void:
 		var lados := forma.shape.get_debug_mesh().get_aabb().size * forma.global_basis.get_scale()
 		corte_colilla = minf(corte_colilla, minf(lados.x, minf(lados.y, lados.z)) / 2.0)
 	assert_float(corte_colilla).is_greater(0.0)
-	assert_float(_corte(almacen)).is_equal_approx(corte_colilla, 0.00001)
+	# Un agarrable nuevo puede ser más fino que la colilla.
+	assert_float(_corte(almacen)).is_less_equal(corte_colilla)
 	var medidos := 0
 	var afuera: Array[String] = []
 	for forma: CollisionShape3D in almacen.find_children(
@@ -347,4 +348,4 @@ func test_el_nuevo_corte_conserva_volumen_sin_rellenar_huecos() -> void:
 		. override_failure_message("volúmenes fuera de su malla: %s" % [afuera])
 		. is_empty()
 	)
-	assert_array(_sin_volumen(almacen, corte_colilla)).is_empty()
+	assert_array(_sin_volumen(almacen, _corte(almacen))).is_empty()
