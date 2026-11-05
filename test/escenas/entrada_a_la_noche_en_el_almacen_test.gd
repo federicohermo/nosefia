@@ -1,6 +1,7 @@
 extends GdUnitTestSuite
 
 const AvanceDeDevolucion := preload("res://test/avance_de_devolucion.gd")
+const AvanceDelEpilogo := preload("res://test/avance_del_epilogo.gd")
 
 const ALMACEN := preload("res://src/escenas/almacen.tscn")
 const Menu := preload("res://src/escenas/menu_de_inicio.gd")
@@ -218,6 +219,7 @@ func test_volver_de_una_partida_terminada_no_anuncia_otra_noche() -> void:  # AC
 	pantalla.elegir()
 	pantalla.elegir()
 	assert_int(pedidos[0]).is_zero()
+	AvanceDelEpilogo.recorrer(_almacen)
 	var final: PantallaDeFinal = _almacen.get_node("PantallaDeFinal")
 	final.boton_de_volver().pressed.emit()
 	final.boton_de_volver().pressed.emit()

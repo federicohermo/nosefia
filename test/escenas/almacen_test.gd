@@ -543,6 +543,8 @@ func _hasta_la_pantalla_del_despido(almacen: Node3D, cuentas: Dictionary) -> Pan
 	pantalla.elegir()
 	pantalla.elegir()
 	assert_int(cuentas["menus"]).is_zero()
+	# AC-SHF-137: el despido no tiene epílogo.
+	assert_array(almacen.find_children("*", "PantallaDeEpilogo", true, false)).is_empty()
 	return almacen.get_node("PantallaDeFinal")
 
 

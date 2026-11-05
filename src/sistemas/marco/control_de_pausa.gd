@@ -31,6 +31,9 @@ signal esc_atendido_por_el_celular
 ## El celular, mirado por si está libre y abierto: entonces Esc lo cierra y no pausa. Lo asigna
 ## quien arma el almacén.
 var celular: CelularDelEmpleado
+## El epílogo de un final, mientras se ve: Esc no pausa y perder el cursor tampoco. Lo asigna quien
+## lo muestra, y se libera solo al terminar.
+var epilogo: CanvasLayer
 
 var _interfaces: Array[Interfaz] = []
 
@@ -90,7 +93,8 @@ func _input(evento: InputEvent) -> void:
 			_configuraciones_en_pantalla(),
 			_celular_libre_abierto(),
 			_interfaz_abierta() != null,
-			_logros_en_pantalla()
+			_logros_en_pantalla(),
+			_epilogo_en_pantalla()
 		)
 	)
 
@@ -109,7 +113,8 @@ func _volver_atras() -> void:
 		_configuraciones_en_pantalla(),
 		_celular_libre_abierto(),
 		_interfaz_abierta() != null,
-		_logros_en_pantalla()
+		_logros_en_pantalla(),
+		_epilogo_en_pantalla()
 	)
 	if accion == Pausa.Accion.NADA:
 		return
@@ -215,7 +220,11 @@ func _celular_libre_abierto() -> bool:
 
 
 func _placa_en_pantalla() -> bool:
-	return placa != null and placa.visible
+	return (placa != null and placa.visible) or _epilogo_en_pantalla()
+
+
+func _epilogo_en_pantalla() -> bool:
+	return is_instance_valid(epilogo) and epilogo.visible
 
 
 func _configuraciones_en_pantalla() -> bool:

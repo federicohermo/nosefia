@@ -89,3 +89,14 @@ func test_circulo_cierra_lo_abierto_igual_que_esc() -> void:  # AC-SAV-046
 
 func test_circulo_sin_nada_abierto_no_pausa() -> void:  # AC-SAV-046
 	assert_int(Pausa.ante_volver(false)).is_equal(Pausa.Accion.NADA)
+
+
+func test_con_el_epilogo_en_pantalla_esc_y_circulo_no_hacen_nada() -> void:  # AC-SHF-139
+	assert_int(Pausa.ante_esc(false, false, false, false, false, true)).is_equal(Pausa.Accion.NADA)
+	assert_int(Pausa.ante_esc(true, false, false, false, false, true)).is_equal(Pausa.Accion.NADA)
+	assert_int(Pausa.ante_volver(false, false, false, false, false, true)).is_equal(
+		Pausa.Accion.NADA
+	)
+	assert_int(Pausa.ante_esc(false, false, false, false, false, false)).is_equal(
+		Pausa.Accion.PAUSAR
+	)
