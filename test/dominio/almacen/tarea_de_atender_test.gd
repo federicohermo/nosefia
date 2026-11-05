@@ -79,7 +79,8 @@ func test_perder_a_tin_y_vender_a_tia_no_cumple_atencion() -> void:  # AC-CTR-04
 	tarea.avanzar(12600.0)
 	var atencion := tarea.atencion()
 	atencion.interactuar(null)
-	atencion.interactuar(null)
+	while atencion.abre_la_ventanilla():
+		atencion.interactuar(null)
 	var lineas: Array[Producto] = []
 	for producto in atencion.comprador().pedido().productos():
 		for _unidad in atencion.comprador().pedido().unidades_de(producto):
@@ -296,7 +297,8 @@ func test_compras_cerradas_incluye_despedidas_vencidas_y_vacia() -> void:  # AC-
 	tarea.avanzar(compradores[1].horario.x)
 	var atencion := tarea.atencion()
 	atencion.interactuar(null)
-	atencion.interactuar(null)
+	while atencion.abre_la_ventanilla():
+		atencion.interactuar(null)
 	var productos: Array[Producto] = []
 	for producto in compradores[1].pedido().productos():
 		atencion.interactuar(Estante.new(inventario, Catalogo.todos()).retirar(producto))

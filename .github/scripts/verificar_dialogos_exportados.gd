@@ -7,10 +7,9 @@ func _initialize() -> void:
 	var textos: Resource = load("res://assets/dialogos/compradores_jornada_1.tres")
 	var bloques := {
 		&"tin": ["Hola...", "me olvidé", "Es un chiste"],
-		&"tia": ["Hola! Quiero una caja de cereal"],
-		&"despedida_tin": ["sos lo más"],
-		&"despedida_tia":
-		["tenía mucha hambre", "empleado anterior", "Enrique Peldaño", "11 ****-****"],
+		&"tia": ["……", "………….", "Dame un paquete de", "Y unas"],
+		&"despedida_tin": ["Sos lo más"],
+		&"despedida_tia": ["Hasta luego"],
 	}
 	if textos == null:
 		push_error("El paquete no contiene los diálogos de la primera jornada.")
@@ -49,16 +48,14 @@ func _initialize() -> void:
 				quit(1)
 				return
 	var tia: PackedStringArray = textos.get("tia")
-	if (
-		(
-			_visible(tia[0])
-			!= "Hola! Quiero una caja de cereal Zucarachas y una caja de galletitas Pepito, por favor."
-		)
-		or not _destacados(tia[0], nombres[1])
-	):
-		push_error("La entrada inicial exportada de Tia no conserva texto y destacados.")
-		quit(1)
-		return
+	for indice in 2:
+		var destacado := "[color=#e4f850]{%d}[/color]" % [3, 11][indice]
+		if not tia[indice + 2].contains(destacado):
+			push_error(
+				"La entrada %d de Tia exportada no conserva su producto resaltado." % (indice + 3)
+			)
+			quit(1)
+			return
 	print(
 		"Diálogos exportados: las nueve entradas de Tin y Tia y sus recordatorios están presentes."
 	)
