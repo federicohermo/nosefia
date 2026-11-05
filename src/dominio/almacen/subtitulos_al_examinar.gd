@@ -23,6 +23,8 @@ const PUERTA_DEL_JEFE := &"puerta_del_jefe"
 const CUARTITO_CERRADO := &"cuartito_cerrado"
 const PORTON := &"porton"
 const CONTENEDOR := &"contenedor"
+const CAJA_DEL_PROVEEDOR := &"caja_del_proveedor"
+const CAJA_DE_MADERA := &"caja_de_madera"
 
 const DE_LOS_PRODUCTOS := {
 	Producto.Id.ZUCARACHAS: "Una caja de cereal %s.",
@@ -97,6 +99,14 @@ const DE_LO_DEMAS := {
 	CUARTITO_CERRADO: "Acá guardan las cosas de limpieza. Está cerrado con llave.",
 	PORTON: "Un portón que da a la calle.",
 	CONTENEDOR: "Un contenedor de basura.",
+	CAJA_DEL_PROVEEDOR:
+	"Esta debe ser una de las cajas en las que Hernán\ntrajo los productos que necesitábamos.",
+	CAJA_DE_MADERA:
+	(
+		"El Fernet God viene en estas cajas de madera.\n"
+		+ "No sé para qué las pasamos a una de cartón.\n"
+		+ "Debe ser un toc de Enrique, no me cabe duda."
+	),
 }
 
 const PREFIJO_DE_LA_NOTA := "nota_"
