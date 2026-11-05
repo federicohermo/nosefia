@@ -222,4 +222,5 @@ func test_volver_de_una_partida_terminada_no_anuncia_otra_noche() -> void:  # AC
 	final.boton().pressed.emit()
 	final.boton().pressed.emit()
 	assert_int(pedidos[0]).is_equal(1)
-	assert_bool(_persiana().en_pantalla()).is_false()
+	# La persiana sigue baja bajo la pantalla de final, pero sin la placa de otra noche.
+	assert_bool((_persiana().get("_placa") as Control).visible).is_false()
