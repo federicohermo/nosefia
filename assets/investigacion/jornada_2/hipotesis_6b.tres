@@ -1,0 +1,11 @@
+[gd_resource type="Resource" script_class="Hipotesis" format=3]
+
+[ext_resource type="Script" path="res://src/dominio/investigacion/hipotesis.gd" id="hipotesis"]
+
+[resource]
+script = ExtResource("hipotesis")
+identidad = "6B"
+jornada = 6
+titulo = "DOCUMENTO PECULIAR"
+texto = "¿Testear habilidades técnicas del nuevo empleado? ¿¿En mi sexto día?? ¿¿¿El mismo día en que casualmente se cortó la luz??? No, no, esto es muy turbio. ¿En serio Enrique me está causando estos problemas a propósito? Necesito descubrir qué otras cosas esconde en su oficina, cueste lo que cueste."
+exigencias = PackedStringArray("6B")

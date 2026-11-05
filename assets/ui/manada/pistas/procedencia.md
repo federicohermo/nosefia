@@ -37,3 +37,16 @@ Windows y un azar fijo. El texto es el de la nota de la ficha, con «Yasmín» d
 `nota-examinada.png` es la foto de la pista: una captura de la nota examinada, con la mano y la
 cámara reales del jugador, en la jornada 6 con la 5B elegida. La genera `capturar_nota.gd`, con
 la salida fuera del checkout y `NOSEFIA_CAPTURA_AISLADA=741`.
+
+## El documento impreso (pista 6B)
+
+`documento-impreso.png` es la textura frontal del documento: el nodo `1865:1063` de «Manada - UI»
+en Figma («Textura frontal de la pista 6B», 967 × 1310). La exportación trae un fondo liso que no
+es del papel; `assets/props/documento/generar_documento.py` pasa a transparente ese fondo y deja el
+papel como está. La exportación original pesa lo que pesa su SHA-256:
+`9b48a2c392ea3eef9dbbeef6e70104dd70d59d4b16973b7764e51aff47d1dbdb`. `documento-dorso.png` es el
+mismo contorno en blanco, de la misma generación.
+
+`documento-examinado.png` es la foto de la pista: una captura del documento examinado, con la mano
+y la cámara reales del jugador, en la jornada 6 con la 5A elegida. La genera
+`capturar_documento.gd`, con la salida fuera del checkout y `NOSEFIA_CAPTURA_AISLADA=789`.

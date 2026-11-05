@@ -157,6 +157,7 @@ var _hojas_de_entrada: Array[PuertaDelLocal] = []
 @onready var _investigador: Investigador = $Servicios/Investigador
 @onready var _colilla: ObjetoAgarrable = $Objetos/Colilla
 @onready var _nota: ObjetoAgarrable = $Objetos/NotaBajoLaPuerta
+@onready var _documento: ObjetoAgarrable = $Objetos/DocumentoImpreso
 
 
 func _compradores_de_la_partida(jornada: int) -> Array[Comprador]:
@@ -481,7 +482,7 @@ func _al_abrir_la_jornada(jornada: int) -> void:
 	# Un pensamiento a medio desvanecer tampoco pasa a la noche nueva.
 	_hud.vaciar_subtitulo()
 	_agarre.vaciar_las_manos()
-	for de_una_pista: ObjetoAgarrable in [_colilla, _nota]:
+	for de_una_pista: ObjetoAgarrable in [_colilla, _nota, _documento]:
 		_ubicar_lo_de_una_pista(de_una_pista, jornada)
 	_caja.arrancar(GeneradorDeTickets.para_la_jornada(jornada, _partida.numeros_de_ticket))
 	_puesto_de_la_caja.limpiar()

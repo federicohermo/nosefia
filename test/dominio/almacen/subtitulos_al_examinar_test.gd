@@ -14,6 +14,10 @@ const UTILES: Dictionary[StringName, String] = {
 
 const COLILLA := "res://src/dominio/investigacion/colilla.tres"
 
+const DOCUMENTO := "res://src/dominio/investigacion/documento_impreso.tres"
+
+const NOTA_DE_YASMIN := "res://src/dominio/investigacion/nota_bajo_la_puerta.tres"
+
 ## Cuántos renglones tiene el texto de examinar de cada objeto en su ficha de Notion. Los que no
 ## figuran se ven en un solo renglón.
 const DE_DOS_RENGLONES: Array[StringName] = [
@@ -106,6 +110,7 @@ func _textos_de_examinar() -> Dictionary:
 	for id: StringName in UTILES:
 		textos[id] = (load(UTILES[id]) as ObjetoDelAlmacen).texto_al_examinar()
 	textos[&"colilla"] = (load(COLILLA) as ObjetoDelAlmacen).texto_al_examinar()
+	textos[&"documento_impreso"] = (load(DOCUMENTO) as ObjetoDelAlmacen).texto_al_examinar()
 	for producto: Producto in Catalogo.todos():
 		textos[StringName(producto.nombre)] = SubtitulosAlExaminar.de_producto(producto.id)
 	return textos
@@ -122,3 +127,15 @@ func test_cada_texto_de_examinar_se_corta_en_los_renglones_de_la_ficha() -> void
 		)
 		for renglon in renglones:
 			assert_str(renglon.strip_edges()).is_not_empty()
+
+
+func test_el_documento_impreso_dice_su_texto_en_un_renglon() -> void:  # AC-SUB-051
+	var documento := load(DOCUMENTO) as ObjetoDelAlmacen
+	assert_object(documento).is_not_null()
+	assert_str(String(documento.id)).is_equal("documento_impreso")
+	var texto := documento.texto_al_examinar()
+	assert_str(texto).is_not_empty()
+	assert_array(texto.split("\n")).has_size(1)
+	assert_str(texto).not_contains("...")
+	for otro: String in [COLILLA, NOTA_DE_YASMIN]:
+		assert_str(texto).is_not_equal((load(otro) as ObjetoDelAlmacen).texto_al_examinar())
