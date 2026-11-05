@@ -219,6 +219,7 @@ func _pintar(sentido: int = 0) -> void:
 	_retrato.visible = true
 	_volver.disabled = not _instrucciones.se_puede_volver()
 	_siguiente.text = (TEXTO_DE_COMENZAR if _instrucciones.en_el_ultimo() else TEXTO_DE_SIGUIENTE)
+	FocoDeLaInterfaz.en_el_primero(self)
 	_numeracion = "%d/%d" % [numero, _pasos.size()]
 	if sentido == 0:
 		_contador.text = _numeracion
