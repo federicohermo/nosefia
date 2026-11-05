@@ -128,8 +128,8 @@ const DIALOGOS_AL_AZAR: Dictionary = {
 
 ## Los pedidos con forma propia: `jornada → personaje → forma`. Piden el máximo de tipos, salvo que
 ## la forma diga `tipos`. `ultimo` es el producto que cierra el pedido, `no_primero`, los que no
-## pueden abrirlo, `tipos`, cuántos tipos lleva el pedido, y `fijo`, las líneas `[Producto.Id, unidades]`
-## que reemplazan el sorteo y no dependen del grupo.
+## pueden abrirlo, `tipos`, cuántos tipos lleva el pedido, y `fijo`, las líneas
+## `[Producto.Id, unidades]` que reemplazan el sorteo y no dependen del grupo.
 const PEDIDOS_CON_FORMA: Dictionary = {
 	ReglasDeLaPartida.PRIMERA_JORNADA + 2:
 	{
