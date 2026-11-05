@@ -560,9 +560,9 @@ menú se pide una sola vez.
 ### AC-SHF-100 — Las dos cajas del proveedor están sólo en la jornada 7 *(verifica BR-SHF-050)*
 
 DADA cada jornada de 1 a 6 abierta CUANDO se arma el depósito ENTONCES no hay caja de cartón del
-proveedor ni caja de madera. DADA la jornada 7 abierta ENTONCES hay una de cada una, sin hacer el
-pedido al proveedor y con el pedido hecho. DADA una partida guardada en la jornada 7 CUANDO se
-retoma ENTONCES siguen las dos, una de cada una.
+proveedor ni caja de madera. DADA la jornada 7 abierta ENTONCES hay una de cada una, se haya hecho
+el pedido al proveedor o no. DADA una partida guardada en la jornada 7 CUANDO se retoma ENTONCES
+siguen las dos, una de cada una.
 
 ### AC-SHF-101 — Fijas, mudas y ajenas al depósito *(verifica BR-SHF-050)*
 

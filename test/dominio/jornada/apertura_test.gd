@@ -264,3 +264,16 @@ func test_retomar_la_primera_y_abrir_la_segunda_no_hereda_huecos() -> void:  # A
 		)
 	assert_int(primera.unidades(producto, Inventario.Ubicacion.GONDOLA)).is_zero()
 	assert_bool(Apertura.pide(2, Tarea.Tipo.REPONER)).is_true()
+
+
+func test_las_cajas_del_proveedor_estan_solo_en_la_ultima_jornada() -> void:  # AC-SHF-100
+	var primera := ReglasDeLaPartida.PRIMERA_JORNADA
+	var ultima := primera + ReglasDeLaPartida.JORNADAS_DE_LA_PARTIDA - 1
+	for jornada in range(primera, ultima + 1):
+		(
+			assert_bool(Apertura.hay_cajas_del_proveedor(jornada))
+			. override_failure_message("jornada %d" % jornada)
+			. is_equal(jornada == ultima)
+		)
+	assert_bool(Apertura.hay_cajas_del_proveedor(primera - 1)).is_false()
+	assert_bool(Apertura.hay_cajas_del_proveedor(ultima + 1)).is_false()

@@ -41,6 +41,7 @@ const HabitacionesDelAlmacen := preload("res://src/escenas/puestos/habitaciones_
 const NotasDelLocal := preload("res://src/escenas/puestos/notas_del_almacen.gd")
 const PilaDelDeposito := preload("res://src/escenas/puestos/pila_del_deposito.gd")
 const PALLETS_DE_ENTREGA := preload("res://src/escenas/puestos/pallets_de_entrega.tscn")
+const CAJAS_DEL_PROVEEDOR := preload("res://src/escenas/puestos/cajas_del_proveedor.tscn")
 const ReglasDelCierre := preload("res://src/dominio/almacen/reglas_del_cierre.gd")
 
 ## El jugador tampoco declara un `class_name` —es cáscara, como este archivo—, así que el
@@ -127,6 +128,7 @@ var _router: RouterDelWifi
 var _arranque: Transform3D
 var _acomodador: AcomodadorDelDeposito
 var _pallets_de_entrega: Node3D
+var _cajas_del_proveedor: Node3D
 var _presencias_de_las_cajas: Dictionary[Node3D, PresenciaDeCaja] = {}
 
 ## Cómo se sale al menú. Es una variable y no una llamada directa porque un test no puede
@@ -516,6 +518,7 @@ func _al_abrir_la_jornada(jornada: int) -> void:
 			forma.disabled = true
 		var tacho := _tachos()[indice]
 		tacho.mostrar(bolsa as BolsaDeBasura, _recolector.tarea().tiene_bolsa(tacho.tacho))
+	_disponer_las_cajas_del_proveedor(jornada)
 	var poses: Dictionary[Node3D, Transform3D] = {}
 	if is_instance_valid(_pallets_de_entrega):
 		_pallets_de_entrega.queue_free()
@@ -592,6 +595,18 @@ func _cajas_del_deposito(inventario: Inventario) -> Array[OrganizacionDelDeposit
 			)
 		)
 	return cajas
+
+
+## El proveedor deja sus dos cajas junto al portón sólo en la jornada que lo declara el dominio, y
+## la noche siguiente ya no están.
+func _disponer_las_cajas_del_proveedor(jornada: int) -> void:
+	if is_instance_valid(_cajas_del_proveedor):
+		remove_child(_cajas_del_proveedor)
+		_cajas_del_proveedor.queue_free()
+		_cajas_del_proveedor = null
+	if Apertura.hay_cajas_del_proveedor(jornada):
+		_cajas_del_proveedor = CAJAS_DEL_PROVEEDOR.instantiate()
+		add_child(_cajas_del_proveedor)
 
 
 func _repisas_del_deposito() -> Array[AABB]:

@@ -614,8 +614,8 @@ al examinar, de un renglón.
 
 DADA la jornada 7 CUANDO se pide examinar la caja de cartón del proveedor con las manos vacías
 ENTONCES muestra el texto asociado a su identidad, en dos renglones. CUANDO se pide examinar la caja de
-madera ENTONCES muestra el texto asociado a la suya, en tres renglones. DADA una caja de productos
-del depósito ENTONCES su texto sigue siendo el de su producto.
+madera ENTONCES muestra el texto asociado a la suya, en tres renglones. Ninguna de las dos dice
+el texto de un producto.
 
 ## No objetivos
 
