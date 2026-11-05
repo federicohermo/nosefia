@@ -4,6 +4,7 @@ const Avance := preload("res://test/avance_de_devolucion.gd")
 const FinDeLaReflexion := preload("res://test/fin_de_la_reflexion.gd")
 const JEFE := Conversacion.Interlocutor.JEFE
 const YASMIN := Conversacion.Interlocutor.YASMIN
+const NOTAS := Conversacion.Interlocutor.NOTAS
 const RelojDePrueba := preload("res://test/reloj_de_prueba.gd")
 var _almacen: Node3D
 var _ruta_anterior: String
@@ -133,7 +134,8 @@ func test_checkpoint_real_abre_dos_chats_sin_intro_y_con_devolucion_fechada() ->
 	)
 	await _q()
 	var lista: VBoxContainer = _pantalla().get("_mensajes")
-	assert_int(lista.get_child_count()).is_equal(2)
+	assert_array(bandeja.conversaciones()).contains([bandeja.conversacion_de(NOTAS)])
+	assert_int(lista.get_child_count()).is_equal(bandeja.conversaciones().size())
 	var fila := lista.get_child(1).get_child(0)
 	assert_str((fila.find_child("NoLeidos", true, false).get_child(0) as Label).text).is_equal(
 		str(_guion_de_la_apertura())
