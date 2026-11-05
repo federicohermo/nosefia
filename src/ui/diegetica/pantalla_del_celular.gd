@@ -774,7 +774,6 @@ func _componer(menu: bool, notas: bool = false) -> void:
 	_busqueda.add_theme_stylebox_override("normal", buscar)
 	_busqueda.add_theme_stylebox_override("focus", buscar)
 	_volver.add_theme_stylebox_override("focus", StyleBoxEmpty.new())
-	_volver.add_theme_color_override("font_focus_color", _volver.get_theme_color("font_color"))
 	_entrada.add_theme_stylebox_override("read_only", _estilo(Color("f3f3ef"), 12, 16))
 	var barra := _scroll.get_v_scroll_bar()
 	barra.add_theme_stylebox_override("scroll", _estilo(PAPEL, 0, 5))

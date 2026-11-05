@@ -33,7 +33,10 @@ func _con_marco_de_foco(pantalla: PantallaDelCelular) -> Array[String]:
 	for hijo: Node in pantalla.find_children("*", "Control", true, false):
 		if not (hijo is Button or hijo is LineEdit):
 			continue
-		var estilo := (hijo as Control).get_theme_stylebox("focus")
+		var control := hijo as Control
+		if control.focus_mode == Control.FOCUS_NONE:
+			continue
+		var estilo := control.get_theme_stylebox("focus")
 		if estilo is StyleBoxFlat and (estilo as StyleBoxFlat).get_border_width_min() > 0:
 			con_marco.append(str(hijo.name))
 	return con_marco
