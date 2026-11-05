@@ -189,10 +189,11 @@ CUANDO cambia una asignación, el sistema DEBE aplicarla sin esperar a que se ci
 de controles: la caminata, la mano, el examen, el celular, la agachada, la pausa y cada puesto
 DEBEN responder a la entrada nueva y NO DEBEN responder a la que la ranura dejó. Una asignación
 hecha desde la pausa DEBE valer al reanudar, sin volver al menú. Pausa DEBE ser la tecla que
-pausa, reanuda y cierra Configuraciones y las listas desplegables. Los gestos del cursor
-sobre una pantalla —pulsar al comprador en la ventanilla, avanzar un diálogo, arrastrar para
-girar lo examinado, y pulsar los botones y renglones de las pantallas— NO son una acción: DEBEN
-seguir en el botón izquierdo del mouse, sin importar la asignación.
+pausa, reanuda y cierra Configuraciones y las listas desplegables. Pulsar al comprador en la
+ventanilla DEBE seguir a Agarrar / Soltar: el comprador responde a la entrada que tenga esa acción.
+Los gestos del cursor sobre una pantalla —avanzar un diálogo, arrastrar para girar lo examinado,
+arrastrar la lista de la caja, y pulsar los botones y renglones de las pantallas— NO son una
+acción: DEBEN seguir en el botón izquierdo del mouse, sin importar la asignación.
 
 ### BR-CFG-021 — En la web, Esc sigue pausando
 
@@ -383,8 +384,10 @@ el clic izquierdo ya no lo hace. DADO Pausa asignada a P CUANDO llega P ENTONCES
 pausa; CUANDO llega P otra vez ENTONCES se reanuda; CUANDO llega Esc con la partida en curso
 ENTONCES no se pausa por esa tecla. DADO Pausa en P y Configuraciones abierta CUANDO llega P
 ENTONCES se cierra, y Esc no la cierra. DADO una asignación hecha con la pausa abierta CUANDO se
-reanuda ENTONCES vale sin volver al menú. DADO Agarrar / Soltar en F ENTONCES el clic izquierdo
-sigue pulsando al comprador, avanzando un diálogo y girando lo examinado al arrastrar.
+reanuda ENTONCES vale sin volver al menú. DADO Agarrar / Soltar en F y la ventanilla abierta con un
+comprador CUANDO llega F ENTONCES el comprador avanza, y el clic izquierdo no lo hace. DADO Agarrar
+/ Soltar en F ENTONCES el clic izquierdo sigue avanzando un diálogo, girando lo examinado al
+arrastrar y arrastrando la lista de la caja.
 
 ### AC-CFG-021 — La web sigue pausando con Esc *(verifica BR-CFG-021)*
 
