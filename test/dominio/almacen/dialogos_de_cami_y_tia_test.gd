@@ -20,7 +20,7 @@ const MENSAJE_3_DE_CAMI := 2
 const ENTRADAS := {
 	"cami_tercera": [14, 3],
 	"tin_tercera": [4, 1],
-	"tia_cuarta": [2, 1],
+	"tia_cuarta": [3, 1],
 	"cami_quinta": [9, 3],
 	"tia_sexta": [3, 2],
 }
@@ -179,7 +179,8 @@ func test_tin_de_la_tercera_dice_sus_entradas_y_nombra_sus_tres_productos() -> v
 
 
 func test_tia_de_la_cuarta_y_la_sexta_nombran_el_pedido_entero() -> void:  # AC-CTR-156
-	for caso: Array in [[CUARTA, "tia_cuarta"], [SEXTA, "tia_sexta"]]:
+	# Dónde nombra el pedido la apertura de Tia en cada noche.
+	for caso: Array in [[CUARTA, "tia_cuarta", 1], [SEXTA, "tia_sexta", -1]]:
 		for semilla in range(1, SEMILLAS + 1):
 			var tia := _comprador(caso[0], PERSONAJE.TIA, semilla)
 			var entradas := _entradas_de(tia, caso[1])
@@ -188,9 +189,24 @@ func test_tia_de_la_cuarta_y_la_sexta_nombran_el_pedido_entero() -> void:  # AC-
 			_sin_marcadores(entradas[0])
 			var apertura: PackedStringArray = entradas[0]
 			var pedido := _presentado(tia.pedido().productos())
-			assert_str(apertura[-1]).contains(pedido)
-			assert_int(apertura[-1].count(AMARILLO)).is_equal(tia.pedido().productos().size())
-			assert_int(apertura[0].count(AMARILLO)).is_zero()
+			assert_str(apertura[caso[2]]).contains(pedido)
+			assert_int(apertura[caso[2]].count(AMARILLO)).is_equal(tia.pedido().productos().size())
+			for indice in apertura.size():
+				if indice != posmod(caso[2], apertura.size()):
+					assert_int(apertura[indice].count(AMARILLO)).is_zero()
+
+
+func test_tia_de_la_sexta_nombra_su_primer_y_su_segundo_producto() -> void:  # AC-CTR-156
+	for semilla in range(1, SEMILLAS + 1):
+		var tia := _comprador(SEXTA, PERSONAJE.TIA, semilla)
+		var productos := tia.pedido().productos()
+		assert_array(productos).has_size(2)
+		var ultima := _apertura(tia)[-1]
+		assert_str(ultima).contains(_presentado([productos[0]]))
+		assert_str(ultima).contains(_presentado([productos[1]]))
+		assert_int(ultima.find(_presentado([productos[0]]))).is_less(
+			ultima.find(_presentado([productos[1]]))
+		)
 
 
 func test_cami_de_la_quinta_dice_sus_entradas_y_nombra_el_pedido_entero() -> void:  # AC-CTR-157
@@ -223,7 +239,7 @@ func test_solo_ellos_tienen_guion_propio_y_los_demas_usan_el_predeterminado() ->
 	var con_guion := {
 		TERCERA: [PERSONAJE.CAMI, PERSONAJE.TIN],
 		CUARTA: [PERSONAJE.TIA],
-		QUINTA: [PERSONAJE.CAMI],
+		QUINTA: [PERSONAJE.CAMI, PERSONAJE.MIA],
 		SEXTA: [PERSONAJE.TIA],
 		SEPTIMA: [],
 	}
