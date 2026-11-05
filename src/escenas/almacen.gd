@@ -395,7 +395,7 @@ func _cablear_el_corte_de_luz() -> void:
 ## protagonista lo decide el dominio; acá se lo cuenta al router y al celular. Abrir la jornada va
 ## después de que el corte abre la suya, para que el wifi parta siempre de «con wifi».
 func _cablear_el_router(corte: CorteDeLuz) -> void:
-	_router = $Router
+	_router = $Estructura/Router
 	corte.luz_cambiada.connect(func(_hay_luz: bool) -> void: _wifi.seguir_al_corte(corte.estado()))
 	_ciclo.jornada_abierta.connect(func(_jornada: int) -> void: _wifi.abrir_jornada())
 	_wifi.estado_cambiado.connect(func(_estado: WifiDelLocal.Estado) -> void: _mostrar_el_wifi())

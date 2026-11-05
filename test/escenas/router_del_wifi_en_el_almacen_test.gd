@@ -5,6 +5,7 @@ extends GdUnitTestSuite
 const ALMACEN := preload("res://src/escenas/almacen.tscn")
 const RelojDePrueba := preload("res://test/reloj_de_prueba.gd")
 const TABLERO := "Estructura/tableroluz/StaticBody3D"
+const ROUTER := "Estructura/Router"
 const S := SubtitulosDeLosGestos.Id
 const LUCES := WifiDelLocal.Luces
 
@@ -36,14 +37,14 @@ func _linea(local: Node3D) -> String:
 
 
 func _luces(local: Node3D) -> Texture2D:
-	var router: Node3D = local.get_node("Router")
+	var router: Node3D = local.get_node(ROUTER)
 	var materiales: Array = router.get("_con_luces")
 	assert_array(materiales).is_not_empty()
 	return (materiales[0] as StandardMaterial3D).albedo_texture
 
 
 func _textura(local: Node3D, luces: LUCES) -> Texture2D:
-	var router: Node3D = local.get_node("Router")
+	var router: Node3D = local.get_node(ROUTER)
 	match luces:
 		LUCES.APAGADAS:
 			return router.get("textura_apagada")
@@ -91,7 +92,7 @@ func test_apagar_y_prender_devuelve_el_wifi_y_el_icono() -> void:  # AC-ANO-022,
 	var local := _local()
 	_cortar(local)
 	_restaurar(local)
-	var router: Node3D = local.get_node("Router")
+	var router: Node3D = local.get_node(ROUTER)
 	router.accionar()
 	assert_array(_vista(local)).is_equal(_esperado(LUCES.APAGADAS))
 	assert_str(_linea(local)).is_empty()
@@ -104,7 +105,7 @@ func test_devuelto_el_wifi_el_clic_piensa_y_no_lo_cambia() -> void:  # AC-ANO-02
 	var local := _local()
 	_cortar(local)
 	_restaurar(local)
-	var router: Node3D = local.get_node("Router")
+	var router: Node3D = local.get_node(ROUTER)
 	router.accionar()
 	router.accionar()
 	for _clic in 2:
@@ -116,7 +117,7 @@ func test_devuelto_el_wifi_el_clic_piensa_y_no_lo_cambia() -> void:  # AC-ANO-02
 func test_sin_luz_el_clic_piensa_sin_luz_y_no_lo_cambia() -> void:  # AC-ANO-023, AC-SUB-034
 	var local := _local()
 	_cortar(local)
-	local.get_node("Router").accionar()
+	local.get_node(ROUTER).accionar()
 	assert_str(_linea(local)).is_equal(SubtitulosDeLosGestos.texto(S.SIN_LUZ))
 	assert_array(_vista(local)).is_equal(_esperado(LUCES.APAGADAS))
 
@@ -128,14 +129,14 @@ func test_antes_del_corte_o_en_otra_jornada_el_clic_no_lo_apaga() -> void:  # AC
 	]
 	for jornada in jornadas:
 		var local := _local(jornada)
-		local.get_node("Router").accionar()
+		local.get_node(ROUTER).accionar()
 		assert_str(_linea(local)).is_equal(SubtitulosDeLosGestos.texto(S.ROUTER_ANTES_DEL_CORTE))
 		assert_array(_vista(local)).is_equal(_esperado(LUCES.VERDES))
 
 
 func test_examinar_el_router_dice_su_texto_sin_tocarlo() -> void:  # AC-SUB-034
 	var local := _local()
-	var router: Node3D = local.get_node("Router")
+	var router: Node3D = local.get_node(ROUTER)
 	var texto: String = local.get("_jugador").texto_al_examinar_de(router)
 	assert_str(texto).is_equal(SubtitulosAlExaminar.de_lo_fijo(SubtitulosAlExaminar.ROUTER))
 	assert_array(_vista(local)).is_equal(_esperado(LUCES.VERDES))
