@@ -1,9 +1,11 @@
 ## Qué dice el reloj de pared del local.
 ##
-## **El GDD dice que la hora no está siempre a la vista**: se lee sólo en este reloj. No es
-## cosmético — la tensión del juego es aritmética, y un número siempre visible la afloja: saber
-## cuánto queda sale gratis. Fuera del HUD, enterarse cuesta caminar hasta él; y la sexta noche,
-## con el corte de luz, ni caminar alcanza: queda leyendo la hora del corte hasta el cierre.
+## **El GDD dice que la hora no está siempre a la vista**: en vivo se lee en este reloj y en el
+## celular, y no en el HUD. El ticket guarda la hora de su impresión.
+## No es cosmético — la tensión del juego es aritmética, y un número siempre visible
+## la afloja: saber cuánto queda sale gratis. Fuera del HUD, enterarse cuesta caminar hasta el
+## reloj o abrir el celular; y la sexta noche, con el corte de luz, el reloj queda leyendo la hora
+## del corte hasta el cierre. El celular no se detiene: no es parte de esta regla.
 ##
 ## **Va en `dominio/` y no en el script del nodo**, y está medido: la misma sonda con esta regla
 ## escrita en `escenas/` da los dos gates en verde. Ahí nacería sin test y nadie lo diría.
