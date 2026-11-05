@@ -1,4 +1,4 @@
-﻿"""Texturiza la UV existente; ejecutar desde la raíz con Blender en background."""
+"""Texturiza la UV existente; ejecutar desde la raíz con Blender en background."""
 import bpy
 import numpy as np
 from pathlib import Path
@@ -6,7 +6,6 @@ from mathutils import Vector, noise
 
 ROOT = Path.cwd()
 DEST = ROOT / 'assets/models/Llave'
-OUT = ROOT / 'build/llave'
 obj = bpy.data.objects['Llave']
 mesh = obj.data
 N = 256
@@ -61,10 +60,7 @@ def save(name,data,srgb):
     img=bpy.data.images.new(name,width=N,height=N,alpha=False)
     img.colorspace_settings.name='sRGB' if srgb else 'Non-Color'
     img.pixels.foreach_set(data.ravel())
-    img.filepath_raw=str(DEST/(name+'.png'))
-    img.file_format='PNG'
-    img.save()
-    img.filepath='//'+name+'.png'
+    img.pack()
     return img
 
 mat=bpy.data.materials['metal_llave']
