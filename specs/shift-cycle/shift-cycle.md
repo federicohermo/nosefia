@@ -3,7 +3,7 @@ schema_version: 1
 capability_id: CAP-SHF
 status: ratified
 owner: por definir
-provenance: GDD «Ciclo de jornadas»; fichas «Pantalla entre jornadas» y «Particulares de cada jornada»; decisiones de #364, #369, #436, #526, #527, #573, #691 y #693; migración de los specs 001, 007, 011, 016, 027, 031; quejas de la jornada 7 de #759, ficha «Particulares de cada jornada»; la ficha «Caminos narrativos y finales» y la fila «7B» de la lista de pistas e hipótesis, de #790; cajas del proveedor de #788, filas «Caja de cartón del proveedor» y «Caja de madera» de «Objetos interactuables» leídas el 2026-11-04; hora del celular de #613, decisiones del 2026-10-29, 2026-10-30 y 2026-11-02
+provenance: GDD «Ciclo de jornadas»; fichas «Pantalla entre jornadas» y «Particulares de cada jornada»; decisiones de #364, #369, #436, #526, #527, #573, #691 y #693; migración de los specs 001, 007, 011, 016, 027, 031; quejas de la jornada 7 de #759, ficha «Particulares de cada jornada»; la ficha «Caminos narrativos y finales» y la fila «7B» de la lista de pistas e hipótesis, de #790; la sección «Epílogos» de la ficha «Caminos narrativos y finales», leída el 2026-11-05, de #836; cajas del proveedor de #788, filas «Caja de cartón del proveedor» y «Caja de madera» de «Objetos interactuables» leídas el 2026-11-04; hora del celular de #613, decisiones del 2026-10-29, 2026-10-30 y 2026-11-02
 ---
 
 # Capacidad: el ciclo de la jornada
@@ -134,6 +134,7 @@ pantalla DEBE mostrar su encabezado, su título y un solo botón, «VOLVER AL ME
   pistas.
 - La partida en curso NO DEBE mostrar pantalla de final: la única opción de la devolución sigue a
   la jornada siguiente. Los finales 4 y 5 no pasan por la devolución (BR-SHF-060, BR-SHF-061).
+- Los finales 1 y 2 DEBEN mostrar antes su epílogo (BR-SHF-070); el despido no.
 
 Elegir la opción de la devolución o el botón dos veces NO DEBE mostrar dos pantallas ni pedir dos
 veces el menú. El guardado se borra igual que sin la pantalla (BR-SAV-002).
@@ -149,8 +150,8 @@ no puede terminar despedida ni con el contrato cumplido por esa jornada.
 La pantalla de final DEBE mostrarse en ese mismo paso, con el encabezado «/ FINAL 4», el título
 «JEFE SABOTEADOR» y un solo botón, «VOLVER AL MENÚ», que sale al menú. Accionar otra vez la puerta
 o pulsar el botón dos veces NO DEBE mostrar dos pantallas ni pedir dos veces el menú. El guardado se
-borra (BR-SAV-002). Mientras el epílogo no tenga contenido (OQ-INV-010), NO DEBE intercalarse nada
-entre la puerta y la pantalla.
+borra (BR-SAV-002). El epílogo de este final (BR-SHF-070) va entre la puerta y la pantalla;
+mientras ninguna de sus placas tenga texto, NO DEBE intercalarse nada.
 
 ### BR-SHF-061 — Abrir la puerta del jefe con la llave termina la partida en el final 5
 
@@ -159,11 +160,44 @@ BR-INV-145), el sistema DEBE terminar en ese momento la jornada y la partida con
 las mismas garantías que el final 4 (BR-SHF-060): sin devolución del jefe, sin cierre de la
 jornada, sin elección de hipótesis y sin evaluar la noche.
 
-La pantalla de final DEBE mostrarse en ese mismo paso, con el encabezado «/ FINAL 5», el título
-«JEFE INCOMPETENTE» y un solo botón, «VOLVER AL MENÚ», que sale al menú. Accionar otra vez la
-puerta o pulsar el botón dos veces NO DEBE mostrar dos pantallas ni pedir dos veces el menú. El
-guardado se borra (BR-SAV-002). Mientras el epílogo no tenga contenido (OQ-INV-010), NO DEBE
-intercalarse nada entre la puerta y la pantalla.
+La pantalla de final DEBE mostrarse después del epílogo de este final (BR-SHF-070), con el
+encabezado «/ FINAL 5», el título «JEFE INCOMPETENTE» y un solo botón, «VOLVER AL MENÚ», que sale
+al menú. Accionar otra vez la puerta o pulsar el botón dos veces NO DEBE mostrar dos pantallas ni
+pedir dos veces el menú. El guardado se borra (BR-SAV-002).
+
+### BR-SHF-070 — Los finales narrativos pasan por su epílogo antes de su pantalla
+
+CUANDO la partida termina en un final con epílogo, el sistema DEBE mostrar ese epílogo antes de la
+pantalla de final, y llevar de ahí a la pantalla. Un final tiene epílogo si al menos una de sus
+placas tiene texto. Los finales 1, 2 y 5 lo tienen; el final 4 no lo tiene mientras ninguna de sus
+placas tenga texto; el despido nunca lo tiene.
+
+- La transición hacia cada placa DEBE ser un fundido a negro de 1 segundo seguido de un fundido de
+  entrada de 1 segundo. La misma transición DEBE llevar de la última placa a la pantalla de final.
+- SI el final no tiene epílogo, ENTONCES el sistema DEBE ir directo a la pantalla de final, sin
+  fundido ni pantalla intermedia.
+- El epílogo DEBE mostrar sus placas en el orden de la ficha «Caminos narrativos y finales». Una
+  placa sin texto NO DEBE mostrarse; cuando la ficha le cargue texto, pasa a mostrarse sin otro
+  cambio.
+
+### BR-SHF-071 — Cada placa trae su fondo, su texto y SIGUIENTE
+
+CADA placa DEBE mostrar la imagen de fondo de su final, su texto y un botón «SIGUIENTE» debajo del
+texto. El texto DEBE ser el de la ficha, con los saltos de renglón que la ficha marca. CUANDO se
+acciona «SIGUIENTE», el sistema DEBE pasar a la placa siguiente, o a la pantalla de final si era
+la última. Un final con una sola placa lleva de su única placa a la pantalla de final.
+
+- El final 1 DEBE tener 6 placas, el final 2 DEBE tener 2 y el final 5 DEBE tener 7.
+- Las placas de un mismo final DEBEN compartir su imagen de fondo; cada final usa la suya.
+
+### BR-SHF-072 — Mientras se ve el epílogo, el juego queda quieto
+
+MIENTRAS se ve el epílogo, incluidos sus fundidos, el jugador NO DEBE moverse ni accionar nada del
+almacén, el reloj de la noche NO DEBE avanzar y la tecla de pausa NO DEBE abrir el menú de pausa.
+«SIGUIENTE» DEBE poder accionarse con el mouse, con el teclado y con el joystick.
+
+Accionar «SIGUIENTE» durante un fundido, o dos veces seguidas, NO DEBE saltear ni repetir una
+placa, ni mostrar la pantalla de final antes de tiempo.
 
 ### BR-SHF-030 — Responder a las quejas cuenta cuando las cinco tienen respuesta correcta
 
@@ -631,9 +665,9 @@ prueba, en la jornada 1 o en la 2, ENTONCES la pantalla es la misma.
 ### AC-SHF-064 — El contrato cumplido sin pistas muestra su pantalla *(verifica BR-SHF-027)*
 
 DADO la jornada 7 cerrada con el contrato cumplido y ninguna pista registrada en toda la partida
-CUANDO el jugador elige la opción de la devolución ENTONCES aparece la pantalla con «/ FINAL 1»,
-«EMPLEADO ESTRESADO» y un solo botón, «VOLVER AL MENÚ». CUANDO se pulsa el botón ENTONCES se pide el
-menú.
+CUANDO el jugador elige la opción de la devolución y recorre su epílogo (BR-SHF-070) ENTONCES
+aparece la pantalla con «/ FINAL 1», «EMPLEADO ESTRESADO» y un solo botón, «VOLVER AL MENÚ». CUANDO
+se pulsa el botón ENTONCES se pide el menú.
 
 ### AC-SHF-065 — El despido gana sobre la falta de pistas *(verifica BR-SHF-027)*
 
@@ -644,15 +678,17 @@ la opción de la devolución ENTONCES la pantalla es la del despido, con «DESPE
 ### AC-SHF-066 — Con alguna pista aparece el final 2 *(verifica BR-SHF-027)*
 
 DADO la jornada 7 cerrada con el contrato cumplido y una sola pista registrada, en cualquier jornada,
-CUANDO el jugador elige la opción de la devolución ENTONCES aparece la pantalla con «/ FINAL 2»,
-«LOCURA PARANOICA» y un solo botón, «VOLVER AL MENÚ», y el menú todavía no se pidió. CUANDO se pulsa
+CUANDO el jugador elige la opción de la devolución y recorre su epílogo (BR-SHF-070) ENTONCES
+aparece la pantalla con «/ FINAL 2», «LOCURA PARANOICA» y un solo botón, «VOLVER AL MENÚ», y el
+menú todavía no se pidió. CUANDO se pulsa
 el botón ENTONCES se pide el menú. DADO una partida en curso ENTONCES la devolución no lleva a ninguna
 pantalla de final.
 
 ### AC-SHF-067 — Elegir dos veces no repite nada *(verifica BR-SHF-027)*
 
 DADO la pantalla de final del despido, la del contrato sin pistas y la del final 2 CUANDO se elige dos
-veces la opción de la devolución ENTONCES se muestra una sola pantalla. CUANDO se pulsa dos veces el botón ENTONCES el
+veces la opción de la devolución ENTONCES se muestra una sola pantalla, o un solo epílogo antes
+de ella. CUANDO se pulsa dos veces el botón ENTONCES el
 menú se pide una sola vez.
 
 ### AC-SHF-100 — Las dos cajas del proveedor están sólo en la jornada 7 *(verifica BR-SHF-050)*
@@ -699,11 +735,68 @@ mano CUANDO se acciona la puerta ENTONCES la partida sigue en curso.
 
 ### AC-SHF-113 — El final 5 muestra su pantalla *(verifica BR-SHF-061, BR-SHF-027)*
 
-DADO el final 5 CUANDO termina la partida ENTONCES aparece, sin otra pantalla antes, la pantalla con
-«/ FINAL 5», «JEFE INCOMPETENTE» y un solo botón, «VOLVER AL MENÚ», y el menú todavía no se pidió.
+DADO el final 5 CUANDO termina la partida y se recorre su epílogo (BR-SHF-070) ENTONCES aparece la
+pantalla con «/ FINAL 5», «JEFE INCOMPETENTE» y un solo botón, «VOLVER AL MENÚ», y el menú todavía no se pidió.
 CUANDO se pulsa el botón ENTONCES se pide el menú; CUANDO se pulsa dos veces ENTONCES se pide una sola
 vez. CUANDO se acciona otra vez la puerta ENTONCES se sigue mostrando una sola pantalla. Su
 encabezado y su título no son los del final 4 ni los de ningún otro final.
+
+### AC-SHF-134 — El final 1 pasa por sus seis placas *(verifica BR-SHF-070, BR-SHF-071, BR-SHF-027)*
+
+DADO el contrato cumplido sin ninguna pista CUANDO el jugador elige la opción de la devolución
+ENTONCES no aparece la pantalla de final: tras el fundido de salida y el de entrada aparece la placa
+1 del final 1, con su imagen de fondo, su texto y «SIGUIENTE». CUANDO se acciona «SIGUIENTE» cinco
+veces, esperando cada fundido, ENTONCES se ven las placas 2 a 6 en ese orden, siempre con la misma
+imagen de fondo. CUANDO se acciona en la placa 6 ENTONCES, tras el fundido, aparece la pantalla con
+«/ FINAL 1» y el menú todavía no se pidió. El texto de la placa 1 tiene tres renglones y el de la
+placa 2, uno.
+
+### AC-SHF-135 — El final 2 pasa por sus dos placas *(verifica BR-SHF-070, BR-SHF-071, BR-SHF-027)*
+
+DADO el contrato cumplido con una sola pista, en cualquier jornada, CUANDO el jugador elige la
+opción de la devolución ENTONCES aparece la placa 1 del final 2, con una imagen de fondo distinta de
+la del final 1. CUANDO se acciona «SIGUIENTE» ENTONCES aparece la placa 2, y CUANDO se acciona de
+nuevo ENTONCES, tras el fundido, aparece la pantalla con «/ FINAL 2». El texto de la placa 1 tiene
+dos renglones.
+
+### AC-SHF-136 — El final 5 pasa por sus siete placas *(verifica BR-SHF-070, BR-SHF-071, BR-SHF-061)*
+
+DADO la jornada 7 con la llave en la mano CUANDO se abre la puerta del jefe ENTONCES, tras los
+fundidos, aparece la placa 1 del final 5 y no la pantalla de final. CUANDO se acciona «SIGUIENTE»
+seis veces, esperando cada fundido, ENTONCES se ven las placas 2 a 7 en orden, y la pantalla con
+«/ FINAL 5» no aparece antes de accionarlo en la placa 7. CUANDO se acciona en la placa 7
+ENTONCES, tras el fundido, aparece la pantalla con «/ FINAL 5». El texto de la placa 1 tiene dos
+renglones y el de la placa 7, dos.
+
+### AC-SHF-137 — Sin epílogo, directo a la pantalla *(verifica BR-SHF-070, BR-SHF-027, BR-SHF-060)*
+
+DADO una partida despedida, en cualquier jornada, CUANDO el jugador elige la opción de la devolución
+ENTONCES aparece la pantalla «/ FIN DEL JUEGO» sin fundido ni placa antes. DADO el final 4, cuyas
+placas no tienen texto, CUANDO se abre la puerta del jefe con la palanca ENTONCES aparece la
+pantalla «/ FINAL 4» en ese mismo paso, sin fundido ni placa antes. DADO un final con una placa con
+texto y otra sin él ENTONCES el epílogo muestra sólo la primera.
+
+### AC-SHF-138 — Los fundidos duran un segundo cada uno *(verifica BR-SHF-070)*
+
+DADO el final 1 CUANDO se elige la opción de la devolución ENTONCES la pantalla se oscurece durante
+1 segundo, se ve negro, y vuelve la luz durante 1 segundo hasta mostrar la placa 1; con medio
+segundo transcurrido la pantalla está a medio oscurecer. CUANDO se accionó «SIGUIENTE» en la última
+placa ENTONCES la transición hacia la pantalla de final dura lo mismo. DADO un final con una sola
+placa CUANDO se acciona «SIGUIENTE» ENTONCES se pasa a la pantalla de final y no a otra placa.
+
+### AC-SHF-139 — El epílogo detiene el juego *(verifica BR-SHF-072)*
+
+DADO el epílogo en pantalla, también durante un fundido, CUANDO se mueve el mouse, se pulsan las
+teclas de movimiento o se acciona cualquier otro gesto del almacén ENTONCES el jugador no se mueve ni
+acciona nada; CUANDO pasa tiempo real ENTONCES el reloj de la noche no avanza; CUANDO se pulsa la
+tecla de pausa ENTONCES no se abre el menú de pausa.
+
+### AC-SHF-140 — «SIGUIENTE» se acciona de tres maneras y no se adelanta *(verifica BR-SHF-072, BR-SHF-071)*
+
+DADO una placa con su fundido de entrada terminado CUANDO se acciona «SIGUIENTE» con el mouse, con
+el teclado o con el joystick ENTONCES pasa a la placa siguiente, en las tres. CUANDO se acciona dos
+veces seguidas, o una vez en mitad de un fundido, ENTONCES se pasa de a una placa y ninguna se
+saltea ni se repite; tampoco se muestra la pantalla de final antes de accionarlo en la última placa.
 
 ### AC-SHF-080 — La jornada 7 declara responder a las quejas *(verifica BR-SHF-005, BR-SHF-030)*
 

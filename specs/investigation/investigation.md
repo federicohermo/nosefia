@@ -2292,12 +2292,6 @@ vuelve el wifi ENTONCES se ve el de conectado y no el de sin conexión.
 
 ## Preguntas abiertas
 
-- **OQ-INV-010 — ¿Qué hay entre abrir la puerta de Enrique y la pantalla del final?**
-  - Por qué sigue abierta: las filas «7B» y «7C» dicen que la jornada termina y «pasa directamente
-    al epílogo», pero el epílogo no tiene contenido en Notion ni frame en Figma. Mientras no lo
-    tenga, la puerta lleva directo a la pantalla del final 4 o del 5 (BR-SHF-060, BR-SHF-061).
-  - Decide: game design con narrativa.
-  - Bloquea: intercalar el epílogo antes de la pantalla; no bloquea la pantalla ni el final.
 - **OQ-INV-007 — ¿Cuánto dura y qué curva tiene el deslizamiento del chat?**
   - Por qué sigue abierta: la ficha «Especificar animaciones» pide que el chat entre desde el
     margen derecho «como Instagram» y no da duración ni curva. El juego usa valores provisionales
