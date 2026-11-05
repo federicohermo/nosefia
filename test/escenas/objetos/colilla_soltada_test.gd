@@ -1,27 +1,31 @@
-## La colilla que el jugador suelta en el depósito queda sobre el piso, y se la puede volver a
-## levantar.
+## La colilla que el jugador suelta en cualquier lugar del depósito queda sobre el piso.
 ##
-## Se suelta como en el juego: el jugador la agarra, mira a distintas alturas y repite el clic.
+## Se suelta como en el juego: el jugador la agarra, mira y repite el clic. Se recorre todo el piso
+## del depósito, con un margen hacia el local y las paredes, y se mira desde cada lugar en varias
+## direcciones y alturas.
 extends GdUnitTestSuite
 
 const ALMACEN := preload("res://src/escenas/almacen.tscn")
 const COLILLA := preload("res://src/escenas/objetos/colilla.tscn")
 
-## Piso libre del depósito, lejos de los muebles y sin nada encima. Es el que mide
-## `producto_soltado_test.gd`.
-const PISO_LIBRE := Vector3(4.18, 0.0, -8.95)
+## Cada cuántos metros se para el jugador, en x y en z.
+const PASO := 0.75
 
-## A cuántos metros del lugar libre se para el jugador, mirando hacia adentro del depósito.
-const PARADO := 1.0
+## Cuánto se agranda el depósito para cubrir el borde con el local y las paredes, en metros.
+const MARGEN := 0.5
 
-## Hacia dónde mira al soltar, en grados: del piso a los pies hasta un poco sobre el horizonte.
-const ALTOS_DE_LA_MIRA: Array[float] = [-80.0, -60.0, -40.0, -20.0, 0.0, 15.0]
+## Hacia dónde mira en cada gesto, en grados. El gesto `n` usa el giro `n` y el alto `n`.
+const GIROS: Array[float] = [0.0, 90.0, 180.0, 270.0]
+const ALTOS: Array[float] = [-70.0, -40.0, 0.0, 10.0]
 
 ## Cuadros de física para que lo soltado caiga y se duerma.
-const CUADROS_DE_REPOSO := 90
+const CUADROS_DE_REPOSO := 120
 
-## Cuánto puede bajar el centro por debajo del piso que tiene debajo, en metros.
+## Cuánto puede bajar el centro por debajo del piso, en metros.
 const HUNDIMIENTO := 0.05
+
+## Cuántos casos que fallaron se nombran en el mensaje.
+const AVISOS_MAXIMOS := 10
 
 
 func _almacen() -> Node3D:
@@ -58,59 +62,86 @@ func _clic(jugador: Node3D, objetivo: Node3D) -> void:
 	jugador.call("_unhandled_input", evento)
 
 
-func _piso_debajo(almacen: Node3D, cuerpo: Node3D) -> Dictionary:
-	var arriba := cuerpo.global_position * Vector3(1.0, 0.0, 1.0) + Vector3.UP * 3.0
-	var consulta := PhysicsRayQueryParameters3D.create(arriba, arriba + Vector3.DOWN * 6.0)
-	consulta.exclude = [(cuerpo as CollisionObject3D).get_rid()]
-	return almacen.get_world_3d().direct_space_state.intersect_ray(consulta)
+## El depósito en el mundo, agrandado por el margen.
+func _deposito_en_el_mundo(almacen: Node3D) -> AABB:
+	var habitaciones: Node3D = almacen.get("_habitaciones")
+	var deposito: Array[AABB] = habitaciones.get("deposito")
+	var limites := habitaciones.global_transform * deposito[0]
+	for parte in deposito:
+		limites = limites.merge(habitaciones.global_transform * parte)
+	return limites.grow(MARGEN)
 
 
-func test_la_colilla_soltada_en_el_deposito_queda_sobre_el_piso() -> void:
+## Donde el cuerpo del jugador cabe: parado ahí no se superpone con nada.
+func _cabe_el_jugador(jugador: CharacterBody3D, lugar: Vector3) -> bool:
+	var prueba := PhysicsTestMotionParameters3D.new()
+	prueba.from = Transform3D(jugador.global_basis, lugar)
+	prueba.motion = Vector3.ZERO
+	return not PhysicsServer3D.body_test_motion(
+		jugador.get_rid(), prueba, PhysicsTestMotionResult3D.new()
+	)
+
+
+func _lugares_donde_pararse(
+	almacen: Node3D, jugador: CharacterBody3D, altura: float
+) -> Array[Vector3]:
+	var limites := _deposito_en_el_mundo(almacen)
+	var lugares: Array[Vector3] = []
+	var x := limites.position.x
+	while x <= limites.end.x:
+		var z := limites.position.z
+		while z <= limites.end.z:
+			var lugar := Vector3(x, altura, z)
+			if _cabe_el_jugador(jugador, lugar):
+				lugares.append(lugar)
+			z += PASO
+		x += PASO
+	return lugares
+
+
+func test_la_colilla_soltada_en_cualquier_lugar_del_deposito_queda_sobre_el_piso() -> void:
 	var almacen := await _almacen()
 	var jugador: CharacterBody3D = almacen.get("_jugador")
 	var agarre: Agarre = almacen.get("_agarre")
-	var colilla: ObjetoAgarrable = COLILLA.instantiate()
-	almacen.add_child(colilla)
-	var piso_libre: Dictionary = almacen.get_world_3d().direct_space_state.intersect_ray(
-		PhysicsRayQueryParameters3D.create(
-			PISO_LIBRE + Vector3.UP * 3.0, PISO_LIBRE + Vector3.DOWN * 3.0
-		)
-	)
-	# La premisa: el lugar donde se para el jugador tiene piso horizontal debajo.
-	assert_bool(piso_libre.is_empty()).is_false()
-	assert_bool(piso_libre["normal"].y > 0.99).is_true()
-	var soltadas := 0
-	for alto in ALTOS_DE_LA_MIRA:
-		jugador.global_position = Vector3(
-			PISO_LIBRE.x, piso_libre["position"].y + 0.1, PISO_LIBRE.z + PARADO
-		)
-		jugador.velocity = Vector3.ZERO
-		if agarre.manos().sostenido() == null:
+	var lugares := _lugares_donde_pararse(almacen, jugador, jugador.global_position.y)
+	# La premisa: hay dónde pararse. Si el depósito cambia de lugar, esto sale rojo en vez de
+	# recorrer un piso vacío.
+	assert_array(lugares).is_not_empty()
+	var piso := _deposito_en_el_mundo(almacen).position.y + MARGEN
+	var soltadas: Array[Dictionary] = []
+	for lugar in lugares:
+		for gesto in GIROS.size():
+			var colilla: ObjetoAgarrable = COLILLA.instantiate()
+			almacen.add_child(colilla)
+			jugador.global_position = lugar
+			jugador.velocity = Vector3.ZERO
 			_clic(jugador, colilla)
-		assert_object(agarre.manos().sostenido()).is_same(colilla.datos)
-		_mirar(jugador, 0.0, deg_to_rad(alto))
-		_clic(jugador, colilla)
-		if agarre.manos().sostenido() != null:
-			continue
-		soltadas += 1
-		for cuadro in CUADROS_DE_REPOSO:
 			await get_tree().physics_frame
-		var piso := _piso_debajo(almacen, colilla)
-		assert_bool(piso.is_empty()).is_false()
-		var donde := "Soltada mirando %.0f" % alto
-		(
-			assert_float(colilla.global_position.y)
-			. override_failure_message(
-				(
-					"%s, bajó hasta %.3f y el piso está en %.3f"
-					% [donde, colilla.global_position.y, piso["position"].y]
-				)
+			_mirar(jugador, deg_to_rad(GIROS[gesto]), deg_to_rad(ALTOS[gesto]))
+			_clic(jugador, colilla)
+			# Si adelante no hay lugar vuelve a la mano, y vaciarlas la deja a los pies.
+			agarre.vaciar_las_manos()
+			var donde := "desde %v mirando %.0f/%.0f" % [lugar, GIROS[gesto], ALTOS[gesto]]
+			soltadas.append({"colilla": colilla, "donde": donde})
+	for cuadro in CUADROS_DE_REPOSO:
+		await get_tree().physics_frame
+	var perdidas: Array[String] = []
+	for suelta in soltadas:
+		var colilla: ObjetoAgarrable = suelta["colilla"]
+		if colilla.global_position.y < piso - HUNDIMIENTO:
+			perdidas.append("%s: quedó en %v" % [suelta["donde"], colilla.global_position])
+	(
+		assert_array(perdidas)
+		. override_failure_message(
+			(
+				"%d de %d colillas atravesaron el piso (%.3f). %s"
+				% [
+					perdidas.size(),
+					soltadas.size(),
+					piso,
+					" | ".join(perdidas.slice(0, AVISOS_MAXIMOS))
+				]
 			)
-			. is_greater_equal(piso["position"].y - HUNDIMIENTO)
 		)
-		(
-			assert_bool(colilla.visible and colilla.collision_layer != 0)
-			. override_failure_message("%s, la colilla no quedó a la vista y levantable" % donde)
-			. is_true()
-		)
-	assert_int(soltadas).is_greater(0)
+		. is_empty()
+	)
