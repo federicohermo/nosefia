@@ -382,8 +382,9 @@ func test_notas_j2_fijas_y_j3_menu_conservan_pares_y_scroll() -> void:  # AC-INV
 	assert_int(notas.size()).is_equal(4)
 	if notas.size() != 4:
 		return
-	for conversacion: Conversacion in _celular().bandeja().conversaciones():
-		assert_int(conversacion.interlocutor).is_not_equal(Conversacion.Interlocutor.NOTAS)
+	assert_array(_celular().bandeja().conversaciones()).contains(
+		[_celular().bandeja().conversacion_de(Conversacion.Interlocutor.NOTAS)]
+	)
 	var reloj: RelojDelTurno = _almacen.get("_reloj")
 	reloj.avanzar((reloj.get("_turno") as Turno).tiempo_restante())
 	Avance.entregar(_almacen.get("_pantalla") as PantallaDeDevolucion)
