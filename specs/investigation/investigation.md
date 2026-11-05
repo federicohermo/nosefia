@@ -3,7 +3,7 @@ schema_version: 1
 capability_id: CAP-INV
 status: draft
 owner: por definir
-provenance: GDD «Investigación» y «La computadora»; ficha «Interfaces virtuales durante la jornada» y decisiones de #373, #375 y #376; migración de los specs 006, 009, 018; fichas Chat con el jefe, Chat con compañera y 2A revisadas el 2026-10-15; decisiones de #430; «Sistema de investigación», fichas 2A/2B/2P y decisiones de #22 del 2026-10-15; decisión del usuario del 2026-10-18 de usar la captura del mensaje de Yasmín como foto de 2A; decisión del usuario del 2026-10-17 de retirar las notas de la computadora y usar el diseño del registro de productos; ficha «Pantalla entre jornadas», reflexión de jornada 1, encabezado de jornada 2 y decisiones de #436; decisiones del usuario del 2026-10-18 sobre el recorrido lateral, la elección sin límite de tiempo, la reanudación del cierre y la espera de 1 segundo; ocho jornadas de #526; instrucciones por jornada de #527; la colilla sólo en su jornada, de #536; ficha Chat con compañera, jornada 5, de #458; ficha «Caminos narrativos y finales» y cuadro de pistas e hipótesis de #766 y la ficha «5B» de la lista de pistas e hipótesis y decisiones del usuario del 2026-10-30 sobre su foto y su texto, de #731; la fila «6C» de la lista de pistas e hipótesis, la ficha «Caminos narrativos y finales» y decisiones del usuario del 2026-11-03 sobre Yasmín y la textura de la nota, de #741; encabezado de la jornada 5 y ficha «5P» de la lista de pistas e hipótesis y decisión del usuario del 2026-11-04 sobre la 5L, de #740; ficha «Especificar animaciones», el chat que entra y sale deslizándose, de #627; la fila «5A» de la lista de pistas e hipótesis y el mensaje de Cami de «Diálogos de compradores», de #785
+provenance: GDD «Investigación» y «La computadora»; ficha «Interfaces virtuales durante la jornada» y decisiones de #373, #375 y #376; migración de los specs 006, 009, 018; fichas Chat con el jefe, Chat con compañera y 2A revisadas el 2026-10-15; decisiones de #430; «Sistema de investigación», fichas 2A/2B/2P y decisiones de #22 del 2026-10-15; decisión del usuario del 2026-10-18 de usar la captura del mensaje de Yasmín como foto de 2A; decisión del usuario del 2026-10-17 de retirar las notas de la computadora y usar el diseño del registro de productos; ficha «Pantalla entre jornadas», reflexión de jornada 1, encabezado de jornada 2 y decisiones de #436; decisiones del usuario del 2026-10-18 sobre el recorrido lateral, la elección sin límite de tiempo, la reanudación del cierre y la espera de 1 segundo; ocho jornadas de #526; instrucciones por jornada de #527; la colilla sólo en su jornada, de #536; ficha Chat con compañera, jornada 5, de #458; ficha «Caminos narrativos y finales» y cuadro de pistas e hipótesis de #766 y la ficha «5B» de la lista de pistas e hipótesis y decisiones del usuario del 2026-10-30 sobre su foto y su texto, de #731; la fila «6C» de la lista de pistas e hipótesis, la ficha «Caminos narrativos y finales» y decisiones del usuario del 2026-11-03 sobre Yasmín y la textura de la nota, de #741; encabezado de la jornada 5 y ficha «5P» de la lista de pistas e hipótesis y decisión del usuario del 2026-11-04 sobre la 5L, de #740; ficha «Especificar animaciones», el chat que entra y sale deslizándose, de #627; encabezado de la jornada 6 y fichas «6P» y «6L» de la lista de pistas e hipótesis, de #742; la fila «5A» de la lista de pistas e hipótesis y el mensaje de Cami de «Diálogos de compradores», de #785
 ---
 
 # Capacidad: la investigación
@@ -388,9 +388,9 @@ Los textos de hipótesis DEBEN ser:
 La errata «cigarrilo» DEBE conservarse como aparece en la fuente. Las fotos DEBEN representar
 los motivos indicados; NO DEBEN reemplazarse por imágenes de otro personaje u objeto.
 
-### BR-INV-042 — El cierre de las jornadas 3, 4 y 5 pasa a las notas
+### BR-INV-042 — El cierre de las jornadas 3, 4, 5 y 6 pasa a las notas
 
-CUANDO se elige continuar al terminar la devolución de jornada 3, 4 o 5 con la partida en curso
+CUANDO se elige continuar al terminar la devolución de jornada 3, 4, 5 o 6 con la partida en curso
 (BR-EMP-011), el sistema DEBE pasar a la reflexión de cierre sobre la misma persiana baja. El
 celular DEBE desplazarse desde el centro hasta la mitad izquierda del encuadre sin salir por el
 margen inferior, y abrir el chat de notas en modo fijo (BR-INV-026). Un recuadro con el
@@ -409,7 +409,7 @@ DEBE pedirse la entrada de la noche siguiente. La apertura libre siguiente DEBE 
 (BR-INV-027) y empezar en el menú (BR-INV-022).
 
 Una partida terminada NO DEBE mostrar reflexión. Las jornadas 1 y 2 no declaran reflexión: su
-cierre es sólo la devolución. Las jornadas 6 y 7 tampoco la declaran mientras siga OQ-INV-004.
+cierre es sólo la devolución. La jornada 7 tampoco la declara mientras siga OQ-INV-004.
 En todas ellas, continuar sigue BR-EMP-011 sin pasar por las notas.
 
 ### BR-INV-043 — La tercera jornada reflexiona en tres textos
@@ -555,10 +555,10 @@ la 6 NO DEBE sortear ni activar ninguna: sin pistas en la 4 ni en la 5 no hay pi
 CUANDO una jornada con hipótesis termina sin ninguna pista encontrada, el sistema DEBE ofrecer
 sólo la hipótesis P si el jugador nunca encontró una pista en la partida, o sólo la L si encontró
 al menos una en una jornada anterior. P y L DEBEN ser datos del caso. SI el caso no declara la L,
-ENTONCES el sistema NO DEBE ofrecer otra en su lugar ni inventar su texto: los de 5L, 6L y 7L
+ENTONCES el sistema NO DEBE ofrecer otra en su lugar ni inventar su texto: los de 5L y 7L
 siguen en OQ-INV-004. Esto no cambia BR-INV-039: en la jornada 4 nunca hay una pista anterior,
 así que sin pistas ofrece sólo 2P. Salvedad: mientras la ficha 5L no tenga texto, la hipótesis 5P
-DEBE hacer también de 5L en la jornada 5 (BR-INV-062), para que nadie quede sin poder elegir.
+DEBE hacer también de 5L en la jornada 5 (BR-INV-062), para que nadie quede sin poder elegir. En la jornada 6 la L es la ficha 6L (BR-INV-116).
 
 ### BR-INV-060 — El mensaje J3_3 es el tramo de la pista 5B
 
@@ -685,6 +685,28 @@ cualquier otro caso —otra jornada, otra elección o ninguna— NO DEBE verse, 
 por la mira ni poder levantarse. Una partida guardada en la jornada 6 DEBE conservarla según las
 elecciones guardadas. La nota en la mano al abrir la jornada siguiente DEBE salir de la mano y del
 local, como la colilla.
+
+### BR-INV-116 — La sexta jornada se cierra eligiendo una hipótesis
+
+La reflexión de jornada 6 DEBE mostrar el encabezado «Un apagón me agarró desprevenido esta
+noche…». SI se registró 6C, ENTONCES la única opción DEBE ser la hipótesis 6C (BR-INV-070), sin la
+predeterminada. SI no se registró 6C, ENTONCES la única opción DEBE ser la hipótesis 6P si el
+jugador nunca encontró una pista en la partida, o la 6L si encontró al menos una en una jornada
+anterior (BR-INV-053). Los datos DEBEN ser, según las fichas «6P» y «6L» de la lista de pistas e
+hipótesis:
+
+| Identidad | Título de hipótesis | Texto de hipótesis |
+|---|---|---|
+| 6P | NADA DE OTRO MUNDO | Seguramente fue una sobrecarga o algún cortocircuito de una instalación defectuosa que hizo saltar una térmica. Tengo que dejar de sobrepensar estos asuntos de una vez por todas. |
+| 6L | INVESTIGACIÓN INCONCLUSA | No logré encontrar ninguna pista nueva. Me parece que perdí el rastro que me podía ayudar a entender qué es lo que está pasando… |
+
+6P y 6L NO DEBEN tener pista ni exigencias ni camino (BR-INV-049). Elegir, navegar y pedir una
+identidad ajena DEBEN responder como en BR-INV-044, con la elección fijada para la jornada 6.
+CUANDO la elección resulta ACEPTADA, el sistema DEBE terminar la reflexión después de la misma
+espera de BR-INV-045 y entonces pedir una sola entrada a «NOCHE 7» (BR-SHF-019). Antes de una
+elección aceptada, NO DEBE empezar ninguna entrada. Una reflexión restaurada a mitad de la
+elección DEBE volver a la elección, y pausar o salir al menú NO DEBE elegir por el jugador. Las
+reflexiones de las jornadas 3, 4 y 5 NO DEBEN cambiar.
 
 ### BR-INV-100 — La quinta jornada abre con la foto de las Cindolor y el aviso del olor
 
@@ -1090,7 +1112,7 @@ rueda desplaza y una foto se amplía y se cierra. El turno no descuenta y el jug
 
 ### AC-INV-058 — Sin reflexión, y la apertura siguiente al centro *(verifica BR-INV-042)*
 
-DADO un despido en jornada 3, 4 o 5 CUANDO termina su devolución ENTONCES sólo se ofrece volver al
+DADO un despido en jornada 3, 4, 5 o 6 CUANDO termina su devolución ENTONCES sólo se ofrece volver al
 menú y no aparece la reflexión. DADO el cierre de la jornada 1 o 2 con la partida en curso
 CUANDO se elige continuar ENTONCES el celular baja y empieza la noche siguiente, sin reflexión.
 DADO la reflexión de jornada 3 terminada CUANDO empieza la entrada ENTONCES el celular está
@@ -1355,7 +1377,7 @@ vuelve a la elección. Pasa igual con 5B elegida.
 
 DADO el cierre de la jornada 3 ENTONCES sigue con su encabezado y sus tres textos, y pide «NOCHE 4».
 DADO el cierre de la jornada 4 ENTONCES sigue con su encabezado y las cuatro combinaciones de
-BR-INV-039, y pide «NOCHE 5». DADO el cierre de la jornada 6 o 7 ENTONCES no hay reflexión.
+BR-INV-039, y pide «NOCHE 5». DADO el cierre de la jornada 7 ENTONCES no hay reflexión.
 
 ### AC-INV-165 — Sólo el fragmento de Cami pide 5A *(verifica BR-INV-121, BR-INV-037)*
 
@@ -1538,8 +1560,8 @@ datos, y 5B suma el camino de 6C y 6D.
 ### AC-INV-124 — La hipótesis 6C depende de la pista 6C *(verifica BR-INV-070, BR-INV-039)*
 
 DADO el caso de la partida CUANDO se consultan las hipótesis de la jornada 6 con 6C registrada
-ENTONCES devuelve exactamente la hipótesis 6C; con el expediente vacío o con sólo 2A y 5B devuelve
-ninguna. DADO las jornadas 4 y 5 CUANDO se consultan las hipótesis ENTONCES las combinaciones de
+ENTONCES devuelve exactamente la hipótesis 6C; con el expediente vacío devuelve exactamente la 6P,
+y con sólo 2A y 5B, exactamente la 6L (BR-INV-116). DADO las jornadas 4 y 5 CUANDO se consultan las hipótesis ENTONCES las combinaciones de
 BR-INV-039 y BR-INV-061 no cambian.
 
 ### AC-INV-125 — Con 2A y 5B elegidas, o con la 5 sin pistas y el sorteo de la 6, la nota se levanta; con 2A y 5P sin sorteo, no *(verifica BR-INV-070, BR-INV-062, BR-INV-051)*
@@ -1569,6 +1591,40 @@ cierre con una única pista registrada en la jornada 7 ENTONCES tampoco.
 
 DADO una partida despedida al cerrar la jornada 5 con el expediente sin pistas ENTONCES el final es
 el despido y no «Empleado estresado». DADO una partida en curso sin pistas ENTONCES no hay final.
+
+### AC-INV-150 — Con la pista 6C se ofrece sólo 6C *(verifica BR-INV-116, BR-INV-070)*
+
+DADO 2A elegida en la jornada 4, 5B elegida en la 5 y 6C registrada en la 6 ENTONCES el cierre de la
+jornada 6 lleva el encabezado «Un apagón me agarró desprevenido esta noche…», la única opción es 6C
+«NOTA BAJO LA PUERTA», sin 6P ni 6L, y ofrece sólo «Elegir». CUANDO se pide elegir 6P o 6L ENTONCES
+contesta NO_DISPONIBLE, sin nota ni elección. DADO el expediente sin 6C CUANDO se pide elegir 6C
+ENTONCES contesta NO_DISPONIBLE.
+
+### AC-INV-151 — Sin la pista 6C se ofrece 6P o 6L *(verifica BR-INV-116, BR-INV-053)*
+
+DADO el cierre de jornada 6 con el expediente vacío ENTONCES la única opción es 6P «NADA DE OTRO
+MUNDO» con su texto de la ficha, y ofrece sólo «Elegir». DADO 5B registrada en la jornada 5, sin 6C,
+ENTONCES la única opción es 6L «INVESTIGACIÓN INCONCLUSA» con su texto de la ficha, sin 6P. DADO 2A
+anotada en la jornada 4 y la 5P elegida, sin 6C, ENTONCES la única opción también es 6L. CUANDO en
+cualquiera de los tres casos se pide elegir la identidad que no se ofrece ENTONCES contesta
+NO_DISPONIBLE.
+
+### AC-INV-152 — Elegir en la sexta jornada pide la noche 7 *(verifica BR-INV-116, BR-INV-045)*
+
+DADO el cierre de jornada 6 con la opción 6P CUANDO se elige ENTONCES contesta ACEPTADA, las notas
+reciben su texto una sola vez y la elección de la jornada 6 es 6P. CUANDO se pide elegir otra vez
+ENTONCES contesta REPETIDA y las notas no cambian. DADO la elección aceptada CUANDO pasa la espera
+declarada menos un cuadro ENTONCES no hay entrada; CUANDO pasa el cuadro siguiente ENTONCES hay
+exactamente una entrada «NOCHE 7». DADO la reflexión sin elegir CUANDO pasan 10 minutos ENTONCES no
+hay entrada, nota nueva ni elección. DADO una reflexión restaurada con la elección vacía ENTONCES
+vuelve a la elección. Pasa igual con 6C o con 6L como única opción.
+
+### AC-INV-153 — Las reflexiones de las jornadas 3, 4 y 5 no cambian *(verifica BR-INV-116, BR-INV-043, BR-INV-044, BR-INV-062)*
+
+DADO el cierre de la jornada 3 ENTONCES sigue con su encabezado y sus tres textos, y pide «NOCHE 4».
+DADO el cierre de la jornada 4 ENTONCES sigue con su encabezado y las cuatro combinaciones de
+BR-INV-039, y pide «NOCHE 5». DADO el cierre de la jornada 5 ENTONCES sigue con su encabezado y sus
+opciones 5B o 5P, y pide «NOCHE 6».
 
 ## No objetivos
 
@@ -1651,7 +1707,7 @@ el despido y no «Empleado estresado». DADO una partida en curso sin pistas ENT
 - **OQ-INV-004 — ¿Qué pistas, hipótesis y desenlaces definen las jornadas 5 a 7?**
   - Por qué sigue abierta: las fichas de ese contenido siguen «A desarrollar» y no fijan
     exigencias ni umbrales de los finales. La forma de los caminos ya está fijada
-    (BR-INV-049 a BR-INV-053); falta el texto de cada pista e hipótesis, incluidas 5L, 6L y 7L (la 5L usa el texto de 5P por BR-INV-053).
+    (BR-INV-049 a BR-INV-053); falta el texto de cada pista e hipótesis, incluidas 5L y 7L (la 5L usa el texto de 5P por BR-INV-053).
     Los ejemplos de aceptación son casos de prueba, no contenido para el juego.
   - Decide: game design.
   - Bloquea: publicar ese contenido y sus finales; no bloquea el motor ni las pistas de jornada 4.
