@@ -1,5 +1,5 @@
-## Las siete cajas que sólo existen como caja (BR-STK-054) están en una pila contra el fondo del
-## depósito, y no cuentan para ordenar las cajas (BR-STK-056).
+## Las siete cajas que sólo existen como caja (BR-STK-054) están en dos tramos contra el fondo
+## del depósito, y no cuentan para ordenar las cajas (BR-STK-056).
 extends GdUnitTestSuite
 
 const AvanceDeDevolucion := preload("res://test/avance_de_devolucion.gd")
@@ -10,7 +10,7 @@ const ALMACEN := preload("res://src/escenas/almacen.tscn")
 const Caja := preload("res://src/escenas/objetos/caja_de_productos.gd")
 const COMPLETA := ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA
 
-## Cuánto se mira alrededor del portón y de la puerta del cuartito: lo que la pila no puede tapar.
+## Cuánto se mira alrededor del portón y de la puerta del cuartito: lo que los tramos no tapan.
 const PASO := 0.4
 const TOLERANCIA := 0.02
 
@@ -61,7 +61,7 @@ func _fondo(local: Node3D) -> Array[Caja]:
 	return cajas
 
 
-func test_las_siete_estan_en_una_pila_de_cuatro_abajo_y_tres_arriba() -> void:  # AC-STK-130
+func test_las_siete_estan_en_dos_tramos_de_cuatro_abajo_y_tres_arriba() -> void:  # AC-STK-130
 	var local := await _abrir()
 	var cajas := _fondo(local)
 	assert_int(cajas.size()).is_equal(Catalogo.SOLO_CAJAS.size())
@@ -83,7 +83,7 @@ func test_las_siete_estan_en_una_pila_de_cuatro_abajo_y_tres_arriba() -> void:  
 	assert_int(arriba).is_equal(3)
 
 
-func test_la_pila_no_toca_estanterias_ni_otras_cajas_ni_tapa_el_paso() -> void:  # AC-STK-130
+func test_los_tramos_no_tocan_estanterias_ni_otras_cajas_ni_tapa_el_paso() -> void:  # AC-STK-130
 	var local := await _abrir()
 	var estructura: Node3D = local.get_node("Estructura")
 	var libres: Array[AABB] = []
@@ -104,30 +104,30 @@ func test_la_pila_no_toca_estanterias_ni_otras_cajas_ni_tapa_el_paso() -> void: 
 
 
 ## La palanca de la jornada 7 está contra el mismo fondo (BR-INV-141) y tiene que verse desde la
-## entrada del depósito: la pila ni la pisa ni la tapa.
-func test_la_pila_no_pisa_ni_tapa_la_palanca_desde_la_entrada() -> void:  # AC-STK-130
+## entrada del depósito: los tramos ni la pisan ni la tapan.
+func test_los_tramos_no_pisan_ni_tapan_la_palanca_desde_la_entrada() -> void:  # AC-STK-130
 	var local := await _abrir(ReglasDeLaPartida.JORNADAS_DE_LA_PARTIDA)
 	var lector := local.get("_habitaciones") as Habitaciones
 	var forma: CollisionShape3D = local.get_node("Objetos/Palanca/Forma")
 	var palanca := forma.global_transform * LimitesDeForma.de(forma.shape)
 	var entrada := lector.to_global(lector.deposito[2].get_center())
-	var pila: Array[AABB] = []
+	var lugares: Array[AABB] = []
 	for caja in _fondo(local):
-		pila.append(_limites(caja))
+		lugares.append(_limites(caja))
 	for pallet: MeshInstance3D in local.get_node("PalletsDelFondo").get_children():
-		pila.append(pallet.global_transform * pallet.get_aabb())
-	assert_int(pila.size()).is_equal(_fondo(local).size() + 2)
-	for volumen in pila:
+		lugares.append(pallet.global_transform * pallet.get_aabb())
+	assert_int(lugares.size()).is_equal(_fondo(local).size() + 2)
+	for volumen in lugares:
 		assert_bool(volumen.intersects(palanca)).is_false()
 		assert_bool(volumen.intersects_segment(entrada, palanca.get_center()) == null).is_true()
 
 
-func test_las_siete_amanecen_cada_noche_en_la_pila() -> void:  # AC-STK-130
+func test_las_siete_amanecen_cada_noche_en_su_lugar() -> void:  # AC-STK-130
 	var local := await _abrir()
 	var cajas := _fondo(local)
-	var pila: Array[Vector3] = []
+	var lugares: Array[Vector3] = []
 	for caja in cajas:
-		pila.append(caja.global_position)
+		lugares.append(caja.global_position)
 	cajas[0].global_position += Vector3(0.0, 0.0, 2.0)
 	RelojDePrueba.avanzar_turno(local.get("_reloj"), Reglas.DURACION_DEL_TURNO)
 	var pantalla: PantallaDeDevolucion = local.get("_pantalla")
@@ -139,7 +139,7 @@ func test_las_siete_amanecen_cada_noche_en_la_pila() -> void:  # AC-STK-130
 	for _cuadro in 4:
 		await get_tree().physics_frame
 	for indice in cajas.size():
-		assert_float(cajas[indice].global_position.distance_to(pila[indice])).is_less(0.05)
+		assert_float(cajas[indice].global_position.distance_to(lugares[indice])).is_less(0.05)
 
 
 func test_una_caja_del_fondo_fuera_del_deposito_cuenta_para_el_cierre() -> void:  # AC-STK-131
@@ -165,7 +165,7 @@ func test_una_caja_del_fondo_fuera_del_deposito_cuenta_para_el_cierre() -> void:
 	assert_bool(ReglasDelCierre.hay_objetos_afuera(local.call("_estados_del_cierre"))).is_true()
 
 
-func test_ordenar_las_cajas_no_cuenta_la_pila_del_fondo() -> void:  # AC-STK-131
+func test_ordenar_las_cajas_no_cuenta_los_tramos_del_fondo() -> void:  # AC-STK-131
 	var local := await _abrir()
 	var reloj: RelojDelTurno = local.get("_reloj")
 	var tarea := reloj.obligatoria(Tarea.Tipo.ORDENAR_LAS_CAJAS)

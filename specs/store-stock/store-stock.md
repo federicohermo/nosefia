@@ -664,20 +664,21 @@ entrega nada (BR-STK-016). Durante la jornada 6, Fernet God NO DEBE faltar en su
 en el pedido de ningún comprador, tampoco en los pedidos al azar. Las demás jornadas NO DEBEN abrir
 ninguna caja vacía por esta regla.
 
-### BR-STK-056 — Las siete cajas amanecen en una pila contra el fondo del depósito
+### BR-STK-056 — Las siete cajas amanecen en dos tramos contra el fondo del depósito
 
 CUANDO se abre cada jornada desde la primera completa, el sistema DEBE poner las siete cajas de
-BR-STK-054 en una pila contra la pared del fondo del depósito, sobre dos pallets de piso: cuatro
-apoyadas en los pallets y tres encima de ellas, con las etiquetas hacia el interior del depósito.
-La pila NO DEBE ocupar la zona junto al portón, la pared contraria a la del contenedor de basura ni
-el paso hasta la puerta del cuartito, ni el lugar de la palanca de la jornada 7 (BR-INV-141): ni
-la pisa ni la tapa a quien mira desde la entrada del depósito. Tampoco DEBE tocar las estanterías
-ni otras cajas. Las siete
+BR-STK-054 sobre el piso del depósito, contra la pared del fondo, en dos tramos separados, uno a
+cada lado de la estantería del fondo. Cada tramo lleva un pallet de piso; sobre los dos pallets se
+apoyan cuatro cajas y encima de ellas las otras tres, con las etiquetas hacia el interior del
+depósito. Los tramos NO DEBEN ocupar la zona junto al portón, la pared contraria a la del
+contenedor de basura ni el paso hasta la puerta del cuartito, ni el lugar de la palanca de la
+jornada 7 (BR-INV-141): ni la pisan ni la tapan a quien mira desde la entrada del depósito.
+Tampoco DEBEN tocar las estanterías ni otras cajas. Las siete
 DEBEN amanecer ahí cada noche aunque el jugador las haya movido: no siguen a BR-STK-051. Las
 demás cajas conservan su lugar.
 
 Las siete NO DEBEN contar para ordenar las cajas (BR-STK-039): ordenar se cumple con las demás
-apoyadas en estanterías, estén las siete en la pila o no. Tampoco DEBEN contar como desorden del
+apoyadas en estanterías, estén las siete en su lugar o no. Tampoco DEBEN contar como desorden del
 cierre mientras estén dentro del depósito.
 
 ## Criterios de aceptación
@@ -1475,19 +1476,20 @@ y cuántas le entran: una caja entera. CUANDO el jugador le pide una unidad ENTO
 nada y el depósito sigue en 0. DADO esa caja ENTONCES la apertura la deja presente en el depósito
 y no como caja agotada.
 
-### AC-STK-130 — La pila del fondo: cuatro abajo, tres arriba, sin estorbar *(verifica BR-STK-056)*
+### AC-STK-130 — Los dos tramos del fondo: cuatro abajo, tres arriba, sin estorbar *(verifica BR-STK-056)*
 
-DADO la jornada 3 abierta ENTONCES las siete cajas están dentro del depósito: cuatro apoyadas en
-pallets de piso y tres apoyadas encima de otras cajas de la pila. ENTONCES ninguna toca una
+DADO la jornada 3 abierta ENTONCES las siete cajas están dentro del depósito, en dos tramos contra
+la pared del fondo: cuatro apoyadas en pallets de piso y tres apoyadas encima de otras cajas de
+los tramos. ENTONCES ninguna toca una
 estantería ni una de las otras treinta y dos cajas, y ninguna invade la zona de paso alrededor del
 portón ni de la puerta del cuartito, y ni ellas ni sus pallets pisan el lugar de la palanca ni la
-tapan desde la entrada del depósito. DADA una de las siete movida de la pila CUANDO se abre la
-noche siguiente ENTONCES las siete amanecen otra vez en su lugar de la pila.
+tapan desde la entrada del depósito. DADA una de las siete movida de su tramo CUANDO se abre la
+noche siguiente ENTONCES las siete amanecen otra vez en su lugar.
 
 ### AC-STK-131 — Ordenar no cuenta las siete *(verifica BR-STK-056, BR-STK-039)*
 
 DADO la jornada 3 con las treinta y dos cajas de las estanterías apoyadas en ellas y las siete en
-la pila del fondo ENTONCES ordenar las cajas está cumplida. ENTONCES el cierre no suma desorden de
+los tramos del fondo ENTONCES ordenar las cajas está cumplida. ENTONCES el cierre no suma desorden de
 cajas por las siete.
 
 ## No objetivos

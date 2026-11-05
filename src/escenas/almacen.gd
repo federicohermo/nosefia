@@ -638,9 +638,7 @@ func _al_abrir_la_jornada(jornada: int) -> void:
 	_revisar_la_salida()
 
 
-## Una caja se ve si tiene unidades, o si abrió vacía a propósito: la del pedido al proveedor
-## está ahí para que el jugador la revise.
-## Las siete cajas que sólo existen como caja (BR-STK-054) abren cada noche en una pila contra el
+## Las siete cajas que sólo existen como caja (BR-STK-054) abren cada noche en dos tramos contra el
 ## fondo del depósito, sobre dos pallets de piso: cuatro abajo y tres arriba. Con los pallets y las
 ## poses a la vista, la apertura las trata como fijas.
 func _pila_de_las_cajas_del_fondo(jornada: int) -> Dictionary[Producto.Id, Transform3D]:
@@ -676,7 +674,7 @@ func _limites_de(nodo: Node3D) -> AABB:
 	return total
 
 
-## Las cajas del depósito: las treinta y dos de las estanterías y las siete de la pila del fondo.
+## Las cajas del depósito: las treinta y dos de las estanterías y las siete de los tramos del fondo.
 func _todas_las_cajas() -> Array[Node3D]:
 	return _cajas_de_productos + _cajas_del_fondo
 
