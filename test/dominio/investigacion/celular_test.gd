@@ -156,3 +156,75 @@ func test_esc_no_cierra_el_celular_fijo() -> void:  # AC-INV-072
 	assert_bool(celular.atender_esc()).is_false()
 	assert_bool(celular.abierto()).is_true()
 	assert_bool(celular.fijo()).is_true()
+
+
+func _celular_con(leidos: int, nuevos: int) -> Celular:
+	var conversacion := Conversacion.new()
+	conversacion.nombre = "Contacto"
+	var mensajes: Array[Mensaje] = []
+	for indice in leidos:
+		mensajes.append(_mensaje("viejo %d" % indice))
+	conversacion.mensajes = mensajes
+	var celular := Celular.new(Bandeja.new([conversacion]))
+	celular.habilitar(true)
+	celular.alternar(false)
+	celular.abrir_chat(conversacion.interlocutor)
+	celular.volver_al_menu()
+	for indice in nuevos:
+		celular.bandeja().recibir(conversacion.interlocutor, _mensaje("nuevo %d" % indice))
+	return celular
+
+
+func _mensaje(texto: String) -> Mensaje:
+	var mensaje := Mensaje.new()
+	mensaje.texto = texto
+	return mensaje
+
+
+func test_abrir_con_mensajes_sin_leer_apunta_al_primero() -> void:  # AC-INV-160
+	var celular := _celular_con(27, 3)
+	var quien := celular.bandeja().conversaciones()[0].interlocutor
+	assert_bool(celular.abrir_chat(quien)).is_true()
+	assert_int(celular.primer_nuevo()).is_equal(27)
+	assert_int(celular.bandeja().no_leidos_totales()).is_zero()
+
+
+func test_abrir_sin_mensajes_sin_leer_no_apunta_a_ninguno() -> void:  # AC-INV-161
+	var celular := _celular_con(30, 0)
+	var quien := celular.bandeja().conversaciones()[0].interlocutor
+	celular.abrir_chat(quien)
+	assert_int(celular.primer_nuevo()).is_equal(Celular.AL_FINAL)
+
+
+func test_un_unico_sin_leer_que_es_el_ultimo_es_el_primero() -> void:  # AC-INV-162
+	var celular := _celular_con(29, 1)
+	var quien := celular.bandeja().conversaciones()[0].interlocutor
+	celular.abrir_chat(quien)
+	assert_int(celular.primer_nuevo()).is_equal(29)
+
+
+func test_volver_al_menu_suelta_a_donde_apuntaba() -> void:  # AC-INV-160
+	var celular := _celular_con(27, 3)
+	var quien := celular.bandeja().conversaciones()[0].interlocutor
+	celular.abrir_chat(quien)
+	celular.volver_al_menu()
+	assert_int(celular.primer_nuevo()).is_equal(Celular.AL_FINAL)
+
+
+func test_el_fijo_apunta_al_primer_mensaje_que_llega_y_no_cambia() -> void:  # AC-INV-163
+	var celular := _celular_con(5, 3)
+	var quien := celular.bandeja().conversaciones()[0].interlocutor
+	celular.fijar_en(quien)
+	assert_int(celular.primer_nuevo()).is_equal(Celular.AL_FINAL)
+	celular.llegar(quien, 8)
+	assert_int(celular.primer_nuevo()).is_equal(8)
+	celular.llegar(quien, 9)
+	assert_int(celular.primer_nuevo()).is_equal(8)
+
+
+func test_la_llegada_a_un_chat_libre_no_cambia_a_donde_apunta() -> void:  # AC-INV-164
+	var celular := _celular_con(30, 0)
+	var quien := celular.bandeja().conversaciones()[0].interlocutor
+	celular.abrir_chat(quien)
+	celular.llegar(quien, 30)
+	assert_int(celular.primer_nuevo()).is_equal(Celular.AL_FINAL)
