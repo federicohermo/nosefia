@@ -9,6 +9,8 @@ signal producto_elegido(producto: Producto)
 signal lista_abierta
 signal animacion_terminada
 
+## Dentro de la lista, el hijo 0 es el margen, el 1 la opción vacía y el 2 el primer producto.
+const PRIMER_PRODUCTO := 2
 const COLOR_CLARO := Color("f0f4d1")
 const COLOR_OSCURO := Color("1a1a1a")
 const COLOR_DEL_PANEL := Color("3f434a")
@@ -95,6 +97,7 @@ func cerrar() -> void:
 	if not _abierta:
 		return
 	_abierta = false
+	_devolver_el_foco_a_la_cabecera()
 	_pintar()
 	_animar(0.0)
 
@@ -129,6 +132,25 @@ func _alternar() -> void:
 	_pintar()
 	_animar(1.0)
 	lista_abierta.emit()
+	_enfocar_el_primer_producto()
+
+
+## Con la lista abierta la cruceta elige entre los productos. Se empieza por el primero y no por
+## la opción vacía, que borraría el renglón con el primer X.
+func _enfocar_el_primer_producto() -> void:
+	var items := _lista.get_node("Desplazamiento/Items")
+	var primero := items.get_child(mini(PRIMER_PRODUCTO, items.get_child_count() - 1)) as Button
+	if primero != null:
+		primero.grab_focus()
+
+
+## Una lista que se cierra no deja al jugador sin foco: vuelve al renglón.
+func _devolver_el_foco_a_la_cabecera() -> void:
+	if not is_inside_tree():
+		return
+	var foco := get_viewport().gui_get_focus_owner()
+	if foco != null and _lista.is_ancestor_of(foco):
+		_cabecera.grab_focus()
 
 
 func _ajustar_el_alto_de_la_lista() -> void:
@@ -174,7 +196,7 @@ func _pintar() -> void:
 	var relleno := _producto != null and not _abierta
 	var estilo: StyleBox = StyleBoxEmpty.new() if _abierta else (_lleno if relleno else _vacio)
 	var color := COLOR_OSCURO if relleno else COLOR_CLARO
-	for estado: StringName in [&"normal", &"hover", &"pressed", &"hover_pressed"]:
+	for estado: StringName in [&"normal", &"hover", &"pressed", &"hover_pressed", &"focus"]:
 		_cabecera.add_theme_stylebox_override(estado, estilo)
 	_nombre.add_theme_color_override("font_color", color)
 	_flecha.self_modulate = color
@@ -227,7 +249,7 @@ func _item(producto: Producto) -> Button:
 	item.custom_minimum_size.y = ALTO_DEL_ITEM
 	item.add_theme_color_override("font_color", COLOR_CLARO)
 	for estado: StringName in [
-		&"font_hover_color", &"font_pressed_color", &"font_hover_pressed_color"
+		&"font_hover_color", &"font_pressed_color", &"font_hover_pressed_color", &"font_focus_color"
 	]:
 		item.add_theme_color_override(estado, COLOR_OSCURO)
 	item.pressed.connect(_elegir.bind(producto))
@@ -249,10 +271,9 @@ func _item(producto: Producto) -> Button:
 
 func _boton(normal: StyleBox, resaltado: StyleBox) -> Button:
 	var boton := Button.new()
-	boton.focus_mode = Control.FOCUS_NONE
 	boton.add_theme_font_size_override("font_size", TAMANO_DEL_TEXTO)
 	boton.add_theme_stylebox_override("normal", normal)
-	for estado: StringName in [&"hover", &"pressed", &"hover_pressed"]:
+	for estado: StringName in [&"hover", &"pressed", &"hover_pressed", &"focus"]:
 		boton.add_theme_stylebox_override(estado, resaltado)
 	return boton
 

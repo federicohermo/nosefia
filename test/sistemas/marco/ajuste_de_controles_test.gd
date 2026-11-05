@@ -6,6 +6,7 @@ extends GdUnitTestSuite
 
 const TECLA := AsignacionDeControles.TipoDeEntrada.TECLA
 const BOTON := AsignacionDeControles.TipoDeEntrada.BOTON_DEL_MOUSE
+const JOYSTICK := AsignacionDeControles.TipoDeEntrada.BOTON_DEL_JOYSTICK
 
 var _ajuste: AjusteDePreferencias
 
@@ -43,6 +44,13 @@ func _clic(boton: int) -> InputEventMouseButton:
 	return evento
 
 
+func _boton_del_joystick(indice: int) -> InputEventJoypadButton:
+	var evento := InputEventJoypadButton.new()
+	evento.button_index = indice as JoyButton
+	evento.pressed = true
+	return evento
+
+
 func _responde(evento: InputEvent, accion: StringName) -> bool:
 	return InputMap.event_is_action(evento, accion)
 
@@ -50,7 +58,9 @@ func _responde(evento: InputEvent, accion: StringName) -> bool:
 func _eventos_de_teclas_y_clics(accion: StringName) -> int:
 	var cuantos := 0
 	for evento: InputEvent in InputMap.action_get_events(accion):
-		if AjusteDePreferencias.entrada_de(evento) != AjusteDePreferencias.SIN_ENTRADA:
+		if AjusteDePreferencias.es_de_la_asignacion(
+			accion, AjusteDePreferencias.entrada_de(evento)
+		):
 			cuantos += 1
 	return cuantos
 
@@ -174,3 +184,28 @@ func test_el_esquema_que_se_guarda_vuelve_a_aplicarse_en_otro_arranque() -> void
 	otro_arranque.cargar_y_aplicar()
 	assert_bool(_responde(_tecla(KEY_F), AsignacionDeControles.EXAMINAR)).is_true()
 	assert_bool(_responde(_tecla(KEY_E), AsignacionDeControles.EXAMINAR)).is_false()
+
+
+func test_un_boton_de_joystick_asignado_responde_y_el_anterior_no() -> void:  # AC-CFG-026
+	_ajuste.aplicar(_con([[AsignacionDeControles.EXAMINAR, 1, JOYSTICK, JOY_BUTTON_Y]]))
+	assert_bool(_responde(_boton_del_joystick(JOY_BUTTON_Y), &"examinar")).is_true()
+	assert_bool(_responde(_boton_del_joystick(JOY_BUTTON_X), &"examinar")).is_false()
+	assert_bool(_responde(_tecla(KEY_E), &"examinar")).is_true()
+
+
+func test_intercambiar_dos_botones_de_joystick_los_cruza_en_el_motor() -> void:  # AC-CFG-026
+	_ajuste.aplicar(_con([[AsignacionDeControles.EXAMINAR, 1, JOYSTICK, JOY_BUTTON_LEFT_SHOULDER]]))
+	assert_bool(_responde(_boton_del_joystick(JOY_BUTTON_LEFT_SHOULDER), &"examinar")).is_true()
+	assert_bool(_responde(_boton_del_joystick(JOY_BUTTON_LEFT_SHOULDER), &"agacharse")).is_false()
+	assert_bool(_responde(_boton_del_joystick(JOY_BUTTON_X), &"agacharse")).is_true()
+
+
+func test_aplicar_las_asignaciones_no_toca_start_ni_los_ejes() -> void:  # AC-CFG-025
+	_ajuste.aplicar(_con([[AsignacionDeControles.PAUSA, 0, TECLA, KEY_P]]))
+	assert_bool(_responde(_boton_del_joystick(JOY_BUTTON_START), &"ui_cancel")).is_true()
+	assert_bool(_responde(_tecla(KEY_P), &"ui_cancel")).is_true()
+	assert_bool(_responde(_tecla(KEY_ESCAPE), &"ui_cancel")).is_false()
+	var eje := InputEventJoypadMotion.new()
+	eje.axis = JOY_AXIS_LEFT_Y
+	eje.axis_value = -1.0
+	assert_bool(_responde(eje, &"mover_adelante")).is_true()

@@ -65,6 +65,21 @@ func _exit_tree() -> void:
 	get_tree().physics_frame.disconnect(_mirar_el_cursor)
 
 
+## Si el evento es el de volver atrás: la acción de cancelar —Esc o START— o CÍRCULO.
+static func es_volver(evento: InputEvent) -> bool:
+	return evento.is_action_pressed(&"ui_cancel") or _es_circulo(evento)
+
+
+static func _es_circulo(evento: InputEvent) -> bool:
+	var boton := evento as InputEventJoypadButton
+	return (
+		boton != null
+		and boton.pressed
+		and not boton.is_echo()
+		and boton.button_index == Pausa.BOTON_VOLVER
+	)
+
+
 func _input(evento: InputEvent) -> void:
 	if not evento.is_action_pressed("ui_cancel"):
 		return
@@ -78,6 +93,28 @@ func _input(evento: InputEvent) -> void:
 			_logros_en_pantalla()
 		)
 	)
+
+
+## CÍRCULO hace lo de Esc salvo pausar: con nada abierto deja el evento a la acción del celular.
+## Llega por `_unhandled_input` y no por `_input`: la pantalla de controles que espera un botón se
+## lo queda antes, porque CÍRCULO se puede asignar.
+func _unhandled_input(evento: InputEvent) -> void:
+	if _es_circulo(evento):
+		_volver_atras()
+
+
+func _volver_atras() -> void:
+	var accion := Pausa.ante_volver(
+		get_tree().paused,
+		_configuraciones_en_pantalla(),
+		_celular_libre_abierto(),
+		_interfaz_abierta() != null,
+		_logros_en_pantalla()
+	)
+	if accion == Pausa.Accion.NADA:
+		return
+	get_viewport().set_input_as_handled()
+	_hacer(accion)
 
 
 func _physics_process(delta: float) -> void:

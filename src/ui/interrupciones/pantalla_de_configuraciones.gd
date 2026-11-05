@@ -48,7 +48,7 @@ const ANCHO_DEL_BOTON := 72.0
 
 var _preferencias := Preferencias.new()
 var _barras: Dictionary[Preferencias.Campo, HSlider] = {}
-var _primer_boton: Button
+var _primer_boton: Control
 var _ajustar_controles: Button
 
 
@@ -104,7 +104,7 @@ func marco() -> Control:
 
 
 func _unhandled_input(evento: InputEvent) -> void:
-	if visible and evento.is_action_pressed("ui_cancel"):
+	if visible and ControlDePausa.es_volver(evento):
 		get_viewport().set_input_as_handled()
 		cerrar()
 
@@ -128,8 +128,12 @@ func _fila_de(campo: Preferencias.Campo) -> HBoxContainer:
 	fila.add_child(menos)
 	fila.add_child(barra)
 	fila.add_child(mas)
+	# Con el joystick se elige la barra: la izquierda y la derecha mueven un paso. Los botones − y +
+	# siguen siendo del clic.
+	menos.focus_mode = Control.FOCUS_NONE
+	mas.focus_mode = Control.FOCUS_NONE
 	if _primer_boton == null:
-		_primer_boton = menos
+		_primer_boton = barra
 	return fila
 
 
@@ -147,6 +151,8 @@ func _fila_del_lenguaje() -> HBoxContainer:
 	idioma.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	anterior.disabled = IDIOMAS.size() < 2
 	siguiente.disabled = anterior.disabled
+	_sin_costados(anterior)
+	_sin_costados(siguiente)
 	fila.add_child(anterior)
 	fila.add_child(idioma)
 	fila.add_child(siguiente)
@@ -159,6 +165,7 @@ func _fila_de_los_controles() -> HBoxContainer:
 	_ajustar_controles.custom_minimum_size.x = 0.0
 	_ajustar_controles.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	_ajustar_controles.pressed.connect(_abrir_los_controles)
+	_sin_costados(_ajustar_controles)
 	fila.add_child(_ajustar_controles)
 	return fila
 
@@ -179,6 +186,13 @@ func _al_cerrar_los_controles() -> void:
 func _al_cambiar_los_controles(asignacion: AsignacionDeControles) -> void:
 	_preferencias.poner_controles(asignacion)
 	controles_cambiados.emit(_preferencias.copia())
+
+
+## En una fila sin + ni −, la izquierda y la derecha no hacen nada: tampoco llevan el foco a otra
+## fila.
+static func _sin_costados(control: Control) -> void:
+	control.focus_neighbor_left = NodePath(".")
+	control.focus_neighbor_right = NodePath(".")
 
 
 func _fila_con_nombre(texto: String) -> HBoxContainer:

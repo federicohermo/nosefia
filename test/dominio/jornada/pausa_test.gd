@@ -78,3 +78,14 @@ func test_en_pausa_o_con_configuraciones_la_interfaz_no_quita_su_turno() -> void
 	assert_int(Pausa.ante_esc(false, true, false, true)).is_equal(
 		Pausa.Accion.CERRAR_CONFIGURACIONES
 	)
+
+
+func test_circulo_cierra_lo_abierto_igual_que_esc() -> void:  # AC-SAV-046
+	assert_int(Pausa.ante_volver(true)).is_equal(Pausa.Accion.REANUDAR)
+	assert_int(Pausa.ante_volver(true, true)).is_equal(Pausa.Accion.CERRAR_CONFIGURACIONES)
+	assert_int(Pausa.ante_volver(false, false, true)).is_equal(Pausa.Accion.CERRAR_CELULAR)
+	assert_int(Pausa.ante_volver(false, false, false, true)).is_equal(Pausa.Accion.CERRAR_INTERFAZ)
+
+
+func test_circulo_sin_nada_abierto_no_pausa() -> void:  # AC-SAV-046
+	assert_int(Pausa.ante_volver(false)).is_equal(Pausa.Accion.NADA)

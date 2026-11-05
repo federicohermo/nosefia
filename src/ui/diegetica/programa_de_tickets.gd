@@ -62,6 +62,7 @@ func mostrar(generador: GeneradorDeTickets) -> void:
 			"font_color", Color.BLACK if tiene_producto else Color("f0f4d1")
 		)
 	visible = true
+	FocoDeLaInterfaz.en_el_primero(self)
 
 
 func ocultar() -> void:
