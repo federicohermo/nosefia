@@ -32,6 +32,10 @@ func _restaurar(local: Node3D) -> void:
 	local.get_node(TABLERO).accionar()
 
 
+func _restante(local: Node3D) -> float:
+	return (local.get("_reloj")._turno as Turno).tiempo_restante()
+
+
 func _linea(local: Node3D) -> String:
 	return (local.get("_hud").get("_subtitulo") as Label).text
 
@@ -108,30 +112,63 @@ func test_devuelto_el_wifi_el_clic_piensa_y_no_lo_cambia() -> void:  # AC-ANO-02
 	var router: Node3D = local.get_node(ROUTER)
 	router.accionar()
 	router.accionar()
+	var restante := _restante(local)
 	for _clic in 2:
 		router.accionar()
 		assert_array(_vista(local)).is_equal(_esperado(LUCES.VERDES))
+		assert_float(_restante(local)).is_equal(restante)
 		assert_str(_linea(local)).is_equal(SubtitulosDeLosGestos.texto(S.ROUTER_YA_RESTAURADO))
 
 
 func test_sin_luz_el_clic_piensa_sin_luz_y_no_lo_cambia() -> void:  # AC-ANO-023, AC-SUB-034
 	var local := _local()
 	_cortar(local)
+	var restante := _restante(local)
 	local.get_node(ROUTER).accionar()
 	assert_str(_linea(local)).is_equal(SubtitulosDeLosGestos.texto(S.SIN_LUZ))
 	assert_array(_vista(local)).is_equal(_esperado(LUCES.APAGADAS))
+	assert_float(_restante(local)).is_equal(restante)
 
 
 func test_antes_del_corte_o_en_otra_jornada_el_clic_no_lo_apaga() -> void:  # AC-ANO-023
-	var jornadas: Array[int] = [
-		AnomaliasDeLaJornada.JORNADA_DEL_CORTE,
-		AnomaliasDeLaJornada.JORNADA_DEL_CORTE + 1,
-	]
-	for jornada in jornadas:
+	for jornada in range(1, AnomaliasDeLaJornada.JORNADA_DEL_CORTE + 2):
 		var local := _local(jornada)
+		var restante := _restante(local)
 		local.get_node(ROUTER).accionar()
 		assert_str(_linea(local)).is_equal(SubtitulosDeLosGestos.texto(S.ROUTER_ANTES_DEL_CORTE))
 		assert_array(_vista(local)).is_equal(_esperado(LUCES.VERDES))
+		assert_float(_restante(local)).is_equal(restante)
+
+
+func test_pausar_y_reanudar_conserva_el_router_y_no_consume_turno() -> void:  # AC-ANO-024
+	var local := _local()
+	local.get("_reloj").set_process(true)
+	_cortar(local)
+	_restaurar(local)
+	var router: Node3D = local.get_node(ROUTER)
+	for luces: LUCES in [LUCES.ROJAS, LUCES.APAGADAS]:
+		if luces == LUCES.APAGADAS:
+			router.accionar()
+		var restante := _restante(local)
+		get_tree().paused = true
+		await get_tree().process_frame
+		await get_tree().process_frame
+		assert_array(_vista(local)).is_equal(_esperado(luces))
+		assert_float(_restante(local)).is_equal(restante)
+		get_tree().paused = false
+		assert_array(_vista(local)).is_equal(_esperado(luces))
+
+
+func test_reabrir_la_noche_o_abrir_la_siguiente_parte_con_wifi_sin_guardado() -> void:  # AC-ANO-024
+	var local := _local()
+	_cortar(local)
+	assert_array(_vista(local)).is_equal(_esperado(LUCES.APAGADAS))
+	_restaurar(local)
+	assert_array(_vista(local)).is_equal(_esperado(LUCES.ROJAS))
+	assert_bool(Guardado.new().hay_guardado()).is_false()
+	assert_array(_vista(_local())).is_equal(_esperado(LUCES.VERDES))
+	var siguiente := _local(AnomaliasDeLaJornada.JORNADA_DEL_CORTE + 1)
+	assert_array(_vista(siguiente)).is_equal(_esperado(LUCES.VERDES))
 
 
 func test_examinar_el_router_dice_su_texto_sin_tocarlo() -> void:  # AC-SUB-034
