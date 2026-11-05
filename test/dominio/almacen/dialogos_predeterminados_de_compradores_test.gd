@@ -1,7 +1,6 @@
 extends GdUnitTestSuite
 
 const TERCERA := ReglasDeLaPartida.PRIMERA_JORNADA + 2
-const QUINTA := ReglasDeLaPartida.PRIMERA_JORNADA + 4
 const AMARILLO := "[color=#e4f850]"
 const PISTA := "#e7a1f4"
 const CASOS: Array[Array] = [
@@ -111,7 +110,7 @@ func test_repetir_la_entrega_no_vende_ni_retira_otra_vez() -> void:  # AC-CTR-07
 
 
 func test_la_apertura_de_quien_no_tiene_guion_propio_es_la_predeterminada() -> void:  # AC-CTR-070
-	for caso: Array in [[TERCERA + 1, "Fede"], [QUINTA, "Mía"]]:
+	for caso: Array in [[TERCERA + 1, "Fede"]]:
 		for comprador in Compradores.de_la_jornada(caso[0], 3):
 			if comprador.nombre() != caso[1]:
 				continue

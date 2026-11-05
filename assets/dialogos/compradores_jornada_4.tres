@@ -4,5 +4,5 @@
 
 [resource]
 script = ExtResource("1")
-tia = PackedStringArray("……….", "Quiero {pedido}.")
-despedida_tia = PackedStringArray("Chau….")
+tia = PackedStringArray("Hola…", "Quiero {pedido}.", "……")
+despedida_tia = PackedStringArray("Volveré.")

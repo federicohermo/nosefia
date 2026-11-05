@@ -132,6 +132,61 @@ func test_el_chat_ordena_los_mensajes_del_pedido_y_los_olvida_al_reabrir() -> vo
 	assert_array(bandeja.mensajes_de(PROVEEDOR)).is_empty()
 
 
+func _respuestas_con(activas: PackedStringArray, hay_wifi: bool = true) -> Array[Mensaje]:
+	var pedido := PedidoAlProveedor.new(PEDIDO, activas)
+	pedido.abrir_lista()
+	pedido.marcar(Producto.Id.POETICO)
+	pedido.enviar(hay_wifi, "20:10")
+	return pedido.avanzar(100.0, "20:11")
+
+
+func test_con_6a_activa_la_frase_de_la_primera_respuesta_es_la_pista() -> void:  # AC-INV-200
+	var respuestas := _respuestas_con(PackedStringArray(["6A", "6B"]))
+	assert_int(respuestas.size()).is_equal(PedidoAlProveedor.RESPUESTAS.size())
+	var primera := respuestas[0]
+	assert_str(primera.texto_del_tramo).is_equal(PedidoAlProveedor.FRASE_DE_LA_PISTA)
+	assert_str(primera.texto).contains(primera.texto_del_tramo)
+	assert_str(primera.texto).is_not_equal(primera.texto_del_tramo)
+	assert_str(primera.pista_del_tramo(primera.tramo_de_pista)).is_equal("6A")
+	assert_str(primera.pista_del_tramo("otro")).is_empty()
+
+
+func test_la_segunda_respuesta_nunca_es_una_pista() -> void:  # AC-INV-200
+	var segunda := _respuestas_con(PackedStringArray(["6A"]))[1]
+	assert_str(segunda.pista_del_tramo(segunda.tramo_de_pista)).is_empty()
+	assert_str(segunda.tramo_de_pista).is_empty()
+
+
+func test_sin_6a_activa_ninguna_respuesta_es_una_pista() -> void:  # AC-INV-200
+	var sin_6a: Array[PackedStringArray] = [
+		PackedStringArray(), PackedStringArray(["6C", "6D"]), PackedStringArray(["6B"])
+	]
+	for activas: PackedStringArray in sin_6a:
+		var respuestas := _respuestas_con(activas)
+		assert_str(respuestas[0].texto).contains(PedidoAlProveedor.FRASE_DE_LA_PISTA)
+		for respuesta: Mensaje in respuestas:
+			(
+				assert_str(respuesta.pista_del_tramo(respuesta.tramo_de_pista))
+				. override_failure_message("activas %s" % activas)
+				. is_empty()
+			)
+
+
+func test_sin_wifi_no_llega_ninguna_respuesta_con_pista() -> void:  # AC-INV-200
+	assert_array(_respuestas_con(PackedStringArray(["6A"]), false)).is_empty()
+
+
+func test_el_chat_pide_la_pista_6a_solo_al_pulsar_la_frase() -> void:  # AC-INV-200
+	var bandeja := Bandeja.new(Conversacion.desde_disco())
+	bandeja.abrir_jornada(PEDIDO)
+	var primera := _respuestas_con(PackedStringArray(["6A"]))[0]
+	bandeja.recibir(PROVEEDOR, primera)
+	assert_str(bandeja.pista_de(PROVEEDOR, primera.identidad, primera.tramo_de_pista)).is_equal(
+		"6A"
+	)
+	assert_str(bandeja.pista_de(PROVEEDOR, primera.identidad, "otro")).is_empty()
+
+
 func test_cuenta_el_ultimo_enviado_con_wifi_y_ni_uno_mas_ni_uno_menos() -> void:  # AC-SHF-032
 	var vacias: Array[Producto.Id] = [
 		Producto.Id.FERNET_GOD, Producto.Id.ARVECOR, Producto.Id.GRINGO
