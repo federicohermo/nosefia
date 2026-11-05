@@ -5,7 +5,7 @@
 ## acciones de `project.godot`, que es lo que este issue agrega.
 extends GdUnitTestSuite
 
-const ALMACEN := preload("res://src/escenas/almacen.tscn")
+const JUGADOR := preload("res://src/escenas/jugador.tscn")
 const COMPUTADORA := preload("res://src/ui/diegetica/pantalla_de_computadora.tscn")
 const PROGRAMA_DE_TICKETS := preload("res://src/ui/diegetica/programa_de_tickets.tscn")
 const CELULAR := preload("res://src/ui/diegetica/pantalla_del_celular.tscn")
@@ -17,6 +17,7 @@ const C := Preferencias.Campo
 
 func after_test() -> void:
 	get_tree().paused = false
+	Input.action_release(&"mirar_derecha")
 	var ajuste: AjusteDePreferencias = auto_free(AjusteDePreferencias.new())
 	add_child(ajuste)
 	ajuste.aplicar(Preferencias.new())
@@ -250,26 +251,6 @@ func test_el_foco_no_se_queda_en_un_boton_que_se_deshabilita() -> void:  # AC-CF
 	assert_object(_foco()).is_same(primero)
 
 
-func test_con_una_interfaz_abierta_el_joystick_derecho_no_gira_la_vista() -> void:  # AC-CFG-027
-	var almacen: Node3D = auto_free(ALMACEN.instantiate())
-	add_child(almacen)
-	var jugador: Node3D = almacen.get_node("Jugador")
-	jugador.set_physics_process(false)
-	for _cuadro in 4:
-		await get_tree().physics_frame
-	var control: ControlDelJugador = jugador.get("_control")
-	var puesto: Node3D = almacen.get_node("Estructura/base compu/StaticBody3D")
-	Input.action_press(&"mirar_derecha", 1.0)
-	puesto.call("abrir")
-	var yaw := control.yaw()
-	jugador.call("_mirar_con_el_joystick", 0.5)
-	assert_float(control.yaw()).is_equal(yaw)
-	# La premisa: el mismo joystick, con la interfaz cerrada, sí gira la vista.
-	puesto.call("cerrar")
-	jugador.call("_mirar_con_el_joystick", 0.5)
-	assert_float(control.yaw()).is_not_equal(yaw)
-
-
 func test_la_lista_de_tickets_enfoca_un_item_y_el_foco_vuelve_al_selector() -> void:  # AC-CFG-028
 	for elegir_con_x: bool in [true, false]:
 		var vista: ProgramaDeTickets = auto_free(PROGRAMA_DE_TICKETS.instantiate())
@@ -288,3 +269,18 @@ func test_la_lista_de_tickets_enfoca_un_item_y_el_foco_vuelve_al_selector() -> v
 		assert_object(_foco()).is_same(cabecera)
 		vista.ocultar()
 		remove_child(vista)
+
+
+## Toda interfaz abierta suspende al jugador: es lo que impide que el joystick derecho gire la vista.
+func test_con_una_interfaz_abierta_la_vista_no_gira() -> void:  # AC-CFG-027
+	var jugador: CharacterBody3D = auto_free(JUGADOR.instantiate())
+	var control: ControlDelJugador = jugador.get("_control")
+	Input.action_press(&"mirar_derecha", 1.0)
+	jugador.call("suspender")
+	var yaw := control.yaw()
+	jugador.call("_mirar_con_el_joystick", 0.5)
+	assert_float(control.yaw()).is_equal(yaw)
+	# La premisa: el mismo joystick, con la interfaz cerrada, sí gira la vista.
+	jugador.call("reanudar")
+	jugador.call("_mirar_con_el_joystick", 0.5)
+	assert_float(control.yaw()).is_not_equal(yaw)
