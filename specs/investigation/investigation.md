@@ -3,7 +3,7 @@ schema_version: 1
 capability_id: CAP-INV
 status: draft
 owner: por definir
-provenance: GDD «Investigación» y «La computadora»; ficha «Interfaces virtuales durante la jornada» y decisiones de #373, #375 y #376; migración de los specs 006, 009, 018; fichas Chat con el jefe, Chat con compañera y 2A revisadas el 2026-10-15; decisiones de #430; «Sistema de investigación», fichas 2A/2B/2P y decisiones de #22 del 2026-10-15; decisión del usuario del 2026-10-18 de usar la captura del mensaje de Yasmín como foto de 2A; decisión del usuario del 2026-10-17 de retirar las notas de la computadora y usar el diseño del registro de productos; ficha «Pantalla entre jornadas», reflexión de jornada 1, encabezado de jornada 2 y decisiones de #436; decisiones del usuario del 2026-10-18 sobre el recorrido lateral, la elección sin límite de tiempo, la reanudación del cierre y la espera de 1 segundo; ocho jornadas de #526; instrucciones por jornada de #527; la colilla sólo en su jornada, de #536; ficha Chat con compañera, jornada 5, de #458; ficha «Caminos narrativos y finales» y cuadro de pistas e hipótesis de #766 y la ficha «5B» de la lista de pistas e hipótesis y decisiones del usuario del 2026-10-30 sobre su foto y su texto, de #731; la fila «6C» de la lista de pistas e hipótesis, la ficha «Caminos narrativos y finales» y decisiones del usuario del 2026-11-03 sobre Yasmín y la textura de la nota, de #741; encabezado de la jornada 5 y ficha «5P» de la lista de pistas e hipótesis y decisión del usuario del 2026-11-04 sobre la 5L, de #740; encabezado de la jornada 6 y fichas «6P» y «6L» de la lista de pistas e hipótesis, de #742
+provenance: GDD «Investigación» y «La computadora»; ficha «Interfaces virtuales durante la jornada» y decisiones de #373, #375 y #376; migración de los specs 006, 009, 018; fichas Chat con el jefe, Chat con compañera y 2A revisadas el 2026-10-15; decisiones de #430; «Sistema de investigación», fichas 2A/2B/2P y decisiones de #22 del 2026-10-15; decisión del usuario del 2026-10-18 de usar la captura del mensaje de Yasmín como foto de 2A; decisión del usuario del 2026-10-17 de retirar las notas de la computadora y usar el diseño del registro de productos; ficha «Pantalla entre jornadas», reflexión de jornada 1, encabezado de jornada 2 y decisiones de #436; decisiones del usuario del 2026-10-18 sobre el recorrido lateral, la elección sin límite de tiempo, la reanudación del cierre y la espera de 1 segundo; ocho jornadas de #526; instrucciones por jornada de #527; la colilla sólo en su jornada, de #536; ficha Chat con compañera, jornada 5, de #458; ficha «Caminos narrativos y finales» y cuadro de pistas e hipótesis de #766 y la ficha «5B» de la lista de pistas e hipótesis y decisiones del usuario del 2026-10-30 sobre su foto y su texto, de #731; la fila «6C» de la lista de pistas e hipótesis, la ficha «Caminos narrativos y finales» y decisiones del usuario del 2026-11-03 sobre Yasmín y la textura de la nota, de #741; encabezado de la jornada 5 y ficha «5P» de la lista de pistas e hipótesis y decisión del usuario del 2026-11-04 sobre la 5L, de #740; ficha «Especificar animaciones», el chat que entra y sale deslizándose, de #627; encabezado de la jornada 6 y fichas «6P» y «6L» de la lista de pistas e hipótesis, de #742
 ---
 
 # Capacidad: la investigación
@@ -720,6 +720,20 @@ llevar a su pantalla (BR-SHF-027). Una sola pista registrada, de cualquier jorna
 que no lo sea. Elegir una hipótesis sin pista, P o L, NO DEBE contar como pista. SI la partida termina
 despedida, ENTONCES el final NO DEBE ser éste, aunque no haya pistas.
 
+### BR-INV-104 — El chat entra y sale deslizándose
+CUANDO el jugador abre un chat desde el menú de chats, el chat DEBE entrar desde el borde derecho
+del teléfono y tapar la lista hasta quedar en su lugar. CUANDO el jugador vuelve al menú desde
+un chat, el chat DEBE salir hacia la derecha y descubrir la lista, que DEBE quedar quieta debajo.
+Un chat en modo fijo (BR-INV-026) NO DEBE deslizarse: aparece en su lugar. La duración y la curva
+del deslizamiento DEBEN ser las mismas en la entrada y en la salida (OQ-INV-007).
+
+### BR-INV-105 — El deslizamiento no deja la pantalla a medias
+MIENTRAS un chat se desliza, un pedido de volver o de abrir otro chat NO DEBE dejar la pantalla
+a medio camino ni abrir dos chats: el celular DEBE terminar mostrando un solo destino, el último
+pedido. CUANDO el celular baja o se cierra con un deslizamiento en curso, el deslizamiento DEBE
+saltar a su estado final, de modo que la próxima apertura empiece desde el menú o desde el chat
+que le toque y no desde un punto intermedio.
+
 ## Criterios de aceptación
 
 ### AC-INV-001 — Examinar revela *(verifica BR-INV-001)*
@@ -1404,6 +1418,39 @@ DADO un mensaje fechado sin hora al frente de una tanda ENTONCES el rótulo no l
 mensaje legado sin jornada ENTONCES no abre tanda, no muestra hora y no cambia las tandas de los
 fechados.
 
+### AC-INV-114 — Abrir un chat lo hace entrar por la derecha *(verifica BR-INV-104)*
+
+DADO el menú de chats abierto CUANDO se abre un chat ENTONCES, al empezar el deslizamiento, el
+chat está fuera del borde derecho del teléfono y la lista sigue visible; durante el
+deslizamiento el chat avanza hacia la izquierda; al terminar, el chat ocupa el teléfono entero
+y tapa la lista.
+
+### AC-INV-115 — Volver hace salir el chat por la derecha *(verifica BR-INV-104)*
+
+DADO un chat abierto desde el menú CUANDO se vuelve ENTONCES, durante el deslizamiento, el chat
+avanza hacia la derecha y la lista queda en su lugar sin moverse; al terminar, el chat está fuera
+del teléfono y sólo se ve la lista.
+
+### AC-INV-116 — Un chat fijo aparece sin deslizarse *(verifica BR-INV-104, BR-INV-026)*
+
+DADO un chat en modo fijo CUANDO se muestra ENTONCES ocupa el teléfono entero en el mismo
+cuadro, sin deslizamiento, y no hay botón de volver.
+
+### AC-INV-117 — Un pedido durante el deslizamiento no deja dos chats *(verifica BR-INV-105)*
+
+DADO un chat que está entrando CUANDO se pide volver ENTONCES el celular termina mostrando el
+menú y ningún chat queda a medias. DADO un chat que está entrando CUANDO se pide abrir otro
+chat ENTONCES el celular termina mostrando sólo el último pedido, y hay un solo chat abierto.
+DADO un chat que está saliendo CUANDO se pide abrir un chat ENTONCES termina mostrando ese chat
+y ningún otro.
+
+### AC-INV-118 — Bajar el celular durante el deslizamiento lo termina *(verifica BR-INV-105)*
+
+DADO un chat que está entrando CUANDO el celular baja ENTONCES el deslizamiento salta a su
+estado final, y CUANDO el celular vuelve a subir ENTONCES se ve el estado que le toca, sin el
+deslizamiento a medias. DADO un chat que está saliendo CUANDO el celular baja ENTONCES, al subir,
+se ve la lista sola.
+
 ### AC-INV-120 — La nota está sólo si 6C está activa *(verifica BR-INV-071, BR-INV-050)*
 
 DADO el caso de la partida CUANDO se consulta si la nota está en el local ENTONCES contesta que
@@ -1571,6 +1618,12 @@ opciones 5B o 5P, y pide «NOCHE 6».
 
 ## Preguntas abiertas
 
+- **OQ-INV-007 — ¿Cuánto dura y qué curva tiene el deslizamiento del chat?**
+  - Por qué sigue abierta: la ficha «Especificar animaciones» pide que el chat entre desde el
+    margen derecho «como Instagram» y no da duración ni curva. El juego usa valores provisionales
+    con nombre, que se ajustan sin tocar este contrato.
+  - Decide: game design, con el prototipo de Figma si lo tiene armado.
+  - Bloquea: fijar los valores finales; no bloquea el deslizamiento.
 - **OQ-INV-006 — ¿Cuánto rebota, cuánto dura y dónde se ve el rebote del celular?**
   - Por qué sigue abierta: la ficha pide un resorte «Gentle» con «leve bounce» y no da masa,
     rigidez, amortiguación ni duración; un resorte así suele asentarse después de los 0,25
