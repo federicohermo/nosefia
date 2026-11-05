@@ -2,6 +2,7 @@
 
 [ext_resource type="Script" path="res://src/dominio/investigacion/hipotesis_de_la_jornada.gd" id="jornada"]
 [ext_resource type="Script" path="res://src/dominio/investigacion/hipotesis.gd" id="hipotesis"]
+[ext_resource type="Resource" path="res://assets/investigacion/jornada_2/hipotesis_6a.tres" id="a"]
 [ext_resource type="Resource" path="res://assets/investigacion/jornada_2/hipotesis_6b.tres" id="b"]
 [ext_resource type="Resource" path="res://assets/investigacion/jornada_2/hipotesis_6c.tres" id="c"]
 [ext_resource type="Resource" path="res://assets/investigacion/jornada_2/hipotesis_6p.tres" id="predeterminada"]
@@ -10,6 +11,6 @@
 [resource]
 script = ExtResource("jornada")
 jornada = 6
-opciones = Array[ExtResource("hipotesis")]([ExtResource("b"), ExtResource("c")])
+opciones = Array[ExtResource("hipotesis")]([ExtResource("a"), ExtResource("b"), ExtResource("c")])
 predeterminada = ExtResource("predeterminada")
 con_antecedentes = ExtResource("con_antecedentes")

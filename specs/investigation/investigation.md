@@ -3,7 +3,7 @@ schema_version: 1
 capability_id: CAP-INV
 status: draft
 owner: por definir
-provenance: GDD «Investigación» y «La computadora»; ficha «Interfaces virtuales durante la jornada» y decisiones de #373, #375 y #376; migración de los specs 006, 009, 018; fichas Chat con el jefe, Chat con compañera y 2A revisadas el 2026-10-15; decisiones de #430; «Sistema de investigación», fichas 2A/2B/2P y decisiones de #22 del 2026-10-15; decisión del usuario del 2026-10-18 de usar la captura del mensaje de Yasmín como foto de 2A; decisión del usuario del 2026-10-17 de retirar las notas de la computadora y usar el diseño del registro de productos; ficha «Pantalla entre jornadas», reflexión de jornada 1, encabezado de jornada 2 y decisiones de #436; decisiones del usuario del 2026-10-18 sobre el recorrido lateral, la elección sin límite de tiempo, la reanudación del cierre y la espera de 1 segundo; ocho jornadas de #526; instrucciones por jornada de #527; la colilla sólo en su jornada, de #536; ficha Chat con compañera, jornada 5, de #458; ficha «Caminos narrativos y finales» y cuadro de pistas e hipótesis de #766 y la ficha «5B» de la lista de pistas e hipótesis y decisiones del usuario del 2026-10-30 sobre su foto y su texto, de #731; la fila «6C» de la lista de pistas e hipótesis, la ficha «Caminos narrativos y finales» y decisiones del usuario del 2026-11-03 sobre Yasmín y la textura de la nota, de #741; encabezado de la jornada 5 y ficha «5P» de la lista de pistas e hipótesis y decisión del usuario del 2026-11-04 sobre la 5L, de #740; quejas de la jornada 7, captura de la transferencia y pantalla conjunta de #759, ficha «Particulares de cada jornada» y comentario de Notion del 2026-11-04; ficha «Especificar animaciones», el chat que entra y sale deslizándose, de #627; GJ-62, el chat que abre en el primer mensaje sin leer, de #568; encabezado de la jornada 6 y fichas «6P» y «6L» de la lista de pistas e hipótesis, de #742; la fila «5A» de la lista de pistas e hipótesis y el mensaje de Cami de «Diálogos de compradores», de #785; la fila «6B» de la lista de pistas e hipótesis y la fila «Documento impreso» de «Objetos interactuables», de #789; la fila «7B» de la lista de pistas e hipótesis, la fila «Palanca» de «Objetos interactuables» y la ficha «Caminos narrativos y finales», de #790; la fila «7C» de la lista de pistas e hipótesis, la fila «Llave» de «Objetos interactuables» y la ficha «Caminos narrativos y finales», de #810; el círculo de mensajes nuevos y la vibración del ícono del HUD, ficha «Interfaces virtuales durante la jornada», de #662; hora y wifi de la barra de estado del celular de #613, frames «Estado celular / Hora y wifi» de Manada — UI; el chat de Hernán y el pedido al proveedor, de #691; GJ-79, el chat de notas desde la jornada 4, de #828
+provenance: GDD «Investigación» y «La computadora»; ficha «Interfaces virtuales durante la jornada» y decisiones de #373, #375 y #376; migración de los specs 006, 009, 018; fichas Chat con el jefe, Chat con compañera y 2A revisadas el 2026-10-15; decisiones de #430; «Sistema de investigación», fichas 2A/2B/2P y decisiones de #22 del 2026-10-15; decisión del usuario del 2026-10-18 de usar la captura del mensaje de Yasmín como foto de 2A; decisión del usuario del 2026-10-17 de retirar las notas de la computadora y usar el diseño del registro de productos; ficha «Pantalla entre jornadas», reflexión de jornada 1, encabezado de jornada 2 y decisiones de #436; decisiones del usuario del 2026-10-18 sobre el recorrido lateral, la elección sin límite de tiempo, la reanudación del cierre y la espera de 1 segundo; ocho jornadas de #526; instrucciones por jornada de #527; la colilla sólo en su jornada, de #536; ficha Chat con compañera, jornada 5, de #458; ficha «Caminos narrativos y finales» y cuadro de pistas e hipótesis de #766 y la ficha «5B» de la lista de pistas e hipótesis y decisiones del usuario del 2026-10-30 sobre su foto y su texto, de #731; la fila «6C» de la lista de pistas e hipótesis, la ficha «Caminos narrativos y finales» y decisiones del usuario del 2026-11-03 sobre Yasmín y la textura de la nota, de #741; encabezado de la jornada 5 y ficha «5P» de la lista de pistas e hipótesis y decisión del usuario del 2026-11-04 sobre la 5L, de #740; quejas de la jornada 7, captura de la transferencia y pantalla conjunta de #759, ficha «Particulares de cada jornada» y comentario de Notion del 2026-11-04; ficha «Especificar animaciones», el chat que entra y sale deslizándose, de #627; GJ-62, el chat que abre en el primer mensaje sin leer, de #568; encabezado de la jornada 6 y fichas «6P» y «6L» de la lista de pistas e hipótesis, de #742; la fila «5A» de la lista de pistas e hipótesis y el mensaje de Cami de «Diálogos de compradores», de #785; la fila «6B» de la lista de pistas e hipótesis y la fila «Documento impreso» de «Objetos interactuables», de #789; la fila «7B» de la lista de pistas e hipótesis, la fila «Palanca» de «Objetos interactuables» y la ficha «Caminos narrativos y finales», de #790; la fila «7C» de la lista de pistas e hipótesis, la fila «Llave» de «Objetos interactuables» y la ficha «Caminos narrativos y finales», de #810; el círculo de mensajes nuevos y la vibración del ícono del HUD, ficha «Interfaces virtuales durante la jornada», de #662; hora y wifi de la barra de estado del celular de #613, frames «Estado celular / Hora y wifi» de Manada — UI; el chat de Hernán y el pedido al proveedor, de #691; la fila «6A» de la lista de pistas e hipótesis y el mensaje de Hernán de «Chat con proveedor (Hernán)», de #811; GJ-79, el chat de notas desde la jornada 4, de #828
 ---
 
 # Capacidad: la investigación
@@ -700,7 +700,7 @@ BR-INV-050): está activa si la 5A se eligió en la jornada 5, o si la 5 termin�
 sorteo de la 6 (BR-INV-051) cayó en el camino de la 5A. Con la 5B elegida, con la 5P elegida y sin
 sorteo, o con un sorteo que cayó en otro camino, no lo está. La hipótesis 6B DEBE estar disponible
 al cierre de la jornada 6 si y sólo si 6B está registrada. La hipótesis 5A DEBE declarar el camino
-de 6A y 6B (BR-INV-049); 6A no tiene pista ni objeto todavía. Los datos DEBEN ser, según la fila
+de 6A y 6B (BR-INV-049). Los datos DEBEN ser, según la fila
 «6B» de la lista de pistas e hipótesis:
 
 | Identidad | Foto de pista | Texto de pista | Título de hipótesis |
@@ -802,12 +802,39 @@ DEBE registrar 7C por el canal de acción. Un gesto sobre la puerta sin la llave
 rechazado o uno durante la pausa NO DEBEN registrarla. Registrarla otra vez NO DEBE duplicar nada.
 El final al que lleva es el de BR-SHF-061.
 
+### BR-INV-149 — La frase de Hernán es la pista 6A, y su hipótesis avisa que el camino no sigue
+
+La pista 6A DEBE ser de la jornada 6, del canal de chat y del camino de la hipótesis 5A
+(BR-INV-049, BR-INV-050): está activa en las mismas condiciones que 6B (BR-INV-123). CUANDO llega
+la primera respuesta de Hernán (BR-INV-125) con 6A activa, el sistema DEBE mostrar sólo el
+fragmento «Qué lindo no tener que hablar directamente con Enrique» en rojo y el resto del mensaje
+en el color normal. CUANDO se pulsa el fragmento, DEBE emitir un pedido de la pista 6A por el
+canal de chat, como los demás fragmentos de chat (BR-INV-031, BR-INV-060). SI 6A no está
+activa, ENTONCES la respuesta DEBE ser texto normal, sin fragmento pulsable, y pulsar la frase NO
+DEBE registrar nada. La segunda respuesta de Hernán NO DEBE ser nunca una pista. SI el pedido salió
+sin wifi, ENTONCES no hay respuesta (BR-INV-125) y por lo tanto 6A no tiene de dónde registrarse.
+CUANDO se registra 6A con la jornada 6 abierta y el canal de chat, el sistema DEBE contestar
+ANOTADA y agregar al chat de notas primero su foto y después su texto (BR-INV-040). La hipótesis
+6A DEBE estar disponible al cierre de la jornada 6 si y sólo si 6A está registrada. Los datos DEBEN
+ser, según la fila «6A» de la lista de pistas e hipótesis:
+
+| Identidad | Foto de pista | Texto de pista | Título de hipótesis |
+|---|---|---|---|
+| 6A | la foto de perfil de Hernán | Hernán dijo: “Qué lindo no tener que hablar directamente con Enrique”. | EL PROVEEDOR |
+
+El texto de la pista queda provisional (OQ-INV-011). El texto de la hipótesis 6A DEBE ser, carácter
+por carácter: «ADVERTENCIA: Este camino aún no está listo. Si lo elegís, no te van a aparecer más
+pistas y tu investigación va a quedar incompleta. Recomendamos elegir las otras pistas o reiniciar
+la jornada si no las encontraste.» La hipótesis 6A NO DEBE declarar camino mientras la ficha «7A»
+siga sin contenido (OQ-INV-004): elegirla deja la jornada 7 sin pistas activas. Las pistas y las
+hipótesis 2A, 2B, 2P, 5A, 5B, 6B y 6C, y la colilla, NO DEBEN cambiar.
+
 ### BR-INV-116 — La sexta jornada se cierra eligiendo una hipótesis
 
 La reflexión de jornada 6 DEBE mostrar el encabezado «Un apagón me agarró desprevenido esta
-noche…». SI se registró 6B o 6C, ENTONCES la única opción DEBE ser la hipótesis de la pista
-registrada (BR-INV-123, BR-INV-070), sin la predeterminada. SI no se registró ni 6B ni 6C,
-ENTONCES la única opción DEBE ser la hipótesis 6P si el
+noche…». SI se registró 6A, 6B o 6C, ENTONCES las opciones DEBEN ser las hipótesis de las pistas
+registradas (BR-INV-149, BR-INV-123, BR-INV-070), en el orden 6A, 6B, 6C y sin la predeterminada.
+SI no se registró ninguna de las tres, ENTONCES la única opción DEBE ser la hipótesis 6P si el
 jugador nunca encontró una pista en la partida, o la 6L si encontró al menos una en una jornada
 anterior (BR-INV-053). Los datos DEBEN ser, según las fichas «6P» y «6L» de la lista de pistas e
 hipótesis:
@@ -865,7 +892,7 @@ jornada NO DEBE abrir una tanda ni aportar hora.
 ### BR-INV-103 — Al cumplir el contrato, las pistas deciden entre el final 1 y el final 2
 
 SI la partida termina con el contrato cumplido y el expediente no registró ninguna pista en
-ninguna jornada, ENTONCES el final DEBE ser «Empleado estresado» (final 1). SI registró al menos
+ninguna jornada, ENTONCES el final DEBE ser «Empleado explotado» (final 1). SI registró al menos
 una, de cualquier jornada, ENTONCES el final DEBE ser «Locura paranoica» (final 2): la
 investigación quedó incompleta. En los dos casos la devolución DEBE llevar a la pantalla de su
 final (BR-SHF-027). Una sola pista registrada DEBE bastar para el final 2. Elegir una hipótesis sin
@@ -1031,7 +1058,7 @@ te preparo los productos para mañana. Estaré pasando por allá antes del medio
 al enviar, ENTONCES el mensaje DEBE quedar en rojo con el texto «Error en la red» y NO DEBE llegar
 ninguna respuesta, aunque el wifi vuelva después; el jugador DEBE poder abrir la lista y enviar
 otro pedido. El estado del wifi se lee al enviar, y no cambia un mensaje ya enviado. El tiempo en
-pausa no cuenta para las respuestas. La primera respuesta es texto normal, sin color de pista.
+pausa no cuenta para las respuestas. La primera respuesta es texto normal, salvo lo que fija BR-INV-149.
 
 ### BR-INV-126 — La sexta jornada abre con la foto de las estanterías y el aviso del pedido
 
@@ -1978,24 +2005,24 @@ DADO la nota del local ENTONCES su identidad no es la de ningún producto ni la 
 levantable, tiene subtítulo, se dibuja con una textura de papel distinta de la de las cajas, y su
 cara escrita usa la textura de la nota con texto.
 
-### AC-INV-127 — Sin ninguna pista, estresado *(verifica BR-INV-103)*
+### AC-INV-127 — Sin ninguna pista, explotado *(verifica BR-INV-103)*
 
 DADO la jornada 7 cerrada con el contrato cumplido y el expediente sin pistas, aunque la hipótesis P
-se haya elegido en las jornadas 4 a 6, ENTONCES el final es «Empleado estresado». DADO el mismo
+se haya elegido en las jornadas 4 a 6, ENTONCES el final es «Empleado explotado». DADO el mismo
 cierre con la pista 4A registrada en la jornada 4 y ninguna otra ENTONCES no lo es. DADO el mismo
 cierre con una única pista registrada en la jornada 7 ENTONCES tampoco.
 
-### AC-INV-128 — El despido no es estresado *(verifica BR-INV-103)*
+### AC-INV-128 — El despido no es explotado *(verifica BR-INV-103)*
 
 DADO una partida despedida al cerrar la jornada 5 con el expediente sin pistas ENTONCES el final es
-el despido y no «Empleado estresado». DADO una partida en curso sin pistas ENTONCES no hay final.
+el despido y no «Empleado explotado». DADO una partida en curso sin pistas ENTONCES no hay final.
 
 ### AC-INV-190 — Con alguna pista, locura paranoica *(verifica BR-INV-103)*
 
 DADO la jornada 7 cerrada con el contrato cumplido y una única pista registrada, en cualquier
-jornada de la 1 a la 7, ENTONCES el final es «Locura paranoica» y no «Empleado estresado». DADO el
+jornada de la 1 a la 7, ENTONCES el final es «Locura paranoica» y no «Empleado explotado». DADO el
 mismo cierre sin pistas y con la hipótesis P o L elegida en alguna jornada ENTONCES el final es
-«Empleado estresado». DADO una partida en curso con pistas ENTONCES no hay final.
+«Empleado explotado». DADO una partida en curso con pistas ENTONCES no hay final.
 
 ### AC-INV-191 — El despido y la puerta del jefe ganan sobre la locura paranoica *(verifica BR-INV-103)*
 
@@ -2081,6 +2108,45 @@ nuevos, sin leer, ambos a las 19:48: una foto de las estanterías del depósito 
 BR-INV-126, en ese orden, sin un tercero. CUANDO se amplía la foto ENTONCES muestra ese texto como
 adjunto. DADO cada jornada de la 1 a la 5 ENTONCES ninguno de los dos está en su chat. Retomar la
 jornada 6 los muestra una sola vez.
+
+### AC-INV-199 — El contenido de 6A es el de su ficha *(verifica BR-INV-149)*
+
+DADO el caso de la partida CUANDO se consulta 6A ENTONCES su pista es de la jornada 6 y del canal de
+chat, con la foto de perfil de Hernán, distinta de las fotos de 2A, 2B, 5A, 5B, 6B y 6C; su texto de
+pista, su título y el texto de su hipótesis coinciden con BR-INV-149; y la hipótesis no declara
+camino. La hipótesis 5A declara el camino de 6A y 6B. Las identidades 2A, 2B, 2P, 5A, 5B, 6B y 6C
+conservan sus datos.
+
+### AC-INV-200 — La frase de Hernán es una pista sólo por el camino de la 5A *(verifica BR-INV-149, BR-INV-125, BR-INV-050, BR-INV-051)*
+
+DADO el wifi encendido, un pedido enviado y la primera respuesta de Hernán entregada CUANDO 6A está
+activa (2A elegida en la 4 y 5A elegida en la 5, o la 5 sin pistas y el sorteo de la 6 en el camino
+de la 5A, con una semilla fija) ENTONCES la respuesta tiene un único fragmento de pista, que es la
+frase de BR-INV-149 y está contenida en el mensaje, y su pista es 6A. La segunda respuesta no tiene
+fragmento de pista. CUANDO 6A no está activa (5B elegida, 5P elegida sin sorteo, un sorteo en otro
+camino, 2B elegida en la 4 o ninguna elección) ENTONCES la primera respuesta no tiene fragmento de
+pista y el mismo texto se lee igual. DADO el wifi apagado CUANDO se envía ENTONCES no llega ninguna
+respuesta con fragmento de pista, aunque el wifi vuelva.
+
+### AC-INV-201 — Pulsar la frase registra 6A una vez *(verifica BR-INV-149, BR-INV-032, BR-INV-040, BR-INV-037, BR-INV-050)*
+
+DADO la jornada 6 abierta con 6A activa CUANDO se pide 6A por el canal de chat ENTONCES contesta
+ANOTADA, el expediente suma 6A, se publica una pista nueva de la jornada 6 con su foto y su texto, y
+el chat de notas recibe primero la foto y después el texto. CUANDO se pide otra vez ENTONCES
+contesta REPETIDA y no agrega mensajes ni publica otra pista. CUANDO se pide 6A por el canal de
+chat en otra jornada, o por otro canal en la 6, ENTONCES contesta DESCONOCIDA. DADO 5B elegida en
+la 5 CUANDO se pide 6A por el canal de chat ENTONCES contesta DESCONOCIDA y el expediente no cambia.
+
+### AC-INV-202 — Con la pista 6A se ofrece su hipótesis, y elegirla no abre ninguna pista *(verifica BR-INV-116, BR-INV-149, BR-INV-039)*
+
+DADO 2A elegida en la jornada 4, 5A elegida en la 5 y 6A registrada en la 6, sin 6B, ENTONCES el
+cierre de la jornada 6 lleva el encabezado de BR-INV-116, la única opción es 6A «EL PROVEEDOR»,
+sin 6P ni 6L, y ofrece sólo «Elegir». DADO 6A y 6B registradas ENTONCES las opciones son 6A y 6B,
+en ese orden. CUANDO se pide elegir 6P, 6L o 6C con 6A registrada ENTONCES contesta NO_DISPONIBLE.
+DADO el expediente sin 6A CUANDO se pide elegir 6A ENTONCES contesta NO_DISPONIBLE. CUANDO se elige
+6A con 6A registrada ENTONCES contesta ACEPTADA, las notas reciben su texto una sola vez, la
+elección de la jornada 6 es 6A y la reflexión pide «NOCHE 7». DADO 6A elegida ENTONCES las pistas
+activas de la jornada 7 son ninguna.
 
 ### AC-INV-140 — Enrique avisa de las quejas en la jornada 7 *(verifica BR-INV-114)*
 
@@ -2292,12 +2358,12 @@ vuelve el wifi ENTONCES se ve el de conectado y no el de sin conexión.
 
 ## Preguntas abiertas
 
-- **OQ-INV-010 — ¿Qué hay entre abrir la puerta de Enrique y la pantalla del final?**
-  - Por qué sigue abierta: las filas «7B» y «7C» dicen que la jornada termina y «pasa directamente
-    al epílogo», pero el epílogo no tiene contenido en Notion ni frame en Figma. Mientras no lo
-    tenga, la puerta lleva directo a la pantalla del final 4 o del 5 (BR-SHF-060, BR-SHF-061).
+- **OQ-INV-011 — ¿Qué texto lleva la nota de la pista 6A?**
+  - Por qué sigue abierta: la fila «6A» de la lista de pistas e hipótesis deja vacío el «Texto de
+    la pista». Mientras tanto la nota dice «Hernán dijo: “Qué lindo no tener que hablar
+    directamente con Enrique”.», que sólo repite la frase.
   - Decide: game design con narrativa.
-  - Bloquea: intercalar el epílogo antes de la pantalla; no bloquea la pantalla ni el final.
+  - Bloquea: fijar el texto final de la nota; no bloquea la pista ni su hipótesis.
 - **OQ-INV-007 — ¿Cuánto dura y qué curva tiene el deslizamiento del chat?**
   - Por qué sigue abierta: la ficha «Especificar animaciones» pide que el chat entre desde el
     margen derecho «como Instagram» y no da duración ni curva. El juego usa valores provisionales
