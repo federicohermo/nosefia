@@ -30,7 +30,6 @@ const _IMAGEN_DE_LOS_LOGROS: Dictionary[Logros.Logro, Texture2D] = {
 	Logros.Logro.MI_TALON_DE_AQUILES:
 	preload("res://assets/ui/manada/logros/mi_talon_de_aquiles.png"),
 }
-## Locura paranoica y Jefe saboteador no están: se ven con su nombre y sin imagen propia todavía.
 const _IMAGEN_DE_LOS_FINALES: Dictionary[Partida.Final, Texture2D] = {
 	Partida.Final.DESPEDIDO: preload("res://assets/ui/manada/logros/final_despedido.png"),
 	Partida.Final.CONTRATO_CUMPLIDO:
