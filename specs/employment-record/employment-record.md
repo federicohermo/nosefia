@@ -3,7 +3,7 @@ schema_version: 1
 capability_id: CAP-EMP
 status: ratified
 owner: por definir
-provenance: GDD «Consecuencias» y «Finales»; fichas «1. Ciclo de jornadas y sistema de puntos», «Pantalla entre jornadas» y «Chat con el jefe»; decisiones de #374, decisión del 2026-09-28 de #299, decisiones de #375 y corrección visual solicitada en #398; migración de los specs 002, 016, 017; metadatos temporales de devoluciones de #430; decisiones de #432 sobre el hecho de uso de Poético y de #22 sobre la titularidad del expediente, 2026-10-15; advertencia por Poético y paso a la reflexión de cierre de #436; ocho jornadas de #526; instrucciones por jornada de #527; cuartito de limpieza de #541; puntos de las jornadas de prueba de #572; devolución desde la jornada 4 y cierres de la ficha del 20/10 de #576; mensajes introductorios de la jornada 4 en pantalla, de la ficha «Chat con el jefe» del 2026-10-21; auditoría de la prueba contra las fichas del 2026-10-22; quinto llamado por heladeras abiertas de #550, ficha «Llamados de atención extra» del 2026-10-20 y filas de Reto 5 de «Chat con el jefe» y decisión del 2026-10-26 sobre el texto con P ≥ 4; Tarea 5 con la bolsa tirada por la ventana de #518, decisión del 2026-10-25; espera del celular tras la persiana de #628, ficha «Pantalla entre jornadas»; deslizamiento de las placas de Enrique de #675, ficha «Especificar animaciones» (GJ-69) y decisión del 2026-10-30; siete jornadas, con dos de prueba, de #693
+provenance: GDD «Consecuencias» y «Finales»; fichas «1. Ciclo de jornadas y sistema de puntos», «Pantalla entre jornadas» y «Chat con el jefe»; decisiones de #374, decisión del 2026-09-28 de #299, decisiones de #375 y corrección visual solicitada en #398; migración de los specs 002, 016, 017; metadatos temporales de devoluciones de #430; decisiones de #432 sobre el hecho de uso de Poético y de #22 sobre la titularidad del expediente, 2026-10-15; advertencia por Poético y paso a la reflexión de cierre de #436; ocho jornadas de #526; instrucciones por jornada de #527; cuartito de limpieza de #541; puntos de las jornadas de prueba de #572; devolución desde la jornada 4 y cierres de la ficha del 20/10 de #576; mensajes introductorios de la jornada 4 en pantalla, de la ficha «Chat con el jefe» del 2026-10-21; auditoría de la prueba contra las fichas del 2026-10-22; quinto llamado por heladeras abiertas de #550, ficha «Llamados de atención extra» del 2026-10-20 y filas de Reto 5 de «Chat con el jefe» y decisión del 2026-10-26 sobre el texto con P ≥ 4; Tarea 5 con la bolsa tirada por la ventana de #518, decisión del 2026-10-25; espera del celular tras la persiana de #628, ficha «Pantalla entre jornadas»; deslizamiento de las placas de Enrique de #675, ficha «Especificar animaciones» (GJ-69) y decisión del 2026-10-30; siete jornadas, con dos de prueba, de #693; la Tarea 5 del pedido al proveedor, de #691
 ---
 
 # Capacidad: el legajo del empleado
@@ -596,6 +596,19 @@ está en pantalla, la espera NO DEBE correr, y el celular NO DEBE subir debajo n
 al reanudar, la espera sigue desde donde estaba. La devolución del despido y la del contrato
 cumplido siguen la misma secuencia. Las jornadas de introducción no cambian (BR-EMP-011).
 Esta espera NO DEBE cambiar el guardado de la noche cerrada.
+
+### BR-EMP-047 — La Tarea 5 de la jornada 6 depende del pedido
+
+CUANDO cierra la jornada 6 con el pedido al proveedor sin cumplir (BR-SHF-032), el sistema DEBE
+elegir un único texto para Tarea 5, letra por letra de la ficha «Chat con el jefe»:
+
+| Condición | Texto |
+|---|---|
+| Ningún pedido enviado, o sólo pedidos enviados sin wifi | Era muy importante que le hicieras ese pedido al proveedor anoche. Nos quedamos cortos de productos durante el día. Encima tuve que hacer el pedido yo y fumarme el carácter de mierda del flaco ese. Muchas gracias... |
+| Algún pedido enviado con wifi, y el último no es exacto | El pedido que le hiciste al proveedor no estaba bien… Tuve que ir personalmente a corregir tu error y fumarme el carácter de mierda del flaco ese. Muchas gracias... |
+
+«Último» es el último enviado con wifi (BR-SHF-032). SI el pedido quedó cumplido, ENTONCES NO DEBE
+haber Tarea 5. Las demás jornadas NO DEBEN traer estos textos.
 
 ## Criterios de aceptación
 
@@ -1242,6 +1255,26 @@ CUANDO se pausa mientras la persiana baja, y se reanuda ENTONCES la espera empie
 la persiana termina de bajar. DADO el cierre de la noche 2 sin perder la prueba CUANDO pasan 10 s
 desde que la persiana terminó de bajar ENTONCES el celular no subió (AC-EMP-093).
 
+### AC-EMP-115 — Sin pedido, o sólo sin wifi, Tarea 5 reclama el pedido *(verifica BR-EMP-047)*
+
+DADO el cierre de la jornada 6 sin ningún pedido CUANDO se arma la devolución ENTONCES Tarea 5 es
+el texto de «Era muy importante que le hicieras ese pedido…». DADO sólo pedidos enviados sin wifi
+ENTONCES es el mismo texto, aunque alguno fuera exacto.
+
+### AC-EMP-116 — Un pedido con wifi y equivocado dice el otro texto *(verifica BR-EMP-047)*
+
+DADO el cierre de la jornada 6 con un pedido enviado con wifi que no es exacto como último con
+wifi CUANDO se arma la devolución ENTONCES Tarea 5 es el texto de «El pedido que le hiciste al
+proveedor no estaba bien…». DADO un pedido exacto con wifi seguido de uno equivocado con wifi
+ENTONCES es el mismo texto. DADO uno equivocado con wifi seguido de uno exacto con wifi ENTONCES no
+hay Tarea 5.
+
+### AC-EMP-117 — Cumplido o fuera de la jornada 6 no hay texto *(verifica BR-EMP-047)*
+
+DADO el cierre de la jornada 6 con el pedido cumplido ENTONCES la devolución no trae ninguno de
+los dos textos. DADO el cierre de cada jornada distinta de la 6 con el pedido sin cumplir ENTONCES
+la devolución no trae ninguno de los dos.
+
 ## No objetivos
 
 - Esta capacidad NO cuenta el tiempo de la noche ni cuántas obligatorias hay: las recibe.
@@ -1251,9 +1284,8 @@ desde que la persiana terminó de bajar ENTONCES el celular no subió (AC-EMP-09
   el celular es de [`investigation`](../investigation/investigation.md).
 - Esta capacidad NO muestra la reflexión de cierre que sigue a «continuar» en las jornadas 3 y
   4: es de [`investigation`](../investigation/investigation.md).
-- Esta capacidad NO trae la Tarea 5 de las jornadas 1 y 2 ni de la 6 y la 7: esas noches no
-  declaran particular (BR-SHF-005). Los textos de la 6 y la 7 esperan en la ficha mientras siga
-  abierta OQ-SHF-006.
+- Esta capacidad NO trae la Tarea 5 de las jornadas 1 y 2: esas noches no declaran particular
+  (BR-SHF-005).
 - Esta capacidad NO redacta mensajes de apertura: `investigation` consume el guion de cada
   contacto, incluida la apertura de la jornada 4. Entrega a ese historial las devoluciones fechadas.
 

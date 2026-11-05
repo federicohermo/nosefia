@@ -97,16 +97,18 @@ func test_retoma_intercala_y_no_fusiona() -> void:  # AC-INV-056, AC-EMP-066, AC
 		func(mensaje: Mensaje) -> bool: return mensaje.jornada < 5 and mensaje.condicion.is_empty()
 	)
 	var apertura := guion.filter(func(mensaje: Mensaje) -> bool: return mensaje.jornada == 5)
+	var sexta := guion.filter(func(mensaje: Mensaje) -> bool: return mensaje.jornada == 6)
 	var cuarta := devoluciones.filter(func(mensaje: Mensaje) -> bool: return mensaje.jornada == 4)
 	var quinta := devoluciones.filter(func(mensaje: Mensaje) -> bool: return mensaje.jornada == 5)
 	assert_array(cuarta).is_not_empty()
 	assert_array(quinta).is_not_empty()
-	var esperado: Array = previos + cuarta + apertura + quinta
+	var esperado: Array = previos + cuarta + apertura + quinta + sexta
 	assert_array(historial).is_equal(esperado)
 	assert_str(cuarta[0].identidad).is_not_equal(quinta[0].identidad)
 	var cantidad := guion.size()
-	assert_int(bandeja.conversaciones().size()).is_equal(2)
-	if bandeja.conversaciones().size() != 2:
+	# Enrique, Yasmín y, desde la sexta noche, Hernán.
+	assert_int(bandeja.conversaciones().size()).is_equal(3)
+	if bandeja.conversaciones().size() != 3:
 		return
 	var de_yasmin := Conversacion.de(YASMIN).mensajes.filter(
 		func(mensaje: Mensaje) -> bool: return mensaje.jornada <= retomada.jornada()

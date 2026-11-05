@@ -86,7 +86,7 @@ func test_cambiar_la_lectura_no_cambia_el_dato_compartido() -> void:  # AC-PLY-0
 
 
 func test_la_jornada_sin_particular_enumera_solo_las_fijas() -> void:  # AC-PLY-080
-	var sin_particular := ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA + 3
+	var sin_particular := ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA - 1
 	var filas := NotaPegada.tareas_a_realizar(Apertura.obligatorias(sin_particular)).renglones()
 	assert_array(filas).contains_exactly(
 		["Atención al cliente", "Registro de productos vendidos", "Limpieza", "Reposición"]
@@ -95,7 +95,9 @@ func test_la_jornada_sin_particular_enumera_solo_las_fijas() -> void:  # AC-PLY-
 
 func test_la_septima_lista_responder_a_quejas_despues_de_las_fijas() -> void:  # AC-SHF-080
 	var nota := NotaPegada.tareas_a_realizar(Apertura.obligatorias(QuejasDeLaJornada.JORNADA))
-	var fijas := NotaPegada.tareas_a_realizar(Apertura.obligatorias(QuejasDeLaJornada.JORNADA - 1))
+	var fijas := NotaPegada.tareas_a_realizar(
+		Apertura.obligatorias(ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA - 1)
+	)
 	assert_int(nota.renglones().size()).is_equal(fijas.renglones().size() + 1)
 	assert_array(nota.renglones().slice(0, fijas.renglones().size())).is_equal(fijas.renglones())
 	assert_str(nota.renglones()[-1]).is_equal(

@@ -13,6 +13,18 @@ extends RefCounted
 ## Los dos tamaños de caja que guarda el depósito.
 enum TamanoDeCaja { CHICA, GRANDE }
 
+## Los siete productos que existen sólo como caja del depósito (BR-STK-054): sin góndola, sin
+## venta y sin comprador. `todos()` no los lista.
+const SOLO_CAJAS: Array[Producto.Id] = [
+	Producto.Id.SEI_TUQUI,
+	Producto.Id.LA_MONTELOCA,
+	Producto.Id.FRIGORDO,
+	Producto.Id.GRINGO,
+	Producto.Id.MASTICUL,
+	Producto.Id.COFLOCO,
+	Producto.Id.CHOCOLOCAS,
+]
+
 const PRODUCTOS_DE_PRUEBA: Array[Producto.Id] = [
 	Producto.Id.ACTRONCITO,
 	Producto.Id.ZUCARACHAS,
@@ -78,6 +90,13 @@ const FILAS := {
 	Producto.Id.MARRANOS: ["Marranos", 1400],
 	Producto.Id.FEEL_RICKY_FORT: ["Feel Ricky Fort", 800],
 	Producto.Id.POETICO: ["Poético", 1800],
+	Producto.Id.SEI_TUQUI: ["Sei Tuqui", 900],
+	Producto.Id.LA_MONTELOCA: ["La Monteloca", 900],
+	Producto.Id.FRIGORDO: ["Frigordo", 3000],
+	Producto.Id.GRINGO: ["Gringo", 3000],
+	Producto.Id.MASTICUL: ["Masticul", 700],
+	Producto.Id.COFLOCO: ["Cofloco", 900],
+	Producto.Id.CHOCOLOCAS: ["Chocolocas", 1200],
 }
 
 ## Qué es cada producto, de la columna «Qué es» de la base «Productos y cajas contenedoras». Va
@@ -115,6 +134,13 @@ const RUBROS := {
 	Producto.Id.MARRANOS: "Lata de atún",
 	Producto.Id.FEEL_RICKY_FORT: "Caja de barras de cereal",
 	Producto.Id.POETICO: "Producto de limpieza",
+	Producto.Id.SEI_TUQUI: "Helado de palito",
+	Producto.Id.LA_MONTELOCA: "Helado de palito",
+	Producto.Id.FRIGORDO: "Pote de helado",
+	Producto.Id.GRINGO: "Pote de helado",
+	Producto.Id.MASTICUL: "Paquete de gomitas",
+	Producto.Id.COFLOCO: "Barra de chocolate",
+	Producto.Id.CHOCOLOCAS: "Caja de galletitas",
 }
 
 ## La sonoridad de cada producto, de la columna «Familia sonora» de la ficha. Va aparte de
@@ -152,6 +178,13 @@ const SONORIDADES := {
 	Producto.Id.MARRANOS: EntradaSonora.Sonoridad.LATA,
 	Producto.Id.FEEL_RICKY_FORT: EntradaSonora.Sonoridad.CAJA_CEREALES,
 	Producto.Id.POETICO: EntradaSonora.Sonoridad.BOTELLA_PLASTICA,
+	Producto.Id.SEI_TUQUI: EntradaSonora.Sonoridad.ENVOLTORIO_PLASTICO,
+	Producto.Id.LA_MONTELOCA: EntradaSonora.Sonoridad.ENVOLTORIO_PLASTICO,
+	Producto.Id.FRIGORDO: EntradaSonora.Sonoridad.CAJA,
+	Producto.Id.GRINGO: EntradaSonora.Sonoridad.CAJA,
+	Producto.Id.MASTICUL: EntradaSonora.Sonoridad.ENVOLTORIO_PLASTICO,
+	Producto.Id.COFLOCO: EntradaSonora.Sonoridad.ENVOLTORIO_PLASTICO,
+	Producto.Id.CHOCOLOCAS: EntradaSonora.Sonoridad.CAJA,
 }
 
 ## Qué unidades admiten otro objeto encima: las de tapa lisa. Una fila por producto.
@@ -192,6 +225,13 @@ const ADMITEN_ENCIMA := {
 	Producto.Id.MARRANOS: true,
 	Producto.Id.FEEL_RICKY_FORT: true,
 	Producto.Id.POETICO: false,
+	Producto.Id.SEI_TUQUI: false,
+	Producto.Id.LA_MONTELOCA: false,
+	Producto.Id.FRIGORDO: false,
+	Producto.Id.GRINGO: false,
+	Producto.Id.MASTICUL: false,
+	Producto.Id.COFLOCO: false,
+	Producto.Id.CHOCOLOCAS: false,
 }
 
 ## El tamaño de la caja del depósito de cada producto, de la columna «Caja» de la ficha.
@@ -232,6 +272,13 @@ const TAMANOS_DE_CAJA := {
 	Producto.Id.MARRANOS: TamanoDeCaja.GRANDE,
 	Producto.Id.FEEL_RICKY_FORT: TamanoDeCaja.GRANDE,
 	Producto.Id.POETICO: TamanoDeCaja.GRANDE,
+	Producto.Id.SEI_TUQUI: TamanoDeCaja.CHICA,
+	Producto.Id.LA_MONTELOCA: TamanoDeCaja.CHICA,
+	Producto.Id.FRIGORDO: TamanoDeCaja.GRANDE,
+	Producto.Id.GRINGO: TamanoDeCaja.GRANDE,
+	Producto.Id.MASTICUL: TamanoDeCaja.CHICA,
+	Producto.Id.COFLOCO: TamanoDeCaja.CHICA,
+	Producto.Id.CHOCOLOCAS: TamanoDeCaja.GRANDE,
 }
 
 
@@ -282,10 +329,42 @@ static func caja_de(id: Producto.Id) -> TamanoDeCaja:
 static func todos() -> Array[Producto]:
 	var productos: Array[Producto] = []
 	for id: Producto.Id in Producto.Id.values():
+		if id in SOLO_CAJAS:
+			continue
 		var producto := de(id)
 		if producto == null:
 			continue
 		productos.append(producto)
+	return productos
+
+
+## Los siete que existen sólo como caja, en el orden del enum (BR-STK-054).
+static func solo_cajas() -> Array[Producto]:
+	var productos: Array[Producto] = []
+	for id: Producto.Id in SOLO_CAJAS:
+		var producto := de(id)
+		if producto != null:
+			productos.append(producto)
+	return productos
+
+
+## Los treinta y nueve de la lista de pedido: los de la góndola y los siete que existen sólo como
+## caja, en el orden del enum.
+static func pedibles() -> Array[Producto]:
+	var productos: Array[Producto] = []
+	for id: Producto.Id in Producto.Id.values():
+		var producto := de(id)
+		if producto != null:
+			productos.append(producto)
+	return productos
+
+
+## Los productos que tienen caja en el depósito esa jornada: los de la jornada y, desde la primera
+## completa, los siete que existen sólo como caja (BR-STK-054).
+static func con_caja_de_la_jornada(jornada: int) -> Array[Producto]:
+	var productos := de_la_jornada(jornada)
+	if jornada >= ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA:
+		productos.append_array(solo_cajas())
 	return productos
 
 

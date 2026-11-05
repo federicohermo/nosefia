@@ -223,7 +223,7 @@ es contenido editable: cambiarla NO DEBE cambiar la identidad ni la condición q
 | Pasar por una mancha la mopa mojada con agua sola | `MOPA_SIN_MOJAR` | Necesitaría mojar la mopa en agua con jabón. |
 | Pasar por una mancha la mopa seca, sin haberla mojado en esa jornada | `MOPA_SIN_MOJAR` | Necesitaría mojar la mopa en agua con jabón. |
 | Pasar por una mancha la mopa seca, después de haberla mojado en esa jornada | `MOPA_YA_SECA` | Ya se secó la mopa… |
-| Borrar la caca de la pared del otro inodoro | `PARED_DEL_OTRO_INODORO` | Se ve que alguien no tuvo tiempo de apuntar bien… |
+| Borrar la caca de la pared del otro inodoro | `PARED_DEL_OTRO_INODORO` | Se ve que alguien no llegó a apuntar bien… |
 | Borrar la caca del piso frente a las estanterías del fondo del local, en la jornada 5 | `PISO_DE_LAS_ESTANTERIAS_DEL_FONDO` | Espero que sea vómito… |
 | Borrar la caca del techo del baño, en la jornada 6 | `TECHO_SOBRE_UN_CUBICULO` | ¿¿Cómo llegó eso ahí?? |
 | Usar la puerta de entrada del local en una jornada de prueba, con alguna obligatoria pendiente | `PUERTA_CON_TAREAS_PENDIENTES` | No debería irme.<br>Todavía me quedan tareas por completar. |
@@ -268,7 +268,7 @@ sólo con agua, ENTONCES al intentar limpiar DEBE decir «Ya se secó la mopa…
 
 CUANDO la carga de la mopa pasa de más de cero a cero por primera vez en la partida, el sistema
 DEBE mostrar el pensamiento `MOPA_BERRETA`, cuyo texto actual es
-«Dios mío, qué mopa berreta. Se seca a los tres segundos. Literal.». Las veces
+«Dios mío, qué mopa berreta.<br>Se seca a los tres segundos. Literal.». Las veces
 siguientes, en esa jornada o en otra, NO DEBE mostrarlo. Una partida nueva lo vuelve a mostrar
 una vez. SI se seca durante un examen, ENTONCES el texto fijo del examen DEBE seguir, y el
 pensamiento DEBE mostrarse entero al terminar el examen. Recién al mostrarse cuenta como
@@ -555,8 +555,8 @@ CUANDO llega otro subtítulo ENTONCES lo reemplaza y el pensamiento no vuelve.
 DADO cada pensamiento de la tabla de BR-SUB-013, `MOPA_BERRETA` y el de cada canal de BR-SUB-016
 ENTONCES su texto tiene los renglones de la ficha: dos para el de cada canal de BR-SUB-016,
 `CAJA_EN_EL_CONTENEDOR`, `UTIL_EN_EL_CONTENEDOR`,
-`POR_LA_VENTANA`, `JABON_EQUIVOCADO`, `PUERTA_CON_TAREAS_PENDIENTES`, `SIN_LUZ`,
-`ROUTER_ANTES_DEL_CORTE` y `ROUTER_YA_RESTAURADO`, y uno para cada uno de los
+`POR_LA_VENTANA`, `JABON_EQUIVOCADO`, `MOPA_BERRETA`, `PUERTA_CON_TAREAS_PENDIENTES`,
+`SIN_LUZ`, `ROUTER_ANTES_DEL_CORTE` y `ROUTER_YA_RESTAURADO`, y uno para cada uno de los
 demás. Ningún renglón queda vacío y el texto no empieza ni termina con un salto.
 
 ### AC-SUB-029 — Los mismos renglones en pantalla *(verifica BR-SUB-017, BR-SUB-001)*
