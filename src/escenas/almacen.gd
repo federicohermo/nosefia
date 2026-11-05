@@ -397,6 +397,7 @@ func _cablear_las_preferencias(pausa: ControlDePausa) -> void:
 	configuraciones.preparar(preferencias)
 	configuraciones.preferencias_cambiadas.connect(ajuste.previsualizar)
 	configuraciones.preferencias_confirmadas.connect(ajuste.cambiar)
+	configuraciones.controles_cambiados.connect(ajuste.previsualizar)
 	configuraciones.preferencias_cambiadas.connect(
 		func(nuevas: Preferencias) -> void:
 			_jugador.ajustar_sensibilidad(nuevas.sensibilidad_del_giro())

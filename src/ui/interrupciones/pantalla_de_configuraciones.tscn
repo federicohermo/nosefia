@@ -1,10 +1,11 @@
-[gd_scene load_steps=4 format=3]
+[gd_scene load_steps=5 format=3]
 
 [ext_resource type="Script" path="res://src/ui/interrupciones/pantalla_de_configuraciones.gd" id="1_pantalla"]
 [ext_resource type="Theme" path="res://assets/ui/manada/tema.tres" id="2_tema"]
 [ext_resource type="Script" path="res://src/ui/interrupciones/cabecera_con_solapa.gd" id="4_solapa"]
+[ext_resource type="PackedScene" path="res://src/ui/interrupciones/pantalla_de_controles.tscn" id="5_controles"]
 
-[node name="PantallaDeConfiguraciones" type="CanvasLayer" node_paths=PackedStringArray("_marco", "_titulo", "_filas", "_volver")]
+[node name="PantallaDeConfiguraciones" type="CanvasLayer" node_paths=PackedStringArray("_marco", "_titulo", "_filas", "_volver", "_controles")]
 process_mode = 3
 layer = 4
 script = ExtResource("1_pantalla")
@@ -12,6 +13,7 @@ _marco = NodePath("Fondo/Panel")
 _titulo = NodePath("Fondo/Panel/Titulo")
 _filas = NodePath("Fondo/Panel/Filas")
 _volver = NodePath("Fondo/Panel/Volver")
+_controles = NodePath("Controles")
 
 [node name="Fondo" type="ColorRect" parent="."]
 anchors_preset = 15
@@ -61,9 +63,9 @@ vertical_alignment = 1
 [node name="Filas" type="VBoxContainer" parent="Fondo/Panel"]
 layout_mode = 0
 offset_left = 360.0
-offset_top = 180.0
+offset_top = 150.0
 offset_right = 1560.0
-offset_bottom = 940.0
+offset_bottom = 950.0
 theme_type_variation = &"ColumnaDelMenu"
 alignment = 1
 
@@ -74,3 +76,5 @@ offset_top = 958.0
 offset_right = 1750.0
 offset_bottom = 1018.0
 theme_type_variation = &"BotonDelMenu"
+
+[node name="Controles" parent="." instance=ExtResource("5_controles")]

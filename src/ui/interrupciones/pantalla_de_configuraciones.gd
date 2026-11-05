@@ -1,15 +1,19 @@
-## Configuraciones: una barra por preferencia, con su − y su +, y el idioma. Dibuja lo que
-## contesta `Preferencias` y avisa cada gesto que cambió un valor. No escribe ni aplica nada: eso
-## lo cablea quien la abre.
+## Configuraciones: una barra por preferencia, con su − y su +, el idioma y los controles.
+## Dibuja lo que contesta `Preferencias` y avisa cada gesto que cambió un valor. No escribe ni
+## aplica nada: eso lo cablea quien la abre.
 ##
 ## Corre también con el árbol en pausa: se abre desde el menú de pausa. Esc la cierra; en la
-## pausa lo atiende primero el control de la pausa, que la cierra sin reanudar.
+## pausa lo atiende primero el control de la pausa, que la cierra sin reanudar. Con la pantalla de
+## controles abierta, Esc cierra primero ésa.
 class_name PantallaDeConfiguraciones
 extends CanvasLayer
 
 ## Una vez por gesto que cambia un valor, con una copia: quien la recibe puede guardarla.
 signal preferencias_cambiadas(preferencias: Preferencias)
 signal preferencias_confirmadas(preferencias: Preferencias)
+## Una asignación de controles cambió algo. Va aparte de `preferencias_cambiadas`: sólo reasigna el
+## `InputMap`, que es de todo el proceso, y no obliga a recalcular nada de lo ya dibujado.
+signal controles_cambiados(preferencias: Preferencias)
 signal cerrada
 
 const TEXTO_DEL_TITULO := "/ CONFIGURACIONES:"
@@ -19,6 +23,8 @@ const TEXTO_ANTERIOR := "<"
 const TEXTO_SIGUIENTE := ">"
 const TEXTO_DE_LENGUAJE := "LENGUAJE"
 const TEXTO_DE_VOLVER := "VOLVER"
+const TEXTO_DE_CONTROLES := "CONTROLES"
+const TEXTO_DE_AJUSTAR := "AJUSTAR"
 const IDIOMAS: Array[String] = ["ESPAÑOL"]
 const TEXTOS: Dictionary[Preferencias.Campo, String] = {
 	Preferencias.Campo.EFECTOS: "EFECTOS",
@@ -37,10 +43,12 @@ const ANCHO_DEL_BOTON := 72.0
 @export var _titulo: Label
 @export var _filas: VBoxContainer
 @export var _volver: Button
+@export var _controles: PantallaDeControles
 
 var _preferencias := Preferencias.new()
 var _barras: Dictionary[Preferencias.Campo, HSlider] = {}
 var _primer_boton: Button
+var _ajustar_controles: Button
 
 
 func _ready() -> void:
@@ -51,6 +59,9 @@ func _ready() -> void:
 	for campo: Preferencias.Campo in Preferencias.CAMPOS:
 		_filas.add_child(_fila_de(campo))
 	_filas.add_child(_fila_del_lenguaje())
+	_filas.add_child(_fila_de_los_controles())
+	_controles.controles_cambiados.connect(_al_cambiar_los_controles)
+	_controles.cerrada.connect(_al_cerrar_los_controles)
 	get_viewport().size_changed.connect(_ajustar_al_viewport)
 	_ajustar_al_viewport()
 
@@ -58,6 +69,7 @@ func _ready() -> void:
 ## Los valores que muestra al abrirse. Quien la abre los leyó del disco.
 func preparar(preferencias: Preferencias) -> void:
 	_preferencias = preferencias.copia()
+	_controles.preparar(_preferencias.controles())
 	_pintar()
 
 
@@ -67,8 +79,12 @@ func abrir() -> void:
 	_primer_boton.grab_focus(true)
 
 
+## Con los controles abiertos, cierra ésos y vuelve acá: Esc y la pausa dan un paso atrás.
 func cerrar() -> void:
 	if not visible:
+		return
+	if _controles.visible:
+		_controles.retroceder()
 		return
 	visible = false
 	preferencias_confirmadas.emit(_preferencias.copia())
@@ -134,6 +150,34 @@ func _fila_del_lenguaje() -> HBoxContainer:
 	fila.add_child(idioma)
 	fila.add_child(siguiente)
 	return fila
+
+
+func _fila_de_los_controles() -> HBoxContainer:
+	var fila := _fila_con_nombre(TEXTO_DE_CONTROLES)
+	_ajustar_controles = _boton(TEXTO_DE_AJUSTAR)
+	_ajustar_controles.custom_minimum_size.x = 0.0
+	_ajustar_controles.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	_ajustar_controles.pressed.connect(_abrir_los_controles)
+	fila.add_child(_ajustar_controles)
+	return fila
+
+
+## Los controles reemplazan a Configuraciones mientras están abiertos, sobre la misma vista de
+## fondo. La capa va encima de ésta: una capa hija no hereda el orden de la madre.
+func _abrir_los_controles() -> void:
+	_marco.hide()
+	_controles.layer = layer + 1
+	_controles.abrir()
+
+
+func _al_cerrar_los_controles() -> void:
+	_marco.show()
+	_ajustar_controles.grab_focus(true)
+
+
+func _al_cambiar_los_controles(asignacion: AsignacionDeControles) -> void:
+	_preferencias.poner_controles(asignacion)
+	controles_cambiados.emit(_preferencias.copia())
 
 
 func _fila_con_nombre(texto: String) -> HBoxContainer:

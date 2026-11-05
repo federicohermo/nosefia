@@ -76,6 +76,7 @@ func _ready() -> void:
 	_configuraciones.preparar(_ajuste.cargar_y_aplicar())
 	_configuraciones.preferencias_cambiadas.connect(_ajuste.previsualizar)
 	_configuraciones.preferencias_confirmadas.connect(_ajuste.cambiar)
+	_configuraciones.controles_cambiados.connect(_ajuste.previsualizar)
 	_configuraciones.preferencias_cambiadas.connect(
 		func(_nuevas: Preferencias) -> void: _copia_con_las_preferencias = false
 	)
