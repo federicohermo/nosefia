@@ -15,6 +15,8 @@ const DESPEDIDA := "Muchas gracias."
 const LILA := "#c9a0ff"
 ## Una entrada que empieza con `[solo:ID]` sólo se dice si esa pista está activa.
 const ABRE_CONDICION := "[solo:"
+## Una entrada que empieza con `[salvo:ID]` se dice siempre que esa pista NO esté activa.
+const ABRE_NEGACION := "[salvo:"
 ## `[pista=ID]texto[/pista]` marca el fragmento que se pulsa para pedir esa pista.
 const ABRE_PISTA := "[pista="
 const CIERRA_PISTA := "[/pista]"
@@ -81,10 +83,11 @@ static func _crear_dialogo(
 	var resueltas := PackedStringArray()
 	for entrada: String in entradas:
 		var texto := entrada
-		if texto.begins_with(ABRE_CONDICION):
-			var inicio := ABRE_CONDICION.length()
+		if texto.begins_with(ABRE_CONDICION) or texto.begins_with(ABRE_NEGACION):
+			var pide_activa := texto.begins_with(ABRE_CONDICION)
+			var inicio := (ABRE_CONDICION if pide_activa else ABRE_NEGACION).length()
 			var cierre := texto.find("]")
-			if not pistas_activas.has(texto.substr(inicio, cierre - inicio)):
+			if pistas_activas.has(texto.substr(inicio, cierre - inicio)) != pide_activa:
 				continue
 			texto = texto.substr(cierre + 1)
 		resueltas.append(_con_los_fragmentos(texto.format(nombres)))
