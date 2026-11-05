@@ -279,7 +279,7 @@ func test_el_fragmento_de_la_pista_5a_va_en_lila_y_con_su_identidad() -> void:  
 
 
 func test_la_atencion_pasa_las_pistas_activas_del_comprador_a_su_apertura() -> void:  # AC-CTR-157
-	for activas in [PackedStringArray(["5A"]), PackedStringArray()]:
+	for activas: PackedStringArray in [PackedStringArray(["5A"]), PackedStringArray()]:
 		var cami := _cami_de_la_quinta(5, activas)
 		var atencion := _atencion(cami)
 		atencion.interactuar(null)
