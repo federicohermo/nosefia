@@ -8,6 +8,10 @@ const FALTA := "Gracias. Falta que me des "
 const YA_ENTREGADO := "Gracias, pero ya me habías dado esto."
 const PEDIDO_DEL_TICKET := "Me das el ticket, ¿por favor?"
 const PIDE_EL_TICKET := "Gracias. " + PEDIDO_DEL_TICKET
+const PIDE_EL_TICKET_DE_TIN := (
+	"Joyaaa. ¿Me darías el ticket antes de que me vaya? "
+	+ "Es que sino mi vieja cree me que compro birra con su plata."
+)
 const RECHAZO := "Yo no pedí esto. "
 const SALUDO := "Buenas noches. "
 const DESPEDIDA := "Muchas gracias."
@@ -111,18 +115,39 @@ static func _con_los_fragmentos(texto: String) -> String:
 ## Lo que dice cualquier comprador al hablarle: lo que todavía le falta, o el ticket si sólo falta
 ## él. Al rechazar, antepone el rechazo a lo que todavía le falta.
 static func recordatorio(
-	pedido: Venta, recepcion: RecepcionDeCompra, rechazo: bool = false
+	pedido: Venta,
+	recepcion: RecepcionDeCompra,
+	rechazo: bool = false,
+	personaje: int = Personaje.NINGUNO
 ) -> Dialogo:
 	var faltan := _enumeracion(pedido, recepcion.pendientes)
 	if rechazo:
-		return una(RECHAZO + (PEDIDO_DEL_TICKET if faltan.is_empty() else "Quiero " + faltan + "."))
-	return una(PIDE_EL_TICKET if faltan.is_empty() else "Quiero " + faltan + ".")
+		return una(
+			(
+				RECHAZO
+				+ (
+					_ticket_de(personaje, PEDIDO_DEL_TICKET)
+					if faltan.is_empty()
+					else "Quiero " + faltan + "."
+				)
+			)
+		)
+	return una(
+		_ticket_de(personaje, PIDE_EL_TICKET) if faltan.is_empty() else "Quiero " + faltan + "."
+	)
 
 
 ## Lo que dice al recibir un producto: agradece y nombra lo que falta, o pide el ticket.
-static func agradecimiento(pedido: Venta, recepcion: RecepcionDeCompra) -> Dialogo:
+static func agradecimiento(
+	pedido: Venta, recepcion: RecepcionDeCompra, personaje: int = Personaje.NINGUNO
+) -> Dialogo:
 	var faltan := _enumeracion(pedido, recepcion.pendientes)
-	return una(PIDE_EL_TICKET if faltan.is_empty() else FALTA + faltan + ".")
+	return una(_ticket_de(personaje, PIDE_EL_TICKET) if faltan.is_empty() else FALTA + faltan + ".")
+
+
+## Tin pide el ticket con su frase propia; los demás, con la común.
+static func _ticket_de(personaje: int, comun: String) -> String:
+	return PIDE_EL_TICKET_DE_TIN if personaje == Personaje.TIN else comun
 
 
 ## Lo que dice al atenderlo quien no trae guion propio: saluda y nombra su pedido entero.

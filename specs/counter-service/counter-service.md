@@ -3,7 +3,7 @@ schema_version: 1
 capability_id: CAP-CTR
 status: ratified
 owner: por definir
-provenance: GDD «Atención por ventanilla»; fichas «Atención al cliente» y «Diálogos de compradores»; base «Productos y cajas contenedoras»; decisiones de #365, #366, #429, #433, #444 y #694; pedidos fijos y guiones de jornada 2 decididos el 15 de octubre de 2026; migración de los specs 013, 035; ocho jornadas de #526; horarios de Tin y Tia en la jornada 1 y de Fede y Mía en la jornada 2 de «Atención al cliente» del 21 de octubre de 2026 (#605); agenda de compradores de las jornadas 3 a 5 de «Atención al cliente» y textos predeterminados de «Diálogos de compradores» del 21 de octubre de 2026 (#459); diálogos de entrega como subtítulo de GJ-57 (#564); agendas de la noche del corte de luz y de la última noche de «Atención al cliente» del 30 de octubre de 2026, con las decisiones de Mía y de Durextra (#694); ficha «Llamados de atención extra», llamado 3, y GJ-70 sobre soltar un producto en el hueco con un comprador (#521); guiones de Cami, Tin y Tia de las jornadas 3 a 6 de «Diálogos de compradores» del 3 y 4 de noviembre de 2026 (#784)
+provenance: GDD «Atención por ventanilla»; fichas «Atención al cliente» y «Diálogos de compradores»; base «Productos y cajas contenedoras»; decisiones de #365, #366, #429, #433, #444 y #694; pedidos fijos y guiones de jornada 2 decididos el 15 de octubre de 2026; migración de los specs 013, 035; ocho jornadas de #526; horarios de Tin y Tia en la jornada 1 y de Fede y Mía en la jornada 2 de «Atención al cliente» del 21 de octubre de 2026 (#605); agenda de compradores de las jornadas 3 a 5 de «Atención al cliente» y textos predeterminados de «Diálogos de compradores» del 21 de octubre de 2026 (#459); diálogos de entrega como subtítulo de GJ-57 (#564); agendas de la noche del corte de luz y de la última noche de «Atención al cliente» del 30 de octubre de 2026, con las decisiones de Mía y de Durextra (#694); ficha «Llamados de atención extra», llamado 3, y GJ-70 sobre soltar un producto en el hueco con un comprador (#521); guiones de Cami, Tin y Tia de las jornadas 3 a 6 de «Diálogos de compradores» del 3 y 4 de noviembre de 2026 (#784); frase del ticket de Tin de «Diálogos de compradores» del 5 de noviembre de 2026 (#825)
 ---
 
 # Capacidad: la atención por la ventanilla
@@ -389,7 +389,9 @@ orden del pedido, con los textos comunes de la ficha «Diálogos de compradores�
 anteponer su prefijo y enumerar los productos que todavía faltan, no los ya recibidos. Con todos
 los productos recibidos y sólo el ticket pendiente DEBE pedir el ticket, y un rechazo en ese
 estado DEBE anteponerle el prefijo a ese pedido. CUANDO recibe un producto, el comprador DEBE agradecer
-nombrando lo que todavía falta, o pedir el ticket si ya recibió todos. Ese agradecimiento NO
+nombrando lo que todavía falta, o pedir el ticket si ya recibió todos. Tin DEBE pedir el ticket
+con su frase propia de la ficha, en vez de la común, al recibir el último producto, al
+recordarlo y en el rechazo, que se la antepone; los demás compradores DEBEN conservar la común. Ese agradecimiento NO
 DEBE retener el clic siguiente con un objeto ni impedir dejar la ventanilla.
 Para una unidad, cada marcador DEBE usar el subtítulo del producto con primera letra minúscula
 y sin punto final. Para más de una DEBE usar «dos» o «tres» seguido del nombre del producto.
@@ -1019,8 +1021,8 @@ DADO pedidos A/A/A, A/A/B y A/B/C CUANDO se consulta recordatorio ENTONCES se us
 la forma de uno, dos y tres marcadores, sin marcadores sin reemplazar. A/A/A usa «tres» y el
 nombre A; A/A/B usa «dos» y el nombre A, y para B el subtítulo con inicial minúscula y sin punto
 final. Un rechazo antepone exactamente «Yo no pedí esto. ». Los productos llevan amarillo y
-ningún fragmento se ofrece como pista. Con los tres productos y sin ticket el texto es
-exactamente «Gracias. Me das el ticket, ¿por favor?».
+ningún fragmento se ofrece como pista. Con los tres productos y sin ticket, un comprador que no
+es Tin dice exactamente «Gracias. Me das el ticket, ¿por favor?».
 DADO un pedido de dos unidades de A y una de B, con una unidad de A ya entregada, CUANDO se
 ofrece un objeto ajeno ENTONCES el rechazo es el prefijo seguido de «Quiero» con una unidad de A
 y B, en el orden del pedido. Con dos y tres productos distintos faltantes el rechazo usa su forma de
@@ -1431,6 +1433,24 @@ ofrece un objeto ajeno, se les entrega un producto que falta o ya recibieron, o 
 pedido sin ticket ENTONCES responden con el recordatorio, el rechazo, el agradecimiento y el aviso
 de ticket comunes, y no repiten la apertura. DADO una partida CUANDO se reabre o se reintenta la
 jornada ENTONCES el pedido y los textos que lo nombran son los mismos.
+
+### AC-CTR-160 — Tin pide el ticket con su propia frase *(verifica BR-CTR-039)*
+
+DADO Tin en la jornada 1 o en la 3, con todos sus productos recibidos y sin ticket CUANDO recibe
+el último producto, o se le habla ENTONCES dice «Joyaaa. ¿Me darías el ticket antes de que me
+vaya? Es que sino mi vieja cree me que compro birra con su plata.» y no la frase común.
+
+### AC-CTR-161 — El rechazo de Tin antepone su frase del ticket *(verifica BR-CTR-039)*
+
+DADO Tin con todos sus productos recibidos y sin ticket CUANDO se le ofrece un objeto ajeno
+ENTONCES dice el prefijo del rechazo seguido de su frase del ticket. DADO Tin con un producto
+todavía pendiente ENTONCES el rechazo sigue nombrando lo que falta, sin frase del ticket.
+
+### AC-CTR-162 — Los demás compradores conservan la frase común del ticket *(verifica BR-CTR-039)*
+
+DADO un comprador que no es Tin con todos sus productos recibidos y sin ticket CUANDO recibe el
+último producto, se le habla o se le ofrece un objeto ajeno ENTONCES dice, respectivamente, la
+frase común, la frase común y el prefijo del rechazo seguido de «Me das el ticket, ¿por favor?».
 
 ### AC-CTR-133 — Sólo el nombre propio va en amarillo *(verifica BR-CTR-039)*
 
