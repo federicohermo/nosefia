@@ -512,7 +512,7 @@ Los grupos son estos:
 |---|---|
 | Tin | Marolini, Coracola, Malbardo, Mayonchis, Arvecor, Uakalas, Don Saturados, Amargadito |
 | Tia | Zucarachas, Pepito, Marranos, Arvecor, Mayonchis, Jorgillo, Marolini, Saladick, Don Saturados, Laysnnt, Chisitos, Malbardo |
-| Fede | Poético, Progres, Duronga, Burbaloo, Malbardo, Fernet God, Terminator, Frigordo, Gringo |
+| Fede | Poético, Progres, Duronga, Burbaloo, Malbardo, Fernet God, Terminator |
 | Mía | Burbaloo, Fernet God, Terminator, Actroncito, Amargadito, Coracola, Uakalas, Marranos |
 | Cami | Burbaloo, Zucarachas, Frot Lups, Jorgillo, Pepito, Oremos, Petisas, Macumbas, Flim Pof, Cindolor, Cosa de Maní, Feel Ricky Fort, Oaaaa |
 
@@ -1477,12 +1477,6 @@ primera, la segunda, la tercera y la sexta no resaltan ningún producto. CUANDO 
 compra ENTONCES vende una sola vez, dice 1 entrada de despedida de la ficha y no se retira hasta
 terminarla.
 
-### AC-CTR-176 — El grupo de Fede suma Frigordo y Gringo *(verifica BR-CTR-047, BR-CTR-052)*
-
-DADO el grupo de Fede ENTONCES contiene Frigordo y Gringo, además de los productos que ya tenía.
-DADO la última noche, con muchas semillas, CUANDO se construye el pedido de Fede ENTONCES sigue
-incluyendo siempre Duronga y Durextra, y su tercer producto puede ser Frigordo o Gringo.
-
 ### AC-CTR-158 — Los demás compradores usan el guion predeterminado *(verifica BR-CTR-048)*
 
 DADO Tin en la jornada 6 y cada comprador de la jornada 7 CUANDO se les
@@ -1608,3 +1602,9 @@ en un recurso por jornada; `inicial` y `despedida` reciben el pedido para resolv
     la noche ni la lista.
   - Decide: game design.
   - Bloquea: nada. Sumaría productos al grupo de Fede en BR-CTR-047.
+- **OQ-CTR-008 — ¿Frigordo y Gringo se venden en el mostrador?**
+  - Por qué sigue abierta: la ficha de atención al cliente suma Frigordo y Gringo al grupo de Fede,
+    pero hoy son productos que sólo llegan en cajas, no se venden y ningún comprador los pide
+    (BR-STK-054). En el grupo no tendrían efecto.
+  - Decide: game design.
+  - Bloquea: nada. Sumaría esos dos productos al grupo de Fede en BR-CTR-047.
