@@ -1480,7 +1480,8 @@ DADO la apertura de la jornada 5 por transición, tras leer el chat de Yasmín e
 CUANDO se consulta Yasmín ENTONCES tiene 26 entradas: J2_1 a J2_16 con los textos de
 BR-INV-029, leídas, y después J3_1 a J3_10 con los textos de BR-INV-048, en ese orden, sin leer;
 su contador es 10. DADO la apertura de la jornada 5 desde un checkpoint ENTONCES tiene las mismas
-26 entradas, todas sin leer. Leer Yasmín deja su contador en cero sin cambiar el de Enrique ni el
+26 entradas, con J2_1 a J2_16 leídas por ser de una jornada anterior (BR-INV-180) y J3_1 a J3_10
+sin leer; su contador es 10. Leer Yasmín deja su contador en cero sin cambiar el de Enrique ni el
 guion compartido.
 
 ### AC-INV-067 — Antes de la jornada 5 el bloque no existe *(verifica BR-INV-048, BR-INV-029, BR-INV-023)*
@@ -2225,8 +2226,9 @@ DADO un guardado en jornada 5, con chats de las jornadas 1 a 4, devoluciones de 
 una legada sin jornada, CUANDO se continúa ENTONCES el total de no leídos es la cantidad de
 mensajes de la jornada 5, y el chat de Enrique cuenta sólo los suyos, con el primero de la jornada 5
 como primer no leído. CUANDO llega un mensaje después ENTONCES el total sube en uno. CUANDO se abre
-el chat de Enrique ENTONCES queda sin no leídos. DADO un guardado sin mensajes de la jornada
-retomada en un chat ENTONCES ese chat cuenta cero.
+el chat de Enrique ENTONCES queda sin no leídos. CUANDO después de abrirlo llega un mensaje
+fechado ENTONCES ese chat cuenta uno, con ese mensaje como primer no leído. DADO un guardado sin
+mensajes de la jornada retomada en un chat ENTONCES ese chat cuenta cero.
 
 ### AC-INV-195 — La barra lleva la hora y el wifi conectado *(verifica BR-INV-146)*
 

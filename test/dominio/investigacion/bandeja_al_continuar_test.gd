@@ -43,6 +43,26 @@ func test_continuar_deja_leido_lo_de_jornadas_anteriores() -> void:  # AC-INV-23
 	assert_bool(bandeja.esta_leida(JEFE)).is_true()
 
 
+func test_lo_que_llega_tras_leer_el_chat_cuenta_pese_a_la_legada_sin_fecha() -> void:  # AC-INV-230
+	var bandeja := Bandeja.new([Conversacion.de(JEFE)])
+	bandeja.abrir_jornada(COMPLETA)
+	var legada := Mensaje.new()
+	legada.texto = "legada"
+	legada.jornada = 0
+	legada.momento = Mensaje.Momento.SIN_FECHA
+	assert_bool(bandeja.recibir(JEFE, legada)).is_true()
+	bandeja.dar_por_leidos_los_anteriores_a(COMPLETA)
+	assert_bool(bandeja.marcar_leida(JEFE)).is_true()
+	assert_int(bandeja.no_leidos(JEFE)).is_zero()
+	var nuevo := _mensaje("llega_despues", COMPLETA, Mensaje.Momento.CIERRE)
+	assert_bool(bandeja.recibir(JEFE, nuevo)).is_true()
+	assert_int(bandeja.no_leidos(JEFE)).is_equal(1)
+	assert_int(bandeja.no_leidos_totales()).is_equal(1)
+	assert_int(bandeja.primer_no_leido(JEFE)).is_equal(bandeja.mensajes_de(JEFE).find(nuevo))
+	assert_bool(bandeja.marcar_leida(JEFE)).is_true()
+	assert_int(bandeja.no_leidos(JEFE)).is_zero()
+
+
 func test_continuar_sin_mensajes_de_la_jornada_deja_el_chat_en_cero() -> void:  # AC-INV-230
 	var vacio := Conversacion.new()
 	vacio.interlocutor = JEFE
