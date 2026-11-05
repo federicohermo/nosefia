@@ -173,9 +173,11 @@ func test_los_pedidos_son_de_dos_y_de_tres_con_frecuencias_parecidas() -> void: 
 	for jornada: int in [CUARTA, QUINTA]:
 		for semilla in range(1, SEMILLAS + 1):
 			for comprador in Compradores.de_la_jornada(jornada, semilla):
+				if jornada == QUINTA and comprador.personaje == PERSONAJE.MIA:
+					continue
 				por_cantidad[comprador.pedido().productos().size()] += 1
 	var total: int = por_cantidad[2] + por_cantidad[3]
-	assert_int(total).is_equal(2 * 2 * SEMILLAS)
+	assert_int(total).is_equal(3 * SEMILLAS)
 	assert_int(por_cantidad[2]).is_greater(total / 4)
 	assert_int(por_cantidad[3]).is_greater(total / 4)
 

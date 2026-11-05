@@ -66,6 +66,37 @@ func test_el_mensaje_2_de_mia_no_resalta_nada() -> void:  # AC-CTR-173
 			assert_int(apertura[indice].count(AMARILLO)).is_zero()
 
 
+func test_mia_rechaza_un_ajeno_y_el_recordatorio_nombra_lo_que_falta() -> void:  # AC-CTR-159
+	var mia := _mia()
+	var pedido := mia.pedido().productos()
+	var inventario := Apertura.inventario_con_faltantes({}, {}, Catalogo.todos())
+	var estante := Estante.new(inventario, Catalogo.todos())
+	mia.horario = Vector2(0.0, 1000.0)
+	var atencion := Atencion.new(mia, inventario)
+	atencion.interactuar(null)
+	while not atencion.puede_abandonar():
+		atencion.interactuar(null)
+	assert_int(atencion.interactuar(estante.retirar(pedido[0]))).is_equal(
+		RecepcionDeCompra.Resultado.ACEPTADA
+	)
+	var del_pedido: Array[Producto.Id] = []
+	for producto in pedido:
+		del_pedido.append(producto.id)
+	var ajeno: Producto = null
+	for producto in Catalogo.todos():
+		if not del_pedido.has(producto.id):
+			ajeno = producto
+			break
+	assert_object(ajeno).is_not_null()
+	assert_int(atencion.interactuar(estante.retirar(ajeno))).is_equal(
+		RecepcionDeCompra.Resultado.RECHAZADA
+	)
+	var rechazo := atencion.dialogo().entrada_actual()
+	assert_str(rechazo).not_contains(_presentado(pedido[0]))
+	for producto in pedido.slice(1):
+		assert_str(rechazo).contains(_presentado(producto))
+
+
 func test_mia_vende_una_vez_y_se_retira_tras_dos_entradas_de_despedida() -> void:  # AC-CTR-173
 	var mia := _mia()
 	assert_int(_despedida(mia).size()).is_equal(ENTRADAS_DE_DESPEDIDA)
