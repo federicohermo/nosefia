@@ -141,6 +141,7 @@ con el mismo contenido, y el cuerpo y la tapa del contenedor.
 | Jabón amarillo | Un bidón de jabón amarillo, marca “O”.<br>Sirve para manchas de polvo. |
 | Cada bolsa de basura | Una bolsa de basura. |
 | Colilla | Una colilla de cigarrillo. Qué raro… |
+| Documento impreso | Una especie de… ¿nota impresa? |
 | Inodoro | Un inodoro. Enrique me pidió encarecidamente<br>que no tire papel en él, porque se tapa. |
 | Lavatorio | Un lavatorio. Acá puedo cargar el balde. |
 | Nota de jabones y manchas | Una nota explicando qué jabón usar<br>para cada tipo de mancha. |
@@ -607,6 +608,12 @@ ENTONCES el pensamiento es `ROUTER_YA_RESTAURADO`, con dos renglones. DADO el ro
 o apagado, con la luz restaurada, CUANDO se hace clic ENTONCES no hay pensamiento. DADO cualquier
 estado y jornada CUANDO se examina el router con E y las manos vacías ENTONCES se muestra su texto
 al examinar, de un renglón.
+
+### AC-SUB-051 — El documento impreso dice su texto *(verifica BR-SUB-010)*
+
+DADA la jornada 6 con el documento de la pista 6B en el local CUANDO se pide examinarlo con las
+manos vacías ENTONCES muestra el texto asociado a su identidad, de un renglón. Ese texto no es el
+de la colilla ni el de ninguna nota. «…» es un solo carácter.
 
 ## No objetivos
 
