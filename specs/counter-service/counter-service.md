@@ -1449,8 +1449,7 @@ el orden de la ficha. La segunda nombra Poético y Pura-cola sin resaltarlos y s
 pedido. La cuarta nombra el primero, el segundo y el tercer producto de su pedido, cada uno
 presentado como en BR-CTR-039 y con sólo el nombre en amarillo. CUANDO se completa su compra
 ENTONCES vende una sola vez, dice 2 entradas de despedida en el orden de la ficha y no se retira
-hasta terminarlas. DADO el rechazo de uno de los tres ENTONCES el recordatorio nombra los que
-faltan de esos tres (BR-CTR-039).
+hasta terminarlas.
 
 ### AC-CTR-158 — Los demás compradores usan el guion predeterminado *(verifica BR-CTR-048)*
 

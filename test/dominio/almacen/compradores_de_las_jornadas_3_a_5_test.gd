@@ -135,11 +135,15 @@ func test_cada_pedido_son_dos_o_tres_tipos_de_su_grupo_y_de_lo_que_se_vende() ->
 			for comprador in Compradores.de_la_jornada(jornada, semilla):
 				var pedido := comprador.pedido()
 				var ids: Array[Producto.Id] = []
+				var fijo := jornada == QUINTA and comprador.personaje == PERSONAJE.MIA
 				for producto in pedido.productos():
 					ids.append(producto.id)
 					assert_int(pedido.unidades_de(producto)).is_equal(1)
 					assert_array(vendibles).contains([producto.id])
-					assert_array(Compradores.GRUPOS[comprador.personaje]).contains([producto.id])
+					if not fijo:
+						assert_array(Compradores.GRUPOS[comprador.personaje]).contains(
+							[producto.id]
+						)
 				assert_int(ids.size()).is_between(2, 3)
 
 
@@ -203,6 +207,31 @@ func test_cami_de_la_quinta_conserva_el_sorteo_comun() -> void:  # AC-CTR-152
 	for semilla in range(1, SEMILLAS + 1):
 		var cami := Compradores.de_la_jornada(QUINTA, semilla)[0]
 		tamanos[cami.pedido().productos().size()] = true
+	assert_array(tamanos.keys()).contains_exactly_in_any_order([2, 3])
+
+
+func test_mia_de_la_quinta_pide_siempre_poetico_pura_cola_y_fernet_god() -> void:  # AC-CTR-171
+	var esperado: Array[Producto.Id] = [
+		Producto.Id.POETICO, Producto.Id.PURA_COLA, Producto.Id.FERNET_GOD
+	]
+	for semilla in range(1, SEMILLAS * 3 + 1):
+		var mia := Compradores.de_la_jornada(QUINTA, semilla)[1]
+		assert_int(mia.personaje).is_equal(PERSONAJE.MIA)
+		var ids: Array[Producto.Id] = []
+		for producto in mia.pedido().productos():
+			ids.append(producto.id)
+			assert_int(mia.pedido().unidades_de(producto)).is_equal(1)
+		assert_array(ids).is_equal(esperado)
+
+
+func test_cami_de_la_quinta_no_cambia_con_el_pedido_fijo_de_mia() -> void:  # AC-CTR-171
+	var tamanos: Dictionary = {}
+	for semilla in range(1, SEMILLAS + 1):
+		var cami := Compradores.de_la_jornada(QUINTA, semilla)[0]
+		assert_int(cami.personaje).is_equal(PERSONAJE.CAMI)
+		tamanos[cami.pedido().productos().size()] = true
+		for producto in cami.pedido().productos():
+			assert_array(Compradores.GRUPOS[PERSONAJE.CAMI]).contains([producto.id])
 	assert_array(tamanos.keys()).contains_exactly_in_any_order([2, 3])
 
 
