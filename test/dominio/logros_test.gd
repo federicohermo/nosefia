@@ -144,6 +144,17 @@ func test_un_final_se_anota_una_vez_y_el_despedido_no_es_el_cumplido() -> void: 
 	assert_bool(logros.final_alcanzado(F.CONTRATO_CUMPLIDO)).is_false()
 
 
+func test_todo_final_de_la_partida_se_anota_y_cruza_el_archivo() -> void:  # AC-ACH-011
+	for final: F in F.values():
+		if final == F.EN_CURSO:
+			continue
+		var logros := Logros.new()
+		assert_bool(Logros.finales().has(final)).is_true()
+		assert_bool(logros.alcanzar_final(final)).is_true()
+		assert_bool(Logros.desde(logros.datos()).final_alcanzado(final)).is_true()
+		assert_str(Logros.nombre_del_final(final)).is_not_empty()
+
+
 func test_una_partida_en_curso_no_es_un_final() -> void:  # AC-ACH-011
 	var logros := Logros.new()
 	assert_bool(logros.alcanzar_final(F.EN_CURSO)).is_false()

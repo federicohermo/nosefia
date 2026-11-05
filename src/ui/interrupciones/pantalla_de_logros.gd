@@ -30,6 +30,7 @@ const _IMAGEN_DE_LOS_LOGROS: Dictionary[Logros.Logro, Texture2D] = {
 	Logros.Logro.MI_TALON_DE_AQUILES:
 	preload("res://assets/ui/manada/logros/mi_talon_de_aquiles.png"),
 }
+## Jefe saboteador no está: se ve con su nombre y sin imagen propia todavía.
 const _IMAGEN_DE_LOS_FINALES: Dictionary[Partida.Final, Texture2D] = {
 	Partida.Final.DESPEDIDO: preload("res://assets/ui/manada/logros/final_despedido.png"),
 	Partida.Final.CONTRATO_CUMPLIDO:
@@ -131,14 +132,14 @@ func _pintar() -> void:
 			lista.remove_child(entrada)
 			entrada.free()
 	if _caso != null:
-		for pista: Pista in _caso.pistas:
+		for pista: Pista in _caso.pistas.filter(func(p: Pista) -> bool: return p.deja_nota()):
 			var descubierta := _logros.pista_descubierta(pista.identidad)
 			_agregar(TEXTO_DE_LAS_PISTAS, descubierta, pista.foto, pista.texto)
 	for final: Partida.Final in Logros.finales():
 		_agregar(
 			TEXTO_DE_LOS_FINALES,
 			_logros.final_alcanzado(final),
-			_IMAGEN_DE_LOS_FINALES[final],
+			_IMAGEN_DE_LOS_FINALES.get(final),
 			Logros.nombre_del_final(final)
 		)
 	for logro: Logros.Logro in Logros.Logro.values():

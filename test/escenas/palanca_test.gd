@@ -227,6 +227,17 @@ func test_el_final_4_muestra_su_pantalla_y_borra_el_guardado() -> void:  # AC-SH
 	assert_bool(Guardado.new().hay_guardado()).is_false()
 
 
+func test_el_final_4_se_anota_en_los_logros() -> void:  # AC-ACH-011
+	await _abrir(JORNADA_7, _por_la_6b())
+	var logros := _almacen.get("_logros") as Logros
+	assert_bool(logros.final_alcanzado(Partida.Final.JEFE_SABOTEADOR)).is_false()
+	var palanca := _palanca()
+	assert_bool(_agarre().pedir_agarrar(palanca.datos, palanca)).is_true()
+	_puerta_del_jefe().call("accionar")
+	await _cuadros()
+	assert_bool(logros.final_alcanzado(Partida.Final.JEFE_SABOTEADOR)).is_true()
+
+
 func test_sin_la_palanca_en_la_mano_la_puerta_sigue_trabada() -> void:  # AC-PLY-190 AC-SHF-110
 	await _abrir(JORNADA_7, _por_la_6b())
 	var palanca := _palanca()

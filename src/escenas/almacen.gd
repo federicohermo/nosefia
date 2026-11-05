@@ -793,6 +793,8 @@ func _al_forzar_la_puerta_del_jefe() -> void:
 	_audio.callar_la_musica()
 	_jugador.suspender()
 	_enlace_de_guardado.guardar()
+	if _logros.alcanzar_final(_partida.final()):
+		_archivo_de_logros.escribir(_logros)
 	(get_node("Interfaz/PersianaDeLaNoche") as PersianaDeLaNoche).mostrar_baja()
 	_mostrar_el_final()
 

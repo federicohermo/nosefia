@@ -21,14 +21,14 @@ noche.
 | **Logro** | uno de los nueve premios del catálogo cerrado, con nombre fijo | medalla, trofeo |
 | **Desbloquear** | ganar un logro por primera vez; ocurre una sola vez en la vida del archivo | completar, activar |
 | **Catalogado** | el logro existe y se muestra, aunque nada lo desbloquee todavía | implementado |
-| **Final alcanzado** | un final de la partida que el jugador vio alguna vez: despedido o contrato cumplido | final desbloqueado |
+| **Final alcanzado** | un final de la partida que el jugador vio alguna vez: despedido, contrato cumplido o jefe saboteador | final desbloqueado |
 | **Pista descubierta** | una pista que la investigación aceptó alguna vez, en cualquier partida | pista vista |
 | **Pantalla de logros** | la pantalla de tres columnas —pistas, finales y logros— que abren el menú de inicio y la pausa | galería |
 
 Los nueve logros y su nombre en pantalla son: **Obelisco de cartón**, **Rebelde**, **Y se marchó…**,
 **A la basura**, **Estamos al pedo, ¿no?**, **Empleado ejemplar**, **Pésima primera impresión**,
-**Mi talón de Aquiles** y **Elemental, mi querida Yasmín**. Los dos finales y su nombre en pantalla
-son **Despedido** y **Contrato cumplido**.
+**Mi talón de Aquiles** y **Elemental, mi querida Yasmín**. Los tres finales y su nombre en pantalla
+son **Despedido**, **Contrato cumplido** y **Jefe saboteador**.
 
 ## Comportamiento normativo
 
@@ -103,8 +103,8 @@ conoce, ENTONCES el sistema DEBE ignorarlo y conservar los demás.
 
 ### BR-ACH-012 — Los finales y las pistas también duran
 
-CUANDO la partida termina, el sistema DEBE anotar en el mismo archivo el final alcanzado: despedido
-o contrato cumplido. CUANDO la investigación acepta una pista nueva (BR-NTF-010), el sistema DEBE
+CUANDO la partida termina, el sistema DEBE anotar en el mismo archivo el final alcanzado: despedido,
+contrato cumplido o jefe saboteador. CUANDO la investigación acepta una pista nueva (BR-NTF-010), el sistema DEBE
 anotarla como descubierta en el mismo archivo. Las dos anotaciones DEBEN cruzar partidas como los
 logros, y repetirlas no cambia nada. SI el archivo nombra una pista o un final que el juego no
 conoce, ENTONCES el sistema DEBE ignorarlo.
@@ -112,8 +112,9 @@ conoce, ENTONCES el sistema DEBE ignorarlo.
 ### BR-ACH-013 — La pantalla tiene tres columnas
 
 La pantalla de logros DEBE mostrar tres columnas, en este orden: **pistas, finales y logros**. La de
-pistas DEBE listar todas las pistas del caso. La de finales DEBE listar los dos finales. La de logros
-DEBE listar los nueve.
+pistas DEBE listar las pistas del caso que dejan una nota, con foto y texto: una pista de acción,
+sin foto ni texto, NO DEBE aparecer, porque nunca se descubre como las demás. La de finales DEBE
+listar todos los finales de la partida. La de logros DEBE listar los nueve.
 
 ### BR-ACH-014 — Una entrada desbloqueada muestra, una bloqueada pregunta
 
@@ -201,7 +202,8 @@ final o una pista desconocidos en el archivo ENTONCES se ignoran.
 ### AC-ACH-012 — Tres columnas en orden *(verifica BR-ACH-013, BR-ACH-014)*
 
 DADO la pantalla de logros ENTONCES hay tres columnas, en este orden: pistas, finales y logros. La
-de logros lista nueve entradas, la de finales dos, y la de pistas tantas como pistas tiene el caso.
+de logros lista nueve entradas, la de finales una por cada final de la partida, y la de pistas una
+por cada pista del caso que deja nota: una pista sin foto ni texto no tiene entrada.
 
 ### AC-ACH-013 — Desbloqueada nombra, bloqueada pregunta *(verifica BR-ACH-014)*
 
