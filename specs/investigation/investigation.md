@@ -2158,7 +2158,7 @@ vuelve el wifi ENTONCES se ve el de conectado y no el de sin conexión.
   expediente recibido, identidades para reconstrucción y gestos de pista con canal y jornada;
   el camino de cada hipótesis, el azar para sortear y el sorteo guardado; el aviso de que la
   puerta del jefe se abrió con la palanca o con la llave;
-  la jornada, Q, el estado del control, el tiempo restante del turno y el estado del wifi
+  la jornada, Q, el estado del control, el tiempo restante del turno, el estado del wifi
   y los pedidos de recibir mensajes, navegar chats, ampliar fotos, fijar y soltar el celular;
   identidad y metadatos temporales de mensajes y el tramo de pista pulsado; continuar, navegar
   y elegir en la reflexión de cierre, y la reflexión y la elección restauradas.
