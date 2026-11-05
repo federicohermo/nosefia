@@ -527,6 +527,12 @@ grupo, y el primero NO DEBE ser Coracola, Malbardo ni Don Saturados; el sorteo s
 ningún pedido viole esa condición. Un Oaaaa sin unidades vendibles sigue siendo el tercero de
 Cami. El pedido de Cami en la jornada 5 conserva el sorteo común.
 
+Otros dos pedidos tienen forma propia. El de Mía en la jornada 5 DEBE ser siempre el mismo, con
+cualquier semilla: Poético, Coracola y Fernet God, una unidad de cada uno y en ese orden. NO
+depende del grupo de Mía (Poético no está en él) ni se sortea. El de Tia en la noche del corte de
+luz (jornada 6) DEBE tener siempre exactamente dos tipos de su grupo, sorteados con el mismo reparto
+parejo, nunca dos o tres. SI esa noche sólo se venden dos tipos de su grupo, ENTONCES pide esos dos.
+
 La partida DEBE llevar una semilla propia, fijada al empezar y conservada al guardar y retomar.
 Con la misma partida, abrir de nuevo la misma jornada, retomarla o reintentarla DEBE construir los
 mismos productos en el mismo orden, con estados nuevos; otra partida PUEDE sortear otros.
@@ -548,7 +554,7 @@ entrada, «Muchas gracias.»; NO DEBE retirar al comprador hasta terminarla. Los
 jornadas 1 y 2 son de sus compradores y NO DEBEN decirse en estas jornadas.
 
 Tienen guion propio, con las entradas de «Diálogos de compradores» y no las predeterminadas, sólo
-Cami en las jornadas 3 y 5, Tin en la 3 y Tia en la 4 y en la 6. Los demás compradores de esas
+Cami en las jornadas 3 y 5, Tin en la 3, Tia en la 4 y en la 6 y Mía en la 5. Los demás compradores de esas
 noches y los de la jornada 7 usan la apertura y la despedida predeterminadas, y el sistema NO DEBE
 inventarles guion. Un guion propio DEBE decir sus entradas de apertura en el orden de la ficha, una
 por una, y después sus entradas de despedida, también en su orden; la ficha no tiene un mensaje 9
@@ -1140,7 +1146,7 @@ lo de las jornadas 1 y 2. Reposición y atención reciben la misma lista de cada
 
 DADO la apertura de cada jornada de la 3 a la 5, con distintas semillas de partida, CUANDO se
 construyen sus compradores ENTONCES cada pedido, salvo los de Cami y Tin en la jornada 3
-(AC-CTR-152, AC-CTR-153), tiene dos o tres productos de tipos distintos
+(AC-CTR-152, AC-CTR-153) y el de Mía en la jornada 5 (AC-CTR-171), tiene dos o tres productos de tipos distintos
 con una unidad cada uno, y todos pertenecen al grupo de su comprador y a los que se venden esa
 noche: el catálogo completo, desde la primera jornada completa. Entre las semillas
 probadas hay pedidos distintos.
@@ -1217,15 +1223,15 @@ cada instante no repite eventos. Tin sigue llegando a las 20:30 y pidiendo lo mi
 ### AC-CTR-107 — Cada comprador pide de su grupo *(verifica BR-CTR-047)*
 
 DADO la apertura de cada jornada de la 3 a la 5, con muchas semillas, CUANDO se construyen sus
-compradores ENTONCES ningún pedido incluye un producto fuera del grupo de su comprador. DADO la
+compradores ENTONCES ningún pedido, salvo el de Mía en la jornada 5 (AC-CTR-171), incluye un producto fuera del grupo de su comprador. DADO la
 jornada 3 ENTONCES con las semillas probadas cada comprador pide todos los productos de su
 grupo. DADO Fede en la jornada 4 ENTONCES jamás pide Durextra.
 
 ### AC-CTR-108 — Dos o tres, nunca uno ni cuatro *(verifica BR-CTR-047)*
 
 DADO la apertura de cada jornada de la 3 a la 5, con muchas semillas, CUANDO se construyen sus
-compradores ENTONCES cada pedido, salvo los de Cami y Tin en la jornada 3, tiene dos o tres
-productos, aparecen las dos cantidades, ninguno tiene un producto repetido ni más de una unidad
+compradores ENTONCES cada pedido, salvo los de Cami y Tin en la jornada 3 y el de Mía en la
+jornada 5, tiene dos o tres productos, aparecen las dos cantidades, ninguno tiene un producto repetido ni más de una unidad
 por producto, y las dos cantidades salen con frecuencias parecidas.
 
 ### AC-CTR-109 — Las ventanas de dos horas y media *(verifica BR-CTR-045, BR-CTR-046)*
@@ -1264,9 +1270,10 @@ reciben la misma lista de cada apertura.
 ### AC-CTR-129 — Cada uno pide dos o tres tipos de su grupo *(verifica BR-CTR-051, BR-CTR-052, BR-CTR-047)*
 
 DADO la apertura de la noche del corte de luz y la de la última noche, con muchas semillas, CUANDO
-se construyen sus compradores ENTONCES cada pedido tiene dos o tres productos de tipos distintos con
-una unidad cada uno, todos del grupo de su comprador, aparecen las dos cantidades y salen con
-frecuencias parecidas. Ningún pedido incluye un producto de almacén.
+se construyen sus compradores ENTONCES cada pedido, salvo el de Tia en la noche del corte de luz
+(AC-CTR-172), tiene dos o tres productos de tipos distintos con una unidad cada uno, todos del
+grupo de su comprador, aparecen las dos cantidades y salen con frecuencias parecidas. Ningún
+pedido incluye un producto de almacén.
 
 ### AC-CTR-130 — Fede pide siempre Duronga y Durextra en la última noche *(verifica BR-CTR-052)*
 
@@ -1396,11 +1403,11 @@ terminarla.
 
 ### AC-CTR-156 — Tia en las jornadas 4 y 6 dice su guion y nombra el pedido entero *(verifica BR-CTR-048)*
 
-DADO la jornada 4 CUANDO se le habla a Tia ENTONCES dice 2 entradas de apertura: la primera sin
-productos y la segunda con el pedido entero; al completarse dice 1 entrada de despedida. DADO la
-jornada 6 ENTONCES dice 3 entradas de apertura, la última con el pedido entero, y 2 de despedida.
-DADO un pedido de dos tipos y otro de tres ENTONCES el pedido entero se enumera como «a y b» y
-«a, b y c», con sólo los nombres en amarillo. Vende una sola vez y no se retira hasta terminar la
+DADO la jornada 4 CUANDO se le habla a Tia ENTONCES dice 3 entradas de apertura: la segunda con el
+pedido entero y las otras dos sin productos; al completarse dice 1 entrada de despedida. DADO la
+jornada 6 ENTONCES dice 3 entradas de apertura, la última con sus dos productos, el primero y el
+segundo, y 2 de despedida. DADO un pedido de dos tipos y otro de tres, en la jornada 4, ENTONCES el
+pedido entero se enumera como «a y b» y «a, b y c», con sólo los nombres en amarillo. Vende una sola vez y no se retira hasta terminar la
 despedida.
 
 ### AC-CTR-157 — Cami en la jornada 5 dice su guion y nombra el pedido entero *(verifica BR-CTR-048)*
@@ -1420,15 +1427,40 @@ hipótesis 2B) ENTONCES dice sólo el de «¿No es muy capa ella?» y no el de �
 persona?». DADO la jornada 5 sin camino definido ENTONCES dice lo mismo que por el camino de la
 2B. En los tres casos el resto de las entradas conserva su orden.
 
+### AC-CTR-171 — Mía en la jornada 5 pide siempre Poético, Coracola y Fernet God *(verifica BR-CTR-047)*
+
+DADO la apertura de la jornada 5, con muchas semillas, CUANDO se construye el pedido de Mía
+ENTONCES tiene exactamente tres productos, una unidad de cada uno y en este orden: Poético,
+Coracola y Fernet God. DADO esas mismas semillas ENTONCES el pedido de Cami en la jornada 5 sigue
+siendo de dos o tres tipos de su grupo, y la misma semilla repite el mismo pedido de Cami.
+
+### AC-CTR-172 — Tia en el corte de luz pide exactamente dos tipos *(verifica BR-CTR-047)*
+
+DADO la apertura de la noche del corte de luz (jornada 6), con muchas semillas, CUANDO se construye
+el pedido de Tia ENTONCES tiene exactamente dos productos de tipos distintos, una unidad cada uno,
+ambos de su grupo y de los que se venden esa noche. Con las semillas probadas el primero y el
+segundo recorren todo su grupo. DADO esas mismas semillas ENTONCES el pedido de Tin esa noche sigue
+siendo de dos o tres tipos, y el de Tia en la jornada 4 también.
+
+### AC-CTR-173 — Mía en la jornada 5 dice su guion y nombra sus tres productos *(verifica BR-CTR-048)*
+
+DADO la jornada 5 CUANDO se le habla a Mía por primera vez ENTONCES dice 4 entradas de apertura en
+el orden de la ficha. La segunda nombra Poético y Pura-cola sin resaltarlos y sin que cuenten como
+pedido. La cuarta nombra el primero, el segundo y el tercer producto de su pedido, cada uno
+presentado como en BR-CTR-039 y con sólo el nombre en amarillo. CUANDO se completa su compra
+ENTONCES vende una sola vez, dice 2 entradas de despedida en el orden de la ficha y no se retira
+hasta terminarlas. DADO el rechazo de uno de los tres ENTONCES el recordatorio nombra los que
+faltan de esos tres (BR-CTR-039).
+
 ### AC-CTR-158 — Los demás compradores usan el guion predeterminado *(verifica BR-CTR-048)*
 
-DADO Tin en la jornada 6, Fede en la 4, Mía en la 5 y cada comprador de la jornada 7 CUANDO se les
+DADO Tin en la jornada 6, Fede en la 4 y cada comprador de la jornada 7 CUANDO se les
 habla y se completa su compra ENTONCES dicen la apertura y la despedida predeterminadas de
 BR-CTR-048. DADO las jornadas 1 y 2 ENTONCES siguen con los guiones propios de sus compradores.
 
 ### AC-CTR-159 — Con un guion propio, los textos comunes y la misma partida *(verifica BR-CTR-047, BR-CTR-048)*
 
-DADO Cami, Tin o Tia con guion propio, terminada su apertura CUANDO se les habla de nuevo, se les
+DADO Cami, Tin, Tia o Mía con guion propio, terminada su apertura CUANDO se les habla de nuevo, se les
 ofrece un objeto ajeno, se les entrega un producto que falta o ya recibieron, o completan el
 pedido sin ticket ENTONCES responden con el recordatorio, el rechazo, el agradecimiento y el aviso
 de ticket comunes, y no repiten la apertura. DADO una partida CUANDO se reabre o se reintenta la
