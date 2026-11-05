@@ -205,7 +205,7 @@ func desenlaces_alcanzados() -> Array[Desenlace]:
 
 
 func _agregar_notas(pista: Pista, hora: String = "") -> void:
-	if pista.foto == null or pista.texto.is_empty():
+	if not pista.deja_nota():
 		return
 	var orden := _orden_siguiente()
 	for es_foto: bool in [true, false]:

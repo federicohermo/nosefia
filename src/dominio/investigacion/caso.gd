@@ -32,15 +32,19 @@ func pista_de(identidad: String) -> Pista:
 	return null
 
 
-## Lo que se levanta para dar una pista está en el local sólo la noche de esa pista, y sólo si
-## esa pista está activa por lo elegido y lo sorteado.
+## Lo que se levanta, o con lo que se actúa, para dar una pista está en el local sólo la noche de
+## esa pista, y sólo si esa pista está activa por lo elegido y lo sorteado.
 func esta_en_el_local(
 	origen: StringName, jornada: int, elecciones: Dictionary, sorteos: Dictionary
 ) -> bool:
 	if origen.is_empty():
 		return true
 	for pista: Pista in pistas:
-		if pista != null and pista.canal == Pista.Canal.LEVANTAR and pista.origen == origen:
+		if (
+			pista != null
+			and pista.origen == origen
+			and pista.canal in [Pista.Canal.LEVANTAR, Pista.Canal.ACCION]
+		):
 			return (
 				pista.jornada == jornada
 				and pistas_activas(jornada, elecciones, sorteos).has(pista.identidad)

@@ -1,3 +1,4 @@
+# gdlint:ignore=max-public-methods
 ## Lo que dura más que una noche: qué jornada va, el legajo que se arrastra y cómo termina todo.
 ##
 ## **Es la pieza que hace jugable la regla del despido.** Hasta acá el legajo vivía adentro del
@@ -14,9 +15,9 @@
 class_name Partida
 extends RefCounted
 
-## Los tres estados en los que puede estar una partida. Es un conjunto cerrado y por eso es un
+## Los estados en los que puede estar una partida. Es un conjunto cerrado y por eso es un
 ## `enum`: un `String` suelto dejaría al `if` del menú sin entrar nunca, sin decir una palabra.
-enum Final { EN_CURSO, CONTRATO_CUMPLIDO, DESPEDIDO }
+enum Final { EN_CURSO, CONTRATO_CUMPLIDO, DESPEDIDO, JEFE_SABOTEADOR }
 enum Llamado {
 	LOCAL_DESORDENADO,
 	OBJETO_AFUERA,
@@ -27,6 +28,10 @@ enum Llamado {
 enum RegistroDePoetico { RECHAZADO, ANOTADO, REPETIDO }
 
 const ReglasDelCierre := preload("res://src/dominio/almacen/reglas_del_cierre.gd")
+
+## Con qué objeto en la mano se abre la puerta de la oficina del jefe, y de qué pista es la acción
+## de abrirla (BR-PLY-060, BR-INV-142).
+const PALANCA := &"palanca"
 
 ## La última noche de la prueba: de ahí sale el resultado que la primera jornada completa hereda.
 const _ULTIMA_DE_LA_PRUEBA := ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA - 1
@@ -403,6 +408,22 @@ func cerrar_la_jornada(
 	)
 	# Después de anotar la noche: la devolución lee las cuentas que ya la incluyen.
 	_devoluciones.append_array(DevolucionDelJefe.new(cerrada, self).mensajes_fechados())
+
+
+## La puerta de la oficina del jefe se abrió con la palanca en la jornada 7 (BR-SHF-060): registra
+## la 7B y termina la jornada y la partida en ese momento, sin cierre, sin devolución y sin
+## evaluar la noche. Devuelve si terminó; sin la 7B activa, o con la jornada cerrada, no cambia
+## nada.
+func abrir_la_oficina_del_jefe(hora: String = "") -> bool:
+	if terminada() or not _jornada_abierta:
+		return false
+	var resultado := _expediente.registrar_por_canal(PALANCA, Pista.Canal.ACCION, _jornada, hora)
+	if resultado == Expediente.Resultado.DESCONOCIDA:
+		return false
+	_jornada_abierta = false
+	_reflexion = null
+	_final = Final.JEFE_SABOTEADOR
+	return true
 
 
 ## El azar de esta jornada sale de la semilla de la partida: con la misma, sale el mismo camino.

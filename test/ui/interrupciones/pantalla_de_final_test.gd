@@ -3,7 +3,9 @@ extends GdUnitTestSuite
 
 const ESCENA := "res://src/ui/interrupciones/pantalla_de_final.tscn"
 const FINALES: Array[FinalConPantalla.Cual] = [
-	FinalConPantalla.Cual.DESPEDIDO, FinalConPantalla.Cual.EMPLEADO_ESTRESADO
+	FinalConPantalla.Cual.DESPEDIDO,
+	FinalConPantalla.Cual.EMPLEADO_ESTRESADO,
+	FinalConPantalla.Cual.JEFE_SABOTEADOR,
 ]
 
 var _pedidos: int = 0
@@ -31,7 +33,7 @@ func test_arranca_oculta() -> void:
 	assert_bool(_pantalla().visible).is_false()
 
 
-func test_cada_final_dibuja_su_encabezado_y_su_titulo() -> void:  # AC-SHF-063, AC-SHF-064
+func test_cada_final_dibuja_su_encabezado_y_titulo() -> void:  # AC-SHF-063 AC-SHF-064 AC-SHF-111
 	var pantalla := _pantalla()
 	var titulos: Array[String] = []
 	for final: FinalConPantalla.Cual in FINALES:
@@ -41,10 +43,12 @@ func test_cada_final_dibuja_su_encabezado_y_su_titulo() -> void:  # AC-SHF-063, 
 		assert_str(pantalla.titulo()).is_equal(PantallaDeFinal.TITULOS[final])
 		assert_str(pantalla.encabezado()).is_not_empty()
 		titulos.append(pantalla.titulo())
-	assert_str(titulos[0]).is_not_equal(titulos[1])
+	assert_int(titulos.size()).is_equal(FINALES.size())
+	for titulo: String in titulos:
+		assert_int(titulos.count(titulo)).is_equal(1)
 
 
-func test_tiene_un_solo_boton_y_es_el_de_volver_al_menu() -> void:  # AC-SHF-063, AC-SHF-064
+func test_tiene_un_solo_boton_y_es_el_de_volver() -> void:  # AC-SHF-063 AC-SHF-064 AC-SHF-111
 	var pantalla := _pantalla()
 	for final: FinalConPantalla.Cual in FINALES:
 		pantalla.mostrar(final)
