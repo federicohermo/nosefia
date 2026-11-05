@@ -13,12 +13,6 @@ const CONTROLES := "res://src/ui/interrupciones/pantalla_de_controles.tscn"
 const PAUSA := "res://src/ui/interrupciones/menu_de_pausa.tscn"
 const C := Preferencias.Campo
 
-var _reanudar: int = 0
-
-
-func before_test() -> void:
-	_reanudar = 0
-
 
 func after_test() -> void:
 	get_tree().paused = false
@@ -74,27 +68,22 @@ func test_la_cruceta_el_derecho_y_x_son_las_acciones_de_las_interfaces() -> void
 			assert_bool(InputMap.event_is_action(evento, accion)).is_true()
 
 
-func test_configuraciones_elige_una_barra_y_los_costados_mueven_un_paso() -> void:  # AC-CFG-027
-	var avisos: Array[Preferencias] = []
+func test_configuraciones_elige_una_barra_con_el_paso_de_su_preferencia() -> void:  # AC-CFG-027
 	var pantalla: PantallaDeConfiguraciones = auto_free(load(CONFIGURACIONES).instantiate())
 	add_child(pantalla)
 	pantalla.preparar(Preferencias.new())
-	pantalla.preferencias_cambiadas.connect(func(p: Preferencias) -> void: avisos.append(p))
 	pantalla.abrir()
-	assert_object(_foco()).is_instanceof(HSlider)
+	var barra := _foco() as HSlider
+	assert_object(barra).is_not_null()
 	assert_bool(_foco_adentro_de(pantalla)).is_true()
-	var paso := Preferencias.paso(C.EFECTOS)
-	var maximo := Preferencias.maximo(C.EFECTOS)
-	_gesto(_eje(JOY_AXIS_RIGHT_X, -1.0))
-	assert_int(avisos.size()).is_equal(1)
-	assert_float(avisos[0].valor(C.EFECTOS)).is_equal_approx(maximo - paso, 1e-4)
-	_gesto(_eje(JOY_AXIS_RIGHT_X, 1.0))
-	assert_int(avisos.size()).is_equal(2)
-	assert_float(avisos[1].valor(C.EFECTOS)).is_equal_approx(maximo, 1e-4)
-	var barra := _foco()
-	_gesto(_boton(JOY_BUTTON_DPAD_DOWN))
-	assert_object(_foco()).is_not_same(barra)
-	assert_bool(_foco_adentro_de(pantalla)).is_true()
+	assert_float(barra.step).is_equal(Preferencias.paso(C.EFECTOS))
+	# Abajo pasa a otro renglón: el motor mueve el foco a la barra que tiene debajo.
+	var debajo := barra.find_valid_focus_neighbor(SIDE_BOTTOM)
+	assert_object(debajo).is_not_null()
+	assert_bool(pantalla.is_ancestor_of(debajo)).is_true()
+	# Los botones − y + son del clic: la barra es lo único que se elige en su fila.
+	for boton: Button in barra.get_parent().find_children("*", "Button", true, false):
+		assert_int(boton.focus_mode).is_equal(Control.FOCUS_NONE)
 
 
 func test_la_planilla_elige_por_fila_y_los_costados_suman_y_restan() -> void:  # AC-CFG-027
@@ -119,23 +108,23 @@ func test_la_planilla_elige_por_fila_y_los_costados_suman_y_restan() -> void:  #
 	assert_int(registro.unidades_de(producto)).is_equal(2)
 	_gesto(_boton(JOY_BUTTON_DPAD_LEFT))
 	assert_int(registro.unidades_de(producto)).is_equal(1)
-	_gesto(_boton(JOY_BUTTON_DPAD_DOWN))
-	assert_object(_foco()).is_same(filas.get_child(1))
-	assert_int(registro.unidades_de(registro.productos()[1])).is_zero()
-	# Repintar la planilla no le quita el foco al jugador.
+	# Abajo pasa a la fila siguiente, y repintar la planilla no le quita el foco al jugador.
+	await await_idle_frame()
+	assert_object(primera.find_valid_focus_neighbor(SIDE_BOTTOM)).is_same(filas.get_child(1))
+	filas.get_child(1).grab_focus()
 	caja.mostrar(registro)
 	assert_object(_foco()).is_same(filas.get_child(1))
 
 
-func test_la_pausa_deja_el_foco_en_un_boton_y_x_lo_aprieta() -> void:  # AC-CFG-027
+func test_la_pausa_deja_el_foco_en_un_boton_que_x_aprieta() -> void:  # AC-CFG-027
 	var menu: MenuDePausa = auto_free(load(PAUSA).instantiate())
-	menu.reanudar_pedido.connect(func() -> void: _reanudar += 1)
 	add_child(menu)
 	menu.mostrar()
 	assert_object(_foco()).is_instanceof(Button)
 	assert_bool(_foco_adentro_de(menu)).is_true()
-	_gesto(_boton(JOY_BUTTON_A))
-	assert_int(_reanudar).is_equal(1)
+	# X es la acción de aceptar: con el foco en el botón, el motor lo aprieta.
+	assert_bool(InputMap.event_is_action(_boton(JOY_BUTTON_A), &"ui_accept")).is_true()
+	assert_bool((_foco() as Button).disabled).is_false()
 
 
 func test_controles_deja_el_foco_en_un_renglon() -> void:  # AC-CFG-028

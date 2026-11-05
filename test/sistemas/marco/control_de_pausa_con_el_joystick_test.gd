@@ -85,6 +85,8 @@ func test_circulo_cierra_la_interfaz_abierta_y_no_pausa() -> void:  # AC-SAV-046
 
 func test_circulo_sin_nada_abierto_no_pausa_y_no_se_come_el_evento() -> void:  # AC-SAV-046
 	var control := _control()
+	# Un evento nuevo limpia el «atendido» que dejó el caso anterior en el viewport.
+	control.get_viewport().push_input(InputEventAction.new())
 	control._input(_boton(JOY_BUTTON_B))
 	assert_bool(get_tree().paused).is_false()
 	assert_int(_pausas).is_zero()
