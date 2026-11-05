@@ -177,7 +177,9 @@ func al_terminar_el_examen(partida: Partida) -> Id:
 func al_anotar_una_pista(partida: Partida, celular_abierto: bool, canal: Pista.Canal) -> Id:
 	if partida.primera_pista_pensada or _primera_pista_pendiente != Id.NINGUNO:
 		return Id.NINGUNO
-	var pensamiento: Id = DE_LAS_PRIMERAS_PISTAS[canal]
+	var pensamiento: Id = DE_LAS_PRIMERAS_PISTAS.get(canal, Id.NINGUNO)
+	if pensamiento == Id.NINGUNO:
+		return Id.NINGUNO
 	if celular_abierto:
 		_primera_pista_pendiente = pensamiento
 		return Id.NINGUNO

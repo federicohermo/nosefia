@@ -1,0 +1,11 @@
+[gd_resource type="Resource" script_class="ObjetoDelAlmacen" format=3]
+
+[ext_resource type="Script" path="res://src/dominio/almacen/objeto_del_almacen.gd" id="objeto"]
+
+[resource]
+script = ExtResource("objeto")
+id = &"palanca"
+nombre = "Palanca"
+subtitulo = "Una palanca que se usó\npara abrir las cajas de madera."
+levantable = true
+es_largo = true

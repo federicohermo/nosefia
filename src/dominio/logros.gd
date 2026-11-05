@@ -40,6 +40,7 @@ const _NOMBRES: Dictionary[Logro, String] = {
 const _NOMBRES_DE_LOS_FINALES: Dictionary[Partida.Final, String] = {
 	Partida.Final.DESPEDIDO: "Despedido",
 	Partida.Final.CONTRATO_CUMPLIDO: "Contrato cumplido",
+	Partida.Final.JEFE_SABOTEADOR: "Jefe saboteador",
 }
 
 var _logros: Dictionary[Logro, bool] = {}

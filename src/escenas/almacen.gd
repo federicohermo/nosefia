@@ -158,6 +158,7 @@ var _hojas_de_entrada: Array[PuertaDelLocal] = []
 @onready var _colilla: ObjetoAgarrable = $Objetos/Colilla
 @onready var _nota: ObjetoAgarrable = $Objetos/NotaBajoLaPuerta
 @onready var _documento: ObjetoAgarrable = $Objetos/DocumentoImpreso
+@onready var _palanca: ObjetoAgarrable = $Objetos/Palanca
 
 
 func _compradores_de_la_partida(jornada: int) -> Array[Comprador]:
@@ -334,6 +335,11 @@ func _ready() -> void:
 	}
 	for ruta: NodePath in trabadas:
 		(get_node(ruta) as PuertaDelLocal).identidad = trabadas[ruta]
+	# La traba sigue siendo de la puerta del jefe: sólo cede a la palanca en la mano.
+	var puerta_del_jefe: PuertaDelLocal = $Estructura/puertajefe/CuerpoDeLaHoja
+	puerta_del_jefe.puerta().ceder_a(Partida.PALANCA)
+	puerta_del_jefe.lo_que_se_lleva = func() -> ObjetoDelAlmacen: return _agarre.manos().sostenido()
+	puerta_del_jefe.puerta_forzada.connect(_al_forzar_la_puerta_del_jefe.unbind(1))
 	_jugador.examen.examen_terminado.connect(_hud.vaciar_subtitulo)
 	_cablear_los_gestos()
 	_limpiador.balde_tenido_con.connect(_al_tenir_con)
@@ -482,7 +488,7 @@ func _al_abrir_la_jornada(jornada: int) -> void:
 	# Un pensamiento a medio desvanecer tampoco pasa a la noche nueva.
 	_hud.vaciar_subtitulo()
 	_agarre.vaciar_las_manos()
-	for de_una_pista: ObjetoAgarrable in [_colilla, _nota, _documento]:
+	for de_una_pista: ObjetoAgarrable in [_colilla, _nota, _documento, _palanca]:
 		_ubicar_lo_de_una_pista(de_una_pista, jornada)
 	_caja.arrancar(GeneradorDeTickets.para_la_jornada(jornada, _partida.numeros_de_ticket))
 	_puesto_de_la_caja.limpiar()
@@ -774,6 +780,23 @@ func _salir_del_cierre(opcion: DevolucionDelJefe.Opcion) -> void:
 		DevolucionDelJefe.Opcion.VOLVER_AL_MENU: _ir_al_menu,
 	}
 	acciones[opcion].call()
+
+
+## La palanca abrió la oficina de Enrique: la jornada y la partida terminan en ese momento, sin
+## cierre ni devolución, y el final se muestra en el mismo paso (BR-SHF-060). Si la partida no lo
+## acepta, la puerta ya se abrió y nada más cambia.
+func _al_forzar_la_puerta_del_jefe() -> void:
+	if not _partida.abrir_la_oficina_del_jefe(_reloj.hora()):
+		return
+	_reloj.retener()
+	_gestos.descartar()
+	_audio.callar_la_musica()
+	_jugador.suspender()
+	_enlace_de_guardado.guardar()
+	if _logros.alcanzar_final(_partida.final()):
+		_archivo_de_logros.escribir(_logros)
+	(get_node("Interfaz/PersianaDeLaNoche") as PersianaDeLaNoche).mostrar_baja()
+	_mostrar_el_final()
 
 
 ## La persiana sigue baja: la pantalla de final se dibuja encima, y sólo su botón sale al menú.

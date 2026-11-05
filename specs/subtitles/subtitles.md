@@ -3,7 +3,7 @@ schema_version: 1
 capability_id: CAP-SUB
 status: ratified
 owner: por definir
-provenance: fichas «Subtítulos», «5. Formas de interacción con objetos», «Interfaces virtuales durante la jornada» y «8. Tarea: Reposición»; columnas «Subtítulo al examinar» de las bases «Productos y cajas contenedoras» y «Otros objetos interactuables»; decisiones de #376; exención de bolsa, producto vencido, ticket y pista de #516; cuartito de limpieza de #541; texto provisorio del depósito trabado de #574; útiles fuera del contenedor de #552, ficha «Subtítulos» revisada el 2026-10-21; pensamiento de la primera pista de #714, ficha «Subtítulos» revisada el 2026-10-30; pensamiento sin luz de #689, ficha «Subtítulos» leída el 2026-11-03; subtítulos de las manchas de #457, ficha «Limpieza» revisada el 2026-10-20; renglones y ancho de #626, ficha «Subtítulos» revisada el 2026-11-03; pensamiento de la primera pista por canal de #762, ficha «Subtítulos» leída el 2026-11-03; router del wifi de #690, fichas «Subtítulos» y «Objetos interactuables» leídas el 2026-11-04
+provenance: fichas «Subtítulos», «5. Formas de interacción con objetos», «Interfaces virtuales durante la jornada» y «8. Tarea: Reposición»; columnas «Subtítulo al examinar» de las bases «Productos y cajas contenedoras» y «Otros objetos interactuables»; decisiones de #376; exención de bolsa, producto vencido, ticket y pista de #516; cuartito de limpieza de #541; texto provisorio del depósito trabado de #574; útiles fuera del contenedor de #552, ficha «Subtítulos» revisada el 2026-10-21; pensamiento de la primera pista de #714, ficha «Subtítulos» revisada el 2026-10-30; pensamiento sin luz de #689, ficha «Subtítulos» leída el 2026-11-03; subtítulos de las manchas de #457, ficha «Limpieza» revisada el 2026-10-20; renglones y ancho de #626, ficha «Subtítulos» revisada el 2026-11-03; pensamiento de la primera pista por canal de #762, ficha «Subtítulos» leída el 2026-11-03; router del wifi de #690, fichas «Subtítulos» y «Objetos interactuables» leídas el 2026-11-04; la fila «Palanca» de «Objetos interactuables», de #790
 ---
 
 # Capacidad: los subtítulos
@@ -142,6 +142,7 @@ con el mismo contenido, y el cuerpo y la tapa del contenedor.
 | Cada bolsa de basura | Una bolsa de basura. |
 | Colilla | Una colilla de cigarrillo. Qué raro… |
 | Documento impreso | Una especie de… ¿nota impresa? |
+| Palanca | Una palanca que se usó<br>para abrir las cajas de madera. |
 | Inodoro | Un inodoro. Enrique me pidió encarecidamente<br>que no tire papel en él, porque se tapa. |
 | Lavatorio | Un lavatorio. Acá puedo cargar el balde. |
 | Nota de jabones y manchas | Una nota explicando qué jabón usar<br>para cada tipo de mancha. |
@@ -614,6 +615,12 @@ al examinar, de un renglón.
 DADA la jornada 6 con el documento de la pista 6B en el local CUANDO se pide examinarlo con las
 manos vacías ENTONCES muestra el texto asociado a su identidad, de un renglón. Ese texto no es el
 de la colilla ni el de ninguna nota. «…» es un solo carácter.
+
+### AC-SUB-052 — La palanca dice su texto *(verifica BR-SUB-010)*
+
+DADA la jornada 7 con la palanca de la pista 7B en el local CUANDO se pide examinarla con las manos
+vacías ENTONCES muestra el texto asociado a su identidad, de dos renglones. Ese texto no es el de
+ningún otro objeto de la tabla. Su identidad no es la de la colilla ni la del documento impreso.
 
 ## No objetivos
 

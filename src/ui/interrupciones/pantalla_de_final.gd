@@ -11,10 +11,12 @@ signal volver_al_menu_pedido
 const ENCABEZADOS: Dictionary[FinalConPantalla.Cual, String] = {
 	FinalConPantalla.Cual.DESPEDIDO: "/ FIN DEL JUEGO",
 	FinalConPantalla.Cual.EMPLEADO_ESTRESADO: "/ FINAL 1",
+	FinalConPantalla.Cual.JEFE_SABOTEADOR: "/ FINAL 4",
 }
 const TITULOS: Dictionary[FinalConPantalla.Cual, String] = {
 	FinalConPantalla.Cual.DESPEDIDO: "DESPEDIDO",
 	FinalConPantalla.Cual.EMPLEADO_ESTRESADO: "EMPLEADO ESTRESADO",
+	FinalConPantalla.Cual.JEFE_SABOTEADOR: "JEFE SABOTEADOR",
 }
 const TEXTO_DEL_BOTON := MenuDePausa.TEXTO_DE_VOLVER_AL_MENU
 

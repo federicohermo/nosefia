@@ -33,13 +33,45 @@ func _imagen(entrada: HBoxContainer) -> Texture2D:
 	return (entrada.get_child(0) as TextureRect).texture
 
 
+## Las pistas que la pantalla lista: las que dejan una nota.
+func _pistas_con_nota() -> Array[Pista]:
+	var con_nota: Array[Pista] = []
+	for pista: Pista in CasoDeInvestigacion.de_la_partida().pistas:
+		if pista.deja_nota():
+			con_nota.append(pista)
+	return con_nota
+
+
 func test_tiene_tres_columnas_en_orden_con_una_entrada_por_cosa() -> void:  # AC-ACH-012
 	var pantalla := _pantalla()
 	assert_array(pantalla.columnas()).is_equal([PISTAS, FINALES, LOGROS])
-	var pistas := CasoDeInvestigacion.de_la_partida().pistas.size()
-	assert_int(pantalla.entradas(PISTAS).size()).is_equal(pistas)
+	assert_int(pantalla.entradas(PISTAS).size()).is_equal(_pistas_con_nota().size())
 	assert_int(pantalla.entradas(FINALES).size()).is_equal(Logros.finales().size())
 	assert_int(pantalla.entradas(LOGROS).size()).is_equal(L.values().size())
+
+
+func test_la_columna_de_finales_lista_todo_final_de_la_partida() -> void:  # AC-ACH-012
+	var pantalla := _pantalla()
+	for final: F in F.values():
+		if final != F.EN_CURSO:
+			assert_bool(Logros.finales().has(final)).is_true()
+	assert_int(pantalla.entradas(FINALES).size()).is_equal(F.values().size() - 1)
+
+
+func test_una_pista_sin_foto_ni_texto_no_entra_en_la_columna_de_pistas() -> void:  # AC-ACH-012
+	var todas := CasoDeInvestigacion.de_la_partida().pistas
+	var sin_nota: Array[Pista] = []
+	for pista: Pista in todas:
+		if not pista.deja_nota():
+			sin_nota.append(pista)
+	assert_array(sin_nota).is_not_empty()
+	var entradas := _pantalla().entradas(PISTAS)
+	assert_int(entradas.size()).is_equal(todas.size() - sin_nota.size())
+	var logros := Logros.new()
+	for pista: Pista in todas:
+		logros.descubrir_pista(pista.identidad)
+	for entrada: HBoxContainer in _pantalla(logros).entradas(PISTAS):
+		assert_str(_texto(entrada)).is_not_equal(PantallaDeLogros.TEXTO_BLOQUEADO)
 
 
 func test_lo_bloqueado_pregunta_en_las_tres_columnas() -> void:  # AC-ACH-013
@@ -66,15 +98,16 @@ func test_cada_entrada_alcanzada_muestra_una_imagen_propia() -> void:  # AC-ACH-
 		if logro != L.OBELISCO_DE_CARTON and logro != L.ELEMENTAL:
 			logros.desbloquear(logro)
 			desbloqueables.append(logro)
-	for final: F in Logros.finales():
+	var con_imagen: Array[F] = [F.DESPEDIDO, F.CONTRATO_CUMPLIDO]
+	for final: F in con_imagen:
 		logros.alcanzar_final(final)
 	var pantalla := _pantalla(logros)
 	var imagenes: Array[Texture2D] = []
 	for logro: L in desbloqueables:
 		imagenes.append(_imagen(pantalla.entradas(LOGROS)[logro]))
-	for entrada: HBoxContainer in pantalla.entradas(FINALES):
-		imagenes.append(_imagen(entrada))
-	assert_int(imagenes.size()).is_equal(desbloqueables.size() + Logros.finales().size())
+	for final: F in con_imagen:
+		imagenes.append(_imagen(pantalla.entradas(FINALES)[Logros.finales().find(final)]))
+	assert_int(imagenes.size()).is_equal(desbloqueables.size() + con_imagen.size())
 	var vistas: Array[Texture2D] = [PantallaDeLogros.IMAGEN_BLOQUEADA]
 	for imagen: Texture2D in imagenes:
 		assert_object(imagen).is_not_null()
@@ -106,8 +139,19 @@ func test_un_final_alcanzado_muestra_su_nombre_y_el_otro_pregunta() -> void:  # 
 	)
 
 
+func test_todo_final_alcanzado_muestra_su_nombre() -> void:  # AC-ACH-013
+	var logros := Logros.new()
+	for final: F in Logros.finales():
+		logros.alcanzar_final(final)
+	var entradas := _pantalla(logros).entradas(FINALES)
+	for final: F in Logros.finales():
+		assert_str(_texto(entradas[Logros.finales().find(final)])).is_equal(
+			Logros.nombre_del_final(final)
+		)
+
+
 func test_una_pista_descubierta_muestra_su_foto_y_su_texto() -> void:  # AC-ACH-013
-	var pistas := CasoDeInvestigacion.de_la_partida().pistas
+	var pistas := _pistas_con_nota()
 	var logros := Logros.new()
 	logros.descubrir_pista(pistas[0].identidad)
 	var entradas := _pantalla(logros).entradas(PISTAS)
@@ -155,5 +199,4 @@ func test_una_pista_que_el_caso_no_conoce_no_agrega_una_entrada() -> void:  # AC
 	var logros := Logros.new()
 	logros.descubrir_pista("NO_ES_DEL_CASO")
 	var pantalla := _pantalla(logros)
-	var pistas := CasoDeInvestigacion.de_la_partida().pistas.size()
-	assert_int(pantalla.entradas(PISTAS).size()).is_equal(pistas)
+	assert_int(pantalla.entradas(PISTAS).size()).is_equal(_pistas_con_nota().size())

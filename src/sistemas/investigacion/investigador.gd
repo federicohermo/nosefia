@@ -31,7 +31,8 @@ func pedir_pista(
 
 func _al_anotar(pista: Pista) -> void:
 	_publicar_notas()
-	pista_nueva.emit(pista)
+	if pista.deja_nota():
+		pista_nueva.emit(pista)
 
 
 func _publicar_notas() -> void:
