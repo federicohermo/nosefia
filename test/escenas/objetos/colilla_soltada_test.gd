@@ -87,7 +87,7 @@ func test_la_colilla_soltada_en_el_deposito_queda_sobre_el_piso() -> void:
 		jugador.velocity = Vector3.ZERO
 		if agarre.manos().sostenido() == null:
 			_clic(jugador, colilla)
-		assert_object(agarre.manos().sostenido()).is_same(colilla)
+		assert_object(agarre.manos().sostenido()).is_same(colilla.datos)
 		_mirar(jugador, 0.0, deg_to_rad(alto))
 		_clic(jugador, colilla)
 		if agarre.manos().sostenido() != null:
