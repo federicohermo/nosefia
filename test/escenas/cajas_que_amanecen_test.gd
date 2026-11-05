@@ -115,7 +115,9 @@ func test_el_cierre_anota_la_pose_de_cada_caja_y_la_guarda() -> void:  # AC-SAV-
 	RelojDePrueba.avanzar_turno(local.get("_reloj"), Reglas.DURACION_DEL_TURNO)
 	var partida: Partida = local.get("_partida")
 	var poses := partida.poses_de_las_cajas
-	assert_int(poses.size()).is_equal(local.get("_cajas_de_productos").size())
+	# Las treinta y dos de las estanterías y las siete de la pila del fondo.
+	var todas: int = local.get("_cajas_de_productos").size() + local.get("_cajas_del_fondo").size()
+	assert_int(poses.size()).is_equal(todas)
 	assert_bool(poses[movida.producto].is_equal_approx(pose)).is_true()
 	var retomada := Partida.desde(Guardado.new().cargar())
 	assert_bool(retomada.poses_de_las_cajas[movida.producto].is_equal_approx(pose)).is_true()
