@@ -1,0 +1,51 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://src/escenas/objetos/objeto_agarrable.gd" id="objeto"]
+[ext_resource type="Resource" path="res://src/dominio/investigacion/nota_bajo_la_puerta.tres" id="datos"]
+[ext_resource type="Texture2D" path="res://assets/ui/manada/pistas/nota-bajo-la-puerta.png" id="escrita"]
+[ext_resource type="Texture2D" path="res://assets/models/SEPT_JUEGOS_PROTOTIPO_nota sin texto.png" id="dorso"]
+
+[sub_resource type="BoxShape3D" id="cuerpo"]
+margin = 0.001
+size = Vector3(0.12, 0.019, 0.15)
+
+[sub_resource type="StandardMaterial3D" id="material_escrito"]
+albedo_texture = ExtResource("escrita")
+roughness = 1.0
+emission_enabled = true
+emission = Color(1, 1, 1, 1)
+emission_energy_multiplier = 0.2
+emission_texture = ExtResource("escrita")
+
+[sub_resource type="StandardMaterial3D" id="material_dorso"]
+albedo_texture = ExtResource("dorso")
+roughness = 1.0
+emission_enabled = true
+emission = Color(1, 1, 1, 1)
+emission_energy_multiplier = 0.2
+emission_texture = ExtResource("dorso")
+
+[sub_resource type="PlaneMesh" id="papel"]
+size = Vector2(0.18, 0.18)
+
+[node name="NotaBajoLaPuerta" type="RigidBody3D" groups=["interactuable"]]
+mass = 0.01
+collision_mask = 9
+script = ExtResource("objeto")
+datos = ExtResource("datos")
+orientacion_en_mano = Basis(1, 0, 0, 0, 0, -1, 0, 1, 0)
+
+[node name="Forma" type="CollisionShape3D" parent="."]
+shape = SubResource("cuerpo")
+
+[node name="Escrito" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.0085, 0)
+mesh = SubResource("papel")
+surface_material_override/0 = SubResource("material_escrito")
+gi_mode = 2
+
+[node name="Dorso" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, -1, 0, 0, 0, -1, 0, -0.0087, 0)
+mesh = SubResource("papel")
+surface_material_override/0 = SubResource("material_dorso")
+gi_mode = 2
