@@ -93,7 +93,7 @@ func test_mia_rechaza_un_ajeno_y_el_recordatorio_nombra_lo_que_falta() -> void: 
 	)
 	var rechazo := atencion.dialogo().entrada_actual()
 	assert_str(rechazo).not_contains(_presentado(pedido[0]))
-	for producto in pedido.slice(1):
+	for producto: Producto in pedido.slice(1):
 		assert_str(rechazo).contains(_presentado(producto))
 
 
