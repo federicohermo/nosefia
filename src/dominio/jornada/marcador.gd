@@ -1,9 +1,9 @@
 ## Los números del turno, ya formateados.
 ##
-## Con la hora fuera del HUD, `hora()` tiene un solo cliente, el reloj de mesa del dominio, que
-## decide si esta noche se puede leer. La aritmética está acá y no en el nodo que pinta porque es
-## **una regla que decide**, y una regla en `escenas/` nace sin test: es la trampa que describe
-## `.claude/rules/presentacion.md`.
+## Con la hora fuera del HUD, `hora()` tiene dos clientes: el reloj de pared, que decide si esta
+## noche se puede leer, y la barra de estado del celular, que la lee siempre. La aritmética está acá
+## y no en el nodo que pinta porque es **una regla que decide**, y una regla en `escenas/` nace sin
+## test: es la trampa que describe `.claude/rules/presentacion.md`.
 class_name Marcador
 extends RefCounted
 
