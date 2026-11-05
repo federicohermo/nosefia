@@ -14,8 +14,8 @@ from lib.godot import validar_motor
 
 
 IMPORTADORES = {
-    "assets/models/importar_modelo.gd": "0da71c1d2052f41124553e8187c1646b7a50206ea69643284ec75b036337310e",
-    "assets/models/importar_caja.gd": "f09d6fd85dec24b9544948637bbc12cbef8e8904ff362fa3aecc517fe2a24755",
+    "assets/models/importar_modelo.gd": "2e775ade95b5342f297f9e5abd686e9a9b701b4b20b29d0378df75717c018cdb",
+    "assets/models/importar_caja.gd": "92f38d55d8c23f27f0f47b12118c55eeb75a4c7f17d3da919201552e6c6212f6",
 }
 CAJAS = {"caja_registradora", "lector_de_productos", "ticket_impreso"}
 MATERIAL = "src/escenas/puestos/vidrio_del_local.tres"
@@ -206,6 +206,8 @@ def main() -> int:
         datos = asdict(resultado) | {"commit": os.environ.get("GITHUB_SHA", "")}
         with Path(os.environ["GITHUB_OUTPUT"]).open("a", encoding="utf-8") as salida:
             salida.write(f"key={resultado.key}\ncacheable={str(resultado.cacheable).lower()}\n")
+        if not resultado.cacheable:
+            print(f"::warning::Caché de importaciones apagada: {resultado.motivo}")
     else:
         datos = json.loads(reporte.read_text(encoding="utf-8"))
         exacta = (
