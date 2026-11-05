@@ -1,5 +1,5 @@
 ## El recorrido de un epílogo: qué placa se ve, cuánto oscurece la pantalla y cuándo termina
-## (BR-SHF-070, BR-SHF-071, BR-SHF-072).
+## (BR-SHF-072, BR-SHF-073, BR-SHF-074).
 ##
 ## Cada paso hacia una placa es un fundido a negro y un fundido de entrada, de un segundo cada uno.
 ## La primera placa entra así desde lo que hubiera en pantalla, y la pantalla de final entra igual

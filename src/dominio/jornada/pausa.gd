@@ -25,7 +25,7 @@ const BOTON_VOLVER := JOY_BUTTON_B
 const GRACIA_TRAS_ESC := 0.5
 
 
-## Con el epílogo de un final en pantalla, Esc no hace nada (BR-SHF-072).
+## Con el epílogo de un final en pantalla, Esc no hace nada (BR-SHF-074).
 ##
 ## Con configuraciones o logros abierta desde la pausa, Esc la cierra y deja la pausa: el Esc
 ## siguiente reanuda. Con el celular libre o con otra interfaz abierta, Esc la cierra a ella y no

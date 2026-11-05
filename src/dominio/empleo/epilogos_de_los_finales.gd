@@ -1,4 +1,4 @@
-## Las placas del epílogo de cada final narrativo (BR-SHF-070, BR-SHF-071).
+## Las placas del epílogo de cada final narrativo (BR-SHF-072, BR-SHF-073).
 ##
 ## Cada final trae una imagen de fondo y el texto de sus placas, en el orden de la ficha. Una placa
 ## sin texto no se muestra: la ficha todavía no se lo cargó, y cuando lo cargue basta con

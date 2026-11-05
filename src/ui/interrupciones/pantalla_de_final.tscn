@@ -9,14 +9,16 @@
 base_font = ExtResource("4_fuente")
 spacing_glyph = 9
 
-[node name="PantallaDeFinal" type="CanvasLayer" node_paths=PackedStringArray("_marco", "_encabezado", "_titulo", "_boton")]
+[node name="PantallaDeFinal" type="CanvasLayer" node_paths=PackedStringArray("_marco", "_encabezado", "_titulo", "_mensaje", "_boton_de_nueva_partida", "_boton_de_volver")]
 layer = 5
 visible = false
 script = ExtResource("1_pantalla")
 _marco = NodePath("Marco")
 _encabezado = NodePath("Marco/Contenido/Encabezado")
 _titulo = NodePath("Marco/Contenido/Titulo")
-_boton = NodePath("Marco/Contenido/Acciones/Boton")
+_mensaje = NodePath("Marco/Contenido/Mensaje")
+_boton_de_nueva_partida = NodePath("Marco/Contenido/Acciones/BotonNuevaPartida")
+_boton_de_volver = NodePath("Marco/Contenido/Acciones/BotonVolver")
 
 [node name="Oscurecimiento" type="ColorRect" parent="."]
 anchors_preset = 15
@@ -93,7 +95,18 @@ theme_override_constants/separation = 0
 custom_minimum_size = Vector2(0, 26)
 layout_mode = 2
 
-[node name="Boton" type="Button" parent="Marco/Contenido/Acciones"]
+[node name="BotonNuevaPartida" type="Button" parent="Marco/Contenido/Acciones"]
+custom_minimum_size = Vector2(560, 72)
+layout_mode = 2
+size_flags_horizontal = 4
+theme_type_variation = &"BotonContinuar"
+theme_override_font_sizes/font_size = 32
+
+[node name="Separacion" type="Control" parent="Marco/Contenido/Acciones"]
+custom_minimum_size = Vector2(0, 24)
+layout_mode = 2
+
+[node name="BotonVolver" type="Button" parent="Marco/Contenido/Acciones"]
 custom_minimum_size = Vector2(560, 72)
 layout_mode = 2
 size_flags_horizontal = 4

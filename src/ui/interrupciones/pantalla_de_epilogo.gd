@@ -1,5 +1,5 @@
 ## El epílogo de un final en pantalla: la placa con su fondo, su texto y «SIGUIENTE», y el negro de
-## los fundidos (BR-SHF-070 a BR-SHF-072). Dibuja lo que `RecorridoDelEpilogo` decide: cuál placa y
+## los fundidos (BR-SHF-072 a BR-SHF-074). Dibuja lo que `RecorridoDelEpilogo` decide: cuál placa y
 ## cuánto negro.
 ##
 ## `terminado` avisa con la pantalla del todo negra, cuando la última placa se cerró: quien lo
