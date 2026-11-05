@@ -192,7 +192,7 @@ func test_tia_de_la_cuarta_y_la_sexta_nombran_el_pedido_entero() -> void:  # AC-
 			assert_str(apertura[caso[2]]).contains(pedido)
 			assert_int(apertura[caso[2]].count(AMARILLO)).is_equal(tia.pedido().productos().size())
 			for indice in apertura.size():
-				if indice != caso[2] % apertura.size():
+				if indice != posmod(caso[2], apertura.size()):
 					assert_int(apertura[indice].count(AMARILLO)).is_zero()
 
 
