@@ -1,0 +1,12 @@
+[gd_resource type="Resource" script_class="Hipotesis" format=3]
+
+[ext_resource type="Script" path="res://src/dominio/investigacion/hipotesis.gd" id="hipotesis"]
+
+[resource]
+script = ExtResource("hipotesis")
+identidad = "6A"
+jornada = 6
+titulo = "EL PROVEEDOR"
+texto = "ADVERTENCIA: Este camino aún no está listo. Si lo elegís, no te van a aparecer más pistas y tu investigación va a quedar incompleta. Recomendamos elegir las otras pistas o reiniciar la jornada si no las encontraste."
+exigencias = PackedStringArray("6A")
+camino = PackedStringArray()

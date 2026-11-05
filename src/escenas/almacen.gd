@@ -146,6 +146,8 @@ var _presencias_de_las_cajas: Dictionary[Node3D, PresenciaDeCaja] = {}
 ## Cómo se sale al menú. Es una variable y no una llamada directa porque un test no puede
 ## cambiar de escena: se llevaría puesto al runner.
 var _ir_al_menu: Callable = volver_al_menu
+## Cómo se arranca otra partida desde la pantalla de final. Es una variable por la misma razón.
+var _ir_a_la_partida_nueva: Callable = abrir_partida_nueva
 var _gestos := SubtitulosDeLosGestos.new()
 ## Dónde nació el pensamiento que se ve, y a qué distancia estaba el jugador entonces.
 var _lugar_del_pensamiento := Vector3.INF
@@ -522,7 +524,7 @@ func _al_abrir_la_jornada(jornada: int) -> void:
 	for comprador: Comprador in compradores:
 		comprador.pistas_activas = _partida.expediente.pistas_activas(jornada)
 	_cajas_vacias = Apertura.cajas_vacias_de_la_jornada(jornada, compradores, _partida.semilla)
-	_pedido = PedidoAlProveedor.new(jornada)
+	_pedido = PedidoAlProveedor.new(jornada, _partida.expediente.pistas_activas(jornada))
 	_pantalla_del_celular.pedido = _pedido
 	_reposicion_manual.limpiar()
 	_reposicion_manual.seleccionar_disposicion(jornada)
@@ -882,11 +884,13 @@ func _al_forzar_la_puerta_del_jefe() -> void:
 	_mostrar_el_final()
 
 
-## La persiana sigue baja: la pantalla de final se dibuja encima, y sólo su botón sale al menú.
+## La persiana sigue baja: la pantalla de final se dibuja encima, y sus dos botones salen al menú o
+## a una partida nueva (BR-SHF-071).
 func _mostrar_el_final() -> void:
 	var pantalla: PantallaDeFinal = PANTALLA_DE_FINAL.instantiate()
 	add_child(pantalla)
 	pantalla.volver_al_menu_pedido.connect(func() -> void: _ir_al_menu.call())
+	pantalla.nueva_partida_pedida.connect(_comenzar_nueva_partida)
 	pantalla.mostrar(FinalConPantalla.de(_partida))
 
 
@@ -1073,6 +1077,22 @@ func _al_subir_la_persiana(_jornada: int) -> void:
 ## Deja la partida y carga el menú de inicio. No abre ninguna jornada.
 func volver_al_menu() -> void:
 	get_tree().change_scene_to_file(ESCENA_DEL_MENU)
+
+
+## Lo mismo que «Nuevo juego» del menú: borra el guardado y arranca en la jornada 1.
+func _comenzar_nueva_partida() -> void:
+	Guardado.new().borrar()
+	_ir_a_la_partida_nueva.call()
+
+
+## Sin pasar por el menú: un almacén nuevo, que lee el guardado ya borrado, toma el lugar de éste.
+func abrir_partida_nueva() -> void:
+	var arbol := get_tree()
+	var nuevo: Node = load(scene_file_path).instantiate()
+	arbol.root.add_child(nuevo)
+	nuevo.call("empezar_partida_nueva")
+	arbol.current_scene = nuevo
+	queue_free()
 
 
 func _estados_del_cierre() -> Array[ReglasDelCierre.Estado]:

@@ -18,8 +18,11 @@ const NOMBRE_DEL_PROVEEDOR := "Hernán"
 ## primera a los tres segundos, y la segunda un segundo después de la primera.
 const SEGUNDOS_HASTA_LA_PRIMERA := 3.0
 const SEGUNDOS_ENTRE_RESPUESTAS := 1.0
+const FRASE_DE_LA_PISTA := "Qué lindo no tener que hablar directamente con Enrique"
+const TRAMO_DE_LA_PISTA := "proveedor"
+const PISTA := "6A"
 const RESPUESTAS: Array[String] = [
-	"Hola, buenas noches! Qué lindo no tener que hablar directamente con Enrique",
+	"Hola, buenas noches! " + FRASE_DE_LA_PISTA,
 	"Dale, te preparo los productos para mañana. Estaré pasando por allá antes del mediodía",
 ]
 
@@ -27,6 +30,7 @@ const RESPUESTAS: Array[String] = [
 const ORDEN_BASE := 1000
 
 var _jornada: int
+var _pistas_activas: PackedStringArray
 var _lista_abierta: bool = false
 var _marcados: Array[Producto.Id] = []
 var _enviados: Array[Array] = []
@@ -36,8 +40,11 @@ var _mensajes_creados: int = 0
 var _pendientes: Array[Dictionary] = []
 
 
-func _init(jornada: int) -> void:
+## `pistas_activas` son las de la noche: la frase de la primera respuesta sólo es una pista si 6A
+## está entre ellas.
+func _init(jornada: int, pistas_activas: PackedStringArray = PackedStringArray()) -> void:
 	_jornada = jornada
+	_pistas_activas = pistas_activas
 
 
 ## Los treinta y nueve que ofrece la lista, con casilla cada uno.
@@ -178,6 +185,10 @@ func _respuesta(indice: int) -> Mensaje:
 		"RESPUESTA_%d_%d" % [_enviados.size(), indice + 1], RESPUESTAS[indice], ""
 	)
 	mensaje.de_quien = NOMBRE_DEL_PROVEEDOR
+	if indice == 0 and _pistas_activas.has(PISTA):
+		mensaje.tramo_de_pista = TRAMO_DE_LA_PISTA
+		mensaje.texto_del_tramo = FRASE_DE_LA_PISTA
+		mensaje.pista = PISTA
 	return mensaje
 
 

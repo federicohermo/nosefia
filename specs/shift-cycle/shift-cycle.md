@@ -3,7 +3,7 @@ schema_version: 1
 capability_id: CAP-SHF
 status: ratified
 owner: por definir
-provenance: GDD «Ciclo de jornadas»; fichas «Pantalla entre jornadas» y «Particulares de cada jornada»; decisiones de #364, #369, #436, #526, #527, #573, #691 y #693; migración de los specs 001, 007, 011, 016, 027, 031; quejas de la jornada 7 de #759, ficha «Particulares de cada jornada»; la ficha «Caminos narrativos y finales» y la fila «7B» de la lista de pistas e hipótesis, de #790; cajas del proveedor de #788, filas «Caja de cartón del proveedor» y «Caja de madera» de «Objetos interactuables» leídas el 2026-11-04; hora del celular de #613, decisiones del 2026-10-29, 2026-10-30 y 2026-11-02
+provenance: GDD «Ciclo de jornadas»; fichas «Pantalla entre jornadas» y «Particulares de cada jornada»; decisiones de #364, #369, #436, #526, #527, #573, #691 y #693; migración de los specs 001, 007, 011, 016, 027, 031; quejas de la jornada 7 de #759, ficha «Particulares de cada jornada»; la ficha «Caminos narrativos y finales» y la fila «7B» de la lista de pistas e hipótesis, de #790; cajas del proveedor de #788, filas «Caja de cartón del proveedor» y «Caja de madera» de «Objetos interactuables» leídas el 2026-11-04; hora del celular de #613, decisiones del 2026-10-29, 2026-10-30 y 2026-11-02; pantalla de final con tip y botones de #827, ficha «Pantalla de fin de juego» leída el 2026-11-05
 ---
 
 # Capacidad: el ciclo de la jornada
@@ -122,12 +122,13 @@ sin cumplir. Un pedido que sale con el turno cerrado NO DEBE cambiar el cierre (
 
 CUANDO la partida termina despedida, o termina con el contrato cumplido (BR-INV-103), el sistema
 DEBE llevar la única opción de la devolución del cierre a una pantalla de final, y no al menú. La
-pantalla DEBE mostrar su encabezado, su título y un solo botón, «VOLVER AL MENÚ», que sale al menú.
+pantalla DEBE mostrar su encabezado, su título, lo que lleva entre el título y los botones
+(BR-SHF-070) y sus dos botones (BR-SHF-071).
 
 - El despido DEBE llevar el encabezado «/ FIN DEL JUEGO» y el título «DESPEDIDO». Vale para todos
   los despidos, incluido el de la prueba.
 - El contrato cumplido sin ninguna pista DEBE llevar el encabezado «/ FINAL 1» y el título
-  «EMPLEADO ESTRESADO».
+  «EMPLEADO EXPLOTADO».
 - El contrato cumplido con al menos una pista, de cualquier jornada, DEBE llevar el encabezado
   «/ FINAL 2» y el título «LOCURA PARANOICA».
 - SI la partida termina despedida, ENTONCES la pantalla DEBE ser la del despido aunque haya o no
@@ -135,8 +136,46 @@ pantalla DEBE mostrar su encabezado, su título y un solo botón, «VOLVER AL ME
 - La partida en curso NO DEBE mostrar pantalla de final: la única opción de la devolución sigue a
   la jornada siguiente. Los finales 4 y 5 no pasan por la devolución (BR-SHF-060, BR-SHF-061).
 
-Elegir la opción de la devolución o el botón dos veces NO DEBE mostrar dos pantallas ni pedir dos
-veces el menú. El guardado se borra igual que sin la pantalla (BR-SAV-002).
+Elegir la opción de la devolución dos veces NO DEBE mostrar dos pantallas. El guardado se borra
+igual que sin la pantalla (BR-SAV-002).
+
+### BR-SHF-070 — El despido lleva un tip y los finales su texto de cierre
+
+CUANDO se muestra la pantalla del despido, el sistema DEBE mostrar entre el título y los botones
+uno de los cinco tips de la tabla, con su texto literal, elegido al azar al mostrar la pantalla. El
+tip NO DEBE cambiar mientras esa pantalla sigue a la vista.
+
+| Nº | Tip |
+|---|---|
+| 1 | Prestá atención a las pautas anotadas en el corcho. Dejar el local desordenado va a hacer que Enrique esté más inclinado a despedirte. |
+| 2 | Tené en cuenta que podés agarrar directamente del depósito los productos que vendas. Así, no vas a necesitar reponerlos después. |
+| 3 | Buscá manchas de suciedad en todos los rincones. A veces, pueden estar en los lugares que menos esperás. |
+| 4 | ¡No dejes de anotar los productos vendidos en la computadora! Podés hacerlo antes de dárselos al cliente, para no olvidarte. |
+| 5 | ¡Priorizá la atención al cliente! Tenés toda la noche para hacer las demás tareas, pero los compradores pueden cansarse e irse. |
+
+CUANDO se muestra la pantalla de un final narrativo, el sistema NO DEBE mostrar ningún tip: DEBE
+mostrar en su lugar el texto de cierre de ese final, con su texto literal, en los renglones que
+indica la tabla. SI el final no tiene texto de cierre, ENTONCES el espacio queda vacío (OQ-SHF-009).
+
+| Final | Texto de cierre |
+|---|---|
+| 1 | Conseguiste ignorar tus instintos paranoicos. / ¿Pero a qué costo? ¿Es esta la “cordura” que querías preservar? |
+| 2 | Perdiste el rastro. No pudiste encontrar suficientes pistas como para elaborar una hipótesis sólida. Tal vez la próxima… |
+| 4 | sin texto todavía |
+| 5 | sin texto todavía |
+
+La barra «/» de la tabla separa los dos renglones del final 1.
+
+### BR-SHF-071 — La pantalla de final ofrece comenzar de nuevo o volver al menú
+
+La pantalla de final DEBE ofrecer, abajo de todo, dos botones: «COMENZAR NUEVA PARTIDA» arriba y
+«VOLVER AL MENÚ» abajo. Al mostrarse, el foco DEBE estar en «COMENZAR NUEVA PARTIDA». Vale para el
+despido y para todos los finales con pantalla.
+
+- CUANDO se pulsa «COMENZAR NUEVA PARTIDA», el sistema DEBE borrar el guardado y arrancar una
+  partida nueva en la jornada 1, igual que «Nuevo juego» del menú de inicio, sin pasar por el menú.
+- CUANDO se pulsa «VOLVER AL MENÚ», el sistema DEBE salir al menú, sin abrir ninguna jornada.
+- Pulsar un botón dos veces, o pulsar uno y después el otro, NO DEBE pedir una segunda salida.
 
 ### BR-SHF-060 — Abrir la puerta del jefe con la palanca termina la partida en el final 4
 
@@ -147,8 +186,8 @@ evaluarse: las tareas pendientes, el turno que queda y los llamados no deciden n
 no puede terminar despedida ni con el contrato cumplido por esa jornada.
 
 La pantalla de final DEBE mostrarse en ese mismo paso, con el encabezado «/ FINAL 4», el título
-«JEFE SABOTEADOR» y un solo botón, «VOLVER AL MENÚ», que sale al menú. Accionar otra vez la puerta
-o pulsar el botón dos veces NO DEBE mostrar dos pantallas ni pedir dos veces el menú. El guardado se
+«JEFE SABOTEADOR» y sus dos botones (BR-SHF-071). Accionar otra vez la puerta NO DEBE mostrar dos
+pantallas. El guardado se
 borra (BR-SAV-002). Mientras el epílogo no tenga contenido (OQ-INV-010), NO DEBE intercalarse nada
 entre la puerta y la pantalla.
 
@@ -160,9 +199,8 @@ las mismas garantías que el final 4 (BR-SHF-060): sin devolución del jefe, sin
 jornada, sin elección de hipótesis y sin evaluar la noche.
 
 La pantalla de final DEBE mostrarse en ese mismo paso, con el encabezado «/ FINAL 5», el título
-«JEFE INCOMPETENTE» y un solo botón, «VOLVER AL MENÚ», que sale al menú. Accionar otra vez la
-puerta o pulsar el botón dos veces NO DEBE mostrar dos pantallas ni pedir dos veces el menú. El
-guardado se borra (BR-SAV-002). Mientras el epílogo no tenga contenido (OQ-INV-010), NO DEBE
+«JEFE INCOMPETENTE» y sus dos botones (BR-SHF-071). Accionar otra vez la puerta NO DEBE mostrar
+dos pantallas. El guardado se borra (BR-SAV-002). Mientras el epílogo no tenga contenido (OQ-INV-010), NO DEBE
 intercalarse nada entre la puerta y la pantalla.
 
 ### BR-SHF-030 — Responder a las quejas cuenta cuando las cinco tienen respuesta correcta
@@ -621,39 +659,79 @@ jugador cierra antes de tiempo ENTONCES el celular lee también la hora de cierr
 su salida. DADO la jornada 6 con el reloj leyendo `"20:58"` CUANDO el turno cierra ENTONCES el
 celular lee la hora de cierre. La hora sigue siendo ésa hasta que se abre otra jornada.
 
+### AC-SHF-124 — El despido muestra uno de los cinco tips *(verifica BR-SHF-070)*
+
+DADO la pantalla del despido CUANDO se muestra ENTONCES entre el título y los botones hay uno solo de
+los cinco tips de BR-SHF-070, con su texto literal. DADO el despido mostrado muchas veces ENTONCES
+cada uno de los cinco sale alguna vez, y ningún otro texto. DADO la pantalla ya mostrada ENTONCES el
+tip no cambia aunque pase el tiempo.
+
+### AC-SHF-125 — Los finales 1 y 2 muestran su texto de cierre y ningún tip *(verifica BR-SHF-070)*
+
+DADO la pantalla del final 1 CUANDO se muestra ENTONCES entre el título y los botones está su texto
+de cierre, en dos renglones, y ninguno de los cinco tips. DADO la pantalla del final 2 ENTONCES está
+su texto de cierre y ninguno de los cinco tips. DADO el mismo final mostrado varias veces ENTONCES el
+texto es siempre el mismo.
+
+### AC-SHF-126 — Los finales 4 y 5 dejan el espacio vacío *(verifica BR-SHF-070)*
+
+DADO la pantalla del final 4 o la del final 5 CUANDO se muestra ENTONCES entre el título y los botones
+no hay texto, y no hay ninguno de los cinco tips.
+
+### AC-SHF-127 — Los dos botones y el foco *(verifica BR-SHF-071)*
+
+DADO la pantalla de cada final con pantalla —el despido y los finales 1, 2, 4 y 5— CUANDO se muestra
+ENTONCES hay exactamente dos botones, «COMENZAR NUEVA PARTIDA» arriba y «VOLVER AL MENÚ» abajo, y el
+foco está en el de arriba.
+
+### AC-SHF-128 — Comenzar nueva partida borra el guardado y abre la jornada 1 *(verifica BR-SHF-071)*
+
+DADO la pantalla de final con un guardado en disco CUANDO se pulsa «COMENZAR NUEVA PARTIDA» ENTONCES
+el guardado se borra, se pide una partida nueva una sola vez y el menú no se pide. DADO el guardado
+borrado ENTONCES la partida que se carga está en la jornada 1.
+
+### AC-SHF-129 — Volver al menú sale al menú y nada más *(verifica BR-SHF-071)*
+
+DADO la pantalla de final CUANDO se pulsa «VOLVER AL MENÚ» ENTONCES se pide el menú y no se pide una
+partida nueva. CUANDO se pulsa dos veces ENTONCES el menú se pide una sola vez.
+
+### AC-SHF-130 — Un botón y el otro no piden dos salidas *(verifica BR-SHF-071)*
+
+DADO la pantalla de final CUANDO se pulsa «COMENZAR NUEVA PARTIDA» y después «VOLVER AL MENÚ»
+ENTONCES se pide sólo la partida nueva. DADO el orden inverso ENTONCES se pide sólo el menú. DADO
+«COMENZAR NUEVA PARTIDA» pulsado dos veces ENTONCES se pide una sola partida nueva.
+
 ### AC-SHF-063 — El despido muestra su pantalla *(verifica BR-SHF-027)*
 
 DADO una partida despedida al cerrar la jornada 5 CUANDO el jugador elige la opción de la devolución
-ENTONCES aparece la pantalla con «/ FIN DEL JUEGO», «DESPEDIDO» y un solo botón, «VOLVER AL MENÚ», y
-el menú todavía no se pidió. CUANDO se pulsa el botón ENTONCES se pide el menú. DADO el despido de la
+ENTONCES aparece la pantalla con «/ FIN DEL JUEGO», «DESPEDIDO» y sus dos botones, y el menú todavía
+no se pidió. CUANDO se pulsa «VOLVER AL MENÚ» ENTONCES se pide el menú. DADO el despido de la
 prueba, en la jornada 1 o en la 2, ENTONCES la pantalla es la misma.
 
 ### AC-SHF-064 — El contrato cumplido sin pistas muestra su pantalla *(verifica BR-SHF-027)*
 
 DADO la jornada 7 cerrada con el contrato cumplido y ninguna pista registrada en toda la partida
 CUANDO el jugador elige la opción de la devolución ENTONCES aparece la pantalla con «/ FINAL 1»,
-«EMPLEADO ESTRESADO» y un solo botón, «VOLVER AL MENÚ». CUANDO se pulsa el botón ENTONCES se pide el
-menú.
+«EMPLEADO EXPLOTADO» y sus dos botones. CUANDO se pulsa «VOLVER AL MENÚ» ENTONCES se pide el menú.
 
 ### AC-SHF-065 — El despido gana sobre la falta de pistas *(verifica BR-SHF-027)*
 
 DADO una partida despedida al cerrar la jornada 4 sin ninguna pista registrada CUANDO el jugador elige
 la opción de la devolución ENTONCES la pantalla es la del despido, con «DESPEDIDO», y no la de
-«EMPLEADO ESTRESADO».
+«EMPLEADO EXPLOTADO».
 
 ### AC-SHF-066 — Con alguna pista aparece el final 2 *(verifica BR-SHF-027)*
 
 DADO la jornada 7 cerrada con el contrato cumplido y una sola pista registrada, en cualquier jornada,
 CUANDO el jugador elige la opción de la devolución ENTONCES aparece la pantalla con «/ FINAL 2»,
-«LOCURA PARANOICA» y un solo botón, «VOLVER AL MENÚ», y el menú todavía no se pidió. CUANDO se pulsa
-el botón ENTONCES se pide el menú. DADO una partida en curso ENTONCES la devolución no lleva a ninguna
+«LOCURA PARANOICA» y sus dos botones, y el menú todavía no se pidió. CUANDO se pulsa «VOLVER AL
+MENÚ» ENTONCES se pide el menú. DADO una partida en curso ENTONCES la devolución no lleva a ninguna
 pantalla de final.
 
 ### AC-SHF-067 — Elegir dos veces no repite nada *(verifica BR-SHF-027)*
 
 DADO la pantalla de final del despido, la del contrato sin pistas y la del final 2 CUANDO se elige dos
-veces la opción de la devolución ENTONCES se muestra una sola pantalla. CUANDO se pulsa dos veces el botón ENTONCES el
-menú se pide una sola vez.
+veces la opción de la devolución ENTONCES se muestra una sola pantalla.
 
 ### AC-SHF-100 — Las dos cajas del proveedor están sólo en la jornada 7 *(verifica BR-SHF-050)*
 
@@ -682,9 +760,8 @@ mano CUANDO se acciona la puerta ENTONCES la partida sigue en curso.
 ### AC-SHF-111 — El final 4 muestra su pantalla *(verifica BR-SHF-060, BR-SHF-027)*
 
 DADO el final 4 CUANDO termina la partida ENTONCES aparece, sin otra pantalla antes, la pantalla con
-«/ FINAL 4», «JEFE SABOTEADOR» y un solo botón, «VOLVER AL MENÚ», y el menú todavía no se pidió.
-CUANDO se pulsa el botón ENTONCES se pide el menú; CUANDO se pulsa dos veces ENTONCES se pide una sola
-vez. CUANDO se acciona otra vez la puerta ENTONCES se sigue mostrando una sola pantalla. DADO el
+«/ FINAL 4», «JEFE SABOTEADOR» y sus dos botones, y el menú todavía no se pidió. CUANDO se acciona
+otra vez la puerta ENTONCES se sigue mostrando una sola pantalla. DADO el
 despido o el contrato cumplido sin pistas ENTONCES sus pantallas siguen como en AC-SHF-063 y
 AC-SHF-064.
 
@@ -700,9 +777,8 @@ mano CUANDO se acciona la puerta ENTONCES la partida sigue en curso.
 ### AC-SHF-113 — El final 5 muestra su pantalla *(verifica BR-SHF-061, BR-SHF-027)*
 
 DADO el final 5 CUANDO termina la partida ENTONCES aparece, sin otra pantalla antes, la pantalla con
-«/ FINAL 5», «JEFE INCOMPETENTE» y un solo botón, «VOLVER AL MENÚ», y el menú todavía no se pidió.
-CUANDO se pulsa el botón ENTONCES se pide el menú; CUANDO se pulsa dos veces ENTONCES se pide una sola
-vez. CUANDO se acciona otra vez la puerta ENTONCES se sigue mostrando una sola pantalla. Su
+«/ FINAL 5», «JEFE INCOMPETENTE» y sus dos botones, y el menú todavía no se pidió. CUANDO se acciona
+otra vez la puerta ENTONCES se sigue mostrando una sola pantalla. Su
 encabezado y su título no son los del final 4 ni los de ningún otro final.
 
 ### AC-SHF-080 — La jornada 7 declara responder a las quejas *(verifica BR-SHF-005, BR-SHF-030)*
@@ -803,9 +879,9 @@ instancia nueva y sin cumplir.
 
 ## Preguntas abiertas
 
-- **OQ-SHF-008 — ¿Qué mensaje lleva la pantalla de final y se puede reintentar la jornada?**
-  - Por qué sigue abierta: las pantallas de diseño traen un mensaje del jefe y, la del despido, un botón
-    «REINTENTAR JORNADA». Ninguna ficha define el texto de ningún final. Reintentar choca con
-    BR-SAV-002, que borra el guardado al terminar la partida.
-  - Decide: game design, en la ficha de los finales.
-  - Bloquea: mostrar un mensaje y ofrecer el reintento; no bloquea la pantalla de BR-SHF-027.
+- **OQ-SHF-009 — ¿Qué texto de cierre llevan los finales 4 y 5?**
+  - Por qué sigue abierta: la ficha «Pantalla de fin de juego» tiene la tabla de textos de cierre con
+    esas dos filas vacías.
+  - Decide: game design, en esa ficha.
+  - Bloquea: mostrar el texto de esos dos finales; no bloquea su pantalla, que deja el espacio vacío
+    (BR-SHF-070).
