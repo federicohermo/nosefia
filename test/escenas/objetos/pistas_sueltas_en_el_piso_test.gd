@@ -63,23 +63,34 @@ func _caida_de(escena: PackedScene) -> Dictionary:
 	return {"piso": piso, "minima": minima}
 
 
-func _afirmar_sobre_el_piso(caida: Dictionary, nombre: String) -> void:
+func test_la_colilla_soltada_no_atraviesa_el_piso() -> void:
+	var caida := await _caida_de(COLILLA)
 	(
 		assert_float(caida["minima"])
 		. override_failure_message(
-			"%s bajó hasta %.3f y el piso está en %.3f" % [nombre, caida["minima"], caida["piso"]]
+			"La colilla bajó hasta %.3f y el piso está en %.3f" % [caida["minima"], caida["piso"]]
 		)
 		. is_greater_equal(caida["piso"] - HUNDIMIENTO)
 	)
 
 
-func test_la_colilla_soltada_no_atraviesa_el_piso() -> void:
-	_afirmar_sobre_el_piso(await _caida_de(COLILLA), "La colilla")
-
-
 func test_la_llave_soltada_no_atraviesa_el_piso() -> void:
-	_afirmar_sobre_el_piso(await _caida_de(LLAVE), "La llave")
+	var caida := await _caida_de(LLAVE)
+	(
+		assert_float(caida["minima"])
+		. override_failure_message(
+			"La llave bajó hasta %.3f y el piso está en %.3f" % [caida["minima"], caida["piso"]]
+		)
+		. is_greater_equal(caida["piso"] - HUNDIMIENTO)
+	)
 
 
 func test_el_documento_soltado_no_atraviesa_el_piso() -> void:
-	_afirmar_sobre_el_piso(await _caida_de(DOCUMENTO), "El documento")
+	var caida := await _caida_de(DOCUMENTO)
+	(
+		assert_float(caida["minima"])
+		. override_failure_message(
+			"El documento bajó hasta %.3f y el piso está en %.3f" % [caida["minima"], caida["piso"]]
+		)
+		. is_greater_equal(caida["piso"] - HUNDIMIENTO)
+	)
