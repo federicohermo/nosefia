@@ -24,17 +24,31 @@ func _textos(pila: PilaDeNotificaciones) -> Array[String]:
 	return textos
 
 
+func _aviso_de(logro: L) -> String:
+	return PilaDeNotificaciones.PREFIJO_DEL_LOGRO + Logros.nombre(logro).to_upper()
+
+
 func test_el_nombre_va_en_mayusculas_y_dos_logros_son_dos_carteles() -> void:  # AC-NTF-046
 	var pila: PilaDeNotificaciones = auto_free(load(ESCENA).instantiate())
 	add_child(pila)
 	pila.set_process(false)
 	pila.avisar_logro(L.REBELDE)
 	pila.avisar_logro(L.ESTAMOS_AL_PEDO)
-	assert_array(_textos(pila)).is_equal(
-		[Logros.nombre(L.ESTAMOS_AL_PEDO).to_upper(), Logros.nombre(L.REBELDE).to_upper()]
-	)
+	assert_array(_textos(pila)).is_equal([_aviso_de(L.ESTAMOS_AL_PEDO), _aviso_de(L.REBELDE)])
 	pila._process(Notificaciones.DURACION)
 	assert_array(_textos(pila)).is_empty()
+
+
+func test_el_aviso_dice_nuevo_logro_antes_del_nombre() -> void:  # AC-NTF-046
+	var pila: PilaDeNotificaciones = auto_free(load(ESCENA).instantiate())
+	add_child(pila)
+	pila.set_process(false)
+	pila.avisar_logro(L.REBELDE)
+	var textos := _textos(pila)
+	assert_int(textos.size()).is_equal(1)
+	assert_str(textos[0]).starts_with(PilaDeNotificaciones.PREFIJO_DEL_LOGRO)
+	assert_str(textos[0]).ends_with(Logros.nombre(L.REBELDE).to_upper())
+	assert_str(PilaDeNotificaciones.PREFIJO_DEL_LOGRO).is_not_empty()
 
 
 func test_el_cartel_lleva_el_trofeo_a_la_izquierda_en_un_renglon() -> void:  # AC-NTF-046
@@ -87,4 +101,27 @@ func test_un_logro_del_cierre_aparece_despues_de_vaciar_la_noche() -> void:  # A
 	pila.avisar_pista()
 	pila.vaciar()
 	pila.avisar_logro(L.EMPLEADO_EJEMPLAR)
-	assert_array(_textos(pila)).is_equal([Logros.nombre(L.EMPLEADO_EJEMPLAR).to_upper()])
+	assert_array(_textos(pila)).is_equal([_aviso_de(L.EMPLEADO_EJEMPLAR)])
+
+
+func test_ningun_aviso_de_logro_se_sale_del_cartel() -> void:  # AC-NTF-046
+	var viewport: SubViewport = auto_free(SubViewport.new())
+	viewport.size = Vector2i(1280, 720)
+	add_child(viewport)
+	var pila := _pila_en(viewport)
+	for logro: L in L.values():
+		pila.avisar_logro(logro)
+	pila._process(1.0)
+	await get_tree().process_frame
+	await get_tree().process_frame
+	var carteles := pila.get_node("Marco/Pila").get_children()
+	assert_int(carteles.size()).is_equal(L.values().size())
+	for cartel: PanelContainer in carteles:
+		var texto: Label = cartel.get_child(0).get_child(1)
+		(
+			assert_bool(
+				Rect2(Vector2.ZERO, Vector2(viewport.size)).encloses(cartel.get_global_rect())
+			)
+			. is_true()
+		)
+		assert_float(texto.get_global_rect().end.x).is_less_equal(cartel.get_global_rect().end.x)

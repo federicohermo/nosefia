@@ -15,6 +15,7 @@ const TITULOS := {
 	Notificaciones.Tipo.CIERRE_PROXIMO: "¡HORA DE CIERRE!",
 	Notificaciones.Tipo.TAREAS_TERMINADAS: "¡TAREAS COMPLETADAS!",
 }
+const PREFIJO_DEL_LOGRO := "NUEVO LOGRO: "
 const SIMBOLO_DEL_CLIENTE := preload("res://assets/ui/manada/notificacion_cliente.svg")
 const SIMBOLO_DE_LA_SALIDA := preload("res://assets/ui/manada/notificacion_salida.svg")
 const SIMBOLOS := {
@@ -235,10 +236,9 @@ func _cartel(clave: int) -> PanelContainer:
 	return cartel
 
 
-## El nombre del logro, en mayúsculas y en un renglón, como el resto de los avisos.
 func _texto_de(clave: int) -> String:
 	if Notificaciones.tipo_de(clave) == Notificaciones.Tipo.LOGRO:
-		return Logros.nombre(Notificaciones.logro_de(clave)).to_upper()
+		return PREFIJO_DEL_LOGRO + Logros.nombre(Notificaciones.logro_de(clave)).to_upper()
 	return TEXTOS[Notificaciones.tipo_de(clave)]
 
 
