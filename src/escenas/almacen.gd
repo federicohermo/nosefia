@@ -1220,7 +1220,8 @@ func _mostrar_el_chat_del_celular(quien: Conversacion.Interlocutor) -> void:
 		_celular.bandeja().conversacion_de(quien),
 		_celular.bandeja().mensajes_de(quien),
 		_celular.celular().fijo(),
-		_jornada_del_celular
+		_jornada_del_celular,
+		_celular.celular().primer_nuevo()
 	)
 
 
@@ -1233,7 +1234,7 @@ func _al_recibir_en_el_celular(quien: Conversacion.Interlocutor, mensaje: Mensaj
 	if _celular.celular().pantalla() == Celular.Pantalla.MENU:
 		_mostrar_el_menu_del_celular()
 	elif _celular.celular().chat() == quien:
-		_pantalla_del_celular.recibir(mensaje, indice)
+		_pantalla_del_celular.recibir(mensaje, indice, _celular.celular().primer_nuevo())
 
 
 func _cablear_la_investigacion() -> void:

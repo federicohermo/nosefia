@@ -242,3 +242,18 @@ func test_esc_con_el_celular_fijo_no_emite_nada() -> void:  # AC-INV-072
 	assert_bool(sistema.pedir_esc()).is_false()
 	assert_array(cierres).is_empty()
 	assert_bool(sistema.celular().abierto()).is_true()
+
+
+func test_el_primer_mensaje_que_llega_al_fijo_es_el_primero_nuevo() -> void:  # AC-INV-163
+	var sistema: CelularDelEmpleado = auto_free(CelularDelEmpleado.new())
+	sistema.abrir_jornada(1)
+	sistema.mostrar_fijo(Conversacion.Interlocutor.JEFE)
+	var antes := sistema.bandeja().mensajes_de(Conversacion.Interlocutor.JEFE).size()
+	var apuntados: Array[int] = []
+	sistema.mensaje_recibido.connect(
+		func(_quien: Conversacion.Interlocutor, _mensaje: Mensaje) -> void:
+			apuntados.append(sistema.celular().primer_nuevo())
+	)
+	sistema.recibir(Conversacion.Interlocutor.JEFE, Mensaje.new())
+	sistema.recibir(Conversacion.Interlocutor.JEFE, Mensaje.new())
+	assert_array(apuntados).is_equal([antes, antes])
