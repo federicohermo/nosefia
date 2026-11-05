@@ -271,7 +271,7 @@ func test_la_lista_de_tickets_enfoca_un_item_y_el_foco_vuelve_al_selector() -> v
 		remove_child(vista)
 
 
-## Toda interfaz abierta suspende al jugador: es lo que impide que el joystick derecho gire la vista.
+## Toda interfaz abierta suspende al jugador: eso impide que el joystick derecho gire la vista.
 func test_con_una_interfaz_abierta_la_vista_no_gira() -> void:  # AC-CFG-027
 	var jugador: CharacterBody3D = auto_free(JUGADOR.instantiate())
 	var control: ControlDelJugador = jugador.get("_control")
