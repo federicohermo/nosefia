@@ -1,5 +1,5 @@
-## Ningún test lee ni escribe la partida ni las preferencias del usuario, aunque levante el
-## almacén, cierre la noche o mueva una barra.
+## Ningún test lee ni escribe la partida, las preferencias ni los logros del usuario, aunque
+## levante el almacén, cierre la noche, mueva una barra o desbloquee un logro.
 ##
 ## Lo sostiene el gancho de sesión `test/guardado_de_la_sesion.gd`. Sin él, este caso da rojo.
 extends GdUnitTestSuite
@@ -66,6 +66,26 @@ func test_cambiar_una_preferencia_no_toca_el_archivo_del_usuario() -> void:
 
 func test_el_caso_siguiente_arranca_sin_preferencias() -> void:
 	assert_bool(FileAccess.file_exists(ArchivoDePreferencias.ruta_por_defecto)).is_false()
+
+
+func _logros_del_usuario() -> String:
+	if not FileAccess.file_exists(ArchivoDeLogros.RUTA_DEL_USUARIO):
+		return "sin archivo"
+	return FileAccess.get_file_as_string(ArchivoDeLogros.RUTA_DEL_USUARIO)
+
+
+func test_desbloquear_un_logro_no_toca_el_archivo_del_usuario() -> void:  # AC-ACH-010
+	assert_str(ArchivoDeLogros.ruta_por_defecto).is_not_equal(ArchivoDeLogros.RUTA_DEL_USUARIO)
+	var antes := _logros_del_usuario()
+	var logros := Logros.new()
+	logros.desbloquear(Logros.Logro.REBELDE)
+	assert_bool(ArchivoDeLogros.new().escribir(logros)).is_true()
+	assert_str(_logros_del_usuario()).is_equal(antes)
+	assert_bool(FileAccess.file_exists(ArchivoDeLogros.ruta_por_defecto)).is_true()
+
+
+func test_el_caso_siguiente_arranca_sin_logros() -> void:
+	assert_bool(FileAccess.file_exists(ArchivoDeLogros.ruta_por_defecto)).is_false()
 
 
 func test_cambiar_los_controles_no_toca_el_archivo_del_usuario() -> void:

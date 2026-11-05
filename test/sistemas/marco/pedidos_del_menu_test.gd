@@ -10,6 +10,7 @@ var _nuevos: int = 0
 var _salidas: int = 0
 var _continuaciones: int = 0
 var _configuraciones: int = 0
+var _logros: int = 0
 var _guardado: Guardado
 
 
@@ -18,6 +19,7 @@ func _pedidos(hay_guardado: bool = false) -> PedidosDelMenu:
 	_salidas = 0
 	_continuaciones = 0
 	_configuraciones = 0
+	_logros = 0
 	_guardado = Guardado.new()
 	_guardado.ruta = create_temp_dir("pedidos").path_join("partida.guardado")
 	_guardado.borrar()
@@ -29,6 +31,7 @@ func _pedidos(hay_guardado: bool = false) -> PedidosDelMenu:
 	pedidos.salir_pedido.connect(func() -> void: _salidas += 1)
 	pedidos.continuar_pedido.connect(func() -> void: _continuaciones += 1)
 	pedidos.configuraciones_pedida.connect(func() -> void: _configuraciones += 1)
+	pedidos.logros_pedida.connect(func() -> void: _logros += 1)
 	return pedidos
 
 
@@ -60,8 +63,16 @@ func test_rearmado_nuevo_juego_vuelve_a_pedir() -> void:
 func test_las_opciones_deshabilitadas_no_piden_nada() -> void:
 	var pedidos := _pedidos()
 	pedidos.elegir(MenuDeInicio.Opcion.CONTINUAR)
+	assert_int(_nuevos + _salidas + _continuaciones + _configuraciones + _logros).is_equal(0)
+
+
+func test_logros_se_pide_cada_vez_y_no_traba_el_menu() -> void:  # AC-ACH-014
+	var pedidos := _pedidos()
 	pedidos.elegir(MenuDeInicio.Opcion.LOGROS)
-	assert_int(_nuevos + _salidas + _continuaciones + _configuraciones).is_equal(0)
+	pedidos.elegir(MenuDeInicio.Opcion.LOGROS)
+	assert_int(_logros).is_equal(2)
+	pedidos.elegir(MenuDeInicio.Opcion.NUEVO_JUEGO)
+	assert_int(_nuevos).is_equal(1)
 
 
 func test_con_guardado_continuar_pide_una_sola_vez_con_doble_clic() -> void:

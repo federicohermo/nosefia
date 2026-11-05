@@ -1,9 +1,9 @@
 ---
 schema_version: 1
 capability_id: CAP-SAV
-status: draft
+status: ratified
 owner: por definir
-provenance: GDD «checkpoint al final de cada noche»; ficha «Pantalla entre jornadas» y decisiones de #374; fichas «2. Menú de inicio» y «Pausa y menú de pausa» y decisiones de #378; decisión del 2026-09-28 de #299; decisiones de #375; migración de los specs 019, 020, 036; historial de devoluciones fechado y compatibilidad con textos legados de #430; checkpoint del cierre, expediente, notas y elección de #436; decisión del usuario del 2026-10-18 sobre la reanudación del cierre; ocho jornadas de #526; instrucciones por jornada de #527; pose de las cajas del depósito de #555; mensajes de Yasmín de la jornada 6 de #458; sorteo del camino de #787
+provenance: GDD «checkpoint al final de cada noche»; ficha «Pantalla entre jornadas» y decisiones de #374; fichas «2. Menú de inicio» y «Pausa y menú de pausa» y decisiones de #378 y #381; decisión del 2026-09-28 de #299; decisiones de #375; migración de los specs 019, 020, 036; historial de devoluciones fechado y compatibilidad con textos legados de #430; checkpoint del cierre, expediente, notas y elección de #436; decisión del usuario del 2026-10-18 sobre la reanudación del cierre; ocho jornadas de #526; instrucciones por jornada de #527; pose de las cajas del depósito de #555; mensajes de Yasmín de la jornada 6 de #458; sorteo del camino de #787
 ---
 
 # Capacidad: guardar y retomar
@@ -132,12 +132,14 @@ mostrar el menú de pausa; volver tampoco DEBE abrirlo.
 SI Configuraciones está abierta desde la pausa, ENTONCES Esc DEBE cerrarla y dejar el menú de
 pausa en pantalla, **sin reanudar**; el Esc siguiente reanuda, como siempre. SI Configuraciones
 está abierta desde el menú de inicio, ENTONCES Esc DEBE cerrarla y dejar el menú de inicio.
+Lo mismo vale para la pantalla de logros: abierta desde la pausa, Esc la cierra y deja el menú de
+pausa, sin reanudar; abierta desde el menú de inicio, Esc la cierra y deja el menú de inicio.
 
 ### BR-SAV-017 — El menú de pausa muestra cuatro opciones
 
 El menú de pausa DEBE mostrar cuatro opciones, en este orden: **reanudar, configuraciones, logros
-y volver al menú**. Sólo logros DEBE verse deshabilitada: configuraciones DEBE estar habilitada y
-abrir Configuraciones. El menú de pausa no ofrece salir: el juego se cierra sólo desde el menú de
+y volver al menú**. Las cuatro DEBEN estar habilitadas: configuraciones DEBE abrir Configuraciones
+y logros DEBE abrir la pantalla de logros (BR-ACH-015). El menú de pausa no ofrece salir: el juego se cierra sólo desde el menú de
 inicio.
 
 ### BR-SAV-018 — Volver al menú abandona la jornada
@@ -333,8 +335,7 @@ CUANDO llega Esc ENTONCES Configuraciones se cierra y el menú de inicio está e
 ### AC-SAV-019 — Los cuatro botones de la pausa *(verifica BR-SAV-017)*
 
 DADO el menú de pausa ENTONCES muestra reanudar, configuraciones, logros y volver al menú, en ese
-orden; reanudar, configuraciones y volver al menú están habilitados, y sólo logros está
-deshabilitado.
+orden, y los cuatro están habilitados.
 
 ### AC-SAV-020 — Volver al menú no guarda *(verifica BR-SAV-018)*
 
@@ -488,6 +489,13 @@ legajo y las cuentas son los guardados. DADO el campo con un sorteo de una ident
 hipótesis de la jornada anterior respalda y otro válido ENTONCES sólo el válido se conserva. DADO un
 despido o un contrato cumplido ENTONCES no queda guardado ni sorteos.
 
+### AC-SAV-037 — Esc cierra la pantalla de logros y deja el menú de donde vino *(verifica BR-SAV-016)*
+
+DADO el menú de pausa CUANDO se elige «logros» y se aprieta Esc ENTONCES la pantalla de logros se
+cierra, el menú de pausa sigue en pantalla y la jornada sigue pausada; el Esc siguiente reanuda.
+DADO el menú de inicio CUANDO se elige «logros» y se aprieta Esc ENTONCES la pantalla se cierra y
+queda el menú de inicio.
+
 ## No objetivos
 
 - Esta capacidad NO decide **qué** guarda cada sistema: define el sobre. El inventario entra
@@ -496,6 +504,8 @@ despido o un contrato cumplido ENTONCES no queda guardado ni sorteos.
   marcas de lectura; acepta las listas antiguas según BR-SAV-020.
 - Esta capacidad NO ofrece ranuras, autoguardado ni nube.
 - Esta capacidad NO avisa en pantalla que la escritura falló.
+- Esta capacidad NO guarda los logros, los finales alcanzados ni las pistas descubiertas: viven
+  aparte, en [`achievements`](../achievements/achievements.md), y borrar el guardado no los toca.
 - Esta capacidad NO guarda las preferencias del jugador: viven aparte, en
   [`settings`](../settings/settings.md), y borrar el guardado no las toca.
 
@@ -526,6 +536,8 @@ despido o un contrato cumplido ENTONCES no queda guardado ni sorteos.
   reflexión pendiente y elección, que se escriben en cada paso aceptado del cierre.
 - [`settings`](../settings/settings.md) (alimenta): los dos menús abren Configuraciones, y Esc
   la cierra.
+- [`achievements`](../achievements/achievements.md) (alimenta): los dos menús abren la pantalla de
+  logros, y Esc la cierra.
 - [`store-stock`](../store-stock/store-stock.md) (consume y alimenta): la pose de cada caja al
   cierre, y la que la apertura de la jornada siguiente le pide al retomar (BR-STK-051).
 
