@@ -38,7 +38,7 @@ const TIPS: Array[String] = [
 		+ "pero los compradores pueden cansarse e irse."
 	),
 ]
-## El texto de cierre de cada final narrativo. Un final que no está acá no lleva texto.
+## El texto de cierre de cada final narrativo.
 const CIERRES: Dictionary[Cual, String] = {
 	Cual.EMPLEADO_ESTRESADO:
 	(
@@ -70,8 +70,8 @@ static func de(partida: Partida) -> Cual:
 
 
 ## El mensaje del final: un tip al azar si lo despidieron, el texto de cierre si llegó a un final
-## narrativo, y nada si el final no lo tiene.
+## narrativo.
 static func mensaje(final: Cual, azar: RandomNumberGenerator) -> String:
 	if final == Cual.DESPEDIDO:
 		return TIPS[azar.randi_range(0, TIPS.size() - 1)]
-	return CIERRES.get(final, "")
+	return CIERRES[final]

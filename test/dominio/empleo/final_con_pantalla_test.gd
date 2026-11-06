@@ -139,7 +139,7 @@ func test_el_despido_muestra_un_tip_y_con_el_tiempo_sale_cada_uno() -> void:  # 
 	assert_int(vistos.size()).is_equal(FinalConPantalla.TIPS.size())
 
 
-func test_los_finales_1_y_2_muestran_su_cierre_y_ningun_tip() -> void:  # AC-SHF-125
+func test_los_finales_muestran_su_cierre_y_ningun_tip() -> void:  # AC-SHF-125 AC-SHF-141
 	for final: FinalConPantalla.Cual in FinalConPantalla.CIERRES:
 		for semilla: int in [1, 2, 3]:
 			var mensaje := FinalConPantalla.mensaje(final, _azar(semilla))
