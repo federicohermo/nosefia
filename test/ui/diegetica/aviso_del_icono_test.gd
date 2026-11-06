@@ -64,7 +64,7 @@ func _rectangulo_en_pantalla(control: Control) -> Rect2:
 	return control.get_global_transform() * Rect2(Vector2.ZERO, control.size)
 
 
-func _comprobar_que_nada_se_corta(ventana: Vector2i) -> void:
+func _pantalla_con_aviso_en(ventana: Vector2i) -> PantallaDelCelular:
 	get_window().size = ventana
 	await get_tree().process_frame
 	var pantalla := _pantalla()
@@ -72,19 +72,26 @@ func _comprobar_que_nada_se_corta(ventana: Vector2i) -> void:
 	pantalla.soltar_los_no_leidos()
 	pantalla.mostrar_no_leidos(9)
 	await get_tree().process_frame
-	var icono: Control = _recordatorio(pantalla).get_node("Icono")
-	var pantalla_visible := Rect2(Vector2.ZERO, get_viewport().get_visible_rect().size)
-	assert_bool(_circulo(pantalla).is_visible_in_tree()).is_true()
-	assert_bool(pantalla_visible.encloses(_rectangulo_en_pantalla(icono))).is_true()
-	assert_bool(pantalla_visible.encloses(_rectangulo_en_pantalla(_circulo(pantalla)))).is_true()
+	return pantalla
+
+
+func _cabe_en_pantalla(control: Control) -> bool:
+	var visible := Rect2(Vector2.ZERO, get_viewport().get_visible_rect().size)
+	return visible.encloses(_rectangulo_en_pantalla(control))
 
 
 func test_el_icono_y_el_circulo_no_se_cortan_a_1920x1080() -> void:  # AC-INV-180
-	await _comprobar_que_nada_se_corta(Vector2i(1920, 1080))
+	var pantalla := await _pantalla_con_aviso_en(Vector2i(1920, 1080))
+	assert_bool(_circulo(pantalla).is_visible_in_tree()).is_true()
+	assert_bool(_cabe_en_pantalla(_recordatorio(pantalla).get_node("Icono"))).is_true()
+	assert_bool(_cabe_en_pantalla(_circulo(pantalla))).is_true()
 
 
 func test_el_icono_y_el_circulo_no_se_cortan_a_1280x720() -> void:  # AC-INV-180
-	await _comprobar_que_nada_se_corta(Vector2i(1280, 720))
+	var pantalla := await _pantalla_con_aviso_en(Vector2i(1280, 720))
+	assert_bool(_circulo(pantalla).is_visible_in_tree()).is_true()
+	assert_bool(_cabe_en_pantalla(_recordatorio(pantalla).get_node("Icono"))).is_true()
+	assert_bool(_cabe_en_pantalla(_circulo(pantalla))).is_true()
 
 
 func test_la_tecla_queda_a_la_derecha_del_icono_sin_que_el_circulo_la_tape() -> void:  # AC-INV-180
