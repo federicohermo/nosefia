@@ -19,6 +19,7 @@ const ESCRITURAS_PROHIBIDAS := [
 	"jugador.transform", "jugador.position", "jugador.rotation", "jugador.global_position"
 ]
 const RelojDePrueba := preload("res://test/reloj_de_prueba.gd")
+const OclusionDePrueba := preload("res://test/oclusion_de_prueba.gd")
 const VIDRIO := preload("res://src/escenas/puestos/vidrio_del_local.tres")
 
 
@@ -233,25 +234,6 @@ func _esquinas_del_marco(ventanilla: VentanillaQueSeVe) -> Array[Vector3]:
 	return puntos
 
 
-func _la_malla_tapa(camara: Camera3D, esquina: Vector3, malla: MeshInstance3D) -> bool:
-	var inversa := malla.global_transform.affine_inverse()
-	var desde := inversa * camara.global_position
-	# El borde pertenece a la propia malla; se pregunta por el recorrido anterior a tocarlo.
-	var hasta := inversa * esquina.move_toward(camara.global_position, 0.002)
-	if malla.get_aabb().intersects_segment(desde, hasta) == null:
-		return false
-	var caras := malla.mesh.get_faces()
-	for indice in range(0, caras.size(), 3):
-		if (
-			Geometry3D.segment_intersects_triangle(
-				desde, hasta, caras[indice], caras[indice + 1], caras[indice + 2]
-			)
-			!= null
-		):
-			return true
-	return false
-
-
 func _afirmar_encuadre(ventanilla: VentanillaQueSeVe, camara: Camera3D) -> void:
 	var pantalla := camara.get_viewport().get_visible_rect().size
 	var minimo := pantalla
@@ -273,9 +255,9 @@ func _afirmar_encuadre(ventanilla: VentanillaQueSeVe, camara: Camera3D) -> void:
 				camara.global_position.distance_to(esquina) - 0.002
 			)
 		# La malla del antepecho no trae colisión. Sus triángulos sí ejercen la oclusión visual.
-		assert_bool(_la_malla_tapa(camara, esquina, ventanilla.antepecho)).is_false()
+		assert_bool(OclusionDePrueba.tapa(camara, esquina, ventanilla.antepecho)).is_false()
 		var pared: MeshInstance3D = ventanilla.get_parent().get_node("almacen")
-		assert_bool(_la_malla_tapa(camara, esquina, pared)).is_false()
+		assert_bool(OclusionDePrueba.tapa(camara, esquina, pared)).is_false()
 	var alto_ocupa := absf(minimo.y) < 0.5 and absf(maximo.y - pantalla.y) < 0.5
 	var ancho_ocupa := absf(minimo.x) < 0.5 and absf(maximo.x - pantalla.x) < 0.5
 	assert_bool(alto_ocupa or ancho_ocupa).is_true()

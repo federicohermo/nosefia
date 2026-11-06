@@ -3,6 +3,7 @@ extends GdUnitTestSuite
 
 const ALMACEN := preload("res://src/escenas/almacen.tscn")
 const Exterior := preload("res://src/escenas/puestos/exterior_del_almacen.gd")
+const OclusionDePrueba := preload("res://test/oclusion_de_prueba.gd")
 var _almacen: Node3D
 
 
@@ -154,13 +155,40 @@ func test_un_producto_soltado_mirando_recto_por_el_hueco_se_ve_y_se_agarra_desde
 	assert_float(unidad.global_position.z).is_greater(plano_exterior)
 	assert_float(unidad.global_position.y).is_less(hueco.position.y)
 	var camara: Camera3D = jugador.get_node("Giro/Camara")
+	var zona := _zona_visible(camara, antepecho, plano_exterior, unidad.global_position.y)
+	# El soltado natural puede caer en la zona ciega: se ubica el producto en la mitad de la visible.
+	unidad.global_position.z = plano_exterior + (zona.x + zona.y) / 2.0
+	unidad.linear_velocity = Vector3.ZERO
+	unidad.angular_velocity = Vector3.ZERO
+	for cuadro in 60:
+		await get_tree().physics_frame
+	assert_float(unidad.global_position.z - plano_exterior).is_between(zona.x, zona.y)
 	camara.look_at(unidad.global_position)
 	for cuadro in 4:
 		await get_tree().physics_frame
+	# El foco es un rayo de física y el antepecho no tiene colisión: la vista se prueba con sus
+	# triángulos. El mismo punto, más pegado a la pared, queda tapado.
+	assert_bool(OclusionDePrueba.tapa(camara, unidad.global_position, antepecho)).is_false()
+	var pegado := unidad.global_position
+	pegado.z = plano_exterior + zona.x / 2.0
+	assert_bool(OclusionDePrueba.tapa(camara, pegado, antepecho)).is_true()
 	jugador.call("_leer_la_mira")
 	assert_object(jugador.get("_enfocado")).is_same(unidad)
 	_accion(jugador, unidad, ReglasDeLosObjetos.ACCION_AGARRAR)
 	assert_object(agarre.cuerpo_sostenido()).is_same(unidad)
+
+
+## Distancias a la pared exterior entre las que se ve y se agarra lo que está a `altura`: desde
+## donde la mirada que roza el borde del antepecho llega a esa altura, hasta el alcance de la mira.
+func _zona_visible(
+	camara: Camera3D, antepecho: MeshInstance3D, plano_exterior: float, altura: float
+) -> Vector2:
+	var ojo := camara.global_position
+	var borde := (antepecho.global_transform * antepecho.get_aabb()).end.y
+	var cruce := ojo.z + (plano_exterior - ojo.z) * (ojo.y - altura) / (ojo.y - borde)
+	return Vector2(
+		cruce - plano_exterior, ojo.z + ReglasDelJugador.ALCANCE_DE_LA_MIRA - plano_exterior
+	)
 
 
 func _mirar(jugador: Node3D, giro: float, alto: float) -> void:
