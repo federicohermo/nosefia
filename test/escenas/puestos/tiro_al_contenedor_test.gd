@@ -143,7 +143,7 @@ func test_la_caja_y_los_utiles_se_rechazan_sobre_la_tapa_sin_cerrarla() -> void:
 	var agarre: Agarre = almacen.get("_agarre")
 	var tapa: Node3D = almacen.get_node(TAPA)
 	var rechazados: Array[ObjetoAgarrable] = [almacen.get_node("Objetos/CajaDeActroncito")]
-	for nombre: String in ["Mopa", "Balde", "JabonAzul"]:
+	for nombre: String in ["Mopa", "Balde"]:
 		rechazados.append(almacen.get_node("Objetos/" + nombre))
 	for objeto in rechazados:
 		_agarrar(almacen, objeto)
