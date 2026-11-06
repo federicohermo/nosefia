@@ -72,7 +72,7 @@ func _automatico(productos: Array[Producto]) -> GeneradorDeTickets:
 func test_cada_renglon_ofrece_vacio_y_despues_el_catalogo_en_mayusculas() -> void:  # AC-CTR-030
 	var vista := _abrir(6)
 	assert_int(vista.selectores.size()).is_equal(GeneradorDeTickets.RENGLONES)
-	var catalogo := Catalogo.todos()
+	var catalogo := Catalogo.en_orden_alfabetico(Catalogo.todos())
 	for selector in vista.selectores:
 		assert_bool(selector.is_visible_in_tree()).is_true()
 		var nombres := _nombres_de_la_lista(selector)
