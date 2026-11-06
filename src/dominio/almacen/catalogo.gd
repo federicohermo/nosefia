@@ -13,6 +13,18 @@ extends RefCounted
 ## Los dos tamaños de caja que guarda el depósito.
 enum TamanoDeCaja { CHICA, GRANDE }
 
+## Cada letra con tilde cuenta como su letra sola, salvo la «ñ»: va como una «n» más grande que
+## cualquier letra que la siga, y queda entre la «n» y la «o» (BR-STK-053).
+const _SIN_TILDE := {
+	"á": "a",
+	"é": "e",
+	"í": "i",
+	"ó": "o",
+	"ú": "u",
+	"ü": "u",
+	"ñ": "n~",
+}
+
 const PRODUCTOS_DE_PRUEBA: Array[Producto.Id] = [
 	Producto.Id.ACTRONCITO,
 	Producto.Id.ZUCARACHAS,
@@ -53,7 +65,7 @@ const FILAS := {
 	Producto.Id.LAYSNNT: ["Laysnnt", 1100],
 	Producto.Id.MALBARDO: ["Malbardo", 1500],
 	Producto.Id.PROGRES: ["Progres", 1200],
-	Producto.Id.JORGILLO: ["Jorgillo", 900],
+	Producto.Id.JORGILLO: ["Jorgillata", 900],
 	Producto.Id.ARVECOR: ["Arvecor", 800],
 	Producto.Id.CHISITOS: ["Chisitos", 700],
 	Producto.Id.OREMOS: ["Oremos", 1000],
@@ -289,6 +301,20 @@ static func todos() -> Array[Producto]:
 	return productos
 
 
+## Una copia de `productos` en orden alfabético por nombre (BR-STK-053): sin distinguir mayúsculas
+## ni tildes. Dos nombres iguales salvo las tildes conservan el orden en que llegaron.
+static func en_orden_alfabetico(productos: Array[Producto]) -> Array[Producto]:
+	var claves: Array = []
+	for indice in productos.size():
+		claves.append([_clave_de(productos[indice].nombre), indice])
+	claves.sort()
+	var ordenados: Array[Producto] = []
+	for clave: Array in claves:
+		var indice: int = clave[1]
+		ordenados.append(productos[indice])
+	return ordenados
+
+
 static func de_la_jornada(jornada: int) -> Array[Producto]:
 	if jornada >= ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA:
 		return todos()
@@ -296,3 +322,10 @@ static func de_la_jornada(jornada: int) -> Array[Producto]:
 	for id in PRODUCTOS_DE_PRUEBA:
 		productos.append(de(id))
 	return productos
+
+
+static func _clave_de(nombre: String) -> String:
+	var clave := nombre.to_lower()
+	for con_tilde: String in _SIN_TILDE:
+		clave = clave.replace(con_tilde, _SIN_TILDE[con_tilde])
+	return clave
