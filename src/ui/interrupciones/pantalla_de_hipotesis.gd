@@ -116,7 +116,7 @@ func mostrar(reflexion: ReflexionDeCierre) -> void:
 		etapa in [ReflexionDeCierre.Etapa.TEXTOS, ReflexionDeCierre.Etapa.ELEGIR]
 	)
 	if not _accion.disabled:
-		_accion.grab_focus()
+		_accion.grab_focus(true)
 
 
 func ocultar() -> void:

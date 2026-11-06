@@ -208,3 +208,11 @@ func test_una_pista_que_el_caso_no_conoce_no_agrega_una_entrada() -> void:  # AC
 	logros.descubrir_pista("NO_ES_DEL_CASO")
 	var pantalla := _pantalla(logros)
 	assert_int(pantalla.entradas(PISTAS).size()).is_equal(_pistas_con_nota().size())
+
+
+func test_el_foco_de_logros_queda_puesto_y_no_se_dibuja() -> void:  # AC-CFG-028
+	var pantalla := _pantalla()
+	var foco := pantalla.get_viewport().gui_get_focus_owner()
+	assert_object(foco).is_not_null()
+	assert_bool(foco != null and pantalla.is_ancestor_of(foco) and foco.has_focus()).is_true()
+	assert_bool(foco != null and foco.has_focus(true)).is_false()

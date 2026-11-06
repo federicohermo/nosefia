@@ -49,6 +49,18 @@ func test_el_menu_no_dibuja_marco_de_foco_en_sus_controles() -> void:
 	assert_array(_con_marco_de_foco(pantalla)).is_empty()
 
 
+func test_la_opcion_que_aparece_tiene_el_foco_puesto_y_no_dibujado() -> void:  # AC-CFG-028
+	var pantalla := _pantalla()
+	var conversacion := _conversacion()
+	pantalla.mostrar_chat(conversacion, conversacion.mensajes, false, 1, Celular.AL_FINAL, true)
+	pantalla.mostrar_opcion("Opcion")
+	await _cuadros()
+	var opcion := pantalla.opcion()
+	assert_object(opcion).is_not_null()
+	assert_bool(opcion != null and opcion.has_focus()).is_true()
+	assert_bool(opcion != null and opcion.has_focus(true)).is_false()
+
+
 func test_el_chat_no_dibuja_marco_de_foco_en_sus_controles() -> void:
 	var pantalla := _pantalla()
 	var conversacion := _conversacion()
