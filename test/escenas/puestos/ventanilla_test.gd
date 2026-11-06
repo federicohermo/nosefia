@@ -19,6 +19,7 @@ const ESCRITURAS_PROHIBIDAS := [
 	"jugador.transform", "jugador.position", "jugador.rotation", "jugador.global_position"
 ]
 const RelojDePrueba := preload("res://test/reloj_de_prueba.gd")
+const VIDRIO := preload("res://src/escenas/puestos/vidrio_del_local.tres")
 
 
 func _ventanilla() -> VentanillaQueSeVe:
@@ -156,6 +157,43 @@ func test_abrir_y_cerrar_la_ventanilla_suspende_y_devuelve_el_control() -> void:
 	ventanilla.cerrar()
 	assert_bool(jugador.get("_control").esta_suspendido()).is_false()
 	assert_bool(ventanilla.panel.visible).is_false()
+
+
+func test_el_hueco_de_la_ventanilla_no_tiene_vidrio_a_la_vista() -> void:
+	var almacen := await _almacen_en(Vector2i(1280, 720), false)
+	var ventanilla: VentanillaQueSeVe = almacen.get_node("Estructura/Ventanilla")
+	var hueco := ventanilla.global_transform * VentanillaQueSeVe.VOLUMEN_DEL_HUECO
+	var vidrios_a_la_vista := 0
+	var vidrios_en_el_hueco := 0
+	for malla: MeshInstance3D in almacen.get_node("Estructura").find_children(
+		"*", "MeshInstance3D", true, false
+	):
+		if not malla.is_visible_in_tree() or malla.get_surface_override_material(0) != VIDRIO:
+			continue
+		vidrios_a_la_vista += 1
+		if (malla.global_transform * malla.get_aabb()).grow(0.01).intersects(hueco):
+			vidrios_en_el_hueco += 1
+	# La premisa: los demás vidrios del local siguen a la vista, así que la búsqueda los encuentra.
+	assert_int(vidrios_a_la_vista).is_greater(0)
+	assert_int(vidrios_en_el_hueco).is_zero()
+
+
+func test_el_antepecho_no_sobresale_del_plano_exterior_de_la_pared() -> void:
+	var almacen := await _almacen_en(Vector2i(1280, 720), false)
+	var ventanilla: VentanillaQueSeVe = almacen.get_node("Estructura/Ventanilla")
+	var soporte := ventanilla.antepecho.global_transform * ventanilla.antepecho.get_aabb()
+	# La pared se mide con un rayo desde afuera, debajo del antepecho, donde la cáscara es maciza.
+	var afuera := Vector3(soporte.get_center().x, soporte.position.y - 0.3, soporte.end.z + 1.0)
+	var consulta := PhysicsRayQueryParameters3D.create(afuera, afuera + Vector3.FORWARD * 2.0, 1)
+	var pared := ventanilla.get_world_3d().direct_space_state.intersect_ray(consulta)
+	assert_dict(pared).is_not_empty()
+	if pared.is_empty():
+		return
+	(
+		assert_float(soporte.end.z - (pared["position"] as Vector3).z)
+		. override_failure_message("el antepecho sobresale hacia afuera del plano de la pared")
+		. is_less_equal(0.001)
+	)
 
 
 func after_test() -> void:
