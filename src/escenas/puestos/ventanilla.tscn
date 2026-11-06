@@ -27,7 +27,7 @@ disabled = true
 
 [node name="Comprador" type="AnimatedSprite3D" parent="."]
 visible = false
-position = Vector3(0, 0.57, 0.22)
+position = Vector3(0, 0.57, 0.16)
 rotation = Vector3(0, 3.1415927, 0)
 pixel_size = 0.001
 texture_filter = 0
@@ -43,7 +43,7 @@ antepecho = NodePath("../../Antepecho")
 [node name="Forma" type="CollisionShape3D" parent="Comprador/Objetivo"]
 
 [node name="Antepecho" type="MeshInstance3D" parent="."]
-position = Vector3(0, 0, -0.14)
+position = Vector3(0, 0, -0.2)
 mesh = SubResource("BoxMesh_antepecho")
 gi_mode = 2
 
