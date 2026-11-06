@@ -758,6 +758,7 @@ func _revisar_la_salida() -> void:
 
 func _al_iniciar_el_cierre() -> void:
 	_salida_preparada = false
+	_revisar_orden_del_deposito()
 
 
 func _puede_salir() -> bool:

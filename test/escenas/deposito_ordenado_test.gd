@@ -283,9 +283,41 @@ func _reposar(caja: Caja, donde: Vector3) -> void:
 		await get_tree().physics_frame
 
 
-func _punto_del_local(local: Node3D) -> Vector3:
+## Un punto del piso del local donde la caja entra sin tocar un mueble ni al jugador.
+func _punto_del_local(local: Node3D, caja: Caja) -> Vector3:
+	var suelo: CollisionShape3D = local.get_node("Estructura/SueloSolido/Local")
+	var limites := suelo.global_transform * suelo.shape.get_debug_mesh().get_aabb()
+	var cuerpo: CollisionShape3D = caja.get_node("Cuerpo")
+	var volumen := PhysicsShapeQueryParameters3D.new()
+	var forma := BoxShape3D.new()
+	forma.size = Vector3.ONE * (cuerpo.scale.x * 2.0 - 0.01)
+	volumen.shape = forma
+	volumen.exclude = [caja.get_rid(), local.get("_jugador").get_rid()]
+	volumen.margin = 0.0
+	var espacio := local.get_world_3d().direct_space_state
 	var lector: Habitaciones = local.get("_habitaciones")
-	return lector.to_global(lector.local[0].get_center())
+	for paso_x in range(1, 10):
+		for paso_z in range(1, 10):
+			var punto := Vector3(
+				lerpf(limites.position.x, limites.end.x, paso_x / 10.0),
+				limites.end.y + cuerpo.scale.y + 0.01,
+				lerpf(limites.position.z, limites.end.z, paso_z / 10.0)
+			)
+			volumen.transform = Transform3D(Basis.IDENTITY, punto)
+			if (
+				lector.de(punto) == ReglasDelCierre.Habitacion.LOCAL
+				and espacio.intersect_shape(volumen, 1).is_empty()
+			):
+				return punto
+	return Vector3.INF
+
+
+## Afirma la premisa: la caja descansa en el piso del local por sí misma, sin que nadie la rescate.
+func _comprobar_apoyo_en_el_piso_del_local(local: Node3D, caja: Caja) -> void:
+	assert_object(_apoyo(local, caja).get("collider")).is_same(
+		local.get_node("Estructura/SueloSolido")
+	)
+	assert_array((local.get_node("Servicios/RedDeSeguridad") as RedDeSeguridad).rescates).is_empty()
 
 
 func test_apoyar_descumplir_sostener_y_examinar_actualizan_ordenar() -> void:  # AC-STK-079
@@ -362,10 +394,11 @@ func test_una_caja_en_el_local_cumple_y_dos_fuera_de_las_estanterias_no() -> voi
 	var cajas: Array = local.get("_cajas_de_productos")
 	var en_el_local: Caja = cajas[0]
 	var otra: Caja = cajas[1]
-	await _reposar(en_el_local, _punto_del_local(local))
+	await _reposar(en_el_local, _punto_del_local(local, en_el_local))
 	assert_int(local.get("_habitaciones").de(en_el_local.global_position)).is_equal(
 		ReglasDelCierre.Habitacion.LOCAL
 	)
+	_comprobar_apoyo_en_el_piso_del_local(local, en_el_local)
 	assert_bool(tarea.completada()).is_true()
 	var agarre: Agarre = local.get("_agarre")
 	assert_bool(agarre.pedir_agarrar(otra.datos, otra)).is_true()
@@ -382,14 +415,29 @@ func test_la_jornada_cierra_con_la_ultima_caja_en_la_mano_o_en_el_local() -> voi
 		var local := await _abrir()
 		var reloj: RelojDelTurno = local.get("_reloj")
 		var tarea := reloj.obligatoria(Tarea.Tipo.ORDENAR_LAS_CAJAS)
+		var llegadas := Apertura.productos_con_cajas_apiladas(
+			ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA
+		)
+		var pila: Array[Caja] = []
+		for candidata: Caja in local.get("_cajas_de_productos"):
+			if llegadas.has(candidata.producto):
+				pila.append(candidata)
+		var en_el_piso: Array[Vector3] = [pila[0].global_position, pila[1].global_position]
 		await _ordenar_en_sus_estanterias(local)
-		var cajas: Array = local.get("_cajas_de_productos")
+		# La tarea parte pendiente: cada caja que va a quedar fuera vuelve antes al piso del depósito.
+		for indice in 2:
+			if fila[indice]:
+				await _reposar(pila[indice], en_el_piso[indice])
+		assert_bool(tarea.completada()).is_false()
+		# La última caja cambia de mano o de apoyo en el mismo cuadro en que se agota el turno.
 		if fila[1]:
-			await _reposar(cajas[1], _punto_del_local(local))
+			pila[1].global_position = _punto_del_local(local, pila[1])
+			pila[1].quedarse_quieta()
+			pila[1].sleeping_state_changed.emit()
+			_comprobar_apoyo_en_el_piso_del_local(local, pila[1])
 		if fila[0]:
 			var agarre: Agarre = local.get("_agarre")
-			assert_bool(agarre.pedir_agarrar(cajas[0].datos, cajas[0])).is_true()
-		await get_tree().process_frame
+			assert_bool(agarre.pedir_agarrar(pila[0].datos, pila[0])).is_true()
 		RelojDePrueba.avanzar_turno(reloj, Reglas.DURACION_DEL_TURNO)
 		assert_bool(tarea.completada()).is_equal(fila[2])
 		local.queue_free()
