@@ -77,7 +77,7 @@ const FILAS := {
 	Producto.Id.LAYSNNT: ["Laysnnt", 1100],
 	Producto.Id.MALBARDO: ["Malbardo", 1500],
 	Producto.Id.PROGRES: ["Progres", 1200],
-	Producto.Id.JORGILLO: ["Jorgillo", 900],
+	Producto.Id.JORGILLO: ["Jorgillata", 900],
 	Producto.Id.ARVECOR: ["Arvecor", 800],
 	Producto.Id.CHISITOS: ["Chisitos", 700],
 	Producto.Id.OREMOS: ["Oremos", 1000],
