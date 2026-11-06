@@ -4,5 +4,7 @@
 
 [resource]
 script = ExtResource("1")
-tia = PackedStringArray("……….", "Quiero {pedido}.")
-despedida_tia = PackedStringArray("Chau….")
+tia = PackedStringArray("Hola…", "Quiero {pedido}.", "……")
+despedida_tia = PackedStringArray("Volveré.")
+fede = PackedStringArray("¡Hola, buenas noches! Que día tan cansador... ¡La otra vez te invité a mi casa y no viniste! ¿Qué pasó?", "Está bien.. entiendo que estás laburando hasta tarde y estás agotado. Igual, siempre va a haber una oportunidad para que vengas. Vos avisame...", "Sabés que los Duronga que compré la otra vez no me sirvieron como esperaba. Me dejé llevar por la imagen del Chiqui Tapia y, lo admito, no me dieron más placer...", "Así que esta vez voy a llevar unos [color=#e4f850]{1}[/color], aunque aprieten, y {producto2}.", "¡Ah! Me acordé de que un compañero del trabajo me recomendó que compre {producto3} también.", "Así que serían esas tres cosas, por favor.")
+despedida_fede = PackedStringArray("¡Gracias, muchacho! Como siempre digo, este es el mejor negocio de la zona. ¡Hasta pronto!")

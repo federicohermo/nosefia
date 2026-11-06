@@ -772,6 +772,8 @@ func _componer(menu: bool, notas: bool = false) -> void:
 	buscar.content_margin_top = 0
 	buscar.content_margin_bottom = 0
 	_busqueda.add_theme_stylebox_override("normal", buscar)
+	_busqueda.add_theme_stylebox_override("focus", buscar)
+	_volver.add_theme_stylebox_override("focus", StyleBoxEmpty.new())
 	_entrada.add_theme_stylebox_override("read_only", _estilo(Color("f3f3ef"), 12, 16))
 	var barra := _scroll.get_v_scroll_bar()
 	barra.add_theme_stylebox_override("scroll", _estilo(PAPEL, 0, 5))
@@ -825,6 +827,7 @@ func _boton_de(conversacion: Conversacion, sin_leer: int, resumen: String) -> Bu
 	boton.add_theme_stylebox_override("normal", _estilo(PAPEL, 8))
 	boton.add_theme_stylebox_override("hover", _estilo(Color("ebebeb"), 8))
 	boton.add_theme_stylebox_override("pressed", _estilo(Color("c8c8c8"), 8))
+	boton.add_theme_stylebox_override("focus", _estilo(Color("ebebeb"), 8))
 	var fila := HBoxContainer.new()
 	fila.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	fila.offset_left = 12
@@ -1033,10 +1036,13 @@ func _boton_de_respuesta(texto: String, da_la_razon: bool, fondo: Color, letra: 
 	boton.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
 	boton.add_theme_font_override("font", _fuente_del_chat)
 	boton.add_theme_font_size_override("font_size", 26)
-	for estado: String in ["font_color", "font_hover_color", "font_pressed_color"]:
+	for estado: String in [
+		"font_color", "font_hover_color", "font_pressed_color", "font_focus_color"
+	]:
 		boton.add_theme_color_override(estado, letra)
 	for estado: String in ["normal", "hover", "pressed"]:
 		boton.add_theme_stylebox_override(estado, _estilo(fondo, 12, 16))
+	boton.add_theme_stylebox_override("focus", _estilo(fondo.darkened(0.12), 12, 16))
 	boton.pressed.connect(func() -> void: respuesta_pedida.emit(da_la_razon))
 	return boton
 

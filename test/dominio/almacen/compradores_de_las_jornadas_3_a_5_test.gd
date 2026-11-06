@@ -135,11 +135,16 @@ func test_cada_pedido_son_dos_o_tres_tipos_de_su_grupo_y_de_lo_que_se_vende() ->
 			for comprador in Compradores.de_la_jornada(jornada, semilla):
 				var pedido := comprador.pedido()
 				var ids: Array[Producto.Id] = []
+				var fijo := jornada == QUINTA and comprador.personaje == PERSONAJE.MIA
+				var con_durextra := jornada == CUARTA and comprador.personaje == PERSONAJE.FEDE
 				for producto in pedido.productos():
 					ids.append(producto.id)
 					assert_int(pedido.unidades_de(producto)).is_equal(1)
 					assert_array(vendibles).contains([producto.id])
-					assert_array(Compradores.GRUPOS[comprador.personaje]).contains([producto.id])
+					if not fijo and not (con_durextra and producto.id == Producto.Id.DUREXTRA):
+						assert_array(Compradores.GRUPOS[comprador.personaje]).contains(
+							[producto.id]
+						)
 				assert_int(ids.size()).is_between(2, 3)
 
 
@@ -157,21 +162,18 @@ func test_la_tercera_pide_de_todo_su_grupo() -> void:  # AC-CTR-107
 		)
 
 
-func test_fede_nunca_pide_durextra() -> void:  # AC-CTR-107
-	for semilla in range(1, SEMILLAS + 1):
-		for comprador in Compradores.de_la_jornada(CUARTA, semilla):
-			for producto in comprador.pedido().productos():
-				assert_int(producto.id).is_not_equal(Producto.Id.DUREXTRA)
-
-
 func test_los_pedidos_son_de_dos_y_de_tres_con_frecuencias_parecidas() -> void:  # AC-CTR-108
 	var por_cantidad := {2: 0, 3: 0}
 	for jornada: int in [CUARTA, QUINTA]:
 		for semilla in range(1, SEMILLAS + 1):
 			for comprador in Compradores.de_la_jornada(jornada, semilla):
+				if jornada == QUINTA and comprador.personaje == PERSONAJE.MIA:
+					continue
+				if jornada == CUARTA and comprador.personaje == PERSONAJE.FEDE:
+					continue
 				por_cantidad[comprador.pedido().productos().size()] += 1
 	var total: int = por_cantidad[2] + por_cantidad[3]
-	assert_int(total).is_equal(2 * 2 * SEMILLAS)
+	assert_int(total).is_equal(2 * SEMILLAS)
 	assert_int(por_cantidad[2]).is_greater(total / 4)
 	assert_int(por_cantidad[3]).is_greater(total / 4)
 
@@ -203,6 +205,31 @@ func test_cami_de_la_quinta_conserva_el_sorteo_comun() -> void:  # AC-CTR-152
 	for semilla in range(1, SEMILLAS + 1):
 		var cami := Compradores.de_la_jornada(QUINTA, semilla)[0]
 		tamanos[cami.pedido().productos().size()] = true
+	assert_array(tamanos.keys()).contains_exactly_in_any_order([2, 3])
+
+
+func test_mia_de_la_quinta_pide_siempre_poetico_pura_cola_y_fernet_god() -> void:  # AC-CTR-171
+	var esperado: Array[Producto.Id] = [
+		Producto.Id.POETICO, Producto.Id.PURA_COLA, Producto.Id.FERNET_GOD
+	]
+	for semilla in range(1, SEMILLAS * 3 + 1):
+		var mia := Compradores.de_la_jornada(QUINTA, semilla)[1]
+		assert_int(mia.personaje).is_equal(PERSONAJE.MIA)
+		var ids: Array[Producto.Id] = []
+		for producto in mia.pedido().productos():
+			ids.append(producto.id)
+			assert_int(mia.pedido().unidades_de(producto)).is_equal(1)
+		assert_array(ids).is_equal(esperado)
+
+
+func test_cami_de_la_quinta_no_cambia_con_el_pedido_fijo_de_mia() -> void:  # AC-CTR-171
+	var tamanos: Dictionary = {}
+	for semilla in range(1, SEMILLAS + 1):
+		var cami := Compradores.de_la_jornada(QUINTA, semilla)[0]
+		assert_int(cami.personaje).is_equal(PERSONAJE.CAMI)
+		tamanos[cami.pedido().productos().size()] = true
+		for producto in cami.pedido().productos():
+			assert_array(Compradores.GRUPOS[PERSONAJE.CAMI]).contains([producto.id])
 	assert_array(tamanos.keys()).contains_exactly_in_any_order([2, 3])
 
 

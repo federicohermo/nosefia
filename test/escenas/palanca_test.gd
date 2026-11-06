@@ -207,6 +207,7 @@ func test_con_la_palanca_en_la_mano_la_puerta_abre_y_termina_la_partida() -> voi
 
 
 func test_el_final_4_muestra_su_pantalla_y_borra_el_guardado() -> void:  # AC-SHF-111 AC-SAV-050
+	# AC-SHF-137: sus placas no tienen texto, así que no hay epílogo ni fundido antes.
 	await _abrir(JORNADA_7, _por_la_6b())
 	assert_bool(Guardado.new().hay_guardado()).is_true()
 	var palanca := _palanca()
@@ -214,6 +215,7 @@ func test_el_final_4_muestra_su_pantalla_y_borra_el_guardado() -> void:  # AC-SH
 	_puerta_del_jefe().call("accionar")
 	_puerta_del_jefe().call("accionar")
 	await _cuadros()
+	assert_array(_almacen.find_children("*", "PantallaDeEpilogo", true, false)).is_empty()
 	var pantallas := _almacen.find_children("*", "PantallaDeFinal", true, false)
 	assert_int(pantallas.size()).is_equal(1)
 	var pantalla := pantallas[0] as PantallaDeFinal

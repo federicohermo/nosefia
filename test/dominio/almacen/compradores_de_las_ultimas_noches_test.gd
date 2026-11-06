@@ -180,11 +180,43 @@ func test_cada_pedido_es_de_dos_o_tres_tipos_de_su_grupo() -> void:  # AC-CTR-12
 				var pedido := comprador.pedido()
 				for producto in pedido.productos():
 					assert_int(pedido.unidades_de(producto)).is_equal(1)
+				if jornada == CORTE and comprador.personaje == PERSONAJE.TIA:
+					continue
 				assert_int(ids.size()).is_between(2, 3)
 				por_cantidad[ids.size()] += 1
 	var total: int = por_cantidad[2] + por_cantidad[3]
 	assert_int(por_cantidad[2]).is_greater(total / 4)
 	assert_int(por_cantidad[3]).is_greater(total / 4)
+
+
+func test_tia_del_corte_pide_siempre_dos_tipos_de_su_grupo() -> void:  # AC-CTR-172
+	var vendibles: Array[Producto.Id] = []
+	for producto in Catalogo.de_la_jornada(CORTE):
+		vendibles.append(producto.id)
+	var vistos: Dictionary = {}
+	for semilla in range(1, SEMILLAS + 1):
+		var tia := Compradores.de_la_jornada(CORTE, semilla)[1]
+		assert_int(tia.personaje).is_equal(PERSONAJE.TIA)
+		var ids := _ids_de(tia)
+		assert_array(ids).has_size(2)
+		assert_int(ids[0]).is_not_equal(ids[1])
+		for producto in tia.pedido().productos():
+			assert_int(tia.pedido().unidades_de(producto)).is_equal(1)
+			assert_array(Compradores.GRUPOS[PERSONAJE.TIA]).contains([producto.id])
+			assert_array(vendibles).contains([producto.id])
+			vistos[producto.id] = true
+	assert_array(vistos.keys()).contains_exactly_in_any_order(Compradores.GRUPOS[PERSONAJE.TIA])
+
+
+func test_tin_del_corte_y_tia_de_la_cuarta_siguen_con_el_sorteo_comun() -> void:  # AC-CTR-172
+	var cuarta := ReglasDeLaPartida.PRIMERA_JORNADA + 3
+	var del_corte: Dictionary = {}
+	var de_la_cuarta: Dictionary = {}
+	for semilla in range(1, SEMILLAS + 1):
+		del_corte[_ids_de(Compradores.de_la_jornada(CORTE, semilla)[0]).size()] = true
+		de_la_cuarta[_ids_de(Compradores.de_la_jornada(cuarta, semilla)[0]).size()] = true
+	assert_array(del_corte.keys()).contains_exactly_in_any_order([2, 3])
+	assert_array(de_la_cuarta.keys()).contains_exactly_in_any_order([2, 3])
 
 
 func test_fede_pide_siempre_duronga_y_durextra_en_la_ultima_noche() -> void:  # AC-CTR-130
@@ -219,7 +251,8 @@ func test_nadie_mas_pide_durextra() -> void:  # AC-CTR-130
 	for jornada: int in noches_al_azar:
 		for semilla in range(1, SEMILLAS + 1):
 			for comprador in Compradores.de_la_jornada(jornada, semilla):
-				if jornada == ULTIMA and comprador.personaje == PERSONAJE.FEDE:
+				var cuarta := jornada == ReglasDeLaPartida.PRIMERA_JORNADA + 3
+				if comprador.personaje == PERSONAJE.FEDE and (cuarta or jornada == ULTIMA):
 					continue
 				assert_array(_ids_de(comprador)).not_contains([Producto.Id.DUREXTRA])
 
