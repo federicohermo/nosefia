@@ -146,15 +146,30 @@ func test_los_finales_1_y_2_muestran_su_cierre_y_ningun_tip() -> void:  # AC-SHF
 			assert_str(mensaje).is_equal(FinalConPantalla.CIERRES[final])
 			assert_str(mensaje).is_not_empty()
 			assert_array(FinalConPantalla.TIPS).not_contains([mensaje])
-	assert_array(FinalConPantalla.CIERRES.keys()).contains_exactly_in_any_order(
-		[FinalConPantalla.Cual.EMPLEADO_ESTRESADO, FinalConPantalla.Cual.LOCURA_PARANOICA]
+	(
+		assert_array(FinalConPantalla.CIERRES.keys())
+		. contains_exactly_in_any_order(
+			[
+				FinalConPantalla.Cual.EMPLEADO_ESTRESADO,
+				FinalConPantalla.Cual.LOCURA_PARANOICA,
+				FinalConPantalla.Cual.JEFE_SABOTEADOR,
+				FinalConPantalla.Cual.JEFE_INCOMPETENTE,
+			]
+		)
 	)
 	var cierre_del_1 := FinalConPantalla.CIERRES[FinalConPantalla.Cual.EMPLEADO_ESTRESADO]
 	assert_int(cierre_del_1.split("\n").size()).is_equal(2)
 
 
-func test_los_finales_4_y_5_dejan_el_espacio_vacio() -> void:  # AC-SHF-126
+func test_los_finales_4_y_5_muestran_su_cierre_y_ningun_tip() -> void:  # AC-SHF-141
+	var cierres: Array[String] = []
 	for final: FinalConPantalla.Cual in [
 		FinalConPantalla.Cual.JEFE_SABOTEADOR, FinalConPantalla.Cual.JEFE_INCOMPETENTE
 	]:
-		assert_str(FinalConPantalla.mensaje(final, _azar(827))).is_empty()
+		var primero := FinalConPantalla.mensaje(final, _azar(827))
+		assert_str(primero).is_not_empty()
+		assert_array(FinalConPantalla.TIPS).not_contains([primero])
+		for semilla: int in [1, 2, 3]:
+			assert_str(FinalConPantalla.mensaje(final, _azar(semilla))).is_equal(primero)
+		cierres.append(primero)
+	assert_str(cierres[0]).is_not_equal(cierres[1])

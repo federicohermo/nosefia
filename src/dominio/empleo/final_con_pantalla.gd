@@ -38,7 +38,7 @@ const TIPS: Array[String] = [
 		+ "pero los compradores pueden cansarse e irse."
 	),
 ]
-## El texto de cierre de cada final narrativo. Un final que no está acá no lleva texto (OQ-SHF-009).
+## El texto de cierre de cada final narrativo. Un final que no está acá no lleva texto.
 const CIERRES: Dictionary[Cual, String] = {
 	Cual.EMPLEADO_ESTRESADO:
 	(
@@ -50,6 +50,8 @@ const CIERRES: Dictionary[Cual, String] = {
 		"Perdiste el rastro. No pudiste encontrar suficientes pistas "
 		+ "como para elaborar una hipótesis sólida. Tal vez la próxima…"
 	),
+	Cual.JEFE_SABOTEADOR: "La unión hace la fuerza. Pero no garantiza la estabilidad laboral…",
+	Cual.JEFE_INCOMPETENTE: "El pueblo unido jamás será vencido.",
 }
 
 
@@ -68,7 +70,7 @@ static func de(partida: Partida) -> Cual:
 
 
 ## El mensaje del final: un tip al azar si lo despidieron, el texto de cierre si llegó a un final
-## narrativo, y nada si ese final todavía no lo tiene.
+## narrativo, y nada si el final no lo tiene.
 static func mensaje(final: Cual, azar: RandomNumberGenerator) -> String:
 	if final == Cual.DESPEDIDO:
 		return TIPS[azar.randi_range(0, TIPS.size() - 1)]
