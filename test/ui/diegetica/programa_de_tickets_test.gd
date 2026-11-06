@@ -508,7 +508,7 @@ func _clic(nodo: Node, posicion: Vector2) -> void:
 
 
 func _posicion_en_el_catalogo(producto: Producto) -> int:
-	var catalogo := Catalogo.todos()
+	var catalogo := Catalogo.en_orden_alfabetico(Catalogo.todos())
 	for indice in catalogo.size():
 		if catalogo[indice].id == producto.id:
 			return indice
