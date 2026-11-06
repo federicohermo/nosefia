@@ -511,12 +511,12 @@ Los grupos son estos:
 | Comprador | Productos que puede pedir |
 |---|---|
 | Tin | Marolini, Coracola, Malbardo, Mayonchis, Arvecor, Uakalas, Don Saturados, Amargadito |
-| Tia | Zucarachas, Pepito, Marranos, Arvecor, Mayonchis, Jorgillo, Marolini, Saladick, Don Saturados, Laysnnt, Chisitos, Malbardo |
+| Tia | Zucarachas, Pepito, Marranos, Arvecor, Mayonchis, Jorgillata, Marolini, Saladick, Don Saturados, Laysnnt, Chisitos, Malbardo |
 | Fede | Poético, Progres, Duronga, Burbaloo, Malbardo, Fernet God, Terminator |
 | Mía | Burbaloo, Fernet God, Terminator, Actroncito, Amargadito, Coracola, Uakalas, Marranos |
-| Cami | Burbaloo, Zucarachas, Frot Lups, Jorgillo, Pepito, Oremos, Petisas, Macumbas, Flim Pof, Cindolor, Cosa de Maní, Feel Ricky Fort, Oaaaa |
+| Cami | Burbaloo, Zucarachas, Frot Lups, Jorgillata, Pepito, Oremos, Petisas, Macumbas, Flim Pof, Cindolor, Cosa de Maní, Feel Ricky Fort, Oaaaa |
 
-Coracola es la Pura-Cola de la ficha, y Jorgillo la Jorgillata. El Durextra entra al pedido de
+Coracola es la Pura-Cola de la ficha. El Durextra entra al pedido de
 Fede en la jornada 4, y sólo en ella. Los productos de almacén que pide alguna noche siguen
 sin noche ni lista (OQ-CTR-007), y no entran.
 
