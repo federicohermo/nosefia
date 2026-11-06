@@ -13,19 +13,11 @@ size = Vector3(0.14, 0.019, 0.11)
 transparency = 2
 albedo_texture = ExtResource("escrita")
 roughness = 1.0
-emission_enabled = true
-emission = Color(1, 1, 1, 1)
-emission_energy_multiplier = 0.2
-emission_texture = ExtResource("escrita")
 
 [sub_resource type="StandardMaterial3D" id="material_dorso"]
 transparency = 2
 albedo_texture = ExtResource("dorso")
 roughness = 1.0
-emission_enabled = true
-emission = Color(1, 1, 1, 1)
-emission_energy_multiplier = 0.2
-emission_texture = ExtResource("dorso")
 
 [sub_resource type="PlaneMesh" id="papel"]
 size = Vector2(0.18, 0.1324)

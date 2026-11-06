@@ -8,6 +8,10 @@ const Luz := preload("res://test/escenas/luz_de_cada_objeto.gd")
 const Lector := preload("res://test/escenas/sondas_del_horneado.gd")
 const Sondas := preload("res://addons/hornear/sondas.gd")
 const HORNO_SIN_LUZ := "res://src/escenas/almacen_sin_luz.lmbake"
+const PAPELES_DE_PISTA := [
+	"res://src/escenas/objetos/nota_bajo_la_puerta.tscn",
+	"res://src/escenas/objetos/documento_impreso.tscn",
+]
 ## La calle no es del local: el corte no la apaga.
 const EXTERIOR := "Exterior"
 const ESTRUCTURA := "Estructura"
@@ -66,6 +70,33 @@ func test_durante_el_corte_nada_toma_de_las_sondas_mas_luz_que_su_ambiente() -> 
 	(
 		assert_array(claros)
 		. override_failure_message("más claros que su ambiente: %s" % ", ".join(claros))
+		. is_empty()
+	)
+
+
+## Una pista de papel recibe la luz como el resto: si se alumbrara sola, brillaría en la oscuridad.
+func test_durante_el_corte_las_pistas_de_papel_no_se_alumbran_solas() -> void:
+	var local := _local_cortado()
+	var horno: LightmapGI = local.get_node("LightmapGI")
+	var papeles: Array[Node3D] = []
+	for ruta: String in PAPELES_DE_PISTA:
+		var papel := (load(ruta) as PackedScene).instantiate() as Node3D
+		local.add_child(papel)
+		papeles.append(papel)
+	var de_cada_papel: Array[int] = [0, 0]
+	var emisores: Array[String] = []
+	for fila: Dictionary in Luz.clasificar(local, horno, Lector.new(HORNO_SIN_LUZ)):
+		for indice in papeles.size():
+			if not papeles[indice].is_ancestor_of(fila.objeto):
+				continue
+			de_cada_papel[indice] += 1
+			if fila.clase == Luz.Clase.EMISOR:
+				emisores.append(fila.ruta)
+	for cantidad in de_cada_papel:
+		assert_int(cantidad).is_greater(0)
+	(
+		assert_array(emisores)
+		. override_failure_message("se alumbran solas con el corte: %s" % ", ".join(emisores))
 		. is_empty()
 	)
 
