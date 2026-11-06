@@ -426,9 +426,14 @@ y AC-STK-111 a AC-STK-113.
 
 MIENTRAS queda turno y la jornada declara ordenar las cajas, el sistema DEBE contar esa
 obligatoria como cumplida si cada caja está suelta y su cadena de apoyos termina en un pallet
-de las tres estanterías del depósito. Una caja sostenida —también examinada desde la mano— o
-apoyada sobre una caja sostenida NO DEBE contar como ordenada.
-Un pallet del piso NO DEBE contar como estantería. Una cadena que termina en otra superficie,
+de las tres estanterías del depósito. Una única caja que no cumple esa condición DEBE contar
+como apoyada en una estantería si está sostenida —también examinada desde la mano— o apoyada
+en el local (BR-CLN-027), en cualquier superficie suya. Dos o más cajas fuera de las
+estanterías NO DEBEN ordenar, aunque una esté en la mano y otra en el local. Una caja apoyada
+sobre la sostenida o sobre la del local NO DEBE contar como ordenada.
+Un pallet del piso NO DEBE contar como estantería. Una caja en el piso del depósito, en el
+pallet del piso, en el baño, en el cuartito o afuera NO DEBE contar como la excepción. Una
+cadena que termina en otra superficie,
 en una caja ausente o en un ciclo NO DEBE contar como ordenada. Una lista vacía DEBE contestar
 que está ordenada. CUANDO una caja deja de cumplir la condición, el sistema DEBE descumplir
 ordenar; recuperar la condición DEBE volver a cumplirla. Con el turno cerrado, mover cajas NO
@@ -1155,7 +1160,8 @@ DADO el conjunto de cajas CUANDO se evalúa su orden ENTONCES:
 | Todas sobre estanterías salvo una en el piso | pendiente |
 | Una sobre otra apoyada en estantería; el resto, en estanterías | cumplida |
 | Una sobre otra que está en el piso | pendiente |
-| Todas en estanterías salvo una sostenida, incluso examinada desde la mano | pendiente |
+| Todas en estanterías salvo una sostenida, incluso examinada desde la mano | cumplida |
+| Una sostenida y otra en el piso del depósito; el resto, en estanterías | pendiente |
 | La misma caja soltada en el piso | pendiente |
 | Una sobre el pallet del piso | pendiente |
 | Dos que se declaran apoyadas una sobre otra | pendiente |
@@ -1166,13 +1172,16 @@ DADO el conjunto de cajas CUANDO se evalúa su orden ENTONCES:
 ### AC-STK-079 — La última caja cumple y puede descumplir *(verifica BR-STK-039)*
 
 DADO la jornada 3 y todas las cajas salvo una ordenadas CUANDO se apoya la última en una
-estantería ENTONCES ordenar se cumple. CUANDO se baja una caja al piso y queda
-en reposo ENTONCES se descumple. CUANDO se la sostiene o se la examina desde
-la mano ENTONCES sigue pendiente. CUANDO se la suelta sobre una estantería ENTONCES vuelve a
-cumplirse. CUANDO se levanta una caja de la estantería ENTONCES vuelve a quedar pendiente.
-DADO el turno cerrado CUANDO se mueve esa caja ENTONCES la
-cuenta permanece como al cierre. DADO una jornada que no declara ordenar CUANDO todas quedan
-en estanterías ENTONCES no se suma una obligatoria ajena.
+estantería ENTONCES ordenar se cumple. CUANDO se baja una caja al piso del depósito y queda
+en reposo ENTONCES se descumple. CUANDO se la sostiene o se la examina desde la mano ENTONCES
+se cumple. CUANDO se la suelta en el piso ENTONCES vuelve a quedar pendiente. CUANDO se la
+suelta sobre una estantería ENTONCES se cumple. DADO todas las cajas en estanterías CUANDO se
+levanta una ENTONCES sigue cumplida, y CUANDO se levanta además una segunda ENTONCES queda
+pendiente. DADO el turno cerrado con la última caja en la mano CUANDO se la suelta en el piso
+ENTONCES la cuenta permanece como al cierre: cumplida. DADO el turno cerrado con la última en
+el piso CUANDO se la agarra ENTONCES la cuenta permanece como al cierre: pendiente. DADO una
+jornada que no declara ordenar CUANDO todas quedan en estanterías ENTONCES no se suma una
+obligatoria ajena.
 
 ### AC-STK-080 — Rescatar vuelve al origen de esa noche *(verifica BR-STK-038, BR-STK-039)*
 
@@ -1491,6 +1500,29 @@ noche siguiente ENTONCES las siete amanecen otra vez en su lugar.
 DADO la jornada 3 con las treinta y dos cajas de las estanterías apoyadas en ellas y las siete en
 los tramos del fondo ENTONCES ordenar las cajas está cumplida. ENTONCES el cierre no suma desorden de
 cajas por las siete.
+
+### AC-STK-132 — Una caja en el local o en la mano no impide ordenar *(verifica BR-STK-039)*
+
+DADO el conjunto de cajas con la regla de apilado vigente CUANDO se evalúa su orden ENTONCES:
+
+| Estado | Ordenar |
+|---|---|
+| Todas en estanterías salvo una apoyada en el local | cumplida |
+| Todas en estanterías salvo una sostenida | cumplida |
+| Una sostenida, otra apoyada en el local; el resto, en estanterías | pendiente |
+| Dos apoyadas en el local; el resto, en estanterías | pendiente |
+| Una apoyada en el local y otra apilada sobre ella | pendiente |
+| Una sostenida y otra apilada sobre ella | pendiente |
+| Una apoyada en el baño, el cuartito o afuera; el resto, en estanterías | pendiente |
+| Una en el piso del depósito; el resto, en estanterías | pendiente |
+| Una sobre el pallet del piso; el resto, en estanterías | pendiente |
+
+### AC-STK-133 — La jornada cierra con la última caja en el local *(verifica BR-STK-039)*
+
+DADO la jornada 3 con todas las cajas en estanterías salvo una apoyada en el local CUANDO se
+agota el turno ENTONCES la jornada cierra con ordenar cumplida. DADO la misma situación con la
+caja en la mano ENTONCES también. DADO dos cajas fuera de las estanterías, una en la mano y otra
+en el local, CUANDO se agota el turno ENTONCES ordenar cierra pendiente.
 
 ## No objetivos
 
