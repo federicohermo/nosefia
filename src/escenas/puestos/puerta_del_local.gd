@@ -24,9 +24,11 @@ signal puerta_trabada(puerta: Node3D)
 signal porton_trabado(puerta: Node3D)
 signal salida_solicitada
 
-## Una trabada se abrió porque el primario la encontró con su objeto en la mano (BR-PLY-060). Se
-## suma a `puerta_abierta`.
+## Una trabada se abrió porque el primario la encontró con su objeto en la mano (BR-PLY-060). No
+## emite `puerta_abierta`: la forzada suena con el objeto que la abrió.
 signal puerta_forzada(puerta: Node3D)
+signal puerta_forzada_con_llave(puerta: Node3D)
+signal puerta_forzada_con_palanca(puerta: Node3D)
 
 ## La entrada preguntó si se puede salir y la respuesta fue no. Se suma a `puerta_trabada`.
 signal salida_rechazada
@@ -155,7 +157,14 @@ func accionar() -> void:
 	if lo_que_se_lleva.is_valid():
 		var llevado: ObjetoDelAlmacen = lo_que_se_lleva.call()
 		if _puerta.forzar(llevado):
-			puerta_abierta.emit(self)
+			(
+				(
+					puerta_forzada_con_llave
+					if llevado.id == Partida.LLAVE
+					else puerta_forzada_con_palanca
+				)
+				. emit(self)
+			)
 			puerta_forzada.emit(self)
 			return
 	alternar()

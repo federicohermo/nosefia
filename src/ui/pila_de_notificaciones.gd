@@ -1,6 +1,11 @@
 class_name PilaDeNotificaciones
 extends CanvasLayer
 
+## Entró o salió algún cartel. Una sola vez por cuadro, aunque entren o salgan varios, y nunca al
+## vaciar la pila de golpe.
+signal cartel_entrado
+signal cartel_salido
+
 const TEXTOS := {
 	Notificaciones.Tipo.CLIENTE: "¡HAY UN CLIENTE!",
 	Notificaciones.Tipo.LECTURA_FALLIDA: "NO SE PUDO LEER",
@@ -63,6 +68,9 @@ var _estado := Notificaciones.new()
 var _dibujadas: Array[int] = []
 var _activos: Dictionary[int, AvisoEnPantalla] = {}
 var _saliendo: Array[AvisoEnPantalla] = []
+var _entro := false
+var _salio := false
+var _avisando := false
 
 
 func _ready() -> void:
@@ -124,19 +132,22 @@ func actualizar_tiempo(restante: float) -> void:
 
 func vaciar() -> void:
 	_estado.vaciar()
-	_pintar()
+	_pintar(false)
 	for aviso in _saliendo:
 		aviso.cartel.free()
 	_saliendo.clear()
 
 
-func _pintar() -> void:
+func _pintar(con_aviso_de_salida := true) -> void:
 	var actuales := _estado.avisos()
 	if actuales == _dibujadas:
 		return
+	var salio := false
 	for clave: int in _activos.keys():
 		if not actuales.has(clave):
 			_despedir(clave)
+			salio = true
+	var entro := false
 	for indice in actuales.size():
 		var clave := actuales[indice]
 		if not _activos.has(clave):
@@ -145,8 +156,27 @@ func _pintar() -> void:
 				aviso.entrada = 1.0
 			_activos[clave] = aviso
 			_pila.add_child(aviso.cartel)
+			entro = true
 		_pila.move_child(_activos[clave].cartel, indice)
 	_dibujadas = actuales
+	_salio = _salio or (salio and con_aviso_de_salida)
+	_entro = _entro or entro
+	if (_entro or _salio) and not _avisando:
+		_avisando = true
+		_avisar_al_final_del_cuadro.call_deferred()
+
+
+## Junta lo que entró y salió en el cuadro: varios carteles seguidos suenan una sola vez.
+func _avisar_al_final_del_cuadro() -> void:
+	_avisando = false
+	var salio := _salio
+	var entro := _entro
+	_salio = false
+	_entro = false
+	if salio:
+		cartel_salido.emit()
+	if entro:
+		cartel_entrado.emit()
 
 
 func _despedir(clave: int) -> void:

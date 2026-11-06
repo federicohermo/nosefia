@@ -55,6 +55,14 @@
 [ext_resource type="AudioStream" uid="uid://da0m57upg8r23" path="res://assets/audio/SFX_OBJETO_Basura_SacarBolsa.wav" id="sacar_bolsa"]
 [ext_resource type="AudioStream" uid="uid://cw8y0ed1l0523" path="res://assets/audio/SFX_OBJETO_Balde_VertirJabon.wav" id="verter_jabon"]
 [ext_resource type="AudioStream" uid="uid://cn3ikjyax8bvn" path="res://assets/audio/SFX_INTERFAZ_Celular_Mensaje_Recibido.wav" id="recibido"]
+[ext_resource type="AudioStream" uid="uid://bllfotyc2gor4" path="res://assets/audio/SFX_EVENTO_CorteLuz.wav" id="luz_cortada"]
+[ext_resource type="AudioStream" uid="uid://cqj3n5oryysh0" path="res://assets/audio/SFX_EVENTO_VuelveLuz.wav" id="luz_vuelta"]
+[ext_resource type="AudioStream" uid="uid://wx10mvx5pdu5" path="res://assets/audio/SFX_NOLEV_Wifi_Apagar.wav" id="wifi_apagar"]
+[ext_resource type="AudioStream" uid="uid://bgavi34nox0mt" path="res://assets/audio/SFX_NOLEV_Wifi_Prender.wav" id="wifi_prender"]
+[ext_resource type="AudioStream" uid="uid://bn6q2j7awu141" path="res://assets/audio/SFX_EVENTO_NotificacionEntra.wav" id="notif_entra"]
+[ext_resource type="AudioStream" uid="uid://tsfxbqfi2eqp" path="res://assets/audio/SFX_EVENTO_NotificacionSale.wav" id="notif_sale"]
+[ext_resource type="AudioStream" uid="uid://buxg27vanec8t" path="res://assets/audio/SFX_NOLEV_Puerta_AbrirLlave.wav" id="puerta_llave"]
+[ext_resource type="AudioStream" uid="uid://keu5wu3611q7" path="res://assets/audio/SFX_NOLEV_Puerta_AbrirPalanca.wav" id="puerta_palanca"]
 
 [sub_resource type="Resource" id="Resource_x3pvh"]
 script = ExtResource("1_qermt")
@@ -652,6 +660,62 @@ senal = &"pista_nueva"
 bus = "Interfaz"
 stream = ExtResource("46_enviado")
 
+[sub_resource type="Resource" id="Resource_luz_cortada"]
+script = ExtResource("1_qermt")
+evento = 37
+senal = &"luz_cortada"
+stream = ExtResource("luz_cortada")
+
+[sub_resource type="Resource" id="Resource_luz_vuelta"]
+script = ExtResource("1_qermt")
+evento = 38
+senal = &"luz_vuelta"
+stream = ExtResource("luz_vuelta")
+
+[sub_resource type="Resource" id="Resource_wifi_apagado"]
+script = ExtResource("1_qermt")
+evento = 39
+senal = &"router_apagado"
+posicional = true
+emisor = &"Router"
+stream = ExtResource("wifi_apagar")
+
+[sub_resource type="Resource" id="Resource_wifi_prendido"]
+script = ExtResource("1_qermt")
+evento = 40
+senal = &"router_prendido"
+posicional = true
+emisor = &"Router"
+stream = ExtResource("wifi_prender")
+
+[sub_resource type="Resource" id="Resource_notif_entrada"]
+script = ExtResource("1_qermt")
+evento = 41
+senal = &"cartel_entrado"
+bus = "Interfaz"
+stream = ExtResource("notif_entra")
+
+[sub_resource type="Resource" id="Resource_notif_salida"]
+script = ExtResource("1_qermt")
+evento = 42
+senal = &"cartel_salido"
+bus = "Interfaz"
+stream = ExtResource("notif_sale")
+
+[sub_resource type="Resource" id="Resource_puerta_forzada_llave"]
+script = ExtResource("1_qermt")
+evento = 43
+senal = &"puerta_forzada_con_llave"
+posicional = true
+stream = ExtResource("puerta_llave")
+
+[sub_resource type="Resource" id="Resource_puerta_forzada_palanca"]
+script = ExtResource("1_qermt")
+evento = 44
+senal = &"puerta_forzada_con_palanca"
+posicional = true
+stream = ExtResource("puerta_palanca")
+
 [resource]
 script = ExtResource("2_xbcco")
-entradas = Array[ExtResource("1_qermt")]([SubResource("Resource_x3pvh"), SubResource("Resource_oefuu"), SubResource("Resource_382as"), SubResource("Resource_b10uv"), SubResource("Resource_ag1"), SubResource("Resource_ag2"), SubResource("Resource_ag3"), SubResource("Resource_ag4"), SubResource("Resource_ag5"), SubResource("Resource_ag6"), SubResource("Resource_ag7"), SubResource("Resource_ag8"), SubResource("Resource_ag9"), SubResource("Resource_so1"), SubResource("Resource_so2"), SubResource("Resource_so3"), SubResource("Resource_so4"), SubResource("Resource_so5"), SubResource("Resource_so6"), SubResource("Resource_so7"), SubResource("Resource_so8"), SubResource("Resource_so9"), SubResource("Resource_avff3"), SubResource("Resource_co1"), SubResource("Resource_co2"), SubResource("Resource_co3"), SubResource("Resource_co4"), SubResource("Resource_co5"), SubResource("Resource_co6"), SubResource("Resource_co7"), SubResource("Resource_co8"), SubResource("Resource_co9"), SubResource("Resource_2fnal"), SubResource("Resource_38ejk"), SubResource("Resource_ql6t2"), SubResource("Resource_s3myp"), SubResource("Resource_boton"), SubResource("Resource_musica"), SubResource("Resource_pasos"), SubResource("Resource_compra"), SubResource("Resource_lector"), SubResource("Resource_celular"), SubResource("Resource_puerta_abierta"), SubResource("Resource_puerta_cerrada"), SubResource("Resource_puerta_trabada"), SubResource("Resource_porton_trabado"), SubResource("Resource_balde_llenado"), SubResource("Resource_balde_tenido"), SubResource("Resource_balde_vaciado"), SubResource("Resource_mopa_mojada"), SubResource("Resource_de1"), SubResource("Resource_de2"), SubResource("Resource_de3"), SubResource("Resource_de4"), SubResource("Resource_de5"), SubResource("Resource_de6"), SubResource("Resource_de7"), SubResource("Resource_de8"), SubResource("Resource_de9"), SubResource("Resource_escaneo"), SubResource("Resource_impresion"), SubResource("Resource_ticket_desechado"), SubResource("Resource_jabon_equivocado"), SubResource("Resource_exterior"), SubResource("Resource_ag10"), SubResource("Resource_so10"), SubResource("Resource_co10"), SubResource("Resource_de10"), SubResource("Resource_ag11"), SubResource("Resource_so11"), SubResource("Resource_co11"), SubResource("Resource_de11"), SubResource("Resource_ag12"), SubResource("Resource_so12"), SubResource("Resource_co12"), SubResource("Resource_de12"), SubResource("Resource_bolsa_sacada"), SubResource("Resource_objeto_desechado"), SubResource("Resource_nota_anotada")])
+entradas = Array[ExtResource("1_qermt")]([SubResource("Resource_x3pvh"), SubResource("Resource_oefuu"), SubResource("Resource_382as"), SubResource("Resource_b10uv"), SubResource("Resource_ag1"), SubResource("Resource_ag2"), SubResource("Resource_ag3"), SubResource("Resource_ag4"), SubResource("Resource_ag5"), SubResource("Resource_ag6"), SubResource("Resource_ag7"), SubResource("Resource_ag8"), SubResource("Resource_ag9"), SubResource("Resource_so1"), SubResource("Resource_so2"), SubResource("Resource_so3"), SubResource("Resource_so4"), SubResource("Resource_so5"), SubResource("Resource_so6"), SubResource("Resource_so7"), SubResource("Resource_so8"), SubResource("Resource_so9"), SubResource("Resource_avff3"), SubResource("Resource_co1"), SubResource("Resource_co2"), SubResource("Resource_co3"), SubResource("Resource_co4"), SubResource("Resource_co5"), SubResource("Resource_co6"), SubResource("Resource_co7"), SubResource("Resource_co8"), SubResource("Resource_co9"), SubResource("Resource_2fnal"), SubResource("Resource_38ejk"), SubResource("Resource_ql6t2"), SubResource("Resource_s3myp"), SubResource("Resource_boton"), SubResource("Resource_musica"), SubResource("Resource_pasos"), SubResource("Resource_compra"), SubResource("Resource_lector"), SubResource("Resource_celular"), SubResource("Resource_puerta_abierta"), SubResource("Resource_puerta_cerrada"), SubResource("Resource_puerta_trabada"), SubResource("Resource_porton_trabado"), SubResource("Resource_balde_llenado"), SubResource("Resource_balde_tenido"), SubResource("Resource_balde_vaciado"), SubResource("Resource_mopa_mojada"), SubResource("Resource_de1"), SubResource("Resource_de2"), SubResource("Resource_de3"), SubResource("Resource_de4"), SubResource("Resource_de5"), SubResource("Resource_de6"), SubResource("Resource_de7"), SubResource("Resource_de8"), SubResource("Resource_de9"), SubResource("Resource_escaneo"), SubResource("Resource_impresion"), SubResource("Resource_ticket_desechado"), SubResource("Resource_jabon_equivocado"), SubResource("Resource_exterior"), SubResource("Resource_ag10"), SubResource("Resource_so10"), SubResource("Resource_co10"), SubResource("Resource_de10"), SubResource("Resource_ag11"), SubResource("Resource_so11"), SubResource("Resource_co11"), SubResource("Resource_de11"), SubResource("Resource_ag12"), SubResource("Resource_so12"), SubResource("Resource_co12"), SubResource("Resource_de12"), SubResource("Resource_bolsa_sacada"), SubResource("Resource_objeto_desechado"), SubResource("Resource_nota_anotada"), SubResource("Resource_luz_cortada"), SubResource("Resource_luz_vuelta"), SubResource("Resource_wifi_apagado"), SubResource("Resource_wifi_prendido"), SubResource("Resource_notif_entrada"), SubResource("Resource_notif_salida"), SubResource("Resource_puerta_forzada_llave"), SubResource("Resource_puerta_forzada_palanca")])
