@@ -229,6 +229,108 @@ func test_una_caja_chica_soltada_hacia_la_gondola_no_atraviesa_sus_solidos() -> 
 		assert_object(jugador.get("_enfocado")).is_same(caja)
 
 
+## La fachada de madera del fondo no tiene malla de colisión propia: lo único que frena es su
+## `Contorno`. Los puntos salen de su caja envolvente, y cada disparo va a un montante o a una
+## cabecera, nunca a un hueco de heladera ni al de la góndola.
+func _disparos_contra_la_fachada_del_fondo(fachada: AABB) -> Array[Dictionary]:
+	var centro_z := fachada.position.z + fachada.size.z / 2.0
+	var derecha := fachada.end.x - 0.1
+	var izquierda := fachada.position.x + 0.1
+	var cabecera := fachada.get_center().x
+	var casos: Array[Dictionary] = []
+	for altura: float in [0.2, 1.5, 3.2]:
+		casos.append(
+			{
+				"desde": Vector3(fachada.end.x + 0.6, altura, centro_z),
+				"hacia": Vector3.LEFT,
+				"cara": fachada.end.x
+			}
+		)
+		for x: float in [derecha, izquierda]:
+			casos.append(
+				{
+					"desde": Vector3(x, altura, fachada.end.z + 0.6),
+					"hacia": Vector3.FORWARD,
+					"cara": fachada.end.z
+				}
+			)
+	casos.append(
+		{
+			"desde": Vector3(cabecera, 3.2, fachada.end.z + 0.6),
+			"hacia": Vector3.FORWARD,
+			"cara": fachada.end.z
+		}
+	)
+	return casos
+
+
+func test_un_producto_tirado_contra_la_madera_del_fondo_no_la_atraviesa() -> void:
+	var almacen: Node3D = auto_free(ALMACEN.instantiate())
+	almacen.set(
+		"_partida",
+		Partida.desde({"jornada": ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA + 1, "medios": 0})
+	)
+	add_child(almacen)
+	await get_tree().physics_frame
+	var fachada_malla := almacen.get_node("Estructura/mueble_continuo") as MeshInstance3D
+	var fachada := fachada_malla.global_transform * fachada_malla.get_aabb()
+	var mitad := 0.05
+	for caso: Dictionary in _disparos_contra_la_fachada_del_fondo(fachada):
+		var forma := CollisionShape3D.new()
+		var caja := BoxShape3D.new()
+		caja.size = Vector3.ONE * mitad * 2.0
+		forma.shape = caja
+		var producto: RigidBody3D = auto_free(RigidBody3D.new())
+		producto.add_child(forma)
+		producto.collision_layer = 0
+		producto.collision_mask = ReglasDeLosObjetos.MASCARA_DEL_PRODUCTO
+		producto.gravity_scale = 0.0
+		producto.can_sleep = false
+		add_child(producto)
+		var hacia: Vector3 = caso["hacia"]
+		producto.global_position = caso["desde"]
+		producto.linear_velocity = hacia * 4.0
+		for cuadro in 40:
+			await get_tree().physics_frame
+		var eje := 0 if absf(hacia.x) > 0.5 else 2
+		# Frena del lado de afuera: llegó hasta la cara, y no pasó de largo.
+		var afuera := -hacia[eje] * (producto.global_position[eje] - float(caso["cara"]))
+		(
+			assert_float(afuera)
+			. override_failure_message(
+				"desde %v hacia %v quedó en %v" % [caso["desde"], hacia, producto.global_position]
+			)
+			. is_between(0.0, mitad + 0.05)
+		)
+		producto.queue_free()
+
+
+func test_el_jugador_que_camina_contra_la_madera_del_fondo_choca_con_su_contorno() -> void:
+	var almacen: Node3D = auto_free(ALMACEN.instantiate())
+	almacen.set(
+		"_partida",
+		Partida.desde({"jornada": ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA + 1, "medios": 0})
+	)
+	add_child(almacen)
+	var jugador: CharacterBody3D = almacen.get("_jugador")
+	jugador.set_physics_process(false)
+	var fachada_malla := almacen.get_node("Estructura/mueble_continuo") as MeshInstance3D
+	var fachada := fachada_malla.global_transform * fachada_malla.get_aabb()
+	# El montante del extremo derecho da a un pasillo libre. El izquierdo está pegado a la pared,
+	# y el cuerpo del jugador chocaría antes contra ella.
+	var x := fachada.end.x - 0.1
+	jugador.global_position = Vector3(x, 0.11, fachada.end.z + 0.6)
+	await get_tree().physics_frame
+	var choque := jugador.move_and_collide(Vector3.FORWARD, true)
+	(
+		assert_object(choque)
+		. override_failure_message("la madera del fondo no frena al jugador")
+		. is_not_null()
+	)
+	if choque != null:
+		assert_object(choque.get_collider()).is_same(fachada_malla.get_node("Contorno"))
+
+
 func _accion(jugador: Node, objetivo: Node) -> void:
 	jugador.set("_enfocado", objetivo)
 	var evento := InputEventAction.new()
