@@ -62,13 +62,6 @@ const ETIQUETAS := {
 	Producto.Id.MARRANOS: preload("res://assets/boxes/marranos.png"),
 	Producto.Id.FEEL_RICKY_FORT: preload("res://assets/boxes/feel_ricky_fort.png"),
 	Producto.Id.POETICO: preload("res://assets/boxes/poetico.png"),
-	Producto.Id.SEI_TUQUI: preload("res://assets/boxes/sei_tuqui.png"),
-	Producto.Id.LA_MONTELOCA: preload("res://assets/boxes/la_monteloca.png"),
-	Producto.Id.FRIGORDO: preload("res://assets/boxes/frigordo.png"),
-	Producto.Id.GRINGO: preload("res://assets/boxes/gringo.png"),
-	Producto.Id.MASTICUL: preload("res://assets/boxes/masticul.png"),
-	Producto.Id.COFLOCO: preload("res://assets/boxes/cofloco.png"),
-	Producto.Id.CHOCOLOCAS: preload("res://assets/boxes/chocolocas.png"),
 }
 
 @export var producto: Producto.Id = Producto.Id.ACTRONCITO

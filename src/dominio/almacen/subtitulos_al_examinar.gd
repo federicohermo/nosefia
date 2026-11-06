@@ -59,13 +59,6 @@ const DE_LOS_PRODUCTOS := {
 	Producto.Id.OAAAA: "Una caja de jugo %s.",
 	Producto.Id.TERMINATOR: "Una caja de vino %s.",
 	Producto.Id.POETICO: "Una botella de %s.",
-	Producto.Id.SEI_TUQUI: "Un helado de palito %s.",
-	Producto.Id.LA_MONTELOCA: "Un helado de palito %s.",
-	Producto.Id.FRIGORDO: "Un pote de helado %s.",
-	Producto.Id.GRINGO: "Un pote de helado %s.",
-	Producto.Id.MASTICUL: "Un paquete de gomitas %s.",
-	Producto.Id.COFLOCO: "Una barra de chocolate %s.",
-	Producto.Id.CHOCOLOCAS: "Una caja de galletitas %s.",
 }
 
 const DE_LAS_NOTAS := {

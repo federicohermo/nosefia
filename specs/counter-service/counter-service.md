@@ -3,7 +3,7 @@ schema_version: 1
 capability_id: CAP-CTR
 status: ratified
 owner: por definir
-provenance: GDD «Atención por ventanilla»; fichas «Atención al cliente» y «Diálogos de compradores»; base «Productos y cajas contenedoras»; decisiones de #365, #366, #429, #433, #444 y #694; pedidos fijos y guiones de jornada 2 decididos el 15 de octubre de 2026; migración de los specs 013, 035; ocho jornadas de #526; horarios de Tin y Tia en la jornada 1 y de Fede y Mía en la jornada 2 de «Atención al cliente» del 21 de octubre de 2026 (#605); agenda de compradores de las jornadas 3 a 5 de «Atención al cliente» y textos predeterminados de «Diálogos de compradores» del 21 de octubre de 2026 (#459); diálogos de entrega como subtítulo de GJ-57 (#564); agendas de la noche del corte de luz y de la última noche de «Atención al cliente» del 30 de octubre de 2026, con las decisiones de Mía y de Durextra (#694); ficha «Llamados de atención extra», llamado 3, y GJ-70 sobre soltar un producto en el hueco con un comprador (#521); guiones de Cami, Tin y Tia de las jornadas 3 a 6 de «Diálogos de compradores» del 3 y 4 de noviembre de 2026 (#784); frase del ticket de Tin de «Diálogos de compradores» del 5 de noviembre de 2026 (#825)
+provenance: GDD «Atención por ventanilla»; fichas «Atención al cliente» y «Diálogos de compradores»; base «Productos y cajas contenedoras»; decisiones de #365, #366, #429, #433, #444 y #694; pedidos fijos y guiones de jornada 2 decididos el 15 de octubre de 2026; migración de los specs 013, 035; ocho jornadas de #526; horarios de Tin y Tia en la jornada 1 y de Fede y Mía en la jornada 2 de «Atención al cliente» del 21 de octubre de 2026 (#605); agenda de compradores de las jornadas 3 a 5 de «Atención al cliente» y textos predeterminados de «Diálogos de compradores» del 21 de octubre de 2026 (#459); diálogos de entrega como subtítulo de GJ-57 (#564); agendas de la noche del corte de luz y de la última noche de «Atención al cliente» del 30 de octubre de 2026, con las decisiones de Mía y de Durextra (#694); ficha «Llamados de atención extra», llamado 3, y GJ-70 sobre soltar un producto en el hueco con un comprador (#521); guiones de Cami, Tin y Tia de las jornadas 3 a 6 de «Diálogos de compradores» del 3 y 4 de noviembre de 2026 (#784); frase del ticket de Tin de «Diálogos de compradores» del 5 de noviembre de 2026 (#825); orden de los compradores de las jornadas 6 y 7 y pedido de Fede de «Atención al cliente» del 6 de noviembre de 2026 (#760)
 ---
 
 # Capacidad: la atención por la ventanilla
@@ -518,7 +518,7 @@ Los grupos son estos:
 | Cami | Burbaloo, Zucarachas, Frot Lups, Jorgillata, Pepito, Oremos, Petisas, Macumbas, Flim Pof, Cindolor, Cosa de Maní, Feel Ricky Fort, Oaaaa |
 
 Coracola es la Pura-Cola de la ficha. El Durextra entra al pedido de
-Fede en la jornada 4 y en la última noche (BR-CTR-052). Los productos de almacén que pide alguna noche siguen
+Fede en la jornada 4, y sólo en ella. Los productos de almacén que pide alguna noche siguen
 sin noche ni lista (OQ-CTR-007), y no entran.
 
 En la jornada 3, y sólo en ella, dos pedidos tienen forma propia. El de Cami DEBE tener siempre
@@ -530,7 +530,8 @@ Cami. El pedido de Cami en la jornada 5 conserva el sorteo común.
 
 El pedido de Fede en la jornada 4 DEBE tener siempre tres tipos, una unidad de cada uno: Durextra
 primero, que no es del grupo de Fede, y después dos tipos de su grupo sorteados con el mismo reparto
-parejo y distintos entre sí. NO exige Duronga.
+parejo y distintos entre sí. NO DEBE incluir Duronga: aunque Duronga es del grupo de Fede, en esta
+noche y en la última (BR-CTR-052) su sorteo sale del grupo sin Duronga.
 
 Otros dos pedidos tienen forma propia. El de Mía en la jornada 5 DEBE ser siempre el mismo, con
 cualquier semilla: Poético, Coracola y Fernet God, una unidad de cada uno y en ese orden. NO
@@ -601,46 +602,45 @@ despedida NO DEBEN acortarse: siguen abriendo la ventanilla. Esos textos NO DEBE
 cada pulsación DEBE producir una sola interacción nueva, con el objeto sostenido o con la mano
 vacía, incluso sobre un objeto que acaba de rechazarse.
 
-### BR-CTR-051 — La noche del corte de luz recibe a Tin y Tia por horario
+### BR-CTR-051 — La noche del corte de luz recibe a Tia y Tin por horario
 
 CUANDO se abre la noche del corte de luz (BR-ANO-011), por transición o desde una partida retomada,
-el sistema DEBE activar exactamente Tin y Tia, con su figura propia, en estas ventanas. La llegada
-se incluye y el límite se excluye.
+el sistema DEBE activar exactamente Tia y Tin, en ese orden, con su figura propia, en estas
+ventanas. La llegada se incluye y el límite se excluye.
 
 | Comprador | Llega | Se va | Desde apertura hasta llegada | Desde apertura hasta límite |
 |---|---|---|---|---|
-| Tin | 00:00 | 02:30 | 240 minutos | 390 minutos |
-| Tia | 02:31 | 05:01 | 391 minutos | 541 minutos |
+| Tia | 00:00 | 02:30 | 240 minutos | 390 minutos |
+| Tin | 02:31 | 05:01 | 391 minutos | 541 minutos |
 
-El horario de Tia es fijo: NO DEBE depender de cuándo se retira Tin, a diferencia de la jornada 1.
-Tia llega un minuto después del límite de Tin, así que con Tin sin atender vence primero Tin y
-llega Tia después. Valen las demás condiciones de BR-CTR-044: el reloj del turno, el padrón
+El horario de Tin es fijo: NO DEBE depender de cuándo se retira Tia, a diferencia de la jornada 1.
+Tin llega un minuto después del límite de Tia, así que con Tia sin atender vence primero Tia y
+llega Tin después. Valen las demás condiciones de BR-CTR-044: el reloj del turno, el padrón
 excluido, una sola llegada y un solo vencimiento, la pausa, la recepción física, la venta única, el
 destino al vencer y el cumplimiento de atención de BR-CTR-031. Cada pedido sale de BR-CTR-047. Tin y
 Tia NO DEBEN repetir las conversaciones ni los pedidos fijos de la jornada 1. El corte de luz no
 cambia estas ventanas.
 
-### BR-CTR-052 — La última noche recibe a Fede y Mía por horario, y Fede pide Duronga y Durextra
+### BR-CTR-052 — La última noche recibe a Mía y Fede por horario, y Fede no pide Duronga ni Durextra
 
 CUANDO se abre la última noche de la partida (BR-ANO-004), por transición o desde una partida
-retomada, el sistema DEBE activar exactamente Fede y Mía, con su figura propia, en estas ventanas.
-La llegada se incluye y el límite se excluye.
+retomada, el sistema DEBE activar exactamente Mía y Fede, en ese orden, con su figura propia, en estas
+ventanas. La llegada se incluye y el límite se excluye.
 
 | Comprador | Llega | Se va | Desde apertura hasta llegada | Desde apertura hasta límite |
 |---|---|---|---|---|
-| Fede | 23:00 | 01:30 | 180 minutos | 330 minutos |
-| Mía | 05:30 | 08:00 | 570 minutos | 720 minutos |
+| Mía | 23:00 | 01:30 | 180 minutos | 330 minutos |
+| Fede | 05:30 | 08:00 | 570 minutos | 720 minutos |
 
-Fede cruza la medianoche. Mía se va al cerrar el turno, para esperar sus dos horas y media
-completas dentro de él; la ficha dice 06:00 a 08:30, y manda la decisión de game design del 30 de
-octubre de 2026. Valen las demás condiciones de BR-CTR-044. Fede y Mía NO DEBEN repetir las
+Mía cruza la medianoche. Fede se va al cerrar el turno, para esperar sus dos horas y media
+completas dentro de él; la ficha dice 06:00 a 08:30, y manda la decisión de game design del 6 de
+noviembre de 2026. Valen las demás condiciones de BR-CTR-044. Mía y Fede NO DEBEN repetir las
 conversaciones ni los pedidos fijos de las jornadas 1 y 2.
 
-El pedido de Fede de esta noche DEBE incluir siempre Duronga y Durextra. Con dos tipos, pide
-exactamente esos dos; con tres, suma un tipo más de su grupo (BR-CTR-047), distinto de esos dos.
-Pedir dos o tres tiene la misma probabilidad. Fuera de esta noche, Durextra sólo sale en el pedido
-de Fede en la jornada 4 (BR-CTR-047); NO DEBE salir en el pedido de otro comprador ni en otra
-noche. Un pedido que las cajas cambiadas no permiten reponer vale
+El pedido de Fede de esta noche DEBE ser de dos o tres tipos de su grupo, sin Duronga (BR-CTR-047):
+NO DEBE incluir Duronga ni Durextra. Pedir dos o tres tiene la misma probabilidad. Mía NO DEBE
+pedir Durextra. Fuera de la jornada 4 (BR-CTR-047), el Durextra NO DEBE salir en el pedido de nadie
+de una noche con agenda al azar. Un pedido que las cajas cambiadas no permiten reponer vale
 igual, como un producto sin unidades vendibles en BR-CTR-047.
 
 ### BR-CTR-053 — Con un comprador, soltar un producto en el hueco es entregárselo
@@ -1253,18 +1253,18 @@ jornada 5 CUANDO pasan 20:29:59, 20:30:00, 22:59:59 y 23:00:00 ENTONCES lo mismo
 ### AC-CTR-126 — Las fronteras de la noche del corte de luz *(verifica BR-CTR-051)*
 
 DADO la noche del corte de luz CUANDO se piden sus compradores ENTONCES son exactamente dos, en este
-orden: Tin y Tia. Para Tin, a las 23:59:59 está ausente, a las 00:00:00 llega, a las 02:29:59 espera y
-a las 02:30:00 vence si no completó; para Tia, a las 02:30:59 está ausente, a las 02:31:00 llega, a las
+orden: Tia y Tin. Para Tia, a las 23:59:59 está ausente, a las 00:00:00 llega, a las 02:29:59 espera y
+a las 02:30:00 vence si no completó; para Tin, a las 02:30:59 está ausente, a las 02:31:00 llega, a las
 05:00:59 espera y a las 05:01:00 vence si no completó. Repetir cada instante no repite eventos.
-DADO Tin completo a las 00:10 CUANDO pasan 02:30:59 y 02:31:00 ENTONCES Tia sigue ausente y llega.
-DADO Tin sin atender CUANDO el reloj salta de la apertura al cierre ENTONCES vencen en este orden Tin
-y Tia. Cada ventana dura 150 minutos de juego.
+DADO Tia completa a las 00:10 CUANDO pasan 02:30:59 y 02:31:00 ENTONCES Tin sigue ausente y llega.
+DADO Tia sin atender CUANDO el reloj salta de la apertura al cierre ENTONCES vencen en este orden Tia
+y Tin. Cada ventana dura 150 minutos de juego.
 
 ### AC-CTR-127 — Las fronteras de la última noche *(verifica BR-CTR-052)*
 
 DADO la última noche CUANDO se piden sus compradores ENTONCES son exactamente dos, en este orden:
-Fede y Mía. Para Fede, a las 22:59:59 está ausente, a las 23:00:00 llega, a las 01:29:59 espera y a las
-01:30:00 vence si no completó; para Mía, a las 05:29:59 está ausente, a las 05:30:00 llega, a las
+Mía y Fede. Para Mía, a las 22:59:59 está ausente, a las 23:00:00 llega, a las 01:29:59 espera y a las
+01:30:00 vence si no completó; para Fede, a las 05:29:59 está ausente, a las 05:30:00 llega, a las
 07:59:59 espera y al cierre del turno, a las 08:00:00, vence si no completó. Repetir cada instante no
 repite eventos. Una compra completada antes de su límite no vence.
 
@@ -1272,8 +1272,8 @@ repite eventos. Una compra completada antes de su límite no vence.
 
 DADO una transición a la noche del corte de luz y a la última noche y, por separado, una partida
 retomada directamente en cada una CUANDO llega cada horario ENTONCES hay un único comprador con la
-identidad y la figura de la tabla. No aparecen compradores del padrón ni copias. Tin y Tia no piden ni
-dicen lo de la jornada 1; Fede y Mía no piden ni dicen lo de la jornada 2. Reposición y atención
+identidad y la figura de la tabla. No aparecen compradores del padrón ni copias. Tia y Tin no piden ni
+dicen lo de la jornada 1; Mía y Fede no piden ni dicen lo de la jornada 2. Reposición y atención
 reciben la misma lista de cada apertura.
 
 ### AC-CTR-129 — Cada uno pide dos o tres tipos de su grupo *(verifica BR-CTR-051, BR-CTR-052, BR-CTR-047)*
@@ -1284,13 +1284,14 @@ se construyen sus compradores ENTONCES cada pedido, salvo el de Tia en la noche 
 grupo de su comprador, aparecen las dos cantidades y salen con frecuencias parecidas. Ningún
 pedido incluye un producto de almacén.
 
-### AC-CTR-130 — Fede pide siempre Duronga y Durextra en la última noche *(verifica BR-CTR-052)*
+### AC-CTR-130 — Fede no pide Duronga ni Durextra en la última noche *(verifica BR-CTR-052)*
 
-DADO la última noche, con muchas semillas, CUANDO se construye el pedido de Fede ENTONCES incluye
-Duronga y Durextra. Si pide dos, son exactamente esos dos; si pide tres, el tercero es de su grupo y
-distinto de ellos, y con las semillas probadas salen todos los candidatos. Las dos cantidades
-aparecen con frecuencias parecidas. DADO cualquier otro comprador de esa noche, o cualquier comprador
-de otra noche con agenda al azar, salvo Fede en la jornada 4 (AC-CTR-174), ENTONCES jamás pide Durextra.
+DADO la última noche, con muchas semillas, CUANDO se construye el pedido de Fede ENTONCES tiene dos o
+tres productos de tipos distintos, una unidad de cada uno, todos de su grupo, y jamás incluye Duronga
+ni Durextra. Con las semillas probadas salen todos los productos de su grupo menos Duronga, y las dos
+cantidades aparecen con frecuencias parecidas. DADO cualquier otro comprador de esa noche, o cualquier
+comprador de otra noche con agenda al azar, salvo Fede en la jornada 4 (AC-CTR-174), ENTONCES jamás
+pide Durextra.
 
 ### AC-CTR-131 — La misma partida repite estos pedidos *(verifica BR-CTR-047, BR-CTR-052)*
 
@@ -1464,8 +1465,8 @@ hasta terminarlas.
 
 DADO la apertura de la jornada 4, con muchas semillas, CUANDO se construye el pedido de Fede
 ENTONCES tiene exactamente tres productos de tipos distintos, una unidad de cada uno: el primero es
-Durextra y los otros dos son de su grupo, sin Duronga obligatorio. Con las semillas probadas el
-segundo y el tercero recorren todo lo que se vende esa noche de su grupo. DADO esas mismas semillas
+Durextra y los otros dos son de su grupo, sin Duronga. Con las semillas probadas el
+segundo y el tercero recorren todo lo que se vende esa noche de su grupo menos Duronga. DADO esas mismas semillas
 ENTONCES el pedido de Tia en la jornada 4 sigue siendo de dos o tres tipos de su grupo, sin
 Durextra. DADO la misma semilla ENTONCES el pedido de Fede se repite.
 
@@ -1477,6 +1478,12 @@ segundo producto de su pedido, y la quinta el tercero, cada uno con sólo el nom
 primera, la segunda, la tercera y la sexta no resaltan ningún producto. CUANDO se completa su
 compra ENTONCES vende una sola vez, dice 1 entrada de despedida de la ficha y no se retira hasta
 terminarla.
+
+### AC-CTR-186 — Fede no pide Duronga en la jornada 4 *(verifica BR-CTR-047)*
+
+DADO la apertura de la jornada 4, con muchas semillas, CUANDO se construye el pedido de Fede
+ENTONCES jamás incluye Duronga, aunque Duronga sea del grupo de Fede y se venda esa noche. DADO la
+jornada 2 ENTONCES el pedido fijo de Fede sigue incluyendo Duronga.
 
 ### AC-CTR-158 — Los demás compradores usan el guion predeterminado *(verifica BR-CTR-048)*
 
@@ -1605,7 +1612,7 @@ en un recurso por jornada; `inicial` y `despedida` reciben el pedido para resolv
   - Bloquea: nada. Sumaría productos al grupo de Fede en BR-CTR-047.
 - **OQ-CTR-008 — ¿Frigordo y Gringo se venden en el mostrador?**
   - Por qué sigue abierta: la ficha de atención al cliente suma Frigordo y Gringo al grupo de Fede,
-    pero hoy son productos que sólo llegan en cajas, no se venden y ningún comprador los pide
-    (BR-STK-054). En el grupo no tendrían efecto.
+    pero hoy no están en el catálogo: no se venden y ningún comprador los pide. En el grupo no
+    tendrían efecto.
   - Decide: game design.
   - Bloquea: nada. Sumaría esos dos productos al grupo de Fede en BR-CTR-047.

@@ -47,9 +47,9 @@ func _init(jornada: int, pistas_activas: PackedStringArray = PackedStringArray()
 	_pistas_activas = pistas_activas
 
 
-## Los treinta y nueve que ofrece la lista, con casilla cada uno.
+## Los productos del catálogo que ofrece la lista, con casilla cada uno.
 func productos_de_la_lista() -> Array[Producto]:
-	return Catalogo.pedibles()
+	return Catalogo.todos()
 
 
 func lista_abierta() -> bool:
