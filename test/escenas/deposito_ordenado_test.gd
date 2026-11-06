@@ -5,6 +5,7 @@ const AvanceDeDevolucion := preload("res://test/avance_de_devolucion.gd")
 const ReglasDelCierre := preload("res://src/dominio/almacen/reglas_del_cierre.gd")
 const ALMACEN := preload("res://src/escenas/almacen.tscn")
 const Caja := preload("res://src/escenas/objetos/caja_de_productos.gd")
+const Habitaciones := preload("res://src/escenas/puestos/habitaciones_del_almacen.gd")
 const RelojDePrueba := preload("res://test/reloj_de_prueba.gd")
 
 ## Fracciones del tamaño de la caja, desde su centro, adonde se apunta la mira.
@@ -294,7 +295,7 @@ func _punto_del_piso_del_deposito(local: Node3D, caja: Caja) -> Vector3:
 
 
 func _punto_del_local(local: Node3D) -> Vector3:
-	var lector: HabitacionesDelAlmacen = local.get("_habitaciones")
+	var lector: Habitaciones = local.get("_habitaciones")
 	return lector.to_global(lector.local[0].get_center())
 
 
@@ -351,7 +352,8 @@ func test_apoyar_descumplir_sostener_y_examinar_actualizan_ordenar() -> void:  #
 
 func test_una_caja_en_el_local_cumple_y_dos_fuera_de_las_estanterias_no() -> void:  # AC-STK-132
 	var local := await _abrir()
-	var tarea := local.get("_reloj").obligatoria(Tarea.Tipo.ORDENAR_LAS_CAJAS)
+	var reloj: RelojDelTurno = local.get("_reloj")
+	var tarea := reloj.obligatoria(Tarea.Tipo.ORDENAR_LAS_CAJAS)
 	await _ordenar_en_sus_estanterias(local)
 	assert_bool(tarea.completada()).is_true()
 	var cajas: Array = local.get("_cajas_de_productos")
