@@ -1,4 +1,4 @@
-[gd_scene load_steps=7 format=3]
+[gd_scene load_steps=8 format=3]
 
 [ext_resource type="Script" path="res://src/escenas/puestos/ventanilla.gd" id="1_ventanilla"]
 [ext_resource type="Script" path="res://src/escenas/objetos/comprador_interactuable.gd" id="2_comprador"]
@@ -9,8 +9,11 @@ size = Vector3(1.2, 1.4, 0.001)
 [sub_resource type="BoxMesh" id="BoxMesh_antepecho"]
 size = Vector3(1.4, 0.08, 0.4)
 
-[sub_resource type="BoxShape3D" id="BoxShape3D_apoyo"]
+[sub_resource type="BoxMesh" id="BoxMesh_apoyo_interior"]
 size = Vector3(1.4, 0.08, 0.4)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_apoyo"]
+size = Vector3(1.4, 0.08, 0.8)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_tope"]
 size = Vector3(1.4, 0.12, 0.02)
@@ -57,18 +60,23 @@ gi_mode = 2
 position = Vector3(0, 1.4, 0.02)
 rotation = Vector3(0, 3.1415927, 0)
 
+[node name="ApoyoInterior" type="MeshInstance3D" parent="."]
+mesh = SubResource("BoxMesh_apoyo_interior")
+position = Vector3(0, 0, -0.4)
+gi_mode = 2
+
 [node name="ApoyoDeEntregas" type="Marker3D" parent="."]
-position = Vector3(0, 0.04, -0.15)
-editor_description = "Cara de arriba del apoyo de la ventanilla, del lado de adentro; las entregas abandonadas se apoyan acá."
+position = Vector3(0, 0.04, -0.13)
+editor_description = "Borde de adelante, del lado de adentro de la abertura, de la cara de arriba del apoyo de la ventanilla; las entregas abandonadas se apoyan acá, hacia adentro."
 
 [node name="Superficie" type="StaticBody3D" parent="ApoyoDeEntregas"]
 collision_layer = 16
 collision_mask = 0
 
 [node name="Tapa" type="CollisionShape3D" parent="ApoyoDeEntregas/Superficie"]
-position = Vector3(0, -0.04, 0.15)
+position = Vector3(0, -0.04, -0.07)
 shape = SubResource("BoxShape3D_apoyo")
 
 [node name="Tope" type="CollisionShape3D" parent="ApoyoDeEntregas/Superficie"]
-position = Vector3(0, 0.06, 0.35)
+position = Vector3(0, 0.06, 0.33)
 shape = SubResource("BoxShape3D_tope")

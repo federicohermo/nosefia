@@ -348,6 +348,33 @@ func test_tres_abandonadas_quedan_adentro_sin_solidos_y_pausan_la_caida() -> voi
 	assert_array(manual.call("unidades_sueltas")).contains_exactly_in_any_order(cuerpos)
 	for indice in cuerpos.size():
 		assert_that(cuerpos[indice].global_position).is_equal(antes[indice])
+	await _llega_el_comprador_siguiente_y_no_empuja(cuerpos)
+
+
+## Tia llega a las 23:30 y la abertura vuelve a ser sólida: lo que quedó sobre el apoyo no puede
+## quedar adentro de ella.
+func _llega_el_comprador_siguiente_y_no_empuja(cuerpos: Array[ObjetoAgarrable]) -> void:
+	var ventana: Node3D = _almacen.get_node("Estructura/Ventanilla")
+	var hueco: StaticBody3D = ventana.get("_hueco")
+	assert_int(hueco.collision_layer).is_equal(0)
+	var antes: Array[Vector3] = []
+	for cuerpo in cuerpos:
+		antes.append(cuerpo.global_position)
+	RelojDePrueba.avanzar_hasta(_almacen.get("_reloj"), Vector2i(23, 30))
+	assert_bool((ventana.get("comprador_visible") as AnimatedSprite3D).visible).is_true()
+	assert_int(hueco.collision_layer).is_equal(ReglasDeLosObjetos.CAPA_DEL_HUECO)
+	for _cuadro in 90:
+		await get_tree().physics_frame
+	_afirmar_apoyos_libres(cuerpos)
+	var forma_del_hueco: CollisionShape3D = hueco.get_child(0)
+	var volumen_del_hueco := (
+		forma_del_hueco.global_transform * forma_del_hueco.shape.get_debug_mesh().get_aabb()
+	)
+	for indice in cuerpos.size():
+		var forma: CollisionShape3D = cuerpos[indice].get_node("Forma")
+		var huella := forma.global_transform * forma.shape.get_debug_mesh().get_aabb()
+		assert_bool(huella.intersects(volumen_del_hueco)).is_false()
+		assert_float(cuerpos[indice].global_position.distance_to(antes[indice])).is_less(0.05)
 
 
 func test_abandonadas_en_el_apoyo_dan_un_desorden_sin_objeto_afuera() -> void:  # AC-CTR-046

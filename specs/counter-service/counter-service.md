@@ -219,9 +219,11 @@ CUANDO se cruza una llegada, el sistema DEBE publicar una sola llegada aunque la
 cerrada. Repetir un instante o reabrir NO DEBE llamar ni repetir al comprador.
 CUANDO se cruza el límite con una compra incompleta, el sistema DEBE publicar una sola salida,
 cerrar su conversación y dejar todos los productos recibidos sobre el apoyo de la ventanilla,
-del lado de adentro. Ninguno DEBE quedar en el piso. DEBEN conservar su identidad y quedar
-visibles, con física y recogibles, sin superponerse entre sí, con el jugador ni con los sólidos
-del local. Los que no entren en el apoyo NO DEBEN atravesar un sólido ni salir del local.
+del lado de adentro. Ninguno DEBE quedar en el piso, salvo los que no entren en el apoyo: esos
+DEBEN bajar al piso de adelante, del lado de adentro, sin atravesar un sólido ni salir del local.
+DEBEN conservar su identidad y quedar visibles, con física y recogibles, sin superponerse entre
+sí, con el jugador ni con los sólidos del local. Ninguno DEBE quedar dentro de la abertura de la
+ventanilla, tampoco cuando llega el comprador siguiente.
 DEBEN seguir registrados afuera de su caja, sin cambiar depósito, contenido de caja ni góndola
 por el vencimiento y sin contar como venta. DEBEN admitir los mismos gestos y consecuencias
 de cualquier unidad suelta: agarrar, colocar en su casillero vacío, devolver a su caja o tirar
@@ -975,7 +977,9 @@ con física y recogibles, apoyadas sobre el apoyo de la ventanilla, del lado int
 en el piso, sin superponerse entre sí, con el jugador ni con un sólido. La pausa detiene su caída
 y reanudar la continúa. Repetir el vencimiento no crea otras unidades ni recoloca las recuperadas.
 DADO más unidades abandonadas que las que caben en el apoyo CUANDO vence la compra ENTONCES
-ninguna atraviesa un sólido ni queda fuera del local.
+las que no caben bajan al piso de adelante, del lado de adentro, y ninguna atraviesa un sólido
+ni queda fuera del local. DADO esas tres sobre el apoyo CUANDO llega el comprador siguiente
+ENTONCES siguen sobre el apoyo, fuera de la abertura y sin que nada las empuje.
 
 DADO esas unidades como únicos cuerpos desordenados CUANDO se cierra la noche con las tres
 sobre el apoyo ENTONCES hay un único motivo de desorden y ninguno de objeto afuera. DADO el mismo

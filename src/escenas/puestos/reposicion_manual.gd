@@ -1861,8 +1861,9 @@ func recibir_abandonadas(cuerpos: Array[Node3D], punto: Marker3D) -> void:
 		_agrupar_suelto(cuerpo)
 
 
-## Con `sobre_el_apoyo`, sólo cuenta la cara de arriba del apoyo y se recorre su único renglón;
-## sin él, el piso del local desde ahí hacia adentro. **La abertura no estorba la consulta de
+## Con `sobre_el_apoyo`, sólo cuenta la cara de arriba del apoyo y se recorre su único renglón,
+## cuyo borde de adelante es `punto`: cada unidad queda entera de ese lado, fuera de la abertura.
+## Sin él, el piso del local desde ahí hacia adentro. **La abertura no estorba la consulta de
 ## forma**: la ventanilla todavía la tiene cerrada al vencer, y esa capa sólo detiene lo que cruza
 ## con un comprador. El apoyo vive en esa misma capa, que sólo miran los productos: ni la mira ni
 ## la cámara lo ven.
@@ -1882,10 +1883,14 @@ func _lugar_para_abandonada(
 	consulta.margin = TOLERANCIA_DEL_APOYO / 4.0
 	var pasos := ceili(ReglasDelJugador.ALCANCE_DE_LA_MIRA / paso)
 	var renglones := 0 if sobre_el_apoyo else pasos
+	var retiro := 0.0
+	if sobre_el_apoyo:
+		var hacia_la_abertura := punto.global_basis.z.normalized()
+		retiro = hacia_la_abertura.abs().dot(limites.size / 2.0)
 	var candidatos: Array[Vector3] = []
 	for profundidad in range(renglones + 1):
 		for lateral in range(-pasos, pasos + 1):
-			var desplazamiento := Vector3(lateral * paso, 0.0, -profundidad * paso)
+			var desplazamiento := Vector3(lateral * paso, 0.0, -profundidad * paso - retiro)
 			if desplazamiento.length() <= ReglasDelJugador.ALCANCE_DE_LA_MIRA:
 				candidatos.append(desplazamiento)
 	candidatos.sort_custom(
