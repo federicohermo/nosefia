@@ -38,6 +38,12 @@ func abrir_jornada(jornada: int, condiciones: Array[StringName] = []) -> void:
 	no_leidos_cambiados.emit(_bandeja.no_leidos_totales())
 
 
+## Al continuar: lo de jornadas anteriores a `jornada` vuelve leído, y el aviso se entera.
+func dar_por_leidos_los_anteriores_a(jornada: int) -> void:
+	_bandeja.dar_por_leidos_los_anteriores_a(jornada)
+	no_leidos_cambiados.emit(_bandeja.no_leidos_totales())
+
+
 ## Las quejas de la noche, o ninguna: los chats de los compradores salen de ellas.
 func usar_quejas(quejas: QuejasDeLaJornada) -> void:
 	_bandeja.usar_quejas(quejas)

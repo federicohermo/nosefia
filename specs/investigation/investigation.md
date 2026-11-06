@@ -151,7 +151,7 @@ interlocutores, salvo el chat de notas cuyo permiso de menú lo fija BR-INV-040.
 Cada botón DEBE mostrar nombre, imagen y cantidad de no leídos cuando es mayor
 que cero; sin imagen, DEBE mostrar un círculo liso del tema. La jornada NO DEBE programar nuevas
 llegadas durante su transcurso. Al continuar desde un guardado, los mensajes del guión DEBEN
-reconstruirse según esa jornada, todos sin leer. Las devoluciones de Enrique de las noches ya
+reconstruirse según esa jornada, y cuáles cuentan como nuevos lo fija BR-INV-180. Las devoluciones de Enrique de las noches ya
 cerradas DEBEN volver a su chat intercaladas con las aperturas en orden cronológico
 (BR-INV-030, BR-EMP-031, BR-SAV-019), y el chat de notas DEBE volver con su historial
 (BR-INV-047, BR-SAV-021); los demás recibidos fuera del guión NO DEBEN guardarse.
@@ -264,7 +264,7 @@ mensajes (BR-EMP-031). Los mensajes legados sin jornada DEBEN conservar texto y 
 sin recibir una jornada ni una hora. Su intercalado con bloques fechados depende de
 OQ-INV-005. La vista cronológica y sus consultas NO DEBEN mutar el guion compartido ni sus
 marcas de lectura. Retomar DEBE reconstruir el guion y conservar las devoluciones guardadas
-con esos metadatos, con los mensajes del guion sin leer según BR-INV-023.
+con esos metadatos; cuáles cuentan como nuevos lo fija BR-INV-180.
 
 ### BR-INV-031 — Sólo el tramo de pista emite su identidad
 
@@ -944,6 +944,14 @@ persiana termine de subir y aparecer entonces. MIENTRAS la persiana no terminó 
 cambio del total DEBE pintarse ni vibrar. CUANDO la persiana termina de subir, el círculo DEBE
 mostrar el total vigente, y el ícono DEBE vibrar sólo si ese total supera el que el jugador veía.
 
+### BR-INV-180 — Al continuar sólo cuentan como nuevos los mensajes de la jornada que arranca
+CUANDO el jugador continúa una partida guardada, los mensajes de jornadas anteriores a la que
+arranca DEBEN volver leídos: ni el círculo del ícono, ni el botón de su chat, ni el chat abierto
+DEBEN mostrarlos como nuevos. Esto incluye las devoluciones de Enrique guardadas, con jornada o
+sin ella. Los mensajes de la jornada que arranca, y los que lleguen después, DEBEN contar como
+sin leer hasta que el jugador los lea. Jugar una noche tras otra NO DEBE cambiar lo que cuenta
+como nuevo.
+
 ### BR-INV-146 — La barra de estado del celular lleva la hora y el wifi
 El celular DEBE mostrar arriba a la derecha de su pantalla una barra de estado con la hora de la
 noche (BR-SHF-040, BR-SHF-041) y, a su derecha, el ícono de wifi conectado. La barra DEBE verse
@@ -1258,8 +1266,7 @@ Q permitido abre el menú.
 ### AC-INV-037 — Retomar reconstruye los chats *(verifica BR-INV-023, BR-INV-008)*
 
 DADO un guardado en jornada 5, con chats que antes se leyeron y mensajes recibidos fuera del guión,
-CUANDO se retoma ENTONCES se ven los mensajes del guión de jornada menor o igual a 5, todos sin
-leer, y ninguno de los recibidos fuera de él salvo las devoluciones de Enrique de las jornadas 1
+CUANDO se retoma ENTONCES se ven los mensajes del guión de jornada menor o igual a 5, y ninguno de los recibidos fuera de él salvo las devoluciones de Enrique de las jornadas 1
 a 4, intercaladas con los mensajes de cada jornada: cada devolución después de los de su
 jornada y antes de los de la siguiente, hasta la devolución 4. Los registros legados sin jornada conservan su orden sin fechas inventadas.
 Abrir y cerrar sin entrar a un chat conserva los contadores.
@@ -1500,7 +1507,8 @@ DADO la apertura de la jornada 5 por transición, tras leer el chat de Yasmín e
 CUANDO se consulta Yasmín ENTONCES tiene 26 entradas: J2_1 a J2_16 con los textos de
 BR-INV-029, leídas, y después J3_1 a J3_10 con los textos de BR-INV-048, en ese orden, sin leer;
 su contador es 10. DADO la apertura de la jornada 5 desde un checkpoint ENTONCES tiene las mismas
-26 entradas, todas sin leer. Leer Yasmín deja su contador en cero sin cambiar el de Enrique ni el
+26 entradas, con J2_1 a J2_16 leídas por ser de una jornada anterior (BR-INV-180) y J3_1 a J3_10
+sin leer; su contador es 10. Leer Yasmín deja su contador en cero sin cambiar el de Enrique ni el
 guion compartido.
 
 ### AC-INV-067 — Antes de la jornada 5 el bloque no existe *(verifica BR-INV-048, BR-INV-029, BR-INV-023)*
@@ -2277,6 +2285,16 @@ DADO que la jornada abre con 2 mensajes sin leer CUANDO la persiana todavía no 
 ENTONCES el círculo no se ve y el ícono no vibra. CUANDO la persiana termina de subir ENTONCES el
 círculo muestra 2 y el ícono vibra una vez. DADO que el jugador veía 2 y la jornada siguiente abre
 con esos mismos 2 ENTONCES al subir la persiana el ícono no vibra.
+
+### AC-INV-230 — Continuar deja leído lo de jornadas anteriores *(verifica BR-INV-180, BR-INV-009)*
+
+DADO un guardado en jornada 5, con chats de las jornadas 1 a 4, devoluciones de Enrique fechadas y
+una legada sin jornada, CUANDO se continúa ENTONCES el total de no leídos es la cantidad de
+mensajes de la jornada 5, y el chat de Enrique cuenta sólo los suyos, con el primero de la jornada 5
+como primer no leído. CUANDO llega un mensaje después ENTONCES el total sube en uno. CUANDO se abre
+el chat de Enrique ENTONCES queda sin no leídos. CUANDO después de abrirlo llega un mensaje
+fechado ENTONCES ese chat cuenta uno, con ese mensaje como primer no leído. DADO un guardado sin
+mensajes de la jornada retomada en un chat ENTONCES ese chat cuenta cero.
 
 ### AC-INV-195 — La barra lleva la hora y el wifi conectado *(verifica BR-INV-146)*
 

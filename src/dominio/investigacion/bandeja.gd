@@ -4,8 +4,11 @@ extends RefCounted
 
 var _conversaciones: Array[Conversacion] = []
 var _leidos: Dictionary[Conversacion.Interlocutor, int] = {}
+var _leidos_sin_fecha: Dictionary[Conversacion.Interlocutor, int] = {}
 var _recibidos: Dictionary[Conversacion.Interlocutor, Array] = {}
 var _jornada: int = 1
+## Lo de jornadas anteriores a ésta no cuenta como nuevo, esté donde esté la marca de `_leidos`.
+var _primera_jornada_nueva: int = 0
 var _condiciones: Array[StringName] = []
 var _quejas: QuejasDeLaJornada = null
 
@@ -118,7 +121,7 @@ func esta_leida(quien: Conversacion.Interlocutor) -> bool:
 
 
 func no_leidos(quien: Conversacion.Interlocutor) -> int:
-	return maxi(0, mensajes_de(quien).size() - _leidos.get(quien, 0))
+	return _posiciones_sin_leer(quien).size()
 
 
 func no_leidos_totales() -> int:
@@ -130,14 +133,23 @@ func no_leidos_totales() -> int:
 
 ## El lugar, en `mensajes_de`, del primer mensaje sin leer; -1 si el chat está al día.
 func primer_no_leido(quien: Conversacion.Interlocutor) -> int:
-	var sin_leer := no_leidos(quien)
-	return -1 if sin_leer == 0 else mensajes_de(quien).size() - sin_leer
+	var sin_leer := _posiciones_sin_leer(quien)
+	return -1 if sin_leer.is_empty() else sin_leer[0]
+
+
+## Al continuar una partida: sólo cuentan como nuevos los mensajes de `jornada` en adelante. Las
+## devoluciones sin jornada tienen la 0, y por eso también quedan leídas.
+func dar_por_leidos_los_anteriores_a(jornada: int) -> void:
+	_primera_jornada_nueva = jornada
 
 
 func marcar_leida(quien: Conversacion.Interlocutor) -> bool:
 	if not _leidos.has(quien) or no_leidos(quien) == 0:
 		return false
-	_leidos[quien] = mensajes_de(quien).size()
+	var mensajes := mensajes_de(quien)
+	var sin_fecha := _cantidad_sin_fecha(mensajes)
+	_leidos[quien] = mensajes.size() - sin_fecha
+	_leidos_sin_fecha[quien] = sin_fecha
 	return true
 
 
@@ -166,6 +178,33 @@ func pista_de(quien: Conversacion.Interlocutor, identidad: String, tramo: String
 		if mensaje.identidad == identidad:
 			return mensaje.pista_del_tramo(tramo)
 	return ""
+
+
+## Las sin fecha van detrás de las fechadas, así que un fechado nuevo las corre: se cuentan aparte
+## para que la marca de lectura de las fechadas no se desplace sobre ellas.
+func _posiciones_sin_leer(quien: Conversacion.Interlocutor) -> Array[int]:
+	var posiciones: Array[int] = []
+	var mensajes := mensajes_de(quien)
+	var fechados := mensajes.size() - _cantidad_sin_fecha(mensajes)
+	var leidos_fechados: int = _leidos.get(quien, 0)
+	var leidos_sin_fecha: int = _leidos_sin_fecha.get(quien, 0)
+	for posicion in mensajes.size():
+		var leido := (
+			posicion - fechados < leidos_sin_fecha
+			if posicion >= fechados
+			else posicion < leidos_fechados
+		)
+		if not leido and mensajes[posicion].jornada >= _primera_jornada_nueva:
+			posiciones.append(posicion)
+	return posiciones
+
+
+static func _cantidad_sin_fecha(mensajes: Array[Mensaje]) -> int:
+	var cuantos := 0
+	for mensaje in mensajes:
+		if mensaje.momento == Mensaje.Momento.SIN_FECHA:
+			cuantos += 1
+	return cuantos
 
 
 static func _antes(a: Dictionary, b: Dictionary) -> bool:

@@ -262,3 +262,15 @@ func test_el_primer_mensaje_que_llega_al_fijo_es_el_primero_nuevo() -> void:  # 
 	sistema.recibir(Conversacion.Interlocutor.JEFE, Mensaje.new())
 	sistema.recibir(Conversacion.Interlocutor.JEFE, Mensaje.new())
 	assert_array(apuntados).is_equal([antes, antes])
+
+
+func test_dar_por_leidos_los_anteriores_avisa_el_total_nuevo() -> void:  # AC-INV-230
+	var sistema: CelularDelEmpleado = auto_free(CelularDelEmpleado.new())
+	var cuentas: Array[int] = []
+	sistema.no_leidos_cambiados.connect(func(cuenta: int) -> void: cuentas.append(cuenta))
+	sistema.abrir_jornada(ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA)
+	var antes := sistema.bandeja().no_leidos_totales()
+	assert_int(antes).is_greater(0)
+	sistema.dar_por_leidos_los_anteriores_a(ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA + 1)
+	assert_int(sistema.bandeja().no_leidos_totales()).is_zero()
+	assert_int(cuentas.back()).is_zero()
