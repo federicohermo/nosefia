@@ -60,6 +60,17 @@ func levanta_una_pista(origen: StringName, jornada: int) -> bool:
 	return false
 
 
+## El título de la hipótesis que sólo esa pista habilita, o vacío si no hay una.
+func titulo_de_la_pista(identidad: String) -> String:
+	for opciones: HipotesisDeLaJornada in hipotesis:
+		if opciones == null:
+			continue
+		for opcion: Hipotesis in opciones.opciones:
+			if opcion != null and opcion.exigencias == PackedStringArray([identidad]):
+				return opcion.titulo
+	return ""
+
+
 func hipotesis_para(jornada: int, descubiertas: PackedStringArray) -> Array[Hipotesis]:
 	var opciones := _hipotesis_de(jornada)
 	if opciones == null:
