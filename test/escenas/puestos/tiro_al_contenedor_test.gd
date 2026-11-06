@@ -115,7 +115,47 @@ func _comprobar_tirado(
 	assert_bool(candidato.visible).is_false()
 
 
-func test_cuerpo_rechaza_durante_giro_y_tapa_no_tira() -> void:  # AC-CLN-037 AC-CLN-035
+func test_tirar_sobre_la_tapa_abierta_entrega_lo_mismo_y_no_la_cierra() -> void:  # AC-CLN-036
+	var almacen := await _abrir()
+	var jugador: Node3D = almacen.get("_jugador")
+	var agarre: Agarre = almacen.get("_agarre")
+	var contenedor: Node3D = almacen.get_node(CUERPO)
+	var tapa: Node3D = almacen.get_node(TAPA)
+	var recolector: RecolectorDeBasura = almacen.get("_recolector")
+	var unidad := _unidad(almacen)
+	_clic(jugador, tapa, MOUSE_BUTTON_LEFT)
+	_comprobar_tirado(unidad, contenedor, jugador, agarre)
+	var objetos: Array[ObjetoAgarrable] = [
+		unidad, _ticket(almacen), almacen.get_node("Objetos/BolsaDeBasura1")
+	]
+	for objeto in objetos.slice(1):
+		_agarrar(almacen, objeto)
+		_clic(jugador, tapa, MOUSE_BUTTON_LEFT)
+		_comprobar_tirado(objeto, contenedor, jugador, agarre)
+	assert_bool(tapa.call("recibe_objetos")).is_true()
+	assert_int(recolector.tarea().depositadas()).is_equal(1)
+	assert_array(contenedor.call("tirados")).has_size(objetos.size())
+
+
+func test_la_caja_y_los_utiles_se_rechazan_sobre_la_tapa_sin_cerrarla() -> void:  # AC-CLN-037
+	var almacen := await _abrir()
+	var jugador: Node3D = almacen.get("_jugador")
+	var agarre: Agarre = almacen.get("_agarre")
+	var tapa: Node3D = almacen.get_node(TAPA)
+	var rechazados: Array[ObjetoAgarrable] = [almacen.get_node("Objetos/CajaDeActroncito")]
+	for nombre: String in ["Mopa", "Balde", "JabonAzul"]:
+		rechazados.append(almacen.get_node("Objetos/" + nombre))
+	for objeto in rechazados:
+		_agarrar(almacen, objeto)
+		_clic(jugador, tapa, MOUSE_BUTTON_LEFT)
+		assert_object(agarre.manos().sostenido()).is_same(objeto.datos)
+		assert_bool(objeto.visible).is_true()
+		assert_bool(tapa.call("recibe_objetos")).is_true()
+		agarre.soltar(false)
+	assert_int(almacen.get("_recolector").tarea().depositadas()).is_zero()
+
+
+func test_cuerpo_rechaza_durante_giro_y_tapa_alterna() -> void:  # AC-CLN-037 AC-CLN-035
 	var almacen := await _abrir()
 	var jugador: Node3D = almacen.get("_jugador")
 	var agarre: Agarre = almacen.get("_agarre")
@@ -136,8 +176,10 @@ func test_cuerpo_rechaza_durante_giro_y_tapa_no_tira() -> void:  # AC-CLN-037 AC
 		_clic(jugador, destino, MOUSE_BUTTON_RIGHT)
 		assert_bool(tapa.call("recibe_objetos")).is_true()
 		assert_object(agarre.manos().sostenido()).is_same(bolsa.datos)
+	agarre.soltar(false)
 	_clic(jugador, tapa, MOUSE_BUTTON_LEFT)
 	assert_bool(tapa.call("recibe_objetos")).is_false()
+	_agarrar(almacen, bolsa)
 	_clic(jugador, cuerpo, MOUSE_BUTTON_LEFT)
 	assert_object(agarre.manos().sostenido()).is_same(bolsa.datos)
 	tapa.call("_physics_process", 0.2)
