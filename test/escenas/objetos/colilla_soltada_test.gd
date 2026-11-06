@@ -111,6 +111,9 @@ func test_la_colilla_soltada_en_cualquier_lugar_del_deposito_queda_sobre_el_piso
 	var soltadas: Array[Dictionary] = []
 	for lugar in lugares:
 		for gesto in GIROS.size():
+			# Una colilla ya soltada puede haber quedado donde se para ahora: ahí no se entra.
+			if not _cabe_el_jugador(jugador, lugar):
+				continue
 			var colilla: ObjetoAgarrable = COLILLA.instantiate()
 			almacen.add_child(colilla)
 			jugador.global_position = lugar
@@ -121,7 +124,12 @@ func test_la_colilla_soltada_en_cualquier_lugar_del_deposito_queda_sobre_el_piso
 			_clic(jugador, colilla)
 			# Si adelante no hay lugar vuelve a la mano, y vaciarlas la deja a los pies.
 			agarre.vaciar_las_manos()
-			var donde := "desde %v mirando %.0f/%.0f" % [lugar, GIROS[gesto], ALTOS[gesto]]
+			var nacio := colilla.global_position
+			await get_tree().physics_frame
+			var donde := (
+				"desde %v mirando %.0f/%.0f, nació en %v y al cuadro siguiente en %v"
+				% [lugar, GIROS[gesto], ALTOS[gesto], nacio, colilla.global_position]
+			)
 			soltadas.append({"colilla": colilla, "donde": donde})
 	for cuadro in CUADROS_DE_REPOSO:
 		await get_tree().physics_frame
