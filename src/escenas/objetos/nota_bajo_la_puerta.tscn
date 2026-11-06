@@ -3,13 +3,14 @@
 [ext_resource type="Script" path="res://src/escenas/objetos/objeto_agarrable.gd" id="objeto"]
 [ext_resource type="Resource" path="res://src/dominio/investigacion/nota_bajo_la_puerta.tres" id="datos"]
 [ext_resource type="Texture2D" path="res://assets/ui/manada/pistas/nota-bajo-la-puerta.png" id="escrita"]
-[ext_resource type="Texture2D" path="res://assets/models/SEPT_JUEGOS_PROTOTIPO_nota sin texto.png" id="dorso"]
+[ext_resource type="Texture2D" path="res://assets/ui/manada/pistas/nota-dorso.png" id="dorso"]
 
 [sub_resource type="BoxShape3D" id="cuerpo"]
 margin = 0.001
-size = Vector3(0.12, 0.019, 0.15)
+size = Vector3(0.14, 0.019, 0.11)
 
 [sub_resource type="StandardMaterial3D" id="material_escrito"]
+transparency = 2
 albedo_texture = ExtResource("escrita")
 roughness = 1.0
 emission_enabled = true
@@ -18,6 +19,7 @@ emission_energy_multiplier = 0.2
 emission_texture = ExtResource("escrita")
 
 [sub_resource type="StandardMaterial3D" id="material_dorso"]
+transparency = 2
 albedo_texture = ExtResource("dorso")
 roughness = 1.0
 emission_enabled = true
@@ -26,7 +28,7 @@ emission_energy_multiplier = 0.2
 emission_texture = ExtResource("dorso")
 
 [sub_resource type="PlaneMesh" id="papel"]
-size = Vector2(0.18, 0.18)
+size = Vector2(0.18, 0.1324)
 
 [node name="NotaBajoLaPuerta" type="RigidBody3D" groups=["interactuable"]]
 mass = 0.01

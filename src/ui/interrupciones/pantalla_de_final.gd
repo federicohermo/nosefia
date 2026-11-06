@@ -58,7 +58,7 @@ func mostrar(final: FinalConPantalla.Cual) -> void:
 	_mensaje.text = FinalConPantalla.mensaje(final, _azar)
 	_pedido = false
 	visible = true
-	_boton_de_nueva_partida.grab_focus(true)
+	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 
 
 func encabezado() -> String:
