@@ -26,6 +26,14 @@ func test_cada_conversacion_documentada_es_de_su_interlocutor() -> void:
 		assert_int(conversacion.interlocutor).is_equal(quien)
 
 
+func test_cada_conversacion_documentada_lleva_foto_salvo_las_notas() -> void:
+	for conversacion in Conversacion.desde_disco():
+		if conversacion.interlocutor == Conversacion.Interlocutor.NOTAS:
+			assert_object(conversacion.imagen).is_null()
+		else:
+			assert_object(conversacion.imagen).is_not_null()
+
+
 func test_un_interlocutor_sin_guion_documentado_no_carga_textos_inventados() -> void:
 	assert_object(Conversacion.de(Conversacion.Interlocutor.DESCONOCIDO)).is_null()
 

@@ -2,6 +2,7 @@
 
 [ext_resource type="Script" path="res://src/dominio/investigacion/mensaje.gd" id="mensaje"]
 [ext_resource type="Script" path="res://src/dominio/investigacion/conversacion.gd" id="conversacion"]
+[ext_resource type="Texture2D" path="res://assets/ui/manada/celular/yasmin.png" id="yasmin"]
 
 [sub_resource type="Resource" id="J2_1"]
 script = ExtResource("mensaje")
@@ -246,6 +247,7 @@ texto = "igual con lo rata que es seguro que no lo va a hacer"
 [resource]
 script = ExtResource("conversacion")
 interlocutor = 3
+imagen = ExtResource("yasmin")
 nombre = "Yasmín"
 rol = "Compañera de trabajo"
 mensajes = Array[ExtResource("mensaje")]([SubResource("J2_1"), SubResource("J2_2"), SubResource("J2_3"), SubResource("J2_4"), SubResource("J2_5"), SubResource("J2_6"), SubResource("J2_7"), SubResource("J2_8"), SubResource("J2_9"), SubResource("J2_10"), SubResource("J2_11"), SubResource("J2_12"), SubResource("J2_13"), SubResource("J2_14"), SubResource("J2_15"), SubResource("J2_16"), SubResource("J3_1"), SubResource("J3_2"), SubResource("J3_3"), SubResource("J3_4"), SubResource("J3_5"), SubResource("J3_6"), SubResource("J3_7"), SubResource("J3_8"), SubResource("J3_9"), SubResource("J3_10")])
