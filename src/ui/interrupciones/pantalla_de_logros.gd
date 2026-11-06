@@ -1,6 +1,6 @@
 ## La pantalla de logros: tres columnas —pistas, finales y logros— que dibuja lo que contesta
-## `Logros`. Una entrada alcanzada muestra su imagen y su nombre; una que no, el signo de pregunta
-## y «?????». No decide nada ni escribe nada.
+## `Logros`. Una entrada alcanzada muestra su imagen y su nombre —el de una pista es el título de
+## su hipótesis—; una que no, el signo de pregunta y «?????». No decide nada ni escribe nada.
 ##
 ## Corre también con el árbol en pausa: se abre desde el menú de pausa. Esc la cierra; en la pausa
 ## lo atiende primero el control de la pausa, que la cierra sin reanudar.
@@ -133,7 +133,12 @@ func _pintar() -> void:
 	if _caso != null:
 		for pista: Pista in _caso.pistas.filter(func(p: Pista) -> bool: return p.deja_nota()):
 			var descubierta := _logros.pista_descubierta(pista.identidad)
-			_agregar(TEXTO_DE_LAS_PISTAS, descubierta, pista.foto, pista.texto)
+			_agregar(
+				TEXTO_DE_LAS_PISTAS,
+				descubierta,
+				pista.foto,
+				_caso.titulo_de_la_pista(pista.identidad)
+			)
 	for final: Partida.Final in Logros.finales():
 		_agregar(
 			TEXTO_DE_LOS_FINALES,
