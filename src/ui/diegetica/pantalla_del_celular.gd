@@ -313,7 +313,9 @@ func mostrar_chat(
 	_avatar_del_chat.show()
 	_subtitulo.text = conversacion.rol
 	_subtitulo.visible = not conversacion.rol.is_empty()
-	_avatar_del_chat.material = MASCARA_DEL_AVATAR
+	_avatar_del_chat.material = (
+		null if _avatar_del_chat.texture == AVATAR_ENRIQUE else MASCARA_DEL_AVATAR
+	)
 	if _avatar_del_chat.texture == null:
 		var lisa := GradientTexture2D.new()
 		var gradiente := Gradient.new()
