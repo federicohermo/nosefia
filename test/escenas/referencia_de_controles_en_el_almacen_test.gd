@@ -151,6 +151,7 @@ func test_contenedor_y_tapa_ofrecen_gestos_distintos() -> void:  # AC-PLY-086
 	assert_array(_referencia(almacen, tapa)).contains_exactly(
 		["[E] Examinar (mano)", "[Click Izq] Abrir"]
 	)
+	tapa.call("_physics_process", 1.0)
 	tapa.call("accionar")
 	assert_array(_referencia(almacen, tapa)).contains_exactly(
 		["[E] Examinar (mano)", "[Click Izq] Cerrar"]
