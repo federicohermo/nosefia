@@ -312,7 +312,9 @@ func test_con_la_pantalla_del_final_4_ni_pausa_ni_icono_del_celular() -> void:  
 	assert_bool(_agarre().pedir_agarrar(palanca.datos, palanca)).is_true()
 	_puerta_del_jefe().call("accionar")
 	await _cuadros()
+	AvanceDelEpilogo.recorrer(_almacen)
 	var pantallas := _almacen.find_children("*", "PantallaDeFinal", true, false)
+	assert_int(pantallas.size()).is_equal(1)
 	assert_bool((pantallas[0] as PantallaDeFinal).visible).is_true()
 	assert_bool(recordatorio.is_visible_in_tree()).is_false()
 	var pausa := _almacen.get_node("Interfaz/ControlDePausa") as ControlDePausa
