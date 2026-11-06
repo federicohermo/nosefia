@@ -68,7 +68,7 @@ PRODUCTOS: tuple[Producto, ...] = (
     Producto("LAYSNNT", "Laysnnt", "snackpapas1-convcol.002", _X, _Z),
     Producto("MALBARDO", "Malbardo", "malbardocig-convcol", _MENOS_Y, _Z),
     Producto("PROGRES", "Progres", "pringles3-convcol.001", _MENOS_X, _Z),
-    Producto("JORGILLO", "Jorgillo", "alfajorescaja2-2oeste1-col.001", _Z, _X),
+    Producto("JORGILLO", "Jorgillata", "alfajorescaja2-2oeste1-col.001", _Z, _X),
     Producto("ARVECOR", "Arvecor", "lataarvejas-convcol.002", (-0.0177, -0.9998, 0.0), _Z),
     Producto("CHISITOS", "Chisitos", "chisitos2-convcol.001", _X, _Z),
     Producto("OREMOS", "Oremos", "oremos-col", _X, _Z),

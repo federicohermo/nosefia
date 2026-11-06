@@ -16,7 +16,7 @@ const NOMBRES: Array[String] = [
 	"Laysnnt",
 	"Malbardo",
 	"Progres",
-	"Jorgillo",
+	"Jorgillata",
 	"Arvecor",
 	"Chisitos",
 	"Oremos",
@@ -74,7 +74,14 @@ const SONORIDADES_NUEVAS := {
 ## demás van en caja grande. **No sale del volumen de la unidad**: Actroncito es una caja grande
 ## de remedio y va en caja chica, y Zucarachas al revés.
 const EN_CAJA_CHICA: Array[String] = [
-	"Actroncito", "Arvecor", "Durextra", "Jorgillo", "Malbardo", "Duronga", "Oaaaa", "Cosa de Maní"
+	"Actroncito",
+	"Arvecor",
+	"Durextra",
+	"Jorgillata",
+	"Malbardo",
+	"Duronga",
+	"Oaaaa",
+	"Cosa de Maní"
 ]
 
 

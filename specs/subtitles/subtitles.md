@@ -99,7 +99,7 @@ editable y NO DEBE formar parte de la identidad. Los nombres de productos salen 
 | Marranos | Una lata de atún Marranos. |
 | Arvejas | Una lata de arvejas Arvecor. |
 | Mayonchis | Un paquete de Mayonchis. |
-| Jorgillo | Un alfajor Jorgillo. |
+| Jorgillata | Un alfajor Jorgillata. |
 | Marolini | Una caja de fideos Marolini. |
 | Uakas | Una caja de fideos Uakalas. |
 | Saladik | Una caja de Saladick. |
@@ -324,7 +324,7 @@ El salto de renglón cuenta como un carácter para la duración (BR-SUB-004).
 DADO el HUD a 1920×1080 y a 1280×720 CUANDO se muestra un pensamiento ENTONCES el centro
 horizontal de la línea coincide con el del encuadre y su centro vertical está en la mitad
 inferior. DADO el pensamiento «Una bolsa de basura.» visible CUANDO llega «Un alfajor
-Jorgillo.» ENTONCES la línea muestra sólo «Un alfajor Jorgillo.».
+Jorgillata.» ENTONCES la línea muestra sólo «Un alfajor Jorgillata.».
 
 ### AC-SUB-002 — La E con las manos vacías piensa *(verifica BR-SUB-002)*
 
