@@ -36,6 +36,7 @@ const FILAS: Array[Dictionary] = [
 	{
 		"quien": Conversacion.Interlocutor.EL_SEBA,
 		"nombre": "El Seba",
+		"imagen": "res://assets/ui/manada/celular/el_seba.png",
 		"texto":
 		(
 			"Hola buenas tardes, te comento que ayer por la noche hice una compra de dos "
@@ -48,6 +49,7 @@ const FILAS: Array[Dictionary] = [
 	{
 		"quien": Conversacion.Interlocutor.SUKO_YANEZ,
 		"nombre": "Suko Yañez",
+		"imagen": "res://assets/ui/manada/celular/suko_yanez.png",
 		"texto":
 		(
 			"hola no puede ser, un dia que decido pasarme por el local y me cobraron mal la "
@@ -63,6 +65,7 @@ const FILAS: Array[Dictionary] = [
 	{
 		"quien": Conversacion.Interlocutor.LUCAS_ORTEGA,
 		"nombre": "Lucas Ortega",
+		"imagen": "res://assets/ui/manada/celular/lucas_ortega.png",
 		"texto":
 		(
 			"Hola buenas noches. El martes pase por el local y creo que me cobraron mal. Yo "
@@ -75,6 +78,7 @@ const FILAS: Array[Dictionary] = [
 	{
 		"quien": Conversacion.Interlocutor.FLAVIO_BALBIN,
 		"nombre": "Flavio Balbín",
+		"imagen": "res://assets/ui/manada/celular/flavio_balbin.png",
 		"texto":
 		(
 			"hola, estimado, ayer mi señora hizo una compra y me comento que le dieron mal el "
@@ -88,6 +92,7 @@ const FILAS: Array[Dictionary] = [
 	{
 		"quien": Conversacion.Interlocutor.MYRIAM_MELANO,
 		"nombre": "Myriam Melano",
+		"imagen": "res://assets/ui/manada/celular/myriam_melano.png",
 		"texto":
 		(
 			"qué onda, manadaaa, saben que.. la semana pasada me compre un terminator, un "
@@ -178,6 +183,7 @@ static func conversaciones() -> Array[Conversacion]:
 		var chat := Conversacion.new()
 		chat.interlocutor = fila["quien"]
 		chat.nombre = fila["nombre"]
+		chat.imagen = load(fila["imagen"]) as Texture2D
 		chat.rol = ROL
 		chat.jornada_de_menu = JORNADA
 		chats.append(chat)

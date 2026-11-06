@@ -280,7 +280,7 @@ func test_el_izquierdo_fuera_del_telefono_no_lo_baja() -> void:  # AC-INV-033, A
 
 
 # AC-INV-039, AC-INV-041, AC-INV-042
-func test_yasmin_conserva_rol_avatar_liso_y_tramo_identificado() -> void:
+func test_yasmin_conserva_rol_foto_enmascarada_y_tramo_identificado() -> void:
 	var pantalla := _pantalla()
 	var sistema: CelularDelEmpleado = auto_free(CelularDelEmpleado.new())
 	var pedidos: Array[String] = []
@@ -296,7 +296,10 @@ func test_yasmin_conserva_rol_avatar_liso_y_tramo_identificado() -> void:
 	pantalla.mostrar_chat(conversacion, mensajes, false, 5)
 	assert_str((pantalla.get("_subtitulo") as Label).text).is_equal("Compañera de trabajo")
 	assert_bool((pantalla.get("_subtitulo") as Label).visible).is_true()
-	assert_object((pantalla.get("_avatar_del_chat") as TextureRect).texture).is_not_null()
+	var avatar: TextureRect = pantalla.get("_avatar_del_chat")
+	assert_object(conversacion.imagen).is_not_null()
+	assert_object(avatar.texture).is_same(conversacion.imagen)
+	assert_object(avatar.material).is_same(PantallaDelCelular.MASCARA_DEL_AVATAR)
 	var texto := (
 		_burbuja(pantalla, 5).find_children("*", "RichTextLabel", true, false)[0] as RichTextLabel
 	)
