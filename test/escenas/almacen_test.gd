@@ -563,6 +563,17 @@ func test_con_el_despido_la_devolucion_lleva_a_la_pantalla_de_final() -> void:  
 	assert_bool(reloj.corriendo()).is_false()
 
 
+func test_con_el_despido_el_jugador_sigue_suspendido_tras_un_cuadro_fisico() -> void:  # AC-SHF-127
+	var almacen: Node3D = auto_free(load(ESCENA_DEL_ALMACEN).instantiate())
+	var final := await _hasta_la_pantalla_del_despido(almacen, {})
+	var modo_anterior := Input.mouse_mode
+	assert_bool(final.visible).is_true()
+	await get_tree().physics_frame
+	assert_bool((almacen.get_node("Jugador") as Node).call("suspendido")).is_true()
+	assert_int(Input.mouse_mode).is_equal(Input.MOUSE_MODE_VISIBLE)
+	Input.mouse_mode = modo_anterior
+
+
 func test_comenzar_nueva_partida_borra_el_guardado_y_abre_la_jornada_1() -> void:  # AC-SHF-128
 	var almacen: Node3D = auto_free(load(ESCENA_DEL_ALMACEN).instantiate())
 	var cuentas := {}

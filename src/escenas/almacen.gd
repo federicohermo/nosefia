@@ -843,12 +843,12 @@ func _al_forzar_la_puerta_del_jefe() -> void:
 ## El final de la partida: su epílogo, si lo tiene, y después su pantalla (BR-SHF-072). La pantalla
 ## de final se pone debajo del negro cuando el epílogo termina de cerrarse.
 func _mostrar_el_final() -> void:
+	# La devolución suelta el celular antes de llegar acá, y eso reanuda al jugador.
+	_jugador.suspender()
 	var placas := EpilogosDeLosFinales.placas_de(FinalConPantalla.de(_partida))
 	if placas.is_empty():
 		_mostrar_la_pantalla_del_final()
 		return
-	# La devolución suelta el celular antes de llegar acá, y eso reanuda al jugador.
-	_jugador.suspender()
 	var epilogo: PantallaDeEpilogo = PANTALLA_DE_EPILOGO.instantiate()
 	add_child(epilogo)
 	(get_node("Interfaz/ControlDePausa") as ControlDePausa).epilogo = epilogo
