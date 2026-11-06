@@ -34,9 +34,6 @@ const NOMBRES_DISTINTOS_DEL_ID := {
 	Producto.Id.DON_SATURADOS: "donsaturados",
 }
 
-## Donde el artista dejó las etiquetas. Lleva nombres con acento, que la copia no lleva.
-const ORIGEN := "res://assets/source/textures/stockroom/DEPOSITO CAJAS TEXTURA/"
-
 ## La textura de la caja genérica «DEPÓSITO».
 const GENERICA := "res://assets/models/SEPT_JUEGOS_PROTOTIPO_caja.png"
 
@@ -397,18 +394,18 @@ func test_la_etiqueta_filtra_pixelado_como_la_caja_generica() -> void:
 		)
 
 
-## La copia es la textura del artista byte por byte: con otro nombre y nada más. Si el artista
-## cambia la suya, esto da rojo hasta que se vuelva a copiar.
-func test_cada_etiqueta_es_la_copia_de_la_textura_del_artista() -> void:
-	for id: Producto.Id in ORIGEN_DE_CADA_ETIQUETA:
-		var origen := FileAccess.get_file_as_bytes(ORIGEN + ORIGEN_DE_CADA_ETIQUETA[id])
-		var copia := FileAccess.get_file_as_bytes(_ruta_de_la_etiqueta(id))
-		assert_int(origen.size()).is_greater(0)
+## El arte puede corregirse sin conservar sus bytes originales. La correspondencia entre
+## producto y material se ejerce en los otros casos; acá se comprueba que la imagen se decodifica.
+func test_cada_etiqueta_contiene_una_imagen_valida() -> void:
+	for id: Producto.Id in ORIGEN_DE_CADA_ETIQUETA.keys() + DEL_ENVASE:
+		var imagen := Image.new()
+		var bytes := FileAccess.get_file_as_bytes(_ruta_de_la_etiqueta(id))
 		(
-			assert_bool(copia == origen)
-			. override_failure_message("la etiqueta de %s no es su copia" % _nombre(id))
-			. is_true()
+			assert_int(imagen.load_png_from_buffer(bytes))
+			. override_failure_message("la etiqueta de %s no se puede leer" % _nombre(id))
+			. is_equal(OK)
 		)
+		assert_bool(imagen.is_empty()).is_false()
 
 
 ## `ACTRÓNCITO`, `MANÍ` y `LAYSNT´T` se escriben distinto en cada sistema de archivos: «Ó» es un

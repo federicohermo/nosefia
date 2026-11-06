@@ -39,6 +39,11 @@ capacidad son el marco: un criterio que se cumple rompiendo otra regla no está 
 
 ## Los límites del issue son límites
 
+**Antes de cambiar arte, revisá los tests que comparan sus bytes con la fuente anterior.**
+En #869, borrar una tilde dejó roja una igualdad de archivos que congelaba el error visual.
+Reemplazá esa igualdad por carga válida y correspondencia entre producto y material; conservá
+el antes y el después para QA. No copies el error a la fuente ni fijes el hash del arte nuevo.
+
 La tabla de **límites de archivo** del issue no es una sugerencia: la fila «No se toca» es una
 lista negativa y cerrada. Si el trabajo pide escribir algo de esa fila, **eso es un hallazgo sobre
 el issue** y se descarga por la 2 o la 4 de `sin-deuda.md` — no se escribe igual.
