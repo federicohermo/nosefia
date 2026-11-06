@@ -64,7 +64,9 @@ func test_no_salir_conserva_el_ritmo_y_cierra_por_el_recorrido_natural() -> void
 		assert_array(cierres).is_empty()
 		assert_float(_restante(almacen)).is_equal(1.0)
 		RelojDePrueba.avanzar_turno(reloj, 1.0)
-		var esperadas := Apertura.cantidad_de_obligatorias(3) - int(con_pendiente)
+		# Ordenar se cuenta al iniciar el cierre con las cajas como están, y en la apertura ninguna
+		# está en estantes: queda pendiente aunque `_cumplir` la haya marcado.
+		var esperadas := Apertura.cantidad_de_obligatorias(3) - 1 - int(con_pendiente)
 		assert_array(cierres).is_equal([esperadas])
 		_comprobar_el_cierre_sin_celular(almacen)
 		assert_array(_textos(almacen)).is_empty()
