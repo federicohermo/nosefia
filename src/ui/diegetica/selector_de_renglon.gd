@@ -216,7 +216,7 @@ func _armar_la_lista(catalogo: Array[Producto]) -> Panel:
 	lista.add_theme_stylebox_override("panel", _estilo(COLOR_DEL_PANEL))
 	var separador := SeparadorDePixel.new()
 	separador.name = "Separador"
-	separador.position = Vector2(18.5, ALTO_DE_LA_CABECERA - 0.5)
+	separador.colocar(Vector2(18.5, ALTO_DE_LA_CABECERA - 0.5))
 	lista.add_child(separador)
 	var desplazamiento := ScrollContainer.new()
 	desplazamiento.name = "Desplazamiento"
@@ -255,7 +255,7 @@ func _item(producto: Producto) -> Button:
 	item.pressed.connect(_elegir.bind(producto))
 	var linea := SeparadorDePixel.new()
 	linea.name = "Linea"
-	linea.position = Vector2(17.5, ALTO_DEL_ITEM - 1.0)
+	linea.colocar(Vector2(17.5, ALTO_DEL_ITEM - 1.0))
 	item.add_child(linea)
 	if producto == null:
 		item.name = "OpcionVacia"
