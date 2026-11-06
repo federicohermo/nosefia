@@ -181,7 +181,8 @@ cualquier producto del catálogo, incluidos productos repetidos. Elegir vacío D
 sólo ese renglón. La pantalla DEBE conservar cada posición al repintar, abrir o imprimir,
 aunque los anteriores estén vacíos; el papel DEBE llevar sólo los llenos en su orden.
 SI el programa es automático o el renglón está fuera de los 3, ENTONCES elegir NO DEBE
-cambiar nada. Los menús DEBEN ofrecer primero vacío y después el catálogo en su orden.
+cambiar nada. Los menús DEBEN ofrecer primero vacío y después el catálogo en orden alfabético, con el
+criterio de BR-STK-053.
 
 ### BR-CTR-024 — El hueco no lee ni avisa
 
@@ -511,12 +512,12 @@ Los grupos son estos:
 | Comprador | Productos que puede pedir |
 |---|---|
 | Tin | Marolini, Coracola, Malbardo, Mayonchis, Arvecor, Uakalas, Don Saturados, Amargadito |
-| Tia | Zucarachas, Pepito, Marranos, Arvecor, Mayonchis, Jorgillo, Marolini, Saladick, Don Saturados, Laysnnt, Chisitos, Malbardo |
+| Tia | Zucarachas, Pepito, Marranos, Arvecor, Mayonchis, Jorgillata, Marolini, Saladick, Don Saturados, Laysnnt, Chisitos, Malbardo |
 | Fede | Poético, Progres, Duronga, Burbaloo, Malbardo, Fernet God, Terminator |
 | Mía | Burbaloo, Fernet God, Terminator, Actroncito, Amargadito, Coracola, Uakalas, Marranos |
-| Cami | Burbaloo, Zucarachas, Frot Lups, Jorgillo, Pepito, Oremos, Petisas, Macumbas, Flim Pof, Cindolor, Cosa de Maní, Feel Ricky Fort, Oaaaa |
+| Cami | Burbaloo, Zucarachas, Frot Lups, Jorgillata, Pepito, Oremos, Petisas, Macumbas, Flim Pof, Cindolor, Cosa de Maní, Feel Ricky Fort, Oaaaa |
 
-Coracola es la Pura-Cola de la ficha, y Jorgillo la Jorgillata. El Durextra entra al pedido de
+Coracola es la Pura-Cola de la ficha. El Durextra entra al pedido de
 Fede en la jornada 4 y en la última noche (BR-CTR-052). Los productos de almacén que pide alguna noche siguen
 sin noche ni lista (OQ-CTR-007), y no entran.
 
@@ -834,7 +835,7 @@ y una unidad vuelve a anotarse.
 ### AC-CTR-030 — Los menús conservan la selección durante la pausa *(verifica BR-CTR-023)*
 
 DADO el programa manual, CUANDO se abren sus menús ENTONCES cada uno ofrece vacío primero
-y el catálogo ordenado, y muestra la selección del mismo renglón; repintar no publica otra
+y después todo el catálogo en orden alfabético con el criterio de BR-STK-053, y muestra la selección del mismo renglón; repintar no publica otra
 elección ni sonidos. DADO una lista desplegada CUANDO se pulsa derecho ENTONCES se cierra
 el programa conservando la mano. CUANDO se pulsa Esc ENTONCES la lista se oculta y se abre
 la pausa vigente; reanudar conserva selecciones, mano y programa abierto, con control suspendido.

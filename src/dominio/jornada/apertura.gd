@@ -245,11 +245,8 @@ static func faltantes_al_azar(
 		if maximo >= ReglasDelEstante.MENOS_QUE_FALTA:
 			elegibles.append(producto.id)
 			maximos[producto.id] = maximo
-	var cantidad := azar.randi_range(
-		ReglasDelEstante.TIPOS_QUE_FALTAN.x, ReglasDelEstante.TIPOS_QUE_FALTAN.y
-	)
 	var faltantes: Dictionary[Producto.Id, int] = {}
-	for elegido in mini(cantidad, elegibles.size()):
+	for elegido in mini(ReglasDelEstante.TIPOS_QUE_FALTAN, elegibles.size()):
 		var indice := azar.randi_range(0, elegibles.size() - 1)
 		var id := elegibles[indice]
 		elegibles.remove_at(indice)
