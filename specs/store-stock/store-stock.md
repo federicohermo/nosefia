@@ -875,8 +875,7 @@ productos distintos.
 
 DADO una fuente de azar controlada CUANDO se eligen los extremos del intervalo de unidades ENTONCES
 se pueden obtener 3 y el máximo reponible de cada elegido. La elección de unidades tiene tantas
-alternativas equiprobables como enteros hay entre 3 y su máximo reponible, y la cantidad de
-productos no consume azar.
+alternativas equiprobables como enteros hay entre 3 y su máximo reponible.
 
 DADO una caja de 8 CUANDO un producto tiene 6 casilleros principales y 3 unidades pedidas ENTONCES
 su máximo es 5. Con 4 casilleros principales y 1 unidad pedida, el máximo es 4. Con 8 unidades
