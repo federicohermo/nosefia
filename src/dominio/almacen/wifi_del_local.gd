@@ -11,6 +11,11 @@ extends RefCounted
 ## Cada cambio de estado, y sólo cuando cambia.
 signal estado_cambiado(estado: Estado)
 
+## El jugador apagó el router descompuesto, o prendió el apagado. El corte y la apertura de la
+## jornada cambian el estado pero no son un gesto suyo, y no avisan por acá.
+signal router_apagado
+signal router_prendido
+
 ## `SIN_ENERGIA` es el router con el corte cortado; `DESCOMPUESTO`, con la luz de vuelta y sin
 ## arreglar; `APAGADO`, el que el jugador apagó para arreglarlo.
 enum Estado { CON_WIFI, SIN_ENERGIA, APAGADO, DESCOMPUESTO }
@@ -58,8 +63,10 @@ func accionar() -> void:
 	match _estado:
 		Estado.DESCOMPUESTO:
 			_poner(Estado.APAGADO)
+			router_apagado.emit()
 		Estado.APAGADO:
 			_poner(Estado.CON_WIFI)
+			router_prendido.emit()
 
 
 func _poner(nuevo: Estado) -> void:

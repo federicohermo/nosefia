@@ -26,7 +26,9 @@ func _pedidos_de_sonido() -> Array[EntradaSonora.Evento]:
 	)
 	var pedidos: Array[EntradaSonora.Evento] = []
 	reproductor.sonido_pedido.connect(
-		func(evento: EntradaSonora.Evento) -> void: pedidos.append(evento)
+		func(evento: EntradaSonora.Evento) -> void:
+			if evento != EntradaSonora.Evento.NOTIFICACION_ENTRADA:
+				pedidos.append(evento)
 	)
 	return pedidos
 
