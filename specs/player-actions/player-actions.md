@@ -837,7 +837,7 @@ dormida.
 
 DADO una superficie con la inclinación justo debajo del corte de horizontal ENTONCES no admite;
 con el corte exacto sobre el piso y los muebles del mundo fijo, sobre una caja contenedora o sobre
-una unidad que admite, sí; sobre el cuerpo del contenedor (BR-CLN-040) y sobre la mopa, no.
+una unidad que admite, sí; sobre el contenedor, cuerpo o tapa (BR-CLN-040) y sobre la mopa, no.
 Admiten otro encima exactamente las cajas contenedoras y las unidades de producto de caja, cajita
 y lata; ningún otro objeto del almacén lo admite. La cara de una lata acostada cuya normal queda
 por debajo del corte no admite.
