@@ -128,7 +128,7 @@ func test_tirar_sobre_la_tapa_abierta_entrega_lo_mismo_y_no_la_cierra() -> void:
 	var objetos: Array[ObjetoAgarrable] = [
 		unidad, _ticket(almacen), almacen.get_node("Objetos/BolsaDeBasura1")
 	]
-	for objeto in objetos.slice(1):
+	for objeto: ObjetoAgarrable in objetos.slice(1):
 		_agarrar(almacen, objeto)
 		_clic(jugador, tapa, MOUSE_BUTTON_LEFT)
 		_comprobar_tirado(objeto, contenedor, jugador, agarre)

@@ -1,7 +1,7 @@
 ## La tapa abierta con algo en la mano ofrece lo mismo que el cuerpo; en los demás casos alterna.
 extends GdUnitTestSuite
 
-const R := ReferenciaDeControles
+const R := preload("res://src/dominio/jugador/referencia_de_controles.gd")
 const L := ReferenciaDeControles.Linea
 const M := ReferenciaDeControles.Mira
 
