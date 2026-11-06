@@ -1,5 +1,6 @@
 extends GdUnitTestSuite
 
+const PAPEL := preload("res://src/escenas/objetos/documento_impreso.tscn")
 const JORNADA_DEL_DOCUMENTO := GeneradorDeTickets.JORNADA_SIN_LECTOR + 1
 
 var _almacen: Node3D
@@ -239,9 +240,7 @@ func test_mirar_rechazar_o_pausar_no_registran_el_documento() -> void:  # AC-INV
 
 
 func test_el_documento_es_una_hoja_impresa_propia() -> void:  # AC-INV-175
-	var documento: ObjetoAgarrable = auto_free(
-		(load("res://src/escenas/objetos/documento_impreso.tscn") as PackedScene).instantiate()
-	)
+	var documento: ObjetoAgarrable = auto_free(PAPEL.instantiate())
 	var nota: ObjetoAgarrable = auto_free(
 		(load("res://src/escenas/objetos/nota_bajo_la_puerta.tscn") as PackedScene).instantiate()
 	)
@@ -279,4 +278,14 @@ func test_el_documento_es_una_hoja_impresa_propia() -> void:  # AC-INV-175
 	var de_la_cara := impreso.get_surface_override_material(0) as StandardMaterial3D
 	assert_str(de_la_cara.albedo_texture.resource_path).is_equal(
 		"res://assets/ui/manada/pistas/documento-impreso.png"
+	)
+
+
+func test_el_papel_conserva_la_proporcion_de_su_textura() -> void:
+	var papel: ObjetoAgarrable = auto_free(PAPEL.instantiate())
+	var cara := papel.get_node("Impreso") as MeshInstance3D
+	var textura := (cara.get_surface_override_material(0) as StandardMaterial3D).albedo_texture
+	var plano := cara.mesh as PlaneMesh
+	assert_float(plano.size.x / plano.size.y).is_equal_approx(
+		float(textura.get_width()) / textura.get_height(), 0.01
 	)

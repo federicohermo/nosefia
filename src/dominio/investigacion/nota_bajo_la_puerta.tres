@@ -8,3 +8,4 @@ id = &"nota_bajo_la_puerta"
 nombre = "Nota"
 subtitulo = "Una nota escrita a mano que asoma bajo la puerta de Enrique."
 levantable = true
+escala_de_examen = 3.2

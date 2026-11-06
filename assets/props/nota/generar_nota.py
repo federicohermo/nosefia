@@ -1,73 +1,36 @@
-"""Regenera la textura de la nota de Yasmín: su texto, a mano, sobre el papel sin texto.
+"""Regenera las texturas de la nota de la pista 6C desde la exportación de Figma.
 
-Uso: python generar_nota.py [--fuente RUTA]. El resultado es determinista para una misma fuente.
+Uso: python generar_nota.py --entrada RUTA_DE_LA_EXPORTACION. La exportación es el nodo
+1865:867 de «Manada - UI», tal como la entrega Figma. Su fondo es un color liso que no es parte
+del papel: los píxeles de ese color unidos al borde pasan a transparentes, y el papel no cambia.
+El dorso es el mismo contorno en blanco. El resultado es determinista.
 """
 import argparse
-import random
 from pathlib import Path
 
-from PIL import Image, ImageDraw, ImageFont
+from PIL import Image, ImageDraw
 
-AQUI = Path(__file__).resolve().parent
-BASE = AQUI.parent.parent / "models" / "SEPT_JUEGOS_PROTOTIPO_nota sin texto.png"
-SALIDA = AQUI.parent.parent / "ui" / "manada" / "pistas" / "nota-bajo-la-puerta.png"
-FUENTE = Path("C:/Windows/Fonts/Inkfree.ttf")
-SEMILLA = 741
-TINTA = (28, 36, 92)
-MARGEN = 64
-TAMANO = 56
-INTERLINEADO = 70
-
-PARRAFOS = [
-    "Hola, Enrique.",
-    "",
-    "Te dejo esto por escrito porque no me estás contestando los mensajes. "
-    "En serio, hace falta revisar si hay un cable pelado en el local o algo, "
-    "porque se sigue cortando la luz. Por favor, respondé.",
-    "",
-    "Saludos,",
-    "Yasmín.",
-]
+SALIDA = Path(__file__).resolve().parent.parent.parent / "ui" / "manada" / "pistas"
+FONDO = (199, 210, 217, 255)
+PAPEL_DEL_DORSO = (234, 229, 221, 255)
 
 
-def renglones(fuente: ImageFont.FreeTypeFont, ancho: int) -> list[str]:
-    salida: list[str] = []
-    for parrafo in PARRAFOS:
-        actual = ""
-        for palabra in parrafo.split():
-            prueba = f"{actual} {palabra}".strip()
-            if fuente.getlength(prueba) <= ancho:
-                actual = prueba
-            else:
-                salida.append(actual)
-                actual = palabra
-        salida.append(actual)
+def recortar(origen: Image.Image) -> Image.Image:
+    papel = origen.convert("RGBA")
+    assert papel.getpixel((0, 0)) == FONDO, "la exportación no trae el fondo esperado"
+    ImageDraw.floodfill(papel, (0, 0), (0, 0, 0, 0), thresh=0)
+    return papel
+
+
+def dorso(papel: Image.Image) -> Image.Image:
+    salida = Image.new("RGBA", papel.size, (0, 0, 0, 0))
+    salida.paste(PAPEL_DEL_DORSO, mask=papel.getchannel("A").point(lambda a: 255 if a else 0))
     return salida
-
-
-def generar(fuente_ruta: Path, destino: Path) -> None:
-    azar = random.Random(SEMILLA)
-    papel = Image.open(BASE).convert("RGBA")
-    ancho, alto = papel.size
-    fuente = ImageFont.truetype(str(fuente_ruta), TAMANO)
-    tinta = Image.new("RGBA", papel.size, (0, 0, 0, 0))
-    y = MARGEN
-    for renglon in renglones(fuente, ancho - 2 * MARGEN):
-        x = MARGEN + azar.randint(-6, 10)
-        for palabra in renglon.split():
-            ancho_de_palabra = int(fuente.getlength(palabra)) + 24
-            hoja = Image.new("RGBA", (ancho_de_palabra, TAMANO * 2), (0, 0, 0, 0))
-            ImageDraw.Draw(hoja).text((8, TAMANO // 2), palabra, font=fuente, fill=TINTA + (235,))
-            hoja = hoja.rotate(azar.uniform(-2.2, 2.2), resample=Image.BICUBIC, expand=False)
-            tinta.alpha_composite(hoja, (x - 8, y - TAMANO // 2 + azar.randint(-4, 4)))
-            x += int(fuente.getlength(palabra + " "))
-        y += INTERLINEADO
-    assert y < alto - MARGEN, "el texto no entra en el papel"
-    destino.parent.mkdir(parents=True, exist_ok=True)
-    Image.alpha_composite(papel, tinta).convert("RGB").save(destino, optimize=True)
 
 
 if __name__ == "__main__":
     analizador = argparse.ArgumentParser()
-    analizador.add_argument("--fuente", type=Path, default=FUENTE)
-    generar(analizador.parse_args().fuente, SALIDA)
+    analizador.add_argument("--entrada", type=Path, required=True)
+    recortado = recortar(Image.open(analizador.parse_args().entrada))
+    recortado.save(SALIDA / "nota-bajo-la-puerta.png", optimize=True)
+    dorso(recortado).save(SALIDA / "nota-dorso.png", optimize=True)

@@ -29,6 +29,7 @@ var sensibilidad: float = ReglasDelJugador.SENSIBILIDAD_DEL_MOUSE
 
 var _hallazgos := Hallazgos.new()
 var _examinando: Node3D = null
+var _escala_de_mundo := Vector3.ONE
 
 
 func hallazgos() -> Hallazgos:
@@ -72,6 +73,8 @@ func iniciar(enfocado: ObjetoDelAlmacen = null, texto_del_enfocado: String = "")
 		+ Vector3.UP * distancia * ReglasDeLosObjetos.ELEVACION_DEL_EXAMEN
 	)
 	_examinando = nodo
+	_escala_de_mundo = nodo.scale
+	nodo.scale = _escala_de_mundo * datos.escala_de_examen
 	examen_iniciado.emit(nodo)
 	objeto_revelado.emit(datos, _hallazgos.registrar(datos))
 	return true
@@ -82,6 +85,8 @@ func iniciar(enfocado: ObjetoDelAlmacen = null, texto_del_enfocado: String = "")
 func terminar() -> void:
 	if _examinando == null:
 		return
+	if is_instance_valid(_examinando):
+		_examinando.scale = _escala_de_mundo
 	_examinando = null
 	if agarre != null:
 		agarre.devolver_a_la_mano()
