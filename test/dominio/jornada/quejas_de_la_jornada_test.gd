@@ -52,6 +52,11 @@ func test_cada_comprador_tiene_su_chat_y_ninguno_se_repite() -> void:  # AC-INV-
 	assert_int(QuejasDeLaJornada.indice_de(Conversacion.Interlocutor.JEFE)).is_equal(-1)
 
 
+func test_cada_comprador_trae_su_foto_de_perfil() -> void:
+	for chat in QuejasDeLaJornada.conversaciones():
+		assert_object(chat.imagen).is_not_null()
+
+
 func test_el_mensaje_de_cada_comprador_lleva_la_captura_con_su_valor() -> void:  # AC-INV-141
 	var quejas := QuejasDeLaJornada.de_la_partida(1)
 	for chat in QuejasDeLaJornada.conversaciones():
