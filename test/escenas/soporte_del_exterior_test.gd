@@ -121,6 +121,68 @@ func test_los_dos_laterales_reales_dejan_caer_apoyar_y_recoger_un_cuerpo() -> vo
 		jugador.call("reanudar")
 
 
+func test_un_producto_soltado_mirando_recto_por_el_hueco_se_ve_y_se_agarra_desde_adentro() -> void:
+	_almacen = ALMACEN.instantiate()
+	add_child(_almacen)
+	var jugador: CharacterBody3D = _almacen.get("_jugador")
+	jugador.set_process(false)
+	jugador.set_physics_process(false)
+	await get_tree().physics_frame
+	var ventana: Node3D = _almacen.get_node("Estructura/Ventanilla")
+	var hueco := _limites_del_hueco(ventana)
+	var antepecho: MeshInstance3D = ventana.get_node("Antepecho")
+	var plano_exterior := (antepecho.global_transform * antepecho.get_aabb()).end.z
+	# El jugador queda pegado a la pared, lo más cerca del hueco que el cuerpo permite.
+	jugador.global_position = Vector3(
+		hueco.get_center().x, jugador.global_position.y, hueco.position.z - 1.5
+	)
+	jugador.velocity = Vector3.ZERO
+	_mirar(jugador, PI, 0.0)
+	jugador.move_and_collide(Vector3(0, 0, 3.0))
+	assert_float(jugador.global_position.z).is_less(plano_exterior)
+	var agarre: Agarre = _almacen.get("_agarre")
+	_almacen.get("_reposicion_manual").call("retirar", Producto.Id.MALBARDO)
+	var unidad := agarre.punto_de_producto.get_child(0) as RigidBody3D
+	assert_object(unidad).is_not_null()
+	if unidad == null:
+		return
+	_accion(jugador, unidad, ReglasDeLosObjetos.ACCION_AGARRAR)
+	assert_object(agarre.cuerpo_sostenido()).is_null()
+	for cuadro in 150:
+		await get_tree().physics_frame
+	# La premisa: cayó del lado de la calle, en el piso, y no dentro del local.
+	assert_float(unidad.global_position.z).is_greater(plano_exterior)
+	assert_float(unidad.global_position.y).is_less(hueco.position.y)
+	var camara: Camera3D = jugador.get_node("Giro/Camara")
+	camara.look_at(unidad.global_position)
+	for cuadro in 4:
+		await get_tree().physics_frame
+	jugador.call("_leer_la_mira")
+	assert_object(jugador.get("_enfocado")).is_same(unidad)
+	_accion(jugador, unidad, ReglasDeLosObjetos.ACCION_AGARRAR)
+	assert_object(agarre.cuerpo_sostenido()).is_same(unidad)
+
+
+func _mirar(jugador: Node3D, giro: float, alto: float) -> void:
+	var camara: Camera3D = jugador.get_node("Giro/Camara")
+	var evento := InputEventMouseMotion.new()
+	evento.relative = (
+		Vector2(jugador.get_node("Giro").rotation.y - giro, camara.rotation.x - alto)
+		/ ReglasDelJugador.SENSIBILIDAD_DEL_MOUSE
+	)
+	jugador.call("_unhandled_input", evento)
+	(jugador.get("_control") as ControlDelJugador).avanzar_el_dibujo(SuavizadoDelGiro.VENTANA)
+	jugador.call("_aplicar_la_rotacion")
+
+
+func _accion(jugador: Node3D, objetivo: Node3D, accion: StringName) -> void:
+	jugador.set("_enfocado", objetivo)
+	var evento := InputEventAction.new()
+	evento.action = accion
+	evento.pressed = true
+	jugador.call("_unhandled_input", evento)
+
+
 func _limites_del_hueco(ventana: Node3D) -> AABB:
 	var soporte: MeshInstance3D = ventana.get_node("Antepecho")
 	var bajo := soporte.global_transform * soporte.get_aabb()
