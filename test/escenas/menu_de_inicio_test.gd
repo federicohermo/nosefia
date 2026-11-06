@@ -11,7 +11,9 @@ const TEXTOS_FUERA_DE_LA_WEB: Array[String] = [
 	"CONFIGURACIONES",
 	"SALIR",
 ]
-const HABILITADOS_FUERA_DE_LA_WEB: Array[String] = ["NUEVO JUEGO", "CONFIGURACIONES", "SALIR"]
+const HABILITADOS_FUERA_DE_LA_WEB: Array[String] = [
+	"NUEVO JUEGO", "LOGROS", "CONFIGURACIONES", "SALIR"
+]
 
 var _ruta: String
 
@@ -63,7 +65,7 @@ func test_el_juego_abre_en_el_menu() -> void:  # AC-SAV-012
 	assert_object(_menu()).is_not_null()
 
 
-func test_muestra_los_cinco_botones_y_habilita_tres() -> void:  # AC-CFG-010
+func test_muestra_los_cinco_botones_y_habilita_cuatro() -> void:  # AC-CFG-010
 	var textos: Array[String] = []
 	var menu := _menu()
 	for boton: Button in menu.get_node("Marco").find_children("*", "Button", true, false):
@@ -236,6 +238,23 @@ func test_cambiar_una_preferencia_invalida_la_copia() -> void:
 		assert_bool(pantalla.visible).is_false()
 		assert_bool(menu.call("_sirve_la_copia")).is_false()
 		remove_child(menu)
+
+
+func test_reasignar_una_tecla_invalida_la_copia() -> void:  # AC-CFG-022
+	var menu := _menu()
+	menu.set_process(false)
+	var pantalla := _configuraciones(menu)
+	_boton(menu, "CONFIGURACIONES").pressed.emit()
+	assert_bool(menu.call("_sirve_la_copia")).is_true()
+	var fila: HBoxContainer = pantalla.filas()[Preferencias.CAMPOS.size() + 1]
+	(fila.get_child(1) as Button).pressed.emit()
+	var controles: PantallaDeControles = pantalla.get_node("Controles")
+	controles.elegir(AsignacionDeControles.EXAMINAR, 0)
+	var tecla := InputEventKey.new()
+	tecla.physical_keycode = KEY_F
+	tecla.pressed = true
+	assert_bool(controles.atender(tecla)).is_true()
+	assert_bool(menu.call("_sirve_la_copia")).is_false()
 
 
 func test_la_letra_cambia_al_volver_de_configuraciones() -> void:  # AC-CFG-008, AC-CFG-010

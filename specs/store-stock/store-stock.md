@@ -3,7 +3,7 @@ schema_version: 1
 capability_id: CAP-STK
 status: ratified
 owner: por definir
-provenance: GDD «Reponer» y «Registrar»; fichas «7. Tarea: Registro de productos vendidos», «8. Tarea: Reposición», «5. Formas de interacción con objetos» y «Particulares de cada jornada»; decisiones de #366, #367, #369, #376 y #425; base «Productos y cajas contenedoras»; migración de los specs 005, 008, 033, 042, 047; Mapa de góndolas y comentario de Tiago del 2026-10-15 a las 18:25 UTC que conserva Duronga en exhibición provisional (#434); decisión del dueño de #434 — Actroncito y Prongles conservan dos hileras y rige la lista de cinco del arte vigente; pedidos fijos y activación J2 de #433 y #444; ocho jornadas de #526; mapas de prueba y completo del 20/10/2026 (#575); Duronga en lugar de Durextra en las jornadas de prueba y compras de Fede en la jornada 2 (#605); decisión del dueño de #645 — sólo los productos de una sola fila conservan una unidad y pasan el vacío al estante vecino; correcciones y protección del aire y de los márgenes de cabeceras y laterales pedidas por el dueño en #621; paso uniforme entre productos de un estante y aire de Terminator pedidos por el dueño tras probar #621; compras físicas, pedidos sorteados y registro de las jornadas 3 a 5 de #459; registro de las noches de prueba con sólo los productos presentes (#625); cajas que amanecen donde el jugador las dejó, de la ficha «8. Tarea: Reposición» (#555); la unidad en la mano al cierre cuenta como puesta (#386); planilla en orden alfabético (#567)
+provenance: GDD «Reponer» y «Registrar»; fichas «7. Tarea: Registro de productos vendidos», «8. Tarea: Reposición», «5. Formas de interacción con objetos» y «Particulares de cada jornada»; decisiones de #366, #367, #369, #376 y #425; base «Productos y cajas contenedoras»; migración de los specs 005, 008, 033, 042, 047; Mapa de góndolas y comentario de Tiago del 2026-10-15 a las 18:25 UTC que conserva Duronga en exhibición provisional (#434); decisión del dueño de #434 — Actroncito y Prongles conservan dos hileras y rige la lista de cinco del arte vigente; pedidos fijos y activación J2 de #433 y #444; ocho jornadas de #526; mapas de prueba y completo del 20/10/2026 (#575); Duronga en lugar de Durextra en las jornadas de prueba y compras de Fede en la jornada 2 (#605); decisión del dueño de #645 — sólo los productos de una sola fila conservan una unidad y pasan el vacío al estante vecino; correcciones y protección del aire y de los márgenes de cabeceras y laterales pedidas por el dueño en #621; paso uniforme entre productos de un estante y aire de Terminator pedidos por el dueño tras probar #621; compras físicas, pedidos sorteados y registro de las jornadas 3 a 5 de #459; registro de las noches de prueba con sólo los productos presentes (#625); cajas que amanecen donde el jugador las dejó, de la ficha «8. Tarea: Reposición» (#555); la unidad en la mano al cierre cuenta como puesta (#386); planilla en orden alfabético (#567); las cajas del pedido al proveedor, de #691
 ---
 
 # Capacidad: la mercadería del almacén
@@ -25,20 +25,19 @@ depósito son dos lugares distintos, y mover mercadería del fondo al estante cu
 | **Contenido de la caja** | cuántas unidades tiene la caja: su depósito menos sus unidades afuera | stock, carga |
 | **Unidad afuera** | una unidad que salió de su caja, o que se agarró de la góndola, y todavía no se colocó, volvió a su caja ni se tiró: en la mano o soltada en el piso. Sigue contada en el depósito | reservada, en tránsito |
 | **Góndola** | el estante del local, el que el jugador repone | vitrina, exhibidor |
-| **Tanda** | las unidades de un mismo producto puestas juntas sobre un estante del local, en dos filas o en una | bloque, exhibición |
+| **Tanda** | las unidades de un mismo producto puestas juntas sobre un estante del local, en una sola fila | bloque, exhibición |
 | **Tanda fija** | una tanda que repite un producto para completar un estante. Su fila de adelante tiene casilleros, como la de cualquier tanda | guía, decorado |
 | **Cara de lado** | cada uno de los dos lados largos de un mueble de estantes, el que da a un pasillo | frente, lateral |
 | **Cabecera** | cada uno de los dos extremos cortos de un mueble de estantes | punta, testero |
 | **Zócalo** | el estante de más abajo de una cara de lado | base, piso |
 | **Estante de reposición** | un estante a la altura de la mano: los niveles 1 y 2 de los cuatro existentes, tanto en laterales como en cabeceras | estante del medio, estante útil |
-| **Fila de adelante** | la fila de una tanda del lado del pasillo: la única que el jugador repone. En una tanda de una sola fila, es esa fila | frente, cara |
-| **Fila de atrás** | la fila de una tanda de dos filas contra el fondo del estante: fija, entera toda la noche | guía, fondo |
+| **Fila de adelante** | la única fila de una tanda, del lado del pasillo: la que el jugador repone | frente, cara |
 | **Casillero** | cada lugar de la fila de adelante, que el jugador llena colocando una unidad y vacía agarrándola. Cada uno está vacío u ocupado por separado | hueco, slot |
 | **Cupo** | cuántos casilleros suman las filas de adelante de las tandas de un producto: cuántas unidades pide su góndola. Es distinto para cada producto | umbral, mínimo, tope |
 | **Faltante** | un producto con algún casillero vacío en su fila de adelante | agotado, sin stock |
 | **Faltantes de la jornada** | cuántas unidades de cada producto faltan en la góndola cuando abre una jornada | pedido, reposición |
 | **Máximo reponible** | el menor entre los casilleros de la tanda reponible de un producto y las unidades de una caja menos sus unidades pedidas esa noche | cupo, vendibles |
-| **Producto elegible** | producto del catálogo cuyo máximo reponible es al menos una unidad | producto sorteado |
+| **Producto elegible** | producto del catálogo cuyo máximo reponible es al menos 3 unidades | producto sorteado |
 | **Vendibles** | lo que queda en la caja menos lo que a la góndola todavía le falta de ella: el depósito menos el mayor entre los casilleros vacíos de la fila de adelante y las unidades afuera | stock, disponible |
 | **Planilla** | la lista donde el jugador anota cuántas unidades se vendieron de cada producto | registro de caja, ticket |
 | **Lo vendido** | las unidades de un producto que salieron en ventas cobradas esa noche | stock, ventas del día |
@@ -189,17 +188,13 @@ un jugador parado en el pasillo. La fila de adelante de cada tanda del local, re
 en cualquier estante, DEBE ser de casilleros de su producto: se agarra y se repone igual. Los
 casilleros vacíos con que abre una jornada DEBEN quedar juntos: un bloque de casilleros seguidos
 en la fila de adelante de una tanda del producto, reponible o fija y en cualquier estante. La
-tanda DEBE elegirse al azar entre las que reciben el faltante entero.
-SI el faltante no entra entero en ninguna, ENTONCES DEBE partirse: las tandas se vacían enteras,
-una junto a la otra en estantes contiguos, y la tanda parcial queda pegada a ellas, debajo del
-bloque; arriba sólo si debajo no hay estante. Los vacíos de la tanda parcial DEBEN ir en las mismas
-columnas que los del estante anterior, hasta donde lo permita lo que la tanda protege. En una
-tanda, los vacíos NO DEBEN quedar separados por casilleros ocupados. En un producto de dos filas
-(BR-STK-025), la apertura PUEDE vaciar entera la fila de adelante de cualquier tanda, la
-reponible incluida: la fila de atrás dice qué va ahí.
+tanda DEBE elegirse al azar entre las que reciben el faltante entero. En una tanda, los vacíos
+NO DEBEN quedar separados por casilleros ocupados.
 
-La apertura NO DEBE vaciar entera la fila de adelante de ninguna tanda de un producto de una sola
-fila: en cada estante del producto DEBE quedar al menos una unidad. El faltante que no cabe en un
+La apertura NO DEBE vaciar entera la fila de adelante de ninguna tanda: en cada estante del
+producto DEBE quedar al menos una unidad. Los vacíos que pasan a otro estante DEBEN ir en las
+mismas columnas que los del estante anterior, hasta donde lo permita la unidad que el estante
+conserva. El faltante que no cabe en un
 estante DEBE quedar en la fila de adelante del estante de justo arriba: con cuatro casilleros por
 estante y cuatro faltantes, faltan tres de un estante y uno del de arriba. SI el de los tres es el
 de arriba de todo, ENTONCES el que sobra DEBE quedar en el de justo abajo. SI el estante vecino
@@ -216,21 +211,13 @@ En una heladera, cualquier bandeja puede llevar la tanda reponible o una tanda f
 En las jornadas de prueba, BR-STK-047 permite repetir una tanda fija en el otro nivel de
 reposición, conservando una sola principal por producto y todos los frontales interactuables.
 
-### BR-STK-025 — Las filas corresponden a cada tanda aprobada
+### BR-STK-025 — Cada tanda se ve en una sola fila
 
-Cada tanda principal o fija de un producto exhibido DEBE tener dos filas, una detrás de la
-otra, salvo las excepciones siguientes. Cada lugar de la fila de adelante DEBE ser un
-casillero del producto, y ninguno de la fila de atrás. La fila de atrás DEBE verse entera
-desde que abre la jornada y NO DEBE poder agarrarse ni vaciarse: es la que dice qué va ahí.
-
-Todas las tandas de Cosa de Maní, Flin Puf, Burbaloo, Marranos y Poético DEBEN tener una sola
-fila. Las demás tandas DEBEN tener dos filas, incluidas las principales y fijas de Actroncito y
-Prongles, que conservan las dos hileras del arte vigente. Las dos filas de una tanda DEBEN
-verse separadas, y las unidades de un estante DEBEN repartirse de punta a punta con el mismo
-hueco entre todas.
-
-Cada lugar de una tanda de una fila DEBE ser un casillero, sea principal o fija; esa tanda
-NO DEBE tener fila posterior. La cantidad de filas se decide por tanda, no sólo por producto.
+Cada tanda principal o fija de un producto exhibido DEBE verse en una sola fila, la de
+adelante, y cada lugar suyo DEBE ser un casillero del producto. Detrás de los casilleros NO
+DEBE verse ninguna unidad: al vaciar todos los casilleros de una tanda, no queda a la vista
+ninguna unidad suya. Las unidades de un estante DEBEN repartirse de punta a punta con el
+mismo hueco entre todas.
 El estante NO DEBE ensancharse para un producto: dos muebles iguales miden lo mismo.
 
 ### BR-STK-026 — Lo que falta al abrir cada jornada
@@ -242,24 +229,24 @@ góndola son huecos, y reponer queda cumplida cuando están todos llenos.
 Retomar la jornada 1 desde el menú DEBE abrirla completa otra vez.
 La jornada 2 DEBE abrir con su inventario nuevo y sus faltantes sorteados.
 Los huecos dejados por ventas en la jornada 1 NO DEBEN pasar a la siguiente.
-DEBE elegir entre 4 y 6 productos distintos y, de cada uno, entre 3 unidades y su máximo
-reponible. Ningún otro producto DEBE faltar. Los intervalos son los de la
+DEBE elegir cuatro productos distintos, ni más ni menos, y, de cada uno, entre 3 unidades y su
+máximo reponible. Ningún otro producto DEBE faltar. La cantidad y el intervalo son los de la
 [ficha «8. Tarea: Reposición»](https://app.notion.com/p/3cc86efecd9d81968a25c7cffca4b0dd).
 
 Para cada producto, el máximo reponible DEBE ser `mínimo(C − P, F)`: `C` son las unidades de una
 caja (BR-STK-004), `P` la suma de sus unidades pedidas esa noche y `F` los casilleros de la fila de
-adelante de todas sus tandas, reponible y fijas, menos uno por cada tanda de un producto de una
-sola fila, que no puede abrir vacía entera (BR-STK-024). El inventario DEBE conservar el cupo
+adelante de todas sus tandas, reponible y fijas, menos uno por cada tanda, que no puede abrir
+vacía entera (BR-STK-024). El inventario DEBE conservar el cupo
 total de todas las tandas (BR-STK-008). Los casilleros vacíos de un producto DEBEN quedar juntos
 (BR-STK-024). Sólo los productos con máximo reponible mayor o igual a 3
 DEBEN entrar al sorteo. Los pedidos DEBEN ser los mismos que recibe la atención de esa apertura,
 incluidas las repeticiones de producto entre compradores. Consultarlos NO DEBE volver a sortear
 compradores ni pedidos.
 
-La cantidad de productos y las unidades de cada elegido DEBEN sortearse con reparto parejo
-entre los enteros de sus intervalos inclusivos. Los productos DEBEN elegirse sin repetición.
-SI hay menos elegibles que la cantidad sorteada, ENTONCES DEBEN faltar todos los elegibles
-y ninguno más. Con cero elegibles NO DEBE faltar nada.
+La cantidad de productos NO se sortea: sólo se sortea cuáles. Las unidades de cada elegido
+DEBEN sortearse con reparto parejo entre los enteros de su intervalo inclusivo. Los productos
+DEBEN elegirse sin repetición. SI hay menos de cuatro elegibles, ENTONCES DEBEN faltar todos
+los elegibles y ninguno más. Con cero elegibles NO DEBE faltar nada.
 
 El sistema DEBE recibir la fuente de azar: con la misma semilla inicial, pedidos y casilleros,
 DEBE producir los mismos faltantes y dejar vacíos los mismos casilleros. En juego, la fuente DEBE inicializarse al azar.
@@ -342,7 +329,7 @@ vuelve a poner.
 CUANDO el jugador agarra una unidad colocada en un casillero de la fila de adelante, el sistema
 DEBE dársela y dejar ese casillero vacío: el producto vuelve a faltar (BR-STK-007). Da lo mismo
 que la haya colocado él o que estuviera desde que abrió la jornada. SI el casillero está vacío,
-ENTONCES el sistema NO DEBE darle nada. La fila de atrás no se agarra (BR-STK-025).
+ENTONCES el sistema NO DEBE darle nada.
 
 Con esa unidad en la mano vale todo lo que vale para una que salió de su caja: se coloca en
 cualquier casillero vacío de su producto, se suelta, o se devuelve a su caja (BR-STK-030). SI
@@ -439,9 +426,14 @@ y AC-STK-111 a AC-STK-113.
 
 MIENTRAS queda turno y la jornada declara ordenar las cajas, el sistema DEBE contar esa
 obligatoria como cumplida si cada caja está suelta y su cadena de apoyos termina en un pallet
-de las tres estanterías del depósito. Una caja sostenida —también examinada desde la mano— o
-apoyada sobre una caja sostenida NO DEBE contar como ordenada.
-Un pallet del piso NO DEBE contar como estantería. Una cadena que termina en otra superficie,
+de las tres estanterías del depósito. Una única caja que no cumple esa condición DEBE contar
+como apoyada en una estantería si está sostenida —también examinada desde la mano— o apoyada
+en el local (BR-CLN-027), en cualquier superficie suya. Dos o más cajas fuera de las
+estanterías NO DEBEN ordenar, aunque una esté en la mano y otra en el local. Una caja apoyada
+sobre la sostenida o sobre la del local NO DEBE contar como ordenada.
+Un pallet del piso NO DEBE contar como estantería. Una caja en el piso del depósito, en el
+pallet del piso, en el baño, en el cuartito o afuera NO DEBE contar como la excepción. Una
+cadena que termina en otra superficie,
 en una caja ausente o en un ciclo NO DEBE contar como ordenada. Una lista vacía DEBE contestar
 que está ordenada. CUANDO una caja deja de cumplir la condición, el sistema DEBE descumplir
 ordenar; recuperar la condición DEBE volver a cumplirla. Con el turno cerrado, mover cajas NO
@@ -467,7 +459,7 @@ no implica renombrar productos.
 | Mitad de snacks dulces junto a cereales, primera isla | Macumbas, Pepitos (Pepito) |
 | Lado de snacks dulces, segunda isla | Oremos, Petisas, Cosa de Maní, Feel Ricky Fort |
 | Lado/cabecera de snacks salados, isla de snacks | Donsaturados (Don Saturados), Prongles (Progres), Chisitos, Laysntt (Laysnnt), Saladik (Saladick) |
-| Cabeceras de golosinas, isla de snacks | Burbaloo, Flinpuf (Flim Pof), Jorgillo |
+| Cabeceras de golosinas, isla de snacks | Burbaloo, Flinpuf (Flim Pof), Jorgillata |
 
 La primera isla DEBE reunir almacén, cereales y la mitad de snacks dulces junto a cereales,
 con bebidas sin refrigerar en una cabecera. La segunda DEBE reunir los otros snacks dulces,
@@ -533,7 +525,7 @@ CUANDO se completa una compra de jornada 2 con productos y ticket exactos, el si
 retirar sus unidades registradas afuera una sola vez por identidad y contarlas como vendidas,
 sin descontar además el pedido completo. Una recepción parcial NO DEBE sumar ventas. SI vence
 sin completarse, ENTONCES las unidades recibidas DEBEN seguir registradas afuera y quedar
-recogibles en el piso interior del local frente a la ventanilla; depósito, caja y góndola DEBEN
+recogibles sobre el apoyo de la ventanilla, del lado de adentro; depósito, caja y góndola DEBEN
 conservarse como antes del vencimiento. El ticket aceptado DEBE descartarse. Esas unidades
 DEBEN poder colocarse, devolverse o recogerse como cualquier unidad suelta. Vender una unidad
 retirada de góndola NO DEBE rellenar su casillero ni cumplir reposición.
@@ -562,7 +554,7 @@ reposición DEBEN consumir los mismos pedidos fijos de la única lista construid
 
 HASTA la jornada anterior a la primera completa, el sistema DEBE tener únicamente los
 dieciséis productos del mapa de prueba. Sus identidades son Actroncito, Duronga, Arvecor,
-Marolini, Zucarachas, Malbardo, Progres, Jorgillo, Pepito, Pura-Cola, Don Saturados, Petisas,
+Marolini, Zucarachas, Malbardo, Progres, Jorgillata, Pepito, Pura-Cola, Don Saturados, Petisas,
 Mayonchis, Poético, Terminator y Fernet God, con sus nombres de catálogo vigentes.
 
 Los otros productos NO DEBEN tener unidades en góndola o depósito, cajas visibles, cuerpos
@@ -576,67 +568,26 @@ local NO DEBE conservar cupos, dibujos, objetivos ni unidades sueltas de la etap
 ### BR-STK-047 — Las jornadas de prueba ocupan los cuatro niveles
 
 EN las jornadas de prueba, el sistema DEBE ocupar los cuatro niveles de cada cara con
-los mismos productos del mapa de prueba. Cada lado largo DEBE conservar dos mitades
-longitudinales, repetidas en cada nivel, sin estantes vacíos:
+los mismos productos del mapa de prueba, sin estantes vacíos:
 
 | Destino del mapa de prueba | Productos |
 |---|---|
 | Lado de almacén de la primera isla | Arvecor y Marolini |
 | Lado opuesto de esa isla | Terminator y Zucarachas |
-| Cabecera de bebidas de esa isla | Fernet God |
-| Cabecera opuesta de esa isla | Malbardo |
+| Cabecera de bebidas de esa isla | Poético |
+| Cabecera opuesta de esa isla | Fernet God |
 | Lado de dulces de la segunda isla | Pepito y Petisas |
 | Lado de salados de la segunda isla | Progres y Don Saturados |
-| Cabecera que conserva Jorgillo en el mapa completo | Jorgillo |
-| Cabecera opuesta de la segunda isla | Poético |
-| Estantería de no comestibles | Actroncito en la mitad izquierda y Duronga en la derecha |
+| Cabecera que conserva Jorgillata en el mapa completo | Jorgillata |
+| Cabecera opuesta de la segunda isla | Malbardo |
+| Estantería de no comestibles | Actroncito y Duronga |
 | Primera heladera funcional | Pura-Cola |
 | Segunda heladera funcional | Mayonchis |
 
 Cada producto DEBE conservar una sola tanda principal a altura de reposición. Las
 repeticiones de los demás niveles, incluido el otro nivel central, DEBEN ser tandas fijas
-con frontales que se agarran y reponen. Las filas posteriores, orientaciones, apoyos,
-separación de unidades y tamaño de muebles DEBEN conservar las reglas vigentes. El cambio
-a la etapa completa DEBE restituir los sectores de BR-STK-043 y BR-STK-044.
-
-### BR-STK-048 — La prueba conserva los márgenes de la etapa completa
-
-EN las jornadas de prueba, el sistema DEBE conservar el margen de los productos contra
-el borde de cada estante de la etapa completa y la separación uniforme de referencia de
-cada envase. SI las columnas calculadas inicialmente no entran con ese ritmo, los márgenes
-y el aire entre caras, ENTONCES DEBE quitar columnas hasta obtener la mayor cantidad que
-entre en la cara, conservando las dos regiones longitudinales cuando haya dos productos.
-NO DEBE comprimir ni estirar las separaciones para conservar un cupo anterior. El sobrante
-DEBE repartirse a ambos lados de cada tanda, sin pegarla a la división longitudinal.
-Los cupos principales y totales DEBEN medirse del reparto resultante. Se conservan las filas,
-orientaciones, apoyos, destinos y la principal a altura de reposición de BR-STK-047.
-
-### BR-STK-049 — El aire protege las unidades, las caras y la división longitudinal
-
-EN las jornadas de prueba, el sistema DEBE reservar el mínimo de separación de exhibición
-entre unidades vecinas, el mínimo de aire entre caras contiguas y el mínimo de aire entre
-las dos tandas de un lateral. En cada encuentro de cabecera y lateral, el aire DEBE ser al
-menos la mayor separación de referencia de los productos contiguos y nunca menor que el
-mínimo entre caras del dominio. La división longitudinal NO DEBE convertirse en un borde
-contra el que se amontonen ambas tandas. Los centros de ambas tandas DEBEN permanecer en mitades
-opuestas, con el ritmo de su producto en la etapa completa. Un bloque puede aprovechar la
-holgura del otro, como en la etapa completa, antes de quitar otra columna.
-
-En un estante de prueba con dos productos, cada producto DEBE conservar su separación
-interna de referencia. El encuentro DEBE dejar la mayor separación de referencia de sus
-dos productos, nunca menor que el mínimo de aire entre las dos tandas.
-El sobrante DEBE repartirse a partes iguales entre los dos bordes del estante, sin agrandar
-el encuentro entre los productos ni el encuentro entre caras. Terminator DEBE tomar la
-separación de Zucarachas, el otro producto de su estante, en lugar de la suya de referencia,
-y con ese paso expone una columna menos que con la propia.
-
-Las cabeceras DEBEN conservar el margen lateral de exhibición a ambos costados de la chapa,
-además del retiro frontal de referencia de BR-STK-048. Sus filas DEBEN conservar el aire de
-referencia cuando quepa y nunca bajar del mínimo de aire entre filas de exhibición.
-Los mínimos de exhibición son valores del dominio. Ninguna adaptación DEBE poner unidades
-fuera del apoyo, superponerlas ni cambiar filas, orientaciones, destinos o la altura de
-reposición. SI ni una columna satisface simultáneamente esos mínimos en su región,
-ENTONCES el sistema DEBE rechazar el reparto, en vez de publicarlo comprimido.
+con frontales que se agarran y reponen. El freezer NO DEBE exhibir productos. El cambio a la
+etapa completa DEBE restituir los sectores de BR-STK-043 y BR-STK-044 y lo exhibido en el freezer.
 
 ### BR-STK-050 — Las compras de las jornadas 3 a 5 conservan recepción, venta y registro
 
@@ -650,7 +601,7 @@ CUANDO se completa una compra de esas jornadas con productos y ticket exactos, e
 retirar sus unidades registradas afuera una sola vez por identidad y contarlas como vendidas, sin
 descontar además el pedido completo. Una recepción parcial NO DEBE sumar ventas. SI vence sin
 completarse, ENTONCES las unidades recibidas DEBEN seguir registradas afuera y quedar recogibles en
-el piso interior del local frente a la ventanilla, con depósito, caja y góndola como antes del
+el apoyo de la ventanilla, del lado de adentro, con depósito, caja y góndola como antes del
 vencimiento, y el ticket aceptado DEBE descartarse (BR-STK-041).
 
 MIENTRAS haya una compra en curso, registrar DEBE seguir pendiente aunque la planilla coincida
@@ -686,6 +637,20 @@ depender sólo del nombre: no del orden en que el catálogo declara los producto
 subconjunto presente esa noche (BR-STK-046). Dos nombres que sólo difieren en mayúsculas o
 tildes DEBEN conservar el orden del catálogo entre sí. Ordenar la planilla NO DEBE cambiar
 qué productos tiene, sus precios ni lo anotado en cada fila.
+
+### BR-STK-055 — La jornada 6 abre con cinco cajas vacías
+
+CUANDO se abre la jornada 6, el sistema DEBE abrir exactamente cinco cajas del depósito con 0
+unidades. Una DEBE ser la de Fernet God. Las otras cuatro DEBEN salir de un sorteo con la semilla
+de la partida entre todas las cajas del depósito de esa noche, sin contar las de un producto que
+falte esa noche (BR-STK-007) ni las de uno que pidan los compradores de esa noche. Abrir la jornada otra vez o retomarla desde su apertura DEBE
+dar las mismas cinco cajas. Las demás cajas DEBEN abrir como en BR-STK-004.
+
+Una de las cinco permanece en el depósito, visible, y DEBE poder agarrarse y examinarse como
+cualquier caja del depósito: examinarla dice que tiene 0 (BR-STK-031) y pedirle una unidad no
+entrega nada (BR-STK-016). Durante la jornada 6, Fernet God NO DEBE faltar en su góndola ni entrar
+en el pedido de ningún comprador, tampoco en los pedidos al azar. Las demás jornadas NO DEBEN abrir
+ninguna caja vacía por esta regla.
 
 ## Criterios de aceptación
 
@@ -840,28 +805,12 @@ su tanda ENTONCES la mira alcanza su casillero y el producto se coloca.
 
 ### AC-STK-030 — Filas por tanda y casilleros adelante *(verifica BR-STK-025)*
 
-DADO cada tanda principal y fija del local ENTONCES sus filas coinciden con esta tabla:
-
-| Producto | Principal | Fijas |
-|---|---|---|
-| Cosa de Maní, Flin Puf, Burbaloo, Marranos y Poético | 1 | 1 |
-| Actroncito, Prongles y los demás productos exhibidos | 2 | 2 |
-
-La fila de adelante es la más cercana al pasillo y cada lugar suyo es un casillero del
-producto. Los casilleros totales y los que usan la apertura y el sorteo suman los frontales de
+DADO cada tanda principal y fija del local ENTONCES se ve en una sola fila, la más cercana al
+pasillo, y cada lugar suyo es un casillero del producto. Los casilleros totales y los que usan la apertura y el sorteo suman los frontales de
 su principal y sus fijas. Un producto sin casilleros en ninguna tanda NO DEBE volverse elegible.
-Las filas delanteras fijas conservan su interacción de BR-STK-024. La fila de
-atrás, cuando existe, no tiene casilleros: una copia posterior no agrega ninguno.
-
-### AC-STK-031 — La fila de atrás de cada tanda permanece entera *(verifica BR-STK-025)*
-
-DADO una jornada que se abre ENTONCES cada tanda de dos filas muestra entera su fila de
-atrás y su fila delantera completa salvo los faltantes declarados. CUANDO se agarra o repone
-una unidad de delante ENTONCES sólo cambia ese casillero y la fila de atrás no cambió ni se
-puede agarrar. DADO una tanda de una fila ENTONCES no tiene unidades detrás de sus
-casilleros; al vaciar todos sus casilleros no queda ninguna unidad de esa tanda.
-
-DADO Actroncito y Prongles ENTONCES sus tandas principales y fijas conservan ambas filas.
+Las filas de las tandas fijas conservan su interacción de BR-STK-024. DADO una tanda CUANDO se
+vacían todos sus casilleros ENTONCES no queda a la vista ninguna unidad suya. CUANDO se agarra o
+repone una unidad ENTONCES sólo cambia ese casillero.
 
 ### AC-STK-032 — Una caja entera alcanza para el faltante más grande *(verifica BR-STK-004)*
 
@@ -877,39 +826,34 @@ de una caja menos lo pedido —8 menos lo pedido en el balance vigente— ni de 
 fila de adelante de todas las tandas de su producto. El inventario conserva el cupo total de
 todas las tandas. DADO productos de cuatro tandas de tres casilleros, o de dos tandas de cuatro,
 CUANDO se sortean sus vacíos con las 200 semillas ENTONCES hay vacíos en cada tanda de al menos
-un producto. DADO un producto de una sola fila ENTONCES ninguna de sus tandas abre con su fila de
-adelante entera vacía. DADO cualquier producto CUANDO se sortean sus vacíos con las 200 semillas
+un producto. DADO cualquier producto ENTONCES ninguna de sus tandas abre con su fila de adelante
+entera vacía. DADO cualquier producto CUANDO se sortean sus vacíos con las 200 semillas
 ENTONCES en cada tanda los casilleros vacíos son seguidos, sin un casillero ocupado entre dos
 vacíos. Si el faltante entra entero en alguna tanda, todos caen en una sola, aunque otra tanda no
-lo reciba entero: con dos tandas de una fila de cinco y cuatro casilleros y un faltante de cuatro,
-siempre caen en la de cinco. Sólo si no entra en ninguna se parte. DADO un producto de dos filas
-con cuatro tandas de tres casilleros en estantes contiguos CUANDO su faltante se parte con las 200
-semillas ENTONCES las tandas con vacíos son contiguas, todas quedan vacías enteras salvo una, y esa
-tanda parcial está debajo de las vacías; está arriba sólo si las vacías llegan al estante de más
-abajo. DADO un producto de tres tandas con las mismas columnas, en estantes a 0,5, 1 y 2,5 m de
-altura, CUANDO su faltante se parte con las 200 semillas ENTONCES los dos bloques quedan en estantes
-contiguos —nunca el de 0,5 con el de 2,5 m— y las columnas del bloque más corto están entre las del
-más largo. DADO un producto de dos filas CUANDO falta toda su fila de adelante ENTONCES puede abrir
-con la reponible vacía entera.
+lo reciba entero: con dos tandas de cinco y cuatro casilleros y un faltante de cuatro, siempre caen
+en la de cinco. Sólo si no entra en ninguna pasa a otro estante. DADO un producto de tres tandas
+con las mismas columnas, en estantes a 0,5, 1 y 2,5 m de altura, CUANDO su faltante pasa de un
+estante con las 200 semillas ENTONCES los dos bloques quedan en estantes contiguos —nunca el de
+0,5 con el de 2,5 m— y las columnas del bloque más corto están entre las del más largo.
 
 ### AC-STK-034 — Lo que falta en cada jornada *(verifica BR-STK-026)*
 
 DADO las 200 semillas enteras de 0 a 199, ocho casilleros principales por producto y los pedidos de
-cada jornada de la 1 a la 5 CUANDO se sortean sus faltantes ENTONCES cada sorteo contiene entre 4 y
-6 productos distintos. Cada faltante está entre 3 y `mínimo(C − P, F)`, y los productos no elegidos
-están completos. Para cada jornada, las semillas producen al menos dos cantidades de productos y dos
-conjuntos de productos distintos.
+cada jornada de la 2 a la 7 CUANDO se sortean sus faltantes ENTONCES cada sorteo contiene exactamente
+cuatro productos distintos. Cada faltante está entre 3 y `mínimo(C − P, F)`, y los productos no
+elegidos están completos. Para cada jornada, las semillas producen al menos dos conjuntos de
+productos distintos.
 
-DADO una fuente de azar controlada CUANDO se eligen los extremos de los intervalos ENTONCES
-se pueden obtener 4 y 6 productos, y 3 y el máximo reponible de cada elegido. La elección de
-cantidad tiene tres alternativas equiprobables; la de unidades tiene tantas alternativas
-equiprobables como enteros hay entre 3 y su máximo reponible.
+DADO una fuente de azar controlada CUANDO se eligen los extremos del intervalo de unidades ENTONCES
+se pueden obtener 3 y el máximo reponible de cada elegido. La elección de unidades tiene tantas
+alternativas equiprobables como enteros hay entre 3 y su máximo reponible.
 
 DADO una caja de 8 CUANDO un producto tiene 6 casilleros principales y 3 unidades pedidas ENTONCES
 su máximo es 5. Con 4 casilleros principales y 1 unidad pedida, el máximo es 4. Con 8 unidades
 pedidas o con cero casilleros principales, el producto nunca falta; con un máximo de 2, tampoco,
 y con un máximo de 3 es elegible y le faltan exactamente 3. DADO exactamente tres elegibles
-CUANDO la cantidad sorteada es 4 o 6 ENTONCES faltan los tres; con uno, sólo ese; con cero, ninguno.
+CUANDO se sortean los faltantes ENTONCES faltan los tres; con uno, sólo ese; con cero, ninguno.
+DADO exactamente cuatro elegibles ENTONCES faltan los cuatro.
 DADO dos compradores que piden 2 y 3 unidades del mismo producto, una caja de 8 y 6 casilleros
 principales CUANDO se calcula su máximo reponible ENTONCES es 3, porque se suman ambos pedidos.
 
@@ -920,7 +864,7 @@ al menú y se continúa, o se retoma en otra sesión ENTONCES se realiza un nuev
 
 ### AC-STK-035 — Se vende sin quitarle a la reposición *(verifica BR-STK-027)*
 
-DADO las 200 semillas enteras de 0 a 199, los casilleros del local y cada jornada de la 1 a la 5 CUANDO
+DADO las 200 semillas enteras de 0 a 199, los casilleros del local y cada jornada de la 2 a la 7 CUANDO
 se completan todas las compras de los pedidos usados para acotar los faltantes, por el
 recorrido de esa jornada, ENTONCES ningún cobro se rechaza. CUANDO después se repone todo lo
 que falta ENTONCES la góndola queda completa y reponer queda cumplida.
@@ -1095,7 +1039,7 @@ DADO cada producto exhibido, Arvejas y Coracola incluidas, con una unidad coloca
 fila de adelante y las manos vacías CUANDO el jugador se para en el pasillo frente a su tanda
 ENTONCES la mira enfoca esa unidad y el clic se la pone en la mano. DADO cualquier unidad que se
 ve en un estante de reposición del reparto completo ENTONCES es de la fila de adelante de
-una tanda reponible, o de su fila de atrás: ninguna es de una tanda fija. En las jornadas
+una tanda reponible: ninguna es de una tanda fija. En las jornadas
 de prueba, los frontales de las repeticiones permitidas por BR-STK-047 se agarran y reponen igual.
 
 ### AC-STK-051 — Mitad y mitad, o el estante entero *(verifica BR-STK-035)*
@@ -1110,8 +1054,7 @@ inferior no está más hacia el pasillo que el frente de los estantes superiores
 ### AC-STK-052 — El cierre cuenta la planilla de ese instante *(verifica BR-STK-022)*
 
 DADO una noche posterior a la quinta sin ventas y sin gestos en la planilla CUANDO cierra
-ENTONCES registrar cuenta como cumplida. Antes del cierre, una planilla en cero sin ventas NO completa la tarea ni suma
-una tarea al contador. DADO una noche con la planilla igual a lo vendido CUANDO se cobra una venta más
+ENTONCES registrar cuenta como cumplida. Antes del cierre, una planilla en cero sin ventas NO completa la tarea. DADO una noche con la planilla igual a lo vendido CUANDO se cobra una venta más
 y la noche cierra sin anotarla ENTONCES registrar no cuenta.
 
 ### AC-STK-053 — Tirar conserva caja y góndola *(verifica BR-STK-036)*
@@ -1183,7 +1126,8 @@ DADO el conjunto de cajas CUANDO se evalúa su orden ENTONCES:
 | Todas sobre estanterías salvo una en el piso | pendiente |
 | Una sobre otra apoyada en estantería; el resto, en estanterías | cumplida |
 | Una sobre otra que está en el piso | pendiente |
-| Todas en estanterías salvo una sostenida, incluso examinada desde la mano | pendiente |
+| Todas en estanterías salvo una sostenida, incluso examinada desde la mano | cumplida |
+| Una sostenida y otra en el piso del depósito; el resto, en estanterías | pendiente |
 | La misma caja soltada en el piso | pendiente |
 | Una sobre el pallet del piso | pendiente |
 | Dos que se declaran apoyadas una sobre otra | pendiente |
@@ -1194,13 +1138,16 @@ DADO el conjunto de cajas CUANDO se evalúa su orden ENTONCES:
 ### AC-STK-079 — La última caja cumple y puede descumplir *(verifica BR-STK-039)*
 
 DADO la jornada 3 y todas las cajas salvo una ordenadas CUANDO se apoya la última en una
-estantería ENTONCES ordenar se cumple y el HUD sube en 1. CUANDO se baja una caja al piso y queda
-en reposo ENTONCES se descumple y el HUD baja en 1. CUANDO se la sostiene o se la examina desde
-la mano ENTONCES sigue pendiente. CUANDO se la suelta sobre una estantería ENTONCES vuelve a
-cumplirse. CUANDO se levanta una caja de la estantería ENTONCES vuelve a quedar pendiente.
-DADO el turno cerrado CUANDO se mueve esa caja ENTONCES la
-cuenta permanece como al cierre. DADO una jornada que no declara ordenar CUANDO todas quedan
-en estanterías ENTONCES no se suma una obligatoria ajena.
+estantería ENTONCES ordenar se cumple. CUANDO se baja una caja al piso del depósito y queda
+en reposo ENTONCES se descumple. CUANDO se la sostiene o se la examina desde la mano ENTONCES
+se cumple. CUANDO se la suelta en el piso ENTONCES vuelve a quedar pendiente. CUANDO se la
+suelta sobre una estantería ENTONCES se cumple. DADO todas las cajas en estanterías CUANDO se
+levanta una ENTONCES sigue cumplida, y CUANDO se levanta además una segunda ENTONCES queda
+pendiente. DADO el turno cerrado con la última caja en la mano CUANDO se la suelta en el piso
+ENTONCES la cuenta permanece como al cierre: cumplida. DADO el turno cerrado con la última en
+el piso CUANDO se la agarra ENTONCES la cuenta permanece como al cierre: pendiente. DADO una
+jornada que no declara ordenar CUANDO todas quedan en estanterías ENTONCES no se suma una
+obligatoria ajena.
 
 ### AC-STK-080 — Rescatar vuelve al origen de esa noche *(verifica BR-STK-038, BR-STK-039)*
 
@@ -1265,11 +1212,11 @@ faltantes antes y después de construir atención, y se repiten ambas consultas 
 las mismas instancias de compradores y pedidos, con los seis productos fijos de BR-CTR-038,
 sin reconstrucción ni azar. Otra apertura crea estados propios sin heredar entregas.
 
-### AC-STK-082 — Vencer devuelve productos al piso interior sin venta *(verifica BR-STK-041)*
+### AC-STK-082 — Vencer deja los productos sobre el apoyo sin venta *(verifica BR-STK-041)*
 
 DADO jornada 2 y una compra parcial con dos unidades recibidas, una de caja y otra de góndola,
 CUANDO vence ENTONCES ambas identidades siguen afuera, los cuerpos quedan visibles y recogibles
-en el piso interior frente a ventanilla, sin superponerse con sólidos ni entre sí, y no suman
+sobre el apoyo de la ventanilla, sin superponerse con sólidos ni entre sí, y no suman
 venta ni descuento. El ticket aceptado desaparece. Repetir vencimiento no duplica cuerpos.
 Colocar o devolver esas unidades conserva los permisos habituales; dejarlas sueltas al cierre
 produce desorden, no objeto afuera; sostenerlas sin examen, colocarlas o devolverlas evita ese
@@ -1315,16 +1262,16 @@ se valida ENTONCES se rechaza sin satisfacer Poético ni alterar las cantidades 
 DADO cualquier cara de un mueble ENTONCES el estante de arriba de todo lleva los mismos productos
 que el reponible de abajo, y el otro reponible los mismos que el zócalo, en el mismo orden.
 
-### AC-STK-093 — Un producto de una sola fila no abre con una tanda vacía entera *(verifica BR-STK-024)*
+### AC-STK-093 — Ningún producto abre con una tanda vacía entera *(verifica BR-STK-024)*
 
-DADO un producto de una sola fila con cuatro estantes de cuatro casilleros a distinta altura, y un
+DADO un producto con cuatro estantes de cuatro casilleros a distinta altura, y un
 faltante de cuatro CUANDO se sortean sus vacíos con las 200 semillas ENTONCES cada estante conserva
 al menos una unidad, tres vacíos caen en un estante y el otro en el de justo arriba, o en el de
 justo abajo si el de los tres es el de arriba de todo. DADO Poético en la jornada 1 o 2 y Flin Puf
 desde la jornada 3, con un faltante igual a los casilleros de un estante, ENTONCES se cumple lo
 mismo con sus estantes reales.
 
-DADO un producto de una sola fila con tres estantes de cuatro, uno y cuatro casilleros, y un
+DADO un producto con tres estantes de cuatro, uno y cuatro casilleros, y un
 faltante de cuatro CUANDO se sortean sus vacíos con las 200 semillas ENTONCES el del medio conserva
 su unidad y los vacíos se reparten entre los otros dos, tres en uno y uno en el otro.
 
@@ -1354,10 +1301,9 @@ incluyen presentes. DADO jornadas 3 y 7 ENTONCES están las treinta y dos identi
 
 DADO una apertura de prueba CUANDO se recorren las cuatro alturas de cada destino de
 BR-STK-047 ENTONCES sus productos coinciden con la tabla, sin ajenos ni niveles vacíos; en
-la estantería de no comestibles, Duronga ocupa la mitad derecha de los cuatro niveles junto
-a Actroncito.
-Cada producto tiene una sola principal y los cupos suman todos sus frontales. Cada unidad
-se apoya sobre su estante, sin intersecciones, y conserva la orientación y filas de su envase.
+la estantería de no comestibles, Duronga está en los cuatro niveles junto a Actroncito.
+Cada producto tiene una sola principal y los cupos suman todos sus frontales.
+El freezer no exhibe ningún producto.
 CUANDO se agarra y repone una unidad del frontal repetido en el otro nivel central ENTONCES
 sólo cambia ese casillero y la cuenta de reponer responde a ambos gestos.
 
@@ -1373,6 +1319,7 @@ Durextra entre ellas, y las recién llegadas satisfacen AC-STK-077.
 
 DADO el mismo local con jornada 2 abierta CUANDO se abre la jornada 3 ENTONCES recupera
 las treinta y dos identidades y el reparto completo, con sus cupos y zonas correspondientes.
+El freezer vuelve a exhibir sus productos.
 Repetir la apertura NO duplica objetivos ni respuestas a un gesto. DADO una nueva partida
 de prueba después de una completa ENTONCES reaparece únicamente el reparto de dieciséis.
 Retomar desde el menú en cualquiera de las dos etapas conserva el reparto de esa etapa.
@@ -1383,68 +1330,6 @@ Una unidad sostenida al cerrar NO sobrevive al cambio de etapa.
 DADO cada jornada 1 y 2 CUANDO se recorren todos los pedidos construidos para ella
 ENTONCES cada identidad pedida pertenece a los dieciséis presentes. Completar esas compras
 y reponer sus faltantes respeta la disponibilidad de una caja por producto.
-
-### AC-STK-100 — La prueba quita columnas antes de comprimir la referencia *(verifica BR-STK-048, BR-STK-047)*
-
-DADO cada tipo de cara de las islas, las heladeras funcionales y la estantería de no
-comestibles CUANDO se compara su exhibición de prueba con la etapa completa ENTONCES
-conserva el margen de referencia contra el borde, las filas y la separación uniforme de
-referencia, sin unidades fuera de la chapa ni intersecciones. DADO un cupo inicial que
-no entra con esos márgenes y ese ritmo ENTONCES quita columnas y conserva la mayor cantidad
-que entra en la cara con los dos centros en mitades opuestas. Agregar una columna excedería
-el espacio disponible. Una tanda que ya entra conserva sus columnas. El sobrante queda libre a ambos lados, sin estirar huecos.
-Las dos mitades longitudinales y la principal a altura de reposición se conservan.
-
-### AC-STK-101 — Los laterales conservan aire entre unidades y a ambos lados de la mitad *(verifica BR-STK-049, BR-STK-047)*
-
-DADOS los cuatro niveles de ambos laterales de cada isla de prueba CUANDO se mide su
-exhibición completa ENTONCES cada fila conserva la separación uniforme de referencia
-de su producto (AC-STK-106 fija la de Terminator), no menor que el mínimo entre unidades
-de exhibición, y las dos tandas conservan el mínimo de aire entre tandas. Sus centros quedan en mitades opuestas, sin acumular sus unidades contra la división,
-y se aprovecha la holgura conjunta antes de quitar otra columna.
-
-### AC-STK-102 — Las cabeceras conservan aire y margen a sus costados *(verifica BR-STK-049, BR-STK-048)*
-
-DADOS los cuatro niveles de las cuatro cabeceras de prueba CUANDO se miden sus unidades y
-sus encuentros con los laterales ENTONCES cada fila conserva la separación uniforme de
-referencia y cada costado conserva el margen lateral de exhibición. Cada encuentro deja
-como mínimo la mayor separación de referencia de sus productos contiguos y el mínimo de
-aire entre caras. Las cabeceras con dos filas conservan el aire de referencia cuando entra
-y nunca bajan del mínimo entre filas. Se quitan columnas antes de sacrificar esos márgenes.
-
-### AC-STK-103 — El reparto con aire conserva el margen frontal y los apoyos *(verifica BR-STK-049, BR-STK-048)*
-
-DADO el reparto de prueba completo CUANDO se compara con la etapa completa ENTONCES conserva
-el retiro frontal de referencia en cada cara, todas las unidades quedan apoyadas dentro
-de su chapa y ninguna unidad se superpone con otra ni con el mueble. Las filas, las
-orientaciones y los destinos permanecen iguales. Los cupos principales y totales coinciden
-con las columnas realmente exhibidas después de adaptar su cantidad.
-
-### AC-STK-104 — Un reparto imposible no se publica pegado *(verifica BR-STK-049)*
-
-DADO un tramo que alcanza exactamente para una columna por producto, sus márgenes y todos
-los mínimos de aire CUANDO se distribuye ENTONCES conserva una columna y satisface cada
-mínimo. DADO ese mismo tramo reducido por debajo del mínimo necesario CUANDO se distribuye
-ENTONCES rechaza el reparto; no elimina un producto, su margen ni el aire entre caras o
-en la mitad para hacerlo entrar.
-
-### AC-STK-105 — Entre dos productos de un estante el paso es el de sus unidades *(verifica BR-STK-049, BR-STK-047)*
-
-DADOS los cuatro niveles de cada estante de prueba con dos productos —los dos laterales de
-cada isla y la estantería de no comestibles— CUANDO se mide la separación entre unidades
-vecinas ENTONCES el encuentro de los dos productos separa lo mismo que la mayor separación
-de sus dos productos, nunca menos que el mínimo de aire entre tandas ni más que esa
-separación más la tolerancia de exhibición. Un hueco mayor en el cambio de producto, como el
-que dejaba repartir el sobrante en la unión, hace fallar el criterio. Los centros de ambas
-tandas siguen en mitades opuestas.
-
-### AC-STK-106 — Terminator toma el paso de Zucarachas *(verifica BR-STK-049, BR-STK-048)*
-
-DADOS los cuatro niveles del lado de Terminator y Zucarachas CUANDO se mide la separación
-entre unidades vecinas ENTONCES las de Terminator miden lo mismo que las de Zucarachas, con
-la tolerancia de exhibición, y el encuentro entre ambos también. Con la separación de referencia
-propia de Terminator entraría una columna más, y no la hay: agregarla excedería el espacio
-disponible a este paso.
 
 ### AC-STK-107 — Los faltantes de las jornadas 3 a 5 respetan los pedidos sorteados *(verifica BR-STK-050, BR-STK-026, BR-STK-027, BR-STK-046)*
 
@@ -1470,7 +1355,7 @@ DADO una compra de la jornada 3, 4 o 5 con sus tres productos y su ticket exacto
 la góndola y otro de la caja, CUANDO se completa ENTONCES las tres identidades se retiran una sola
 vez y cuentan como vendidas sin descontar además el pedido; repetir la entrega no vende otra vez.
 DADO una compra con dos productos recibidos CUANDO vence ENTONCES las dos unidades siguen
-registradas afuera y recogibles en el piso interior, sin venta, y depósito, caja y góndola quedan
+registradas afuera y recogibles sobre el apoyo de la ventanilla, sin venta, y depósito, caja y góndola quedan
 como antes del vencimiento.
 
 ### AC-STK-110 — El registro de la prueba no lista productos ausentes *(verifica BR-STK-019, BR-STK-046)*
@@ -1523,6 +1408,56 @@ casillero vacío. DADO dos casilleros vacíos de ese producto, o uno vacío de o
 además del suyo, CUANDO se cierra con esa unidad en la mano ENTONCES reponer no cuenta cumplida. DADO la
 unidad en la mano que se suelta antes del cierre ENTONCES reponer no cuenta cumplida.
 
+### AC-STK-126 — La jornada 6 abre con cinco cajas vacías, una de Fernet God *(verifica BR-STK-055)*
+
+DADO la apertura de la jornada 6 con cualquiera de veinte semillas ENTONCES hay exactamente cinco
+cajas con 0 unidades en el depósito, entre ellas la de Fernet God, y las otras veintisiete
+tienen todas las unidades de una caja.
+
+### AC-STK-127 — Las vacías no son faltantes ni se piden *(verifica BR-STK-055)*
+
+DADO la apertura de la jornada 6 con cualquiera de veinte semillas CUANDO se comparan las cinco
+cajas vacías con los faltantes de la noche y con los productos que piden sus compradores ENTONCES
+no comparten ningún producto. CUANDO se cuentan los faltantes y los pedidos de la noche ENTONCES
+Fernet God no está en ninguno.
+
+### AC-STK-128 — La misma semilla da las mismas cinco, y otra noche ninguna *(verifica BR-STK-055)*
+
+DADO la jornada 6 y una semilla CUANDO se abre dos veces ENTONCES salen las mismas cinco cajas.
+DADO dos semillas distintas ENTONCES salen conjuntos distintos para al menos un par de entre
+veinte. DADO cada jornada distinta de la 6 CUANDO se abre ENTONCES ninguna caja del depósito abre
+con 0 unidades por esta regla.
+
+### AC-STK-129 — Una caja vacía se examina en 0 y no entrega nada *(verifica BR-STK-055)*
+
+DADO la jornada 6 con una de las cinco cajas vacías CUANDO se la examina ENTONCES dice que tiene 0
+y cuántas le entran: una caja entera. CUANDO el jugador le pide una unidad ENTONCES no recibe
+nada y el depósito sigue en 0. DADO esa caja ENTONCES la apertura la deja presente en el depósito
+y no como caja agotada.
+
+### AC-STK-132 — Una caja en el local o en la mano no impide ordenar *(verifica BR-STK-039)*
+
+DADO el conjunto de cajas con la regla de apilado vigente CUANDO se evalúa su orden ENTONCES:
+
+| Estado | Ordenar |
+|---|---|
+| Todas en estanterías salvo una apoyada en el local | cumplida |
+| Todas en estanterías salvo una sostenida | cumplida |
+| Una sostenida, otra apoyada en el local; el resto, en estanterías | pendiente |
+| Dos apoyadas en el local; el resto, en estanterías | pendiente |
+| Una apoyada en el local y otra apilada sobre ella | pendiente |
+| Una sostenida y otra apilada sobre ella | pendiente |
+| Una apoyada en el baño, el cuartito o afuera; el resto, en estanterías | pendiente |
+| Una en el piso del depósito; el resto, en estanterías | pendiente |
+| Una sobre el pallet del piso; el resto, en estanterías | pendiente |
+
+### AC-STK-133 — La jornada cierra con la última caja en el local *(verifica BR-STK-039)*
+
+DADO la jornada 3 con todas las cajas en estanterías salvo una apoyada en el local CUANDO se
+agota el turno ENTONCES la jornada cierra con ordenar cumplida. DADO la misma situación con la
+caja en la mano ENTONCES también. DADO dos cajas fuera de las estanterías, una en la mano y otra
+en el local, CUANDO se agota el turno ENTONCES ordenar cierra pendiente.
+
 ## No objetivos
 
 - Esta capacidad NO cobra ni atiende: eso es de
@@ -1553,8 +1488,8 @@ solo de sus consumidores.
   obligatoria está cumplida, y el motivo de cada rechazo.
 - **Apertura sorteada:** recibe los mismos pedidos que la atención, suma sus unidades por
   producto y devuelve faltantes dentro del máximo de sus casilleros de adelante, y cuáles quedan
-  vacíos. El inventario conserva el cupo total. Con menos elegibles que la
-  cantidad sorteada devuelve todos; con cero, ninguno. No modifica ni vuelve a sortear los pedidos.
+  vacíos. El inventario conserva el cupo total. Con menos de cuatro
+  elegibles devuelve todos; con cero, ninguno. No modifica ni vuelve a sortear los pedidos.
 - **Orden del depósito:** recibe la particular de la jornada, el conjunto de cajas, si cada
   una está sostenida y su apoyo directo; contesta disposición de apertura y si todas cumplen
   la condición de orden. Ciclos y apoyos ausentes contestan pendiente; el conjunto vacío,

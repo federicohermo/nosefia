@@ -25,6 +25,7 @@ El compresor no normaliza el nivel. El nivel lo decide el artista en el original
 | `SFX_OBJETO_Bolsa_Alzar.wav`, `SFX_OBJETO_BotellaPlastica_Alzar.wav`, `SFX_OBJETO_BotellaPlastica_Dejar.wav`, `SFX_OBJETO_Cajita_Alzar.wav`, `SFX_OBJETO_Cajita_Dejar.wav`, `SFX_OBJETO_Lata_Alzar.wav`, `SFX_OBJETO_Lata_Dejar.wav`, `SFX_OBJETO_Mopa_Alzar.wav` | `a2d6c45e3549a7dfac45c37c870eab5ff81485e8` | WAV mono de 22 050 Hz |
 | `SFX_OBJETO_Mopa_Dejar.wav`, `SFX_OBJETO_BotellaVidrio_Alzar.wav`, `SFX_OBJETO_BotellaVidrio_Dejar.wav`, `SFX_OBJETO_CajaCereales_Alzar.wav`, `SFX_OBJETO_CajaCereales_Dejar.wav`, `SFX_OBJETO_Balde_AlzarVacio.wav`, `SFX_OBJETO_Balde_DejarVacio.wav`, `SFX_OBJETO_Basura_Contenedor.wav`, `SFX_OBJETO_Basura_SacarBolsa.wav`, `SFX_OBJETO_Balde_VertirJabon.wav`, `SFX_INTERFAZ_Celular_Mensaje_Recibido.wav`, `SFX_INTERFAZ_PersianaSube.wav`, `SFX_INTERFAZ_PersianaBaja.wav` | `a2d6c45e3549a7dfac45c37c870eab5ff81485e8` | WAV mono de 22 050 Hz |
 | `AMB_PROXIMIDAD_Neon.ogg` | `a2d6c45e3549a7dfac45c37c870eab5ff81485e8` | Vorbis mono de 64 kbps, sin recorte, en bucle |
+| `SFX_EVENTO_CorteLuz.wav`, `SFX_EVENTO_VuelveLuz.wav`, `SFX_NOLEV_Wifi_Apagar.wav`, `SFX_NOLEV_Wifi_Prender.wav`, `SFX_EVENTO_NotificacionEntra.wav`, `SFX_EVENTO_NotificacionSale.wav`, `SFX_NOLEV_Puerta_AbrirLlave.wav`, `SFX_NOLEV_Puerta_AbrirPalanca.wav` | `502397629aebff972ff50f8b6b4622703a997d4d` | WAV mono de 22 050 Hz |
 
 Los audios anteriores a esta tabla no registran su revisión.
 
@@ -43,6 +44,10 @@ banderas del compresor y sin el filtro de recorte. Los niveles son los del artis
 | `SFX_NOLEV_Basura_SacarBolsa` | `SFX_OBJETO_Basura_SacarBolsa` | Se saca una bolsa del tacho, en lugar de alzarla |
 | (sin audio) | `SFX_OBJETO_Basura_Contenedor` | Se desecha algo aceptado en el contenedor |
 | `SFX_NOLEV_Puerta_Garage` | `SFX_INTERFAZ_PersianaSube` y `SFX_INTERFAZ_PersianaBaja` | La persiana de la noche, uno por movimiento |
+| (sin audio) | `SFX_EVENTO_CorteLuz` y `SFX_EVENTO_VuelveLuz` | Se corta la luz de la sexta noche, y el tablero la devuelve. Abrir la jornada siguiente no suena |
+| (sin audio) | `SFX_NOLEV_Wifi_Apagar` y `SFX_NOLEV_Wifi_Prender` | El jugador apaga o prende el router. El corte no suena el router |
+| (sin audio) | `SFX_EVENTO_NotificacionEntra` y `SFX_EVENTO_NotificacionSale` | Entra o sale un cartel, una vez por cuadro. Vaciar la pila no suena |
+| `SFX_NOLEV_Puerta_Abrir` | `SFX_NOLEV_Puerta_AbrirLlave` y `SFX_NOLEV_Puerta_AbrirPalanca` | La puerta del jefe se abre con la llave o con la palanca, y no suena el de abrir |
 | `SFX_OBJETO_Balde_Alzar` y `_Dejar` | `SFX_OBJETO_Balde_AlzarVacio` y `_DejarVacio` | El balde sin agua |
 | `SFX_OBJETO_Cajita_*` y `_BotellaPlastica_*` | `SFX_OBJETO_CajaCereales_*` y `_BotellaVidrio_*` | Los cereales y el Fernet God |
 

@@ -20,12 +20,13 @@ const TEXTO_DE_LA_COLUMNA_MARCA := "MARCA"
 const TEXTO_DE_LA_COLUMNA_PRODUCTO := "PRODUCTO"
 const TEXTO_DE_LA_COLUMNA_PRECIO := "PRECIO"
 const TEXTO_DE_LA_COLUMNA_VENDIDO := "VENDIDO"
-const TEXTO_DE_LA_COLUMNA_TOTAL := "TOTAL"
 const TEXTO_DE_LA_CANTIDAD := "%d PRODUCTOS EN EL REGISTRO"
 const TEXTO_DEL_DESPLAZAMIENTO := "ARRASTRÁ PARA DESPLAZAR  /  + − AJUSTAR UNIDADES"
 const TEXTO_DE_LA_ETIQUETA_TOTAL := "TOTAL"
 const TEXTO_DE_SUMAR := "+"
 const TEXTO_DE_RESTAR := "−"
+## La fila que la cruceta tiene elegida se aclara: el panel no dibuja el foco.
+const COLOR_DE_LA_FILA_ELEGIDA := Color(1.35, 1.35, 1.35)
 
 ## El ancho de cada columna fija, igual en el encabezado y en las filas. La marca y el rubro
 ## se reparten lo que sobra según su peso.
@@ -33,10 +34,8 @@ const ALTO_DE_LA_FILA := 105.0
 const ANCHO_DE_LA_IMAGEN := ALTO_DE_LA_FILA  # las imágenes son cuadradas
 const ANCHO_DEL_PRECIO := 168.0
 const ANCHO_DE_LO_VENDIDO := 240.0
-const ANCHO_DEL_TOTAL := 164.0
 const PESO_DE_LA_MARCA := 2.0
 const PESO_DEL_RUBRO := 3.0
-const TAMANO_DE_LETRA_DE_LA_DESCRIPCION := 28
 const IMAGENES := {
 	Producto.Id.ACTRONCITO: preload("res://assets/ui/manada/actroncito.png"),
 	Producto.Id.DUREXTRA: preload("res://assets/ui/manada/durextra.png"),
@@ -84,7 +83,6 @@ const IMAGENES := {
 @export var _columna_producto: Label
 @export var _columna_precio: Label
 @export var _columna_vendido: Label
-@export var _columna_total: Label
 @export var _cantidad: Label
 @export var _desplazamiento: Label
 @export var _etiqueta_del_total: Label
@@ -96,11 +94,10 @@ var _registro: RegistroDeVentas
 var _arrastrando: bool = false
 var _posicion_del_arrastre: float = 0.0
 
-## Las etiquetas de unidades y de total de cada fila, por `producto.id`. Las filas se arman una
+## Las etiquetas de unidades de cada fila, por `producto.id`. Las filas se arman una
 ## vez por planilla y después sólo se reescriben: rehacerlas en cada gesto vaciaría el contenedor
 ## un instante y el desplazamiento volvería arriba.
 var _unidades_por_id: Dictionary = {}
-var _totales_por_id: Dictionary = {}
 
 
 func _ready() -> void:
@@ -116,7 +113,6 @@ func _ready() -> void:
 	_encabezar(_columna_producto, TEXTO_DE_LA_COLUMNA_PRODUCTO, 0.0, PESO_DEL_RUBRO)
 	_encabezar(_columna_precio, TEXTO_DE_LA_COLUMNA_PRECIO, ANCHO_DEL_PRECIO)
 	_encabezar(_columna_vendido, TEXTO_DE_LA_COLUMNA_VENDIDO, ANCHO_DE_LO_VENDIDO)
-	_encabezar(_columna_total, TEXTO_DE_LA_COLUMNA_TOTAL, ANCHO_DEL_TOTAL)
 	_desplazamiento.text = TEXTO_DEL_DESPLAZAMIENTO
 	_etiqueta_del_total.text = TEXTO_DE_LA_ETIQUETA_TOTAL
 	_scroll.gui_input.connect(_al_tocar_la_lista)
@@ -179,9 +175,9 @@ func mostrar(registro: RegistroDeVentas) -> void:
 	for producto in registro.productos():
 		var unidades: Label = _unidades_por_id[producto.id]
 		unidades.text = str(registro.unidades_de(producto))
-		var total_de_la_fila: Label = _totales_por_id[producto.id]
-		total_de_la_fila.text = texto_de_pesos(registro.total_de(producto))
 	_total.text = texto_de_pesos(registro.total())
+	if is_visible_in_tree():
+		FocoDeLaInterfaz.en_el_primero(_filas)
 
 
 ## El monto con el signo, un espacio y el punto como separador de miles. La planilla no produce
@@ -209,7 +205,6 @@ func _armar_filas() -> void:
 		_filas.remove_child(vieja)
 		vieja.queue_free()
 	_unidades_por_id.clear()
-	_totales_por_id.clear()
 	for producto in _registro.productos():
 		_filas.add_child(_fila_de(producto))
 	_cantidad.text = TEXTO_DE_LA_CANTIDAD % _unidades_por_id.size()
@@ -223,6 +218,12 @@ func _fila_de(producto: Producto) -> PanelContainer:
 	panel.custom_minimum_size = Vector2(0, ALTO_DE_LA_FILA)
 	panel.mouse_filter = Control.MOUSE_FILTER_PASS
 	panel.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
+	# Con el joystick se elige la fila entera: arriba y abajo pasan de producto, y los costados
+	# restan y suman. Los dos botones siguen siendo del clic.
+	panel.focus_mode = Control.FOCUS_ALL
+	panel.gui_input.connect(_al_elegir_la_fila.bind(producto, panel))
+	panel.focus_entered.connect(_resaltar.bind(panel, true))
+	panel.focus_exited.connect(_resaltar.bind(panel, false))
 	var fila := HBoxContainer.new()
 	fila.add_theme_constant_override(&"separation", 24)
 	fila.mouse_filter = Control.MOUSE_FILTER_PASS
@@ -240,10 +241,8 @@ func _fila_de(producto: Producto) -> PanelContainer:
 	imagen.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	marco.add_child(imagen)
 	var marca := _etiqueta(producto.nombre.to_upper(), 0, PESO_DE_LA_MARCA)
-	marca.add_theme_font_size_override(&"font_size", TAMANO_DE_LETRA_DE_LA_DESCRIPCION)
 	fila.add_child(marca)
 	var rubro := _etiqueta(Catalogo.rubro_de(producto.id).to_upper(), 0, PESO_DEL_RUBRO)
-	rubro.add_theme_font_size_override(&"font_size", TAMANO_DE_LETRA_DE_LA_DESCRIPCION)
 	fila.add_child(rubro)
 	fila.add_child(_etiqueta(texto_de_pesos(producto.precio), ANCHO_DEL_PRECIO))
 	fila.add_child(_boton(TEXTO_DE_RESTAR, func() -> void: resta_pedida.emit(producto)))
@@ -255,9 +254,6 @@ func _fila_de(producto: Producto) -> PanelContainer:
 	_unidades_por_id[producto.id] = unidades
 	fila.add_child(unidades)
 	fila.add_child(_boton(TEXTO_DE_SUMAR, func() -> void: suma_pedida.emit(producto)))
-	var total_de_la_fila := _etiqueta("", ANCHO_DEL_TOTAL)
-	_totales_por_id[producto.id] = total_de_la_fila
-	fila.add_child(total_de_la_fila)
 	return panel
 
 
@@ -274,6 +270,20 @@ func _etiqueta(texto: String, ancho: float, peso: float = 0.0) -> Label:
 	return etiqueta
 
 
+func _resaltar(panel: PanelContainer, elegida: bool) -> void:
+	panel.self_modulate = COLOR_DE_LA_FILA_ELEGIDA if elegida else Color.WHITE
+
+
+## Con la fila elegida, la izquierda resta una unidad y la derecha suma una.
+func _al_elegir_la_fila(evento: InputEvent, producto: Producto, panel: PanelContainer) -> void:
+	if evento.is_action_pressed(&"ui_left"):
+		resta_pedida.emit(producto)
+		panel.accept_event()
+	elif evento.is_action_pressed(&"ui_right"):
+		suma_pedida.emit(producto)
+		panel.accept_event()
+
+
 ## El clic queda en el botón y la rueda llega a la lista. Así un «+» no inicia un arrastre.
 func _boton(texto: String, al_apretar: Callable) -> Button:
 	var boton := Button.new()
@@ -284,5 +294,6 @@ func _boton(texto: String, al_apretar: Callable) -> Button:
 	boton.mouse_filter = Control.MOUSE_FILTER_STOP
 	boton.mouse_force_pass_scroll_events = true
 	boton.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
+	boton.focus_mode = Control.FOCUS_NONE
 	boton.pressed.connect(al_apretar)
 	return boton

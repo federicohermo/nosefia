@@ -1,0 +1,12 @@
+[gd_resource type="Resource" script_class="Hipotesis" format=3]
+
+[ext_resource type="Script" path="res://src/dominio/investigacion/hipotesis.gd" id="hipotesis"]
+
+[resource]
+script = ExtResource("hipotesis")
+identidad = "5B"
+jornada = 5
+titulo = "INCOMPETENCIA"
+texto = "¿Será posible que Enrique tenga TAN mal gestionado su local? ¿O Yasmín está tratando de hacerse la inocente? De lo único que puedo estar seguro es de que estas cosas raras se deben a la incompetencia de alguno de ellos. Necesito verificar cuál de los dos es el verdadero responsable…"
+exigencias = PackedStringArray("5B")
+camino = PackedStringArray("6C", "6D")

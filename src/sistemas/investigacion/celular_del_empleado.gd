@@ -10,9 +10,17 @@ signal foto_cerrada
 signal tramo_de_pista_pedido(identidad: String)
 signal no_leidos_cambiados(sin_leer: int)
 signal mensaje_recibido(quien: Conversacion.Interlocutor, mensaje: Mensaje)
+signal nota_recibida(mensaje: Mensaje)
 
-var _bandeja := Bandeja.new(Conversacion.desde_disco())
+var _bandeja := Bandeja.new(_todas_las_conversaciones())
 var _celular := Celular.new(_bandeja)
+
+
+## Los chats del guión y los de los compradores, que sólo tienen mensajes si hay quejas.
+static func _todas_las_conversaciones() -> Array[Conversacion]:
+	var todas := Conversacion.desde_disco()
+	todas.append_array(QuejasDeLaJornada.conversaciones())
+	return todas
 
 
 func celular() -> Celular:
@@ -27,6 +35,18 @@ func abrir_jornada(jornada: int, condiciones: Array[StringName] = []) -> void:
 	cerrar_jornada()
 	_bandeja.abrir_jornada(jornada, condiciones)
 	_celular.habilitar(true)
+	no_leidos_cambiados.emit(_bandeja.no_leidos_totales())
+
+
+## Al continuar: lo de jornadas anteriores a `jornada` vuelve leído, y el aviso se entera.
+func dar_por_leidos_los_anteriores_a(jornada: int) -> void:
+	_bandeja.dar_por_leidos_los_anteriores_a(jornada)
+	no_leidos_cambiados.emit(_bandeja.no_leidos_totales())
+
+
+## Las quejas de la noche, o ninguna: los chats de los compradores salen de ellas.
+func usar_quejas(quejas: QuejasDeLaJornada) -> void:
+	_bandeja.usar_quejas(quejas)
 	no_leidos_cambiados.emit(_bandeja.no_leidos_totales())
 
 
@@ -45,6 +65,18 @@ func pedir_alternar(control_tomado: bool) -> void:
 		menu_mostrado.emit()
 	else:
 		celular_cerrado.emit()
+
+
+## Devuelve si el celular atendió Esc, para que no abra la pausa.
+func pedir_esc() -> bool:
+	var era_foto := _celular.pantalla() == Celular.Pantalla.FOTO
+	if not _celular.atender_esc():
+		return false
+	if era_foto:
+		foto_cerrada.emit()
+	else:
+		celular_cerrado.emit()
+	return true
 
 
 func pedir_chat(quien: Conversacion.Interlocutor) -> void:
@@ -88,7 +120,16 @@ func soltar() -> void:
 
 func recibir(quien: Conversacion.Interlocutor, mensaje: Mensaje) -> void:
 	if _bandeja.recibir(quien, mensaje):
+		_celular.llegar(quien, _bandeja.mensajes_de(quien).find(mensaje))
 		mensaje_recibido.emit(quien, mensaje)
+		no_leidos_cambiados.emit(_bandeja.no_leidos_totales())
+
+
+## La nota de una pista la anota el jugador: llega al chat de notas sin el aviso de un mensaje
+## recibido.
+func recibir_nota(mensaje: Mensaje) -> void:
+	if _bandeja.recibir(Conversacion.Interlocutor.NOTAS, mensaje):
+		nota_recibida.emit(mensaje)
 		no_leidos_cambiados.emit(_bandeja.no_leidos_totales())
 
 

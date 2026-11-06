@@ -86,8 +86,55 @@ func test_cambiar_la_lectura_no_cambia_el_dato_compartido() -> void:  # AC-PLY-0
 
 
 func test_la_jornada_sin_particular_enumera_solo_las_fijas() -> void:  # AC-PLY-080
-	var sin_particular := ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA + 3
+	var sin_particular := ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA - 1
 	var filas := NotaPegada.tareas_a_realizar(Apertura.obligatorias(sin_particular)).renglones()
 	assert_array(filas).contains_exactly(
 		["Atención al cliente", "Registro de productos vendidos", "Limpieza", "Reposición"]
 	)
+
+
+func test_la_septima_lista_responder_a_quejas_despues_de_las_fijas() -> void:  # AC-SHF-080
+	var nota := NotaPegada.tareas_a_realizar(Apertura.obligatorias(QuejasDeLaJornada.JORNADA))
+	var fijas := NotaPegada.tareas_a_realizar(
+		Apertura.obligatorias(ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA - 1)
+	)
+	assert_int(nota.renglones().size()).is_equal(fijas.renglones().size() + 1)
+	assert_array(nota.renglones().slice(0, fijas.renglones().size())).is_equal(fijas.renglones())
+	assert_str(nota.renglones()[-1]).is_equal(
+		NotaPegada.NOMBRES_DE_LAS_TAREAS[Tarea.Tipo.RESPONDER_QUEJAS]
+	)
+	for jornada in range(ReglasDeLaPartida.PRIMERA_JORNADA, QuejasDeLaJornada.JORNADA):
+		var de_la_noche := NotaPegada.tareas_a_realizar(Apertura.obligatorias(jornada))
+		assert_array(de_la_noche.renglones()).not_contains([nota.renglones()[-1]])
+
+
+func test_la_tarea_cumplida_marca_su_renglon_y_al_descumplirse_lo_pierde() -> void:  # AC-PLY-165
+	var limpiar := Tarea.new(Tarea.Tipo.LIMPIAR)
+	var basura := Tarea.new(Tarea.Tipo.SACAR_LA_BASURA)
+	# La lista llega en un orden y los renglones salen en el de la ficha.
+	var obligatorias: Array[Tarea] = [basura, limpiar]
+	var sin_cumplir := NotaPegada.tareas_a_realizar(obligatorias)
+	assert_bool(sin_cumplir.cumplida(0)).is_false()
+	assert_bool(sin_cumplir.cumplida(1)).is_false()
+	limpiar.completar()
+	var con_limpieza := NotaPegada.tareas_a_realizar(obligatorias)
+	assert_bool(con_limpieza.cumplida(0)).is_true()
+	assert_bool(con_limpieza.cumplida(1)).is_false()
+	assert_array(con_limpieza.renglones()).contains_exactly(sin_cumplir.renglones())
+	limpiar.descompletar()
+	assert_bool(NotaPegada.tareas_a_realizar(obligatorias).cumplida(0)).is_false()
+
+
+func test_la_jornada_que_abre_con_una_tarea_cumplida_arranca_cumplida() -> void:  # AC-PLY-165
+	var obligatorias := Apertura.obligatorias(ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA)
+	obligatorias[2].completar()
+	var nota := NotaPegada.tareas_a_realizar(obligatorias)
+	for fila in nota.renglones().size():
+		assert_bool(nota.cumplida(fila)).is_equal(fila == 2)
+
+
+func test_las_hojas_sin_tareas_no_arrancan_cumplidas() -> void:  # AC-PLY-165
+	for id: NotaPegada.Id in NotaPegada.Id.values():
+		var nota := NotaPegada.de(id)
+		for fila in nota.renglones().size():
+			assert_bool(nota.cumplida(fila)).is_false()

@@ -14,7 +14,7 @@ func _pila() -> PilaDeNotificaciones:
 	return pila
 
 
-func test_avisos_de_salida_entran_y_dejan_pasar_el_clic() -> void:  # AC-NTF-027, AC-NTF-030
+func test_avisos_de_salida_entran_y_dejan_pasar_el_clic() -> void:  # AC-NTF-027
 	var viewport: SubViewport = auto_free(SubViewport.new())
 	viewport.size = Vector2i(1920, 1080)
 	add_child(viewport)
@@ -26,15 +26,13 @@ func test_avisos_de_salida_entran_y_dejan_pasar_el_clic() -> void:  # AC-NTF-027
 	assert_str(_textos(pila)[0]).is_equal(
 		PilaDeNotificaciones.TEXTOS[Notificaciones.Tipo.TAREAS_TERMINADAS]
 	)
-	await _verificar_carteles_de_salida(viewport, pila)
-	pila.actualizar_salida(false)
-	assert_str(_textos(pila)[0]).is_equal(
-		PilaDeNotificaciones.TEXTOS[Notificaciones.Tipo.SALIDA_RETRABADA]
-	)
-	await _verificar_carteles_de_salida(viewport, pila)
+	await _verificar_carteles_de_salida(viewport, pila, "/notificacion_tareas_completadas.svg", 2)
 
 
-func _verificar_carteles_de_salida(viewport: SubViewport, pila: PilaDeNotificaciones) -> void:
+func _verificar_carteles_de_salida(
+	viewport: SubViewport, pila: PilaDeNotificaciones, simbolo_esperado: String, renglones: int
+) -> void:
+	pila._process(1.0)
 	for tamano: Vector2i in [Vector2i(1920, 1080), Vector2i(1280, 720)]:
 		viewport.size = tamano
 		await get_tree().process_frame
@@ -43,8 +41,8 @@ func _verificar_carteles_de_salida(viewport: SubViewport, pila: PilaDeNotificaci
 		var cartel: PanelContainer = carteles[0]
 		var fila: HBoxContainer = cartel.get_child(0)
 		var simbolo: TextureRect = fila.get_child(0)
-		var texto: Label = fila.get_child(1)
-		assert_int(texto.get_line_count()).is_equal(1)
+		var texto: Label = cartel.find_children("*", "Label", true, false).back()
+		assert_int(texto.get_line_count()).is_equal(renglones)
 		assert_float(texto.size.x).is_greater_equal(texto.get_minimum_size().x)
 		(
 			assert_bool(Rect2(Vector2.ZERO, Vector2(tamano)).encloses(cartel.get_global_rect()))
@@ -58,46 +56,31 @@ func _verificar_carteles_de_salida(viewport: SubViewport, pila: PilaDeNotificaci
 		)
 		assert_float(simbolo.get_global_rect().end.x).is_less(texto.get_global_rect().position.x)
 		assert_object(texto.get_theme_font("font")).is_same(pila._marco.get_theme_font("font"))
-		assert_str(simbolo.texture.resource_path).ends_with("/notificacion_cliente.svg")
+		assert_str(simbolo.texture.resource_path).ends_with(simbolo_esperado)
 		for control: Control in pila.find_children("*", "Control", true, false):
 			assert_int(control.mouse_filter).is_equal(Control.MOUSE_FILTER_IGNORE)
 
 
-func test_tareas_terminadas_conserva_su_resto_en_pausa() -> void:  # AC-NTF-026
+# AC-NTF-044, AC-NTF-045
+func test_tareas_terminadas_sigue_a_la_vista_hasta_deshacer() -> void:
 	var pila := _pila()
 	pila.set_process(false)
+	pila.avisar_pista()
 	pila.actualizar_salida(true)
-	pila._process(Notificaciones.DURACION - 1.0)
-	get_tree().paused = true
-	await get_tree().process_frame
-	assert_bool(pila.can_process()).is_false()
-	assert_array(_textos(pila)).has_size(1)
-	get_tree().paused = false
-	pila._process(0.9)
-	assert_array(_textos(pila)).has_size(1)
-	pila._process(0.1)
-	assert_array(_textos(pila)).is_empty()
-
-
-func test_retrabar_conserva_el_resto_en_pausa_y_vaciar_la_retira() -> void:  # AC-NTF-031
-	var pila := _pila()
-	pila.set_process(false)
-	pila.actualizar_salida(true)
-	pila.actualizar_salida(false)
-	pila._process(Notificaciones.DURACION - 1.0)
+	pila._process(Notificaciones.DURACION * 10.0)
 	get_tree().paused = true
 	await get_tree().process_frame
 	assert_bool(pila.can_process()).is_false()
 	assert_array(_textos(pila)).is_equal(
-		[PilaDeNotificaciones.TEXTOS[Notificaciones.Tipo.SALIDA_RETRABADA]]
+		[PilaDeNotificaciones.TEXTOS[Notificaciones.Tipo.TAREAS_TERMINADAS]]
 	)
 	get_tree().paused = false
-	pila._process(0.9)
-	assert_array(_textos(pila)).has_size(1)
-	pila._process(0.1)
+	pila.actualizar_salida(false)
 	assert_array(_textos(pila)).is_empty()
 	pila.actualizar_salida(true)
-	pila.actualizar_salida(false)
+	assert_array(_textos(pila)).is_equal(
+		[PilaDeNotificaciones.TEXTOS[Notificaciones.Tipo.TAREAS_TERMINADAS]]
+	)
 	pila.vaciar()
 	assert_array(_textos(pila)).is_empty()
 
@@ -119,10 +102,129 @@ func test_la_salida_tiene_el_texto_y_simbolo_de_figma_y_respeta_pausa() -> void:
 	assert_array(_textos(pila)).is_empty()
 
 
+func test_el_cartel_con_titulo_pone_el_titulo_sobre_el_cuerpo() -> void:  # AC-NTF-043
+	var viewport: SubViewport = auto_free(SubViewport.new())
+	viewport.size = Vector2i(1920, 1080)
+	add_child(viewport)
+	var pila: PilaDeNotificaciones = load(ESCENA).instantiate()
+	viewport.add_child(pila)
+	pila.set_process(false)
+	pila.avisar_pista()
+	pila.actualizar_salida(true)
+	pila._process(1.0)
+	for tamano: Vector2i in [Vector2i(1920, 1080), Vector2i(1280, 720)]:
+		viewport.size = tamano
+		await get_tree().process_frame
+		await get_tree().process_frame
+		var carteles := pila.get_node("Marco/Pila").get_children()
+		var titulado: PanelContainer = carteles[0]
+		var titulo: Label = titulado.find_child("Titulo", true, false)
+		var cuerpo: Label = titulado.find_children("*", "Label", true, false).back()
+		assert_object(titulo).is_not_null()
+		assert_str(titulo.text).is_not_empty()
+		assert_str(cuerpo.text).is_equal(
+			PilaDeNotificaciones.TEXTOS[Notificaciones.Tipo.TAREAS_TERMINADAS]
+		)
+		assert_float(titulo.get_global_rect().end.y).is_less_equal(
+			cuerpo.get_global_rect().position.y
+		)
+		assert_int(titulo.get_theme_font_size("font_size")).is_less(
+			cuerpo.get_theme_font_size("font_size")
+		)
+		var letra_de_otro_cartel: Label = (
+			(carteles[1] as Control).find_children("*", "Label", true, false)[0]
+		)
+		var letra_del_tema := pila._marco.get_theme_default_font_size()
+		assert_int(letra_de_otro_cartel.get_theme_font_size("font_size")).is_equal(letra_del_tema)
+		assert_int(cuerpo.get_theme_font_size("font_size")).is_equal(letra_del_tema)
+		(
+			assert_str(
+				titulado.find_children("*", "TextureRect", true, false)[0].texture.resource_path
+			)
+			. ends_with("/notificacion_tareas_completadas.svg")
+		)
+		assert_object((carteles[1] as Control).find_child("Titulo", true, false)).is_null()
+		assert_array((carteles[1] as Control).find_children("*", "Label", true, false)).has_size(1)
+		assert_float(titulado.get_global_rect().end.x).is_equal_approx(
+			(carteles[1] as Control).get_global_rect().end.x, 0.1
+		)
+		(
+			assert_bool(Rect2(Vector2.ZERO, Vector2(tamano)).encloses(titulado.get_global_rect()))
+			. is_true()
+		)
+
+
+func test_el_cierre_proximo_lleva_titulo_y_el_reloj_de_arena() -> void:  # AC-NTF-043
+	var viewport: SubViewport = auto_free(SubViewport.new())
+	viewport.size = Vector2i(1920, 1080)
+	add_child(viewport)
+	var pila: PilaDeNotificaciones = load(ESCENA).instantiate()
+	viewport.add_child(pila)
+	pila.set_process(false)
+	pila.avisar_pista()
+	pila.actualizar_tiempo(3600.0)
+	pila._process(1.0)
+	for tamano: Vector2i in [Vector2i(1920, 1080), Vector2i(1280, 720)]:
+		viewport.size = tamano
+		await get_tree().process_frame
+		await get_tree().process_frame
+		var carteles := pila.get_node("Marco/Pila").get_children()
+		var cierre: PanelContainer = carteles[0]
+		var titulo: Label = cierre.find_child("Titulo", true, false)
+		var cuerpo: Label = cierre.find_children("*", "Label", true, false).back()
+		assert_object(titulo).is_not_null()
+		assert_str(titulo.text).is_equal(
+			PilaDeNotificaciones.TITULOS[Notificaciones.Tipo.CIERRE_PROXIMO]
+		)
+		assert_str(cuerpo.text).is_equal(
+			PilaDeNotificaciones.TEXTOS[Notificaciones.Tipo.CIERRE_PROXIMO]
+		)
+		assert_float(titulo.get_global_rect().end.y).is_less_equal(
+			cuerpo.get_global_rect().position.y
+		)
+		assert_int(titulo.get_theme_font_size("font_size")).is_less(
+			cuerpo.get_theme_font_size("font_size")
+		)
+		(
+			assert_str(
+				cierre.find_children("*", "TextureRect", true, false)[0].texture.resource_path
+			)
+			. ends_with("/notificacion_cierre.svg")
+		)
+		assert_object((carteles[1] as Control).find_child("Titulo", true, false)).is_null()
+		assert_float(cierre.get_global_rect().end.x).is_equal_approx(
+			(carteles[1] as Control).get_global_rect().end.x, 0.1
+		)
+		(
+			assert_bool(Rect2(Vector2.ZERO, Vector2(tamano)).encloses(cierre.get_global_rect()))
+			. is_true()
+		)
+
+
+func test_la_salida_con_productos_usa_el_simbolo_de_salida_y_respeta_pausa() -> void:  # AC-NTF-033
+	var pila := _pila()
+	pila.avisar_salida(Compradores.de_la_jornada(ReglasDeLaPartida.PRIMERA_JORNADA)[0], true)
+	assert_array(_textos(pila)).is_equal(
+		[PilaDeNotificaciones.TEXTOS[Notificaciones.Tipo.CLIENTE_CANSADO_CON_PRODUCTOS]]
+	)
+	var simbolo := pila.find_children("*", "TextureRect", true, false)[0] as TextureRect
+	assert_str(simbolo.texture.resource_path).ends_with("/notificacion_salida.svg")
+	pila._process(2.9)
+	get_tree().paused = true
+	await get_tree().process_frame
+	await get_tree().process_frame
+	assert_bool(pila.can_process()).is_false()
+	assert_array(_textos(pila)).has_size(1)
+	get_tree().paused = false
+	pila._process(0.1)
+	assert_array(_textos(pila)).is_empty()
+
+
 func _textos(pila: PilaDeNotificaciones) -> Array[String]:
 	var textos: Array[String] = []
-	for label: Label in pila.find_children("*", "Label", true, false):
-		textos.append(label.text)
+	for label: Label in pila.get_node("Marco/Pila").find_children("*", "Label", true, false):
+		if label.name != &"Titulo":
+			textos.append(label.text)
 	return textos
 
 
@@ -131,7 +233,9 @@ func test_los_textos_se_pintan_en_el_orden_del_dominio() -> void:  # AC-NTF-009
 	pila.avisar_pista()
 	pila.avisar_llegada(Comprador.new("Comprador", Venta.new(), 0))
 	pila.avisar_lectura_rechazada(GeneradorDeTickets.Resultado.LLENO)
-	assert_array(_textos(pila)).is_equal(["NO SE PUDO LEER", "¡HAY UN CLIENTE!", "¡NUEVA PISTA!"])
+	assert_array(_textos(pila)).is_equal(
+		["NO SE PUDO LEER", "¡HAY UN CLIENTE!", "Nueva pista desbloqueada"]
+	)
 	var simbolos := pila.find_children("*", "TextureRect", true, false)
 	assert_int(simbolos.size()).is_equal(3)
 	assert_str((simbolos[0] as TextureRect).texture.resource_path).is_equal(
@@ -155,6 +259,7 @@ func test_los_tres_carteles_entran_en_la_esquina_en_dos_resoluciones() -> void: 
 	pila.avisar_pista()
 	pila.avisar_llegada(Comprador.new("Comprador", Venta.new(), 0))
 	pila.avisar_lectura_rechazada(GeneradorDeTickets.Resultado.LLENO)
+	pila._process(1.0)
 	for tamano: Vector2i in [Vector2i(1920, 1080), Vector2i(1280, 720)]:
 		viewport.size = tamano
 		await get_tree().process_frame
@@ -182,7 +287,7 @@ func test_vaciar_retira_los_carteles_del_arbol() -> void:  # AC-NTF-006
 	pila.avisar_lectura_rechazada(GeneradorDeTickets.Resultado.LLENO)
 	assert_int(_textos(pila).size()).is_equal(2)
 	pila.vaciar()
-	assert_array(_textos(pila)).is_empty()
+	assert_array(pila.find_children("*", "Label", true, false)).is_empty()
 
 
 func test_pausar_suspende_el_procesamiento_sin_borrar_el_aviso() -> void:  # AC-NTF-008
@@ -212,7 +317,7 @@ func test_ningun_control_de_la_pila_intercepta_el_mouse() -> void:  # AC-NTF-010
 		assert_int(control.mouse_filter).is_equal(Control.MOUSE_FILTER_IGNORE)
 
 
-func test_el_clic_sobre_la_retraba_llega_a_la_computadora() -> void:  # AC-NTF-010, AC-NTF-030
+func test_el_clic_sobre_el_aviso_llega_a_la_computadora() -> void:  # AC-NTF-010, AC-NTF-027
 	var viewport: SubViewport = auto_free(SubViewport.new())
 	viewport.size = Vector2i(1920, 1080)
 	add_child(viewport)
@@ -227,7 +332,7 @@ func test_el_clic_sobre_la_retraba_llega_a_la_computadora() -> void:  # AC-NTF-0
 	viewport.add_child(pila)
 	pila.set_process(false)
 	pila.actualizar_salida(true)
-	pila.actualizar_salida(false)
+	pila._process(1.0)
 	for tamano: Vector2i in [Vector2i(1920, 1080), Vector2i(1280, 720)]:
 		viewport.size = tamano
 		pantalla.mostrar()
@@ -260,12 +365,14 @@ func test_todos_los_avisos_usan_una_linea_y_el_ancho_de_su_contenido() -> void: 
 	pila.avisar_llegada(Comprador.new("Comprador", Venta.new(), 0))
 	pila.avisar_lectura_rechazada(GeneradorDeTickets.Resultado.LLENO)
 	pila.avisar_salida(Comprador.new("Otro", Venta.new(), 0))
+	pila.avisar_salida(Comprador.new("Con productos", Venta.new(), 0), true)
+	pila._process(1.0)
 	for tamano: Vector2i in [Vector2i(1920, 1080), Vector2i(1280, 720)]:
 		viewport.size = tamano
 		await get_tree().process_frame
 		await get_tree().process_frame
 		var carteles := pila.get_node("Marco/Pila").get_children()
-		assert_int(carteles.size()).is_equal(4)
+		assert_int(carteles.size()).is_equal(5)
 		var derecha: float = carteles[0].get_global_rect().end.x
 		for cartel: PanelContainer in carteles:
 			var fila: HBoxContainer = cartel.get_child(0)
@@ -286,7 +393,7 @@ func test_todos_los_avisos_usan_una_linea_y_el_ancho_de_su_contenido() -> void: 
 			assert_float(simbolo.get_global_rect().get_center().y).is_equal_approx(
 				texto.get_global_rect().get_center().y, 1.0
 			)
-		assert_float((carteles[0] as Control).size.x).is_greater((carteles[2] as Control).size.x)
+		assert_float((carteles[0] as Control).size.x).is_greater((carteles[3] as Control).size.x)
 
 
 func test_el_aviso_de_una_hora_conserva_su_resto_en_pausa() -> void:  # AC-NTF-023
@@ -298,7 +405,9 @@ func test_el_aviso_de_una_hora_conserva_su_resto_en_pausa() -> void:  # AC-NTF-0
 	await get_tree().process_frame
 	await get_tree().process_frame
 	assert_bool(pila.can_process()).is_false()
-	assert_array(_textos(pila)).is_equal(["QUEDA UNA HORA DE JORNADA"])
+	assert_array(_textos(pila)).is_equal(
+		[PilaDeNotificaciones.TEXTOS[Notificaciones.Tipo.CIERRE_PROXIMO]]
+	)
 	get_tree().paused = false
 	pila._process(0.9)
 	assert_array(_textos(pila)).has_size(1)
@@ -319,7 +428,10 @@ func test_una_hora_comparte_esquina_y_su_texto_entra_en_ambas_resoluciones() -> 
 	pila.avisar_salida(Comprador.new("Otro", Venta.new(), 0))
 	pila.avisar_lectura_rechazada(GeneradorDeTickets.Resultado.LLENO)
 	pila.actualizar_tiempo(3600.0)
-	assert_str(_textos(pila)[0]).is_equal("QUEDA UNA HORA DE JORNADA")
+	assert_str(_textos(pila)[0]).is_equal(
+		PilaDeNotificaciones.TEXTOS[Notificaciones.Tipo.CIERRE_PROXIMO]
+	)
+	pila._process(1.0)
 	for tamano: Vector2i in [Vector2i(1920, 1080), Vector2i(1280, 720)]:
 		viewport.size = tamano
 		await get_tree().process_frame
@@ -330,8 +442,9 @@ func test_una_hora_comparte_esquina_y_su_texto_entra_en_ambas_resoluciones() -> 
 		for cartel: PanelContainer in carteles:
 			var fila: HBoxContainer = cartel.get_child(0)
 			var simbolo: TextureRect = fila.get_child(0)
-			var texto: Label = fila.get_child(1)
-			assert_int(texto.get_line_count()).is_equal(1)
+			var texto: Label = cartel.find_children("*", "Label", true, false).back()
+			var renglones := 2 if cartel == carteles[0] else 1
+			assert_int(texto.get_line_count()).is_equal(renglones)
 			assert_float(texto.size.x).is_greater_equal(texto.get_minimum_size().x)
 			assert_object(texto.get_theme_font("font")).is_same(pila._marco.get_theme_font("font"))
 			assert_float(cartel.get_global_rect().end.x).is_equal_approx(derecha, 0.1)
@@ -364,6 +477,7 @@ func test_el_aviso_de_una_hora_deja_pasar_el_clic_hacia_la_computadora() -> void
 	viewport.add_child(pila)
 	pila.set_process(false)
 	pila.actualizar_tiempo(3600.0)
+	pila._process(1.0)
 	for tamano: Vector2i in [Vector2i(1920, 1080), Vector2i(1280, 720)]:
 		viewport.size = tamano
 		pantalla.mostrar()
@@ -394,12 +508,14 @@ func test_la_pista_tiene_su_simbolo_y_la_pausa_conserva_su_tiempo() -> void:
 	await get_tree().process_frame
 	await get_tree().process_frame
 	assert_bool(pila.can_process()).is_false()
-	assert_array(_textos(pila)).is_equal(["¡NUEVA PISTA!"])
+	assert_array(_textos(pila)).is_equal(["Nueva pista desbloqueada"])
 	var fila: HBoxContainer = pila.get_node("Marco/Pila").get_child(0).get_child(0)
 	assert_str((fila.get_child(0) as TextureRect).texture.resource_path).is_equal(
 		"res://assets/ui/manada/notificacion_pista.svg"
 	)
 	assert_object(fila.get_child(1)).is_instanceof(Label)
+	var cartel: Control = pila.get_node("Marco/Pila").get_child(0)
+	assert_bool(get_viewport().get_visible_rect().encloses(cartel.get_global_rect())).is_true()
 	get_tree().paused = false
 	pila._process(2.9)
 	assert_array(_textos(pila)).has_size(1)

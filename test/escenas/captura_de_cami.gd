@@ -4,10 +4,14 @@ extends "res://test/escenas/captura_de_compradores_jornada_2.gd"
 class GuionDeCaptura:
 	extends DialogosDeCompradores
 
-	func inicial(personaje: int) -> Dialogo:
+	func inicial(
+		personaje: int,
+		pedido: Venta = null,
+		pistas_activas: PackedStringArray = PackedStringArray()
+	) -> Dialogo:
 		if personaje == Personaje.CAMI:
-			return _crear_dialogo(PackedStringArray(["Atención de prueba: Cami."]))
-		return super.inicial(personaje)
+			return _crear_dialogo(PackedStringArray(["Atención de prueba: Cami."]), pedido)
+		return super.inicial(personaje, pedido, pistas_activas)
 
 
 func _compradores(jornada: int) -> Array[Comprador]:

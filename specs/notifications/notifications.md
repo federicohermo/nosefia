@@ -3,7 +3,7 @@ schema_version: 1
 capability_id: CAP-NTF
 status: ratified
 owner: por definir
-provenance: GDD «Notificaciones»; ficha «Sistema de investigación (pistas e hipótesis)»; GJ-43; decisiones de los issues 309, 385 y 435; ocho jornadas de #526; salida voluntaria de #573; siete jornadas de #693
+provenance: GDD «Notificaciones»; ficha «Logros» y decisiones de #381; ficha «Sistema de investigación (pistas e hipótesis)»; GJ-43; decisiones de los issues 309, 385 y 435; ocho jornadas de #526; salida voluntaria de #573; siete jornadas de #693; salida con productos de #734
 ---
 
 # Capacidad: los avisos durante la noche
@@ -11,7 +11,7 @@ provenance: GDD «Notificaciones»; ficha «Sistema de investigación (pistas e 
 ## Propósito
 
 Hacer visibles la llegada y salida por cansancio de un comprador y el rechazo del lector lleno.
-Avisar también una pista nueva, la salida habilitada o vuelta a trabar de las jornadas de prueba
+Avisar también una pista nueva, un logro ganado, la salida habilitada de las jornadas de prueba
 y la proximidad del cierre mientras el jugador reparte su atención entre las tareas.
 Los avisos acompañan esos sucesos sin cambiar su resultado.
 
@@ -20,9 +20,10 @@ Los avisos acompañan esos sucesos sin cambiar su resultado.
 | Término | Significado acá | Evitar |
 |---|---|---|
 | **Notificación** | cartel breve con texto y símbolo de un suceso | ventana, diálogo |
-| **Tipo** | llegada, salida por cansancio, lectura fallida por renglones llenos, pista nueva, cierre próximo, tareas terminadas o salida vuelta a trabar | prioridad |
+| **Tipo** | llegada, salida por cansancio, salida por cansancio con productos dejados, lectura fallida por renglones llenos, pista nueva, logro, cierre próximo o tareas terminadas | prioridad |
 | **Visible** | tipo cuyo tiempo todavía no se agotó | historial |
 | **Comprador avisado** | la misma identidad que ya disparó su llegada durante el turno | mismo nombre |
+| **Logro** | uno de los nueve de [`achievements`](../achievements/achievements.md), con su nombre | medalla |
 | **Pista nueva** | pista cuyo registro acepta investigación por primera vez y desbloquea una hipótesis | objeto revelado, objeto examinado |
 
 ## Comportamiento normativo
@@ -53,8 +54,7 @@ CUANDO se avisa un tipo ya visible, el sistema DEBE dejarlo una sola vez, primer
 segundos completos, sin renovar los otros tipos. La llegada del mismo comprador sigue la excepción
 de BR-NTF-001 y la persistencia de BR-NTF-009. El cierre próximo sigue la unicidad
 por jornada de BR-NTF-012 y NO DEBE renovarse por entradas sucesivas de tiempo.
-Las tareas terminadas siguen la unicidad por jornada de BR-NTF-014. La salida vuelta a
-trabar sigue las transiciones de BR-NTF-015.
+Las tareas terminadas siguen la persistencia de BR-NTF-014.
 
 ### BR-NTF-005 — Los tipos conviven en orden
 
@@ -70,22 +70,30 @@ y puede volver a avisar su propio cierre próximo.
 ### BR-NTF-007 — El cartel comunica sin tomar el control
 
 El sistema DEBE dibujar los carteles claros en la esquina superior derecha, con el símbolo
-del tipo a la izquierda y su texto en mayúsculas a la derecha. Llegada, lectura y pista van sin
-punto final; la salida conserva el punto final de su diseño. El comprador
+del tipo a la izquierda y su texto en mayúsculas a la derecha; sólo el de pista conserva la
+capitalización de la ficha, «Nueva pista desbloqueada». Llegada, lectura y pista van sin
+punto final; la salida conserva el punto final de su diseño. El aviso de tareas terminadas usa
+el símbolo de la puerta principal y el de cierre próximo usa el reloj de arena con exclamación.
+Los dos suman un título en letra chica encima de su cuerpo. El comprador
 usa la figura con exclamación, el lector usa la cruz y la pista usa el signo de pregunta del diseño.
 MIENTRAS computadora, ventanilla u otra interfaz de la jornada están abiertas, incluyendo los diálogos, el cartel
 DEBE verse encima y DEBE dejar pasar el clic. El menú
 de pausa DEBE dibujarse por encima del cartel.
 
-TODOS los tipos DEBEN presentar su texto en una sola línea, con el tamaño de letra principal
-del tema. El contenedor DEBE ajustar su ancho al símbolo, la separación, el texto y sus
+TODOS los tipos sin título DEBEN presentar su texto en una sola línea, con el tamaño de letra
+principal del tema. Un tipo con título DEBE presentar el título en una línea de letra chica y su
+cuerpo debajo, con el tamaño de letra principal del tema y en los renglones que fija su diseño. El contenedor DEBE ajustar su ancho al símbolo, la separación, el texto y sus
 márgenes, sin una franja vacía de ancho fijo. Los carteles DEBEN compartir el borde derecho
 y centrar verticalmente símbolo y texto, sin recortarlos al cambiar la resolución.
 
 ### BR-NTF-008 — El comprador que vence avisa su salida
 
 CUANDO una compra vence, el sistema DEBE mostrar «El cliente se cansó de esperar» una vez por
-identidad y jornada. DEBE usar la duración, pausa, orden y deduplicación de los demás avisos.
+identidad y jornada. SI el comprador ya había recibido al menos un producto, ENTONCES el
+sistema DEBE mostrar en su lugar «El cliente se cansó de esperar y dejó los productos», con el
+mismo símbolo y presentación. El ticket solo no cuenta como producto. Nunca salen los dos
+para la misma identidad y jornada.
+DEBE usar la duración, pausa, orden y deduplicación de los demás avisos.
 Una compra completa NO DEBE producirlo. El cierre DEBE olvidar las identidades de salida.
 
 ### BR-NTF-009 — La llegada espera a la conversación
@@ -101,7 +109,7 @@ conservan el recorrido y duración anteriores hasta que tengan diálogos diseña
 ### BR-NTF-010 — Sólo una pista anotada avisa
 
 CUANDO investigación confirma una pista nueva anotada que desbloquea una hipótesis, el sistema
-DEBE mostrar «¡NUEVA PISTA!». El disparador es el registro aceptado, según la
+DEBE mostrar «Nueva pista desbloqueada». El disparador es el registro aceptado, según la
 [ficha «Notificaciones»](https://app.notion.com/p/3e486efecd9d808bb505c198429d316d).
 Un resultado repetido o desconocido NO DEBE crear ni renovar el aviso.
 Revelar o examinar un objeto sin registrar una pista NO DEBE producirlo.
@@ -117,7 +125,7 @@ CUANDO el turno está abierto y el tiempo restante alcanza o atraviesa el umbral
 las 07:00 de ficción, el sistema DEBE mostrar un aviso de cierre próximo una sola vez en esa
 jornada. El umbral DEBE derivarse de la apertura y duración de BR-SHF-001: duración menos
 el intervalo desde la apertura hasta las 07:00 del día siguiente. Con el turno vigente,
-equivale a una hora de ficción restante, no a la hora del equipo ni al texto del reloj de mesa.
+equivale a una hora de ficción restante, no a la hora del equipo ni al texto del reloj de pared.
 Antes del umbral, con tiempo no positivo o con turno cerrado NO DEBE dispararse.
 
 Una primera entrada ya dentro de la última hora con turno abierto DEBE dispararlo. Un salto
@@ -126,53 +134,54 @@ Las entradas siguientes NO DEBEN repetirlo ni renovarlo, incluso después de que
 El cierre DEBE vaciarlo y suprimir un disparo si ese avance llega directamente al final del
 turno. Abrir la noche siguiente DEBE habilitar un nuevo disparo, en cualquiera de las cinco
 jornadas. Retomar desde el inicio de la jornada DEBE habilitarlo sin guardar una bandera propia.
-La falla del reloj de mesa NO DEBE impedir el aviso.
+El reloj detenido de la sexta noche NO DEBE impedir el aviso.
 
-### BR-NTF-013 — El cierre próximo comunica una hora restante
+### BR-NTF-013 — El cierre próximo comunica que queda poco tiempo
 
-CUANDO se muestra cierre próximo, el sistema DEBE comunicar que queda una hora de jornada,
-con un símbolo que identifique el tiempo restante, usando el fondo claro, fuente principal,
-esquina superior derecha, una sola línea y ancho ajustado de BR-NTF-007. DEBE permanecer
+CUANDO se muestra cierre próximo, el sistema DEBE mostrar el título «¡HORA DE CIERRE!» y el
+cuerpo «QUEDA POCO TIEMPO PARA QUE SE TERMINE LA JORNADA.», en dos renglones, con el reloj de
+arena con exclamación como símbolo, usando el fondo claro, fuente principal, esquina superior
+derecha y ancho ajustado de BR-NTF-007. DEBE permanecer
 durante la duración de BR-NTF-003, conservar su resto en pausa, dejar pasar clics y dibujarse
 encima de las interfaces de jornada y debajo del menú de pausa. NO DEBE añadir un reloj
 permanente al HUD ni cambiar la duración del turno.
 DEBE convivir con los demás tipos conservando orden, deduplicación y duración propia de
 cada uno; un aviso persistente NO DEBE adquirir un temporizador por la llegada de éste.
 
-### BR-NTF-014 — Las tareas terminadas avisan una vez por jornada de prueba
+### BR-NTF-014 — Las tareas terminadas quedan a la vista mientras la salida está habilitada
 
-CUANDO la jornada habilita por primera vez la salida según BR-SHF-021, el sistema DEBE mostrar
-«Ya terminaste tus tareas y podés irte» una sola vez en esa
-jornada. El aviso DEBE seguir la duración, pausa, orden y presentación comunes.
-Entradas repetidas del mismo cumplimiento NO DEBEN renovarlo, ni recrearlo después de vencer.
+CUANDO la jornada habilita la salida según BR-SHF-021, el sistema DEBE mostrar el título
+«¡Tareas completadas!» y el cuerpo «Ya podés retirarte por la puerta principal.», en dos
+renglones. El aviso DEBE quedar a la vista, sin la duración de BR-NTF-003 y como la llegada
+persistente de BR-NTF-009, hasta que la salida se traba o el jugador se va del local. DEBE
+seguir el orden, la pausa y la presentación comunes.
+Entradas repetidas del mismo cumplimiento NO DEBEN renovarlo ni recrearlo.
 Si la salida vuelve a trabarse, el sistema DEBE retirar este aviso para no anunciar un permiso
-que ya no vale. Recuperar la salida NO DEBE repetir el aviso inicial.
+que ya no vale. Recuperar la salida DEBE mostrarlo otra vez.
 Cerrar DEBE retirar el aviso y olvidar su disparo. Una jornada nueva de prueba puede avisar
 otra vez. Desde la primera jornada completa NO DEBE aparecer este aviso.
 
-MIENTRAS la computadora está abierta, los cambios de permiso NO DEBEN disparar este aviso ni
-el de BR-NTF-015. Un aviso previo que sigue vigente conserva su duración al abrirla.
+MIENTRAS la computadora está abierta, los cambios de permiso NO DEBEN disparar este aviso.
+Un aviso previo que sigue vigente conserva su duración al abrirla.
 CUANDO el jugador sale de la computadora, el sistema DEBE mostrar el aviso que
 corresponde al estado vigente de la salida, como si el cambio ocurriera en ese instante.
 SI sale con el mismo permiso con que entró, ENTONCES NO DEBE dispararse un nuevo aviso de salida.
 Una habilitación que se pierde antes de salir NO cuenta como avisada. El retiro del aviso
-opuesto que ya no vale NO DEBE esperar. SI el turno cierra con la computadora abierta,
+que ya no vale NO DEBE esperar. SI el turno cierra con la computadora abierta,
 ENTONCES salir de ella NO DEBE mostrar un aviso pendiente.
 
-### BR-NTF-015 — Cada nueva traba de salida avisa
+### BR-NTF-017 — Un logro ganado avisa su nombre
 
-CUANDO la salida de prueba pasa de habilitada a trabada porque una obligatoria dejó de
-cumplirse según BR-SHF-024, el sistema DEBE mostrar «Ya no podés irte porque una tarea quedó
-sin cumplir». El texto es provisorio y DEBE usar el mismo símbolo, estilo y mecanismo del
-aviso de tareas terminadas, con duración, pausa, orden, deduplicación y cierre comunes.
-Cada nueva transición DEBE dispararlo otra vez, incluso si el aviso anterior ya venció.
-Confirmar repetidas veces el mismo estado trabado NO DEBE renovarlo ni recrearlo.
-Antes de habilitar la salida por primera vez NO DEBE aparecer este aviso.
-Cuando se recupera la salida, el sistema DEBE retirar el aviso de traba para no anunciar una
-restricción que ya no vale, sin repetir el aviso inicial. Ninguno de estos cambios DEBE
-retirar ni renovar otros tipos. Cerrar DEBE vaciar ambos avisos y olvidar las transiciones.
-Desde la primera jornada completa NO DEBE aparecer este aviso. Con la computadora abierta,
-este aviso espera a que el jugador salga según BR-NTF-014.
+CUANDO se desbloquea un logro (BR-ACH-002), el sistema DEBE mostrar «NUEVO LOGRO:» seguido de su
+nombre en mayúsculas, en un solo renglón, con el trofeo a la izquierda. El aviso del nombre más
+largo DEBE caber entero en el cartel. El aviso DEBE usar la duración, la pausa, el orden, el
+borde derecho, el fondo y el clic atravesado de BR-NTF-003, BR-NTF-005 y BR-NTF-007. La identidad
+del aviso es el logro: dos logros distintos ganados a la vez DEBEN dejar dos avisos, el más nuevo
+primero, y un logro nunca avisa dos veces (BR-ACH-002). El nombre con «¿», «¡» o «…» DEBE verse
+entero.
+
+Un logro ganado al cerrar la noche DEBE avisarse después de que BR-NTF-006 vacíe los avisos de esa
+noche, y su aviso DEBE verse encima de la pantalla del cierre.
 
 ## Criterios de aceptación
 
@@ -228,7 +237,7 @@ completar el 0,1 restante sí.
 DADO llegada, lectura fallida y pista visibles CUANDO se presentan a 1920 × 1080 y 1280 × 720
 ENTONCES sus carteles quedan dentro de la esquina superior derecha, sin recorte.
 La cruz corresponde a «NO SE PUDO LEER» y
-la figura con exclamación a «¡HAY UN CLIENTE!»; el signo de pregunta corresponde a «¡NUEVA PISTA!».
+la figura con exclamación a «¡HAY UN CLIENTE!»; el signo de pregunta corresponde a «Nueva pista desbloqueada».
 Los tres símbolos están a la izquierda de su texto. Los tres carteles usan la
 fuente del tema de Manada y el fondo claro del diseño.
 
@@ -248,6 +257,7 @@ DADO una compra vencida CUANDO se avisa la salida ENTONCES aparece su texto y s�
 Repetir esa identidad no renueva. A los 2,9 segundos sigue; a los 3,0 desaparece.
 La pausa conserva el resto. Otra identidad renueva el tipo sin duplicarlo ni renovar los otros.
 Cerrar y comenzar otra jornada permite avisar otra vez la misma identidad.
+Ambos textos de salida siguen estas reglas.
 
 ### AC-NTF-012 — Espera y primer clic *(verifica BR-NTF-009, BR-NTF-001, BR-NTF-006)*
 
@@ -258,17 +268,17 @@ cierre del turno la retiran. Una identidad distinta no puede ocultarla.
 
 ### AC-NTF-013 — Una línea y ancho según el contenido *(verifica BR-NTF-007)*
 
-DADO llegada, lectura fallida, cansancio y pista CUANDO se muestran a 1920 × 1080 y 1280 × 720
-ENTONCES cada texto ocupa una sola línea con la letra principal del tema, queda completo
-junto al símbolo y su cartel ajusta el ancho al contenido. Los cuatro comparten el borde
-derecho dentro de la pantalla; el mensaje más largo ocupa un cartel más ancho.
+DADO llegada, lectura fallida, cansancio, cansancio con productos y pista CUANDO se muestran a
+1920 × 1080 y 1280 × 720 ENTONCES cada texto ocupa una sola línea con la letra principal del
+tema, queda completo junto al símbolo y su cartel ajusta el ancho al contenido. Los cinco
+comparten el borde derecho dentro de la pantalla; el mensaje más largo ocupa un cartel más ancho.
 
 ### AC-NTF-014 — Registro nuevo, repetido y desconocido *(verifica BR-NTF-010)*
 
 DADO cero avisos CUANDO se revela un objeto que no es pista, se repite una pista conocida
 o se intenta registrar una desconocida ENTONCES no aparece ningún aviso de pista.
 CUANDO investigación acepta una pista nueva ENTONCES aparece exactamente un cartel
-«¡NUEVA PISTA!» con el signo de pregunta a su izquierda.
+«Nueva pista desbloqueada» con el signo de pregunta a su izquierda.
 DADO ese aviso con dos segundos consumidos CUANDO se repite la pista o se intenta registrar
 una desconocida ENTONCES sigue uno solo y desaparece al consumir el segundo restante.
 
@@ -317,18 +327,19 @@ de la última hora ENTONCES no reaparece. DADO un avance desde 06:59 hasta el ci
 ENTONCES la pila termina vacía y no aparece sobre la devolución. CUANDO comienza la noche
 siguiente, o se retoma esa jornada desde su inicio, ENTONCES puede avisar al alcanzar su umbral.
 
-### AC-NTF-023 — La pausa y el reloj averiado no cambian el disparador *(verifica BR-NTF-012, BR-NTF-013, BR-NTF-003)*
+### AC-NTF-023 — La pausa y el reloj detenido no cambian el disparador *(verifica BR-NTF-012, BR-NTF-013, BR-NTF-003)*
 
 DADO el turno justo antes del umbral CUANDO se pausa y pasan cuadros ENTONCES no consume
 tiempo ni dispara. DADO aviso con dos segundos consumidos CUANDO se pausa y reanuda
 ENTONCES conserva el segundo restante: 0,9 no lo retiran y completar 0,1 sí.
-DADO la jornada en que falla el reloj de mesa, con el display apagado CUANDO el turno
+DADO la jornada 6 con el reloj leyendo `20:58` CUANDO el turno
 alcanza las 07:00 ENTONCES llega exactamente un cierre próximo a la pila de avisos.
 
-### AC-NTF-024 — Una hora legible sin tomar el clic *(verifica BR-NTF-013, BR-NTF-007)*
+### AC-NTF-024 — El aviso legible sin tomar el clic *(verifica BR-NTF-013, BR-NTF-007)*
 
-DADO cierre próximo a 1920×1080 y 1280×720 CUANDO se presenta ENTONCES comunica una hora
-restante, con símbolo de tiempo a la izquierda, texto en mayúsculas completo en una línea,
+DADO cierre próximo a 1920×1080 y 1280×720 CUANDO se presenta ENTONCES muestra en mayúsculas
+«¡HORA DE CIERRE!» como título y «QUEDA POCO TIEMPO PARA QUE SE TERMINE LA JORNADA.» como
+cuerpo, en dos renglones, con el reloj de arena con exclamación a la izquierda,
 fuente principal y fondo claro. Su ancho se ajusta al contenido y comparte el borde derecho
 de la pila. DADO computadora, celular o ventanilla abiertos ENTONCES el aviso queda encima y
 deja pasar clics hacia ellos; al abrir pausa, ésta queda encima del aviso. El HUD no incorpora
@@ -346,81 +357,101 @@ DADO los cuatro tipos todavía visibles CUANDO cierra el turno ENTONCES retira l
 ### AC-NTF-026 — Un disparo, duración y nueva noche *(verifica BR-NTF-014, BR-NTF-003, BR-NTF-005, BR-NTF-006)*
 
 DADO salida habilitada CUANDO se recibe su confirmación repetidas veces ENTONCES hay un
-solo aviso de tareas terminadas, primero entre los otros tipos. A los 2,9 segundos sigue;
-al completar 3,0 se retira. Una entrada repetida no renueva su resto ni lo recrea al vencer.
-Cerrar retira todos los tipos y permite avisar una vez en la siguiente jornada de prueba.
-Pausar conserva el tiempo restante del aviso.
+solo aviso de tareas terminadas, primero entre los otros tipos. Los otros tipos
+siguen su duración; el de tareas terminadas no vence. Una entrada repetida no lo recrea.
+Cerrar retira todos los tipos y permite avisar de nuevo en la siguiente jornada de prueba.
 
 ### AC-NTF-027 — Texto completo con la presentación común *(verifica BR-NTF-014, BR-NTF-007)*
 
 DADO el aviso a 1920×1080 y 1280×720 CUANDO se dibuja ENTONCES muestra en mayúsculas
-«Ya terminaste tus tareas y podés irte» completo en una línea, con fondo claro, símbolo a la
-izquierda y fuente principal. Su cartel ajusta el ancho al contenido, comparte el borde
-derecho de la pila, queda dentro de pantalla y deja pasar clics.
+«¡Tareas completadas!» como título y «Ya podés retirarte por la puerta principal.» como cuerpo
+en dos renglones, con fondo claro, símbolo a la izquierda y fuente principal. Su cartel ajusta
+el ancho al contenido, comparte el borde derecho de la pila, queda dentro de pantalla y deja
+pasar clics.
 
 ### AC-NTF-028 — Sólo al completar las tareas de prueba *(verifica BR-NTF-014)*
 
 DADO por separado las jornadas 1, 2 y la primera jornada completa CUANDO falta una tarea
 ENTONCES no hay aviso. CUANDO se completa la última ENTONCES las dos primeras muestran
-exactamente uno y la primera completa ninguno. DADO el aviso vencido CUANDO se descumple
-y se recupera una tarea ENTONCES el aviso inicial no reaparece; la salida sigue el estado
-actual de sus tareas.
+exactamente uno y la primera completa ninguno. DADO el aviso visible CUANDO se descumple
+y se recupera una tarea ENTONCES el aviso reaparece; la salida sigue el estado actual de
+sus tareas.
 
-### AC-NTF-029 — Cada transición avisa y los estados opuestos se retiran *(verifica BR-NTF-014, BR-NTF-015, BR-NTF-004, BR-NTF-005)*
-
-DADO una jornada de prueba sin salida habilitada todavía CUANDO se confirma que faltan tareas
-ENTONCES no hay aviso de traba. DADO el aviso inicial visible CUANDO una tarea se descumple
-ENTONCES se retira ese aviso y aparece uno de salida vuelta a trabar. Confirmar otra vez el
-mismo estado no lo renueva. CUANDO se recuperan todas las tareas ENTONCES se retira el aviso
-de traba sin repetir el inicial. CUANDO otra tarea vuelve a descumplirse ENTONCES aparece
-un nuevo aviso de traba con sus tres segundos completos, también si el anterior ya venció.
-Los otros tipos conservan su orden relativo y su tiempo restante durante ambos cambios.
-
-### AC-NTF-030 — La nueva traba usa la presentación del aviso de salida *(verifica BR-NTF-015, BR-NTF-007)*
-
-DADO el aviso de salida vuelta a trabar a 1920×1080 y 1280×720 CUANDO se dibuja ENTONCES
-muestra en mayúsculas «Ya no podés irte porque una tarea quedó sin cumplir» completo en una
-línea, con el mismo símbolo a la izquierda, fondo claro y fuente principal del aviso de tareas
-terminadas. El cartel ajusta su ancho al contenido, comparte el borde derecho de la pila,
-queda dentro de pantalla, encima de interfaces y debajo de pausa, y deja pasar clics.
-
-### AC-NTF-031 — La nueva traba conserva duración, pausa y cierre *(verifica BR-NTF-015, BR-NTF-003, BR-NTF-006)*
-
-DADO un aviso de traba recién disparado CUANDO se consumen 2,9 segundos ENTONCES sigue visible;
-al completar 3,0 desaparece. Confirmar que la salida sigue trabada no lo recrea. DADO dos
-segundos consumidos CUANDO se pausa y pasan cuadros ENTONCES conserva el segundo restante;
-al reanudar, 0,9 no lo retiran y completar 0,1 sí. Un avance de diez segundos también lo retira.
-Cerrar vacía el aviso. Abrir otra jornada de prueba no hereda la traba avisada y permite
-un nuevo aviso inicial y posteriores trabas. La primera jornada completa no produce ninguno
-de los dos avisos, aunque se cumpla y descumpla una tarea.
-
-### AC-NTF-032 — Los avisos de salida esperan a que se cierre la computadora *(verifica BR-NTF-014, BR-NTF-015)*
+### AC-NTF-032 — El aviso de salida espera a que se cierre la computadora *(verifica BR-NTF-014)*
 
 DADO una jornada de prueba sin salida habilitada y la computadora abierta CUANDO se completa
 la última tarea ENTONCES la salida queda habilitada y no hay aviso; CUANDO el jugador sale de
-la computadora ENTONCES aparece el de tareas terminadas con sus tres segundos completos.
+la computadora ENTONCES aparece el de tareas terminadas y queda a la vista.
 DADO ese aviso visible y la computadora abierta CUANDO una tarea se descumple ENTONCES la
-salida se traba y el aviso se retira en el instante, sin aviso de traba; al salir aparece el
-de traba. DADO la salida trabada y la computadora abierta CUANDO se recupera ENTONCES el aviso
-de traba se retira en el instante y al salir no aparece ninguno. DADO la computadora abierta
-CUANDO se descumple y se recupera una tarea antes de salir ENTONCES al salir no hay aviso.
+salida se traba y el aviso se retira en el instante; al salir no aparece ninguno. DADO la
+salida trabada y la computadora abierta CUANDO se recupera ENTONCES no hay aviso hasta que
+el jugador sale y entonces aparece el de tareas terminadas. DADO la computadora abierta
+CUANDO se descumple y se recupera una tarea antes de salir ENTONCES al salir aparece el de
+tareas terminadas.
 DADO una jornada sin salida habilitada CUANDO se cumple y se descumple antes de salir
 ENTONCES al salir no hay aviso, y completar después afuera avisa tareas terminadas una vez.
 DADO un cambio pendiente CUANDO cierra el turno antes de salir ENTONCES salir no muestra
 aviso. Los otros tipos conservan su orden y su tiempo restante durante la espera.
-DADO un aviso de salida visible CUANDO se abre y se cierra la computadora sin cambiar el
-permiso ENTONCES el aviso conserva su tiempo restante, sin renovarse ni recrearse al vencer.
+DADO el aviso de tareas terminadas visible CUANDO se abre y se cierra la computadora sin
+cambiar el permiso ENTONCES sigue a la vista, sin recrearse.
+
+### AC-NTF-043 — El cartel con título pone el título sobre el cuerpo *(verifica BR-NTF-007, BR-NTF-014)*
+
+DADO el aviso de tareas terminadas visible CUANDO se dibuja ENTONCES el título está encima del
+cuerpo, con letra más chica que la del cuerpo, y el cuerpo usa el mismo tamaño de letra que los
+demás carteles. El símbolo es el de la puerta principal, no el del comprador. DADO cierre próximo visible CUANDO se dibuja ENTONCES lleva el mismo orden de título y cuerpo, y
+su símbolo es el reloj de arena con exclamación. DADO cualquier otro tipo visible CUANDO se dibuja
+ENTONCES no tiene título y conserva su texto en una sola línea.
+
+### AC-NTF-044 — Las tareas terminadas no vencen *(verifica BR-NTF-014, BR-NTF-003, BR-NTF-009)*
+
+DADO el aviso de tareas terminadas visible junto a otros tipos CUANDO pasa más tiempo que la
+duración de los avisos comunes ENTONCES los otros tipos se retiran y este sigue a la vista, también
+con la partida en pausa y tras repetir su confirmación. CUANDO el jugador se va del local
+ENTONCES el aviso se retira.
+
+### AC-NTF-045 — Deshacer una tarea retira las tareas terminadas y cumplirlas las devuelve *(verifica BR-NTF-014, BR-NTF-004, BR-NTF-005)*
+
+DADO el aviso de tareas terminadas visible CUANDO una tarea queda sin cumplir ENTONCES el aviso
+se retira y no aparece ningún otro en su lugar. CUANDO todas se cumplen otra vez ENTONCES el
+aviso vuelve, tantas veces como se repita, también si el cambio ocurrió con la computadora
+abierta y el jugador salió después. Los otros tipos conservan su orden relativo y su tiempo
+restante durante ambos cambios.
+
+### AC-NTF-033 — Con productos dejados, el aviso largo *(verifica BR-NTF-008, BR-NTF-004)*
+
+DADO un comprador que recibió un producto CUANDO su compra vence ENTONCES aparece
+«EL CLIENTE SE CANSÓ DE ESPERAR Y DEJÓ LOS PRODUCTOS.» con el símbolo del aviso de cansancio y
+no aparece «EL CLIENTE SE CANSÓ DE ESPERAR.». DADO un comprador que no recibió nada, o sólo el
+ticket, CUANDO su compra vence ENTONCES aparece sólo el texto corto. DADO un comprador que
+recibió dos productos ENTONCES aparece un solo aviso. DADO una compra completa ENTONCES no
+aparece ninguno de los dos. DADO el aviso largo con 2,9 segundos consumidos ENTONCES sigue
+visible; al completar 3,0 desaparece. Repetir la misma identidad en la misma jornada no lo
+renueva, y cerrar permite avisar otra vez. Un comprador que dejó productos y otro que no
+dejaron nada, en la misma jornada, dejan dos avisos, uno de cada texto.
+
+### AC-NTF-046 — El logro avisa su nombre y no se repite *(verifica BR-NTF-017, BR-NTF-003, BR-NTF-005, BR-NTF-006)*
+
+DADO cero avisos CUANDO se desbloquea un logro ENTONCES hay un aviso con «NUEVO LOGRO:» y su nombre
+en mayúsculas, en un solo renglón, con el trofeo a la izquierda, que sigue visible a los 2,9 segundos y desaparece
+al completar 3,0. DADO dos logros distintos desbloqueados en el mismo cuadro ENTONCES hay dos avisos,
+el más nuevo primero. DADO un logro ya ganado CUANDO se cumple otra vez su condición ENTONCES no hay
+aviso. DADO un aviso de logro y otro de pista ENTONCES conviven en el orden de BR-NTF-005. A 1920 × 1080
+y 1280 × 720 el aviso queda dentro de la esquina superior derecha, comparte el borde derecho de la pila
+y deja pasar el clic. Los nombres con «¿», «¡» y «…» se ven enteros con la fuente del tema.
+DADO un logro que se gana al cerrar la noche, con avisos visibles CUANDO cierra el turno ENTONCES los
+avisos de la noche se retiran y el del logro queda visible, encima de la pantalla del cierre.
 
 ## No objetivos
 
 - Esta capacidad NO decide cuándo llegan o se despachan compradores ni acepta lecturas.
 - Esta capacidad NO decide el abandono del comprador ni qué es una pista o qué hipótesis desbloquea.
-- Esta capacidad NO incorpora logros.
+- Esta capacidad NO decide cuándo se gana un logro: lo decide [`achievements`](../achievements/achievements.md).
 - Esta capacidad NO guarda avisos entre sesiones.
 
 ## Contratos
 
-- **Entrada:** identidad de quien llega o vence, motivo de lectura, confirmación de pista nueva
+- **Entrada:** un logro desbloqueado, identidad de quien llega o vence y si ya había recibido un producto, motivo de lectura, confirmación de pista nueva
   anotada por investigación, tiempo en ejecución, tiempo restante de ficción del turno abierto,
   salida habilitada o vuelta a trabar, computadora abierta o cerrada y cierre.
 - **Salida:** tipos visibles ordenados, texto y símbolo correspondientes.
@@ -429,7 +460,7 @@ permiso ENTONCES el aviso conserva su tiempo restante, sin renovarse ni recrears
 
 ## Señales
 
-- Escucha llegada, vencimiento, rechazo, pista nueva anotada, tiempo restante, salida habilitada
+- Escucha llegada, vencimiento, rechazo, pista nueva anotada, logro desbloqueado, tiempo restante, salida habilitada
   o vuelta a trabar y cierre.
   No emite decisiones a las capacidades que los publican.
 
@@ -440,9 +471,8 @@ permiso ENTONCES el aviso conserva su tiempo restante, sin renovarse ni recrears
 - `player-actions` (consume): suspensión del procesamiento durante la pausa.
 - [`investigation`](../investigation/investigation.md) (consume): confirmación de pista nueva
   anotada que desbloquea una hipótesis; una revelación de objeto no reemplaza esa confirmación.
+- [`achievements`](../achievements/achievements.md) (consume): el logro recién desbloqueado y su nombre.
 
 ## Preguntas abiertas
 
 Ninguna para estos tipos. Los demás disparadores están fuera de sus objetivos.
-El texto del aviso de cierre próximo debe comunicar la hora restante.
-El diseño no prescribe una frase literal ni una ilustración específica.

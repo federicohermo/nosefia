@@ -56,6 +56,15 @@ func girar(delta_del_mouse: Vector2) -> void:
 	)
 
 
+## El joystick derecho gira la vista en proporción a su inclinación, de `-1` a `1`: `x` a la
+## derecha e `y` hacia abajo, como el delta del mouse. Se dibuja en el momento: el suavizado
+## reparte los saltos del mouse, y la inclinación ya es continua.
+func girar_con_el_joystick(inclinacion: Vector2, segundos: float) -> void:
+	if _suspendido:
+		return
+	_mirada.girar_en_radianes(inclinacion * ReglasDelJugador.GIRO_DEL_JOYSTICK * segundos)
+
+
 ## El giro que faltaba dibujar se descarta: es de la mirada anterior.
 func orientar(nuevo_yaw: float) -> void:
 	_mirada.orientar(nuevo_yaw)
@@ -125,3 +134,9 @@ func hay_interactuable() -> bool:
 ## donde se parte la traducción — acá se decide SI, en `src/escenas/jugador.gd` se traduce a QUÉ.
 func quiere_el_cursor_tomado() -> bool:
 	return not _suspendido
+
+
+## El clic que llega con el cursor suelto estando el juego en marcha es el gesto que el navegador
+## pide para devolverlo, y no una acción: el Esc que lo soltó no cuenta como gesto.
+func clic_es_para_tomar_el_cursor(cursor_tomado: bool) -> bool:
+	return quiere_el_cursor_tomado() and not cursor_tomado

@@ -7,14 +7,16 @@
 ## jugador: sin esas dos puertas, abrir la computadora degradaría en silencio —el mouse seguiría
 ## girando la cámara y el jugador seguiría caminando detrás del panel—.
 ##
-## **Se sale con el clic derecho, y no con la tecla de la pausa.** Esa tecla pausa la jornada
-## desde cualquier puesto, así que compartirla cerraría la computadora cada vez que el jugador
-## pausa. El nombre de esa acción no se escribe acá ni en un comentario: el caso que lo verifica
-## no distingue código de prosa.
+## **Se sale con el clic derecho, y la tecla de la pausa también.** Ésa la atiende el nodo de la
+## pausa, que registra a este puesto y le pide cerrar. Pausar con la computadora abierta pasa por
+## el segundo toque. El nombre de esa acción no se escribe acá ni en un comentario: el caso que lo
+## verifica no distingue código de prosa.
 ##
 ## **El reloj está acá para apagar la pantalla cuando la noche termina**, no para pausarlo: una
 ## computadora abierta encima de la placa de cierre dejaría al jugador viendo las dos.
 extends StaticBody3D
+
+signal apertura_rechazada_sin_luz
 
 ## El script del jugador se preloadea para poder tiparlo: los scripts de `escenas/` son cáscara y
 ## no declaran `class_name`, así que sin esto el tipo estático sería `CharacterBody3D` y llamarle
@@ -44,6 +46,8 @@ func _ready() -> void:
 func accionar() -> void:
 	if con_luz:
 		abrir()
+	else:
+		apertura_rechazada_sin_luz.emit()
 
 
 func abrir() -> void:
@@ -53,6 +57,16 @@ func abrir() -> void:
 
 func cerrar() -> void:
 	computadora.pedir_cerrar()
+
+
+func esta_abierta() -> bool:
+	return computadora.computadora().abierta()
+
+
+## Lo pide el nodo de la pausa. Como el clic derecho: devuelve el cursor al juego.
+func cerrar_con_esc() -> void:
+	cerrar()
+	jugador.tomar_el_cursor_desde_entrada()
 
 
 ## Atiende el cierre antes de que la interfaz reciba el gesto.

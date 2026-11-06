@@ -4,8 +4,38 @@ extends GdUnitTestSuite
 const R := ReglasDeLaLimpieza.Resultado
 const T := ReglasDeLaBasura.Tiro
 const S := SubtitulosDeLosGestos.Id
+const C := Pista.Canal
 const BOLSA := preload("res://src/dominio/almacen/bolsa_de_basura_1.tres")
 const CAJA := preload("res://src/dominio/almacen/caja_de_reposicion.tres")
+
+## Cuántos renglones tiene cada texto en la ficha «Subtítulos».
+const RENGLONES_DE_LA_FICHA: Dictionary[SubtitulosDeLosGestos.Id, int] = {
+	SubtitulosDeLosGestos.Id.MALA_IDEA: 1,
+	SubtitulosDeLosGestos.Id.CAJA_EN_EL_CONTENEDOR: 2,
+	SubtitulosDeLosGestos.Id.UTIL_EN_EL_CONTENEDOR: 2,
+	SubtitulosDeLosGestos.Id.POR_LA_VENTANA: 2,
+	SubtitulosDeLosGestos.Id.JABON_EQUIVOCADO: 2,
+	SubtitulosDeLosGestos.Id.MOPA_SIN_MOJAR: 1,
+	SubtitulosDeLosGestos.Id.MOPA_YA_SECA: 1,
+	SubtitulosDeLosGestos.Id.MOPA_BERRETA: 2,
+	SubtitulosDeLosGestos.Id.PARED_DEL_OTRO_INODORO: 1,
+	SubtitulosDeLosGestos.Id.PISO_DE_LAS_ESTANTERIAS_DEL_FONDO: 1,
+	SubtitulosDeLosGestos.Id.TECHO_SOBRE_UN_CUBICULO: 1,
+	SubtitulosDeLosGestos.Id.PUERTA_CON_TAREAS_PENDIENTES: 2,
+	SubtitulosDeLosGestos.Id.SIN_LUZ: 2,
+	SubtitulosDeLosGestos.Id.ROUTER_ANTES_DEL_CORTE: 2,
+	SubtitulosDeLosGestos.Id.ROUTER_YA_RESTAURADO: 2,
+	SubtitulosDeLosGestos.Id.PRIMERA_PISTA_OBJETO: 2,
+	SubtitulosDeLosGestos.Id.PRIMERA_PISTA_EXAMEN: 2,
+	SubtitulosDeLosGestos.Id.PRIMERA_PISTA_COMPRADOR: 2,
+	SubtitulosDeLosGestos.Id.PRIMERA_PISTA_CHAT: 2,
+}
+const PRIMERAS_PISTAS: Array[SubtitulosDeLosGestos.Id] = [
+	SubtitulosDeLosGestos.Id.PRIMERA_PISTA_OBJETO,
+	SubtitulosDeLosGestos.Id.PRIMERA_PISTA_EXAMEN,
+	SubtitulosDeLosGestos.Id.PRIMERA_PISTA_COMPRADOR,
+	SubtitulosDeLosGestos.Id.PRIMERA_PISTA_CHAT,
+]
 
 
 func _unidad() -> UnidadDeProducto:
@@ -145,11 +175,107 @@ func test_el_cierre_descarta_la_mopa_berreta_pendiente() -> void:  # AC-SUB-019
 	assert_int(gestos.al_secarse_la_mopa(partida, false)).is_equal(S.MOPA_BERRETA)
 
 
+func test_la_primera_pista_piensa_una_sola_vez_por_partida() -> void:  # AC-SUB-027
+	var gestos := SubtitulosDeLosGestos.new()
+	var partida := Partida.nueva()
+	assert_int(gestos.al_anotar_una_pista(partida, false, C.LEVANTAR)).is_equal(
+		S.PRIMERA_PISTA_OBJETO
+	)
+	assert_bool(partida.primera_pista_pensada).is_true()
+	assert_int(gestos.al_anotar_una_pista(partida, false, C.LEVANTAR)).is_equal(S.NINGUNO)
+	assert_int(gestos.al_anotar_una_pista(partida, false, C.CHAT)).is_equal(S.NINGUNO)
+	var otra := SubtitulosDeLosGestos.new()
+	assert_int(otra.al_anotar_una_pista(Partida.nueva(), false, C.LEVANTAR)).is_equal(
+		S.PRIMERA_PISTA_OBJETO
+	)
+
+
+func test_cada_canal_piensa_su_texto() -> void:  # AC-SUB-027, AC-SUB-033
+	var esperados := {
+		C.LEVANTAR: S.PRIMERA_PISTA_OBJETO,
+		C.EXAMINAR_NO_LEVANTABLE: S.PRIMERA_PISTA_EXAMEN,
+		C.COMPRADOR: S.PRIMERA_PISTA_COMPRADOR,
+		C.CHAT: S.PRIMERA_PISTA_CHAT,
+	}
+	assert_int(esperados.size() + 1).is_equal(C.values().size())
+	for canal: C in esperados:
+		var gestos := SubtitulosDeLosGestos.new()
+		assert_int(gestos.al_anotar_una_pista(Partida.nueva(), false, canal)).is_equal(
+			esperados[canal]
+		)
+
+
+func test_una_pista_de_accion_no_piensa_ni_gasta_el_primer_pensamiento() -> void:  # AC-SUB-033
+	var partida := Partida.nueva()
+	var gestos := SubtitulosDeLosGestos.new()
+	assert_int(gestos.al_anotar_una_pista(partida, false, C.ACCION)).is_equal(S.NINGUNO)
+	assert_bool(partida.primera_pista_pensada).is_false()
+	assert_int(gestos.al_anotar_una_pista(partida, false, C.LEVANTAR)).is_equal(
+		S.PRIMERA_PISTA_OBJETO
+	)
+
+
+func test_con_el_celular_abierto_la_primera_pista_espera_y_no_se_duplica() -> void:  # AC-SUB-027
+	var gestos := SubtitulosDeLosGestos.new()
+	var partida := Partida.nueva()
+	assert_int(gestos.al_cerrar_el_celular(partida)).is_equal(S.NINGUNO)
+	assert_int(gestos.al_anotar_una_pista(partida, true, C.COMPRADOR)).is_equal(S.NINGUNO)
+	assert_int(gestos.al_anotar_una_pista(partida, true, C.COMPRADOR)).is_equal(S.NINGUNO)
+	assert_bool(partida.primera_pista_pensada).is_false()
+	assert_int(gestos.al_cerrar_el_celular(partida)).is_equal(S.PRIMERA_PISTA_COMPRADOR)
+	assert_bool(partida.primera_pista_pensada).is_true()
+	assert_int(gestos.al_cerrar_el_celular(partida)).is_equal(S.NINGUNO)
+	assert_int(gestos.al_anotar_una_pista(partida, false, C.COMPRADOR)).is_equal(S.NINGUNO)
+
+
+func test_la_pendiente_conserva_el_canal_de_la_primera_pista() -> void:  # AC-SUB-027, AC-SUB-033
+	var gestos := SubtitulosDeLosGestos.new()
+	var partida := Partida.nueva()
+	assert_int(gestos.al_anotar_una_pista(partida, true, C.CHAT)).is_equal(S.NINGUNO)
+	assert_int(gestos.al_anotar_una_pista(partida, true, C.LEVANTAR)).is_equal(S.NINGUNO)
+	assert_int(gestos.al_cerrar_el_celular(partida)).is_equal(S.PRIMERA_PISTA_CHAT)
+
+
+func test_el_cierre_descarta_la_primera_pista_pendiente() -> void:  # AC-SUB-027
+	var gestos := SubtitulosDeLosGestos.new()
+	var partida := Partida.nueva()
+	assert_int(gestos.al_anotar_una_pista(partida, true, C.CHAT)).is_equal(S.NINGUNO)
+	gestos.descartar()
+	assert_int(gestos.al_cerrar_el_celular(partida)).is_equal(S.NINGUNO)
+	assert_bool(partida.primera_pista_pensada).is_false()
+	assert_int(gestos.al_anotar_una_pista(partida, false, C.LEVANTAR)).is_equal(
+		S.PRIMERA_PISTA_OBJETO
+	)
+
+
+func test_los_pensamientos_de_la_primera_pista_comparten_el_cierre() -> void:  # AC-SUB-033
+	var cierres := {}
+	var comienzos := {}
+	for id: S in PRIMERAS_PISTAS:
+		var renglones := SubtitulosDeLosGestos.texto(id).split("\n")
+		assert_int(renglones.size()).is_equal(2)
+		cierres[renglones[1]] = true
+		comienzos[renglones[0]] = true
+	assert_int(cierres.size()).is_equal(1)
+	assert_int(comienzos.size()).is_equal(PRIMERAS_PISTAS.size())
+
+
 func test_cada_id_tiene_texto_salvo_ninguno() -> void:  # AC-SUB-018
 	assert_str(SubtitulosDeLosGestos.texto(S.NINGUNO)).is_empty()
 	for id: S in S.values():
 		if id != S.NINGUNO:
 			assert_str(SubtitulosDeLosGestos.texto(id)).is_not_empty()
+
+
+func test_cada_texto_se_corta_en_los_renglones_de_la_ficha() -> void:  # AC-SUB-028
+	for id: S in RENGLONES_DE_LA_FICHA:
+		var renglones := SubtitulosDeLosGestos.texto(id).split("\n")
+		assert_int(renglones.size()).is_equal(RENGLONES_DE_LA_FICHA[id])
+		for renglon in renglones:
+			assert_str(renglon.strip_edges()).is_not_empty()
+	for id: S in S.values():
+		if id != S.NINGUNO:
+			assert_bool(RENGLONES_DE_LA_FICHA.has(id)).is_true()
 
 
 func _cumplidas_salvo(jornada: int, pendiente: Tarea = null) -> Array[Tarea]:

@@ -91,8 +91,8 @@ class ElReparto(unittest.TestCase):
             "B.este.1": ("OREMOS", "FEEL_RICKY_FORT"),
             "B.oeste.2": ("SALADICK", "PROGRES"),
             "B.oeste.1": ("CHISITOS", "LAYSNNT"),
-            "B.sur.2": ("COSA_DE_MANI",), "B.sur.1": ("FLIM_POF",),
-            "B.norte.2": ("JORGILLO",), "B.norte.1": ("BURBALOO",),
+            "B.norte.2": ("COSA_DE_MANI",), "B.norte.1": ("FLIM_POF",),
+            "B.sur.2": ("JORGILLO",), "B.sur.1": ("BURBALOO",),
             "N.sur.2": ("DURONGA", "DUREXTRA"),
             "N.sur.1": ("POETICO", "ACTRONCITO"),
         }

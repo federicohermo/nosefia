@@ -187,7 +187,7 @@ func _sitios(almacen: Node3D, objetivo: PhysicsBody3D, centro: Vector3) -> Array
 	var espacio := almacen.get_world_3d().direct_space_state
 	var forma: CollisionShape3D = jugador.get_node("Cuerpo")
 	var sitios: Array[Vector3] = []
-	for distancia: float in [0.6, 0.8, 1.0, 1.2, 1.5, 2.0]:
+	for distancia: float in [0.6, 0.8, 1.0, 1.2, 1.4, 1.6, 1.8, 2.0]:
 		for paso in 16:
 			var angulo := TAU * paso / 16.0
 			var punto := centro + Vector3(cos(angulo), 0, sin(angulo)) * distancia
@@ -216,12 +216,17 @@ func _sitios(almacen: Node3D, objetivo: PhysicsBody3D, centro: Vector3) -> Array
 			if not espacio.intersect_shape(volumen).is_empty():
 				continue
 			var ojo := posicion + Vector3.UP * ReglasDelJugador.ALTURA_DE_LA_CAMARA
-			var rayo := PhysicsRayQueryParameters3D.create(ojo, centro, 3)
+			var rayo := PhysicsRayQueryParameters3D.create(
+				ojo, ReglasDelJugador.fin_de_la_mira(ojo, ojo.direction_to(centro)), 3
+			)
 			rayo.exclude = [jugador.get_rid()]
 			var impacto := espacio.intersect_ray(rayo)
 			if (
 				impacto.get("collider") == objetivo
-				and ojo.distance_to(impacto.position) <= ReglasDelJugador.ALCANCE_DE_LA_MIRA
+				and (
+					ReglasDelJugador.proximidad(ojo, impacto.position)
+					<= ReglasDelJugador.ALCANCE_DE_LA_MIRA
+				)
 			):
 				sitios.append(posicion)
 	return sitios
@@ -288,7 +293,11 @@ func test_los_eventos_reales_piden_escaneo_error_impresion_y_botones() -> void:
 		"Servicios/AudioDelAlmacen/Reproductor"
 	)
 	var sonidos: Array[int] = []
-	reproductor.sonido_pedido.connect(func(evento: int) -> void: sonidos.append(evento))
+	reproductor.sonido_pedido.connect(
+		func(evento: int) -> void:
+			if evento != EntradaSonora.Evento.NOTIFICACION_ENTRADA:
+				sonidos.append(evento)
+	)
 	var jugador: Node3D = almacen.get_node("Jugador")
 	var lector: Node3D = almacen.get_node("Estructura/Lector")
 	_accion(jugador, lector, ReglasDeLosObjetos.ACCION_AGARRAR)
@@ -470,10 +479,7 @@ func test_la_lista_pausa_y_reanuda_programa_y_mano() -> void:  # AC-CTR-030, AC-
 	var selector := _vista(almacen).selectores[2]
 	(selector.find_child("Cabecera", true, false) as Button).pressed.emit()
 	assert_bool(selector.esta_abierta()).is_true()
-	var evento := InputEventKey.new()
-	evento.keycode = KEY_ESCAPE
-	evento.pressed = true
-	(almacen.get_node("Interfaz/ControlDePausa") as ControlDePausa).call("_input", evento)
+	(almacen.get_node("Interfaz/ControlDePausa") as ControlDePausa).pausar()
 	for _cuadro in 4:
 		await get_tree().process_frame
 	assert_bool(get_tree().paused).is_true()

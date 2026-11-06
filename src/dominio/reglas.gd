@@ -34,17 +34,6 @@ const APERCIBIMIENTOS_POR_AVISO := 1
 const MEDIOS_POR_APERCIBIMIENTO: int = 2
 const MEDIOS_POR_LLAMADO: int = 1
 
-## En qué noche falla el reloj de mesa del local: desde la mitad de ese turno hasta su cierre, y
-## la noche siguiente vuelve a andar.
-##
-## El GDD dice que deja de funcionar «a mitad de una de las jornadas» y no cuál: es una decisión
-## de balance. Cae adentro a propósito: una jornada posterior a la última dejaría la regla escrita
-## y muerta, y eso lo caza `reglas_test.gd`.
-##
-## Vive acá y no en `reglas_de_la_partida.gd` porque no es cuánto dura la partida sino un número
-## de balance más, del mismo tipo que los apercibimientos: `Reglas` ya cruza jornadas.
-const JORNADA_EN_QUE_FALLA_EL_RELOJ := ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA + 3
-
 ## Vale el doble que un aviso, y eso es lo que hace que las tres bandas pesen distinto también
 ## sobre el despido: a la banda grave le alcanza con una jornada menos.
 const APERCIBIMIENTOS_POR_BANDA_GRAVE := 2

@@ -12,6 +12,9 @@ extends Resource
 
 enum Momento { APERTURA, CIERRE, SIN_FECHA }
 
+const HORA_DEL_MEDIODIA := 12
+const TANDAS_POR_DIA := 2
+
 @export var identidad: String = ""
 @export var jornada: int = 1
 @export var momento: Momento = Momento.APERTURA
@@ -23,8 +26,25 @@ enum Momento { APERTURA, CIERRE, SIN_FECHA }
 
 @export var de_quien: String = ""
 
+## Salió sin red: el chat lo muestra en rojo y nadie lo contestó.
+@export var con_error: bool = false
+
+## Lo creó la noche y se pierde al volver a abrirla: lo enviado y su respuesta no son del guión.
+@export var de_la_noche: bool = false
+
+## `H:MM` o `HH:MM`. Vacía cuando nadie la fijó: un dato guardado antes de que existiera carga así.
+@export var hora: String = ""
+
 ## Vacía en un mensaje fijo. Con valor, el mensaje sale sólo si la partida eligió esa condición.
 @export var condicion: StringName = &""
+
+## Lo que escribió el jugador, y no lo que le llegó: se lee del lado de las notas propias.
+@export var propio: bool = false
+
+## Sobre la foto de una transferencia se escriben el importe y los cuatro dígitos de la cuenta de
+## origen. Vacíos en un mensaje sin captura.
+@export var importe_de_la_captura: String = ""
+@export var origen_de_la_captura: String = ""
 
 ## El cuerpo va como texto multilínea porque un chat del GDD es un párrafo, no un renglón.
 @export_multiline var texto: String = ""
@@ -39,6 +59,10 @@ func dice_algo() -> bool:
 	return foto != null or not texto.strip_edges().is_empty()
 
 
+func tiene_captura() -> bool:
+	return foto != null and not importe_de_la_captura.is_empty()
+
+
 func vale_para(condiciones: Array[StringName]) -> bool:
 	return condicion.is_empty() or condiciones.has(condicion)
 
@@ -49,10 +73,26 @@ func pista_del_tramo(tramo: String) -> String:
 	return pista if texto.contains(texto_del_tramo) else ""
 
 
+## El día del calendario del mensaje, contado en jornadas. Lo que el jefe manda a la mañana
+## siguiente de cerrar una noche es del día de la jornada que sigue.
+func dia() -> int:
+	return jornada + 1 if momento == Momento.CIERRE and _es_de_la_manana() else jornada
+
+
+## Qué tanda del historial le toca: un día y su momento, mañana o tarde. Dos mensajes seguidos con
+## la misma tanda van bajo el mismo separador. El legado sin fecha no tiene tanda.
+func tanda() -> int:
+	if momento == Momento.SIN_FECHA:
+		return -1
+	return dia() * TANDAS_POR_DIA + (0 if _es_de_la_manana() else 1)
+
+
 func a_datos() -> Variant:
 	if momento == Momento.SIN_FECHA:
 		return texto
-	return {"texto": texto, "identidad": identidad, "jornada": jornada, "orden": orden}
+	return {
+		"texto": texto, "identidad": identidad, "jornada": jornada, "orden": orden, "hora": hora
+	}
 
 
 static func desde_datos(dato: Variant) -> Mensaje:
@@ -75,4 +115,14 @@ static func desde_datos(dato: Variant) -> Mensaje:
 	nuevo.jornada = dato.jornada
 	nuevo.orden = dato.orden
 	nuevo.momento = Momento.CIERRE
+	if dato.get("hora") is String:
+		nuevo.hora = dato.hora
 	return nuevo
+
+
+## Sin hora, o con una que no es `H:MM`, el mensaje cuenta como de la tarde.
+func _es_de_la_manana() -> bool:
+	var partes := hora.split(":")
+	if partes.size() != 2 or not partes[0].is_valid_int():
+		return false
+	return partes[0].to_int() < HORA_DEL_MEDIODIA

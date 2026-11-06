@@ -1,0 +1,116 @@
+[gd_scene load_steps=6 format=3]
+
+[ext_resource type="Script" path="res://src/ui/interrupciones/pantalla_de_final.gd" id="1_pantalla"]
+[ext_resource type="Theme" path="res://assets/ui/manada/tema.tres" id="2_tema"]
+[ext_resource type="Texture2D" path="res://assets/ui/manada/cabecera.svg" id="3_cabecera"]
+[ext_resource type="FontFile" path="res://assets/ui/manada/unscii-16.ttf" id="4_fuente"]
+
+[sub_resource type="FontVariation" id="Titulo"]
+base_font = ExtResource("4_fuente")
+spacing_glyph = 9
+
+[node name="PantallaDeFinal" type="CanvasLayer" node_paths=PackedStringArray("_marco", "_encabezado", "_titulo", "_mensaje", "_boton_de_nueva_partida", "_boton_de_volver")]
+layer = 5
+visible = false
+script = ExtResource("1_pantalla")
+_marco = NodePath("Marco")
+_encabezado = NodePath("Marco/Contenido/Encabezado")
+_titulo = NodePath("Marco/Contenido/Titulo")
+_mensaje = NodePath("Marco/Contenido/Mensaje")
+_boton_de_nueva_partida = NodePath("Marco/Contenido/Acciones/BotonNuevaPartida")
+_boton_de_volver = NodePath("Marco/Contenido/Acciones/BotonVolver")
+
+[node name="Oscurecimiento" type="ColorRect" parent="."]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.0156863, 0.0196078, 0.0352941, 0.46)
+
+[node name="Marco" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 1920.0
+offset_bottom = 1080.0
+mouse_filter = 2
+theme = ExtResource("2_tema")
+
+[node name="BarraSuperior" type="TextureRect" parent="Marco"]
+layout_mode = 0
+offset_left = 104.0
+offset_top = 46.0
+offset_right = 1816.0
+offset_bottom = 116.3
+mouse_filter = 2
+texture = ExtResource("3_cabecera")
+expand_mode = 1
+
+[node name="BarraInferior" type="TextureRect" parent="Marco"]
+layout_mode = 0
+offset_left = 104.0
+offset_top = 963.7
+offset_right = 1816.0
+offset_bottom = 1034.0
+mouse_filter = 2
+texture = ExtResource("3_cabecera")
+expand_mode = 1
+flip_h = true
+flip_v = true
+
+[node name="Contenido" type="VBoxContainer" parent="Marco"]
+layout_mode = 0
+offset_left = 440.0
+offset_top = 268.0
+offset_right = 1480.0
+offset_bottom = 836.0
+theme_override_constants/separation = 24
+
+[node name="Encabezado" type="Label" parent="Marco/Contenido"]
+modulate = Color(1, 1, 1, 0.72)
+custom_minimum_size = Vector2(0, 56)
+layout_mode = 2
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Titulo" type="Label" parent="Marco/Contenido"]
+layout_mode = 2
+theme_override_fonts/font = SubResource("Titulo")
+theme_override_font_sizes/font_size = 112
+horizontal_alignment = 1
+autowrap_mode = 3
+
+[node name="Mensaje" type="Label" parent="Marco/Contenido"]
+custom_minimum_size = Vector2(0, 84)
+layout_mode = 2
+theme_override_font_sizes/font_size = 30
+horizontal_alignment = 1
+autowrap_mode = 3
+
+[node name="Acciones" type="VBoxContainer" parent="Marco/Contenido"]
+layout_mode = 2
+theme_override_constants/separation = 0
+
+[node name="Relleno" type="Control" parent="Marco/Contenido/Acciones"]
+custom_minimum_size = Vector2(0, 26)
+layout_mode = 2
+
+[node name="BotonNuevaPartida" type="Button" parent="Marco/Contenido/Acciones"]
+custom_minimum_size = Vector2(560, 72)
+layout_mode = 2
+size_flags_horizontal = 4
+focus_mode = 0
+theme_type_variation = &"BotonContinuar"
+theme_override_font_sizes/font_size = 32
+
+[node name="Separacion" type="Control" parent="Marco/Contenido/Acciones"]
+custom_minimum_size = Vector2(0, 24)
+layout_mode = 2
+
+[node name="BotonVolver" type="Button" parent="Marco/Contenido/Acciones"]
+custom_minimum_size = Vector2(560, 72)
+layout_mode = 2
+size_flags_horizontal = 4
+focus_mode = 0
+theme_type_variation = &"BotonContinuar"
+theme_override_font_sizes/font_size = 32

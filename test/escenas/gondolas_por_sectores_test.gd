@@ -52,8 +52,8 @@ func _destinos() -> Dictionary:
 			],
 			Vector3.LEFT:
 			[Producto.Id.SALADICK, Producto.Id.PROGRES, Producto.Id.CHISITOS, Producto.Id.LAYSNNT],
-			Vector3.BACK: [Producto.Id.COSA_DE_MANI, Producto.Id.FLIM_POF],
-			Vector3.FORWARD: [Producto.Id.JORGILLO, Producto.Id.BURBALOO],
+			Vector3.BACK: [Producto.Id.JORGILLO, Producto.Id.BURBALOO],
+			Vector3.FORWARD: [Producto.Id.COSA_DE_MANI, Producto.Id.FLIM_POF],
 		},
 		"gondolanueva_001":
 		{
@@ -228,7 +228,7 @@ func test_jornada_dos_puede_vender_reponer_y_cerrar_con_duronga_exhibida() -> vo
 	var atenciones: Ventanilla = almacen.get("_atenciones")
 	assert_object(atenciones.tarea().get("_inventario")).is_same(inventario)
 	var cupos: Dictionary[Producto.Id, int] = puesto.call("casilleros")
-	assert_int(cupos.size()).is_equal(Producto.Id.size())
+	assert_int(cupos.size()).is_equal(Catalogo.todos().size())
 	assert_int(cupos[Producto.Id.DURONGA]).is_greater(0)
 	var disposicion: DisposicionDeLaGondola = puesto.get("disposicion")
 	assert_int(disposicion.filas_de_adelante[Producto.Id.DURONGA]).is_greater(0)

@@ -3,7 +3,7 @@ schema_version: 1
 capability_id: CAP-CLN
 status: ratified
 owner: por definir
-provenance: GDD «Limpiar» y «Sacar la basura»; fichas «9. Tarea: Limpieza», «Particulares de cada jornada» y «Contenedor de basura»; decisiones de #370 y #372; migración de los specs 010, 015, 043; ajustes del dueño sobre duración de la mopa, mezcla, enjuague y agua temporal; fichas Limpieza, Particulares y Contenedor revisadas el 2026-10-15; decisiones de #425; anomalía J2 y sustitución por Poético de #432, 2026-10-15; ocho jornadas de #526; cuartito de limpieza de #541; exención de Poético en el desorden de #517, ficha «Llamados de atención extra» revisada el 2026-10-20; exención de ticket, pista, bolsa y producto vencido de #516; heladeras abiertas al cierre de #550, decisión del 2026-10-26; útiles fuera del contenedor de #552, ficha «Contenedor de basura» revisada el 2026-10-20; útil en la mano al cierre cuenta como guardado de #386, decisión del 2026-10-26; manchas de las jornadas 6 a 8 de #457, ficha Limpieza revisada el 2026-10-20
+provenance: GDD «Limpiar» y «Sacar la basura»; fichas «9. Tarea: Limpieza», «Particulares de cada jornada» y «Contenedor de basura»; decisiones de #370 y #372; migración de los specs 010, 015, 043; ajustes del dueño sobre duración de la mopa, mezcla, enjuague y agua temporal; fichas Limpieza, Particulares y Contenedor revisadas el 2026-10-15; decisiones de #425; anomalía J2 y sustitución por Poético de #432, 2026-10-15; ocho jornadas de #526; cuartito de limpieza de #541; exención de Poético en el desorden de #517, ficha «Llamados de atención extra» revisada el 2026-10-20; exención de ticket, pista, bolsa y producto vencido de #516; heladeras abiertas al cierre de #550, decisión del 2026-10-26; útiles fuera del contenedor de #552, ficha «Contenedor de basura» revisada el 2026-10-20; útil en la mano al cierre cuenta como guardado de #386, decisión del 2026-10-26; manchas de las jornadas 6 a 8 de #457, ficha Limpieza revisada el 2026-10-20; el contenedor abierto desecha desde cuerpo y tapa de #868, ficha GJ-84
 ---
 
 # Capacidad: dejar el local en orden
@@ -242,29 +242,34 @@ detener su evaporación durante la pausa y desaparecer al abrir otra jornada. La
 simultánea DEBE estar acotada; repetir pasadas no reserva nodos sin límite. Los charcos no
 obstruyen el movimiento ni la mira.
 
-### BR-CLN-025 — La tapa alterna con el primario y no desecha
+### BR-CLN-025 — La tapa alterna con el primario salvo que haya algo en la mano
 
 CUANDO abre una jornada, el contenedor DEBE tener la tapa completamente abierta. El primario
-—clic izquierdo por defecto— sobre la tapa DEBE alternar abrir y cerrar con cualquier mano,
-sin cambiar lo sostenido ni desecharlo. Otro primario durante el giro DEBE invertirlo.
-El secundario NO DEBE alternar. La tapa y el cuerpo DEBEN ser objetivos distintos: el cuerpo
-recibe según BR-CLN-026 y NO DEBE alternar además la tapa con el mismo clic.
+—clic izquierdo por defecto— sobre la tapa DEBE alternar abrir y cerrar con la mano vacía y con
+la tapa cerrada o girando, con cualquier objeto en la mano. Otro primario durante el giro DEBE
+invertirlo. Con la tapa completamente abierta y un objeto en la mano, el primario sobre la tapa
+DEBE hacer lo mismo que sobre el cuerpo (BR-CLN-026) y NO DEBE alternarla. El secundario NO DEBE
+alternar. La tapa y el cuerpo son parte del mismo contenedor: el primario sobre cualquiera de los
+dos, desde cualquier ángulo, NO DEBE producir además el efecto del otro con el mismo clic.
 La bisagra y la colisión DEBEN acompañar la tapa y el giro DEBE detenerse ante un objeto sin
 atravesarlo ni comprimirlo. Sólo la tapa completamente abierta DEBE permitir recibir objetos;
 cerrar corta ese permiso desde el inicio del giro y abrir lo recupera al alcanzar el tope.
 
-### BR-CLN-026 — Tirar al cuerpo consume el primario y retira lo sostenido
+### BR-CLN-026 — Tirar al contenedor consume el primario y retira lo sostenido
 
-CUANDO se hace el primario sobre el cuerpo del contenedor completamente abierto con un objeto que
-entra, el sistema DEBE retirarlo de la mano y de la jornada: oculto, sin colisión ni foco.
-Una caja del depósito y un útil —la mopa, el balde o cualquiera de los tres jabones— NO DEBEN
-entrar, esté la tapa abierta, cerrada o girando: el rechazo por no entrar gana al de la tapa. El
-útil NO DEBE entrar tampoco con el balde lleno o teñido ni con la mopa mojada. Poético, aun en la
-jornada en que sustituye al jabón azul (BR-CLN-033), es un producto y NO DEBE tratarse como útil:
-entra como cualquier unidad. Con mano vacía, caja, útil o tapa cerrada o girando, el primario sobre el cuerpo
-DEBE conservar manos y tarea sin soltar genéricamente. Abrir NO DEBE tirar automáticamente.
-Con el jugador suspendido por examen, pausa o cierre, ambos clics NO DEBEN tirar ni alternar.
-El secundario NO DEBE desechar. Accionar la tapa NO DEBE desechar además lo sostenido.
+CUANDO se hace el primario sobre el cuerpo o sobre la tapa del contenedor completamente abierto,
+desde cualquier ángulo, con un objeto que entra, el sistema DEBE retirarlo de la mano y de la
+jornada: oculto, sin colisión ni foco. Una caja del depósito y un útil —la mopa, el balde o
+cualquiera de los tres jabones— NO DEBEN entrar, esté la tapa abierta, cerrada o girando: el
+rechazo por no entrar gana al de la tapa. El útil NO DEBE entrar tampoco con el balde lleno o
+teñido ni con la mopa mojada. Poético, aun en la jornada en que sustituye al jabón azul
+(BR-CLN-033), es un producto y NO DEBE tratarse como útil: entra como cualquier unidad. Con mano
+vacía, caja, útil o tapa cerrada o girando, el primario sobre el cuerpo DEBE conservar manos y
+tarea sin soltar genéricamente. Con la tapa completamente abierta, el primario sobre la tapa con
+una caja o un útil sostenido DEBE rechazar igual que sobre el cuerpo y NO DEBE cerrarla. Abrir NO
+DEBE tirar automáticamente. Con el jugador suspendido por examen, pausa o cierre, ambos clics NO
+DEBEN tirar ni alternar. El secundario NO DEBE desechar. Accionar la tapa NO DEBE desechar además
+lo sostenido.
 Al abrir otra noche, las bolsas DEBEN seguir
 la declaración de la jornada nueva: fuera del mundo si no declara basura, o en su tacho y sin
 depositar si la declara, nunca sueltas por haber sido tiradas en la noche anterior.
@@ -418,14 +423,14 @@ alcanza sólo al desorden: una unidad de Poético afuera DEBE conservar el motiv
 y la caja de Poético fuera del depósito DEBE contar como cualquier otra caja. La regla DEBE resolverse con la jornada y la identidad del producto como
 datos del cierre, sin que la escena filtre cuerpos.
 
-### BR-CLN-040 — El cuerpo del contenedor no sirve de apoyo
+### BR-CLN-040 — El contenedor no sirve de apoyo
 
 CUANDO se suelta con la mira una caja del depósito, un bidón de jabón o cualquier otra cosa que se
-apoya donde la mira toca (BR-PLY-018), y esa mira apunta al cuerpo del contenedor —su interior,
-su fondo o su borde—, el sistema NO DEBE apoyarla ahí. DEBE soltarla como si la superficie no la
-admitiera: al frente, o a los pies si adelante no hay lugar. El cuerpo del contenedor es la
-excepción a que el mundo fijo admite apoyo. El permiso para tirar con el primario (BR-CLN-026) no
-cambia, y la tapa se rige por BR-CLN-025.
+apoya donde la mira toca (BR-PLY-018), y esa mira apunta al contenedor —el interior, el fondo o el
+borde de su cuerpo, o su tapa, abierta o cerrada—, el sistema NO DEBE apoyarla ahí. DEBE soltarla
+como si la superficie no la admitiera: al frente, o a los pies si adelante no hay lugar. El
+contenedor es la excepción a que el mundo fijo admite apoyo. El permiso para tirar con el primario
+(BR-CLN-026) no cambia, y la tapa alterna según BR-CLN-025.
 
 ## Criterios de aceptación
 
@@ -445,7 +450,7 @@ de todos ellos, por encima del alcance de la mira. Las posiciones se derivan del
 
 DADO una bolsa soltada en el piso a menos de 1 metro del contenedor o por su boca física
 CUANDO queda suelta ENTONCES no cuenta y se puede recoger. CUANDO después se la tira con el
-primario sobre el cuerpo completamente abierto ENTONCES sí cuenta; sobre la tapa no deposita.
+primario sobre el cuerpo o sobre la tapa completamente abiertos ENTONCES sí cuenta; con la tapa no abierta, no.
 
 ### AC-CLN-011 — El orden y la idempotencia *(verifica BR-CLN-010)*
 
@@ -606,33 +611,40 @@ muestra ambos líquidos durante la transición y termina con el color del jabón
 agua acepta inmediatamente mojar la mopa de ese jabón. Una actualización repetida no reinicia
 la transición; un uso rechazado no la dispara. Vaciar o abrir otra jornada cancela la mezcla.
 
-### AC-CLN-034 — La tapa alterna sin desechar *(verifica BR-CLN-025)*
+### AC-CLN-034 — La tapa alterna salvo abierta del todo con algo en la mano *(verifica BR-CLN-025)*
 
-DADO el contenedor al abrir ENTONCES tiene la tapa abierta. DADO mano vacía y, por separado,
-bolsa sostenida CUANDO se hace primario sobre la tapa ENTONCES gira para cerrar sin cambiar
-la mano ni depositar; otro primario invierte el giro. El secundario no alterna. La bisagra
+DADO el contenedor al abrir ENTONCES tiene la tapa abierta. DADO mano vacía CUANDO se
+hace primario sobre la tapa abierta ENTONCES gira para cerrar; otro primario invierte el giro.
+DADO la tapa cerrada y, por separado, girando, con una bolsa sostenida CUANDO se hace primario
+sobre la tapa ENTONCES la alterna sin cambiar la mano ni depositar. El secundario no alterna. La bisagra
 y colisión acompañan ambos estados y el movimiento; un objeto en el recorrido detiene el
 cierre sin atravesarlo ni comprimirlo y retirarlo permite continuar. Dividir el tiempo entre
 cuadros conserva el giro y abrir otra jornada restaura la tapa abierta.
 
-### AC-CLN-035 — Sólo el cuerpo plenamente abierto recibe *(verifica BR-CLN-025, BR-CLN-026)*
+### AC-CLN-035 — Cuerpo y tapa abiertos del todo reciben; cerrados o girando, no *(verifica BR-CLN-025, BR-CLN-026)*
 
 DADO una bolsa sostenida y tapa cerrada o girando CUANDO se hace primario sobre el cuerpo
 ENTONCES la bolsa sigue sostenida y no cuenta. Terminar de abrir no la tira; el primario
-posterior sobre el cuerpo sí. DADO la tapa abierta CUANDO se pulsa sobre ella ENTONCES
-comienza a cerrar, conserva la bolsa y corta el permiso desde el inicio.
+posterior sobre el cuerpo sí. DADO la tapa abierta y mano vacía CUANDO se pulsa sobre ella
+ENTONCES comienza a cerrar y corta el permiso desde el inicio. DADO la bolsa sostenida y la tapa
+cerrada CUANDO se pulsa sobre ella ENTONCES comienza a abrir, conserva la bolsa y no la cuenta.
 
 ### AC-CLN-036 — Cada objeto aceptado sale de la jornada *(verifica BR-CLN-026, BR-CLN-009)*
 
 DADO por turno bolsa, unidad y ticket sostenidos CUANDO se pulsa
 izquierdo sobre el contenedor completamente abierto ENTONCES queda mano vacía y el mismo
-cuerpo oculto, sin colisión ni foco. Sólo la bolsa aumenta lo depositado.
+cuerpo oculto, sin colisión ni foco. Sólo la bolsa aumenta lo depositado. Vale con el clic sobre
+el cuerpo y con el clic sobre la tapa abierta, mirando el contenedor desde su lado largo y desde
+su lado angosto: la tapa no se cierra y no queda nada soltado.
 
 ### AC-CLN-037 — El rechazo consume el gesto *(verifica BR-CLN-026, BR-CLN-025)*
 
 DADO el cuerpo del contenedor con mano vacía, caja sostenida o tapa no abierta, por turno,
 CUANDO se hace primario ENTONCES no hay soltado adicional, la carga conserva su lugar y la
-tarea no cambia. DADO bolsa sostenida CUANDO se hace secundario sobre cuerpo o tapa
+tarea no cambia. DADO la tapa completamente abierta y, por separado, una caja y un útil
+sostenidos CUANDO se hace primario sobre la tapa ENTONCES se rechaza igual que sobre el cuerpo:
+la tapa no se cierra, la mano y la tarea no cambian y no hay soltado adicional. DADO bolsa
+sostenida CUANDO se hace secundario sobre cuerpo o tapa
 ENTONCES no se tira ni se suelta, no cuenta y la tapa conserva su estado.
 
 ### AC-CLN-038 — Los tirados vuelven con la noche nueva *(verifica BR-CLN-026, BR-CLN-014)*
@@ -823,7 +835,7 @@ DADO la jornada 4 CUANDO se enfoca cada tacho desde un punto libre del piso dent
 vigente ENTONCES aparece su contorno y la mira no se detiene en la bolsa. CUANDO se hace clic
 izquierdo con la mano vacía ENTONCES la bolsa queda en la mano y desaparece de la boca de ese
 tacho. CUANDO se tiran dos al contenedor con la tapa abierta ENTONCES la basura sigue pendiente;
-tirar la tercera la cumple y sube el HUD en 1. Repetir la misma identidad no vuelve a sumar.
+tirar la tercera la cumple. Repetir la misma identidad no vuelve a sumar.
 
 ### AC-CLN-055 — Otros gestos y otras noches conservan el estado *(verifica BR-CLN-032, BR-CLN-007)*
 
@@ -977,15 +989,17 @@ unidad de Poético sostenida o devuelta a su casillero ENTONCES no hay desorden,
 cualquier unidad. DADO esa jornada y una caja de Poético apoyada en el baño, como única caja,
 ENTONCES hay desorden.
 
-### AC-CLN-079 — El cuerpo del contenedor no sirve de apoyo *(verifica BR-CLN-040, BR-CLN-026)*
+### AC-CLN-079 — El contenedor no sirve de apoyo *(verifica BR-CLN-040, BR-CLN-026)*
 
 DADO una caja del depósito sostenida y, por separado, un bidón de jabón, con la tapa
 completamente abierta, CUANDO se suelta con la mira sobre el fondo del contenedor a menos del
 alcance y, por separado, sobre su borde ENTONCES no queda apoyada en el contenedor: termina fuera
-de su volumen, apoyada en otra superficie y sin encimarse con nada. DADO la mira sobre el
-piso libre junto al contenedor CUANDO se suelta lo mismo ENTONCES queda sobre el punto que la mira
-toca (BR-PLY-018). DADO una bolsa sostenida y la tapa completamente abierta CUANDO se hace el
-primario sobre el cuerpo ENTONCES se tira igual que antes (AC-CLN-036).
+de su volumen, apoyada en otra superficie y sin encimarse con nada. DADO la misma
+caja y el mismo bidón con la mira sobre la tapa, abierta y, por separado, cerrada, CUANDO se
+sueltan ENTONCES tampoco quedan apoyados en la tapa: terminan fuera del volumen del contenedor.
+DADO la mira sobre el piso libre junto al contenedor CUANDO se suelta lo mismo ENTONCES queda sobre
+el punto que la mira toca (BR-PLY-018). DADO una bolsa sostenida y la tapa completamente abierta
+CUANDO se hace el primario sobre el cuerpo ENTONCES se tira igual que antes (AC-CLN-036).
 
 ## No objetivos
 

@@ -1,0 +1,245 @@
+[gd_scene format=3]
+
+[node name="SondasDeLaHeladera" type="Node3D"]
+metadata/ganancia_de_las_sondas = 6.0
+editor_description = "La mercadería de la heladera toma la luz de estas sondas, y una sonda guarda el rebote, no la luz directa de `LuzInterior`. La ganancia (`metadata/ganancia_de_las_sondas`, la aplica el horneado) devuelve a los productos la luz que le dan al estante. Hay una sonda en cada hueco entre estantes y dos planos de profundidad: el tetraedro de cada producto queda adentro de la heladera."
+
+[node name="Sonda0" type="LightmapProbe" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.339, -0.431, 0.216)
+
+[node name="Sonda1" type="LightmapProbe" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.339, -0.431, 0.036)
+
+[node name="Sonda2" type="LightmapProbe" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.339, -0.431, -0.144)
+
+[node name="Sonda3" type="LightmapProbe" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.339, -0.431, -0.324)
+
+[node name="Sonda4" type="LightmapProbe" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.339, -0.431, -0.504)
+
+[node name="Sonda5" type="LightmapProbe" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.061, -0.431, 0.216)
+
+[node name="Sonda6" type="LightmapProbe" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.061, -0.431, 0.036)
+
+[node name="Sonda7" type="LightmapProbe" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.061, -0.431, -0.144)
+
+[node name="Sonda8" type="LightmapProbe" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.061, -0.431, -0.324)
+
+[node name="Sonda9" type="LightmapProbe" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.061, -0.431, -0.504)
+
+[node name="Sonda10" type="LightmapProbe" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.339, -0.171, 0.216)
+
+[node name="Sonda11" type="LightmapProbe" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.339, -0.171, 0.036)
+
+[node name="Sonda12" type="LightmapProbe" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.339, -0.171, -0.144)
+
+[node name="Sonda13" type="LightmapProbe" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.339, -0.171, -0.324)
+
+[node name="Sonda14" type="LightmapProbe" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.339, -0.171, -0.504)
+
+[node name="Sonda15" type="LightmapProbe" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.061, -0.171, 0.216)
+
+[node name="Sonda16" type="LightmapProbe" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.061, -0.171, 0.036)
+
+[node name="Sonda17" type="LightmapProbe" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.061, -0.171, -0.144)
+
+[node name="Sonda18" type="LightmapProbe" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.061, -0.171, -0.324)
+
+[node name="Sonda19" type="LightmapProbe" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.061, -0.171, -0.504)
+
+[node name="Sonda20" type="LightmapProbe" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.339, -0.071, 0.216)
+
+[node name="Sonda21" type="LightmapProbe" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.339, -0.071, 0.036)
+
+[node name="Sonda22" type="LightmapProbe" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.339, -0.071, -0.144)
+
+[node name="Sonda23" type="LightmapProbe" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.339, -0.071, -0.324)
+
+[node name="Sonda24" type="LightmapProbe" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.339, -0.071, -0.504)
+
+[node name="Sonda25" type="LightmapProbe" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.061, -0.071, 0.216)
+
+[node name="Sonda26" type="LightmapProbe" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.061, -0.071, 0.036)
+
+[node name="Sonda27" type="LightmapProbe" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.061, -0.071, -0.144)
+
+[node name="Sonda28" type="LightmapProbe" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.061, -0.071, -0.324)
+
+[node name="Sonda29" type="LightmapProbe" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.061, -0.071, -0.504)
+
+[node name="Sonda30" type="LightmapProbe" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.339, 0.299, 0.216)
+
+[node name="Sonda31" type="LightmapProbe" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.339, 0.299, 0.036)
+
+[node name="Sonda32" type="LightmapProbe" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.339, 0.299, -0.144)
+
+[node name="Sonda33" type="LightmapProbe" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.339, 0.299, -0.324)
+
+[node name="Sonda34" type="LightmapProbe" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.339, 0.299, -0.504)
+
+[node name="Sonda35" type="LightmapProbe" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.061, 0.299, 0.216)
+
+[node name="Sonda36" type="LightmapProbe" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.061, 0.299, 0.036)
+
+[node name="Sonda37" type="LightmapProbe" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.061, 0.299, -0.144)
+
+[node name="Sonda38" type="LightmapProbe" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.061, 0.299, -0.324)
+
+[node name="Sonda39" type="LightmapProbe" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.061, 0.299, -0.504)
+
+[node name="Sonda40" type="LightmapProbe" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.339, 0.399, 0.216)
+
+[node name="Sonda41" type="LightmapProbe" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.339, 0.399, 0.036)
+
+[node name="Sonda42" type="LightmapProbe" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.339, 0.399, -0.144)
+
+[node name="Sonda43" type="LightmapProbe" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.339, 0.399, -0.324)
+
+[node name="Sonda44" type="LightmapProbe" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.339, 0.399, -0.504)
+
+[node name="Sonda45" type="LightmapProbe" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.061, 0.399, 0.216)
+
+[node name="Sonda46" type="LightmapProbe" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.061, 0.399, 0.036)
+
+[node name="Sonda47" type="LightmapProbe" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.061, 0.399, -0.144)
+
+[node name="Sonda48" type="LightmapProbe" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.061, 0.399, -0.324)
+
+[node name="Sonda49" type="LightmapProbe" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.061, 0.399, -0.504)
+
+[node name="Sonda50" type="LightmapProbe" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.339, 0.769, 0.216)
+
+[node name="Sonda51" type="LightmapProbe" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.339, 0.769, 0.036)
+
+[node name="Sonda52" type="LightmapProbe" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.339, 0.769, -0.144)
+
+[node name="Sonda53" type="LightmapProbe" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.339, 0.769, -0.324)
+
+[node name="Sonda54" type="LightmapProbe" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.339, 0.769, -0.504)
+
+[node name="Sonda55" type="LightmapProbe" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.061, 0.769, 0.216)
+
+[node name="Sonda56" type="LightmapProbe" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.061, 0.769, 0.036)
+
+[node name="Sonda57" type="LightmapProbe" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.061, 0.769, -0.144)
+
+[node name="Sonda58" type="LightmapProbe" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.061, 0.769, -0.324)
+
+[node name="Sonda59" type="LightmapProbe" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.061, 0.769, -0.504)
+
+[node name="Sonda60" type="LightmapProbe" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.339, 0.869, 0.216)
+
+[node name="Sonda61" type="LightmapProbe" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.339, 0.869, 0.036)
+
+[node name="Sonda62" type="LightmapProbe" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.339, 0.869, -0.144)
+
+[node name="Sonda63" type="LightmapProbe" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.339, 0.869, -0.324)
+
+[node name="Sonda64" type="LightmapProbe" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.339, 0.869, -0.504)
+
+[node name="Sonda65" type="LightmapProbe" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.061, 0.869, 0.216)
+
+[node name="Sonda66" type="LightmapProbe" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.061, 0.869, 0.036)
+
+[node name="Sonda67" type="LightmapProbe" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.061, 0.869, -0.144)
+
+[node name="Sonda68" type="LightmapProbe" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.061, 0.869, -0.324)
+
+[node name="Sonda69" type="LightmapProbe" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.061, 0.869, -0.504)
+
+[node name="Sonda70" type="LightmapProbe" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.339, 1.259, 0.216)
+
+[node name="Sonda71" type="LightmapProbe" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.339, 1.259, 0.036)
+
+[node name="Sonda72" type="LightmapProbe" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.339, 1.259, -0.144)
+
+[node name="Sonda73" type="LightmapProbe" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.339, 1.259, -0.324)
+
+[node name="Sonda74" type="LightmapProbe" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.339, 1.259, -0.504)
+
+[node name="Sonda75" type="LightmapProbe" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.061, 1.259, 0.216)
+
+[node name="Sonda76" type="LightmapProbe" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.061, 1.259, 0.036)
+
+[node name="Sonda77" type="LightmapProbe" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.061, 1.259, -0.144)
+
+[node name="Sonda78" type="LightmapProbe" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.061, 1.259, -0.324)
+
+[node name="Sonda79" type="LightmapProbe" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.061, 1.259, -0.504)

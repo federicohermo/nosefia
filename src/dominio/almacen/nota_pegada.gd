@@ -14,6 +14,8 @@ const TAREAS_EN_ORDEN := [
 	Tarea.Tipo.SACAR_LA_BASURA,
 	Tarea.Tipo.ORDENAR_LAS_CAJAS,
 	Tarea.Tipo.DESECHAR_VENCIDOS,
+	Tarea.Tipo.PEDIR_AL_PROVEEDOR,
+	Tarea.Tipo.RESPONDER_QUEJAS,
 ]
 const NOMBRES_DE_LAS_TAREAS := {
 	Tarea.Tipo.CAJA: "Atención al cliente",
@@ -23,17 +25,27 @@ const NOMBRES_DE_LAS_TAREAS := {
 	Tarea.Tipo.SACAR_LA_BASURA: "Tirar la basura",
 	Tarea.Tipo.ORDENAR_LAS_CAJAS: "Ordenar cajas en el depósito",
 	Tarea.Tipo.DESECHAR_VENCIDOS: "Desechar los productos vencidos",
+	Tarea.Tipo.PEDIR_AL_PROVEEDOR: "Hacerle un pedido al proveedor",
+	Tarea.Tipo.RESPONDER_QUEJAS: "Responder a quejas",
 }
 
 var _titulo: String
 var _renglones: Array[String]
 var _numerada: bool
+var _cumplidas: Array[bool]
 
 
-func _init(titulo_de_la_nota: String, filas: Array[String], es_numerada: bool = false) -> void:
+func _init(
+	titulo_de_la_nota: String,
+	filas: Array[String],
+	es_numerada: bool = false,
+	filas_cumplidas: Array[bool] = []
+) -> void:
 	_titulo = titulo_de_la_nota
 	_renglones = filas.duplicate()
 	_numerada = es_numerada
+	_cumplidas = filas_cumplidas.duplicate()
+	_cumplidas.resize(filas.size())
 
 
 static func de(id: Id) -> NotaPegada:
@@ -63,11 +75,13 @@ static func de(id: Id) -> NotaPegada:
 
 static func tareas_a_realizar(obligatorias: Array[Tarea]) -> NotaPegada:
 	var filas: Array[String] = []
+	var cumplidas: Array[bool] = []
 	for tipo: Tarea.Tipo in TAREAS_EN_ORDEN:
 		for tarea in obligatorias:
 			if tarea.tipo() == tipo:
 				filas.append(NOMBRES_DE_LAS_TAREAS[tipo])
-	return NotaPegada.new("TAREAS A REALIZAR", filas, true)
+				cumplidas.append(tarea.completada())
+	return NotaPegada.new("TAREAS A REALIZAR", filas, true, cumplidas)
 
 
 func titulo() -> String:
@@ -80,3 +94,8 @@ func renglones() -> Array[String]:
 
 func numerada() -> bool:
 	return _numerada
+
+
+## Si la tarea de ese renglón estaba cumplida cuando se armó la nota.
+func cumplida(renglon: int) -> bool:
+	return _cumplidas[renglon]

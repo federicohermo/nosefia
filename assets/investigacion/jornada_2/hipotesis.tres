@@ -11,3 +11,4 @@ script = ExtResource("jornada")
 jornada = 4
 opciones = Array[ExtResource("hipotesis")]([ExtResource("a"), ExtResource("b")])
 predeterminada = ExtResource("predeterminada")
+sortea_la_siguiente = true

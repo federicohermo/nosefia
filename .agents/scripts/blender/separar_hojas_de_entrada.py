@@ -49,6 +49,14 @@ def caja(vertices, caras, minimo, maximo):
 
 
 def editar():
+    # Con las dos hojas y sus vidrios ya separados en el `.blend`, la entrada es la que está ahí:
+    # rehacerlas acá pisaba al exportar las medidas que se les ajustaron a mano, y la hoja del
+    # juego quedaba corrida de su marco.
+    if all(bpy.data.objects.get(n) for n in (
+        "puertaentrada-col", "puertaentrada_derecha-col",
+        "local_vidrio_puerta_entrada", "local_vidrio_puerta_entrada_derecha",
+    )):
+        return
     puerta = bpy.data.objects["puertaentrada-col"]
     vidrio = bpy.data.objects["local_vidrio_puerta_entrada"]
     hojas = [(IZQUIERDA, CENTRO - 0.006, 0.05, 0.018),

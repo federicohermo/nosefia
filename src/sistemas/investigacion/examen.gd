@@ -29,6 +29,7 @@ var sensibilidad: float = ReglasDelJugador.SENSIBILIDAD_DEL_MOUSE
 
 var _hallazgos := Hallazgos.new()
 var _examinando: Node3D = null
+var _escala_de_mundo := Vector3.ONE
 
 
 func hallazgos() -> Hallazgos:
@@ -72,6 +73,8 @@ func iniciar(enfocado: ObjetoDelAlmacen = null, texto_del_enfocado: String = "")
 		+ Vector3.UP * distancia * ReglasDeLosObjetos.ELEVACION_DEL_EXAMEN
 	)
 	_examinando = nodo
+	_escala_de_mundo = nodo.scale
+	nodo.scale = _escala_de_mundo * datos.escala_de_examen
 	examen_iniciado.emit(nodo)
 	objeto_revelado.emit(datos, _hallazgos.registrar(datos))
 	return true
@@ -82,6 +85,7 @@ func iniciar(enfocado: ObjetoDelAlmacen = null, texto_del_enfocado: String = "")
 func terminar() -> void:
 	if _examinando == null:
 		return
+	_examinando.scale = _escala_de_mundo
 	_examinando = null
 	if agarre != null:
 		agarre.devolver_a_la_mano()
@@ -122,6 +126,13 @@ func arrastrar(relativo: Vector2, con_el_clic: bool) -> void:
 	if not con_el_clic:
 		return
 	var giro := relativo * sensibilidad
+	_rotar(giro.x, giro.y)
+
+
+## Gira lo examinado con el joystick derecho, en proporción a su inclinación y a la velocidad a
+## fondo del giro de la vista: `x` a la derecha e `y` hacia abajo, como el arrastre del mouse.
+func girar_con_el_joystick(inclinacion: Vector2, segundos: float) -> void:
+	var giro := inclinacion * ReglasDelJugador.GIRO_DEL_JOYSTICK * segundos
 	_rotar(giro.x, giro.y)
 
 

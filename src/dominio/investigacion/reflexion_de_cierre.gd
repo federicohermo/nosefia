@@ -13,12 +13,14 @@ enum Eleccion { ACEPTADA, REPETIDA, NO_DISPONIBLE, FUERA_DE_ETAPA }
 
 const JORNADA_DE_LOS_TEXTOS := ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA
 const ENCABEZADOS: Dictionary[int, String] = {
-	JORNADA_DE_LOS_TEXTOS: "Primera jornada terminada…",
+	JORNADA_DE_LOS_TEXTOS: "Tercera jornada terminada…",
 	JORNADA_DE_LOS_TEXTOS + 1:
 	(
 		"Hoy faltaba uno de los jabones para la limpieza del local. No me quiero empezar a "
 		+ "perseguir, pero…"
 	),
+	JORNADA_DE_LOS_TEXTOS + 2: "Esta vez desapareció el lector de la caja…",
+	JORNADA_DE_LOS_TEXTOS + 3: "Un apagón me agarró desprevenido esta noche…",
 }
 const TEXTOS_DE_LA_PRIMERA: Array[String] = [
 	(
@@ -36,19 +38,25 @@ const TEXTOS_DE_LA_PRIMERA: Array[String] = [
 ]
 ## En segundos de juego, entre elegir la hipótesis y pedir la entrada de la noche siguiente.
 const ESPERA_ANTES_DE_LA_NOCHE := 1.0
+## En segundos de juego, entre recibir el último de los tres textos y pedir la entrada.
+const ESPERA_DESPUES_DE_LOS_TEXTOS := 1.5
 
 var _jornada: int
 var _expediente: Expediente
 var _etapa: Etapa = Etapa.POR_EMPEZAR
 var _mostrada: int = 0
 var _espera: float = 0.0
+var _hora: String = ""
 
 
 ## La reflexión pendiente de esa jornada cerrada, o `null` si no tiene o ya terminó.
-static func para(jornada: int, expediente: Expediente) -> ReflexionDeCierre:
+##
+## `hora` es la del reloj del juego al empezar el cierre, y la llevan las notas que anota.
+static func para(jornada: int, expediente: Expediente, hora: String = "") -> ReflexionDeCierre:
 	if not ENCABEZADOS.has(jornada) or expediente == null:
 		return null
 	var reflexion := ReflexionDeCierre.new(jornada, expediente)
+	reflexion._hora = hora
 	return null if reflexion._completa() else reflexion
 
 
@@ -58,7 +66,7 @@ static func restaurar_notas(expediente: Expediente, identidades: PackedStringArr
 	for indice: int in TEXTOS_DE_LA_PRIMERA.size():
 		if not identidades.has(_identidad(indice)):
 			return
-		expediente.anotar(_nota(indice))
+		expediente.anotar(_nota(indice, ""))
 
 
 func _init(jornada: int, expediente: Expediente) -> void:
@@ -92,8 +100,14 @@ func empezar() -> void:
 		_etapa = Etapa.TEXTOS if _jornada == JORNADA_DE_LOS_TEXTOS else Etapa.ELEGIR
 
 
+## El texto a la vista: el que falta recibir, o el último mientras corre su espera.
 func texto_actual() -> String:
-	return TEXTOS_DE_LA_PRIMERA[_recibidos()] if _etapa == Etapa.TEXTOS else ""
+	match _etapa:
+		Etapa.TEXTOS:
+			return TEXTOS_DE_LA_PRIMERA[_recibidos()]
+		Etapa.ESPERA when _jornada == JORNADA_DE_LOS_TEXTOS:
+			return TEXTOS_DE_LA_PRIMERA.back()
+	return ""
 
 
 ## La identidad del texto a la vista. El pedido la trae para que un gesto repetido no avance dos.
@@ -104,9 +118,10 @@ func identidad_del_texto() -> String:
 func continuar(identidad: String) -> bool:
 	if _etapa != Etapa.TEXTOS or identidad != identidad_del_texto():
 		return false
-	_expediente.anotar(_nota(_recibidos()))
+	_expediente.anotar(_nota(_recibidos(), _hora))
 	if _completa():
-		_etapa = Etapa.TERMINADA
+		_etapa = Etapa.ESPERA
+		_espera = 0.0
 	return true
 
 
@@ -132,7 +147,7 @@ func anterior() -> bool:
 func elegir(identidad: String) -> Eleccion:
 	if _jornada == JORNADA_DE_LOS_TEXTOS or _etapa == Etapa.POR_EMPEZAR:
 		return Eleccion.FUERA_DE_ETAPA
-	match _expediente.elegir(_jornada, identidad):
+	match _expediente.elegir(_jornada, identidad, _hora):
 		Expediente.Resultado.ANOTADA:
 			_etapa = Etapa.ESPERA
 			_espera = 0.0
@@ -147,14 +162,20 @@ func avanzar(segundos: float) -> bool:
 	if _etapa != Etapa.ESPERA or segundos <= 0.0:
 		return false
 	_espera += segundos
-	if _espera < ESPERA_ANTES_DE_LA_NOCHE:
+	if _espera < _espera_declarada():
 		return false
 	_etapa = Etapa.TERMINADA
 	return true
 
 
 func restante() -> float:
-	return maxf(0.0, ESPERA_ANTES_DE_LA_NOCHE - _espera) if _etapa == Etapa.ESPERA else 0.0
+	return maxf(0.0, _espera_declarada() - _espera) if _etapa == Etapa.ESPERA else 0.0
+
+
+func _espera_declarada() -> float:
+	if _jornada == JORNADA_DE_LOS_TEXTOS:
+		return ESPERA_DESPUES_DE_LOS_TEXTOS
+	return ESPERA_ANTES_DE_LA_NOCHE
 
 
 func _navegar(paso: int) -> bool:
@@ -185,10 +206,11 @@ static func _identidad(indice: int) -> String:
 	return "REFLEXION_J%d_%d" % [JORNADA_DE_LOS_TEXTOS, indice + 1]
 
 
-static func _nota(indice: int) -> Mensaje:
+static func _nota(indice: int, hora: String) -> Mensaje:
 	var nota := Mensaje.new()
 	nota.identidad = _identidad(indice)
 	nota.jornada = JORNADA_DE_LOS_TEXTOS
 	nota.momento = Mensaje.Momento.CIERRE
 	nota.texto = TEXTOS_DE_LA_PRIMERA[indice]
+	nota.hora = hora
 	return nota

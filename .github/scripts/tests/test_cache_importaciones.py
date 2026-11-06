@@ -13,6 +13,7 @@ SPEC = importlib.util.spec_from_file_location("cache_importaciones", REPO / ".gi
 cache = importlib.util.module_from_spec(SPEC)
 sys.modules[SPEC.name] = cache
 SPEC.loader.exec_module(cache)
+CAJAS = ("caja_registradora", "lector_de_productos", "ticket_impreso")
 NATIVO = {"receta_sha256": "1" * 64, "binario_sha256": "2" * 64,
           "plataforma": "linux-x86_64", "archivos": {"Godot_v4": "2" * 64}}
 
@@ -50,7 +51,8 @@ class CacheImportacionesTests(unittest.TestCase):
 
     def test_receta_y_binario_reales_cambian_la_clave_sin_cambiar_version_base(self):
         original = self.identidad()
-        self.assertTrue(original.key.startswith("godot-importaciones-v2-"))
+        self.assertTrue(original.prefijo)
+        self.assertTrue(original.key.startswith(original.prefijo + "-"))
         for campo in ("receta_sha256", "binario_sha256"):
             with self.subTest(campo=campo):
                 otro = cache.identidad(self.raiz, "Linux-Ubuntu24", "X64", NATIVO | {
@@ -126,9 +128,12 @@ class CacheImportacionesTests(unittest.TestCase):
         self.escribir("docs/diagrama.svg.import", 'import_script/path=""\ncompress/mode=2\n')
         self.assertNotEqual(original.key, self.identidad().key)
 
-    def test_importadores_nuevos_cambiados_y_plugins_desactivan(self):
+    def test_importador_cambiado_invalida_y_nuevos_o_plugins_desactivan(self):
+        original = self.identidad()
         self.escribir("assets/models/importar_modelo.gd", "modificado")
-        self.assertFalse(self.identidad().cacheable)
+        cambiado = self.identidad()
+        self.assertTrue(cambiado.cacheable)
+        self.assertNotEqual(original.key, cambiado.key)
         self.escribir("assets/models/importar_modelo.gd", (REPO / "assets/models/importar_modelo.gd").read_text(encoding="utf-8"))
         self.escribir("assets/models/modelo.glb.import", 'import_script/path="res://otro.gd"\n')
         self.assertFalse(self.identidad().cacheable)
@@ -168,7 +173,7 @@ class CacheImportacionesTests(unittest.TestCase):
         self.assertFalse(self.identidad().cacheable)
 
     def preparar_importados(self):
-        for caja in cache.CAJAS:
+        for caja in CAJAS:
             destino = f"res://.godot/imported/{caja}.glb-hash.scn"
             self.escribir(f"assets/models/{caja}.glb.import", f'import_script/path="res://assets/models/importar_caja.gd"\ndest_files=["{destino}"]\n')
             self.escribir(f".godot/imported/{caja}.glb-hash.scn", "escena vieja")
@@ -182,12 +187,64 @@ class CacheImportacionesTests(unittest.TestCase):
         self.preparar_importados()
         eliminados = cache.preparar_verificacion(self.raiz, True)
         self.assertEqual(len(eliminados), 6)
-        for caja in cache.CAJAS:
+        for caja in CAJAS:
             self.assertEqual((self.raiz / f"assets/models/{caja}.res").read_text(encoding="utf-8"), "versionado actual")
         for nombre in (".godot/imported/SEPT.glb-hash.scn", ".godot/uid_cache.bin", "reports/results.xml"):
             self.assertTrue((self.raiz / nombre).exists())
 
-    def test_miss_o_restauracion_parcial_limpia_solo_imported(self):
+    def test_prefijo_cubre_motor_importadores_material_y_politica_y_no_el_contenido(self):
+        original = self.identidad()
+        for nombre in ("assets/models/modelo.glb", "icon.svg", "src/escenas/almacen.exr"):
+            self.escribir(nombre, "cambiado")
+        otro = self.identidad()
+        self.assertNotEqual(original.key, otro.key)
+        self.assertEqual(original.prefijo, otro.prefijo)
+        self.assertTrue(otro.key.startswith(original.prefijo + "-"))
+        for campo in ("receta_sha256", "binario_sha256"):
+            with self.subTest(campo=campo):
+                self.assertNotEqual(original.prefijo, cache.identidad(
+                    self.raiz, "Linux-Ubuntu24", "X64", NATIVO | {campo: "3" * 64},
+                ).prefijo)
+        self.assertNotEqual(original.prefijo, self.identidad(sistema="Linux-Ubuntu26").prefijo)
+        for nombre in (*cache.IMPORTADORES, cache.MATERIAL, ".godot-version"):
+            with self.subTest(nombre=nombre):
+                anterior = (self.raiz / nombre).read_text(encoding="utf-8")
+                self.escribir(nombre, anterior + "\ncambio")
+                self.assertNotEqual(original.prefijo, self.identidad().prefijo)
+                self.escribir(nombre, anterior)
+        with tempfile.TemporaryDirectory() as otra:
+            politica = Path(otra) / "cache_importaciones.py"
+            politica.write_text("otra política", encoding="utf-8")
+            with patch.object(cache, "__file__", str(politica)):
+                self.assertNotEqual(original.prefijo, self.identidad().prefijo)
+
+    def test_restauracion_distingue_exacta_parcial_y_ajena(self):
+        datos = {"cacheable": True, "key": "pre-nuevo", "prefijo": "pre"}
+        exacta = {"CACHE_HIT": "true", "CACHE_RESULTADO": "success",
+                  "CACHE_CLAVE_RESTAURADA": "pre-nuevo"}
+        self.assertEqual(cache.restauracion(datos, exacta), "exacta")
+        parcial = exacta | {"CACHE_HIT": "false", "CACHE_CLAVE_RESTAURADA": "pre-viejo"}
+        self.assertEqual(cache.restauracion(datos, parcial), "parcial")
+        for entorno in (
+            parcial | {"CACHE_CLAVE_RESTAURADA": "otro-viejo"},
+            parcial | {"CACHE_CLAVE_RESTAURADA": "prefijo-viejo"},
+            parcial | {"CACHE_CLAVE_RESTAURADA": ""},
+            parcial | {"CACHE_RESULTADO": "failure"},
+            {},
+        ):
+            with self.subTest(entorno=entorno):
+                self.assertEqual(cache.restauracion(datos, entorno), "ninguna")
+        self.assertEqual(cache.restauracion(datos | {"cacheable": False}, exacta), "ninguna")
+
+    def test_restauracion_parcial_conserva_lo_importado_y_purga_las_cajas(self):
+        self.preparar_importados()
+        eliminados = cache.preparar_verificacion(self.raiz, True)
+        self.assertEqual(len(eliminados), 6)
+        self.assertTrue((self.raiz / ".godot/imported/SEPT.glb-hash.scn").exists())
+        for caja in CAJAS:
+            self.assertFalse((self.raiz / f".godot/imported/{caja}.glb-hash.scn").exists())
+
+    def test_miss_limpia_solo_imported(self):
         self.preparar_importados()
         cache.preparar_verificacion(self.raiz, False)
         self.assertFalse((self.raiz / ".godot/imported").exists())
@@ -216,18 +273,33 @@ class CacheImportacionesTests(unittest.TestCase):
                 cache.preparar_verificacion(self.raiz, False)
             self.assertTrue(centinela.exists())
 
-    def test_cli_exige_hit_exacto_y_registra_identidad_sin_userdata(self):
+    def preparar_con(self, restaurada):
         self.preparar_importados()
         reporte = self.raiz / "reports/cache-importaciones.json"
-        reporte.write_text(json.dumps({"cacheable": True, "key": "correcta", "entradas": 1, "motivo": "auditado"}), encoding="utf-8")
+        reporte.write_text(json.dumps({
+            "cacheable": True, "key": "pre-correcta", "prefijo": "pre", "entradas": 1,
+            "motivo": "auditado",
+        }), encoding="utf-8")
+        entorno = {"CACHE_HIT": "false", "CACHE_RESULTADO": "success",
+                   "CACHE_CLAVE_RESTAURADA": restaurada}
         with patch.object(sys, "argv", ["cache", "preparar", "--raiz", str(self.raiz)]), patch.dict(
-            os.environ, {"CACHE_HIT": "true", "CACHE_RESULTADO": "success", "CACHE_CLAVE_RESTAURADA": "parcial"}, clear=True
+            os.environ, entorno, clear=True
         ):
             cache.main()
-        datos = json.loads(reporte.read_text(encoding="utf-8"))
+        return json.loads(reporte.read_text(encoding="utf-8"))
+
+    def test_cli_con_restauracion_parcial_conserva_lo_importado_y_purga_las_cajas(self):
+        datos = self.preparar_con("pre-vieja")
         self.assertFalse(datos["hit"])
-        self.assertFalse((self.raiz / ".godot/imported").exists())
+        self.assertEqual(datos["restauracion"], "parcial")
+        self.assertEqual(len(datos["purgados"]), 6)
+        self.assertTrue((self.raiz / ".godot/imported/SEPT.glb-hash.scn").exists())
         self.assertNotIn("user", datos)
+
+    def test_cli_con_una_clave_de_otro_prefijo_limpia_lo_importado(self):
+        datos = self.preparar_con("ajena-vieja")
+        self.assertEqual(datos["restauracion"], "ninguna")
+        self.assertFalse((self.raiz / ".godot/imported").exists())
 
 
 class CheckoutActualTests(unittest.TestCase):

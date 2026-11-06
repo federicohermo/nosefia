@@ -1,3 +1,4 @@
+# gdlint:ignore=max-public-methods
 ## Lo que dura más que una noche: qué jornada va, el legajo que se arrastra y cómo termina todo.
 ##
 ## **Es la pieza que hace jugable la regla del despido.** Hasta acá el legajo vivía adentro del
@@ -14,9 +15,16 @@
 class_name Partida
 extends RefCounted
 
-## Los tres estados en los que puede estar una partida. Es un conjunto cerrado y por eso es un
+## Los estados en los que puede estar una partida. Es un conjunto cerrado y por eso es un
 ## `enum`: un `String` suelto dejaría al `if` del menú sin entrar nunca, sin decir una palabra.
-enum Final { EN_CURSO, CONTRATO_CUMPLIDO, DESPEDIDO }
+enum Final {
+	EN_CURSO,
+	CONTRATO_CUMPLIDO,
+	DESPEDIDO,
+	JEFE_SABOTEADOR,
+	JEFE_INCOMPETENTE,
+	LOCURA_PARANOICA,
+}
 enum Llamado {
 	LOCAL_DESORDENADO,
 	OBJETO_AFUERA,
@@ -27,6 +35,17 @@ enum Llamado {
 enum RegistroDePoetico { RECHAZADO, ANOTADO, REPETIDO }
 
 const ReglasDelCierre := preload("res://src/dominio/almacen/reglas_del_cierre.gd")
+
+## Con qué objeto en la mano se abre la puerta de la oficina del jefe, y de qué pista es la acción
+## de abrirla (BR-PLY-060, BR-INV-142, BR-INV-145).
+const PALANCA := &"palanca"
+const LLAVE := &"llave"
+
+## A qué final lleva abrir la oficina del jefe con cada objeto (BR-SHF-060, BR-SHF-061).
+const _FINAL_DE_LA_OFICINA: Dictionary[StringName, Final] = {
+	PALANCA: Final.JEFE_SABOTEADOR,
+	LLAVE: Final.JEFE_INCOMPETENTE,
+}
 
 ## La última noche de la prueba: de ahí sale el resultado que la primera jornada completa hereda.
 const _ULTIMA_DE_LA_PRUEBA := ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA - 1
@@ -76,6 +95,12 @@ var vencido_afuera := false:
 	set(valor):
 		vencido_afuera = valor and _jornada_abierta and not terminada()
 
+## Si el último pedido enviado con wifi al proveedor no era el de las cajas vacías: cambia la Tarea
+## 5 de la devolución. Como los llamados, sólo se anota con la jornada abierta.
+var pedido_equivocado := false:
+	set(valor):
+		pedido_equivocado = valor and _jornada_abierta and not terminada()
+
 ## Las clases de desorden con que cerró la noche. Asignarlas anota el llamado por desorden; sin
 ## clases no hay desorden. Como los llamados, sólo se anotan con la jornada abierta.
 var clases_de_desorden: Array[ReglasDelCierre.Clase]:
@@ -98,6 +123,9 @@ var poses_de_las_cajas: Dictionary[Producto.Id, Transform3D]:
 
 ## Los números de ticket ya sorteados: ninguno se repite en la partida.
 var numeros_de_ticket := NumerosDeTicket.new()
+
+## Si ya se mostró el pensamiento de la primera pista anotada (BR-SUB-016).
+var primera_pista_pensada := false
 
 var _expediente: Expediente
 var _legajo: Legajo
@@ -177,6 +205,9 @@ static func desde(datos: Dictionary) -> Partida:
 		if mensaje != null:
 			partida._devoluciones.append(mensaje)
 	partida._mopa_secada = saneado[PartidaSerializada.clave(PartidaSerializada.Campo.MOPA_SECADA)]
+	partida.primera_pista_pensada = saneado[PartidaSerializada.clave(
+		PartidaSerializada.Campo.PRIMERA_PISTA_PENSADA
+	)]
 	var guardada: int = saneado[PartidaSerializada.clave(PartidaSerializada.Campo.SEMILLA)]
 	if guardada > 0:
 		partida._semilla = guardada
@@ -196,18 +227,23 @@ static func desde(datos: Dictionary) -> Partida:
 
 func _restaurar_la_investigacion(saneado: Dictionary) -> void:
 	var notas := PackedStringArray()
+	var horas: Dictionary[String, String] = {}
 	for dato: Variant in saneado[PartidaSerializada.clave(PartidaSerializada.Campo.NOTAS)]:
 		var nota := Mensaje.desde_datos(dato)
 		if nota != null:
 			notas.append(nota.identidad)
+			horas[nota.identidad] = nota.hora
 	ReflexionDeCierre.restaurar_notas(_expediente, notas)
 	var identidades := PackedStringArray()
 	for dato: Variant in saneado[PartidaSerializada.clave(PartidaSerializada.Campo.EXPEDIENTE)]:
 		if dato is String:
 			identidades.append(dato)
 	_expediente.restaurar(
-		identidades, saneado[PartidaSerializada.clave(PartidaSerializada.Campo.ELECCIONES)]
+		identidades,
+		saneado[PartidaSerializada.clave(PartidaSerializada.Campo.ELECCIONES)],
+		saneado[PartidaSerializada.clave(PartidaSerializada.Campo.SORTEOS)]
 	)
+	_expediente.fijar_horas(horas)
 	var pendiente: int = saneado[PartidaSerializada.clave(
 		PartidaSerializada.Campo.CIERRE_PENDIENTE
 	)]
@@ -336,7 +372,9 @@ func abrir_la_jornada() -> Turno:
 	bolsa_afuera = false
 	vencido_en_el_local = false
 	vencido_afuera = false
+	pedido_equivocado = false
 	_obligatorias = Apertura.obligatorias(_jornada)
+	_expediente.sortear_camino(_jornada, _azar_del_camino())
 	_jornada_abierta = true
 	return Apertura.turno_de_la_jornada(_obligatorias)
 
@@ -353,7 +391,9 @@ func abrir_la_jornada() -> Turno:
 ##
 ## Los clientes mal atendidos los cuenta la ventanilla y entran por parámetro: la partida no
 ## sabe cuántos vinieron. Sólo pesan en la prueba, donde cada uno suma como una falla.
-func cerrar_la_jornada(cumplidas: int, clientes_mal_atendidos: int = 0) -> void:
+func cerrar_la_jornada(
+	cumplidas: int, clientes_mal_atendidos: int = 0, hora_del_cierre: String = ""
+) -> void:
 	if not _jornada_abierta:
 		return
 	_jornada_abierta = false
@@ -379,14 +419,47 @@ func cerrar_la_jornada(cumplidas: int, clientes_mal_atendidos: int = 0) -> void:
 	if _despedido_al_cerrar(cerrada):
 		_final = Final.DESPEDIDO
 	elif es_la_ultima_jornada():
-		_final = Final.CONTRATO_CUMPLIDO
+		_final = _final_del_contrato_cumplido()
 	else:
 		if cerrada == _ULTIMA_DE_LA_PRUEBA:
 			_legajo.empezar_las_jornadas_completas()
 		_jornada += 1
-	_reflexion = null if terminada() else ReflexionDeCierre.para(cerrada, _expediente)
+	_reflexion = (
+		null if terminada() else ReflexionDeCierre.para(cerrada, _expediente, hora_del_cierre)
+	)
 	# Después de anotar la noche: la devolución lee las cuentas que ya la incluyen.
 	_devoluciones.append_array(DevolucionDelJefe.new(cerrada, self).mensajes_fechados())
+
+
+## La puerta de la oficina del jefe se abrió en la jornada 7 con `con` en la mano, la palanca o la
+## llave (BR-SHF-060, BR-SHF-061): registra su pista y termina la jornada y la partida en ese
+## momento, sin cierre, sin devolución y sin evaluar la noche. Devuelve si terminó; con otro objeto,
+## sin la pista activa o con la jornada cerrada, no cambia nada.
+func abrir_la_oficina_del_jefe(con: StringName, hora: String = "") -> bool:
+	if terminada() or not _jornada_abierta or not _FINAL_DE_LA_OFICINA.has(con):
+		return false
+	var resultado := _expediente.registrar_por_canal(con, Pista.Canal.ACCION, _jornada, hora)
+	if resultado == Expediente.Resultado.DESCONOCIDA:
+		return false
+	_jornada_abierta = false
+	_reflexion = null
+	_final = _FINAL_DE_LA_OFICINA[con]
+	return true
+
+
+## El azar de esta jornada sale de la semilla de la partida: con la misma, sale el mismo camino.
+func _azar_del_camino() -> RandomNumberGenerator:
+	var azar := RandomNumberGenerator.new()
+	azar.seed = hash([_semilla, _jornada])
+	return azar
+
+
+## Con el contrato cumplido, una sola pista en toda la partida basta para que la investigación quede
+## incompleta (BR-INV-103). Elegir una hipótesis sin pista no cuenta: no entra en `identidades()`.
+func _final_del_contrato_cumplido() -> Final:
+	if _expediente.identidades().is_empty():
+		return Final.CONTRATO_CUMPLIDO
+	return Final.LOCURA_PARANOICA
 
 
 func _despedido_al_cerrar(cerrada: int) -> bool:

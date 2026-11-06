@@ -86,7 +86,12 @@ func interactuar(objeto: ObjetoDelAlmacen) -> RecepcionDeCompra.Resultado:
 			true
 		)
 	elif resultado == RecepcionDeCompra.Resultado.ACEPTADA:
-		_decir(DialogosDeCompradores.agradecimiento(_comprador.pedido(), _recepcion), true)
+		_decir(
+			DialogosDeCompradores.agradecimiento(
+				_comprador.pedido(), _recepcion, _comprador.personaje
+			),
+			true
+		)
 	elif resultado == RecepcionDeCompra.Resultado.COMPLETA:
 		_vendida = _inventario.vender_unidades(_recepcion.unidades())
 		_decir(_despedida(), false)
@@ -103,17 +108,21 @@ func _decir(dialogo: Dialogo, de_entrega: bool) -> void:
 func _inicial() -> Dialogo:
 	if _comprador.dialogos == null:
 		return DialogosDeCompradores.apertura_predeterminada(_comprador.pedido())
-	return _comprador.dialogos.inicial(_comprador.personaje)
+	return _comprador.dialogos.inicial(
+		_comprador.personaje, _comprador.pedido(), _comprador.pistas_activas
+	)
 
 
 func _despedida() -> Dialogo:
 	if _comprador.dialogos == null:
 		return DialogosDeCompradores.despedida_predeterminada()
-	return _comprador.dialogos.despedida(_comprador.personaje)
+	return _comprador.dialogos.despedida(_comprador.personaje, _comprador.pedido())
 
 
 func _recordatorio(rechazo: bool = false) -> Dialogo:
-	return DialogosDeCompradores.recordatorio(_comprador.pedido(), _recepcion, rechazo)
+	return DialogosDeCompradores.recordatorio(
+		_comprador.pedido(), _recepcion, rechazo, _comprador.personaje
+	)
 
 
 ## Esa misma unidad, o un producto del pedido que ya llegó entero.

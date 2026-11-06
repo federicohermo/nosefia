@@ -63,10 +63,13 @@ func test_la_primera_jornada_solo_ofrece_la_introduccion_documentada() -> void: 
 	assert_array(restaurada.conversaciones()).is_equal(bandeja.conversaciones())
 	assert_int(restaurada.no_leidos_totales()).is_equal(mensajes.size())
 	# Los bloques documentados siguen disponibles; no aparecen contactos sin guion.
-	restaurada.abrir_jornada(5)
+	var jornada := 5
+	restaurada.abrir_jornada(jornada)
 	assert_int(restaurada.conversaciones().size()).is_equal(2)
 	assert_array(restaurada.mensajes_de(quien)).is_equal(
-		Conversacion.de(quien).mensajes.filter(func(m: Mensaje) -> bool: return m.vale_para([]))
+		Conversacion.de(quien).mensajes.filter(
+			func(m: Mensaje) -> bool: return m.jornada <= jornada and m.vale_para([])
+		)
 	)
 
 
@@ -270,7 +273,7 @@ func test_la_bandeja_no_se_arma_con_las_conversaciones_del_disco_en_cada_llamada
 	assert_bool(bandeja.esta_leida(Conversacion.Interlocutor.DESCONOCIDO)).is_true()
 
 
-func test_notas_recibidas_antes_de_la_sexta_no_dan_boton() -> void:  # AC-INV-028, AC-INV-052
+func test_notas_recibidas_antes_de_la_cuarta_no_dan_boton() -> void:  # AC-INV-028, AC-INV-052
 	var normal := Conversacion.new()
 	normal.interlocutor = Conversacion.Interlocutor.JEFE
 	var notas := Conversacion.de(Conversacion.Interlocutor.NOTAS)
@@ -294,7 +297,9 @@ func test_notas_recibidas_antes_de_la_sexta_no_dan_boton() -> void:  # AC-INV-02
 	bandeja.abrir_jornada(2)
 	assert_array(bandeja.conversaciones()).is_equal([normal])
 	assert_array(bandeja.mensajes_de(Conversacion.Interlocutor.NOTAS)).is_equal([nota])
-	bandeja.abrir_jornada(notas.jornada_de_menu)
+	bandeja.abrir_jornada(COMPLETA)
+	assert_array(bandeja.conversaciones()).is_equal([normal])
+	bandeja.abrir_jornada(COMPLETA + 1)
 	assert_array(bandeja.conversaciones()).is_equal([normal, notas])
 	assert_array(notas.mensajes).is_empty()
 	assert_array(bandeja.mensajes_de(Conversacion.Interlocutor.NOTAS)).is_equal([nota])

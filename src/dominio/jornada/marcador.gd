@@ -1,12 +1,10 @@
 ## Los números del turno, ya formateados.
 ##
-## **La frontera con quien dibuja se dice en una línea: acá viven los números, allá las
-## palabras.** `"20:00"` y `"3/4"` son números formateados; «Tareas» es de arriba.
-##
-## Con la hora fuera del HUD, `hora()` tiene un solo cliente, el reloj de mesa del dominio, que
-## decide si esta noche se puede leer. La aritmética está acá y no en el nodo que pinta porque es
-## **una regla que decide**, y una regla en `escenas/` nace sin test: es la trampa que describe
-## `.claude/rules/presentacion.md`.
+## Con la hora fuera del HUD, los dos lugares donde el jugador la lee en vivo son el reloj de pared,
+## que decide si esta noche se puede leer, y la barra de estado del celular, que la lee siempre. La
+## aritmética está acá
+## y no en el nodo que pinta porque es **una regla que decide**, y una regla en `escenas/` nace sin
+## test: es la trampa que describe `.claude/rules/presentacion.md`.
 class_name Marcador
 extends RefCounted
 
@@ -26,12 +24,3 @@ static func hora(restante: float) -> String:
 	var minutos := transcurrido / SEGUNDOS_POR_MINUTO
 	var horas := (Reglas.HORA_DE_APERTURA + minutos / MINUTOS_POR_HORA) % HORAS_POR_DIA
 	return "%02d:%02d" % [horas, minutos % MINUTOS_POR_HORA]
-
-
-## Cuántas obligatorias van sobre cuántas se declararon.
-##
-## La cantidad declarada entra por argumento y nunca está escrita acá: cuántas obligatorias pide
-## una jornada lo decide quien arma la lista, y este archivo no lo vuelve a decidir. Hoy son las
-## cinco de `Tarea.Tipo`; una sexta no toca esta función.
-static func tareas(cumplidas: int, obligatorias: int) -> String:
-	return "%d/%d" % [cumplidas, obligatorias]

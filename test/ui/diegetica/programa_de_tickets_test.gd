@@ -72,7 +72,7 @@ func _automatico(productos: Array[Producto]) -> GeneradorDeTickets:
 func test_cada_renglon_ofrece_vacio_y_despues_el_catalogo_en_mayusculas() -> void:  # AC-CTR-030
 	var vista := _abrir(6)
 	assert_int(vista.selectores.size()).is_equal(GeneradorDeTickets.RENGLONES)
-	var catalogo := Catalogo.todos()
+	var catalogo := Catalogo.en_orden_alfabetico(Catalogo.todos())
 	for selector in vista.selectores:
 		assert_bool(selector.is_visible_in_tree()).is_true()
 		var nombres := _nombres_de_la_lista(selector)
@@ -313,6 +313,39 @@ func test_cada_producto_visible_tiene_su_separador_en_cada_resolucion() -> void:
 			assert_int(visibles).is_greater(1)
 
 
+func test_scrollear_la_lista_no_corre_los_separadores_del_borde_de_su_opcion() -> void:
+	for pantalla: Vector2i in RESOLUCIONES:
+		var vista := _abrir_en_pantalla(6, pantalla)
+		var selector := vista.selectores[0]
+		var lineas := await _abrir_la_lista(selector, false)
+		var desplazamiento := selector.find_child("Desplazamiento", true, false) as ScrollContainer
+		var recorte := _rectangulo_global(desplazamiento)
+		var maximo := int(desplazamiento.get_v_scroll_bar().max_value)
+		var posiciones: Array[int] = []
+		for posicion in range(0, maximo, 7):
+			posiciones.append(posicion)
+		for posicion in range(maximo, 0, -5):
+			posiciones.append(posicion)
+		var revisados := 0
+		for posicion in posiciones:
+			desplazamiento.scroll_vertical = posicion
+			await await_idle_frame()
+			for linea in lineas:
+				var rectangulo := _rectangulo_global(linea)
+				var separador := _rectangulo_global(linea.find_child("Linea", false, false))
+				if not recorte.encloses(rectangulo):
+					continue
+				revisados += 1
+				var contexto := "%s, scroll %d" % [pantalla, posicion]
+				# La línea es la última fila de píxeles de su opción: nunca entra al texto.
+				(
+					assert_float(rectangulo.end.y - separador.end.y)
+					. override_failure_message(contexto)
+					. is_between(-0.01, 1.0)
+				)
+		assert_int(revisados).is_greater(posiciones.size())
+
+
 func test_cada_lado_del_borde_de_cada_renglon_ocupa_pixeles_enteros_en_cada_resolucion() -> void:
 	var bordes := 0
 	for pantalla: Vector2i in RESOLUCIONES:
@@ -508,7 +541,7 @@ func _clic(nodo: Node, posicion: Vector2) -> void:
 
 
 func _posicion_en_el_catalogo(producto: Producto) -> int:
-	var catalogo := Catalogo.todos()
+	var catalogo := Catalogo.en_orden_alfabetico(Catalogo.todos())
 	for indice in catalogo.size():
 		if catalogo[indice].id == producto.id:
 			return indice

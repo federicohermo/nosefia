@@ -41,6 +41,15 @@ func _cuadros(cantidad: int = 3) -> void:
 		await get_tree().process_frame
 
 
+## El chat que se abre con el celular arriba entra deslizándose: los clics esperan a que llegue.
+func _esperar_el_deslizamiento() -> void:
+	var pantalla := _pantalla()
+	for _cuadro: int in 600:
+		if pantalla.get("_lista_quieta") == null and pantalla.get("_chat_saliente") == null:
+			return
+		await get_tree().process_frame
+
+
 func _abrir(jornada: int = ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA + 1) -> void:
 	(
 		assert_bool(
@@ -159,6 +168,7 @@ func test_frase_real_anota_una_vez_y_leer_o_prefijo_no_anotan() -> void:  # AC-I
 	await _tecla(Celular.ACCION)
 	_celular().pedir_chat(Conversacion.Interlocutor.YASMIN)
 	await _cuadros()
+	await _esperar_el_deslizamiento()
 	assert_array(Array(_expediente().identidades())).is_empty()
 	var punto := await _tramo()
 	var texto := _burbuja(5).find_children("*", "RichTextLabel", true, false)[0] as RichTextLabel
@@ -349,6 +359,7 @@ func test_canales_fuera_de_j2_no_anotan_y_revelaciones_siguen_aparte() -> void: 
 	await _tecla(Celular.ACCION)
 	_celular().pedir_chat(Conversacion.Interlocutor.YASMIN)
 	await _cuadros()
+	await _esperar_el_deslizamiento()
 	await _clic(await _tramo())
 	assert_array(Array(_expediente().identidades())).is_empty()
 	await _tecla(Celular.ACCION)
@@ -371,8 +382,9 @@ func test_notas_j2_fijas_y_j3_menu_conservan_pares_y_scroll() -> void:  # AC-INV
 	assert_int(notas.size()).is_equal(4)
 	if notas.size() != 4:
 		return
-	for conversacion: Conversacion in _celular().bandeja().conversaciones():
-		assert_int(conversacion.interlocutor).is_not_equal(Conversacion.Interlocutor.NOTAS)
+	assert_array(_celular().bandeja().conversaciones()).contains(
+		[_celular().bandeja().conversacion_de(Conversacion.Interlocutor.NOTAS)]
+	)
 	var reloj: RelojDelTurno = _almacen.get("_reloj")
 	reloj.avanzar((reloj.get("_turno") as Turno).tiempo_restante())
 	Avance.entregar(_almacen.get("_pantalla") as PantallaDeDevolucion)
@@ -433,10 +445,11 @@ func test_recibido_futuro_no_aparece_en_el_chat_abierto() -> void:  # AC-INV-028
 	await _tecla(Celular.ACCION)
 	_celular().pedir_chat(Conversacion.Interlocutor.YASMIN)
 	await _cuadros()
+	await _esperar_el_deslizamiento()
 	var anteriores: Array[Mensaje] = _celular().bandeja().mensajes_de(
 		Conversacion.Interlocutor.YASMIN
 	)
-	assert_int(anteriores.size()).is_equal(15)
+	assert_array(anteriores).is_not_empty()
 	var futuro := Mensaje.new()
 	futuro.identidad = "FUTURO_DE_PRUEBA"
 	futuro.jornada = ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA + 2

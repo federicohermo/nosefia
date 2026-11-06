@@ -1,12 +1,35 @@
 # Gráfica de la computadora
 
+## Imágenes de logros
+
+Arte original generado con `imagegen` el 2026-11-05 para #814: PNG RGBA de 256 × 256,
+con fondo transparente. Se redujeron las salidas con filtro Lanczos, sin cambiar sus motivos.
+La referencia visual son las siluetas negras angulares de `notificacion_pista.svg` y del
+trofeo `notificacion_logro.svg` de la rama `feature/381-logros` (Figma `480:331`).
+Los motivos fueron aprobados por el coordinador. El único texto dentro del arte es «99»;
+los nombres los dibuja la pantalla. La integración en el menú corresponde a #381.
+
+Prompt común: un solo pictograma negro, grueso y angular; fondo transparente; sin colores,
+sombras ni degradados; centrado con margen del 12 %; legible a 72 px. Cada fila aporta el motivo.
+
+| Recurso | Motivo del prompt | Uso |
+|---|---|---|
+| `logros/rebelde.png` | Ticket que cae en un inodoro de perfil | Rebelde |
+| `logros/y_se_marcho.png` | Caja que sale por una ventana abierta, con flecha | Y se marchó… |
+| `logros/a_la_basura.png` | Caja que cae en un contenedor abierto | A la basura |
+| `logros/estamos_al_pedo.png` | Computadora con un 99 en el registro | Estamos al pedo, ¿no? |
+| `logros/empleado_ejemplar.png` | Medalla con estrella y dos cintas | Empleado ejemplar |
+| `logros/pesima_primera_impresion.png` | Credencial tachada y reloj | Pésima primera impresión |
+| `logros/mi_talon_de_aquiles.png` | Planilla con cuatro cruces | Mi talón de Aquiles |
+| `logros/final_despedido.png` | Contrato partido con desgarro central | Final: despedido |
+| `logros/final_contrato_cumplido.png` | Contrato con una tilde grande | Final: contrato cumplido |
+| `logros/bloqueado.png` | Signo de pregunta grueso con ángulos rectos | Entrada sin desbloquear |
+
+## Recursos de la interfaz
+
 Recursos de [Manada — UI](https://www.figma.com/design/SQEAfczyRvyOHokmzPOee7/Manada---UI),
 extraídos el 22 de septiembre de 2026. Las escenas usan recursos locales; no dependen de Figma
 durante la ejecución.
-
-`notificacion_cierre.svg` es un símbolo de reloj original del proyecto, creado el 15 de octubre
-de 2026 para el aviso de una hora restante (#435). El diseño prescribe comunicar el tiempo y
-reutilizar la composición de los avisos; no prescribe una ilustración para este tipo.
 
 Las dos notas del corcho usan los SVG originales del frame
 [notas (`482:827`)](https://www.figma.com/design/SQEAfczyRvyOHokmzPOee7/Manada---UI?node-id=482-827),
@@ -24,7 +47,7 @@ comercial. La incorporación al build local no acredita una licencia comercial.
 
 | Recurso | Origen | Uso |
 |---|---|---|
-| `enrique.png` | Figma, capa `511:317` del frame de instrucciones `511:302`, descargada sin editar el 2026-10-10 | Retrato de Enrique Peldaño en las instrucciones y en el celular |
+| `enrique.png` | Figma, capa `511:317` del frame de instrucciones `511:302`, descargada sin editar el 2026-10-10 | Retrato de Enrique Peldaño en el celular |
 | `fotos/intro-<NN>.png` | Renders del modelo jugable, generados sin editar el PNG: Intro 4 en 960 × 674, Intro 9 en 640 × 640 y las restantes en 960 × 540 | Fotos adjuntas a las instrucciones de Enrique |
 | `celular.svg` | Dibujo vectorial original del proyecto, creado el 2026-10-10 | Recordatorio del celular con Q |
 | `persiana_gris.tres` | Material común sobre la textura real del portón, aprobado por el usuario | Fondo de la intro y persiana de entrada de cada noche |
@@ -32,6 +55,9 @@ comercial. La incorporación al build local no acredita una licencia comercial.
 | `notificacion_cliente.svg` | Figma, grupo `213:191` del frame `243:150` | Símbolo original del aviso «¡HAY UN CLIENTE!» |
 | `notificacion_lectura.svg` | Figma, grupo `480:319` del frame `477:243` | Cruz original del aviso «NO SE PUDO LEER» |
 | `notificacion_pista.svg` | Figma, grupo `480:323` del frame `477:225`, descargado sin editar el 2026-10-18 | Signo de pregunta del aviso «¡NUEVA PISTA!» |
+| `notificacion_logro.svg` | Figma, grupo `480:331` del frame `477:234`, descargado sin editar el 2026-11-04 | Trofeo del aviso de logro ganado |
+| `notificacion_tareas_completadas.svg` | Figma, ícono `1523:452` del frame `1523:451`, descargado sin editar el 2026-11-03 | Puerta principal del aviso «¡TAREAS COMPLETADAS!» |
+| `notificacion_cierre.svg` | Figma, frame `1676:750`: reloj de arena `1676:744` y exclamación `1676:747` / `1676:748`, compuestos en un lienzo de 164 × 154 con sus posiciones relativas del frame; los trazos son los originales, descargados el 2026-11-04 | Reloj de arena con exclamación del aviso «¡HORA DE CIERRE!» |
 | `fondo.png` | Captura histórica de `almacen.tscn` | Recurso conservado; la computadora actual usa un shader |
 | `fondo_inicio.png` | Figma, `217:533` («FONDO 4 1»), la estación de servicio de luz cálida | Fondo del menú de inicio |
 | `titulo_inicio.png` | Figma, grupo `112:388` del frame «UI INICIO» (`13:1075`) | Título del menú de inicio |
@@ -128,10 +154,11 @@ luminosidad 0,48. Sustituye la persiana azul del prototipo por el portón real e
 La intro y la persiana que sube comparten `persiana_gris.tres`, textura y modo de ajuste.
 La imagen azul anterior se retira para que no reaparezca en ninguna de esas vistas.
 
-El retrato local histórico
-incluía un rectángulo opaco celeste: la pantalla usa ahora `instrucciones/enrique.png`, la imagen
-fuente transparente de `511:317`, sin editar. `enrique.gdshader` aplica su exposición y el blur
-progresivo hacia los pies del diseño. El chat conserva su recurso histórico y no se modifica.
+El retrato de Enrique ya no es una imagen fija: la pantalla reproduce sus seis cuadros de reposo
+(`assets/characters/enrique/`, ver [su procedencia](../../characters/enrique_origen.md)) delante de
+su oficina y su escritorio con placa, que son nodos de Godot con las medidas y los colores del frame
+`1676:1000` de Figma (`1676:1013` y `1676:1061`). Ya no hay desenfoque ni título. El chat conserva
+su recurso histórico y no se modifica.
 
 El encuadre de Intro 4 es ortográfico, frontal al corcho completo y sus dos notas. Intro 9
 encuadra las tres alturas del estante de cajas de frente, sin objetos que lo oculten. Las

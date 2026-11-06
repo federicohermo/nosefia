@@ -44,12 +44,14 @@ func _burbuja(pantalla: PantallaDelCelular, indice: int) -> PanelContainer:
 	return null
 
 
-func test_subir_bajar_miden_tiempo_real_y_revertir_conserva_posicion() -> void:  # AC-INV-033
+func test_subir_bajar_miden_tiempo_real_y_revertir_no_salta() -> void:  # AC-INV-033, AC-INV-073
 	var pantalla := _pantalla()
 	var ahora: Array[int] = [0]
 	pantalla.set("_ahora", func() -> int: return ahora[0])
 	var telefono: Control = pantalla.get("_telefono")
 	var velo: Control = pantalla.get("_velo")
+	var bajadas: Array[int] = []
+	pantalla.celular_bajado.connect(func() -> void: bajadas.append(1))
 	pantalla.subir()
 	var abajo := telefono.position
 	AvanceDeDevolucion.animar_celular(pantalla, ahora, 125000)
@@ -57,9 +59,12 @@ func test_subir_bajar_miden_tiempo_real_y_revertir_conserva_posicion() -> void: 
 	assert_float(medio.y).is_less(abajo.y)
 	pantalla.bajar()
 	assert_vector(telefono.position).is_equal(medio)
-	AvanceDeDevolucion.animar_celular(pantalla, ahora, 125000)
-	assert_vector(telefono.position).is_equal(abajo)
+	AvanceDeDevolucion.animar_celular(
+		pantalla, ahora, int(RecorridoDelCelular.DURACION * 1000000.0)
+	)
+	assert_float(telefono.position.y).is_greater_equal(abajo.y)
 	assert_bool(velo.visible).is_false()
+	assert_array(bajadas).is_equal([1])
 	pantalla.subir()
 	AvanceDeDevolucion.animar_celular(pantalla, ahora, 249000)
 	assert_bool(pantalla.is_processing()).is_true()
@@ -254,28 +259,28 @@ func test_buscar_filtra_contactos_y_borrar_restaura_sin_cambiar_lecturas() -> vo
 	assert_str(buscar.text).is_empty()
 
 
-func test_el_izquierdo_fuera_del_telefono_pide_cerrar_y_adentro_no() -> void:  # AC-INV-033
-	var pantalla: PantallaDelCelular = auto_free(ESCENA.instantiate())
-	add_child(pantalla)
-	var cierres: Array[int] = []
-	pantalla.cierre_pedido.connect(func() -> void: cierres.append(1))
+func test_el_izquierdo_fuera_del_telefono_no_lo_baja() -> void:  # AC-INV-033, AC-INV-071
+	var pantalla := _pantalla()
+	var ahora: Array[int] = [0]
+	pantalla.set("_ahora", func() -> int: return ahora[0])
+	pantalla.subir()
+	AvanceDeDevolucion.animar_celular(
+		pantalla, ahora, int(RecorridoDelCelular.DURACION * 1000000.0)
+	)
 	var clic := InputEventMouseButton.new()
 	clic.button_index = MOUSE_BUTTON_LEFT
 	clic.pressed = true
 	clic.position = Vector2(10, 10)
 	pantalla._input(clic)
-	assert_array(cierres).is_empty()
-	pantalla.subir()
-	clic.position = (pantalla.get("_telefono") as Control).get_global_rect().get_center()
-	pantalla._input(clic)
-	assert_array(cierres).is_empty()
-	clic.position = Vector2(10, 10)
-	pantalla._input(clic)
-	assert_int(cierres.size()).is_equal(1)
+	AvanceDeDevolucion.animar_celular(
+		pantalla, ahora, int(RecorridoDelCelular.DURACION * 1000000.0)
+	)
+	assert_bool(pantalla.centrado()).is_true()
+	assert_bool((pantalla.get("_telefono") as Control).visible).is_true()
 
 
 # AC-INV-039, AC-INV-041, AC-INV-042
-func test_yasmin_conserva_rol_avatar_liso_y_tramo_identificado() -> void:
+func test_yasmin_conserva_rol_foto_enmascarada_y_tramo_identificado() -> void:
 	var pantalla := _pantalla()
 	var sistema: CelularDelEmpleado = auto_free(CelularDelEmpleado.new())
 	var pedidos: Array[String] = []
@@ -291,7 +296,10 @@ func test_yasmin_conserva_rol_avatar_liso_y_tramo_identificado() -> void:
 	pantalla.mostrar_chat(conversacion, mensajes, false, 5)
 	assert_str((pantalla.get("_subtitulo") as Label).text).is_equal("Compañera de trabajo")
 	assert_bool((pantalla.get("_subtitulo") as Label).visible).is_true()
-	assert_object((pantalla.get("_avatar_del_chat") as TextureRect).texture).is_not_null()
+	var avatar: TextureRect = pantalla.get("_avatar_del_chat")
+	assert_object(conversacion.imagen).is_not_null()
+	assert_object(avatar.texture).is_same(conversacion.imagen)
+	assert_object(avatar.material).is_same(PantallaDelCelular.MASCARA_DEL_AVATAR)
 	var texto := (
 		_burbuja(pantalla, 5).find_children("*", "RichTextLabel", true, false)[0] as RichTextLabel
 	)

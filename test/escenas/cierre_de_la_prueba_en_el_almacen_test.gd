@@ -148,6 +148,15 @@ func test_la_tercera_noche_cierra_sin_celular_y_sigue_la_cuarta() -> void:  # AC
 	assert_int(await _cerrar_sin_celular(COMPLETA - 1)).is_equal(COMPLETA)
 
 
+func test_la_persiana_de_la_primera_noche_pasa_la_mitad_a_mitad_de_tiempo() -> void:  # AC-EMP-118
+	var almacen: Node3D = await _almacen(PRIMERA)
+	_cerrar_el_turno(almacen)
+	assert_bool(_persiana(almacen).get("_bajando")).is_true()
+	assert_float(AvanceDeDevolucion.bajado_a_la_mitad_del_tiempo(_persiana(almacen))).is_greater(
+		0.5
+	)
+
+
 func test_pausar_con_la_persiana_bajando_no_sube_el_celular() -> void:  # AC-EMP-094
 	var almacen: Node3D = await _almacen(PRIMERA)
 	_cerrar_el_turno(almacen)
@@ -230,6 +239,12 @@ func test_con_la_prueba_perdida_el_despido_es_el_unico_mensaje_de_la_cuarta() ->
 	comenzar.pressed.emit()
 	assert_int(menus[0]).is_zero()
 	AvanceDeDevolucion.terminar_instrucciones(_instrucciones(almacen))
+	assert_int(menus[0]).is_zero()
+	var final: PantallaDeFinal = almacen.get_node("PantallaDeFinal")
+	assert_bool(final.visible).is_true()
+	assert_str(final.titulo()).is_equal(PantallaDeFinal.TITULOS[FinalConPantalla.Cual.DESPEDIDO])
+	final.boton_de_volver().pressed.emit()
+	final.boton_de_volver().pressed.emit()
 	assert_int(menus[0]).is_equal(1)
 	assert_int(aperturas[0]).is_zero()
 	assert_int(partida.jornada()).is_equal(COMPLETA - 1)

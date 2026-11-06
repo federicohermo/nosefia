@@ -4,9 +4,13 @@ extends RefCounted
 
 var _conversaciones: Array[Conversacion] = []
 var _leidos: Dictionary[Conversacion.Interlocutor, int] = {}
+var _leidos_sin_fecha: Dictionary[Conversacion.Interlocutor, int] = {}
 var _recibidos: Dictionary[Conversacion.Interlocutor, Array] = {}
 var _jornada: int = 1
+## Lo de jornadas anteriores a ésta no cuenta como nuevo, esté donde esté la marca de `_leidos`.
+var _primera_jornada_nueva: int = 0
 var _condiciones: Array[StringName] = []
+var _quejas: QuejasDeLaJornada = null
 
 
 func _init(conversaciones: Array[Conversacion]) -> void:
@@ -24,6 +28,18 @@ func _init(conversaciones: Array[Conversacion]) -> void:
 func abrir_jornada(jornada: int, condiciones: Array[StringName] = []) -> void:
 	_jornada = jornada
 	_condiciones = condiciones.duplicate()
+	for quien: Conversacion.Interlocutor in _recibidos:
+		var siguen: Array = []
+		for recibido: Mensaje in _recibidos[quien]:
+			if not recibido.de_la_noche:
+				siguen.append(recibido)
+		_recibidos[quien] = siguen
+
+
+## Las quejas de la noche: sus mensajes salen de ellas y no de un guión, así que no hay una copia
+## que se desactualice. Sin quejas, los chats de los compradores no tienen mensajes.
+func usar_quejas(quejas: QuejasDeLaJornada) -> void:
+	_quejas = quejas
 
 
 func conversaciones() -> Array[Conversacion]:
@@ -31,7 +47,10 @@ func conversaciones() -> Array[Conversacion]:
 	for conversacion in _conversaciones:
 		if (
 			conversacion.jornada_de_menu <= _jornada
-			and not mensajes_de(conversacion.interlocutor).is_empty()
+			and (
+				conversacion.abre_sin_mensajes
+				or not mensajes_de(conversacion.interlocutor).is_empty()
+			)
 		):
 			visibles.append(conversacion)
 	return visibles
@@ -58,6 +77,10 @@ func mensajes_de(quien: Conversacion.Interlocutor) -> Array[Mensaje]:
 	for recibido: Mensaje in _recibidos[quien]:
 		if recibido.jornada <= _jornada:
 			todos.append(recibido)
+	if _quejas != null:
+		for de_la_queja: Mensaje in _quejas.mensajes_de(quien):
+			if de_la_queja.jornada <= _jornada:
+				todos.append(de_la_queja)
 	for posicion: int in todos.size():
 		var mensaje := todos[posicion]
 		if mensaje.momento == Mensaje.Momento.SIN_FECHA:
@@ -98,7 +121,7 @@ func esta_leida(quien: Conversacion.Interlocutor) -> bool:
 
 
 func no_leidos(quien: Conversacion.Interlocutor) -> int:
-	return maxi(0, mensajes_de(quien).size() - _leidos.get(quien, 0))
+	return _posiciones_sin_leer(quien).size()
 
 
 func no_leidos_totales() -> int:
@@ -108,10 +131,25 @@ func no_leidos_totales() -> int:
 	return sin_leer
 
 
+## El lugar, en `mensajes_de`, del primer mensaje sin leer; -1 si el chat está al día.
+func primer_no_leido(quien: Conversacion.Interlocutor) -> int:
+	var sin_leer := _posiciones_sin_leer(quien)
+	return -1 if sin_leer.is_empty() else sin_leer[0]
+
+
+## Al continuar una partida: sólo cuentan como nuevos los mensajes de `jornada` en adelante. Las
+## devoluciones sin jornada tienen la 0, y por eso también quedan leídas.
+func dar_por_leidos_los_anteriores_a(jornada: int) -> void:
+	_primera_jornada_nueva = jornada
+
+
 func marcar_leida(quien: Conversacion.Interlocutor) -> bool:
 	if not _leidos.has(quien) or no_leidos(quien) == 0:
 		return false
-	_leidos[quien] = mensajes_de(quien).size()
+	var mensajes := mensajes_de(quien)
+	var sin_fecha := _cantidad_sin_fecha(mensajes)
+	_leidos[quien] = mensajes.size() - sin_fecha
+	_leidos_sin_fecha[quien] = sin_fecha
 	return true
 
 
@@ -123,6 +161,8 @@ func adjunto_de(quien: Conversacion.Interlocutor, indice: int) -> Mensaje:
 	for posicion in range(indice + 1, mensajes.size()):
 		var siguiente := mensajes[posicion]
 		if siguiente.jornada != origen.jornada or siguiente.momento != origen.momento:
+			return null
+		if siguiente.propio:
 			return null
 		if origen.texto.is_empty():
 			if siguiente.foto != null and siguiente.texto.is_empty():
@@ -138,6 +178,33 @@ func pista_de(quien: Conversacion.Interlocutor, identidad: String, tramo: String
 		if mensaje.identidad == identidad:
 			return mensaje.pista_del_tramo(tramo)
 	return ""
+
+
+## Las sin fecha van detrás de las fechadas, así que un fechado nuevo las corre: se cuentan aparte
+## para que la marca de lectura de las fechadas no se desplace sobre ellas.
+func _posiciones_sin_leer(quien: Conversacion.Interlocutor) -> Array[int]:
+	var posiciones: Array[int] = []
+	var mensajes := mensajes_de(quien)
+	var fechados := mensajes.size() - _cantidad_sin_fecha(mensajes)
+	var leidos_fechados: int = _leidos.get(quien, 0)
+	var leidos_sin_fecha: int = _leidos_sin_fecha.get(quien, 0)
+	for posicion in mensajes.size():
+		var leido := (
+			posicion - fechados < leidos_sin_fecha
+			if posicion >= fechados
+			else posicion < leidos_fechados
+		)
+		if not leido and mensajes[posicion].jornada >= _primera_jornada_nueva:
+			posiciones.append(posicion)
+	return posiciones
+
+
+static func _cantidad_sin_fecha(mensajes: Array[Mensaje]) -> int:
+	var cuantos := 0
+	for mensaje in mensajes:
+		if mensaje.momento == Mensaje.Momento.SIN_FECHA:
+			cuantos += 1
+	return cuantos
 
 
 static func _antes(a: Dictionary, b: Dictionary) -> bool:

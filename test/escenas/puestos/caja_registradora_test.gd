@@ -170,7 +170,7 @@ func test_el_reloj_corre_la_pausa_real_va_encima_y_el_turno_cierra() -> void:  #
 	var evento := InputEventAction.new()
 	evento.action = &"ui_cancel"
 	evento.pressed = true
-	pausa.call("_input", evento)
+	pausa.pausar()
 	var menu: CanvasLayer = almacen.get_node("Interfaz/MenuDePausa")
 	assert_bool(get_tree().paused).is_true()
 	assert_bool(menu.visible).is_true()
@@ -366,7 +366,10 @@ func _sitios(almacen: Node3D, objetivo: PhysicsBody3D, centro: Vector3) -> Array
 			var impacto := espacio.intersect_ray(rayo)
 			if (
 				impacto.get("collider") == objetivo
-				and ojo.distance_to(impacto.position) <= ReglasDelJugador.ALCANCE_DE_LA_MIRA
+				and (
+					ReglasDelJugador.proximidad(ojo, impacto.position)
+					<= ReglasDelJugador.ALCANCE_DE_LA_MIRA
+				)
 			):
 				sitios.append(posicion)
 	return sitios
@@ -771,10 +774,12 @@ func test_el_papel_crece_en_la_mano_mas_al_examinar_y_vuelve_al_soltarlo() -> vo
 	assert_vector(papel.scale).is_equal_approx(Vector3.ONE, tolerancia)
 	_accion(jugador, papel, ReglasDeLosObjetos.ACCION_EXAMINAR)
 	assert_bool((jugador.get("examen") as Examen).esta_examinando()).is_true()
-	var al_examinar := del_mundo * ReglasDeLosObjetos.ESCALA_DEL_TICKET_AL_EXAMINAR
-	assert_vector(malla.scale).is_equal_approx(al_examinar, tolerancia)
-	assert_vector(forma.scale).is_equal_approx(al_examinar, tolerancia)
+	var al_examinar := en_la_mano * (papel.datos as Ticket).escala_de_examen
+	assert_vector(malla.scale * papel.scale).is_equal_approx(al_examinar, tolerancia)
+	assert_vector(forma.scale * papel.scale).is_equal_approx(al_examinar, tolerancia)
+	assert_float((malla.scale * papel.scale).x).is_greater(en_la_mano.x)
 	(jugador.get("examen") as Examen).terminar()
+	assert_vector(papel.scale).is_equal_approx(Vector3.ONE, tolerancia)
 	assert_vector(malla.scale).is_equal_approx(en_la_mano, tolerancia)
 	agarre.soltar(true)
 	assert_vector(malla.scale).is_equal_approx(del_mundo, tolerancia)

@@ -165,9 +165,13 @@ func _entregar_a_tin(
 	var forma_jugador: CollisionShape3D = jugador.get_node("Cuerpo")
 	var capsula := forma_jugador.shape as CapsuleShape3D
 	var antepecho: MeshInstance3D = ventana.get("antepecho")
+	var borde_interior := antepecho.global_transform * antepecho.get_aabb()
 	var lugar := (
 		ventana.global_position
-		- ventana.global_basis.z * (capsula.radius + antepecho.get_aabb().size.z / 2.0 + 0.1)
+		- (
+			ventana.global_basis.z
+			* (ventana.global_position.z - borde_interior.position.z + capsula.radius + 0.1)
+		)
 	)
 	var suelo: StaticBody3D = _almacen.get("_reposicion_manual").get("suelo")
 	var consulta := PhysicsRayQueryParameters3D.create(
@@ -304,7 +308,7 @@ func test_tres_abandonadas_quedan_adentro_sin_solidos_y_pausan_la_caida() -> voi
 		await get_tree().physics_frame
 	var lector: Habitaciones = _almacen.get("_habitaciones")
 	var manual: Node3D = _almacen.get("_reposicion_manual")
-	var suelo: StaticBody3D = manual.get("suelo")
+	var apoyo := _apoyo()
 	var espacio := manual.get_world_3d().direct_space_state
 	for indice in cuerpos.size():
 		var cuerpo := cuerpos[indice]
@@ -320,7 +324,7 @@ func test_tres_abandonadas_quedan_adentro_sin_solidos_y_pausan_la_caida() -> voi
 		consulta.transform = forma.global_transform
 		consulta.collision_mask = cuerpo.collision_mask
 		consulta.margin = 0.0
-		consulta.exclude = [cuerpo.get_rid(), suelo.get_rid()]
+		consulta.exclude = [cuerpo.get_rid(), _rid_del_apoyo(apoyo)]
 		assert_array(espacio.intersect_shape(consulta)).is_empty()
 		var rayo := PhysicsRayQueryParameters3D.create(
 			cuerpo.global_position,
@@ -331,10 +335,10 @@ func test_tres_abandonadas_quedan_adentro_sin_solidos_y_pausan_la_caida() -> voi
 		for otro in cuerpos:
 			excluidos.append(otro.get_rid())
 		rayo.exclude = excluidos
-		var apoyo := espacio.intersect_ray(rayo)
-		assert_object(apoyo.get("collider")).is_same(suelo)
+		var golpe := espacio.intersect_ray(rayo)
+		assert_bool(_es_el_apoyo(golpe.get("collider"), apoyo)).is_true()
 		var limite := forma.global_transform * forma.shape.get_debug_mesh().get_aabb()
-		assert_float(limite.position.y).is_equal_approx((apoyo["position"] as Vector3).y, 0.03)
+		assert_float(limite.position.y).is_equal_approx((golpe["position"] as Vector3).y, 0.03)
 		assert_float(cuerpo.global_position.y).is_less(posiciones[indice].y)
 		var grupo: MultiMeshInstance3D = (manual.get("_sueltos") as Array)[
 			(cuerpo.datos as UnidadDeProducto).producto.id
@@ -348,9 +352,36 @@ func test_tres_abandonadas_quedan_adentro_sin_solidos_y_pausan_la_caida() -> voi
 	assert_array(manual.call("unidades_sueltas")).contains_exactly_in_any_order(cuerpos)
 	for indice in cuerpos.size():
 		assert_that(cuerpos[indice].global_position).is_equal(antes[indice])
+	await _llega_el_comprador_siguiente_y_no_empuja(cuerpos)
 
 
-func test_abandonadas_en_piso_dan_un_desorden_sin_objeto_afuera() -> void:  # AC-CTR-046
+## Tia llega a las 23:30 y la abertura vuelve a ser sólida: lo que quedó sobre el apoyo no puede
+## quedar adentro de ella.
+func _llega_el_comprador_siguiente_y_no_empuja(cuerpos: Array[ObjetoAgarrable]) -> void:
+	var ventana: Node3D = _almacen.get_node("Estructura/Ventanilla")
+	var hueco: StaticBody3D = ventana.get("_hueco")
+	assert_int(hueco.collision_layer).is_equal(0)
+	var antes: Array[Vector3] = []
+	for cuerpo in cuerpos:
+		antes.append(cuerpo.global_position)
+	RelojDePrueba.avanzar_hasta(_almacen.get("_reloj"), Vector2i(23, 30))
+	assert_bool((ventana.get("comprador_visible") as AnimatedSprite3D).visible).is_true()
+	assert_int(hueco.collision_layer).is_equal(ReglasDeLosObjetos.CAPA_DEL_HUECO)
+	for _cuadro in 90:
+		await get_tree().physics_frame
+	_afirmar_apoyos_libres(cuerpos)
+	var forma_del_hueco: CollisionShape3D = hueco.get_child(0)
+	var volumen_del_hueco := (
+		forma_del_hueco.global_transform * forma_del_hueco.shape.get_debug_mesh().get_aabb()
+	)
+	for indice in cuerpos.size():
+		var forma: CollisionShape3D = cuerpos[indice].get_node("Forma")
+		var huella := forma.global_transform * forma.shape.get_debug_mesh().get_aabb()
+		assert_bool(huella.intersects(volumen_del_hueco)).is_false()
+		assert_float(cuerpos[indice].global_position.distance_to(antes[indice])).is_less(0.05)
+
+
+func test_abandonadas_en_el_apoyo_dan_un_desorden_sin_objeto_afuera() -> void:  # AC-CTR-046
 	var cuerpos := await _abandonar_tin()
 	assert_array(cuerpos).has_size(3)
 	_afirmar_cierre_abandonadas(true)
@@ -455,7 +486,8 @@ func test_cero_y_solo_ticket_no_dejan_unidades() -> void:  # AC-CTR-040, AC-STK-
 	RelojDePrueba.avanzar_hasta(reloj, Vector2i(23, 30))
 	ventana.call("abrir")
 	_pulsar_comprador()
-	_pulsar_comprador()
+	while not atenciones.puede_abandonar():
+		_pulsar_comprador()
 	var caja: CajaRegistradora = _almacen.get("_caja")
 	caja.pedir_borrar()
 	for producto in atenciones.atencion().comprador().pedido().productos():
@@ -503,9 +535,29 @@ func test_un_salto_desde_apertura_registra_cero_al_cerrar() -> void:  # AC-STK-0
 	assert_bool(reloj.obligatoria(Tarea.Tipo.CAJA).completada()).is_false()
 
 
-func _afirmar_apoyos_libres(cuerpos: Array[ObjetoAgarrable]) -> void:
+func _apoyo() -> Marker3D:
+	return _almacen.get_node("Estructura/Ventanilla").get("apoyo_de_entregas")
+
+
+func _es_el_apoyo(colisionador: Object, apoyo: Marker3D) -> bool:
+	return colisionador is Node and (colisionador as Node).get_parent() == apoyo
+
+
+func _rid_del_apoyo(apoyo: Marker3D) -> RID:
+	for hijo in apoyo.get_children():
+		if hijo is CollisionObject3D:
+			return (hijo as CollisionObject3D).get_rid()
+	return RID()
+
+
+## Con `sobre_el_apoyo` falso, lo único firme debajo de cada cuerpo es el piso del local. Con
+## `puede_bajar`, lo que no entró en el apoyo puede estar en el piso: es lo que BR-CTR-027 admite.
+func _afirmar_apoyos_libres(
+	cuerpos: Array[ObjetoAgarrable], sobre_el_apoyo: bool = true, puede_bajar: bool = false
+) -> void:
 	var manual: Node3D = _almacen.get("_reposicion_manual")
 	var suelo: StaticBody3D = manual.get("suelo")
+	var apoyo := _apoyo()
 	var espacio := manual.get_world_3d().direct_space_state
 	var lector: Habitaciones = _almacen.get("_habitaciones")
 	var excluidos: Array[RID] = []
@@ -518,7 +570,7 @@ func _afirmar_apoyos_libres(cuerpos: Array[ObjetoAgarrable]) -> void:
 		consulta.shape = forma.shape
 		consulta.transform = forma.global_transform
 		consulta.collision_mask = cuerpo.collision_mask
-		consulta.exclude = [cuerpo.get_rid(), suelo.get_rid()]
+		consulta.exclude = [cuerpo.get_rid(), suelo.get_rid(), _rid_del_apoyo(apoyo)]
 		consulta.margin = 0.0
 		assert_array(espacio.intersect_shape(consulta)).is_empty()
 		var rayo := PhysicsRayQueryParameters3D.create(
@@ -527,11 +579,15 @@ func _afirmar_apoyos_libres(cuerpos: Array[ObjetoAgarrable]) -> void:
 			cuerpo.collision_mask
 		)
 		rayo.exclude = excluidos
-		var piso := espacio.intersect_ray(rayo)
-		assert_object(piso.get("collider")).is_same(suelo)
-		if not piso.is_empty():
-			var limites := forma.global_transform * forma.shape.get_debug_mesh().get_aabb()
-			assert_float(limites.position.y).is_equal_approx((piso["position"] as Vector3).y, 0.03)
+		var golpe := espacio.intersect_ray(rayo)
+		var firme: Object = golpe.get("collider")
+		if puede_bajar:
+			assert_bool(_es_el_apoyo(firme, apoyo) or firme == suelo).is_true()
+		else:
+			assert_bool(_es_el_apoyo(firme, apoyo)).is_equal(sobre_el_apoyo)
+			assert_bool(firme == suelo).is_equal(not sobre_el_apoyo)
+		var limites := forma.global_transform * forma.shape.get_debug_mesh().get_aabb()
+		assert_float(limites.position.y).is_equal_approx((golpe["position"] as Vector3).y, 0.03)
 
 
 func test_dos_vencimientos_en_un_avance_separan_cinco_cuerpos() -> void:  # AC-CTR-040, AC-CTR-046
@@ -547,7 +603,8 @@ func test_dos_vencimientos_en_un_avance_separan_cinco_cuerpos() -> void:  # AC-C
 	)
 	RelojDePrueba.avanzar_hasta(reloj, Vector2i(22, 0))
 	_pulsar_comprador()
-	_pulsar_comprador()
+	while not atenciones.puede_abandonar():
+		_pulsar_comprador()
 	for producto in atenciones.atencion().comprador().pedido().productos():
 		_almacen.get("_reposicion_manual").call("retirar", producto.id)
 		var cuerpo := agarre.cuerpo_sostenido() as ObjetoAgarrable
@@ -572,7 +629,7 @@ func test_dos_vencimientos_en_un_avance_separan_cinco_cuerpos() -> void:  # AC-C
 		huellas.append(huella)
 	for _cuadro in 90:
 		await get_tree().physics_frame
-	_afirmar_apoyos_libres(cuerpos)
+	_afirmar_apoyos_libres(cuerpos, true, true)
 	RelojDePrueba.avanzar_turno(reloj, 0.0)
 	assert_array(emisiones).has_size(2)
 	(
@@ -581,33 +638,26 @@ func test_dos_vencimientos_en_un_avance_separan_cinco_cuerpos() -> void:  # AC-C
 	)
 
 
-func test_el_sector_proximo_ocupado_busca_otro_apoyo_interior() -> void:  # AC-CTR-046
-	var cuerpos := await _entregar_a_tin()
-	var ventana: Node3D = _almacen.get_node("Estructura/Ventanilla")
-	ventana.call("cerrar")
-	var punto: Marker3D = ventana.get("piso_de_entregas")
-	var jugador: CharacterBody3D = _almacen.get("_jugador")
-	jugador.global_position += ventana.global_basis.x * 1.1
+## Un bulto apoyado en el centro del apoyo, del ancho que pide el caso.
+func _bulto_sobre_el_apoyo(ancho: float) -> CollisionShape3D:
 	var bloque := StaticBody3D.new()
 	_almacen.add_child(bloque)
 	var forma := CollisionShape3D.new()
 	var caja := BoxShape3D.new()
-	caja.size = Vector3(1.2, 0.6, 1.2)
+	caja.size = Vector3(ancho, 0.3, 0.3)
 	forma.shape = caja
 	bloque.add_child(forma)
-	bloque.global_position = (
-		punto.global_position + Vector3.UP * caja.size.y / 2.0 - ventana.global_basis.z * 0.35
-	)
+	bloque.global_position = _apoyo().global_position + Vector3.UP * caja.size.y / 2.0
+	return forma
+
+
+func test_el_centro_del_apoyo_ocupado_busca_otro_lugar_del_apoyo() -> void:  # AC-CTR-046
+	var cuerpos := await _entregar_a_tin()
+	var forma := _bulto_sobre_el_apoyo(0.5)
+	var caja := forma.shape as BoxShape3D
+	var ventana: Node3D = _almacen.get_node("Estructura/Ventanilla")
 	for _cuadro in 3:
 		await get_tree().physics_frame
-	var prueba := PhysicsShapeQueryParameters3D.new()
-	prueba.shape = caja
-	prueba.transform = forma.global_transform
-	prueba.collision_mask = jugador.collision_mask
-	var suelo: StaticBody3D = _almacen.get("_reposicion_manual").get("suelo")
-	prueba.exclude = [bloque.get_rid(), suelo.get_rid()]
-	prueba.margin = 0.0
-	assert_array(jugador.get_world_3d().direct_space_state.intersect_shape(prueba)).is_empty()
 	RelojDePrueba.avanzar_hasta(_almacen.get("_reloj"), Vector2i(23, 0))
 	for _cuadro in 90:
 		await get_tree().physics_frame
@@ -617,21 +667,27 @@ func test_el_sector_proximo_ocupado_busca_otro_apoyo_interior() -> void:  # AC-C
 	)
 	_afirmar_apoyos_libres(cuerpos)
 	var ocupado := forma.global_transform * caja.get_debug_mesh().get_aabb()
-	var apoyo_lateral := false
 	for cuerpo in cuerpos:
-		var lateral := ventana.global_basis.x.dot(cuerpo.global_position - punto.global_position)
-		apoyo_lateral = apoyo_lateral or absf(lateral) > caja.size.x / 2.0
+		var lateral := ventana.global_basis.x.dot(cuerpo.global_position - _apoyo().global_position)
+		assert_float(absf(lateral)).is_greater(caja.size.x / 2.0)
 		var volumen: CollisionShape3D = cuerpo.get_node("Forma")
-		(
-			assert_bool(
-				(volumen.global_transform * volumen.shape.get_debug_mesh().get_aabb()).intersects(
-					ocupado
-				)
-			)
-			. is_false()
-		)
+		var huella := volumen.global_transform * volumen.shape.get_debug_mesh().get_aabb()
+		assert_bool(huella.intersects(ocupado)).is_false()
 
-	assert_bool(apoyo_lateral).is_true()
+
+func test_sin_lugar_en_el_apoyo_bajan_al_local_sin_atravesar_nada() -> void:  # AC-CTR-046
+	var cuerpos := await _entregar_a_tin()
+	_bulto_sobre_el_apoyo(1.4)
+	for _cuadro in 3:
+		await get_tree().physics_frame
+	RelojDePrueba.avanzar_hasta(_almacen.get("_reloj"), Vector2i(23, 0))
+	for _cuadro in 90:
+		await get_tree().physics_frame
+	(
+		assert_array(_almacen.get("_reposicion_manual").call("unidades_sueltas"))
+		. contains_exactly_in_any_order(cuerpos)
+	)
+	_afirmar_apoyos_libres(cuerpos, false)
 
 
 func _enfocar_abandonada(cuerpo: ObjetoAgarrable) -> bool:
@@ -670,7 +726,8 @@ func _enfocar_abandonada(cuerpo: ObjetoAgarrable) -> bool:
 			await get_tree().physics_frame
 		jugador.call("_leer_la_mira")
 		if jugador.get("_enfocado") == cuerpo:
-			assert_float(camara.global_position.distance_to(cuerpo.global_position)).is_less(
+			var ojo := camara.global_position
+			assert_float(ReglasDelJugador.proximidad(ojo, cuerpo.global_position)).is_less(
 				ReglasDelJugador.ALCANCE_DE_LA_MIRA
 			)
 			return true

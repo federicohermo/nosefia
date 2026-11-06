@@ -5,9 +5,9 @@
 ## `Catalogo.de(id)` que devuelve `null`, y nada más lo caza.
 extends GdUnitTestSuite
 
-## Los 31 nombres, en el orden del enum. Fija las dos mitades del criterio del catálogo: los 23 de
+## Los 32 nombres, en el orden del enum. Fija las dos mitades del criterio del catálogo: los 23 de
 ## antes no cambian de nombre ni de lugar —una partida guardada nombra al producto por su
-## número— y los 8 que entran van al final, con el nombre de su ficha.
+## número— y los 9 que entran van al final, con el nombre de su ficha.
 const NOMBRES: Array[String] = [
 	"Actroncito",
 	"Durextra",
@@ -16,7 +16,7 @@ const NOMBRES: Array[String] = [
 	"Laysnnt",
 	"Malbardo",
 	"Progres",
-	"Jorgillo",
+	"Jorgillata",
 	"Arvecor",
 	"Chisitos",
 	"Oremos",
@@ -43,7 +43,7 @@ const NOMBRES: Array[String] = [
 	"Poético",
 ]
 
-## Los precios de los 8 que entran. La ficha no los trae: los decidió el issue que los sumó, en el
+## Los precios de los 9 que entran. La ficha no los trae: los decidió el issue que los sumó, en el
 ## rango de los que ya estaban.
 const PRECIOS_NUEVOS := {
 	"Cosa de Maní": 700,
@@ -57,7 +57,7 @@ const PRECIOS_NUEVOS := {
 	"Poético": 1800,
 }
 
-## La sonoridad de los 8 que entran, de la columna «Familia sonora» de su ficha.
+## La sonoridad de los 9 que entran, de la columna «Familia sonora» de su ficha.
 const SONORIDADES_NUEVAS := {
 	"Cosa de Maní": EntradaSonora.Sonoridad.ENVOLTORIO_PLASTICO,
 	"Duronga": EntradaSonora.Sonoridad.CAJITA,
@@ -74,7 +74,14 @@ const SONORIDADES_NUEVAS := {
 ## demás van en caja grande. **No sale del volumen de la unidad**: Actroncito es una caja grande
 ## de remedio y va en caja chica, y Zucarachas al revés.
 const EN_CAJA_CHICA: Array[String] = [
-	"Actroncito", "Arvecor", "Durextra", "Jorgillo", "Malbardo", "Duronga", "Oaaaa", "Cosa de Maní"
+	"Actroncito",
+	"Arvecor",
+	"Durextra",
+	"Jorgillata",
+	"Malbardo",
+	"Duronga",
+	"Oaaaa",
+	"Cosa de Maní"
 ]
 
 

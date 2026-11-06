@@ -1,6 +1,8 @@
 ## Cablea el programa y coloca los papeles en la ranura a escala física real.
 extends StaticBody3D
 
+signal apertura_rechazada_sin_luz
+
 const JugadorDelLocal := preload("res://src/escenas/jugador.gd")
 const PAPEL := preload("res://src/escenas/objetos/ticket.tscn")
 const EscrituraDelTicket := preload("res://src/escenas/objetos/escritura_del_ticket.gd")
@@ -40,8 +42,6 @@ func _ready() -> void:
 	caja.programa_arrancado.connect(
 		func(_manual: bool) -> void: _restante = Reglas.DURACION_DEL_TURNO
 	)
-	jugador.examen.examen_iniciado.connect(_al_examinar)
-	jugador.examen.examen_terminado.connect(_al_terminar_el_examen)
 	agarre.objeto_agarrado.connect(_al_agarrar)
 	agarre.objeto_soltado.connect(_al_soltar)
 	jugador.uso_pedido.connect(_al_usar)
@@ -65,6 +65,8 @@ func _agregar_papel_para_calentar() -> void:
 func accionar() -> void:
 	if con_luz:
 		abrir()
+	else:
+		apertura_rechazada_sin_luz.emit()
 
 
 func abrir() -> void:
@@ -79,6 +81,17 @@ func cerrar() -> void:
 	_abierta = false
 	programa.ocultar()
 	jugador.reanudar()
+
+
+func esta_abierta() -> bool:
+	return _abierta
+
+
+## Lo pide el nodo de la pausa. Una lista desplegada se cierra primero; la caja, con el Esc
+## siguiente.
+func cerrar_con_esc() -> void:
+	if not programa.cerrar_las_listas_abiertas():
+		_cerrar_desde_entrada()
 
 
 func _input(evento: InputEvent) -> void:
@@ -168,17 +181,6 @@ func _al_soltar(objeto: Node3D) -> void:
 	var papel := objeto as ObjetoAgarrable
 	if papel != null and _tickets.has(papel):
 		_escalar(papel, 1.0)
-
-
-func _al_examinar(objeto: Node3D) -> void:
-	var papel := objeto as ObjetoAgarrable
-	if papel != null and _tickets.has(papel):
-		_escalar(papel, ReglasDeLosObjetos.ESCALA_DEL_TICKET_AL_EXAMINAR)
-
-
-func _al_terminar_el_examen() -> void:
-	if is_instance_valid(_papel):
-		_escalar(_papel, ReglasDeLosObjetos.ESCALA_DEL_TICKET_EN_MANO)
 
 
 ## El cuerpo del papel conserva su tamaño: se escalan su malla y su colisión, como en

@@ -24,11 +24,20 @@ signal puerta_trabada(puerta: Node3D)
 signal porton_trabado(puerta: Node3D)
 signal salida_solicitada
 
+## Una trabada se abrió porque el primario la encontró con su objeto en la mano (BR-PLY-060). No
+## emite `puerta_abierta`: la forzada suena con el objeto que la abrió.
+signal puerta_forzada(puerta: Node3D)
+signal puerta_forzada_con_llave(puerta: Node3D)
+signal puerta_forzada_con_palanca(puerta: Node3D)
+
 ## La entrada preguntó si se puede salir y la respuesta fue no. Se suma a `puerta_trabada`.
 signal salida_rechazada
 
 ## Qué aviso da una puerta que no abre.
 enum Traba { NINGUNA, PUERTA, PORTON }
+
+## Metros que el sensor de la compuerta se adelanta a cada cara de la hoja.
+const ALCANCE_DEL_EMPUJE := 0.25
 
 ## Metros. Lo menos que se le exige a un objeto para decir que la hoja lo puede correr.
 const CORRIMIENTO_MINIMO := 0.05
@@ -46,6 +55,11 @@ const CORRIMIENTO_MINIMO := 0.05
 ## `MeshInstance3D` hijos de este cuerpo, que no tiene ninguno: la puerta se vería sin contorno.
 @export var mallas: Array[MeshInstance3D] = []
 
+## La compuerta del mostrador: además del clic, el cuerpo la abre al pasar. Sólo gira hacia
+## `sentido_del_giro`, el lado de sus bisagras: desde el otro lado no cede. Cerrarla es siempre
+## a mano.
+@export var se_abre_al_empujar := false
+
 ## El setter y no `_ready()`: los tests tocan la puerta sin meter la escena al árbol.
 @export var traba := Traba.NINGUNA:
 	set(valor):
@@ -56,6 +70,9 @@ const CORRIMIENTO_MINIMO := 0.05
 ## se la declara por su ruta; una puerta sin identidad no dice nada al examinarla.
 var identidad: StringName = &""
 var consultar_salida: Callable
+
+## Qué lleva el jugador en la mano, o `null`. Lo declara la escena a la puerta que cede a un objeto.
+var lo_que_se_lleva: Callable
 
 var _puerta := Puerta.new()
 
@@ -87,6 +104,48 @@ func _ready() -> void:
 	_bisagra = _cerrada * punto
 	_desde_la_hoja = hoja.global_transform.affine_inverse() * global_transform
 	top_level = true
+	if se_abre_al_empujar:
+		_armar_el_empuje()
+
+
+## Un sensor del tamaño de la hoja y más grueso que ella: el cuerpo lo toca antes que a la hoja,
+## y la hoja ya está girando cuando llega.
+func _armar_el_empuje() -> void:
+	var caja := hoja.get_aabb()
+	var espesor := 0 if caja.size.x < caja.size.z else 2
+	var tamano := caja.size
+	tamano[espesor] += 2.0 * ALCANCE_DEL_EMPUJE
+	var forma := BoxShape3D.new()
+	forma.size = tamano
+	var volumen := CollisionShape3D.new()
+	volumen.shape = forma
+	volumen.position = caja.get_center()
+	var sensor := Area3D.new()
+	sensor.collision_layer = 0
+	sensor.add_child(volumen)
+	sensor.body_entered.connect(_al_tocar)
+	# Diferido: en `_ready()` la hoja todavía está armando sus hijos y rechaza uno nuevo.
+	hoja.add_child.call_deferred(sensor)
+
+
+func _al_tocar(cuerpo: Node3D) -> void:
+	if not cuerpo is CharacterBody3D:
+		return
+	# La punta libre de la hoja se aleja de quien empuja: gira hacia el lado de la hoja opuesto
+	# al cuerpo.
+	var padre := hoja.get_parent_node_3d()
+	var caja := hoja.get_aabb()
+	var espesor := Vector3.RIGHT if caja.size.x < caja.size.z else Vector3.BACK
+	var punta := _cerrada * caja.get_center() - _bisagra
+	var normal := _cerrada.basis * espesor
+	var lejos := (
+		normal
+		* signf(normal.dot(_cerrada * caja.get_center() - padre.to_local(cuerpo.global_position)))
+	)
+	var hacia := 1 if Vector3.UP.cross(punta).dot(lejos) >= 0.0 else -1
+	if hacia != sentido_del_giro or not _puerta.empujar():
+		return
+	puerta_abierta.emit(self)
 
 
 func accionar() -> void:
@@ -95,6 +154,19 @@ func accionar() -> void:
 			salida_solicitada.emit()
 			return
 		salida_rechazada.emit()
+	if lo_que_se_lleva.is_valid():
+		var llevado: ObjetoDelAlmacen = lo_que_se_lleva.call()
+		if _puerta.forzar(llevado):
+			(
+				(
+					puerta_forzada_con_llave
+					if llevado.id == Partida.LLAVE
+					else puerta_forzada_con_palanca
+				)
+				. emit(self)
+			)
+			puerta_forzada.emit(self)
+			return
 	alternar()
 
 

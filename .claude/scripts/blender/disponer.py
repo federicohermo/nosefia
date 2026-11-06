@@ -122,6 +122,16 @@ def bloque(copias, base_del_modelo, clave):
     return ordenar_copias_por_frente(flotantes, FRENTES[cara])
 
 
+def mallas_declaradas():
+    """La malla que ya declara cada producto, por su id.
+
+    Un producto renombrado en el catálogo conserva su archivo: `extraer_mallas.gd` sobrescribe el
+    recurso declarado, y otro nombre dejaría la escena apuntando a un archivo que no existe.
+    """
+    texto = CONTENIDO.read_text(encoding="utf-8")
+    return {int(i): ruta for ruta, i in re.findall(r'path="([^"]+)" id="malla(\d+)"', texto)}
+
+
 def principal():
     if hasattr(sys.stdout, "reconfigure"):
         sys.stdout.reconfigure(encoding="utf-8", errors="replace")
@@ -145,6 +155,8 @@ def principal():
     identidades = []
     bases = {}
     validar_tandas({clave: len(tandas) for clave, tandas in por_producto.items()})
+    declaradas = mallas_declaradas()
+    rutas = [declaradas.get(i, ruta_de_la_malla(p.nombre)) for i, p in enumerate(PRODUCTOS)]
     for producto_id, p in enumerate(PRODUCTOS):
         unidad = bpy.data.objects[p.objeto]
         if not any(sufijo in unidad.name for sufijo in SUFIJOS_DE_IMPORTACION):
@@ -153,7 +165,7 @@ def principal():
         identidades.append(nombre_en_godot(unidad.name))
         base, origen = en_godot(unidad)
         bases[p.clave] = base
-        contenido.append(NodoDeMalla(p.nombre, ruta_de_la_malla(p.nombre), base, origen,
+        contenido.append(NodoDeMalla(p.nombre, rutas[producto_id], base, origen,
                                     punto_en_godot(p.frente), producto_id))
         if p.clave in SOLO_DEPOSITO:
             principales.append([])
@@ -170,7 +182,6 @@ def principal():
         filas_de_adelante.append(sum(1 for c in copias if str(c["fila"]) == "adelante"))
     guias = []
     nodos_de_guia = []
-    nombres = {p.clave: p.nombre for p in PRODUCTOS}
     productos_de_las_guias = []
     filas_de_adelante_de_las_guias = []
     indices = {p.clave: indice for indice, p in enumerate(PRODUCTOS)}
@@ -182,7 +193,7 @@ def principal():
         productos_de_las_guias.append(indices[producto])
         filas_de_adelante_de_las_guias.append(adelante)
         nodos_de_guia.append(
-            NodoDeMalla(f"Guia{numero:02d}", ruta_de_la_malla(nombres[producto]), base, origen)
+            NodoDeMalla(f"Guia{numero:02d}", rutas[indices[producto]], base, origen)
         )
     propio, script = uids(DISPOSICION.read_text(encoding="utf-8"))
     escribir(

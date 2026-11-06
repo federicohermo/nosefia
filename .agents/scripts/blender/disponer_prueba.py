@@ -1,343 +1,164 @@
-"""Mide el mapa de prueba sin guardar el blend ni regenerar el mapa completo."""
+"""Escribe el mapa de las jornadas de prueba sobre los estantes del mapa completo. Corre adentro
+de Blender y no guarda el `.blend`.
+
+    blender <fuente>.blend --background --python .claude/scripts/blender/disponer_prueba.py
+
+Cada cara del mapa de prueba se llena de nuevo sobre los estantes del mapa completo, con el
+mismo frente y a la misma altura. Cuántas unidades lleva cada producto, cada cuánto y en qué punto
+del estante lo declara `FRENTES`, igual en todos los estantes de la cara.
+
+Cada producto copia el giro de una tanda real suya: la de la misma columna de la cara, y si la cara
+no tiene ninguna, la de cualquier otro mueble. Su tanda principal es la más baja de las que eran
+principales en el mapa completo: queda a la altura de la mano.
+"""
 
 import argparse
 import re
 import sys
-from collections import Counter
-from itertools import combinations
 from pathlib import Path
-from statistics import mean
 
-import bmesh
-import bpy
-from mathutils import Vector
-from mathutils.bvhtree import BVHTree
+import bpy  # type: ignore[import-not-found]  # sólo existe adentro de Blender
+from mathutils import Matrix, Vector  # type: ignore[import-not-found]
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
-import acomodar
-import disponer
-from lib.consola import configurar
-from lib.apoyos_del_modelo import mallas_del_glb
-from lib.gondola import (
-    AIRE, MARGEN, escribir_disposicion, fondo_del_estante, nombre_en_godot, punto_en_godot,
-    separar_filas,
-)
-from lib.reparto import PRODUCTOS, partes
-from lib.reparto_de_prueba import (
-    ESTANTES_DE_PRUEBA, RETIROS_POR_ESTANTE_DE_PRUEBA, bandas_del_nivel, bases_del_contenido,
-    validar_identidades_de_prueba,
-    validar_reparto_de_prueba,
-    centros_con_referencia, pasos_del_estante, tramo_con_referencia,
+import disponer  # noqa: E402
+from lib.consola import configurar  # noqa: E402
+from lib.gondola import escribir_disposicion, separar_filas  # noqa: E402
+from lib.reparto import PRODUCTOS, partes, producto  # noqa: E402
+from lib.reparto_de_prueba import (  # noqa: E402
+    CARAS, FRENTES, bases_del_contenido, validar_identidades_de_prueba,
 )
 
 RAIZ = Path(__file__).resolve().parents[3]
 DESTINO = RAIZ / "src/escenas/puestos/disposicion_de_prueba.tres"
 
 
-def referencias_del_mapa_completo(envases):
-    huecos, retiros, aires = {}, {}, {}
-    tandas = disponer.tandas_del_blend()
-    for letra in sorted({partes(clave)[0] for clave in ESTANTES_DE_PRUEBA}):
-        _, bm, estantes = medir(letra, envases)
-        for clave, copias in tandas.items():
-            estante, _ = clave.split("/")
-            if estante not in estantes:
-                continue
-            marco = estantes[estante]
-            por_fila = {}
-            for copia in copias:
-                puntos = [copia.matrix_world @ v.co for v in copia.data.vertices]
-                vs = [(p - marco.origen).dot(marco.v) for p in puntos]
-                por_fila.setdefault(copia["fila"], []).extend(vs)
-            if "atras" in por_fila:
-                aire = min(por_fila["atras"]) - max(por_fila["adelante"])
-                aires.setdefault(str(copias[0]["producto"]), []).append(aire)
-            frontales = [c for c in copias if c["fila"] == "adelante"]
-            limites = []
-            for copia in frontales:
-                puntos = [copia.matrix_world @ v.co for v in copia.data.vertices]
-                us = [(p - marco.origen).dot(marco.u) for p in puntos]
-                vs = [(p - marco.origen).dot(marco.v) for p in puntos]
-                limites.append((min(us), max(us), min(vs)))
-            limites.sort()
-            retiro = min(l[2] for l in limites)
-            retiros[estante] = min(retiros.get(estante, retiro), retiro)
-            if len(limites) > 1 and not copias[0]["fija"]:
-                huecos[str(copias[0]["producto"])] = mean(
-                    b[0] - a[1] for a, b in zip(limites, limites[1:])
-                )
-        bm.free()
-    return huecos, retiros, {p: mean(v) for p, v in aires.items()}
+class Tramo:
+    """El lugar de una tanda: su frente, su base y su largo, en los ejes de su estante."""
+
+    def __init__(self, copias):
+        adelante = [c for c in copias if c["fila"] == "adelante"]
+        modelo = producto(str(copias[0]["producto"]))
+        giro = adelante[0].matrix_world.to_3x3()
+        self.normal = (giro @ Vector(modelo.arriba)).normalized()
+        self.v = -(giro @ Vector(modelo.frente)).normalized()
+        self.u = self.v.cross(self.normal).normalized()
+        puntos = [c.matrix_world @ v.co for c in adelante for v in c.data.vertices]
+        self.origen = (self.u * min(p.dot(self.u) for p in puntos)
+                       + self.v * min(p.dot(self.v) for p in puntos)
+                       + self.normal * min(p.dot(self.normal) for p in puntos))
+
+    def marco(self):
+        """De los ejes del estante al mundo: u a lo largo, v hacia el fondo y la normal arriba."""
+        marco = Matrix((self.u, self.v, self.normal)).transposed().to_4x4()
+        marco.translation = self.origen
+        return marco
 
 
-def colocador_de_prueba(huecos, retiros, aires, reglas):
-    """Reserva márgenes y aire antes de calcular las columnas de cada región."""
-    aires = {p: max(a, reglas["AIRE_MINIMO_ENTRE_FILAS"]) for p, a in aires.items()}
-
-    def colocar(estante, izquierda, largo, envases, cuentas, desde):
-        productos = ESTANTES_DE_PRUEBA[estante.clave]
-        pasos = pasos_del_estante(tuple(t.producto for t in productos), huecos)
-        referencia = retiros[estante.clave]
-        inicio, fin = izquierda, izquierda + largo
-        letra, cara, nivel = partes(estante.clave)
-        aire_de_filas = [None] * len(productos)
-        entre_caras = None
-        if letra in ("A", "B"):
-            extremos, huecos_extremos = (0.0, 0.0), (0.0, 0.0)
-            if cara in ("norte", "sur"):
-                aire_de_filas = [aires.get(t.producto, AIRE) for t in productos]
-                extra = max((a - AIRE for t, a in zip(productos, aire_de_filas)
-                             if t.cantidad_de_filas > 1), default=0.0)
-                estante.fondo += max(0, referencia - MARGEN) + extra
-                inicio = max(inicio, reglas["MARGEN_LATERAL_DE_EXHIBICION"])
-                fin = min(fin, estante.largo - reglas["MARGEN_LATERAL_DE_EXHIBICION"])
-            else:
-                primera, ultima = ("norte", "sur") if cara == "oeste" else ("sur", "norte")
-                claves = [f"{letra}.{c}.{nivel}" for c in (primera, ultima)]
-                extremos = tuple(retiros[c] for c in claves)
-                huecos_extremos = tuple(
-                    max(
-                        (aires.get(t.producto, AIRE) - AIRE) * (t.cantidad_de_filas - 1)
-                        for t in ESTANTES_DE_PRUEBA[c]
-                    ) for c in claves
-                )
-                entre_caras = tuple(
-                    max(reglas["AIRE_MINIMO_ENTRE_CARAS"],
-                        max(huecos[t.producto] for t in ESTANTES_DE_PRUEBA[c]),
-                        max(pasos))
-                    for c in claves
-                )
-            inicio, fin = tramo_con_referencia(
-                estante.largo, inicio, fin - inicio, referencia, extremos, huecos_extremos,
-                cabecera=cara in ("norte", "sur"),
-            )
-        try:
-            columnas = centros_con_referencia(
-                fin - inicio, envases, cuentas, pasos, entre_caras,
-                minimo=reglas["SEPARACION_MINIMA_DE_EXHIBICION"],
-                aire_central=reglas["AIRE_MINIMO_ENTRE_TANDAS"] if entre_caras else 0.0,
-            )
-        except ValueError as error:
-            raise ValueError(f"{estante.clave}: {error}") from error
-        desde = max(desde, referencia - MARGEN)
-        return [[inicio - izquierda + u for u in fila] for fila in columnas], desde, aire_de_filas
-
-    return colocar
+def columnas_de_prueba(cara, tandas):
+    """Qué producto va en cada columna de la cara: el primero del estante, en la primera."""
+    tramos = {int(clave.split("/")[1]): Tramo(copias) for clave, copias in tandas.items()}
+    columnas = sorted(tramos, key=lambda c: tramos[c].origen.dot(tramos[c].u))
+    productos = sorted(FRENTES[cara], key=lambda p: FRENTES[cara][p].medio)
+    return dict(zip(columnas, productos))
 
 
-def malla_evaluada(objeto):
-    evaluado = objeto.evaluated_get(bpy.context.evaluated_depsgraph_get())
-    malla = evaluado.to_mesh()
-    bm = bmesh.new()
-    try:
-        bm.from_mesh(malla)
-    finally:
-        evaluado.to_mesh_clear()
-    return bm
+def molde_de(producto, cara, columna, completo):
+    """La tanda del producto que se copia: la de la misma columna, la de la cara o cualquiera."""
+    def preferencia(clave):
+        letra, de_la_cara, _ = partes(clave.split("/")[0])
+        return (f"{letra}.{de_la_cara}" != cara, int(clave.split("/")[1]) != columna, clave)
+
+    claves = [c for c, copias in completo.items() if str(copias[0]["producto"]) == producto]
+    if not claves:
+        raise ValueError(f"{producto}: no está en el mapa completo, no hay tanda que copiar")
+    return completo[min(claves, key=preferencia)]
 
 
-def comprobar_modelo():
-    nombres = [nombre_en_godot(n) for n in acomodar.MUEBLES.values()]
-    glb = mallas_del_glb(
-        (RAIZ / "assets/models/SEPT_JUEGOS_PROTOTIPO.glb").read_bytes(), nombres
-    )
-    for nombre, letra in zip(nombres, acomodar.MUEBLES):
-        objeto = bpy.data.objects[acomodar.MUEBLES[letra]]
-        evaluado = objeto.evaluated_get(bpy.context.evaluated_depsgraph_get())
-        malla = evaluado.to_mesh()
-        try:
-            malla.calc_loop_triangles()
-            puntos = [punto_en_godot(tuple(malla.vertices[i].co))
-                      for t in malla.loop_triangles for i in t.vertices]
-            fuente = Counter(tuple(round(v, 5) for v in p) for p in puntos)
-            exportado = Counter(tuple(round(v, 5) for v in p)
-                                for cara in glb[nombre] for p in cara)
-            if fuente != exportado:
-                raise ValueError(f"{nombre}: el apoyo evaluado difiere del GLB")
-            print(f"{nombre}: {len(puntos) // 3} triángulos evaluados coinciden con el GLB")
-        finally:
-            evaluado.to_mesh_clear()
+def llenar(copias, molde, frente):
+    """Las unidades del producto en el estante de una tanda, con el giro de `molde`."""
+    destino, origen = Tramo(copias), Tramo(molde)
+    primera = next(c for c in molde if c["fila"] == "adelante")
+    relativa = origen.marco().inverted() @ primera.matrix_world
+    estante = destino.marco()
+    estante.translation -= destino.u * destino.origen.dot(destino.u)
+    unidad = bpy.data.objects[producto(str(molde[0]["producto"])).objeto]
+    salida = []
+    for i in range(frente.cuantas):
+        lugar = frente.medio + frente.paso * (i - (frente.cuantas - 1) / 2)
+        corrimiento = Matrix.Translation((lugar - relativa.translation.x, 0.0, 0.0))
+        copia = unidad.copy()
+        copia.parent = None
+        copia.matrix_world = estante @ corrimiento @ relativa
+        copia["fila"] = "adelante"
+        salida.append(copia)
+    return salida
 
 
-def medir(letra, envases):
-    objeto = bpy.data.objects[acomodar.MUEBLES[letra]]
-    bm = malla_evaluada(objeto)
-    bm.transform(objeto.matrix_world)
-    bm.faces.ensure_lookup_table()
-    if letra not in ("A", "B"):
-        chapas = []
-        for isla in acomodar._islas(bm):
-            cara = acomodar._cara_de_arriba(isla)
-            if cara is None or acomodar._es_panel(isla, objeto):
-                continue
-            if all("Zocalo" in objeto.material_slots[c.material_index].material.name
-                   for c in isla):
-                continue
-            if (letra in acomodar.HELADERAS
-                    and cara.calc_center_median().z > acomodar.TECHO_DE_LA_HELADERA):
-                continue
-            chapas.append((cara.calc_center_median().z, isla, cara))
-        if len(chapas) != 4:
-            bm.free()
-            raise ValueError(f"{letra}: se esperaban cuatro chapas")
-        estantes = {}
-        for nivel, (_, isla, cara) in enumerate(sorted(chapas, key=lambda c: c[0])):
-            clave = f"{letra}.sur.{nivel}"
-            estantes[clave] = acomodar.Estante(clave, isla, cara)
-        return objeto, bm, estantes
-    lado = bm.faces.layers.int.get("lado_de_estante")
-    if lado is None:
-        bm.free()
-        raise ValueError(f"{letra}: faltan las chapas identificadas de la fuente")
-    planos = {}
-    for cara in bm.faces:
-        if cara[lado] and cara.normal.z > 0.999 and cara.calc_area() > 0.1:
-            planos.setdefault(round(cara.calc_center_median().z, 4), []).append(cara)
-    if len(planos) != 4:
-        bm.free()
-        raise ValueError(f"{letra}: se esperaban cuatro planos de apoyo")
-    estantes = {}
-    for nivel, (_, caras) in enumerate(sorted(planos.items())):
-        puntos = [v.co for c in caras for v in c.verts]
-
-        def profundidad(cara):
-            tandas = ESTANTES_DE_PRUEBA[f"{letra}.{cara}.{nivel}"]
-            return fondo_del_estante(
-                [envases[t.producto] for t in tandas], [t.cantidad_de_filas for t in tandas]
-            )
-
-        bandas = bandas_del_nivel(
-            min(p.x for p in puntos), max(p.x for p in puntos),
-            min(p.y for p in puntos), max(p.y for p in puntos),
-            profundidad("norte"), profundidad("sur"),
-        )
-        z = caras[0].verts[0].co.z
-        for cara, banda in bandas.items():
-            clave = f"{letra}.{cara}.{nivel}"
-            estante = acomodar.Estante.__new__(acomodar.Estante)
-            estante.clave = clave
-            estante.isla = caras
-            estante.caras = {c.index for c in caras}
-            estante.normal = Vector((0, 0, 1))
-            estante.mira = acomodar.MIRA[cara]
-            estante.v = -estante.mira
-            estante.u = (-estante.mira).cross(Vector((0, 0, 1))).normalized()
-            esquinas = [Vector((x, y, z))
-                        for x in (banda.x0, banda.x1) for y in (banda.y0, banda.y1)]
-            us = [p.dot(estante.u) for p in esquinas]
-            vs = [p.dot(estante.v) for p in esquinas]
-            estante.origen = estante.u * min(us) + estante.v * min(vs) + Vector((0, 0, z))
-            estante.largo = max(us) - min(us)
-            estante.fondo = max(vs) - min(vs)
-            estantes[clave] = estante
-    return objeto, bm, estantes
+def disponer_cara(cara, de_la_cara, completo):
+    """El producto y las unidades de cada tanda de una cara del mapa de prueba."""
+    productos = columnas_de_prueba(cara, de_la_cara)
+    salida = {}
+    for clave, copias in de_la_cara.items():
+        columna = int(clave.split("/")[1])
+        nuevo = productos[columna]
+        molde = molde_de(nuevo, cara, columna, completo)
+        salida[clave] = (nuevo, llenar(copias, molde, FRENTES[cara][nuevo]))
+    return salida
 
 
 def generar():
-    comprobar_modelo()
     texto_catalogo = (RAIZ / "src/dominio/almacen/catalogo.gd").read_text(encoding="utf-8")
     declaracion = re.search(
         r"const PRODUCTOS_DE_PRUEBA.*?=\s*\[(.*?)\]", texto_catalogo, re.S
     ).group(1)
     validar_identidades_de_prueba(re.findall(r"Producto\.Id\.(\w+)", declaracion))
-    validar_reparto_de_prueba(ESTANTES_DE_PRUEBA)
-    texto_reglas = (RAIZ / "src/dominio/almacen/reglas_del_estante.gd").read_text(encoding="utf-8")
-    reglas = {nombre: float(valor) for nombre, valor in re.findall(
-        r"^const (\w+) := ([0-9.]+)$", texto_reglas, re.M
-    )}
-    huecos, retiros, aires = referencias_del_mapa_completo({
-        p.clave: acomodar.envase_de(p, bpy.data.objects[p.objeto]) for p in PRODUCTOS
-    })
-    fuentes = {p.clave: disponer.en_godot(bpy.data.objects[p.objeto])[0] for p in PRODUCTOS}
+    completo = disponer.tandas_del_blend()
+    por_cara = {}
+    for clave, copias in completo.items():
+        estante = clave.split("/")[0]
+        letra, cara, _ = partes(estante)
+        if f"{letra}.{cara}" in CARAS:
+            por_cara.setdefault(f"{letra}.{cara}", {})[clave] = copias
+    tandas = {}
+    for cara, de_la_cara in sorted(por_cara.items()):
+        for clave, (nuevo, lugar) in disponer_cara(cara, de_la_cara, completo).items():
+            tandas[clave] = (nuevo, not bool(de_la_cara[clave][0]["fija"]), lugar)
+    principales = {}
+    for clave, (nuevo, principal_antes, _) in sorted(
+        tandas.items(), key=lambda t: (partes(t[0].split("/")[0])[2], t[0])
+    ):
+        if principal_antes:
+            principales.setdefault(nuevo, clave)
+    presentes = {p for productos in CARAS.values() for p in productos}
+    if set(principales) != presentes:
+        raise ValueError(f"sin tanda principal: {sorted(presentes - set(principales))}")
     bases = bases_del_contenido(disponer.CONTENIDO.read_text(encoding="utf-8"))
-    for producto, base in bases.items():
-        delta = max(abs(base[i][j] - fuentes[producto][i][j]) for i in range(3) for j in range(3))
-        print(f"{producto}: base horneada contra fuente, diferencia máxima {delta:.9f}")
-        if delta > 0.000002:
-            raise ValueError(f"{producto}: la base horneada difiere de la fuente actual")
-    originales = {p.objeto for p in PRODUCTOS}
-    for objeto in list(bpy.context.scene.objects):
-        if "tanda" in objeto and objeto.name not in originales:
-            bpy.data.objects.remove(objeto, do_unlink=True)
-    acomodar.limpiar_guia()
-    acomodar.preparar_unidades()
-    depsgraph = bpy.context.evaluated_depsgraph_get()
-    for p in PRODUCTOS:
-        unidad = bpy.data.objects[p.objeto]
-        unidad.data = bpy.data.meshes.new_from_object(unidad.evaluated_get(depsgraph))
-        unidad.modifiers.clear()
-    envases = {p.clave: acomodar.envase_de(p, bpy.data.objects[p.objeto]) for p in PRODUCTOS}
-    resumen = {"tandas": 0, "unidades": 0, "choques": [], "cortas": [], "entradas": {}}
-    for letra in sorted({partes(clave)[0] for clave in ESTANTES_DE_PRUEBA}):
-        acomodar.acomodar_mueble(
-            letra, envases, resumen, ESTANTES_DE_PRUEBA, lambda letra: medir(letra, envases),
-            retiros_por_estante=RETIROS_POR_ESTANTE_DE_PRUEBA,
-            colocador=colocador_de_prueba(huecos, retiros, aires, reglas),
-        )
-    if resumen["choques"]:
-        raise ValueError(f"No se publica un reparto con choques: {resumen['choques']}")
-    bpy.context.view_layer.update()
-    tandas = disponer.tandas_del_blend()
-    comprobar_intersecciones(tandas)
-    esperadas = {f"{e}/{i}" for e, ts in ESTANTES_DE_PRUEBA.items() for i in range(len(ts))}
-    if tandas.keys() != esperadas:
-        raise ValueError("El acomodador perdió o agregó tandas del mapa de prueba")
-    principales = [[] for _ in PRODUCTOS]
+    indices = {p.clave: i for i, p in enumerate(PRODUCTOS)}
+    bloques = [[] for _ in PRODUCTOS]
     frontales = [0 for _ in PRODUCTOS]
     guias, productos_guias, frontales_guias = [], [], []
-    indices = {p.clave: i for i, p in enumerate(PRODUCTOS)}
-    for clave, copias in sorted(tandas.items()):
-        producto = str(copias[0]["producto"])
-        estante, columna = clave.split("/")
-        prevista = ESTANTES_DE_PRUEBA[estante][int(columna)]
-        if producto != prevista.producto or bool(copias[0]["fija"]) != prevista.fija:
-            raise ValueError(
-                f"{clave}: {producto}/{bool(copias[0]['fija'])} difiere de "
-                f"{prevista.producto}/{prevista.fija}; {[c.name for c in copias]}"
-            )
-        crudo = PRODUCTOS[indices[producto]]
-        frente_esperado = acomodar.MIRA[partes(estante)[1]]
-        for copia in copias:
-            real = (copia.matrix_world.to_3x3() @ Vector(crudo.frente)).normalized()
-            if real.dot(frente_esperado) < 0.98:
-                raise ValueError(f"{clave}: {copia.name} tiene el frente {tuple(real)}")
-        orden, adelante = separar_filas([str(c["fila"]) for c in copias])
-        if adelante <= 0:
-            raise ValueError(f"{clave}: falta el frontal interactuable")
-        bloque = disponer.bloque([copias[i] for i in orden], bases[producto], clave)
-        indice = indices[producto]
-        if prevista.fija:
-            guias.append(bloque)
-            productos_guias.append(indice)
-            frontales_guias.append(adelante)
+    for clave, (nuevo, _, lugar) in sorted(tandas.items()):
+        orden, adelante = separar_filas([str(c["fila"]) for c in lugar])
+        bloque = disponer.bloque([lugar[i] for i in orden], bases[nuevo], clave)
+        if principales[nuevo] == clave:
+            bloques[indices[nuevo]] = bloque
+            frontales[indices[nuevo]] = adelante
         else:
-            principales[indice] = bloque
-            frontales[indice] = adelante
+            guias.append(bloque)
+            productos_guias.append(indices[nuevo])
+            frontales_guias.append(adelante)
     _, uid_del_script = disponer.uids(disponer.DISPOSICION.read_text(encoding="utf-8"))
     texto = escribir_disposicion(
-        principales, guias, frontales, "uid://cu2p575prueba", uid_del_script,
+        bloques, guias, frontales, "uid://cu2p575prueba", uid_del_script,
         productos_guias, frontales_guias,
     )
-    print(f"{len(tandas)} tandas, {resumen['unidades']} unidades, cero choques")
+    for nuevo, clave in sorted(principales.items()):
+        print(f"{nuevo}: principal en {clave}, {frontales[indices[nuevo]]} de frente")
+    print(f"{len(tandas)} tandas, {len(guias)} fijas")
     return texto + "base_de_guias = 1\n"
-
-
-def comprobar_intersecciones(tandas):
-    cuerpos = []
-    for copias in tandas.values():
-        for copia in copias:
-            puntos = [copia.matrix_world @ v.co for v in copia.data.vertices]
-            limites = tuple((min(p[i] for p in puntos), max(p[i] for p in puntos))
-                            for i in range(3))
-            arbol = BVHTree.FromPolygons(puntos, [list(p.vertices) for p in copia.data.polygons])
-            cuerpos.append((copia.name, limites, arbol))
-    for a, b in combinations(cuerpos, 2):
-        if all(min(a[1][i][1], b[1][i][1]) - max(a[1][i][0], b[1][i][0]) > 1e-6
-               for i in range(3)) and a[2].overlap(b[2]):
-            raise ValueError(f"Se intersecan {a[0]} y {b[0]}")
-    print(f"{len(cuerpos)} unidades sin intersecciones entre sí")
 
 
 def principal():

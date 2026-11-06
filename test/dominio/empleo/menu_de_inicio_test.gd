@@ -34,11 +34,14 @@ func test_con_guardado_continuar_se_habilita() -> void:
 	assert_bool(MenuDeInicio.new(false, true).habilitada(MenuDeInicio.Opcion.CONTINUAR)).is_true()
 
 
-func test_sin_guardado_continuar_y_logros_se_ven_deshabilitadas() -> void:
+func test_sin_guardado_continuar_se_ve_deshabilitada() -> void:
 	var menu := MenuDeInicio.new(false)
-	for opcion: MenuDeInicio.Opcion in [
-		MenuDeInicio.Opcion.CONTINUAR,
-		MenuDeInicio.Opcion.LOGROS,
-	]:
-		assert_bool(menu.opciones().has(opcion)).is_true()
-		assert_bool(menu.habilitada(opcion)).is_false()
+	assert_bool(menu.opciones().has(MenuDeInicio.Opcion.CONTINUAR)).is_true()
+	assert_bool(menu.habilitada(MenuDeInicio.Opcion.CONTINUAR)).is_false()
+
+
+func test_logros_se_habilita_con_o_sin_guardado() -> void:  # AC-ACH-014
+	for hay_guardado: bool in [false, true]:
+		var menu := MenuDeInicio.new(false, hay_guardado)
+		assert_bool(menu.opciones().has(MenuDeInicio.Opcion.LOGROS)).is_true()
+		assert_bool(menu.habilitada(MenuDeInicio.Opcion.LOGROS)).is_true()

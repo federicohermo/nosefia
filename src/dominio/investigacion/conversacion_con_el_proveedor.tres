@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="Conversacion" format=3]
+
+[ext_resource type="Script" path="res://src/dominio/investigacion/conversacion.gd" id="conversacion"]
+[ext_resource type="Texture2D" path="res://assets/ui/manada/celular/hernan.png" id="hernan"]
+
+[resource]
+script = ExtResource("conversacion")
+interlocutor = 1
+imagen = ExtResource("hernan")
+nombre = "Hernán"
+rol = "Proveedor"
+jornada_de_menu = 6
+abre_sin_mensajes = true
+ofrece_pedido = true

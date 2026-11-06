@@ -40,7 +40,7 @@ func test_el_campo_cuelga_del_ojo_y_respeta_el_alcance() -> void:
 	var forma: CollisionShape3D = campo.get_node("Forma")
 	assert_object(forma.shape).is_instanceof(SphereShape3D)
 	assert_vector(campo.position + forma.position).is_equal(Vector3.ZERO)
-	assert_float(forma.shape.radius).is_equal(ReglasDelJugador.ALCANCE_DE_LA_MIRA)
+	assert_float(forma.shape.radius).is_equal_approx(ReglasDelJugador.RADIO_DEL_CAMPO, 1e-6)
 	assert_vector(forma.scale).is_equal(Vector3.ONE)
 	assert_vector(campo.scale).is_equal(Vector3.ONE)
 
@@ -249,3 +249,33 @@ func test_los_brazos_nacen_adentro_de_la_capsula_del_cuerpo() -> void:
 			. override_failure_message("el brazo %s nace fuera de la cápsula" % ruta)
 			. is_less(capsula.radius)
 		)
+
+
+func test_los_joysticks_actuan_fuera_de_su_zona_muerta() -> void:  # AC-PLY-171, AC-PLY-172
+	var jugador := _jugador()
+	var control: ControlDelJugador = jugador.get("_control")
+	var acciones: Array[StringName] = [&"mover_adelante", &"mirar_derecha"]
+	for accion: StringName in acciones:
+		assert_bool(InputMap.has_action(accion)).is_true()
+	Input.action_press(&"mover_adelante", 0.19)
+	Input.action_press(&"mirar_derecha", 0.19)
+	var dentro: Vector2 = jugador.call("_entrada")
+	jugador.call("_mirar_con_el_joystick", 0.5)
+	var yaw_dentro := control.yaw()
+	Input.action_press(&"mover_adelante", 0.21)
+	Input.action_press(&"mirar_derecha", 1.0)
+	var fuera: Vector2 = jugador.call("_entrada")
+	jugador.call("_mirar_con_el_joystick", 0.5)
+	var yaw_fuera := control.yaw()
+	Input.action_release(&"mover_adelante")
+	Input.action_release(&"mirar_derecha")
+	assert_vector(dentro).is_equal(Vector2.ZERO)
+	assert_float(yaw_dentro).is_equal(0.0)
+	assert_float(fuera.y).is_greater(0.0)
+	assert_float(yaw_fuera).is_equal_approx(-ReglasDelJugador.GIRO_DEL_JOYSTICK * 0.5, 1e-5)
+	# Con el control suspendido —AC-PLY-175— el derecho ya no gira la vista.
+	control.suspender()
+	Input.action_press(&"mirar_derecha", 1.0)
+	jugador.call("_mirar_con_el_joystick", 0.5)
+	Input.action_release(&"mirar_derecha")
+	assert_float(control.yaw()).is_equal_approx(yaw_fuera, 1e-5)

@@ -17,8 +17,8 @@ func test_cada_jornada_declara_sus_fijas_y_su_particular() -> void:  # AC-SHF-00
 		3: fijas + [Tarea.Tipo.ORDENAR_LAS_CAJAS],
 		4: fijas + [Tarea.Tipo.SACAR_LA_BASURA],
 		5: fijas + [Tarea.Tipo.DESECHAR_VENCIDOS],
-		6: fijas,
-		7: fijas,
+		6: fijas + [Tarea.Tipo.PEDIR_AL_PROVEEDOR],
+		7: fijas + [Tarea.Tipo.RESPONDER_QUEJAS],
 	}
 	for jornada: int in tabla:
 		var tipos: Array = []
@@ -36,6 +36,18 @@ func test_cada_jornada_declara_sus_fijas_y_su_particular() -> void:  # AC-SHF-00
 		assert_bool(Apertura.pide(jornada, Tarea.Tipo.DESECHAR_VENCIDOS)).is_equal(
 			jornada == ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA + 2
 		)
+
+
+func test_solo_la_septima_declara_responder_a_las_quejas() -> void:  # AC-SHF-080
+	for jornada in range(ReglasDeLaPartida.PRIMERA_JORNADA, QuejasDeLaJornada.JORNADA + 1):
+		var tipos: Array[Tarea.Tipo] = []
+		for tarea in Apertura.obligatorias(jornada):
+			tipos.append(tarea.tipo())
+		var declarada := jornada == QuejasDeLaJornada.JORNADA
+		assert_bool(tipos.has(Tarea.Tipo.RESPONDER_QUEJAS)).is_equal(declarada)
+		assert_bool(Apertura.pide(jornada, Tarea.Tipo.RESPONDER_QUEJAS)).is_equal(declarada)
+		for tarea in Apertura.obligatorias(jornada):
+			assert_bool(tarea.completada()).is_false()
 
 
 func test_el_turno_de_la_jornada_nace_con_el_presupuesto_entero() -> void:  # AC-SHF-001
@@ -226,13 +238,11 @@ func test_la_segunda_jornada_sortea_faltantes() -> void:  # AC-STK-094
 	var inventario := Apertura.inventario_de_la_jornada(
 		2, Compradores.de_la_jornada(2), _casilleros(), _casilleros(), azar
 	)
-	assert_int(inventario.faltantes().size()).is_between(
-		ReglasDelEstante.TIPOS_QUE_FALTAN.x, ReglasDelEstante.TIPOS_QUE_FALTAN.y
-	)
+	assert_int(inventario.faltantes().size()).is_equal(ReglasDelEstante.TIPOS_QUE_FALTAN)
 
 
 func test_retomar_la_primera_y_abrir_la_segunda_no_hereda_huecos() -> void:  # AC-STK-094
-	var casilleros := _casilleros(3)
+	var casilleros := _casilleros(4)
 	var compradores := Compradores.de_la_jornada(1)
 	var azar := RandomNumberGenerator.new()
 	azar.seed = 19
@@ -240,14 +250,14 @@ func test_retomar_la_primera_y_abrir_la_segunda_no_hereda_huecos() -> void:  # A
 	var producto := Catalogo.de(Producto.Id.MAROLINI)
 	(
 		assert_int(
-			primera.mover(producto, Inventario.Ubicacion.GONDOLA, Inventario.Ubicacion.DEPOSITO, 3)
+			primera.mover(producto, Inventario.Ubicacion.GONDOLA, Inventario.Ubicacion.DEPOSITO, 4)
 		)
-		. is_equal(3)
+		. is_equal(4)
 	)
 	assert_int(primera.unidades(producto, Inventario.Ubicacion.GONDOLA)).is_zero()
 	var retomada := Apertura.inventario_de_la_jornada(1, compradores, casilleros, casilleros, azar)
 	assert_array(retomada.faltantes()).is_empty()
-	assert_int(retomada.unidades(producto, Inventario.Ubicacion.GONDOLA)).is_equal(3)
+	assert_int(retomada.unidades(producto, Inventario.Ubicacion.GONDOLA)).is_equal(4)
 	assert_bool(Apertura.pide(1, Tarea.Tipo.REPONER)).is_true()
 	var siguientes := Compradores.de_la_jornada(2)
 	azar.seed = 19
@@ -264,3 +274,16 @@ func test_retomar_la_primera_y_abrir_la_segunda_no_hereda_huecos() -> void:  # A
 		)
 	assert_int(primera.unidades(producto, Inventario.Ubicacion.GONDOLA)).is_zero()
 	assert_bool(Apertura.pide(2, Tarea.Tipo.REPONER)).is_true()
+
+
+func test_las_cajas_del_proveedor_estan_solo_en_la_ultima_jornada() -> void:  # AC-SHF-100
+	var primera := ReglasDeLaPartida.PRIMERA_JORNADA
+	var ultima := primera + ReglasDeLaPartida.JORNADAS_DE_LA_PARTIDA - 1
+	for jornada in range(primera, ultima + 1):
+		(
+			assert_bool(Apertura.hay_cajas_del_proveedor(jornada))
+			. override_failure_message("jornada %d" % jornada)
+			. is_equal(jornada == ultima)
+		)
+	assert_bool(Apertura.hay_cajas_del_proveedor(primera - 1)).is_false()
+	assert_bool(Apertura.hay_cajas_del_proveedor(ultima + 1)).is_false()

@@ -1,10 +1,13 @@
 extends GdUnitTestSuite
 
 const AvanceDeDevolucion := preload("res://test/avance_de_devolucion.gd")
+const AvanceDelEpilogo := preload("res://test/avance_del_epilogo.gd")
 
 const ALMACEN := preload("res://src/escenas/almacen.tscn")
 const Menu := preload("res://src/escenas/menu_de_inicio.gd")
 const RelojDePrueba := preload("res://test/reloj_de_prueba.gd")
+## Cuántos cuadros se espera, como mucho, a que termine un calentamiento.
+const CUADROS_DEL_CALENTAMIENTO := 3000
 
 
 class MenuSinCarga:
@@ -120,6 +123,11 @@ func test_desde_la_cuarta_seguir_anuncia_sin_instrucciones() -> void:  # AC-EMP-
 			"Interfaz/PantallaDeInstrucciones"
 		)
 		assert_bool(instrucciones.visible).is_false()
+		# La noche del corte espera a que su oscuridad quede preparada.
+		for _cuadro in CUADROS_DEL_CALENTAMIENTO:
+			if _persiana().get("_entrada") != null:
+				break
+			await get_tree().process_frame
 		assert_object(_persiana().get("_entrada")).is_not_null()
 		await after_test()
 
@@ -198,7 +206,7 @@ func test_la_entrada_esta_sobre_el_local_y_debajo_de_avisos_y_pausa() -> void:  
 		assert_int(entrada.layer).is_less(capa.layer)
 
 
-func test_volver_de_una_partida_terminada_no_anuncia_otra_noche() -> void:  # AC-SHF-024
+func test_volver_de_una_partida_terminada_no_anuncia_otra_noche() -> void:  # AC-SHF-024, AC-EMP-065
 	_abrir(ReglasDeLaPartida.JORNADAS_DE_LA_PARTIDA)
 	var pedidos := [0]
 	_almacen.set("_ir_al_menu", func() -> void: pedidos[0] += 1)
@@ -209,5 +217,12 @@ func test_volver_de_una_partida_terminada_no_anuncia_otra_noche() -> void:  # AC
 	assert_bool(pantalla.visible).is_true()
 	AvanceDeDevolucion.entregar(pantalla)
 	pantalla.elegir()
+	pantalla.elegir()
+	assert_int(pedidos[0]).is_zero()
+	AvanceDelEpilogo.recorrer(_almacen)
+	var final: PantallaDeFinal = _almacen.get_node("PantallaDeFinal")
+	final.boton_de_volver().pressed.emit()
+	final.boton_de_volver().pressed.emit()
 	assert_int(pedidos[0]).is_equal(1)
-	assert_bool(_persiana().en_pantalla()).is_false()
+	# La persiana sigue baja bajo la pantalla de final, pero sin la placa de otra noche.
+	assert_bool((_persiana().get("_placa") as Control).visible).is_false()

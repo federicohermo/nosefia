@@ -176,3 +176,23 @@ func test_el_texto_al_examinar_es_el_subtitulo_escrito_y_vacio_si_no_hay() -> vo
 	objeto.subtitulo = "Texto de prueba."
 	objeto.nombre = "Bolsa"
 	assert_str(objeto.texto_al_examinar()).is_equal(objeto.subtitulo)
+
+
+func test_un_objeto_se_examina_a_su_tamano_salvo_que_diga_otra_cosa() -> void:
+	assert_float(ObjetoDelAlmacen.new().escala_de_examen).is_equal(1.0)
+
+
+func test_el_ticket_se_examina_mas_grande_de_lo_que_se_ve_en_la_mano() -> void:  # AC-PLY-109
+	var ticket := Ticket.new()
+	assert_float(ticket.escala_de_examen).is_greater(1.0)
+	assert_float(ReglasDeLosObjetos.ESCALA_DEL_TICKET_EN_MANO * ticket.escala_de_examen).is_greater(
+		ReglasDeLosObjetos.ESCALA_DEL_TICKET_EN_MANO
+	)
+
+
+func test_las_pistas_de_papel_se_examinan_mas_grandes() -> void:
+	for id: StringName in [&"documento_impreso", &"nota_bajo_la_puerta"]:
+		var datos := load("res://src/dominio/investigacion/%s.tres" % id) as ObjetoDelAlmacen
+		assert_object(datos).is_not_null()
+		if datos != null:
+			assert_float(datos.escala_de_examen).override_failure_message(str(id)).is_greater(1.0)

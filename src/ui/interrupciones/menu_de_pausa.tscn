@@ -1,11 +1,12 @@
-[gd_scene load_steps=5 format=3]
+[gd_scene load_steps=6 format=3]
 
 [ext_resource type="Script" path="res://src/ui/interrupciones/menu_de_pausa.gd" id="1_menu"]
 [ext_resource type="Theme" path="res://assets/ui/manada/tema.tres" id="2_tema"]
 [ext_resource type="Script" path="res://src/ui/interrupciones/cabecera_con_solapa.gd" id="3_solapa"]
 [ext_resource type="PackedScene" path="res://src/ui/interrupciones/pantalla_de_configuraciones.tscn" id="4_configuraciones"]
+[ext_resource type="PackedScene" path="res://src/ui/interrupciones/pantalla_de_logros.tscn" id="5_logros"]
 
-[node name="MenuDePausa" type="CanvasLayer" node_paths=PackedStringArray("_marco", "_titulo", "_reanudar", "_configuraciones", "_logros", "_volver_al_menu", "_pantalla")]
+[node name="MenuDePausa" type="CanvasLayer" node_paths=PackedStringArray("_marco", "_titulo", "_reanudar", "_configuraciones", "_logros", "_volver_al_menu", "_pantalla", "_pantalla_de_logros")]
 process_mode = 2
 layer = 3
 script = ExtResource("1_menu")
@@ -16,6 +17,7 @@ _configuraciones = NodePath("Fondo/Panel/Opciones/Configuraciones")
 _logros = NodePath("Fondo/Panel/Opciones/Logros")
 _volver_al_menu = NodePath("Fondo/Panel/Opciones/VolverAlMenu")
 _pantalla = NodePath("Configuraciones")
+_pantalla_de_logros = NodePath("Logros")
 
 [node name="Fondo" type="ColorRect" parent="."]
 anchors_preset = 15
@@ -83,7 +85,6 @@ theme_type_variation = &"BotonContinuar"
 custom_minimum_size = Vector2(427, 59)
 layout_mode = 2
 theme_type_variation = &"BotonContinuar"
-disabled = true
 
 [node name="VolverAlMenu" type="Button" parent="Fondo/Panel/Opciones"]
 custom_minimum_size = Vector2(427, 59)
@@ -91,3 +92,5 @@ layout_mode = 2
 theme_type_variation = &"BotonContinuar"
 
 [node name="Configuraciones" parent="." instance=ExtResource("4_configuraciones")]
+
+[node name="Logros" parent="." instance=ExtResource("5_logros")]

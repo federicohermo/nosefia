@@ -4,18 +4,23 @@ extends GdUnitTestSuite
 
 const ESCENA := "res://src/ui/interrupciones/pantalla_de_configuraciones.tscn"
 const C := Preferencias.Campo
-const FILAS: Array[String] = ["EFECTOS", "MÚSICA", "BRILLO", "SENSIBILIDAD", "TEXTOS", "LENGUAJE"]
+const FILAS: Array[String] = [
+	"EFECTOS", "MÚSICA", "BRILLO", "SENSIBILIDAD", "TEXTOS", "LENGUAJE", "CONTROLES"
+]
 
 var _avisos: Array[Preferencias] = []
+var _avisos_de_controles: Array[Preferencias] = []
 var _cierres: int = 0
 
 
 func before_test() -> void:
 	_avisos = []
+	_avisos_de_controles = []
 	_cierres = 0
 
 
 func after_test() -> void:
+	get_tree().paused = false
 	var ajuste: AjusteDePreferencias = auto_free(AjusteDePreferencias.new())
 	add_child(ajuste)
 	ajuste.aplicar(Preferencias.new())
@@ -26,6 +31,9 @@ func _pantalla(preferencias: Preferencias = Preferencias.new()) -> PantallaDeCon
 	add_child(pantalla)
 	pantalla.preparar(preferencias)
 	pantalla.preferencias_cambiadas.connect(func(p: Preferencias) -> void: _avisos.append(p))
+	pantalla.controles_cambiados.connect(
+		func(p: Preferencias) -> void: _avisos_de_controles.append(p)
+	)
 	pantalla.cerrada.connect(func() -> void: _cierres += 1)
 	pantalla.abrir()
 	return pantalla
@@ -53,7 +61,7 @@ func _barra(pantalla: PantallaDeConfiguraciones, campo: Preferencias.Campo) -> H
 	)
 
 
-func test_muestra_las_seis_filas_en_orden_con_menos_barra_y_mas() -> void:  # AC-CFG-001
+func test_muestra_las_siete_filas_en_orden_con_menos_barra_y_mas() -> void:  # AC-CFG-001
 	var pantalla := _pantalla()
 	var nombres: Array[String] = []
 	for fila: HBoxContainer in pantalla.filas():
@@ -73,6 +81,9 @@ func test_muestra_las_seis_filas_en_orden_con_menos_barra_y_mas() -> void:  # AC
 	# Con un solo idioma no hay a cuál pasar.
 	assert_bool((lenguaje[1] as Button).disabled).is_true()
 	assert_bool((lenguaje[3] as Button).disabled).is_true()
+	var controles := _fila(pantalla, 6).get_children()
+	assert_int(controles.size()).is_equal(2)
+	assert_str((controles[1] as Button).text).is_equal(PantallaDeConfiguraciones.TEXTO_DE_AJUSTAR)
 
 
 func test_mas_en_el_maximo_no_avisa_y_menos_si() -> void:  # AC-CFG-003
@@ -177,3 +188,100 @@ func test_la_pantalla_usa_el_tema_y_no_declara_estilos() -> void:
 	var texto := FileAccess.get_file_as_string(ESCENA)
 	assert_str(texto).contains("res://assets/ui/manada/tema.tres")
 	assert_str(texto).not_contains("theme_override_")
+
+
+func _ajustar(pantalla: PantallaDeConfiguraciones) -> PantallaDeControles:
+	var fila := _fila(pantalla, Preferencias.CAMPOS.size() + 1)
+	(fila.get_child(1) as Button).pressed.emit()
+	return pantalla.get_node("Controles")
+
+
+func _tecla(codigo: int) -> InputEventKey:
+	var tecla := InputEventKey.new()
+	tecla.keycode = codigo as Key
+	tecla.physical_keycode = codigo as Key
+	tecla.pressed = true
+	return tecla
+
+
+func _esc() -> InputEventKey:
+	return _tecla(KEY_ESCAPE)
+
+
+func test_ajustar_abre_los_controles_y_esc_vuelve_a_configuraciones() -> void:  # AC-CFG-015
+	var pantalla := _pantalla()
+	var controles := _ajustar(pantalla)
+	assert_bool(controles.visible).is_true()
+	assert_bool(pantalla.marco().visible).is_false()
+	pantalla._unhandled_input(_esc())
+	assert_bool(controles.visible).is_false()
+	assert_bool(pantalla.visible).is_true()
+	assert_bool(pantalla.marco().visible).is_true()
+	assert_int(_cierres).is_equal(0)
+
+
+func test_cerrar_con_los_controles_abiertos_cierra_primero_los_controles() -> void:  # AC-CFG-015
+	var pantalla := _pantalla()
+	var controles := _ajustar(pantalla)
+	pantalla.cerrar()
+	assert_bool(controles.visible).is_false()
+	assert_bool(pantalla.visible).is_true()
+	pantalla.cerrar()
+	assert_bool(pantalla.visible).is_false()
+	assert_int(_cierres).is_equal(1)
+
+
+func test_una_asignacion_avisa_por_su_propia_senal_y_viaja_al_cerrar() -> void:  # AC-CFG-022
+	var confirmadas: Array[Preferencias] = []
+	var pantalla := _pantalla()
+	pantalla.preferencias_confirmadas.connect(func(p: Preferencias) -> void: confirmadas.append(p))
+	var controles := _ajustar(pantalla)
+	controles.elegir(AsignacionDeControles.EXAMINAR, 0)
+	var tecla := InputEventKey.new()
+	tecla.physical_keycode = KEY_F
+	tecla.pressed = true
+	assert_bool(controles.atender(tecla)).is_true()
+	assert_array(_avisos).is_empty()
+	assert_int(_avisos_de_controles.size()).is_equal(1)
+	var examinar := _avisos_de_controles[0].controles().entrada(AsignacionDeControles.EXAMINAR, 0)
+	assert_int(examinar["codigo"]).is_equal(KEY_F)
+	pantalla.cerrar()
+	pantalla.cerrar()
+	assert_int(confirmadas.size()).is_equal(1)
+	examinar = confirmadas[0].controles().entrada(AsignacionDeControles.EXAMINAR, 0)
+	assert_int(examinar["codigo"]).is_equal(KEY_F)
+
+
+func test_con_pausa_en_p_la_tecla_nueva_cierra_configuraciones_y_esc_no() -> void:  # AC-CFG-020
+	var pantalla := _pantalla()
+	var asignacion := AsignacionDeControles.new()
+	asignacion.asignar(
+		AsignacionDeControles.PAUSA, 0, AsignacionDeControles.TipoDeEntrada.TECLA, KEY_P
+	)
+	var preferencias := Preferencias.new()
+	preferencias.poner_controles(asignacion)
+	var ajuste: AjusteDePreferencias = auto_free(AjusteDePreferencias.new())
+	add_child(ajuste)
+	ajuste.aplicar(preferencias)
+	pantalla._unhandled_input(_esc())
+	assert_bool(pantalla.visible).is_true()
+	assert_int(_cierres).is_equal(0)
+	pantalla._unhandled_input(_tecla(KEY_P))
+	assert_bool(pantalla.visible).is_false()
+	assert_int(_cierres).is_equal(1)
+
+
+func test_los_controles_desde_la_pausa_dejan_pausa_y_cursor_suelto() -> void:  # AC-CFG-015
+	get_tree().paused = true
+	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
+	var pantalla := _pantalla()
+	var controles := _ajustar(pantalla)
+	assert_bool(controles.visible).is_true()
+	assert_bool(controles.can_process()).is_true()
+	assert_bool(get_tree().paused).is_true()
+	assert_int(Input.mouse_mode).is_equal(Input.MOUSE_MODE_VISIBLE)
+	pantalla._unhandled_input(_esc())
+	assert_bool(controles.visible).is_false()
+	assert_bool(pantalla.visible).is_true()
+	assert_bool(get_tree().paused).is_true()
+	assert_int(Input.mouse_mode).is_equal(Input.MOUSE_MODE_VISIBLE)

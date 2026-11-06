@@ -113,6 +113,47 @@ const GRUPOS: Dictionary[int, Array] = {
 	],
 }
 
+## Los guiones propios de las noches al azar, por jornada. Quien no tiene entradas en el guion de
+## su noche usa la apertura y la despedida predeterminadas.
+const DIALOGOS_AL_AZAR: Dictionary = {
+	ReglasDeLaPartida.PRIMERA_JORNADA + 2:
+	preload("res://assets/dialogos/compradores_jornada_3.tres"),
+	ReglasDeLaPartida.PRIMERA_JORNADA + 3:
+	preload("res://assets/dialogos/compradores_jornada_4.tres"),
+	ReglasDeLaPartida.PRIMERA_JORNADA + 4:
+	preload("res://assets/dialogos/compradores_jornada_5.tres"),
+	ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA + 3:
+	preload("res://assets/dialogos/compradores_jornada_6.tres"),
+}
+
+## Los pedidos con forma propia: `jornada → personaje → forma`. Piden el máximo de tipos, salvo
+## que la forma diga `tipos` o sólo diga `sin`: entonces piden dos o tres, como cualquiera.
+## `ultimo` es el producto que cierra el pedido, `no_primero`, los que no pueden abrirlo, `tipos`,
+## cuántos tipos lleva el pedido, `sin`, los que nunca entran al sorteo, y `fijo`, las líneas
+## `[Producto.Id, unidades]` que reemplazan el sorteo y no dependen del grupo.
+const PEDIDOS_CON_FORMA: Dictionary = {
+	ReglasDeLaPartida.PRIMERA_JORNADA + 2:
+	{
+		DialogosDeCompradores.Personaje.CAMI: {"ultimo": Producto.Id.OAAAA},
+		DialogosDeCompradores.Personaje.TIN:
+		{"no_primero": [Producto.Id.PURA_COLA, Producto.Id.MALBARDO, Producto.Id.DON_SATURADOS]},
+	},
+	ReglasDeLaPartida.PRIMERA_JORNADA + 3:
+	{DialogosDeCompradores.Personaje.FEDE: {"tipos": 3, "sin": [Producto.Id.DURONGA]}},
+	ReglasDeLaPartida.PRIMERA_JORNADA + 4:
+	{
+		DialogosDeCompradores.Personaje.MIA:
+		{
+			"fijo":
+			[[Producto.Id.POETICO, 1], [Producto.Id.PURA_COLA, 1], [Producto.Id.FERNET_GOD, 1]]
+		},
+	},
+	ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA + 3:
+	{DialogosDeCompradores.Personaje.TIA: {"tipos": 2}},
+	ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA + 4:
+	{DialogosDeCompradores.Personaje.FEDE: {"sin": [Producto.Id.DURONGA]}},
+}
+
 ## Las noches con agenda al azar: `jornada → [nombre, personaje, llegada, límite, obligatorios]` de
 ## cada comprador, con cada hora como `Vector2i(hora, minuto)`. El pedido sale del sorteo de la
 ## apertura; `obligatorios`, si está, son los productos que lleva siempre, fijados antes de
@@ -127,7 +168,13 @@ const AGENDAS_AL_AZAR: Dictionary[int, Array] = {
 	ReglasDeLaPartida.PRIMERA_JORNADA + 3:
 	[
 		["Tia", DialogosDeCompradores.Personaje.TIA, Vector2i(22, 0), Vector2i(0, 30)],
-		["Fede", DialogosDeCompradores.Personaje.FEDE, Vector2i(4, 0), Vector2i(6, 30)],
+		[
+			"Fede",
+			DialogosDeCompradores.Personaje.FEDE,
+			Vector2i(4, 0),
+			Vector2i(6, 30),
+			[Producto.Id.DUREXTRA],
+		],
 	],
 	ReglasDeLaPartida.PRIMERA_JORNADA + 4:
 	[
@@ -136,19 +183,13 @@ const AGENDAS_AL_AZAR: Dictionary[int, Array] = {
 	],
 	ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA + 3:
 	[
-		["Tin", DialogosDeCompradores.Personaje.TIN, Vector2i(0, 0), Vector2i(2, 30)],
-		["Tia", DialogosDeCompradores.Personaje.TIA, Vector2i(2, 31), Vector2i(5, 1)],
+		["Tia", DialogosDeCompradores.Personaje.TIA, Vector2i(0, 0), Vector2i(2, 30)],
+		["Tin", DialogosDeCompradores.Personaje.TIN, Vector2i(2, 31), Vector2i(5, 1)],
 	],
 	ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA + 4:
 	[
-		[
-			"Fede",
-			DialogosDeCompradores.Personaje.FEDE,
-			Vector2i(23, 0),
-			Vector2i(1, 30),
-			[Producto.Id.DURONGA, Producto.Id.DUREXTRA],
-		],
-		["Mía", DialogosDeCompradores.Personaje.MIA, Vector2i(5, 30), Vector2i(8, 0)],
+		["Mía", DialogosDeCompradores.Personaje.MIA, Vector2i(23, 0), Vector2i(1, 30)],
+		["Fede", DialogosDeCompradores.Personaje.FEDE, Vector2i(5, 30), Vector2i(8, 0)],
 	],
 }
 
@@ -195,21 +236,59 @@ static func _al_azar(jornada: int, semilla: int) -> Array[Comprador]:
 		vendibles.append(producto.id)
 	var lista: Array[Comprador] = []
 	for fila: Array in AGENDAS_AL_AZAR[jornada]:
-		var obligatorios: Array = fila[4] if fila.size() > 4 else []
-		var lineas: Array = []
-		for id: Producto.Id in obligatorios:
-			lineas.append([id, 1])
-		var restantes := GRUPOS[fila[1]].filter(
-			func(id: Producto.Id) -> bool: return id in vendibles and not id in obligatorios
+		var forma: Dictionary = PEDIDOS_CON_FORMA.get(jornada, {}).get(fila[1], {})
+		var lineas: Array = (
+			forma["fijo"].duplicate(true)
+			if forma.has("fijo")
+			else _sortear(fila, forma, vendibles, azar)
 		)
-		var tipos := azar.randi_range(TIPOS_MINIMOS_POR_PEDIDO, TIPOS_MAXIMOS_POR_PEDIDO)
-		for _tipo in tipos - obligatorios.size():
-			lineas.append([restantes.pop_at(azar.randi_range(0, restantes.size() - 1)), 1])
 		var comprador := _comprador_de([fila[0], lineas, 0])
 		comprador.personaje = fila[1]
 		comprador.horario = Vector2(_desde_apertura(fila[2]), _desde_apertura(fila[3]))
+		var guion: DialogosDeCompradores = DIALOGOS_AL_AZAR.get(jornada)
+		if guion != null and guion.tiene_guion(fila[1]):
+			comprador.dialogos = guion
 		lista.append(comprador)
 	return lista
+
+
+## Las líneas del pedido de una fila al azar: sus obligatorios, el sorteo de su grupo y, al final,
+## el producto que cierra el pedido.
+static func _sortear(
+	fila: Array, forma: Dictionary, vendibles: Array[Producto.Id], azar: RandomNumberGenerator
+) -> Array:
+	var obligatorios: Array = fila[4] if fila.size() > 4 else []
+	var lineas: Array = []
+	for id: Producto.Id in obligatorios:
+		lineas.append([id, 1])
+	var ultimos: Array = [forma["ultimo"]] if forma.has("ultimo") else []
+	var excluidos: Array = forma.get("sin", [])
+	var restantes := GRUPOS[fila[1]].filter(
+		func(id: Producto.Id) -> bool:
+			return (
+				id in vendibles
+				and not id in obligatorios
+				and not id in ultimos
+				and not id in excluidos
+			)
+	)
+	var tipos := TIPOS_MAXIMOS_POR_PEDIDO
+	if forma.has("tipos"):
+		tipos = forma["tipos"]
+	elif not (forma.has("ultimo") or forma.has("no_primero")):
+		tipos = azar.randi_range(TIPOS_MINIMOS_POR_PEDIDO, TIPOS_MAXIMOS_POR_PEDIDO)
+	for sorteo in tipos - obligatorios.size() - ultimos.size():
+		var elegibles: Array = restantes
+		if sorteo == 0 and obligatorios.is_empty() and forma.has("no_primero"):
+			elegibles = restantes.filter(
+				func(id: Producto.Id) -> bool: return not id in forma["no_primero"]
+			)
+		var elegido: Producto.Id = elegibles[azar.randi_range(0, elegibles.size() - 1)]
+		restantes.erase(elegido)
+		lineas.append([elegido, 1])
+	for id: Producto.Id in ultimos:
+		lineas.append([id, 1])
+	return lineas
 
 
 static func _tin_y_tia(horario_de_tin: Array) -> Array[Comprador]:

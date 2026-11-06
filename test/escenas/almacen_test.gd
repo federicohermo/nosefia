@@ -409,10 +409,9 @@ func test_despachar_la_devolucion_abre_la_noche_siguiente_sin_tareas_cumplidas()
 	var reloj: RelojDelTurno = almacen.get_node("Servicios/RelojDelTurno")
 	var ciclo: CicloDeJornadas = almacen.get_node("Servicios/CicloDeJornadas")
 	var pantalla: PantallaDeDevolucion = almacen.get_node("Interfaz/PantallaDeDevolucion")
-	var tareas: Label = almacen.get_node("Interfaz/Hud/Tareas")
 	assert_bool(reloj.obligatoria(Tarea.Tipo.REGISTRAR).completada()).is_false()
 
-	# Una obligatoria adicional distingue el marcador del cierre del de la apertura siguiente.
+	# Una obligatoria cumplida distingue la noche que cierra de la apertura siguiente.
 	assert_bool(reloj.completar(reloj.obligatoria(Tarea.Tipo.CAJA))).is_true()
 	RelojDePrueba.avanzar_turno(reloj, Reglas.DURACION_DEL_TURNO)
 	AvanceDeDevolucion.esperar_el_celular(pantalla)
@@ -432,16 +431,6 @@ func test_despachar_la_devolucion_abre_la_noche_siguiente_sin_tareas_cumplidas()
 		assert_int(ciclo.partida().jornada())
 		. override_failure_message("despachada la placa, la partida no pasó a la noche siguiente")
 		. is_equal(ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA + 1)
-	)
-	(
-		assert_str(tareas.text)
-		. override_failure_message("el HUD arrastró el marcador de la noche anterior")
-		. is_equal(
-			(
-				Hud.TEXTO_DE_LAS_TAREAS
-				% Marcador.tareas(0, Apertura.cantidad_de_obligatorias(ciclo.partida().jornada()))
-			)
-		)
 	)
 	for tarea: Tarea in (almacen.get("_partida") as Partida).obligatorias():
 		assert_bool(tarea.completada()).is_false()
@@ -519,8 +508,9 @@ func test_abrir_la_jornada_deja_al_jugador_en_el_arranque() -> void:  # AC-PLY-0
 	assert_vector(al_abrir["frente"]).is_equal_approx(-arranque.basis.z, Vector3.ONE * 1e-4)
 
 
-func test_con_el_despido_la_devolucion_vuelve_al_menu_y_no_abre_otra_noche() -> void:  # AC-EMP-016
-	var almacen: Node3D = auto_free(load(ESCENA_DEL_ALMACEN).instantiate())
+## Despide a la partida al cerrar la jornada y la lleva hasta la pantalla de final. Devuelve la
+## pantalla; `cuentas` anota cuántas veces se pidió el menú, una partida nueva y una jornada.
+func _hasta_la_pantalla_del_despido(almacen: Node3D, cuentas: Dictionary) -> PantallaDeFinal:
 	# Tres apercibimientos y una noche sin tareas: salta de 3 a 5 sin pisar el 4.
 	almacen.set(
 		"_partida",
@@ -533,25 +523,75 @@ func test_con_el_despido_la_devolucion_vuelve_al_menu_y_no_abre_otra_noche() -> 
 	)
 	add_child(almacen)
 	await get_tree().process_frame
-	var menus := [0]
-	almacen.set("_ir_al_menu", func() -> void: menus[0] += 1)
+	cuentas.merge({"menus": 0, "partidas": 0, "aperturas": 0}, true)
+	assert_bool(almacen.get("_ir_a_la_partida_nueva") == almacen.abrir_partida_nueva).is_true()
+	almacen.set("_ir_al_menu", func() -> void: cuentas["menus"] += 1)
+	almacen.set("_ir_a_la_partida_nueva", func() -> void: cuentas["partidas"] += 1)
 	var reloj: RelojDelTurno = almacen.get_node("Servicios/RelojDelTurno")
 	var ciclo: CicloDeJornadas = almacen.get_node("Servicios/CicloDeJornadas")
 	var pantalla: PantallaDeDevolucion = almacen.get_node("Interfaz/PantallaDeDevolucion")
-	var aperturas := [0]
-	ciclo.jornada_abierta.connect(func(_jornada: int) -> void: aperturas[0] += 1)
+	ciclo.jornada_abierta.connect(func(_jornada: int) -> void: cuentas["aperturas"] += 1)
 	RelojDePrueba.avanzar_turno(reloj, Reglas.DURACION_DEL_TURNO)
 	assert_int(ciclo.partida().final()).is_equal(Partida.Final.DESPEDIDO)
 	AvanceDeDevolucion.esperar_el_celular(pantalla)
 	assert_bool(pantalla.visible).is_true()
 	AvanceDeDevolucion.entregar(pantalla)
 	var opcion := (almacen.get_node("Interfaz/PantallaDelCelular") as PantallaDelCelular).opcion()
-	assert_str(opcion.text).is_equal("VOLVER AL MENÚ")
+	assert_str(opcion.text).is_equal(
+		PantallaDeDevolucion.TEXTOS[DevolucionDelJefe.Opcion.VER_EL_FINAL]
+	)
 	pantalla.elegir()
 	pantalla.elegir()
-	assert_int(menus[0]).is_equal(1)
-	assert_int(aperturas[0]).is_zero()
+	assert_int(cuentas["menus"]).is_zero()
+	# AC-SHF-137: el despido no tiene epílogo.
+	assert_array(almacen.find_children("*", "PantallaDeEpilogo", true, false)).is_empty()
+	return almacen.get_node("PantallaDeFinal")
+
+
+func test_con_el_despido_la_devolucion_lleva_a_la_pantalla_de_final() -> void:  # AC-SHF-063
+	var almacen: Node3D = auto_free(load(ESCENA_DEL_ALMACEN).instantiate())
+	var cuentas := {}
+	var final := await _hasta_la_pantalla_del_despido(almacen, cuentas)
+	var reloj: RelojDelTurno = almacen.get_node("Servicios/RelojDelTurno")
+	assert_bool(final.visible).is_true()
+	assert_str(final.titulo()).is_equal(PantallaDeFinal.TITULOS[FinalConPantalla.Cual.DESPEDIDO])
+	final.boton_de_volver().pressed.emit()
+	final.boton_de_volver().pressed.emit()
+	assert_int(cuentas["menus"]).is_equal(1)
+	assert_int(cuentas["partidas"]).is_zero()
+	assert_int(cuentas["aperturas"]).is_zero()
 	assert_bool(reloj.corriendo()).is_false()
+
+
+func test_con_el_despido_el_jugador_sigue_suspendido_tras_un_cuadro_fisico() -> void:  # AC-SHF-127
+	var almacen: Node3D = auto_free(load(ESCENA_DEL_ALMACEN).instantiate())
+	var final := await _hasta_la_pantalla_del_despido(almacen, {})
+	var modo_anterior := Input.mouse_mode
+	assert_bool(final.visible).is_true()
+	await get_tree().physics_frame
+	assert_bool((almacen.get_node("Jugador") as Node).call("suspendido")).is_true()
+	assert_int(Input.mouse_mode).is_equal(Input.MOUSE_MODE_VISIBLE)
+	Input.mouse_mode = modo_anterior
+
+
+func test_comenzar_nueva_partida_borra_el_guardado_y_abre_la_jornada_1() -> void:  # AC-SHF-128
+	var almacen: Node3D = auto_free(load(ESCENA_DEL_ALMACEN).instantiate())
+	var cuentas := {}
+	var final := await _hasta_la_pantalla_del_despido(almacen, cuentas)
+	var guardado := Guardado.new()
+	guardado.escribir(
+		PartidaSerializada.sanear({"jornada": ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA})
+	)
+	assert_bool(guardado.hay_guardado()).is_true()
+	var jornada_guardada := Partida.desde(guardado.cargar()).jornada()
+	assert_int(jornada_guardada).is_equal(ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA)
+	final.boton_de_nueva_partida().pressed.emit()
+	final.boton_de_nueva_partida().pressed.emit()
+	assert_int(cuentas["partidas"]).is_equal(1)
+	assert_int(cuentas["menus"]).is_zero()
+	assert_bool(guardado.hay_guardado()).is_false()
+	var jornada := Partida.desde(guardado.cargar()).jornada()
+	assert_int(jornada).is_equal(ReglasDeLaPartida.PRIMERA_JORNADA)
 
 
 func test_con_la_partida_en_curso_volver_al_menu_no_abre_la_noche_siguiente() -> void:
@@ -689,12 +729,10 @@ func test_el_reloj_de_mesa_queda_sobre_el_vidrio_del_reloj_del_modelo() -> void:
 
 
 func test_el_cableado_le_da_la_hora_al_reloj_de_mesa_y_no_al_hud() -> void:
-	# El contador de tareas sigue conectado al reloj de la jornada.
 	var texto := FileAccess.get_file_as_string(SCRIPT_DEL_ALMACEN)
 	assert_str(texto).is_not_empty()
 	assert_str(texto).not_contains("_hud.mostrar_tiempo")
 	assert_str(texto).contains("tiempo_consumido.connect(_reloj_de_mesa.mostrar_tiempo)")
-	assert_str(texto).contains("tarea_completada.connect(_hud.mostrar_tareas)")
 
 
 func test_el_cableado_de_reponer_llega_entero_hasta_los_huecos() -> void:

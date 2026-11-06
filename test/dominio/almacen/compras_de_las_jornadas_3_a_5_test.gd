@@ -202,7 +202,8 @@ func test_la_venta_retira_cada_unidad_una_sola_vez() -> void:  # AC-STK-109
 		assert_int(noche.inventario.unidades(productos[0], Inventario.Ubicacion.GONDOLA)).is_equal(
 			gondola
 		)
-		atencion.interactuar(null)
+		while not atencion.despachada():
+			atencion.interactuar(null)
 		assert_int(atencion.interactuar(_unidad(noche, productos[0], false))).is_equal(
 			RecepcionDeCompra.Resultado.BLOQUEADA
 		)

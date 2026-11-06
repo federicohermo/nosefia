@@ -63,6 +63,7 @@ const FOTOS := {
 @export var _siguiente: Button
 @export var _contador: Label
 @export var _retrato: Control
+@export var _enrique: AnimatedSprite2D
 @export var _fondo: TextureRect
 
 var _etapa: Etapa = Etapa.OCULTA
@@ -122,6 +123,7 @@ func _process(_delta: float) -> void:
 		if _etapa == Etapa.SALIENDO:
 			_etapa = Etapa.OCULTA
 			visible = false
+			_enrique.stop()
 			comenzar_pedido.emit()
 		else:
 			_etapa = Etapa.LEYENDO
@@ -135,6 +137,8 @@ func mostrar(mensajes: Array[Mensaje]) -> void:
 	_transcurrido = 0
 	_ultimo = _ahora.call()
 	visible = true
+	_enrique.set_frame_and_progress(0, 0.0)
+	_enrique.play(&"idle")
 	_siguiente.disabled = false
 	set_process(true)
 	_pintar()
@@ -215,6 +219,7 @@ func _pintar(sentido: int = 0) -> void:
 	_retrato.visible = true
 	_volver.disabled = not _instrucciones.se_puede_volver()
 	_siguiente.text = (TEXTO_DE_COMENZAR if _instrucciones.en_el_ultimo() else TEXTO_DE_SIGUIENTE)
+	FocoDeLaInterfaz.en_el_primero(self)
 	_numeracion = "%d/%d" % [numero, _pasos.size()]
 	if sentido == 0:
 		_contador.text = _numeracion

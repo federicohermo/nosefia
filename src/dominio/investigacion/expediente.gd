@@ -12,6 +12,8 @@ var _identidades: PackedStringArray = PackedStringArray()
 var _notas: Array[Mensaje] = []
 var _avisados: Array[Desenlace] = []
 var _elecciones: Dictionary[int, String] = {}
+## Por jornada, la hipótesis de la anterior cuyo camino se sorteó.
+var _sorteos: Dictionary[int, String] = {}
 
 
 func _init(caso: CasoDeInvestigacion) -> void:
@@ -25,7 +27,14 @@ func levanta_una_pista(origen: StringName, jornada: int) -> bool:
 	return _caso != null and _caso.levanta_una_pista(origen, jornada)
 
 
-func registrar(identidad: String) -> Resultado:
+## Lo que se levanta para dar una pista está en el local sólo la noche de esa pista, y sólo si
+## el camino elegido o sorteado la activa.
+func esta_en_el_local(origen: StringName, jornada: int) -> bool:
+	return _caso == null or _caso.esta_en_el_local(origen, jornada, _elecciones, _sorteos)
+
+
+## `hora` es la del reloj del juego en el momento del hallazgo, y la lleva la nota.
+func registrar(identidad: String, hora: String = "") -> Resultado:
 	if not _consistente:
 		return Resultado.DESCONOCIDA
 	var pista := _caso.pista_de(identidad)
@@ -33,11 +42,13 @@ func registrar(identidad: String) -> Resultado:
 		return Resultado.DESCONOCIDA
 	if _identidades.has(identidad):
 		return Resultado.REPETIDA
+	if not pistas_activas(pista.jornada).has(identidad):
+		return Resultado.DESCONOCIDA
 	for exigida: String in pista.exigencias:
 		if not _identidades.has(exigida):
 			return Resultado.DESCONOCIDA
 	_identidades.append(identidad)
-	_agregar_notas(pista)
+	_agregar_notas(pista, hora)
 	pista_nueva.emit(pista)
 	for desenlace: Desenlace in desenlaces_alcanzados():
 		if not _avisados.has(desenlace):
@@ -46,12 +57,14 @@ func registrar(identidad: String) -> Resultado:
 	return Resultado.ANOTADA
 
 
-func registrar_por_canal(origen: StringName, canal: Pista.Canal, jornada: int) -> Resultado:
+func registrar_por_canal(
+	origen: StringName, canal: Pista.Canal, jornada: int, hora: String = ""
+) -> Resultado:
 	if not _consistente:
 		return Resultado.DESCONOCIDA
 	for pista: Pista in _caso.pistas:
 		if pista.se_dispara_con(origen, canal, jornada):
-			return registrar(pista.identidad)
+			return registrar(pista.identidad, hora)
 	return Resultado.DESCONOCIDA
 
 
@@ -86,7 +99,11 @@ func reconstruir(identidades_conocidas: PackedStringArray, mensajes: Array[Mensa
 
 ## La partida guardada: las pistas vuelven con sus notas, y una elección sólo si sigue entre las
 ## opciones que esas pistas habilitan.
-func restaurar(identidades_conocidas: PackedStringArray, elecciones_guardadas: Dictionary) -> void:
+func restaurar(
+	identidades_conocidas: PackedStringArray,
+	elecciones_guardadas: Dictionary,
+	sorteos_guardados: Dictionary = {}
+) -> void:
 	if not _consistente:
 		return
 	for identidad: String in identidades_conocidas:
@@ -94,11 +111,23 @@ func restaurar(identidades_conocidas: PackedStringArray, elecciones_guardadas: D
 		if pista != null and not _identidades.has(identidad):
 			_identidades.append(identidad)
 			_agregar_notas(pista)
+	for jornada: Variant in sorteos_guardados:
+		var sorteada: Variant = sorteos_guardados[jornada]
+		if jornada is int and sorteada is String and _caso.opcion(jornada - 1, sorteada) != null:
+			_sorteos[jornada] = sorteada
 	for jornada: Variant in elecciones_guardadas:
 		var identidad: Variant = elecciones_guardadas[jornada]
 		if jornada is int and identidad is String:
 			elegir(jornada, identidad)
 	_avisados = desenlaces_alcanzados()
+
+
+## Devuelve a las notas restauradas la hora que traía el guardado: se reconstruyen desde sus
+## identidades, y por ahí la hora no viaja.
+func fijar_horas(horas: Dictionary[String, String]) -> void:
+	for nota: Mensaje in _notas:
+		if horas.has(nota.identidad):
+			nota.hora = horas[nota.identidad]
 
 
 ## Una nota que no es de una pista, como un texto de la reflexión. Cada identidad entra una vez.
@@ -115,7 +144,7 @@ func anotar(mensaje: Mensaje) -> bool:
 
 
 ## Fija la hipótesis de la jornada, una sola vez, si sus pistas la habilitan.
-func elegir(jornada: int, identidad: String) -> Resultado:
+func elegir(jornada: int, identidad: String, hora: String = "") -> Resultado:
 	if _elecciones.has(jornada):
 		return Resultado.REPETIDA
 	for opcion: Hipotesis in hipotesis_para(jornada):
@@ -126,6 +155,7 @@ func elegir(jornada: int, identidad: String) -> Resultado:
 			nota.jornada = jornada
 			nota.momento = Mensaje.Momento.CIERRE
 			nota.texto = opcion.texto
+			nota.hora = hora
 			anotar(nota)
 			return Resultado.ANOTADA
 	return Resultado.DESCONOCIDA
@@ -138,6 +168,27 @@ func eleccion(jornada: int) -> String:
 
 func elecciones() -> Dictionary:
 	return _elecciones.duplicate()
+
+
+func sorteos() -> Dictionary:
+	return _sorteos.duplicate()
+
+
+## Las pistas de esa jornada que se pueden anotar según lo elegido y lo sorteado.
+func pistas_activas(jornada: int) -> PackedStringArray:
+	if not _consistente:
+		return PackedStringArray()
+	return _caso.pistas_activas(jornada, _elecciones, _sorteos)
+
+
+## Si la jornada anterior terminó sin pistas y sortea, fija una sola vez el camino de ésta.
+func sortear_camino(jornada: int, azar: RandomNumberGenerator) -> void:
+	if not _consistente or azar == null or _sorteos.has(jornada):
+		return
+	var candidatas := _caso.opciones_a_sortear(jornada, _identidades, _elecciones, _sorteos)
+	if candidatas.is_empty():
+		return
+	_sorteos[jornada] = candidatas[azar.randi_range(0, candidatas.size() - 1)].identidad
 
 
 func hipotesis_para(jornada: int) -> Array[Hipotesis]:
@@ -153,8 +204,8 @@ func desenlaces_alcanzados() -> Array[Desenlace]:
 	return alcanzados
 
 
-func _agregar_notas(pista: Pista) -> void:
-	if pista.foto == null or pista.texto.is_empty():
+func _agregar_notas(pista: Pista, hora: String = "") -> void:
+	if not pista.deja_nota():
 		return
 	var orden := _orden_siguiente()
 	for es_foto: bool in [true, false]:
@@ -163,6 +214,7 @@ func _agregar_notas(pista: Pista) -> void:
 		mensaje.jornada = pista.jornada
 		mensaje.momento = Mensaje.Momento.CIERRE
 		mensaje.orden = orden
+		mensaje.hora = hora
 		orden += 1
 		mensaje.foto = pista.foto if es_foto else null
 		mensaje.texto = "" if es_foto else pista.texto

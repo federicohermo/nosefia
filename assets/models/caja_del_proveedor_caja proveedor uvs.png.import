@@ -1,0 +1,43 @@
+[remap]
+
+importer="texture"
+type="CompressedTexture2D"
+uid="uid://dhl8rjt25i38d"
+path="res://.godot/imported/caja_del_proveedor_caja proveedor uvs.png-1b26a70cc2b2a7536ba415c48111356a.ctex"
+metadata={
+"vram_texture": false
+}
+generator_parameters={
+"md5": "8b32e36790772d02a611e39b5b2456f4"
+}
+
+[deps]
+
+source_file="res://assets/models/caja_del_proveedor_caja proveedor uvs.png"
+dest_files=["res://.godot/imported/caja_del_proveedor_caja proveedor uvs.png-1b26a70cc2b2a7536ba415c48111356a.ctex"]
+
+[params]
+
+compress/mode=1
+compress/high_quality=false
+compress/lossy_quality=0.9
+compress/uastc_level=0
+compress/rdo_quality_loss=0.0
+compress/hdr_compression=1
+compress/normal_map=0
+compress/channel_pack=0
+mipmaps/generate=true
+mipmaps/limit=-1
+roughness/mode=0
+roughness/src_normal=""
+process/channel_remap/red=0
+process/channel_remap/green=1
+process/channel_remap/blue=2
+process/channel_remap/alpha=3
+process/fix_alpha_border=true
+process/premult_alpha=false
+process/normal_map_invert_y=false
+process/hdr_as_srgb=false
+process/hdr_clamp_exposure=false
+process/size_limit=1024
+detect_3d/compress_to=1

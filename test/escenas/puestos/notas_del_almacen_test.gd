@@ -49,7 +49,7 @@ func _ids_de_las_seis_hojas() -> Array:
 	return ids
 
 
-func test_las_seis_hojas_abren_su_propio_dato_y_cierran_solo_con_el_derecho() -> void:  # AC-PLY-063
+func test_las_seis_hojas_abren_su_propio_dato_y_cierran_con_el_derecho() -> void:  # AC-PLY-063
 	var almacen := await _abrir()
 	var jugador: Node3D = almacen.get_node("Jugador")
 	var puesto: Node = almacen.get_node("Estructura/NotasDelAlmacen")
@@ -73,6 +73,33 @@ func test_las_seis_hojas_abren_su_propio_dato_y_cierran_solo_con_el_derecho() ->
 		assert_bool(vista.visible).is_false()
 		assert_bool((jugador.get("_control") as ControlDelJugador).esta_suspendido()).is_false()
 	assert_array(ids).contains_exactly_in_any_order(_ids_de_las_seis_hojas())
+
+
+func test_x_no_cierra_la_nota_ni_aprieta_el_foco_e_interactuar_la_cierra() -> void:  # AC-CFG-029
+	var almacen := await _abrir()
+	var jugador: Node3D = almacen.get_node("Jugador")
+	var puesto: Node = almacen.get_node("Estructura/NotasDelAlmacen")
+	var vista := _vista(almacen)
+	var apretado: Array[bool] = [false]
+	var boton: Button = auto_free(Button.new())
+	boton.pressed.connect(func() -> void: apretado[0] = true)
+	almacen.add_child(boton)
+	boton.grab_focus()
+	_accion(jugador, (puesto.get("notas") as Array)[0], ReglasDeLosObjetos.ACCION_AGARRAR)
+	assert_bool(vista.visible).is_true()
+	assert_object(get_viewport().gui_get_focus_owner()).is_same(boton)
+	var equis := InputEventJoypadButton.new()
+	equis.button_index = JOY_BUTTON_A
+	for presionado: bool in [true, false]:
+		equis.pressed = presionado
+		get_viewport().push_input(equis)
+	assert_bool(vista.visible).is_true()
+	assert_bool(apretado[0]).is_false()
+	var interactuar := InputEventAction.new()
+	interactuar.action = ReglasDelJugador.ACCION_USAR
+	interactuar.pressed = true
+	get_viewport().push_input(interactuar)
+	assert_bool(vista.visible).is_false()
 
 
 func test_cada_objeto_sigue_en_la_mano_al_leer_y_salir() -> void:  # AC-PLY-064
@@ -215,7 +242,10 @@ func _posiciones_transitables(almacen: Node3D, hoja: StaticBody3D) -> Array[Vect
 			var impacto := espacio.intersect_ray(consulta)
 			if (
 				impacto.get("collider") == hoja
-				and ojo.distance_to(impacto.position) <= ReglasDelJugador.ALCANCE_DE_LA_MIRA
+				and (
+					ReglasDelJugador.proximidad(ojo, impacto.position)
+					<= ReglasDelJugador.ALCANCE_DE_LA_MIRA
+				)
 			):
 				sitios.append(posicion)
 	return sitios
@@ -281,7 +311,7 @@ func test_leer_continua_el_reloj_y_la_pausa_se_dibuja_encima() -> void:  # AC-PL
 	var evento := InputEventAction.new()
 	evento.action = &"ui_cancel"
 	evento.pressed = true
-	pausa.call("_input", evento)
+	pausa.pausar()
 	var menu: CanvasLayer = almacen.get_node("Interfaz/MenuDePausa")
 	assert_bool(get_tree().paused).is_true()
 	assert_bool(menu.visible).is_true()
@@ -365,3 +395,29 @@ func test_hay_una_hoja_de_no_tirar_papel_arriba_de_cada_inodoro() -> void:  # AC
 	assert_object(hojas[1].get_node("StaticBody3D").call("imagen")).is_same(
 		hojas[0].get_node("StaticBody3D").call("imagen")
 	)
+
+
+func test_el_tachado_aparece_en_las_dos_notas_y_se_va_al_descumplir() -> void:  # AC-PLY-165
+	var almacen := await _abrir()
+	var jugador: Node3D = almacen.get_node("Jugador")
+	var reloj: RelojDelTurno = almacen.get("_reloj")
+	var hoja: Node3D = almacen.get_node("Estructura/NotasDelAlmacen").get("notas")[0]
+	assert_int(hoja.get("id")).is_equal(NotaPegada.Id.TAREAS_A_REALIZAR)
+	var tarea := reloj.obligatoria(Tarea.Tipo.REGISTRAR)
+	assert_bool(tarea.completada()).is_false()
+	# Una tarea que ya abre cumplida, como la limpieza de un local limpio, arranca tachada.
+	var cumplidas: Array[int] = hoja.call("filas_tachadas")
+	assert_array(cumplidas).not_contains([1])
+	# Con la lectura abierta, la nota se actualiza sin cerrarla.
+	_accion(jugador, hoja, ReglasDeLosObjetos.ACCION_AGARRAR)
+	assert_array(_vista(almacen).filas_tachadas()).contains_exactly(cumplidas)
+	var con_registro := cumplidas.duplicate()
+	con_registro.append(1)
+	con_registro.sort()
+	assert_bool(reloj.completar(tarea)).is_true()
+	assert_array(hoja.call("filas_tachadas")).contains_exactly(con_registro)
+	assert_array(_vista(almacen).filas_tachadas()).contains_exactly(con_registro)
+	assert_bool(_vista(almacen).visible).is_true()
+	assert_bool(reloj.descumplir(tarea)).is_true()
+	assert_array(hoja.call("filas_tachadas")).contains_exactly(cumplidas)
+	assert_array(_vista(almacen).filas_tachadas()).contains_exactly(cumplidas)

@@ -41,6 +41,7 @@ const CajaDelDeposito := preload("res://src/escenas/objetos/caja_de_productos.gd
 const Casillero := preload("res://src/escenas/puestos/zona_de_reposicion.gd")
 const ManchaEnElPiso := preload("res://src/escenas/objetos/mancha_en_el_piso.gd")
 const ContenedorDelLocal := preload("res://src/escenas/puestos/contenedor_de_basura.gd")
+const TapaDelContenedorLocal := preload("res://src/escenas/puestos/tapa_del_contenedor.gd")
 
 ## Los dos sistemas de agarrar, por `@export` y no por `@onready`: un `@onready` se resuelve
 ## recién al entrar la escena al árbol, y entonces `id_en_la_mano()` se caería sobre un jugador
@@ -211,6 +212,15 @@ func _unhandled_input(evento: InputEvent) -> void:
 			var con_el_clic := movimiento.button_mask & MOUSE_BUTTON_MASK_LEFT != 0
 			examen.arrastrar(movimiento.relative, con_el_clic)
 		return
+	if (
+		_en_web
+		and evento is InputEventMouseButton
+		and evento.is_pressed()
+		and _control.clic_es_para_tomar_el_cursor(_leer_cursor.call() == Input.MOUSE_MODE_CAPTURED)
+	):
+		get_viewport().set_input_as_handled()
+		_aplicar_el_modo_del_cursor(true)
+		return
 	if evento.is_action_pressed(ReglasDeLosObjetos.ACCION_AGARRAR):
 		# Quién se come el clic lo contesta `Examen`, que es el que sabe si hay algo pegado a la
 		# cara. Acá sólo se lo pasa al que quedó: esto es ruteo, no una regla del juego.
@@ -269,9 +279,7 @@ func _usar_la_superficie_mirada() -> void:
 		return
 	var ojo := _camara.global_position
 	var consulta := PhysicsRayQueryParameters3D.create(
-		ojo,
-		ojo - _camara.global_basis.z * ReglasDelJugador.ALCANCE_DE_LA_MIRA,
-		_campo.collision_mask
+		ojo, ReglasDelJugador.fin_de_la_mira(ojo, -_camara.global_basis.z), _campo.collision_mask
 	)
 	consulta.exclude = [get_rid()]
 	var golpe := get_world_3d().direct_space_state.intersect_ray(consulta)
@@ -351,6 +359,7 @@ func _process(delta: float) -> void:
 	# Lo examinado cuelga de la cámara, que no se interpola: girarlo en el paso de física lo
 	# dibujaría a saltos.
 	examen.girar(_entrada(), delta)
+	_mirar_con_el_joystick(delta)
 	_acomodar_la_vista(delta)
 	_control.avanzar_el_dibujo(delta)
 	var atrasado := _control.giro_atrasado()
@@ -372,6 +381,25 @@ func _entrada() -> Vector2:
 		ReglasDelJugador.ACCION_ATRAS,
 		ReglasDelJugador.ACCION_ADELANTE
 	)
+
+
+## El joystick derecho gira la vista, o lo examinado cuando el cursor está suelto: el mismo reparto
+## que el mouse. La inclinación ya sale con la zona muerta de las acciones, y cuánto gira lo decide
+## el dominio. En la `y` positiva se mira hacia abajo, como el delta del mouse.
+func _mirar_con_el_joystick(delta: float) -> void:
+	var inclinacion := Input.get_vector(
+		ReglasDelJugador.ACCION_MIRAR_IZQUIERDA,
+		ReglasDelJugador.ACCION_MIRAR_DERECHA,
+		ReglasDelJugador.ACCION_MIRAR_ARRIBA,
+		ReglasDelJugador.ACCION_MIRAR_ABAJO
+	)
+	if inclinacion == Vector2.ZERO:
+		return
+	if _el_cursor_esta_tomado():
+		_control.girar_con_el_joystick(inclinacion, delta)
+		_aplicar_la_rotacion()
+	else:
+		examen.girar_con_el_joystick(inclinacion, delta)
 
 
 ## Le pasa a lo chocado el paso que no se pudo dar, para que se corra en vez de tapar el paso.
@@ -785,7 +813,7 @@ func _leer_la_mira() -> void:
 func _medir_candidato(cuerpo: Node3D) -> CampoDeInteraccion.Candidato:
 	var ojo := _camara.global_position
 	var adelante := -_camara.global_basis.z
-	var puntos: Array[Vector3] = [ojo + adelante * ReglasDelJugador.ALCANCE_DE_LA_MIRA]
+	var puntos: Array[Vector3] = [ReglasDelJugador.fin_de_la_mira(ojo, adelante)]
 	var formas := cuerpo.find_children("*", "CollisionShape3D", false, false)
 	# La persona requiere la mira sobre alfa real: un rayo auxiliar no rescata transparencia.
 	if cuerpo.has_method("admite_foco_en"):
@@ -806,7 +834,7 @@ func _medir_candidato(cuerpo: Node3D) -> CampoDeInteraccion.Candidato:
 	var mejor: CampoDeInteraccion.Candidato = null
 	for punto in puntos:
 		var consulta := PhysicsRayQueryParameters3D.create(
-			ojo, ojo + ojo.direction_to(punto) * ReglasDelJugador.ALCANCE_DE_LA_MIRA
+			ojo, ReglasDelJugador.fin_de_la_mira(ojo, ojo.direction_to(punto))
 		)
 		var excluidos: Array[RID] = [get_rid()]
 		# Con la máscara del campo y no con todas: el contorno de un mueble lo envuelve, y un
@@ -826,7 +854,7 @@ func _medir_candidato(cuerpo: Node3D) -> CampoDeInteraccion.Candidato:
 			continue
 		var candidato := CampoDeInteraccion.Candidato.new(
 			cuerpo.get_instance_id(),
-			ojo.distance_to(impacto),
+			ReglasDelJugador.proximidad(ojo, impacto),
 			adelante.angle_to(impacto - ojo),
 			true,
 			true
@@ -1191,15 +1219,14 @@ static func _formas_de(cuerpo: RigidBody3D) -> Array[CollisionShape3D]:
 func _golpe_de_la_mira(cuerpo: RigidBody3D) -> Dictionary:
 	var ojo := _camara.global_position
 	var consulta := PhysicsRayQueryParameters3D.create(
-		ojo,
-		ojo - _camara.global_basis.z * ReglasDelJugador.ALCANCE_DE_LA_MIRA,
-		cuerpo.collision_mask
+		ojo, ReglasDelJugador.fin_de_la_mira(ojo, -_camara.global_basis.z), cuerpo.collision_mask
 	)
 	consulta.exclude = [get_rid(), cuerpo.get_rid()]
 	var golpe := get_world_3d().direct_space_state.intersect_ray(consulta)
 	if (
 		golpe.is_empty()
 		or golpe["collider"] is ContenedorDelLocal
+		or golpe["collider"] is TapaDelContenedorLocal
 		or not ReglasDeLosObjetos.admite_lo_soltado(golpe["normal"].y, _datos_de(golpe["collider"]))
 	):
 		return {}

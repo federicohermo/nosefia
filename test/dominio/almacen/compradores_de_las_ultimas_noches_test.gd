@@ -10,13 +10,13 @@ const CASILLEROS := 8
 const AGENDAS := {
 	CORTE:
 	[
-		["Tin", PERSONAJE.TIN, Vector2i(0, 0), Vector2i(2, 30)],
-		["Tia", PERSONAJE.TIA, Vector2i(2, 31), Vector2i(5, 1)],
+		["Tia", PERSONAJE.TIA, Vector2i(0, 0), Vector2i(2, 30)],
+		["Tin", PERSONAJE.TIN, Vector2i(2, 31), Vector2i(5, 1)],
 	],
 	ULTIMA:
 	[
-		["Fede", PERSONAJE.FEDE, Vector2i(23, 0), Vector2i(1, 30)],
-		["Mía", PERSONAJE.MIA, Vector2i(5, 30), Vector2i(8, 0)],
+		["Mía", PERSONAJE.MIA, Vector2i(23, 0), Vector2i(1, 30)],
+		["Fede", PERSONAJE.FEDE, Vector2i(5, 30), Vector2i(8, 0)],
 	],
 }
 
@@ -103,9 +103,9 @@ func test_cada_noche_trae_sus_dos_con_figura_y_horario() -> void:  # AC-CTR-126,
 			assert_object(compradores[indice].llega_tras).is_null()
 
 
-func test_mia_se_va_al_cerrar_el_turno() -> void:  # AC-CTR-127
-	var mia := Compradores.de_la_jornada(ULTIMA, 1)[1]
-	assert_float(mia.horario.y).is_equal(Reglas.DURACION_DEL_TURNO)
+func test_fede_se_va_al_cerrar_el_turno() -> void:  # AC-CTR-127
+	var fede := Compradores.de_la_jornada(ULTIMA, 1)[1]
+	assert_float(fede.horario.y).is_equal(Reglas.DURACION_DEL_TURNO)
 
 
 func test_las_fronteras_de_cada_horario_cruzan_una_sola_vez() -> void:  # AC-CTR-126, AC-CTR-127
@@ -130,17 +130,17 @@ func test_las_fronteras_de_cada_horario_cruzan_una_sola_vez() -> void:  # AC-CTR
 			assert_array(agenda.avanzar(ventana.y)).is_empty()
 
 
-func test_tia_llega_a_su_hora_aunque_tin_se_haya_ido_antes() -> void:  # AC-CTR-126
+func test_tin_llega_a_su_hora_aunque_tia_se_haya_ido_antes() -> void:  # AC-CTR-126
 	var compradores := Compradores.de_la_jornada(CORTE, 1)
-	var tin := compradores[0]
-	var tia := compradores[1]
+	var tia := compradores[0]
+	var tin := compradores[1]
 	var agenda := AgendaDeCompradores.new(compradores)
-	agenda.avanzar(tin.horario.x)
-	assert_array(agenda.avanzar(tin.horario.x + 600.0, [tin])).is_empty()
-	assert_array(agenda.avanzar(tia.horario.x - 1.0, [tin])).is_empty()
-	var llegada := agenda.avanzar(tia.horario.x, [tin])
+	agenda.avanzar(tia.horario.x)
+	assert_array(agenda.avanzar(tia.horario.x + 600.0, [tia])).is_empty()
+	assert_array(agenda.avanzar(tin.horario.x - 1.0, [tia])).is_empty()
+	var llegada := agenda.avanzar(tin.horario.x, [tia])
 	assert_array(llegada).has_size(1)
-	assert_object(llegada[0].comprador).is_same(tia)
+	assert_object(llegada[0].comprador).is_same(tin)
 
 
 func test_saltar_al_cierre_entrega_los_cruces_en_orden() -> void:  # AC-CTR-126, AC-CTR-127
@@ -162,7 +162,8 @@ func test_ninguna_noche_activa_el_padron_ni_los_guiones_de_las_primeras() -> voi
 	for jornada: int in NOCHES:
 		for comprador in Compradores.de_la_jornada(jornada, 1):
 			assert_array(del_padron).not_contains([comprador.nombre()])
-			assert_object(comprador.dialogos).is_null()
+			assert_object(comprador.dialogos).is_not_same(Compradores.DIALOGOS)
+			assert_object(comprador.dialogos).is_not_same(Compradores.DIALOGOS_SEGUNDA)
 
 
 func test_cada_pedido_es_de_dos_o_tres_tipos_de_su_grupo() -> void:  # AC-CTR-129
@@ -171,14 +172,14 @@ func test_cada_pedido_es_de_dos_o_tres_tipos_de_su_grupo() -> void:  # AC-CTR-12
 		for semilla in range(1, SEMILLAS + 1):
 			for comprador in Compradores.de_la_jornada(jornada, semilla):
 				var ids := _ids_de(comprador)
-				var del_grupo: Array = Compradores.GRUPOS[comprador.personaje].duplicate()
-				if jornada == ULTIMA and comprador.personaje == PERSONAJE.FEDE:
-					del_grupo.append(Producto.Id.DUREXTRA)
+				var del_grupo: Array = Compradores.GRUPOS[comprador.personaje]
 				for id in ids:
 					assert_array(del_grupo).contains([id])
 				var pedido := comprador.pedido()
 				for producto in pedido.productos():
 					assert_int(pedido.unidades_de(producto)).is_equal(1)
+				if jornada == CORTE and comprador.personaje == PERSONAJE.TIA:
+					continue
 				assert_int(ids.size()).is_between(2, 3)
 				por_cantidad[ids.size()] += 1
 	var total: int = por_cantidad[2] + por_cantidad[3]
@@ -186,25 +187,53 @@ func test_cada_pedido_es_de_dos_o_tres_tipos_de_su_grupo() -> void:  # AC-CTR-12
 	assert_int(por_cantidad[3]).is_greater(total / 4)
 
 
-func test_fede_pide_siempre_duronga_y_durextra_en_la_ultima_noche() -> void:  # AC-CTR-130
-	var terceros: Dictionary = {}
+func test_tia_del_corte_pide_siempre_dos_tipos_de_su_grupo() -> void:  # AC-CTR-172
+	var vendibles: Array[Producto.Id] = []
+	for producto in Catalogo.de_la_jornada(CORTE):
+		vendibles.append(producto.id)
+	var vistos: Dictionary = {}
+	for semilla in range(1, SEMILLAS + 1):
+		var tia := Compradores.de_la_jornada(CORTE, semilla)[0]
+		assert_int(tia.personaje).is_equal(PERSONAJE.TIA)
+		var ids := _ids_de(tia)
+		assert_array(ids).has_size(2)
+		assert_int(ids[0]).is_not_equal(ids[1])
+		for producto in tia.pedido().productos():
+			assert_int(tia.pedido().unidades_de(producto)).is_equal(1)
+			assert_array(Compradores.GRUPOS[PERSONAJE.TIA]).contains([producto.id])
+			assert_array(vendibles).contains([producto.id])
+			vistos[producto.id] = true
+	assert_array(vistos.keys()).contains_exactly_in_any_order(Compradores.GRUPOS[PERSONAJE.TIA])
+
+
+func test_tin_del_corte_y_tia_de_la_cuarta_siguen_con_el_sorteo_comun() -> void:  # AC-CTR-172
+	var cuarta := ReglasDeLaPartida.PRIMERA_JORNADA + 3
+	var del_corte: Dictionary = {}
+	var de_la_cuarta: Dictionary = {}
+	for semilla in range(1, SEMILLAS + 1):
+		del_corte[_ids_de(Compradores.de_la_jornada(CORTE, semilla)[1]).size()] = true
+		de_la_cuarta[_ids_de(Compradores.de_la_jornada(cuarta, semilla)[0]).size()] = true
+	assert_array(del_corte.keys()).contains_exactly_in_any_order([2, 3])
+	assert_array(de_la_cuarta.keys()).contains_exactly_in_any_order([2, 3])
+
+
+func test_fede_de_la_ultima_pide_de_su_grupo_sin_duronga_ni_durextra() -> void:  # AC-CTR-130
+	var vistos: Dictionary = {}
 	var cantidades: Dictionary = {}
 	for semilla in range(1, SEMILLAS + 1):
-		var ids := _ids_de(Compradores.de_la_jornada(ULTIMA, semilla)[0])
-		assert_array(ids).contains([Producto.Id.DURONGA, Producto.Id.DUREXTRA])
+		var fede := Compradores.de_la_jornada(ULTIMA, semilla)[1]
+		assert_int(fede.personaje).is_equal(PERSONAJE.FEDE)
+		var ids := _ids_de(fede)
+		assert_array(ids).not_contains([Producto.Id.DURONGA, Producto.Id.DUREXTRA])
 		cantidades[ids.size()] = true
-		if ids.size() == 3:
-			var resto: Array[Producto.Id] = ids.duplicate()
-			resto.erase(Producto.Id.DURONGA)
-			resto.erase(Producto.Id.DUREXTRA)
-			var tercero := resto[0]
-			assert_array(Compradores.GRUPOS[PERSONAJE.FEDE]).contains([tercero])
-			terceros[tercero] = true
+		for id in ids:
+			assert_array(Compradores.GRUPOS[PERSONAJE.FEDE]).contains([id])
+			vistos[id] = true
 	assert_array(cantidades.keys()).contains_exactly_in_any_order([2, 3])
 	var candidatos: Array = Compradores.GRUPOS[PERSONAJE.FEDE].filter(
 		func(id: Producto.Id) -> bool: return id != Producto.Id.DURONGA
 	)
-	assert_array(terceros.keys()).contains_exactly_in_any_order(candidatos)
+	assert_array(vistos.keys()).contains_exactly_in_any_order(candidatos)
 
 
 func test_nadie_mas_pide_durextra() -> void:  # AC-CTR-130
@@ -218,7 +247,8 @@ func test_nadie_mas_pide_durextra() -> void:  # AC-CTR-130
 	for jornada: int in noches_al_azar:
 		for semilla in range(1, SEMILLAS + 1):
 			for comprador in Compradores.de_la_jornada(jornada, semilla):
-				if jornada == ULTIMA and comprador.personaje == PERSONAJE.FEDE:
+				var cuarta := jornada == ReglasDeLaPartida.PRIMERA_JORNADA + 3
+				if comprador.personaje == PERSONAJE.FEDE and cuarta:
 					continue
 				assert_array(_ids_de(comprador)).not_contains([Producto.Id.DUREXTRA])
 
@@ -283,7 +313,5 @@ func test_un_pedido_sin_unidades_vendibles_sigue_siendo_el_pedido() -> void:  # 
 	var compradores := Compradores.de_la_jornada(ULTIMA, 5)
 	var inventario := Apertura.inventario_con_faltantes({}, sin_casilleros, productos)
 	var tarea := TareaDeAtender.new(compradores, inventario)
-	tarea.avanzar(compradores[0].horario.x)
-	assert_array(_ids_de(tarea.atencion().comprador())).contains(
-		[Producto.Id.DURONGA, Producto.Id.DUREXTRA]
-	)
+	tarea.avanzar(compradores[1].horario.x)
+	assert_array(_ids_de(tarea.atencion().comprador())).is_equal(_ids_de(compradores[1]))

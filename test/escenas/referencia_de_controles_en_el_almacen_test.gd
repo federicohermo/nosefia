@@ -67,14 +67,6 @@ func test_los_dos_ejemplos_de_la_ficha_en_el_local() -> void:  # AC-PLY-082
 	assert_array(_referencia(almacen, lavatorio)).contains_exactly(
 		["[E] Examinar (mano)", "[Click Izq] Llenar"]
 	)
-	# El contador de tareas sigue arriba de la primera línea.
-	var hud: Node = almacen.get("_hud")
-	var tareas := hud.get_node("Tareas") as Label
-	var controles := hud.get_node("Controles") as Label
-	assert_str(tareas.text).is_not_empty()
-	assert_float(tareas.get_global_rect().end.y).is_less_equal(
-		controles.get_global_rect().position.y
-	)
 
 
 func test_la_caja_del_deposito_saca_y_mete_en_el_local() -> void:  # AC-PLY-083
@@ -150,23 +142,16 @@ func test_el_ticket_sobre_el_inodoro_cuenta_en_el_local() -> void:  # AC-PLY-084
 func test_contenedor_y_tapa_ofrecen_gestos_distintos() -> void:  # AC-PLY-086
 	var almacen := await _abrir()
 	assert_object(BolsaEnLaMano.sacar(almacen)).is_not_null()
-	for parte: Node3D in [almacen.get("_contenedor"), almacen.get("_tapa_del_contenedor")]:
-		var lineas := _referencia(almacen, parte)
-		assert_array(lineas).contains_exactly(
-			[
-				"[E] Examinar (mano)",
-				(
-					"[Click Izq] Interactuar"
-					if parte == almacen.get("_contenedor")
-					else "[Click Izq] Cerrar"
-				)
-			]
-		)
 	var tapa: Node3D = almacen.get("_tapa_del_contenedor")
+	for parte: Node3D in [almacen.get("_contenedor"), tapa]:
+		assert_array(_referencia(almacen, parte)).contains_exactly(
+			["[E] Examinar (mano)", "[Click Izq] Interactuar"]
+		)
 	tapa.call("accionar")
 	assert_array(_referencia(almacen, tapa)).contains_exactly(
 		["[E] Examinar (mano)", "[Click Izq] Abrir"]
 	)
+	tapa.call("_physics_process", 1.0)
 	tapa.call("accionar")
 	assert_array(_referencia(almacen, tapa)).contains_exactly(
 		["[E] Examinar (mano)", "[Click Izq] Cerrar"]

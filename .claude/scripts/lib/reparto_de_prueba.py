@@ -1,123 +1,45 @@
 from collections import Counter
 from collections.abc import Iterable
-from dataclasses import dataclass
-from itertools import product
 import math
 import re
+from typing import NamedTuple
 
-from lib.gondola import Envase, MARGEN
 from lib.reparto import PRODUCTOS, Tanda
 
 
-def tramo_con_referencia(
-    largo_del_estante: float, izquierda: float, largo: float, retiro: float,
-    extremos: tuple[float, float] = (0.0, 0.0),
-    separaciones: tuple[float, float] = (0.0, 0.0),
-    cabecera: bool = False,
-) -> tuple[float, float]:
-    """El retiro frontal no recorta el ancho transversal de una cabecera.
+class Frente(NamedTuple):
+    """Cómo se ve un producto en cada estante de su cara: cuántas unidades, cada cuántos metros, y
+    en qué punto del largo del estante cae el medio de la tanda."""
 
-    En los laterales, la banda medida ya reserva dos márgenes de la tanda de la punta;
-    se agrega sólo el retiro y el aire que todavía faltan detrás de ella.
-    """
-    if cabecera:
-        return izquierda, izquierda + largo
-    inicio = max(izquierda, retiro, extremos[0] - 2 * MARGEN + separaciones[0])
-    fin = min(
-        izquierda + largo,
-        largo_del_estante - max(retiro, extremos[1] - 2 * MARGEN + separaciones[1]),
-    )
-    return inicio, fin
+    cuantas: int
+    paso: float
+    medio: float
 
 
-def pasos_del_estante(productos: tuple[str, ...], referencias: dict[str, float]) -> list[float]:
-    """La separación de cada producto del estante: la de referencia, salvo Terminator.
-
-    Terminator toma la de su vecino porque con la suya de referencia las cajas quedan casi
-    solapadas junto al resto del estante.
-    """
-    pasos = [referencias[producto] for producto in productos]
-    if len(productos) == 2:
-        for indice, producto in enumerate(productos):
-            if producto in CON_EL_PASO_DEL_VECINO:
-                pasos[indice] = referencias[productos[1 - indice]]
-    return pasos
-
-
-def centros_con_referencia(
-    largo: float, envases: list[Envase], cuentas: list[int], huecos: list[float],
-    extremos: tuple[float, float] | None = None,
-    *, minimo: float, aire_central: float = 0.0,
-) -> list[list[float]]:
-    """El cupo sale de las columnas que caben con el ritmo de referencia y sus márgenes.
-
-    El encuentro de dos tandas deja la mayor separación de las dos y el sobrante va a los
-    bordes: así el paso es el mismo entre las unidades vecinas, sean o no del mismo producto.
-    """
-    if not envases or len(envases) != len(cuentas) or len(cuentas) != len(huecos):
-        raise ValueError("el reparto requiere un envase y una separación por tanda")
-    if extremos is not None and len(envases) != 2:
-        raise ValueError("los extremos requieren las dos mitades longitudinales")
-    if len(envases) > 2:
-        raise ValueError("el mapa admite una tanda o las dos mitades longitudinales")
-    if any(n < 1 or h < minimo for n, h in zip(cuentas, huecos)):
-        raise ValueError("el reparto no conserva el mínimo de aire entre unidades")
-    dos = len(envases) == 2
-    union = max(aire_central, *huecos) if dos else 0.0
-    bordes = extremos or ((aire_central / 2,) * 2 if dos else (0.0, 0.0))
-    disponible = largo - sum(bordes) - union
-    candidatas = []
-    for candidata in product(*(range(1, limite + 1) for limite in cuentas)):
-        bloques = [n * e.ancho + (n - 1) * h
-                   for n, e, h in zip(candidata, envases, huecos)]
-        sobrante = disponible - sum(bloques)
-        if sobrante < -1e-9:
-            continue
-        if dos:
-            inicio = bordes[0] + sobrante / 2
-            if not inicio + bloques[0] / 2 < largo / 2 < inicio + bloques[0] + union + bloques[1] / 2:
-                continue
-        candidatas.append((sum(candidata), -abs(bloques[0] - bloques[-1]), candidata, bloques))
-    if not candidatas:
-        raise ValueError("ni una columna cabe conservando los márgenes y el aire")
-    _, _, cuentas, bloques = max(candidatas)
-    inicio = bordes[0] + (disponible - sum(bloques)) / 2
-    inicios = [inicio, inicio + bloques[0] + union][:len(envases)]
-    return [
-        [desde + envase.ancho / 2 + columna * (envase.ancho + hueco) for columna in range(cuenta)]
-        for envase, cuenta, hueco, desde in zip(envases, cuentas, huecos, inicios)
-    ]
-
-
-CARAS = {
-    "A.oeste": ("ARVECOR", "MAROLINI"),
-    "A.este": ("TERMINATOR", "ZUCARACHAS"),
-    "A.norte": ("FERNET_GOD",),
-    "A.sur": ("MALBARDO",),
-    "B.este": ("PEPITO", "PETISAS"),
-    "B.oeste": ("PROGRES", "DON_SATURADOS"),
-    "B.norte": ("JORGILLO",),
-    "B.sur": ("POETICO",),
-    "N.sur": ("ACTRONCITO", "DURONGA"),
-    "H1.sur": ("PURA_COLA",),
-    "H2.sur": ("MAYONCHIS",),
+#: El reparto de las jornadas de prueba. Va declarado porque es una decisión de exhibición: se ve
+#: igual en todos los estantes de una cara y no depende de qué tanda ocupa ese lugar en el mapa
+#: completo.
+FRENTES = {
+    "A.oeste": {"ARVECOR": Frente(9, 0.165, -3.216), "MAROLINI": Frente(5, 0.303, -1.706)},
+    "A.este": {"TERMINATOR": Frente(9, 0.165, 1.7135), "ZUCARACHAS": Frente(5, 0.303, 3.214)},
+    "A.norte": {"POETICO": Frente(4, 0.2117, 0.1666)},
+    "A.sur": {"FERNET_GOD": Frente(6, 0.1407, -0.1667)},
+    "B.este": {"PEPITO": Frente(5, 0.31, 1.757), "PETISAS": Frente(5, 0.265, 3.202)},
+    "B.oeste": {"PROGRES": Frente(11, 0.1424, -3.0878), "DON_SATURADOS": Frente(5, 0.265, -1.6411)},
+    "B.norte": {"MALBARDO": Frente(6, 0.142, -2.7491)},
+    "B.sur": {"JORGILLO": Frente(3, 0.3011, 2.7491)},
+    "N.sur": {"ACTRONCITO": Frente(4, 0.2535, 3.1947), "DURONGA": Frente(4, 0.2535, 2.1148)},
+    "H1.sur": {"PURA_COLA": Frente(5, 0.1641, -1.496)},
+    "H2.sur": {"MAYONCHIS": Frente(3, 0.2918, -0.446)},
 }
+
+CARAS = {cara: tuple(frentes) for cara, frentes in FRENTES.items()}
 
 ESTANTES_DE_PRUEBA = {
     f"{cara}.{nivel}": tuple(Tanda(p, fija=nivel != 1) for p in productos)
     for cara, productos in CARAS.items()
     for nivel in range(4)
 }
-
-CON_EL_PASO_DEL_VECINO = frozenset({"TERMINATOR"})
-
-RETIROS_POR_ESTANTE_DE_PRUEBA = {
-    f"{letra}.{cara}.{nivel}": 0.04
-    for letra in ("A", "B")
-    for cara in ("este", "oeste")
-    for nivel in range(4)
-}
-
 
 def validar_reparto_de_prueba(estantes: dict[str, tuple[Tanda, ...]]) -> None:
     if estantes.keys() != ESTANTES_DE_PRUEBA.keys():
@@ -141,29 +63,6 @@ def validar_identidades_de_prueba(identidades: Iterable[str]) -> None:
     esperadas = [p.clave for p in PRODUCTOS if p.clave in presentes]
     if list(identidades) != esperadas:
         raise ValueError("El mapa y el catálogo de prueba tienen identidades distintas")
-
-
-@dataclass(frozen=True)
-class Banda:
-    x0: float
-    x1: float
-    y0: float
-    y1: float
-
-
-def bandas_del_nivel(
-    x0: float, x1: float, y0: float, y1: float, norte: float, sur: float
-) -> dict[str, Banda]:
-    """Las cabeceras reservan el fondo medido de sus envases sobre la chapa real."""
-    if x1 <= x0 or y1 - y0 <= norte + sur or min(norte, sur) <= 0:
-        raise ValueError("La chapa no alcanza para las caras del mapa")
-    centro = (x0 + x1) / 2
-    return {
-        "norte": Banda(x0, x1, y1 - norte, y1),
-        "sur": Banda(x0, x1, y0, y0 + sur),
-        "oeste": Banda(x0, centro, y0 + sur, y1 - norte),
-        "este": Banda(centro, x1, y0 + sur, y1 - norte),
-    }
 
 
 def bases_del_contenido(texto: str) -> dict[str, tuple[tuple[float, ...], ...]]:

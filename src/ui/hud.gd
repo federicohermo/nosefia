@@ -1,5 +1,5 @@
-## La pantalla del turno: cuántas obligatorias van, los controles que sirven ahora y el
-## subtítulo de lo que se mira o examina.
+## La pantalla del turno: los controles que sirven ahora y el subtítulo de lo que se mira o
+## examina.
 ##
 ## **Recibe todo ya decidido y lo pinta.** No conoce al nodo que le manda los números: se
 ## conecta por señal desde la escena.
@@ -23,23 +23,9 @@
 class_name Hud
 extends CanvasLayer
 
-## El texto de tareas vive acá y **no** además en `hud.tscn`, que es lo que pide
-## `.claude/rules/presentacion.md`: los `Label` de la escena nacen vacíos y el cableado los pinta
-## en su `_ready()`. Un texto en los dos lados se cambia en uno solo el día que haya que
-## cambiarlo.
-const TEXTO_DE_LAS_TAREAS := "Tareas %s"
-
-## Cómo se lee cada botón del mouse, por su máscara. Los demás botones no tienen nombre: la línea
-## de un gesto que sólo tiene uno de ésos no se pinta.
-const NOMBRES_DE_LOS_BOTONES := {
-	MOUSE_BUTTON_MASK_LEFT: "Click Izq",
-	MOUSE_BUTTON_MASK_RIGHT: "Click Der",
-}
-
-@export var _tareas: Label
 @export var _subtitulo: Label
 
-## La referencia de controles, una línea por renglón, debajo del contador de tareas.
+## La referencia de controles, una línea por renglón.
 @export var _controles: Label
 
 ## El diseño del diálogo de comprador, con su texto: se muestra en lugar del `Label` del subtítulo.
@@ -47,8 +33,6 @@ const NOMBRES_DE_LOS_BOTONES := {
 @export var _texto_del_comprador: RichTextLabel
 
 var foco_presente: bool = false
-
-var _obligatorias: int = 0
 
 var _linea := Subtitulo.new()
 
@@ -82,17 +66,6 @@ func mostrar_foco(_objetivo: Node3D, _distancia: float) -> void:
 func ocultar_foco() -> void:
 	foco_presente = false
 	_mira.color = IndicacionDelFoco.COLOR_SIN_FOCO
-
-
-## Cuántas obligatorias pide la jornada. Se declara una vez al abrir el turno y el HUD la guarda
-## para no tener que recibirla en cada actualización.
-func declarar_obligatorias(cuantas: int) -> void:
-	_obligatorias = cuantas
-	mostrar_tareas(0)
-
-
-func mostrar_tareas(cumplidas: int) -> void:
-	_tareas.text = TEXTO_DE_LAS_TAREAS % Marcador.tareas(cumplidas, _obligatorias)
 
 
 ## Un pensamiento: se ve un rato y se desvanece. Un texto vacío no cambia la línea.
@@ -158,7 +131,9 @@ static func _nombre_del_evento(evento: InputEvent) -> String:
 	if boton != null:
 		if boton.button_index <= 0:
 			return ""
-		var nombre: String = NOMBRES_DE_LOS_BOTONES.get(1 << (boton.button_index - 1), "")
+		var nombre: String = AsignacionDeControles.NOMBRES_DE_LOS_BOTONES.get(
+			boton.button_index, ""
+		)
 		return nombre
 	var tecla := evento as InputEventKey
 	if tecla == null:

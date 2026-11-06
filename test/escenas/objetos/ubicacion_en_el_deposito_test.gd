@@ -119,7 +119,10 @@ func test_cada_caja_le_muestra_su_etiqueta_al_cuarto() -> void:
 				if not espacio.intersect_shape(capsula, 8).is_empty():
 					continue
 				var ojos := pies + Vector3.UP * ReglasDelJugador.ALTURA_DE_LA_CAMARA
-				if ojos.distance_to(etiqueta) > ReglasDelJugador.ALCANCE_DE_LA_MIRA:
+				if (
+					ReglasDelJugador.proximidad(ojos, etiqueta)
+					> ReglasDelJugador.ALCANCE_DE_LA_MIRA
+				):
 					continue
 				var consulta := PhysicsRayQueryParameters3D.create(etiqueta, ojos)
 				consulta.exclude = [(caja as PhysicsBody3D).get_rid(), jugador.get_rid()]

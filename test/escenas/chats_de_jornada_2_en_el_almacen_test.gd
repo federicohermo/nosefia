@@ -4,6 +4,7 @@ const Avance := preload("res://test/avance_de_devolucion.gd")
 const FinDeLaReflexion := preload("res://test/fin_de_la_reflexion.gd")
 const JEFE := Conversacion.Interlocutor.JEFE
 const YASMIN := Conversacion.Interlocutor.YASMIN
+const NOTAS := Conversacion.Interlocutor.NOTAS
 const RelojDePrueba := preload("res://test/reloj_de_prueba.gd")
 var _almacen: Node3D
 var _ruta_anterior: String
@@ -41,6 +42,15 @@ func after_test() -> void:
 
 func _cuadros(cuantos: int) -> void:
 	for _cuadro: int in cuantos:
+		await get_tree().process_frame
+
+
+## El chat que se abre con el celular arriba entra deslizándose: los clics esperan a que llegue.
+func _esperar_el_deslizamiento() -> void:
+	var pantalla := _pantalla()
+	for _cuadro: int in 600:
+		if pantalla.get("_lista_quieta") == null and pantalla.get("_chat_saliente") == null:
+			return
 		await get_tree().process_frame
 
 
@@ -111,7 +121,7 @@ func test_checkpoint_real_abre_dos_chats_sin_intro_y_con_devolucion_fechada() ->
 	)
 	assert_bool((_almacen.get("_instrucciones") as CanvasLayer).visible).is_false()
 	var bandeja := _celular().bandeja()
-	assert_int(bandeja.no_leidos(YASMIN)).is_equal(15)
+	assert_int(bandeja.no_leidos(YASMIN)).is_equal(_guion_de_la_apertura())
 	var jefe := bandeja.mensajes_de(JEFE)
 	assert_str(jefe[-2].identidad).is_equal("J2_CONTENEDOR_FOTO")
 	(
@@ -124,10 +134,14 @@ func test_checkpoint_real_abre_dos_chats_sin_intro_y_con_devolucion_fechada() ->
 	)
 	await _q()
 	var lista: VBoxContainer = _pantalla().get("_mensajes")
-	assert_int(lista.get_child_count()).is_equal(2)
+	assert_array(bandeja.conversaciones()).contains([bandeja.conversacion_de(NOTAS)])
+	assert_int(lista.get_child_count()).is_equal(bandeja.conversaciones().size())
 	var fila := lista.get_child(1).get_child(0)
-	assert_str((fila.find_child("NoLeidos", true, false).get_child(0) as Label).text).is_equal("15")
+	assert_str((fila.find_child("NoLeidos", true, false).get_child(0) as Label).text).is_equal(
+		str(_guion_de_la_apertura())
+	)
 	await _clic((lista.get_child(1) as Button).get_global_rect().get_center())
+	await _esperar_el_deslizamiento()
 	assert_int(_celular().celular().chat()).is_equal(YASMIN)
 	assert_int(bandeja.no_leidos(YASMIN)).is_zero()
 	assert_int(bandeja.no_leidos(JEFE)).is_equal(jefe.size())
@@ -147,6 +161,7 @@ func test_solo_el_tramo_real_pide_pista_y_foto_vuelve_al_mismo_scroll() -> void:
 	await _q()
 	var lista: VBoxContainer = _pantalla().get("_mensajes")
 	await _clic((lista.get_child(1) as Button).get_global_rect().get_center())
+	await _esperar_el_deslizamiento()
 	var texto := _burbuja(5).find_children("*", "RichTextLabel", true, false)[0] as RichTextLabel
 	var scroll: ScrollContainer = _pantalla().get("_scroll")
 	scroll.ensure_control_visible(texto)
@@ -185,15 +200,20 @@ func test_solo_el_tramo_real_pide_pista_y_foto_vuelve_al_mismo_scroll() -> void:
 	telefono.resized.connect(func() -> void: cambios.append(telefono.size))
 	await _clic(foto.get_global_rect().get_center())
 	assert_int(_celular().celular().pantalla()).is_equal(Celular.Pantalla.FOTO)
-	assert_str((_pantalla().get("_adjunto") as RichTextLabel).text).is_equal(
-		(
-			"Buen día, pibe. Hoy te pido que tires la basura de todos los tachos del local "
-			+ "en el contenedor. Saludos"
-		)
-	)
+	var texto_de_la_foto := _celular().bandeja().mensajes_de(JEFE)[indice_de_la_foto + 1].texto
+	assert_str(texto_de_la_foto).is_not_empty()
+	assert_str((_pantalla().get("_adjunto") as RichTextLabel).text).is_equal(texto_de_la_foto)
 	await _clic((_pantalla().get("_telefono") as Control).get_global_rect().get_center())
 	assert_int(_celular().celular().pantalla()).is_equal(Celular.Pantalla.CHAT)
 	assert_int(_celular().celular().chat()).is_equal(JEFE)
 	assert_int(scroll.scroll_vertical).is_equal(posicion)
 	for cambio: Vector2 in cambios:
 		assert_bool(cambio.is_equal_approx(tamano_del_telefono)).is_true()
+
+
+func _guion_de_la_apertura() -> int:
+	var cuantos := 0
+	for mensaje: Mensaje in Conversacion.de(YASMIN).mensajes:
+		if mensaje.jornada == ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA + 1:
+			cuantos += 1
+	return cuantos

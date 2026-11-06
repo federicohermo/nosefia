@@ -8,11 +8,13 @@ enum Tipo {
 	CIERRE_PROXIMO,
 	PISTA,
 	TAREAS_TERMINADAS,
-	SALIDA_RETRABADA,
+	CLIENTE_CANSADO_CON_PRODUCTOS,
+	LOGRO,
 }
-enum Salida { SIN_AVISO, HABILITADA, RETRABADA }
 
 const DURACION := 3.0
+## Cada logro es su propio aviso: la clave de un logro empieza donde terminan los valores de `Tipo`.
+const _CLAVE_DEL_PRIMER_LOGRO := 1000
 const HORA_DEL_AVISO := 7
 const UMBRAL_DEL_AVISO := (
 	Reglas.DURACION_DEL_TURNO
@@ -25,13 +27,26 @@ const UMBRAL_DEL_AVISO := (
 
 var _compradores: Array[Comprador] = []
 var _salidos: Array[Comprador] = []
-var _orden: Array[Tipo] = []
-var _transcurrido: Dictionary[Tipo, float] = {}
+var _orden: Array[int] = []
+var _transcurrido: Dictionary[int, float] = {}
 var _esperando: Comprador = null
 var _cierre_avisado := false
-var _salida := Salida.SIN_AVISO
 var _permiso := false
 var _en_la_computadora := false
+
+
+## La clave de un aviso: el valor del tipo, o el del logro desde `_CLAVE_DEL_PRIMER_LOGRO`.
+static func clave_del_logro(logro: Logros.Logro) -> int:
+	return _CLAVE_DEL_PRIMER_LOGRO + logro
+
+
+static func tipo_de(clave: int) -> Tipo:
+	return Tipo.LOGRO if clave >= _CLAVE_DEL_PRIMER_LOGRO else clave as Tipo
+
+
+## Sólo vale para la clave de un aviso de logro.
+static func logro_de(clave: int) -> Logros.Logro:
+	return (clave - _CLAVE_DEL_PRIMER_LOGRO) as Logros.Logro
 
 
 func actualizar_tiempo(restante: float) -> void:
@@ -49,12 +64,12 @@ func atendido(comprador: Comprador) -> void:
 	_transcurrido.erase(Tipo.CLIENTE)
 
 
-func se_fue(comprador: Comprador) -> void:
+func se_fue(comprador: Comprador, dejo_productos := false) -> void:
 	if comprador == null or _salidos.has(comprador):
 		return
 	_salidos.append(comprador)
 	atendido(comprador)
-	_avisar(Tipo.CLIENTE_CANSADO)
+	_avisar(Tipo.CLIENTE_CANSADO_CON_PRODUCTOS if dejo_productos else Tipo.CLIENTE_CANSADO)
 
 
 func llego(comprador: Comprador) -> void:
@@ -74,12 +89,16 @@ func pista_anotada() -> void:
 	_avisar(Tipo.PISTA)
 
 
+## Un logro nunca avisa dos veces: el dominio lo desbloquea una sola.
+func logro_desbloqueado(logro: Logros.Logro) -> void:
+	_avisar_clave(clave_del_logro(logro))
+
+
 func actualizar_salida(disponible: bool) -> void:
 	_permiso = disponible
-	if _en_la_computadora:
-		_retirar(Tipo.SALIDA_RETRABADA if disponible else Tipo.TAREAS_TERMINADAS)
-	else:
-		_avisar_salida(disponible)
+	if disponible and _en_la_computadora:
+		return
+	_avisar_salida(disponible)
 
 
 func actualizar_computadora(abierta: bool) -> void:
@@ -91,16 +110,24 @@ func actualizar_computadora(abierta: bool) -> void:
 func avanzar(segundos: float) -> void:
 	if segundos <= 0.0:
 		return
-	for tipo in visibles():
-		if tipo == Tipo.CLIENTE and _esperando != null:
+	for clave in avisos():
+		if _persiste(tipo_de(clave)):
 			continue
-		_transcurrido[tipo] += segundos
-		if _transcurrido[tipo] >= DURACION:
-			_orden.erase(tipo)
-			_transcurrido.erase(tipo)
+		_transcurrido[clave] += segundos
+		if _transcurrido[clave] >= DURACION:
+			_orden.erase(clave)
+			_transcurrido.erase(clave)
 
 
 func visibles() -> Array[Tipo]:
+	var tipos: Array[Tipo] = []
+	for clave in _orden:
+		tipos.append(tipo_de(clave))
+	return tipos
+
+
+## Lo mismo que `visibles`, con la identidad de cada logro: dos logros son dos avisos.
+func avisos() -> Array[int]:
 	return _orden.duplicate()
 
 
@@ -111,8 +138,11 @@ func vaciar() -> void:
 	_salidos.clear()
 	_esperando = null
 	_cierre_avisado = false
-	_salida = Salida.SIN_AVISO
 	_permiso = false
+
+
+func _persiste(tipo: Tipo) -> bool:
+	return tipo == Tipo.TAREAS_TERMINADAS or (tipo == Tipo.CLIENTE and _esperando != null)
 
 
 func _retirar(tipo: Tipo) -> void:
@@ -121,18 +151,17 @@ func _retirar(tipo: Tipo) -> void:
 
 
 func _avisar(tipo: Tipo) -> void:
-	_orden.erase(tipo)
-	_orden.push_front(tipo)
-	_transcurrido[tipo] = 0.0
+	_avisar_clave(tipo)
+
+
+func _avisar_clave(clave: int) -> void:
+	_orden.erase(clave)
+	_orden.push_front(clave)
+	_transcurrido[clave] = 0.0
 
 
 func _avisar_salida(disponible: bool) -> void:
-	if disponible:
-		if _salida == Salida.SIN_AVISO:
-			_avisar(Tipo.TAREAS_TERMINADAS)
-		_retirar(Tipo.SALIDA_RETRABADA)
-		_salida = Salida.HABILITADA
-	elif _salida == Salida.HABILITADA:
+	if not disponible:
 		_retirar(Tipo.TAREAS_TERMINADAS)
-		_avisar(Tipo.SALIDA_RETRABADA)
-		_salida = Salida.RETRABADA
+	elif not _orden.has(Tipo.TAREAS_TERMINADAS):
+		_avisar(Tipo.TAREAS_TERMINADAS)

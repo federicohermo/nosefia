@@ -3,7 +3,7 @@ schema_version: 1
 capability_id: CAP-EMP
 status: ratified
 owner: por definir
-provenance: GDD «Consecuencias» y «Finales»; fichas «1. Ciclo de jornadas y sistema de puntos», «Pantalla entre jornadas» y «Chat con el jefe»; decisiones de #374, decisión del 2026-09-28 de #299, decisiones de #375 y corrección visual solicitada en #398; migración de los specs 002, 016, 017; metadatos temporales de devoluciones de #430; decisiones de #432 sobre el hecho de uso de Poético y de #22 sobre la titularidad del expediente, 2026-10-15; advertencia por Poético y paso a la reflexión de cierre de #436; ocho jornadas de #526; instrucciones por jornada de #527; cuartito de limpieza de #541; puntos de las jornadas de prueba de #572; devolución desde la jornada 4 y cierres de la ficha del 20/10 de #576; mensajes introductorios de la jornada 4 en pantalla, de la ficha «Chat con el jefe» del 2026-10-21; auditoría de la prueba contra las fichas del 2026-10-22; quinto llamado por heladeras abiertas de #550, ficha «Llamados de atención extra» del 2026-10-20 y filas de Reto 5 de «Chat con el jefe» y decisión del 2026-10-26 sobre el texto con P ≥ 4; Tarea 5 con la bolsa tirada por la ventana de #518, decisión del 2026-10-25; espera del celular tras la persiana de #628, ficha «Pantalla entre jornadas»; deslizamiento de las placas de Enrique de #675, ficha «Especificar animaciones» (GJ-69) y decisión del 2026-10-30; siete jornadas, con dos de prueba, de #693
+provenance: GDD «Consecuencias» y «Finales»; fichas «1. Ciclo de jornadas y sistema de puntos», «Pantalla entre jornadas» y «Chat con el jefe»; decisiones de #374, decisión del 2026-09-28 de #299, decisiones de #375 y corrección visual solicitada en #398; migración de los specs 002, 016, 017; metadatos temporales de devoluciones de #430; decisiones de #432 sobre el hecho de uso de Poético y de #22 sobre la titularidad del expediente, 2026-10-15; advertencia por Poético y paso a la reflexión de cierre de #436; ocho jornadas de #526; instrucciones por jornada de #527; cuartito de limpieza de #541; puntos de las jornadas de prueba de #572; devolución desde la jornada 4 y cierres de la ficha del 20/10 de #576; mensajes introductorios de la jornada 4 en pantalla, de la ficha «Chat con el jefe» del 2026-10-21; auditoría de la prueba contra las fichas del 2026-10-22; quinto llamado por heladeras abiertas de #550, ficha «Llamados de atención extra» del 2026-10-20 y filas de Reto 5 de «Chat con el jefe» y decisión del 2026-10-26 sobre el texto con P ≥ 4; Tarea 5 con la bolsa tirada por la ventana de #518, decisión del 2026-10-25; espera del celular tras la persiana de #628, ficha «Pantalla entre jornadas»; deslizamiento de las placas de Enrique de #675, ficha «Especificar animaciones» (GJ-69) y decisión del 2026-10-30; siete jornadas, con dos de prueba, de #693; la Tarea 5 del pedido al proveedor, de #691; la curva de la persiana del cierre de #674, ficha «Especificar animaciones» (GJ-69) y decisión del 2026-10-27
 ---
 
 # Capacidad: el legajo del empleado
@@ -122,8 +122,9 @@ jugador. Con la partida en curso, ofrece **sólo continuar**. En las jornadas 3 
 cierre (BR-INV-042) y la entrada de la noche siguiente empieza cuando ésta termina. En las
 demás, el celular baja por el margen inferior y después empieza la entrada de la noche
 siguiente (BR-SHF-019). Salir al menú pasa por la pausa, como en cualquier
-otro momento de la jornada. Con la partida terminada, despedido o contrato cumplido, ofrece sólo
-volver al menú: no hay noche siguiente que abrir. La opción DEBE aparecer debajo del último
+otro momento de la jornada. Con la partida terminada, despedido o contrato cumplido, ofrece una
+sola opción de salida: no hay noche siguiente que abrir. Esa opción lleva a la pantalla de final
+cuando el final la tiene (BR-SHF-027) y vuelve al menú cuando no. La opción DEBE aparecer debajo del último
 mensaje, recién cuando ése está a la vista (BR-EMP-030). Elegirla dos veces NO DEBE abrir dos
 noches ni pedir dos veces el menú.
 
@@ -290,6 +291,7 @@ entre tres textos según BR-EMP-046:
 | 3 | Cuando te pedí que ordenaras las cajas en las estanterías del depósito, lo que quería decir es que pongas TODAS y cada una de las CAJAS de cartón con productos ARRIBA de las ESTANTERÍAS del DEPÓSITO. Ahí se entendió? |
 | 4 | De verdad era tan difícil tirar tres bolsas de basura? |
 | 5 | El de BR-EMP-046. |
+| 7 | Te encargué ocuparte de las quejas y ahora recibo quejas sobre la gestión de las quejas. |
 
 ### BR-EMP-028 — Los Retos dicen el llamado que es
 
@@ -595,6 +597,31 @@ al reanudar, la espera sigue desde donde estaba. La devolución del despido y la
 cumplido siguen la misma secuencia. Las jornadas de introducción no cambian (BR-EMP-011).
 Esta espera NO DEBE cambiar el guardado de la noche cerrada.
 
+### BR-EMP-047 — La Tarea 5 de la jornada 6 depende del pedido
+
+CUANDO cierra la jornada 6 con el pedido al proveedor sin cumplir (BR-SHF-032), el sistema DEBE
+elegir un único texto para Tarea 5, letra por letra de la ficha «Chat con el jefe»:
+
+| Condición | Texto |
+|---|---|
+| Ningún pedido enviado, o sólo pedidos enviados sin wifi | Era muy importante que le hicieras ese pedido al proveedor anoche. Nos quedamos cortos de productos durante el día. Encima tuve que hacer el pedido yo y fumarme el carácter de mierda del flaco ese. Muchas gracias... |
+| Algún pedido enviado con wifi, y el último no es exacto | El pedido que le hiciste al proveedor no estaba bien… Tuve que ir personalmente a corregir tu error y fumarme el carácter de mierda del flaco ese. Muchas gracias... |
+
+«Último» es el último enviado con wifi (BR-SHF-032). SI el pedido quedó cumplido, ENTONCES NO DEBE
+haber Tarea 5. Las demás jornadas NO DEBEN traer estos textos.
+
+### BR-EMP-048 — La persiana del cierre baja frenando al llegar abajo
+
+CUANDO cierra cualquier jornada, de la primera a la última, y también al despedir, el sistema DEBE
+bajar la persiana con ease out: la velocidad es máxima al empezar y decrece hasta cero al llegar
+abajo, sin rebote. La curva y la duración son valores de diseño; la duración es la de BR-EMP-030.
+El avance de la bajada DEBE ser 0 al empezar y 1 al terminar, y NO DEBE retroceder. La persiana
+bajada DEBE anunciarse una sola vez, cuando está entera abajo; BR-EMP-044 cuenta sus 0,5 segundos
+desde ese momento, y las noches de prueba abren lo que sigue (BR-EMP-011) recién entonces. El sonido
+de la bajada DEBE durar lo mismo que la bajada. MIENTRAS la pausa está en pantalla, la curva NO
+DEBE avanzar, y al reanudar sigue desde donde quedó. La subida de la persiana al abrir la noche
+(BR-SHF-019) NO DEBE cambiar.
+
 ## Criterios de aceptación
 
 ### AC-EMP-001 — Los tres cortes *(verifica BR-EMP-001)*
@@ -661,7 +688,8 @@ noche de `AVISO` ENTONCES está despedida.
 ### AC-EMP-016 — La partida terminada no ofrece continuar *(verifica BR-EMP-011)*
 
 DADO una partida que termina al cerrar la noche, despedido o contrato cumplido, CUANDO se arma
-la devolución ENTONCES ofrece una sola opción, volver al menú, y no ofrece continuar. DADO la
+la devolución ENTONCES ofrece una sola opción de salida, que lleva a la pantalla de final si el final la tiene
+(BR-SHF-027) y vuelve al menú si no, y no ofrece continuar. DADO la
 partida en curso CUANDO se arma la devolución ENTONCES ofrece una sola opción, continuar, y no
 ofrece volver al menú.
 
@@ -930,7 +958,7 @@ despido. DADO P = 4 con atender y reponer sin cumplir y los cuatro llamados, cad
 vez, ENTONCES la devolución es, en orden: «Che», la fila n = 1 de Tarea 1 y de Tarea 3, la fila
 n = 1 de Reto 1, Reto 2, Reto 3 y Reto 4, y el Cierre del despido: ocho mensajes, sin Tarea 2 ni
 Tarea 4 ni Tarea 5, y la
-única opción es volver al menú.
+única opción lleva a la pantalla de final del despido (BR-SHF-027).
 
 ### AC-EMP-062 — Un mensaje más por segundo *(verifica BR-EMP-011, BR-EMP-030)*
 
@@ -960,8 +988,8 @@ bajar; tras los tres «Continuar» de la reflexión, baja y la persiana muestra 
 CUANDO la noche 4 está abierta y se abre el celular con Q ENTONCES el chat de
 Enrique tiene los mensajes de las jornadas 1 a 3 intercalados con las devoluciones 1 a 3, y
 después la foto y el texto de apertura 4 definidos por `investigation`. DADO una partida despedida
-desde la jornada 3 CUANDO se elige «volver al menú» ENTONCES se pide el menú una vez y no se
-anuncia otra noche.
+desde la jornada 3 CUANDO se elige la opción de la devolución ENTONCES aparece la pantalla de final
+del despido (BR-SHF-027), no se pide el menú y no se anuncia otra noche.
 
 ### AC-EMP-093 — Las noches de prueba cierran sin celular *(verifica BR-EMP-011, BR-EMP-030, BR-EMP-022)*
 
@@ -985,8 +1013,9 @@ siguen las instrucciones una sola vez.
 
 DADO la devolución de la noche 3 con la opción a la vista CUANDO se elige «continuar» dos veces
 ENTONCES empieza una sola reflexión y no se anuncia ninguna noche; terminada la reflexión, se
-anuncia una sola «NOCHE 4» y la jornada es 4. DADO una partida terminada CUANDO se
-elige «volver al menú» dos veces ENTONCES el menú se pide una sola vez.
+anuncia una sola «NOCHE 4» y la jornada es 4. DADO una partida terminada sin pantalla de
+final CUANDO se elige «volver al menú» dos veces ENTONCES el menú se pide una sola vez. Con
+pantalla de final lo cubre AC-SHF-067.
 
 ### AC-EMP-066 — Las devoluciones conservan su lugar entre aperturas *(verifica BR-EMP-031)*
 
@@ -1238,6 +1267,42 @@ CUANDO se pausa mientras la persiana baja, y se reanuda ENTONCES la espera empie
 la persiana termina de bajar. DADO el cierre de la noche 2 sin perder la prueba CUANDO pasan 10 s
 desde que la persiana terminó de bajar ENTONCES el celular no subió (AC-EMP-093).
 
+### AC-EMP-115 — Sin pedido, o sólo sin wifi, Tarea 5 reclama el pedido *(verifica BR-EMP-047)*
+
+DADO el cierre de la jornada 6 sin ningún pedido CUANDO se arma la devolución ENTONCES Tarea 5 es
+el texto de «Era muy importante que le hicieras ese pedido…». DADO sólo pedidos enviados sin wifi
+ENTONCES es el mismo texto, aunque alguno fuera exacto.
+
+### AC-EMP-116 — Un pedido con wifi y equivocado dice el otro texto *(verifica BR-EMP-047)*
+
+DADO el cierre de la jornada 6 con un pedido enviado con wifi que no es exacto como último con
+wifi CUANDO se arma la devolución ENTONCES Tarea 5 es el texto de «El pedido que le hiciste al
+proveedor no estaba bien…». DADO un pedido exacto con wifi seguido de uno equivocado con wifi
+ENTONCES es el mismo texto. DADO uno equivocado con wifi seguido de uno exacto con wifi ENTONCES no
+hay Tarea 5.
+
+### AC-EMP-117 — Cumplido o fuera de la jornada 6 no hay texto *(verifica BR-EMP-047)*
+
+DADO el cierre de la jornada 6 con el pedido cumplido ENTONCES la devolución no trae ninguno de
+los dos textos. DADO el cierre de cada jornada distinta de la 6 con el pedido sin cumplir ENTONCES
+la devolución no trae ninguno de los dos.
+
+### AC-EMP-118 — La persiana baja frenando, en cualquier jornada *(verifica BR-EMP-048, BR-EMP-030)*
+
+DADO el cierre de la jornada 1, y el de la jornada 3, CUANDO pasa la mitad de la duración de la
+bajada ENTONCES la persiana bajó más de la mitad de la pantalla y todavía no terminó. CUANDO se
+comparan el primer y el último décimo de la duración ENTONCES la persiana baja menos en el último
+que en el primero. CUANDO pasa la duración entera ENTONCES el avance es 1, la persiana está entera
+abajo y se anuncia la persiana bajada una sola vez; pasar más tiempo NO la anuncia otra vez. DADO
+la persiana bajando CUANDO se pausa a mitad de la bajada, pasan 5 s y se reanuda ENTONCES la
+posición es la misma de antes de pausar y termina de bajar con el tiempo que le faltaba.
+
+### AC-EMP-119 — La subida y el sonido no cambian con la curva *(verifica BR-EMP-048)*
+
+DADO la entrada a la noche CUANDO pasa la mitad de la duración de la subida ENTONCES la apertura de
+la persiana es la mitad, como antes. DADO la persiana bajando CUANDO suena la bajada ENTONCES el
+sonido se ajusta para durar lo mismo que la bajada.
+
 ## No objetivos
 
 - Esta capacidad NO cuenta el tiempo de la noche ni cuántas obligatorias hay: las recibe.
@@ -1247,9 +1312,8 @@ desde que la persiana terminó de bajar ENTONCES el celular no subió (AC-EMP-09
   el celular es de [`investigation`](../investigation/investigation.md).
 - Esta capacidad NO muestra la reflexión de cierre que sigue a «continuar» en las jornadas 3 y
   4: es de [`investigation`](../investigation/investigation.md).
-- Esta capacidad NO trae la Tarea 5 de las jornadas 1 y 2 ni de la 6 y la 7: esas noches no
-  declaran particular (BR-SHF-005). Los textos de la 6 y la 7 esperan en la ficha mientras siga
-  abierta OQ-SHF-006.
+- Esta capacidad NO trae la Tarea 5 de las jornadas 1 y 2: esas noches no declaran particular
+  (BR-SHF-005).
 - Esta capacidad NO redacta mensajes de apertura: `investigation` consume el guion de cada
   contacto, incluida la apertura de la jornada 4. Entrega a ese historial las devoluciones fechadas.
 
@@ -1300,6 +1364,13 @@ desde que la persiana terminó de bajar ENTONCES el celular no subió (AC-EMP-09
   mensajes de pistas de la partida, conservados entre aperturas sin duplicar su titularidad.
 
 ## Preguntas abiertas
+
+- **OQ-EMP-015 — ¿Qué curva exacta de ease out y qué duración tiene la bajada de la persiana?**
+  - Por qué sigue abierta: la ficha «Especificar animaciones» dice «smart animate ease out» y no
+    da la forma de la curva ni la duración.
+  - Decide: una persona de game design, con arte.
+  - Bloquea: nada. Mientras tanto, la curva es la fórmula provisoria `1 - (1 - t)^3` y la
+    duración es la de BR-EMP-030.
 
 - **OQ-EMP-014 — ¿Qué dice el mensaje 1 de la jornada 2 con cero clientes mal atendidos, el
   registro mal hecho y huecos vacíos en las góndolas?**

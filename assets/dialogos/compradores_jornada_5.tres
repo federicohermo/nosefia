@@ -1,0 +1,10 @@
+[gd_resource type="Resource" script_class="DialogosDeCompradores" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://src/dominio/almacen/dialogos_de_compradores.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+cami = PackedStringArray("¡Hola holaaaaaa! ¿Cómo andás, belleza tropical?", "¿Cómo viene ese laburo? ¿Muy pesado? Bueno, veo que seguís acá, así que eso ya es una buena señal jajajajaj.", "[salvo:5A]El otro día me quedé hablando con Naty. ¿No es muy capa ella? Me parece una mina súper inteligente. Bah, no sé si tienen contacto entre ustedes. Ella se va antes de que vos llegues, ¿no?", "[solo:5A]El otro día me quedé hablando con Naty. ¿No es un amor de persona? Bah, no sé si tienen contacto entre ustedes. Ella se va antes de que vos llegues, ¿no?", "No, pará… No era Natalia,…", "¡Yasmín! Jajajaj. Ay, boludo, no sé por qué no retengo los nombres. Con la buena memoria que tengo. Igual, acá los empleados van cambiando demasiado rápido. No me da el tiempo de aprenderme los nombres.", "[solo:5A]Como que no duran mucho en el puesto, ¿no? Para mí no se bancan las [pista=5A]actitudes extrañas de Peldaño[/pista]. Es medio gede, ¿no? Pero seguro que a vos te va a ir re bien. Tenés pinta de que te la re bancás, ah.", "Bueno, pará, que me tengo que ir rapidito. Está por empezar la novela y necesito saber si Nina se va conseguir vengar de Carminha.", "Dameeeee…. {pedido}.", "Sí, sí. Eso mismo.")
+mia = PackedStringArray("hola.. llevo meses sin dormir, necesito encontrar algo más potente", "Encontré un tip que dice que sí mezclo Poético con Pura-cola puedo llegar a dormirme", "zzzzzzzzzzz", "Ah perdón, entonces te pido {producto1}, {producto2} y tambien {producto3} para sumarle potencia")
+despedida_cami = PackedStringArray("¡Gracias, hermoso!", "¿Che, te conté lo de la vecina de acá a la vuelta?", "¡Ay, se me hace tarde! Perdón, después te cuento. ¡Chau chau!")
+despedida_mia = PackedStringArray("zzzzzzzz", "Ay.. gracias , creo que esto va a ser suficiente .")

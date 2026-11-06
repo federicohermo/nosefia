@@ -10,6 +10,9 @@ const HOJA := "Estructura/puerta"
 ## A qué distancia de la bisagra va lo que se pone en el recorrido.
 const RADIO_EN_EL_RECORRIDO := 1.5
 
+## En qué parte del largo de la hoja se apoya una unidad.
+const FRACCION_DE_LA_HOJA := 0.8
+
 ## Cuántos cuadros se deja girar la hoja como mucho, y cuántos para que un cuerpo se duerma.
 const CUADROS_MAXIMOS := 600
 const CUADROS_PARA_DORMIRSE := 120
@@ -63,13 +66,23 @@ func _bisagra(hoja: MeshInstance3D) -> Vector3:
 
 
 ## Un punto del piso en el recorrido de la hoja, a `angulo` radianes de la hoja cerrada.
-func _en_el_recorrido(almacen: Node3D, hoja: MeshInstance3D, angulo: float) -> Vector3:
+func _en_el_recorrido(
+	almacen: Node3D, hoja: MeshInstance3D, angulo: float, radio: float = RADIO_EN_EL_RECORRIDO
+) -> Vector3:
 	var bisagra := _bisagra(hoja)
 	var brazo := (_cerrada(hoja).basis.x * Vector3(1.0, 0.0, 1.0)).normalized()
-	var punto := bisagra + Basis(Vector3.UP, angulo) * brazo * RADIO_EN_EL_RECORRIDO
+	var punto := bisagra + Basis(Vector3.UP, angulo) * brazo * radio
 	var suelo: CollisionShape3D = almacen.get_node("Estructura/SueloSolido/Local")
 	punto.y = suelo.global_position.y + (suelo.shape as BoxShape3D).size.y / 2.0
 	return punto
+
+
+## Una unidad es chica: para que la hoja la toque tiene que quedar antes de su punta.
+func _radio_de_la_unidad(hoja: MeshInstance3D) -> float:
+	var forma: CollisionShape3D = (
+		_cuerpo_de(hoja).find_children("*", "CollisionShape3D", false, false)[0]
+	)
+	return forma.shape.get_debug_mesh().get_aabb().size.x * FRACCION_DE_LA_HOJA
 
 
 ## Hacia dónde empuja la hoja en ese punto cuando abre.
@@ -208,7 +221,9 @@ func test_una_unidad_de_producto_no_frena_la_hoja() -> void:  # AC-PLY-141
 	var almacen: Node3D = await _almacen()
 	var hoja: MeshInstance3D = almacen.get_node(HOJA)
 	var cuerpo := _cuerpo_de(hoja)
-	var punto := _en_el_recorrido(almacen, hoja, Puerta.ANGULO_ABIERTA / 2.0)
+	var punto := _en_el_recorrido(
+		almacen, hoja, Puerta.ANGULO_ABIERTA / 2.0, _radio_de_la_unidad(hoja)
+	)
 	var unidad := await _unidad_dormida(almacen, punto)
 	var partida := unidad.global_position
 	var al_abrir := await _cuadros_hasta_el_tope(cuerpo, Puerta.ANGULO_ABIERTA)

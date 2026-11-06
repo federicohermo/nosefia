@@ -3,7 +3,7 @@ schema_version: 1
 capability_id: CAP-SUB
 status: ratified
 owner: por definir
-provenance: fichas «Subtítulos», «5. Formas de interacción con objetos», «Interfaces virtuales durante la jornada» y «8. Tarea: Reposición»; columnas «Subtítulo al examinar» de las bases «Productos y cajas contenedoras» y «Otros objetos interactuables»; decisiones de #376; exención de bolsa, producto vencido, ticket y pista de #516; cuartito de limpieza de #541; texto provisorio del depósito trabado de #574; útiles fuera del contenedor de #552, ficha «Subtítulos» revisada el 2026-10-21; subtítulos de las manchas de #457, ficha «Limpieza» revisada el 2026-10-20
+provenance: fichas «Subtítulos», «5. Formas de interacción con objetos», «Interfaces virtuales durante la jornada» y «8. Tarea: Reposición»; columnas «Subtítulo al examinar» de las bases «Productos y cajas contenedoras» y «Otros objetos interactuables»; decisiones de #376; exención de bolsa, producto vencido, ticket y pista de #516; cuartito de limpieza de #541; texto provisorio del depósito trabado de #574; útiles fuera del contenedor de #552, ficha «Subtítulos» revisada el 2026-10-21; pensamiento de la primera pista de #714, ficha «Subtítulos» revisada el 2026-10-30; pensamiento sin luz de #689, ficha «Subtítulos» leída el 2026-11-03; subtítulos de las manchas de #457, ficha «Limpieza» revisada el 2026-10-20; renglones y ancho de #626, ficha «Subtítulos» revisada el 2026-11-03; pensamiento de la primera pista por canal de #762, ficha «Subtítulos» leída el 2026-11-03; router del wifi de #690, fichas «Subtítulos» y «Objetos interactuables» leídas el 2026-11-04; la fila «Palanca» de «Objetos interactuables», de #790; la fila «Llave» de «Objetos interactuables», de #810; cajas del proveedor de #788, fichas «Objetos interactuables» leídas el 2026-11-04
 ---
 
 # Capacidad: los subtítulos
@@ -20,6 +20,7 @@ detener al jugador y sin entregar lo que el objeto esconde.
 |---|---|---|
 | **Línea de subtítulo** | la única línea de texto abajo al centro de la pantalla donde se lee lo que piensa el protagonista | leyenda, caption |
 | **Subtítulo** | el texto que muestra la línea de subtítulo en un instante | mensaje, aviso |
+| **Renglón** | cada tramo de un subtítulo entre dos saltos de línea. La línea de subtítulo puede tener varios | línea (es la del cuadro entero) |
 | **Pensamiento** | un subtítulo temporal: se ve entero un tiempo y después se desvanece | aviso, notificación |
 | **Texto al examinar** | lo que dice un objeto cuando se pide examinarlo. Sale de la ficha, no de la revelación | descripción, revelación |
 | **Examen** | el de `investigation`: lo que se lleva en la mano, delante de la cámara, hasta pulsar otra vez la tecla de examinar | observación, inspección |
@@ -98,7 +99,7 @@ editable y NO DEBE formar parte de la identidad. Los nombres de productos salen 
 | Marranos | Una lata de atún Marranos. |
 | Arvejas | Una lata de arvejas Arvecor. |
 | Mayonchis | Un paquete de Mayonchis. |
-| Jorgillo | Un alfajor Jorgillo. |
+| Jorgillata | Un alfajor Jorgillata. |
 | Marolini | Una caja de fideos Marolini. |
 | Uakas | Una caja de fideos Uakalas. |
 | Saladik | Una caja de Saladick. |
@@ -135,28 +136,35 @@ con el mismo contenido, y el cuerpo y la tapa del contenedor.
 |---|---|
 | Mopa | Una mopa para limpiar las manchas del local. |
 | Balde | Un balde para hacer las mezclas con los jabones. |
-| Jabón azul | Un bidón de jabón azul, marca “2”. Sirve para manchas de humedad. |
-| Jabón rosa | Un bidón de jabón rosa, marca “H”. Sirve para manchas de... para manchas marrones. |
-| Jabón amarillo | Un bidón de jabón amarillo, marca “O”. Sirve para manchas de polvo. |
+| Jabón azul | Un bidón de jabón azul, marca “2”.<br>Sirve para manchas de humedad. |
+| Jabón rosa | Un bidón de jabón rosa, marca “H”.<br>Sirve para manchas de... para manchas marrones. |
+| Jabón amarillo | Un bidón de jabón amarillo, marca “O”.<br>Sirve para manchas de polvo. |
 | Cada bolsa de basura | Una bolsa de basura. |
-| Inodoro | Un inodoro. Enrique me pidió encarecidamente que no tire papel en él, porque se tapa. |
+| Colilla | Una colilla de cigarrillo. Qué raro… |
+| Documento impreso | Una especie de… ¿nota impresa? |
+| Llave | Una llave… ¿será? |
+| Palanca | Una palanca que se usó<br>para abrir las cajas de madera. |
+| Inodoro | Un inodoro. Enrique me pidió encarecidamente<br>que no tire papel en él, porque se tapa. |
 | Lavatorio | Un lavatorio. Acá puedo cargar el balde. |
-| Nota de jabones y manchas | Una nota explicando qué jabón usar para cada tipo de mancha. |
-| Nota de instrucciones de limpieza | Una nota que explica cómo usar los elementos de limpieza. |
+| Nota de jabones y manchas | Una nota explicando qué jabón usar<br>para cada tipo de mancha. |
+| Nota de instrucciones de limpieza | Una nota que explica cómo usar<br>los elementos de limpieza. |
 | Nota de no tirar papel | “Por favor, no tirar papel en el inodoro” |
 | Nota de tareas a realizar | Una lista de las tareas que me dejó Enrique. |
-| Nota del local ordenado | Una nota sobre el correcto orden del local. Enrique es medio insoportable con eso… |
-| Computadora | Una computadora viejita. El único programa que tiene es el registro de productos vendidos. |
-| Caja registradora | La caja registradora. Acá puedo hacer los tickets para los compradores. |
-| Lector | El lector de código de barras. Si le paso un producto, lo va a anotar en el programa generador de tickets de la caja. |
-| Entrada principal | La entrada principal al local. Queda cerrada con llave durante el turno nocturno. |
-| Puerta del jefe | Esta puerta lleva a la “oficina” de Enrique. Así le dice él. Siempre está cerrada. |
+| Nota del local ordenado | Una nota sobre el correcto orden del local.<br>Enrique es medio insoportable con eso… |
+| Router | El router del WiFi. Anda más o menos. |
+| Computadora | Una computadora medio vieja. El único programa<br>que tiene es el registro de productos vendidos. |
+| Caja registradora | La caja registradora. Acá puedo hacer<br>los tickets para los compradores. |
+| Lector | El lector de código de barras. Si le paso un producto,<br>lo va a anotar en el programa de la caja. |
+| Entrada principal | La entrada principal al local. Queda cerrada<br>con llave durante el turno nocturno. |
+| Puerta del jefe | Esta puerta lleva a la “oficina” de Enrique.<br>Así le dice él. Siempre queda cerrada. |
 | Puerta del cuartito, trabada | Acá guardan las cosas de limpieza. Está cerrado con llave. |
 | Portón del depósito | Un portón que da a la calle. |
+| Caja de cartón del proveedor | Esta debe ser una de las cajas en las que Hernán<br>trajo los productos que necesitábamos. |
+| Caja de madera | El Fernet God viene en estas cajas de madera.<br>No sé para qué las pasamos a una de cartón.<br>Debe ser un toc de Enrique, no me cabe duda. |
 | Contenedor de basura | Un contenedor de basura. |
 | Tacho del local | Un tacho de basura para los compradores diurnos. |
-| Tacho del escritorio | Un tachito de basura para nosotros, los empleados. |
-| Tacho del baño | El tacho de basura del baño. Mejor ni mirar lo que tiene adentro. |
+| Tacho del escritorio | Un tacho de basura para nosotros,<br>los empleados. |
+| Tacho del baño | El tacho de basura del baño.<br>Mejor ni mirar lo que tiene adentro. |
 
 Las puertas interiores, las puertas de las heladeras, la ventanilla, el comprador, la góndola y
 las manchas NO DEBEN tener texto al examinar. La excepción es la puerta del
@@ -191,7 +199,7 @@ comprador en la ventanilla en el momento de decir el texto. MIENTRAS el jugador 
 el texto es de una entrega del comprador (margen decidido por el usuario en el QA del
 30/10/2026), éste DEBE durar lo de BR-SUB-004. Un aviso de una acción o del estado del jugador NO
 DEBE tener anclaje espacial, y DEBE durar siempre lo de BR-SUB-004 aunque el jugador camine. Esto incluye los gestos de
-BR-SUB-013 y la mopa que se seca de BR-SUB-014. CUANDO el texto tiene un lugar y el jugador
+BR-SUB-013, la mopa que se seca de BR-SUB-014 y la primera pista de BR-SUB-016. CUANDO el texto tiene un lugar y el jugador
 se aleja más que eso, DEBE empezar a desvanecerse en ese momento, en los mismos 0,5 segundos,
 salvo que ya se estuviera desvanecido. Volver a acercarse NO DEBE devolverle la opacidad. El
 texto fijo del examen NO DEBE acortarse. Un texto nuevo DEBE medir desde su propio lugar y desde
@@ -208,19 +216,22 @@ es contenido editable: cambiarla NO DEBE cambiar la identidad ni la condición q
 | Gesto | ID | Pensamiento |
 |---|---|---|
 | Tirar al contenedor algo que no es una bolsa de basura, un producto vencido, un ticket ni una pista | `MALA_IDEA` | Me parece que eso fue una mala idea… |
-| Tirar al contenedor una caja del depósito, que no entra | `CAJA_EN_EL_CONTENEDOR` | La caja es bastante grande para el contenedor. Rebalsaría. Además, Enrique me pidió que no tire las cajas de productos, ni siquiera las vacías. |
-| Tirar al contenedor un útil de limpieza —la mopa, el balde o un jabón—, que no entra | `UTIL_EN_EL_CONTENEDOR` | Me parece que no debería tirar<br>los elementos de limpieza. |
-| Soltar algo que no es un ticket y que queda quieto fuera del local, el depósito y el baño | `POR_LA_VENTANA` | Si Enrique se entera de que estoy tirando cosas por la ventana, me mata. |
-| Pasar por una mancha la mopa mojada con el jabón que no es el suyo | `JABON_EQUIVOCADO` | Esto no está funcionando… Creo que no estoy usando el jabón correcto. |
+| Tirar al contenedor una caja del depósito, que no entra | `CAJA_EN_EL_CONTENEDOR` | Enrique me pidió que no tirara las cajas<br>de productos, ni siquiera las vacías. |
+| Tirar al contenedor un útil de limpieza —la mopa, el balde o un jabón—, que no entra | `UTIL_EN_EL_CONTENEDOR` | Meee parece que no debería tirar<br>los elementos de limpieza. |
+| Soltar algo que no es un ticket y que queda quieto fuera del local, el depósito y el baño | `POR_LA_VENTANA` | Si Enrique se entera de que estoy tirando<br>cosas por la ventana, me mata. |
+| Pasar por una mancha la mopa mojada con el jabón que no es el suyo | `JABON_EQUIVOCADO` | Esto no está funcionando…<br>Creo que no estoy usando el jabón correcto. |
 | Pasar por una mancha la mopa mojada con agua sola | `MOPA_SIN_MOJAR` | Necesitaría mojar la mopa en agua con jabón. |
 | Pasar por una mancha la mopa seca, sin haberla mojado en esa jornada | `MOPA_SIN_MOJAR` | Necesitaría mojar la mopa en agua con jabón. |
 | Pasar por una mancha la mopa seca, después de haberla mojado en esa jornada | `MOPA_YA_SECA` | Ya se secó la mopa… |
-| Borrar la caca de la pared del otro inodoro | `PARED_DEL_OTRO_INODORO` | Se ve que alguien no tuvo tiempo de apuntar bien… |
+| Borrar la caca de la pared del otro inodoro | `PARED_DEL_OTRO_INODORO` | Se ve que alguien no llegó a apuntar bien… |
 | Borrar la caca del piso frente a las estanterías del fondo del local, en la jornada 5 | `PISO_DE_LAS_ESTANTERIAS_DEL_FONDO` | Espero que sea vómito… |
 | Borrar la caca del techo del baño, en la jornada 6 | `TECHO_SOBRE_UN_CUBICULO` | ¿¿Cómo llegó eso ahí?? |
-| Usar la puerta de entrada del local en una jornada de prueba, con alguna obligatoria pendiente | `PUERTA_CON_TAREAS_PENDIENTES` | No debería irme. Todavía me quedan tareas por completar. |
+| Usar la puerta de entrada del local en una jornada de prueba, con alguna obligatoria pendiente | `PUERTA_CON_TAREAS_PENDIENTES` | No debería irme.<br>Todavía me quedan tareas por completar. |
+| Hacer clic izquierdo sobre la computadora, la caja registradora o el router con el corte de luz cortado | `SIN_LUZ` | Se cortó la luz…<br>Ningún aparato eléctrico funciona. |
+| Hacer clic izquierdo sobre el router con el corte sin cortar: antes del corte de la jornada 6 o en cualquier otra jornada | `ROUTER_ANTES_DEL_CORTE` | Mejor no me pongo a jugar con el router.<br>Ya veo que empieza a andar mal. |
+| Hacer clic izquierdo sobre el router con el wifi devuelto después del corte | `ROUTER_YA_RESTAURADO` | Mejor no vuelvo a tocar el router.<br>No sea que falle de nuevo. |
 
-El `<br>` de la tabla es un salto de línea del subtítulo, tal como lo marca la ficha.
+El `<br>` de la tabla es un salto de renglón del subtítulo, tal como lo marca la ficha (BR-SUB-017).
 
 `CAJA_EN_EL_CONTENEDOR` y `UTIL_EN_EL_CONTENEDOR` DEBEN decidirse por lo que se intenta tirar y no
 por la tapa: con la tapa cerrada o girando piensan lo mismo que con la tapa abierta. Poético, aun en
@@ -236,6 +247,19 @@ espere. Una obligatoria que se descumple después de habilitada la salida DEBE d
 pensamiento. Desde la primera jornada completa NO DEBE pensarlo. La puerta conserva su sonido de
 trabada, y examinarla con E conserva su texto (BR-SUB-010).
 
+`SIN_LUZ` DEBE decidirse por el estado del corte (BR-ANO-012) en el instante del clic y no por la
+jornada: MIENTRAS el corte está cortado, la computadora y la caja registradora DEBEN pensarlo y
+seguir cerradas. Con el corte sin cortar o restaurado NO DEBEN pensarlo, y se abren como siempre.
+Cortarse con una abierta, que se cierra sola, NO DEBE pensarlo. Repetir el clic repite el
+pensamiento, como los demás de esta tabla. El router lo piensa con el corte cortado igual que los
+otros dos aparatos, y no cambia su estado (BR-ANO-017).
+
+`ROUTER_ANTES_DEL_CORTE` y `ROUTER_YA_RESTAURADO` DEBEN decidirse por el estado del router
+(BR-ANO-015, BR-ANO-016) en el instante del clic: el primero, con el corte sin cortar —antes de las
+20:58 de la jornada 6 y en las demás jornadas—; el segundo, con el wifi devuelto después del corte.
+Ninguno cambia el router. Un clic sobre el router descompuesto o apagado, con la luz restaurada, NO DEBE
+pensar nada: apaga o prende (BR-ANO-016).
+
 Los pensamientos de la mopa de esta tabla DEBEN aparecer sólo al intentar limpiar una mancha.
 Mojarla, transportarla o dejar marcas de agua NO DEBE dispararlos. SI se secó después de mojarla
 sólo con agua, ENTONCES al intentar limpiar DEBE decir «Ya se secó la mopa…».
@@ -244,7 +268,7 @@ sólo con agua, ENTONCES al intentar limpiar DEBE decir «Ya se secó la mopa…
 
 CUANDO la carga de la mopa pasa de más de cero a cero por primera vez en la partida, el sistema
 DEBE mostrar el pensamiento `MOPA_BERRETA`, cuyo texto actual es
-«Dios mío, qué mopa berreta. Se seca a los tres segundos. Literal.». Las veces
+«Dios mío, qué mopa berreta.<br>Se seca a los tres segundos. Literal.». Las veces
 siguientes, en esa jornada o en otra, NO DEBE mostrarlo. Una partida nueva lo vuelve a mostrar
 una vez. SI se seca durante un examen, ENTONCES el texto fijo del examen DEBE seguir, y el
 pensamiento DEBE mostrarse entero al terminar el examen. Recién al mostrarse cuenta como
@@ -255,6 +279,44 @@ La frase de los tres segundos expresa una queja del protagonista; NO DEBE fijar 
 exacta ni modificar el desgaste por tiempo y recorrido de
 [`store-cleanup`](../store-cleanup/store-cleanup.md) (BR-CLN-022).
 
+### BR-SUB-016 — La primera pista anotada
+
+CUANDO [`investigation`](../investigation/investigation.md) anota la primera pista de la partida,
+por cualquier canal, el sistema DEBE mostrar el pensamiento de ese canal. Cada texto tiene dos
+renglones, y el segundo es el mismo:
+
+| Canal por el que se anota | Primer renglón | Segundo renglón |
+|---|---|---|
+| Levantar un objeto | «¿Y esto…? Qué raro…» | «Creo que voy a anotarme estas cosas.» |
+| Examinar un objeto que no se levanta | «Hay algo raro acá…» | «Creo que voy a anotarme estas cosas.» |
+| Diálogo de un comprador | «Ese comentario fue… curioso…» | «Creo que voy a anotarme estas cosas.» |
+| Mensaje en un chat | «Ese mensaje fue… curioso…» | «Creo que voy a anotarme estas cosas.» |
+
+Las pistas siguientes, en esa jornada o en otra, NO DEBEN mostrarlo. Una partida nueva lo vuelve
+a mostrar una vez. Un
+resultado repetido o desconocido NO DEBE mostrarlo, igual que no produce el aviso de
+[`notifications`](../notifications/notifications.md) (BR-NTF-010). Retomar una partida guardada
+que ya tiene una pista NO DEBE mostrarlo: restaurar el expediente no es anotar una pista.
+
+SI el celular está abierto al anotarse la pista, ENTONCES el pensamiento DEBE esperar a que se
+cierre y mostrarse entonces, con el texto del canal de la primera pista anotada. Recién al
+mostrarse cuenta como mostrado: si la jornada cierra antes, se descarta y la partida sigue sin
+marca. Anotar otra pista con el pensamiento pendiente NO DEBE duplicarlo ni cambiar el texto,
+aunque sea de otro canal. SI otro subtítulo reemplaza al pensamiento ya mostrado, ENTONCES el pensamiento cuenta
+como mostrado y NO DEBE volver (BR-SUB-001). El aviso «Nueva pista desbloqueada» NO cambia.
+
+### BR-SUB-017 — Los renglones los marca la ficha
+
+El sistema DEBE cortar un subtítulo en renglones exactamente donde lo corta la ficha «Subtítulos»,
+y en ningún otro lugar. Un texto que la ficha no corta DEBE verse en un solo renglón. La línea de
+subtítulo NO DEBE tener un ancho fijo: cada renglón DEBE ocupar lo que mide, y el conjunto DEBE
+quedar centrado abajo (BR-SUB-001). SI un renglón no entra en el ancho de la ventana, ENTONCES el
+sistema DEBE cortarlo igual, para que no se salga de la pantalla. Vale para todo subtítulo,
+también el texto al examinar de cada objeto, que se corta donde marca su ficha de «Otros objetos
+interactuables» o de «Productos y cajas contenedoras» (BR-SUB-009, BR-SUB-010).
+
+El salto de renglón cuenta como un carácter para la duración (BR-SUB-004).
+
 ## Criterios de aceptación
 
 ### AC-SUB-001 — Abajo al centro, y uno por vez *(verifica BR-SUB-001)*
@@ -262,7 +324,7 @@ exacta ni modificar el desgaste por tiempo y recorrido de
 DADO el HUD a 1920×1080 y a 1280×720 CUANDO se muestra un pensamiento ENTONCES el centro
 horizontal de la línea coincide con el del encuadre y su centro vertical está en la mitad
 inferior. DADO el pensamiento «Una bolsa de basura.» visible CUANDO llega «Un alfajor
-Jorgillo.» ENTONCES la línea muestra sólo «Un alfajor Jorgillo.».
+Jorgillata.» ENTONCES la línea muestra sólo «Un alfajor Jorgillata.».
 
 ### AC-SUB-002 — La E con las manos vacías piensa *(verifica BR-SUB-002)*
 
@@ -358,7 +420,7 @@ examinar ENTONCES cada uno conserva su identidad y devuelve el subtítulo no vac
 ### AC-SUB-013 — Lo fijo dice su texto, y lo demás calla *(verifica BR-SUB-010)*
 
 DADO los dos inodoros, los dos lavatorios, las cinco notas, la computadora, la caja
-registradora, el lector, la entrada principal, la puerta del jefe, el portón del depósito, los
+registradora, el router, el lector, la entrada principal, la puerta del jefe, el portón del depósito, los
 tres tachos y el cuerpo y la tapa del contenedor CUANDO se pide su texto al examinar ENTONCES
 cada uno devuelve el subtítulo asociado a su identidad. DADO una puerta interior sin traba, una puerta
 de heladera, la ventanilla, el comprador, la góndola y una mancha ENTONCES no tienen texto. DADO
@@ -473,6 +535,110 @@ jornada completa con obligatorias pendientes CUANDO se usa la puerta ENTONCES no
 DADA la puerta de entrada en una jornada de prueba con una pendiente CUANDO se la examina con E
 ENTONCES dice su texto fijo (BR-SUB-010).
 
+### AC-SUB-027 — La primera pista piensa, una vez *(verifica BR-SUB-016, BR-SUB-001)*
+
+DADA una partida sin la marca CUANDO se anota una pista, por cada canal de anotación, ENTONCES se
+muestra el pensamiento de ese canal (AC-SUB-033) con la duración que le da su largo (BR-SUB-004),
+y la partida queda marcada; CUANDO se anota la segunda pista, en esa jornada o en otra, ENTONCES no se muestra.
+DADO un resultado repetido o desconocido en una partida sin la marca ENTONCES no se muestra y la
+partida sigue sin marca. DADA una partida guardada que ya tiene una pista y la marca CUANDO se
+retoma ENTONCES no se muestra; DADA una partida nueva ENTONCES se muestra una vez más.
+DADO el celular abierto CUANDO se anota la primera pista ENTONCES no se muestra; CUANDO se anota
+otra con el celular abierto, de otro canal, ENTONCES sigue habiendo uno solo pendiente; CUANDO se
+cierra el celular ENTONCES se muestra el texto del canal de la primera, y recién ahí la partida
+queda marcada. DADO el pensamiento pendiente CUANDO
+cierra la jornada ENTONCES se descarta y la partida sigue sin marca. DADO el pensamiento visible
+CUANDO llega otro subtítulo ENTONCES lo reemplaza y el pensamiento no vuelve.
+
+### AC-SUB-028 — Los renglones de cada pensamiento *(verifica BR-SUB-017, BR-SUB-013, BR-SUB-014, BR-SUB-016)*
+
+DADO cada pensamiento de la tabla de BR-SUB-013, `MOPA_BERRETA` y el de cada canal de BR-SUB-016
+ENTONCES su texto tiene los renglones de la ficha: dos para el de cada canal de BR-SUB-016,
+`CAJA_EN_EL_CONTENEDOR`, `UTIL_EN_EL_CONTENEDOR`,
+`POR_LA_VENTANA`, `JABON_EQUIVOCADO`, `MOPA_BERRETA`, `PUERTA_CON_TAREAS_PENDIENTES`,
+`SIN_LUZ`, `ROUTER_ANTES_DEL_CORTE` y `ROUTER_YA_RESTAURADO`, y uno para cada uno de los
+demás. Ningún renglón queda vacío y el texto no empieza ni termina con un salto.
+
+### AC-SUB-029 — Los mismos renglones en pantalla *(verifica BR-SUB-017, BR-SUB-001)*
+
+DADO el HUD a 1920×1080 y a 1280×720 CUANDO se piensa cada pensamiento del AC-SUB-028 y cada texto
+al examinar del AC-SUB-031 ENTONCES la línea muestra tantos renglones como la ficha, sin ningún
+corte de más, y queda centrada en el encuadre y en la mitad inferior. La única excepción es un
+renglón más ancho que la ventana (BR-SUB-017), que se corta por la red de seguridad: a 1280×720 le
+pasa a `MOPA_BERRETA`.
+
+### AC-SUB-030 — Un renglón que no entra se corta *(verifica BR-SUB-017)*
+
+DADO el HUD a 1280×720 y a 1920×1080 CUANDO se piensa un texto de 300 caracteres sin saltos
+ENTONCES se ve en más de un renglón y ninguno sale de la ventana.
+
+### AC-SUB-031 — Los renglones de cada texto al examinar *(verifica BR-SUB-017, BR-SUB-009, BR-SUB-010)*
+
+DADO el texto al examinar de cada objeto de la tabla de BR-SUB-010 ENTONCES tiene los
+renglones de su ficha: dos para el inodoro, la computadora, la caja registradora, el lector, la
+entrada principal, la puerta del jefe, las notas de jabones y manchas, de instrucciones de limpieza
+y del local ordenado, los tachos del escritorio y del baño y los tres jabones, y uno para cada uno
+de los demás. Ningún renglón queda vacío. Cada producto del catálogo, que la ficha no corta, tiene
+un solo renglón.
+
+### AC-SUB-032 — Sin luz, los aparatos piensan *(verifica BR-SUB-013, BR-SUB-001)*
+
+DADO el corte cortado CUANDO se hace clic izquierdo sobre la computadora ENTONCES el pensamiento
+es `SIN_LUZ`, con sus dos renglones, y la computadora no se abre. Lo mismo sobre la caja
+registradora. DADO ese pensamiento visible CUANDO se hace clic otra vez ENTONCES la línea sigue
+mostrando sólo ese texto, una vez, y empieza de nuevo.
+DADO el corte sin cortar, o restaurado con el tablero, CUANDO se hace clic sobre cualquiera de las
+dos ENTONCES se abre y no hay pensamiento. DADA la computadora abierta CUANDO se corta la luz
+ENTONCES se cierra y no hay pensamiento.
+
+### AC-SUB-033 — Cada canal piensa su texto *(verifica BR-SUB-016, BR-SUB-017)*
+
+DADA una partida sin la marca CUANDO la primera pista se anota levantando un objeto ENTONCES la
+línea muestra los renglones «¿Y esto…? Qué raro…» y «Creo que voy a anotarme estas cosas.»; por
+examinar un objeto que no se levanta, «Hay algo raro acá…» y el mismo segundo renglón; por un
+diálogo de un comprador, «Ese comentario fue… curioso…» y el mismo segundo renglón; por un mensaje
+en un chat, «Ese mensaje fue… curioso…» y el mismo segundo renglón. En los cuatro, «…» es un solo
+carácter. DADO el celular abierto CUANDO se anota una primera pista por un canal y otra por un
+canal distinto, y después se cierra el celular, ENTONCES se muestra el texto del canal de la
+primera.
+
+### AC-SUB-034 — El router piensa según su estado *(verifica BR-SUB-013, BR-SUB-010, BR-SUB-001)*
+
+DADO el corte cortado CUANDO se hace clic izquierdo sobre el router ENTONCES el pensamiento es
+`SIN_LUZ`, con sus dos renglones. DADA cada jornada de 1 a 5 y la 7, y la 6 con el corte sin
+cortar, CUANDO se hace clic sobre el router ENTONCES el pensamiento es `ROUTER_ANTES_DEL_CORTE`,
+con dos renglones. DADO el router con el wifi devuelto después del corte CUANDO se hace clic
+ENTONCES el pensamiento es `ROUTER_YA_RESTAURADO`, con dos renglones. DADO el router descompuesto
+o apagado, con la luz restaurada, CUANDO se hace clic ENTONCES no hay pensamiento. DADO cualquier
+estado y jornada CUANDO se examina el router con E y las manos vacías ENTONCES se muestra su texto
+al examinar, de un renglón.
+
+### AC-SUB-050 — Las cajas del proveedor dicen su texto *(verifica BR-SUB-010)*
+
+DADA la jornada 7 CUANDO se pide examinar la caja de cartón del proveedor con las manos vacías
+ENTONCES muestra el texto asociado a su identidad, en dos renglones. CUANDO se pide examinar la caja de
+madera ENTONCES muestra el texto asociado a la suya, en tres renglones. Ninguna de las dos dice
+el texto de un producto.
+
+### AC-SUB-051 — El documento impreso dice su texto *(verifica BR-SUB-010)*
+
+DADA la jornada 6 con el documento de la pista 6B en el local CUANDO se pide examinarlo con las
+manos vacías ENTONCES muestra el texto asociado a su identidad, de un renglón. Ese texto no es el
+de la colilla ni el de ninguna nota. «…» es un solo carácter.
+
+### AC-SUB-052 — La palanca dice su texto *(verifica BR-SUB-010)*
+
+DADA la jornada 7 con la palanca de la pista 7B en el local CUANDO se pide examinarla con las manos
+vacías ENTONCES muestra el texto asociado a su identidad, de dos renglones. Ese texto no es el de
+ningún otro objeto de la tabla. Su identidad no es la de la colilla ni la del documento impreso.
+
+### AC-SUB-053 — La llave dice su texto *(verifica BR-SUB-010)*
+
+DADA la jornada 7 con la llave de la pista 7C en el local CUANDO se pide examinarla con las manos
+vacías ENTONCES muestra el texto asociado a su identidad, de un renglón. Ese texto no es el de la
+palanca ni el de ningún otro objeto de la tabla, y su identidad no es la de la palanca. «…» es un
+solo carácter.
+
 ## No objetivos
 
 - Esta capacidad NO decide qué esconde un objeto ni registra hallazgos: eso es de
@@ -510,6 +676,8 @@ ENTONCES dice su texto fijo (BR-SUB-010).
 - [`counter-service`](../counter-service/counter-service.md) (consume): los productos del
   ticket, en el orden de sus renglones.
 - [`shift-cycle`](../shift-cycle/shift-cycle.md) (consume): la jornada que se abre y la pausa.
+- [`anomalies`](../anomalies/anomalies.md) (consume): el estado del corte y del router, que eligen el
+  pensamiento de un clic.
 
 ## Preguntas abiertas
 

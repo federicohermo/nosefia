@@ -101,6 +101,7 @@ jobs:
         with:
           path: .godot/imported
           key: ${{ steps.importaciones.outputs.key }}
+          restore-keys: ${{ steps.importaciones.outputs.prefijo }}-
 
       - name: Preparar importaciones para la verificación actual
         env:

@@ -16,14 +16,27 @@ extends Resource
 
 ## Identidades admitidas por la bandeja. Sólo las que tienen guion documentado se registran
 ## en ARCHIVOS: declarar una identidad no autoriza a inventarle mensajes.
-enum Interlocutor { JEFE, PROVEEDOR, DESCONOCIDO, YASMIN, NOTAS }
+enum Interlocutor {
+	JEFE,
+	PROVEEDOR,
+	DESCONOCIDO,
+	YASMIN,
+	NOTAS,
+	EL_SEBA,
+	SUKO_YANEZ,
+	LUCAS_ORTEGA,
+	FLAVIO_BALBIN,
+	MYRIAM_MELANO
+}
 
 const CARPETA := "res://src/dominio/investigacion/"
 
-## Guiones documentados en Notion. La primera jornada sólo tiene el chat de Enrique;
-## proveedor y desconocido se retiraron porque sus textos no provenían del diseño.
+## Guiones documentados en Notion. La primera jornada sólo tiene el chat de Enrique; el del
+## proveedor llega en la jornada 6, sin mensajes previos. Desconocido se retiró porque sus textos
+## no provenían del diseño.
 const ARCHIVOS := {
 	Interlocutor.JEFE: "conversacion_con_el_jefe.tres",
+	Interlocutor.PROVEEDOR: "conversacion_con_el_proveedor.tres",
 	Interlocutor.YASMIN: "conversacion_con_yasmin.tres",
 	Interlocutor.NOTAS: "conversacion_de_notas.tres",
 }
@@ -38,6 +51,13 @@ const ARCHIVOS := {
 @export var rol: String = ""
 
 @export var mensajes: Array[Mensaje] = []
+
+## Se lista en el menú aunque todavía no tenga ningún mensaje: es el chat donde el jugador escribe
+## primero.
+@export var abre_sin_mensajes: bool = false
+
+## Ofrece «Hacer pedido»: el chat del proveedor, donde el jugador escribe la lista de lo que falta.
+@export var ofrece_pedido: bool = false
 @export var jornada_de_menu: int = 1
 
 

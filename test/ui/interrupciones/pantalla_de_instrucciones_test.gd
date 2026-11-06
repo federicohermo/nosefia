@@ -4,6 +4,11 @@ const ESCENA := preload("res://src/ui/interrupciones/pantalla_de_instrucciones.t
 const GUION := preload("res://src/dominio/investigacion/conversacion_con_el_jefe.tres")
 const AvanceDeDevolucion := preload("res://test/avance_de_devolucion.gd")
 
+const ESPERA_MS := 5000
+
+## Más que lo que dura un cuadro del reposo.
+const ESPERA_DEL_REPOSO_QUIETO := 1.2
+
 
 func after_test() -> void:
 	get_tree().paused = false
@@ -263,6 +268,33 @@ func test_las_fotos_individuales_conservan_marco_y_caja_con_ticket() -> void:  #
 		assert_int(ticket).is_equal(caja)
 
 
+func test_enrique_arranca_su_reposo_desde_el_primer_cuadro_al_abrir() -> void:
+	var pantalla := _pantalla()
+	var enrique: AnimatedSprite2D = pantalla.get("_enrique")
+	assert_object(enrique).is_not_null()
+	enrique.frame = enrique.sprite_frames.get_frame_count(&"idle") - 1
+	pantalla.mostrar(_mensajes_de_la_primera_jornada())
+	assert_str(String(enrique.animation)).is_equal("idle")
+	assert_int(enrique.frame).is_zero()
+	assert_bool(enrique.sprite_frames.get_animation_loop(&"idle")).is_true()
+	await assert_signal(enrique).wait_until(ESPERA_MS).is_emitted("frame_changed")
+
+
+func test_enrique_se_frena_al_cerrar_la_pantalla() -> void:
+	var pantalla := _pantalla()
+	var enrique: AnimatedSprite2D = pantalla.get("_enrique")
+	pantalla.mostrar(_mensajes_de_la_primera_jornada())
+	await assert_signal(enrique).wait_until(ESPERA_MS).is_emitted("frame_changed")
+	for _paso in InstruccionesDelJefe.pasos_de(_mensajes_de_la_primera_jornada()).size():
+		_boton(pantalla, "_siguiente").pressed.emit()
+	AvanceDeDevolucion.terminar_instrucciones(pantalla)
+	assert_bool(pantalla.visible).is_false()
+	var cambios: Array[int] = [0]
+	enrique.frame_changed.connect(func() -> void: cambios[0] += 1)
+	await get_tree().create_timer(ESPERA_DEL_REPOSO_QUIETO).timeout
+	assert_int(cambios[0]).is_zero()
+
+
 func _fotos_del_paso(paso: InstruccionesDelJefe.Paso) -> Array[Mensaje]:
 	var fotos: Variant = paso.get("fotos")
 	assert_bool(fotos is Array).is_true()
@@ -285,3 +317,14 @@ func _mensajes_de_la_primera_jornada() -> Array[Mensaje]:
 
 func _mensajes_de(jornada: int) -> Array[Mensaje]:
 	return InstruccionesDelJefe.de_la_jornada(GUION.mensajes, jornada)
+
+
+func test_las_instrucciones_dejan_el_foco_en_un_boton_habilitado_por_pagina() -> void:  # AC-CFG-028
+	var pantalla := _pantalla()
+	pantalla.mostrar(_mensajes_de_la_primera_jornada())
+	for _pagina in 2:
+		var foco := pantalla.get_viewport().gui_get_focus_owner() as Button
+		assert_object(foco).is_not_null()
+		assert_bool(pantalla.is_ancestor_of(foco)).is_true()
+		assert_bool(foco.disabled).is_false()
+		_boton(pantalla, "_siguiente").pressed.emit()

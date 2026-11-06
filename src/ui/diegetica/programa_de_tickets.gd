@@ -18,7 +18,7 @@ signal eleccion_pedida(renglon: int, producto: Producto)
 @export var renglon_lleno: StyleBox
 @export var renglon_vacio: StyleBox
 
-var _catalogo: Array[Producto] = Catalogo.todos()
+var _catalogo: Array[Producto] = Catalogo.en_orden_alfabetico(Catalogo.todos())
 
 
 func _ready() -> void:
@@ -62,6 +62,7 @@ func mostrar(generador: GeneradorDeTickets) -> void:
 			"font_color", Color.BLACK if tiene_producto else Color("f0f4d1")
 		)
 	visible = true
+	FocoDeLaInterfaz.en_el_primero(self)
 
 
 func ocultar() -> void:
@@ -81,6 +82,16 @@ func _al_borrar() -> void:
 func _al_imprimir() -> void:
 	boton_pulsado.emit()
 	impresion_pedida.emit()
+
+
+## Cierra las listas desplegadas y dice si había alguna.
+func cerrar_las_listas_abiertas() -> bool:
+	var habia := false
+	for selector in selectores:
+		if selector.esta_abierta():
+			habia = true
+	cerrar_las_listas()
+	return habia
 
 
 func cerrar_las_listas() -> void:

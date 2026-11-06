@@ -36,7 +36,9 @@ func test_los_puestos_completan_la_jornada_y_permiten_abrir_la_siguiente() -> vo
 	await get_tree().process_frame
 	assert_bool(reloj.corriendo()).is_true()
 	_comprobar_ninguna_cumplida_al_abrir(almacen)
-	_comprobar_huecos(almacen, _completos_al_abrir(almacen, control))
+	_comprobar_huecos(
+		almacen, _completos_al_abrir(almacen, control, ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA)
+	)
 	await _reponer(almacen)
 	_comprobar_huecos(almacen, Catalogo.todos().size())
 	await _atender(almacen)
@@ -64,22 +66,20 @@ func test_los_puestos_completan_la_jornada_y_permiten_abrir_la_siguiente() -> vo
 	_comprobar_ninguna_cumplida_al_abrir(almacen)
 	var recolector: RecolectorDeBasura = almacen.get("_recolector")
 	assert_int(recolector.tarea().depositadas()).is_zero()
-	_comprobar_huecos(almacen, _completos_al_abrir(almacen, control))
+	_comprobar_huecos(
+		almacen,
+		_completos_al_abrir(almacen, control, ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA + 1)
+	)
 	_comprobar_planilla_en_cero(almacen)
 
 
 ## Cuántos productos abren esa jornada con la fila de adelante completa: todos menos los que
 ## ella hace faltar. La noche no abre vacía, y la siguiente tampoco hereda lo repuesto.
-func _completos_al_abrir(almacen: Node3D, azar: RandomNumberGenerator) -> int:
+func _completos_al_abrir(almacen: Node3D, azar: RandomNumberGenerator, jornada: int) -> int:
 	var puesto: Node3D = almacen.get("_reposicion_manual")
 	var tandas: Dictionary[Producto.Id, Array] = puesto.call("tandas")
-	var de_una_fila: Dictionary[Producto.Id, bool] = puesto.call("productos_de_una_fila")
 	var vacios := Apertura.vacios_de_la_jornada(
-		ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA,
-		Compradores.de_la_jornada(DEL_PADRON),
-		tandas,
-		de_una_fila,
-		azar
+		jornada, Compradores.de_la_jornada(DEL_PADRON), tandas, azar, puesto.call("posiciones")
 	)
 	return Catalogo.todos().size() - vacios.size()
 
@@ -95,18 +95,8 @@ func _comprobar_planilla_en_cero(almacen: Node3D) -> void:
 
 # AC-STK-024
 func _comprobar_ninguna_cumplida_al_abrir(almacen: Node3D) -> void:
-	var reloj: RelojDelTurno = almacen.get("_reloj")
 	for tarea: Tarea in (almacen.get("_partida") as Partida).obligatorias():
 		assert_bool(tarea.completada()).is_false()
-	var contador: Label = almacen.get("_hud").get("_tareas")
-	assert_str(contador.text).is_equal(
-		(
-			Hud.TEXTO_DE_LAS_TAREAS
-			% Marcador.tareas(
-				0, Apertura.cantidad_de_obligatorias((almacen.get("_partida") as Partida).jornada())
-			)
-		)
-	)
 
 
 # AC-CLN-060
@@ -251,17 +241,13 @@ func _registrar(almacen: Node3D) -> void:
 		for unidad in atender.vendidas_de(productos[indice]):
 			_boton_de_la_fila(filas, indice, 6).pressed.emit()
 	assert_bool(tarea.completada()).is_true()
-	var contador: Label = almacen.get("_hud").get("_tareas")
-	var con_registrar := contador.text
 	# Una unidad de más la descumple, y sacarla la vuelve a cumplir.
 	_boton_de_la_fila(filas, 0, 6).pressed.emit()
 	assert_bool(tarea.completada()).is_false()
-	assert_str(contador.text).is_not_equal(con_registrar)
 	_boton_de_la_fila(filas, 0, 4).pressed.emit()
 	await get_tree().process_frame
 	assert_bool(reloj.corriendo()).is_true()
 	assert_bool(tarea.completada()).is_true()
-	assert_str(contador.text).is_equal(con_registrar)
 	escritorio.call("cerrar")
 
 
@@ -443,12 +429,8 @@ func _comprobar_huecos(almacen: Node3D, esperados: int) -> void:
 	var repositor: Repositor = almacen.get("_repositor")
 	for producto in Catalogo.todos():
 		var grupo: MultiMeshInstance3D = presentacion.get_node("ProductosDe" + producto.nombre)
-		# Las copias visibles son la guía entera más lo que la góndola tiene puesto: la guía no
-		# cambia nunca y arranca a la vista, y los casilleros son las últimas copias, tantos
-		# como el cupo del producto.
-		var guia := grupo.multimesh.instance_count - repositor.estante().cupo(producto)
 		assert_int(grupo.multimesh.visible_instance_count).is_equal(
-			guia + repositor.estante().unidades_en_gondola(producto)
+			repositor.estante().unidades_en_gondola(producto)
 		)
 	assert_int(repositor.estante().productos_completos()).is_equal(esperados)
 

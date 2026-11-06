@@ -68,7 +68,7 @@ static func pasar_la_reflexion(pantalla: PantallaDeDevolucion) -> void:
 		if reflexion.etapa() in [ReflexionDeCierre.Etapa.TEXTOS, ReflexionDeCierre.Etapa.ELEGIR]:
 			recuadro.botones().back().pressed.emit()
 	if reflexion.etapa() == ReflexionDeCierre.Etapa.ESPERA:
-		almacen.call("_process", ReflexionDeCierre.ESPERA_ANTES_DE_LA_NOCHE)
+		almacen.call("_process", reflexion.restante())
 
 
 ## La persiana del cierre baja con su propio reloj: uno simulado la termina sin esperar.
@@ -79,6 +79,18 @@ static func terminar_la_bajada(persiana: PersianaDeLaNoche) -> void:
 	ahora[0] += int(EntradaALaNoche.SUBIDA_DE_LA_PERSIANA * 1000000.0) + 1000
 	persiana.call("_process", 0.0)
 	persiana.set("_ahora", lectura)
+
+
+## Qué parte de la pantalla pintó la persiana al pasar la mitad de la duración de la bajada.
+static func bajado_a_la_mitad_del_tiempo(persiana: PersianaDeLaNoche) -> float:
+	var lectura: Callable = persiana.get("_ahora")
+	var ahora := [int(persiana.get("_ultimo"))]
+	persiana.set("_ahora", func() -> int: return ahora[0])
+	ahora[0] += int(EntradaALaNoche.SUBIDA_DE_LA_PERSIANA * 500000.0)
+	persiana.call("_process", 0.0)
+	persiana.set("_ahora", lectura)
+	var altura := persiana.get_viewport().get_visible_rect().size.y
+	return 1.0 + (persiana.get_node("Persiana") as TextureRect).position.y / altura
 
 
 ## Una jornada con instrucciones abre con ellas: se leen hasta su «OK», que anuncia la noche.

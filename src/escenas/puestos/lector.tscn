@@ -16,7 +16,7 @@ malla_del_hueco = ExtResource("hueco")
 forma = NodePath("Forma")
 mallas = [NodePath("Malla")]
 forma_del_hueco = SubResource("hueco_actual")
-posicion_del_hueco = Vector3(0.000000010, -0.020691900, -0.103478780)
+posicion_del_hueco = Vector3(-0.000000045, -0.020691900, -0.103478780)
 metadata/modelo_reemplazado = NodePath("Estructura/EscritorioComputadora/lector de productos")
 
 [node name="Forma" type="CollisionShape3D" parent="."]

@@ -34,6 +34,7 @@ flowchart TD
   NTF["notifications<br/><i>qué se avisa</i>"]
   CFG["settings<br/><i>cómo suena, se ve y responde</i>"]
   SUB["subtitles<br/><i>qué piensa el protagonista</i>"]
+  ACH["achievements<br/><i>lo que se gana y dura entre partidas</i>"]
 
   CTR -- "obligatoria cumplida" --> SHF
   STK -- "obligatorias cumplidas y descumplidas" --> SHF
@@ -74,11 +75,18 @@ flowchart TD
   CFG -- "volumen de cada bus" --> AMB
   CFG -- "factor de giro de la vista" --> PLY
   CFG -- "factor de giro del examen" --> INV
+  CLN -- "ticket al inodoro, cuerpo afuera y objeto tirado" --> ACH
+  STK -- "el tope de la planilla" --> ACH
+  EMP -- "final, legajo y fallas por tarea" --> ACH
+  INV -- "pista aceptada" --> ACH
+  ACH -- "logro ganado" --> NTF
+  SAV -- "los dos menús abren la pantalla de logros" --> ACH
 ```
 
 La línea punteada expresa escucha sin respuesta. `ambience` escucha las señales de las demás.
 El contrato de `notifications` incluye llegada, vencimiento, rechazo del lector, pista nueva
-anotada, salida habilitada o trabada de nuevo, tiempo restante y cierre del turno.
+anotada y logro ganado. Incluye también salida habilitada o trabada de nuevo, tiempo restante y
+cierre del turno.
 Ninguna contesta a quien publica el suceso.
 Por eso la tabla de sonidos es un archivo y no un `match`:
 agregar un sonido no toca a quien lo emite.
@@ -94,6 +102,7 @@ es la resta**, y las capacidades que le apuntan son lo que cada lado compra.
 | **Lo que el jugador elige** | `investigation` | consume tiempo y **no cumple nada** |
 | **El cuerpo** | `player-actions`, `subtitles` | no consume por sí mismo: el precio son los metros |
 | **Lo que dura más que la noche** | `employment-record`, `save-and-resume` | no consumen: reciben el cierre |
+| **Lo que dura entre partidas** | `achievements` | no consume ni cumple: premia lo hecho, nunca cambia el resultado de una noche |
 | **Lo que ajusta el jugador** | `settings` | no consume ni cumple: cambia cómo se oye, se ve y se gira, nunca la resta |
 
 Al evaluar una feature, la pregunta es de qué lado cae. Una que no toca esa resta es contenido,
@@ -114,7 +123,7 @@ Estos pares se confunden seguido, y cada uno tiene su regla escrita en los dos s
   La apertura comparte una sola selección de compradores y pedidos entre atención y reposición.
   La segunda noche usa los pedidos fijos de Fede y Mía, sus conversaciones propias y sus figuras
   en el mundo. Ninguna consulta reconstruye la lista de apertura.
-  Sus compras vencidas también dejan las unidades recogibles en el piso interior, todavía
+  Sus compras vencidas también dejan las unidades recogibles sobre el apoyo de la ventanilla, todavía
   registradas afuera, y descartan el ticket.
 
   Atención figura cumplida mientras todos los que llegaron estén vendidos, y vuelve a pendiente al
@@ -123,8 +132,8 @@ Estos pares se confunden seguido, y cada uno tiene su regla escrita en los dos s
   la entrada mientras todas sus tareas estén cumplidas. Descumplir una vuelve a trabar la
   salida; recuperar todas la habilita de nuevo. La planilla conserva sus gestos de sumar y
   restar, y retirar mercadería vuelve a dejar reposición pendiente. La primera habilitación
-  avisa una vez por noche y cada nueva traba produce su propio aviso. Recuperar retira el aviso
-  de traba sin repetir el inicial. La puerta termina la noche por el mismo recorrido que el
+  avisa y el aviso queda a la vista. Se retira si una tarea se descumple o el jugador se va, y
+  recuperar todas lo devuelve. La puerta termina la noche por el mismo recorrido que el
   tiempo agotado, contando el cumplimiento actual. Abrir otra jornada vuelve a evaluar sus
   tareas y permiso propios. El reloj conserva el ritmo de esa jornada.
 - **`player-actions` y `counter-service`.** Atención decide si corresponde hablar, recibir o
@@ -149,6 +158,9 @@ Estos pares se confunden seguido, y cada uno tiene su regla escrita en los dos s
 - **`anomalies` y `store-stock`.** La última noche la anomalía permuta qué producto trae cada
   caja del depósito. La mercadería decide cuánto entra, sale y se vende, sobre ese contenido real
   y sin crear identidades nuevas.
+- **`anomalies`, `subtitles` e `investigation`.** El corte de luz de la sexta noche deja el
+  router sin wifi, y apagarlo y prenderlo lo devuelve. La anomalía decide ese estado; subtítulos
+  decide qué piensa el protagonista al hacerle clic, y el celular dibuja su ícono de wifi con él.
 - **`employment-record` e `investigation`.** Cada partida posee un único expediente y sus notas.
   Investigación recibe ese estado, registra pistas y consulta hipótesis, sin escribir disco.
   Las revelaciones por examen conservan su cuenta independiente de las pistas por jornada.

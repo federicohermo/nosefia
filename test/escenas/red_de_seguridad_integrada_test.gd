@@ -65,14 +65,12 @@ func _tareas(almacen: Node3D) -> Dictionary:
 	var manchas := {}
 	for lugar: PisoDelLocal.Lugar in piso.lugares():
 		manchas[lugar] = piso.mancha_de(lugar).esta_limpia()
-	var hud: Node = almacen.get("_hud")
 	return {
 		"gondola": gondola,
 		"bolsas": recolector.tarea().depositadas(),
 		"manchas": manchas,
 		"balde": piso.balde().agua(),
 		"mopa": piso.mopa().agua(),
-		"marcador": (hud.get("_tareas") as Label).text,
 	}
 
 

@@ -38,7 +38,7 @@ func _caras_del_edificio() -> PackedVector3Array:
 func test_el_paso_al_bano_tiene_piso_visible_de_ambos_lados() -> void:
 	var caras := _caras_del_edificio()
 	for x: float in [7.82, 7.90, 7.94, 8.02, 8.12]:
-		for z: float in [0.1, 0.55, 1.0, 1.45]:
+		for z: float in [1.01, 1.46, 1.91, 2.36]:
 			var punto := Vector3(x, 0.10223747, z)
 			(
 				assert_bool(_tiene_piso_visible(caras, punto))

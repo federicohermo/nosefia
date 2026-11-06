@@ -4,6 +4,8 @@ extends RefCounted
 
 enum Pantalla { MENU, CHAT, FOTO }
 const ACCION := &"celular"
+## El chat se abre en su último mensaje.
+const AL_FINAL: int = -1
 
 var _bandeja: Bandeja
 var _habilitado: bool = false
@@ -12,6 +14,7 @@ var _pantalla: Pantalla = Pantalla.MENU
 var _chat: Conversacion.Interlocutor = Conversacion.Interlocutor.values()[0]
 var _foto: int = -1
 var _fijo: bool = false
+var _primer_nuevo: int = AL_FINAL
 
 
 func _init(bandeja: Bandeja) -> void:
@@ -48,6 +51,11 @@ func fijo() -> bool:
 	return _fijo
 
 
+## Dónde empieza el chat abierto: el lugar de su primer mensaje nuevo, o `AL_FINAL`.
+func primer_nuevo() -> int:
+	return _primer_nuevo
+
+
 func alternar(control_tomado: bool) -> bool:
 	if _abierto:
 		if _fijo:
@@ -61,6 +69,17 @@ func alternar(control_tomado: bool) -> bool:
 	return true
 
 
+## Esc cierra primero la foto y después el celular, y sólo si está libre. El fijo no responde:
+## ahí Esc pausa.
+func atender_esc() -> bool:
+	if not _abierto or _fijo:
+		return false
+	if _pantalla == Pantalla.FOTO:
+		return cerrar_foto()
+	_cerrar()
+	return true
+
+
 func abrir_chat(quien: Conversacion.Interlocutor) -> bool:
 	var conversacion := _bandeja.conversacion_de(quien)
 	if (
@@ -71,6 +90,7 @@ func abrir_chat(quien: Conversacion.Interlocutor) -> bool:
 		return false
 	_chat = quien
 	_pantalla = Pantalla.CHAT
+	_primer_nuevo = _bandeja.primer_no_leido(quien)
 	_bandeja.marcar_leida(quien)
 	return true
 
@@ -79,6 +99,7 @@ func volver_al_menu() -> bool:
 	if not _abierto or _fijo or _pantalla != Pantalla.CHAT:
 		return false
 	_pantalla = Pantalla.MENU
+	_primer_nuevo = AL_FINAL
 	return true
 
 
@@ -111,8 +132,15 @@ func fijar_en(quien: Conversacion.Interlocutor) -> bool:
 	_chat = quien
 	_foto = -1
 	_pantalla = Pantalla.CHAT
+	_primer_nuevo = AL_FINAL
 	_bandeja.marcar_leida(quien)
 	return true
+
+
+## En el chat fijo, lo que ya estaba no cuenta como nuevo: empieza en el primer mensaje que llega.
+func llegar(quien: Conversacion.Interlocutor, indice: int) -> void:
+	if _abierto and _fijo and _chat == quien and _primer_nuevo == AL_FINAL:
+		_primer_nuevo = indice
 
 
 func soltar() -> bool:
@@ -127,3 +155,4 @@ func _cerrar() -> void:
 	_fijo = false
 	_foto = -1
 	_pantalla = Pantalla.MENU
+	_primer_nuevo = AL_FINAL

@@ -149,3 +149,124 @@ func test_con_configuraciones_abierta_esc_la_cierra_y_sigue_en_pausa() -> void: 
 	control._input(_esc())
 	assert_bool(get_tree().paused).is_false()
 	assert_int(_reanudaciones).is_equal(1)
+
+
+func _celular_abierto(fijo: bool) -> CelularDelEmpleado:
+	var celular: CelularDelEmpleado = auto_free(CelularDelEmpleado.new())
+	if fijo:
+		celular.mostrar_fijo(Conversacion.Interlocutor.JEFE)
+	else:
+		celular.abrir_jornada(1)
+		celular.pedir_alternar(false)
+	return celular
+
+
+func test_con_el_celular_libre_abierto_esc_lo_cierra_y_no_pausa() -> void:  # AC-INV-070
+	var control := _control()
+	control.celular = _celular_abierto(false)
+	var devueltos: Array[int] = []
+	control.esc_atendido_por_el_celular.connect(func() -> void: devueltos.append(1))
+	control._input(_esc())
+	assert_bool(control.celular.celular().abierto()).is_false()
+	assert_bool(get_tree().paused).is_false()
+	assert_int(_pausas).is_zero()
+	assert_array(devueltos).is_equal([1])
+	control._input(_esc())
+	assert_bool(get_tree().paused).is_true()
+	assert_int(_pausas).is_equal(1)
+	assert_array(devueltos).is_equal([1])
+
+
+func test_con_el_celular_fijo_esc_pausa_y_lo_deja_abierto() -> void:  # AC-INV-072
+	var control := _control()
+	control.celular = _celular_abierto(true)
+	control._input(_esc())
+	assert_bool(get_tree().paused).is_true()
+	assert_bool(control.celular.celular().abierto()).is_true()
+	control._input(_esc())
+	assert_bool(get_tree().paused).is_false()
+	assert_bool(control.celular.celular().abierto()).is_true()
+
+
+## Una interfaz de prueba: abierta hasta que Esc la cierra, con su cursor devuelto al juego.
+class InterfazDePrueba:
+	var abierta := true
+	var cierres: int = 0
+
+	func esta_abierta() -> bool:
+		return abierta
+
+	func cerrar_con_esc() -> void:
+		abierta = false
+		cierres += 1
+
+
+func test_con_una_interfaz_abierta_esc_la_cierra_y_el_siguiente_pausa() -> void:  # AC-PLY-167
+	var control := _control()
+	var interfaz := InterfazDePrueba.new()
+	control.registrar_interfaz(interfaz.esta_abierta, interfaz.cerrar_con_esc)
+	control._input(_esc())
+	assert_int(interfaz.cierres).is_equal(1)
+	assert_bool(get_tree().paused).is_false()
+	assert_int(_pausas).is_zero()
+	control._input(_esc())
+	assert_int(interfaz.cierres).is_equal(1)
+	assert_bool(get_tree().paused).is_true()
+	assert_int(_pausas).is_equal(1)
+
+
+func test_cada_interfaz_registrada_se_cierra_sola() -> void:  # AC-PLY-166
+	var control := _control()
+	var cerrada := InterfazDePrueba.new()
+	cerrada.abierta = false
+	var abierta := InterfazDePrueba.new()
+	control.registrar_interfaz(cerrada.esta_abierta, cerrada.cerrar_con_esc)
+	control.registrar_interfaz(abierta.esta_abierta, abierta.cerrar_con_esc)
+	control._input(_esc())
+	assert_int(cerrada.cierres).is_zero()
+	assert_int(abierta.cierres).is_equal(1)
+	assert_bool(get_tree().paused).is_false()
+
+
+func test_en_pausa_esc_reanuda_y_no_cierra_la_interfaz() -> void:  # AC-PLY-169
+	var control := _control()
+	var interfaz := InterfazDePrueba.new()
+	control.registrar_interfaz(interfaz.esta_abierta, interfaz.cerrar_con_esc)
+	control.pausar()
+	control._input(_esc())
+	assert_bool(get_tree().paused).is_false()
+	assert_int(interfaz.cierres).is_zero()
+	assert_bool(interfaz.abierta).is_true()
+
+
+func test_el_cursor_que_suelta_el_esc_de_la_interfaz_no_pausa() -> void:  # AC-PLY-170
+	var control := _control()
+	var interfaz := InterfazDePrueba.new()
+	control.registrar_interfaz(interfaz.esta_abierta, interfaz.cerrar_con_esc)
+	control._cursor_antes = true
+	control._input(_esc())
+	control._mirar_el_cursor()
+	assert_bool(get_tree().paused).is_false()
+	assert_int(_pausas).is_zero()
+
+
+func test_con_logros_abierta_esc_la_cierra_y_sigue_en_pausa() -> void:  # AC-SAV-037
+	var logros: CanvasLayer = auto_free(CanvasLayer.new())
+	logros.visible = false
+	var control := _control()
+	control.logros = logros
+	var cierres_de_logros: Array[int] = []
+	control.cierre_de_logros_pedido.connect(
+		func() -> void:
+			cierres_de_logros.append(1)
+			logros.hide()
+	)
+	control._input(_esc())
+	logros.show()
+	control._input(_esc())
+	assert_int(cierres_de_logros.size()).is_equal(1)
+	assert_bool(logros.visible).is_false()
+	assert_bool(get_tree().paused).is_true()
+	assert_int(_reanudaciones).is_zero()
+	control._input(_esc())
+	assert_bool(get_tree().paused).is_false()

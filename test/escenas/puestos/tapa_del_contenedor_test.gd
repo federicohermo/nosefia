@@ -1,4 +1,4 @@
-## La hoja alterna con primario; el cuerpo descarta con primario cuando el dominio lo permite.
+## La hoja alterna con primario con la mano vacía; el cuerpo descarta cuando el dominio lo permite.
 extends GdUnitTestSuite
 
 const ALMACEN := preload("res://src/escenas/almacen.tscn")
@@ -32,13 +32,12 @@ func test_tapa_alterna_y_cuerpo_tira_solo_al_terminar_de_abrir() -> void:  # AC-
 	tapa.set_physics_process(false)
 	var bolsa := BolsaEnLaMano.preparar(almacen)
 	var agarre: Agarre = almacen.get("_agarre")
-	assert_bool(agarre.pedir_agarrar(bolsa.datos, bolsa)).is_true()
 	_accion(tapa, false)
 	assert_bool(tapa.call("recibe_objetos")).is_true()
 	_accion(tapa, true)
 	assert_bool(tapa.call("recibe_objetos")).is_false()
-	assert_object(agarre.manos().sostenido()).is_same(bolsa.datos)
 	assert_int(almacen.get("_recolector").tarea().depositadas()).is_zero()
+	assert_bool(agarre.pedir_agarrar(bolsa.datos, bolsa)).is_true()
 	tapa.call("_physics_process", 1.0)
 	_accion(almacen.get("_contenedor"), true)
 	assert_object(agarre.manos().sostenido()).is_same(bolsa.datos)

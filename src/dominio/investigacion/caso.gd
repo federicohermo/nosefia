@@ -32,13 +32,23 @@ func pista_de(identidad: String) -> Pista:
 	return null
 
 
-## Lo que se levanta para dar una pista está en el local sólo la noche de esa pista.
-func esta_en_el_local(origen: StringName, jornada: int) -> bool:
+## Lo que se levanta, o con lo que se actúa, para dar una pista está en el local sólo la noche de
+## esa pista, y sólo si esa pista está activa por lo elegido y lo sorteado.
+func esta_en_el_local(
+	origen: StringName, jornada: int, elecciones: Dictionary, sorteos: Dictionary
+) -> bool:
 	if origen.is_empty():
 		return true
 	for pista: Pista in pistas:
-		if pista != null and pista.canal == Pista.Canal.LEVANTAR and pista.origen == origen:
-			return pista.jornada == jornada
+		if (
+			pista != null
+			and pista.origen == origen
+			and pista.canal in [Pista.Canal.LEVANTAR, Pista.Canal.ACCION]
+		):
+			return (
+				pista.jornada == jornada
+				and pistas_activas(jornada, elecciones, sorteos).has(pista.identidad)
+			)
 	return true
 
 
@@ -50,11 +60,85 @@ func levanta_una_pista(origen: StringName, jornada: int) -> bool:
 	return false
 
 
+## El título de la hipótesis que sólo esa pista habilita, o vacío si no hay una.
+func titulo_de_la_pista(identidad: String) -> String:
+	for opciones: HipotesisDeLaJornada in hipotesis:
+		if opciones == null:
+			continue
+		for opcion: Hipotesis in opciones.opciones:
+			if opcion != null and opcion.exigencias == PackedStringArray([identidad]):
+				return opcion.titulo
+	return ""
+
+
 func hipotesis_para(jornada: int, descubiertas: PackedStringArray) -> Array[Hipotesis]:
+	var opciones := _hipotesis_de(jornada)
+	if opciones == null:
+		return []
+	return opciones.disponibles(descubiertas, _hay_pistas_antes_de(jornada, descubiertas))
+
+
+## La hipótesis de esa jornada con esa identidad, o `null`.
+func opcion(jornada: int, identidad: String) -> Hipotesis:
+	var opciones := _hipotesis_de(jornada)
+	return null if opciones == null else opciones.opcion_de(identidad)
+
+
+## Las pistas de esa jornada que se pueden anotar. La primera jornada con pistas las tiene
+## todas; las siguientes, sólo las del camino que abrió la hipótesis elegida en la anterior o
+## la sorteada. Sin ninguna de las dos, ninguna.
+func pistas_activas(jornada: int, elecciones: Dictionary, sorteos: Dictionary) -> PackedStringArray:
+	var activas := PackedStringArray()
+	var anterior := _hipotesis_de(jornada - 1)
+	var camino := PackedStringArray()
+	if anterior != null:
+		var origen := String(sorteos.get(jornada, elecciones.get(jornada - 1, "")))
+		var abierta := anterior.opcion_de(origen)
+		if abierta == null:
+			return activas
+		camino = abierta.camino
+	for pista: Pista in pistas:
+		if pista.jornada == jornada and (anterior == null or camino.has(pista.identidad)):
+			activas.append(pista.identidad)
+	return activas
+
+
+## Las hipótesis de la jornada anterior entre las que se sortea el camino de ésta: las que sus
+## pistas activas habilitan. Ninguna si esa jornada no sortea, si dio alguna pista, si no tuvo
+## pistas activas o si ya las activó un sorteo: dos jornadas seguidas sin pistas cortan el camino.
+func opciones_a_sortear(
+	jornada: int, descubiertas: PackedStringArray, elecciones: Dictionary, sorteos: Dictionary
+) -> Array[Hipotesis]:
+	var candidatas: Array[Hipotesis] = []
+	var anterior := _hipotesis_de(jornada - 1)
+	if anterior == null or not anterior.sortea_la_siguiente or sorteos.has(jornada - 1):
+		return candidatas
+	for identidad: String in descubiertas:
+		var pista := pista_de(identidad)
+		if pista != null and pista.jornada == jornada - 1:
+			return candidatas
+	var activas := pistas_activas(jornada - 1, elecciones, sorteos)
+	if activas.is_empty():
+		return candidatas
+	for posible: Hipotesis in anterior.opciones:
+		if posible != null and posible.habilitada_por(activas):
+			candidatas.append(posible)
+	return candidatas
+
+
+func _hipotesis_de(jornada: int) -> HipotesisDeLaJornada:
 	for opciones: HipotesisDeLaJornada in hipotesis:
 		if opciones != null and opciones.jornada == jornada:
-			return opciones.disponibles(descubiertas)
-	return []
+			return opciones
+	return null
+
+
+func _hay_pistas_antes_de(jornada: int, descubiertas: PackedStringArray) -> bool:
+	for identidad: String in descubiertas:
+		var pista := pista_de(identidad)
+		if pista != null and pista.jornada < jornada:
+			return true
+	return false
 
 
 func _validar_identidades() -> Consistencia:

@@ -26,6 +26,8 @@ var permanencia := 0.0
 var personaje: int = DialogosDeCompradores.Personaje.NINGUNO
 ## Sin guion propio es `null`, y la atención usa la apertura y la despedida predeterminadas.
 var dialogos: DialogosDeCompradores = null
+## Las pistas que la noche deja anotar. Decide qué entradas condicionadas de su guion dice.
+var pistas_activas: PackedStringArray = PackedStringArray()
 
 var _nombre: String
 var _pedido: Venta

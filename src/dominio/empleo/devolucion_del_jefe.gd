@@ -8,7 +8,7 @@
 class_name DevolucionDelJefe
 extends RefCounted
 
-enum Opcion { CONTINUAR, VOLVER_AL_MENU }
+enum Opcion { CONTINUAR, VOLVER_AL_MENU, VER_EL_FINAL }
 
 const ReglasDelCierre := preload("res://src/dominio/almacen/reglas_del_cierre.gd")
 
@@ -17,6 +17,16 @@ const SEGUNDOS_ENTRE_MENSAJES := 1.0
 
 ## Con la persiana ya baja y antes de que el celular suba.
 const SEGUNDOS_DE_ESPERA_DEL_CELULAR := 0.5
+
+## El minuto del día en que sale el primer mensaje de la devolución de cada jornada, según la
+## ficha del jefe. Cada mensaje siguiente suma un minuto.
+const PRIMER_MINUTO: Dictionary[int, int] = {
+	3: 8 * Marcador.MINUTOS_POR_HORA + 26,
+	4: 8 * Marcador.MINUTOS_POR_HORA + 38,
+	5: 9 * Marcador.MINUTOS_POR_HORA + 5,
+	6: 8 * Marcador.MINUTOS_POR_HORA + 42,
+	7: 9 * Marcador.MINUTOS_POR_HORA + 11,
+}
 
 ## Cuántos medios hay en un punto de la tabla.
 const MEDIOS_POR_PUNTO := Reglas.MEDIOS_POR_APERCIBIMIENTO
@@ -90,6 +100,10 @@ const VENCIDO_EN_EL_LOCAL_Y_POR_LA_VENTANA := (
 	+ "al contenedor, NO POR LA VENTANA."
 )
 
+const QUEJAS_SIN_RESOLVER := (
+	"Te encargué ocuparte de las quejas y ahora recibo " + "quejas sobre la gestión de las quejas."
+)
+
 ## La Tarea 5 sale de la jornada: sólo las que declaran una particular tienen texto.
 const PARTICULARES: Dictionary[int, String] = {
 	ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA:
@@ -102,6 +116,8 @@ const PARTICULARES: Dictionary[int, String] = {
 	ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA + 1:
 	"De verdad era tan difícil tirar tres bolsas de basura?",
 	ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA + 2: VENCIDO_EN_EL_LOCAL,
+	ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA + 3: PEDIDO_SIN_HACER,
+	ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA + 4: QUEJAS_SIN_RESOLVER,
 }
 
 ## La variante de la Tarea 5 cuando una bolsa quedó afuera: reemplaza a la de `PARTICULARES`.
@@ -112,6 +128,18 @@ const PARTICULARES_CON_BOLSA_AFUERA: Dictionary[int, String] = {
 		+ "Te imaginás ir a comprar y tener BASURA A TUS PIES?"
 	),
 }
+
+## Los dos textos de la Tarea 5 del pedido al proveedor: el que no se hizo bien con wifi, y el que
+## se hizo con wifi pero equivocado.
+const PEDIDO_SIN_HACER := (
+	"Era muy importante que le hicieras ese pedido al proveedor anoche. Nos quedamos cortos de "
+	+ "productos durante el día. Encima tuve que hacer el pedido yo y fumarme el carácter de "
+	+ "mierda del flaco ese. Muchas gracias..."
+)
+const PEDIDO_EQUIVOCADO := (
+	"El pedido que le hiciste al proveedor no estaba bien… Tuve que ir personalmente a corregir "
+	+ "tu error y fumarme el carácter de mierda del flaco ese. Muchas gracias..."
+)
 
 ## La fila de la ficha que termina la prueba: Enrique no dice nada más (BR-EMP-043).
 const DESPIDO_DE_LA_PRUEBA := (
@@ -341,7 +369,7 @@ var _opciones: Array[Opcion] = []
 ## son los de la noche cerrada. Las jornadas de introducción cierran sin mensajes.
 func _init(jornada: int, partida: Partida) -> void:
 	_jornada = jornada
-	_opciones.append(Opcion.VOLVER_AL_MENU if partida.terminada() else Opcion.CONTINUAR)
+	_opciones.append(_opcion_de(partida))
 	# El despido de la prueba no abre la jornada siguiente: la partida sigue en la prueba.
 	if partida.terminada() and partida.jornada() < ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA:
 		_mensajes = [DESPIDO_DE_LA_PRUEBA]
@@ -362,8 +390,19 @@ func _init(jornada: int, partida: Partida) -> void:
 		partida.bolsa_afuera,
 		partida.clases_de_desorden,
 		partida.vencido_en_el_local,
-		partida.vencido_afuera
+		partida.vencido_afuera,
+		partida.pedido_equivocado
 	)
+
+
+## Al terminar la partida la única salida lleva a la pantalla de final si el final la tiene, y si no
+## vuelve al menú.
+static func _opcion_de(partida: Partida) -> Opcion:
+	if not partida.terminada():
+		return Opcion.CONTINUAR
+	if FinalConPantalla.de(partida) != FinalConPantalla.Cual.NINGUNO:
+		return Opcion.VER_EL_FINAL
+	return Opcion.VOLVER_AL_MENU
 
 
 ## Las noches de prueba cierran sin celular: sigue la pantalla de inicio de la noche siguiente.
@@ -401,7 +440,16 @@ static func mensaje(texto: String, jornada: int = 0, orden: int = 0) -> Mensaje:
 	nuevo.momento = Mensaje.Momento.CIERRE if jornada > 0 else Mensaje.Momento.SIN_FECHA
 	if jornada > 0:
 		nuevo.identidad = "DEVOLUCION_J%d_%d" % [jornada, orden]
+		nuevo.hora = _hora_de_la_devolucion(jornada, orden)
 	return nuevo
+
+
+@warning_ignore("integer_division")
+static func _hora_de_la_devolucion(jornada: int, orden: int) -> String:
+	if not PRIMER_MINUTO.has(jornada):
+		return ""
+	var minuto := PRIMER_MINUTO[jornada] + orden
+	return "%d:%02d" % [minuto / Marcador.MINUTOS_POR_HORA, minuto % Marcador.MINUTOS_POR_HORA]
 
 
 func mensajes_fechados() -> Array[Mensaje]:
@@ -433,7 +481,8 @@ static func armar(
 	bolsa_afuera: bool = false,
 	desorden: Array[ReglasDelCierre.Clase] = [],
 	vencido_en_el_local: bool = false,
-	vencido_afuera: bool = false
+	vencido_afuera: bool = false,
+	pedido_equivocado: bool = false
 ) -> Array[String]:
 	var mensajes: Array[String] = [_saludo(medios)]
 	for tipo: Tarea.Tipo in Antecedentes.FIJAS:
@@ -443,7 +492,11 @@ static func armar(
 	if uso_de_poetico:
 		mensajes.append(POETICO_EN_EL_DESPIDO if medios >= MEDIOS_DEL_DESPIDO else POETICO)
 	if PARTICULARES.has(jornada) and _alguna_particular(sin_cumplir):
-		mensajes.append(_particular(jornada, bolsa_afuera, vencido_en_el_local, vencido_afuera))
+		mensajes.append(
+			_particular(
+				jornada, bolsa_afuera, vencido_en_el_local, vencido_afuera, pedido_equivocado
+			)
+		)
 	for motivo: Partida.Llamado in retos():
 		if llamados.has(motivo):
 			mensajes.append(_reto(motivo, antecedentes.llamados(motivo), jornada, medios, desorden))
@@ -457,8 +510,14 @@ static func _saludo(medios: int) -> String:
 
 
 static func _particular(
-	jornada: int, bolsa_afuera: bool, vencido_en_el_local: bool, vencido_afuera: bool
+	jornada: int,
+	bolsa_afuera: bool,
+	vencido_en_el_local: bool,
+	vencido_afuera: bool,
+	pedido_equivocado: bool
 ) -> String:
+	if pedido_equivocado and Apertura.pide(jornada, Tarea.Tipo.PEDIR_AL_PROVEEDOR):
+		return PEDIDO_EQUIVOCADO
 	if bolsa_afuera and PARTICULARES_CON_BOLSA_AFUERA.has(jornada):
 		return PARTICULARES_CON_BOLSA_AFUERA[jornada]
 	if vencido_afuera and Apertura.pide(jornada, Tarea.Tipo.DESECHAR_VENCIDOS):

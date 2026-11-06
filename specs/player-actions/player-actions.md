@@ -3,7 +3,7 @@ schema_version: 1
 capability_id: CAP-PLY
 status: ratified
 owner: por definir
-provenance: GDD «Controles»; fichas «8. Tarea: Reposición», «Notas», «Interfaces virtuales durante la jornada» y «Referencia de controles»; decisiones de #368, #369, #370, #373 y #382; migración de los specs 003, 004, 006, 014, 034, 043; fichas de interacción, limpieza y basura revisadas el 2026-10-15; decisiones de #425, bordes de GJ-52 (#428) e interacción directa con compradores (#429); ocho jornadas de #526; cuartito de limpieza de #541; depósito trabado en la jornada 1 y baño abierto en todas de #574; salida voluntaria de #573; ticket escrito de #580; agacharse de #177; empuje de útiles y bolsas de #563; hoja que se frena con lo pesado de #218; patada a la unidad de #219
+provenance: GDD «Controles»; fichas «8. Tarea: Reposición», «Notas», «Interfaces virtuales durante la jornada» y «Referencia de controles»; decisiones de #368, #369, #370, #373 y #382; migración de los specs 003, 004, 006, 014, 034, 043; fichas de interacción, limpieza y basura revisadas el 2026-10-15; decisiones de #425, bordes de GJ-52 (#428) e interacción directa con compradores (#429); ocho jornadas de #526; cuartito de limpieza de #541; depósito trabado en la jornada 1 y baño abierto en todas de #574; salida voluntaria de #573; ticket escrito de #580; agacharse de #177; empuje de útiles y bolsas de #563; hoja que se frena con lo pesado de #218; patada a la unidad de #219; compuerta del mostrador empujada de #695; Esc que sale de las interfaces de #607; joystick de #380; la fila «7B» de la lista de pistas e hipótesis y la fila «Palanca» de «Objetos interactuables», de #790; la fila «Llave» de «Objetos interactuables», de #810; la tapa del contenedor que ofrece lo mismo que el cuerpo de #868, ficha GJ-84
 ---
 
 # Capacidad: lo que el empleado puede hacer
@@ -57,10 +57,12 @@ radianes**. Pasarse de ahí da vuelta la cámara, y eso no es un límite de gust
 
 ### BR-PLY-004 — Se enfoca lo que está a mano
 
-El sistema DEBE enfocar lo que está a **2,5 metros o menos** y dentro de su tolerancia angular
+El sistema DEBE enfocar lo que está a mano y dentro de su tolerancia angular
 respecto del centro de la vista: **3 grados o menos** para productos y huecos de reposición,
-**15 grados o menos** para los otros objetos. El desvío se mide respecto de la superficie
-visible. Entre varios candidatos gana el de menor desvío, y con el mismo desvío el más cercano.
+**8 grados o menos** para los otros objetos. A mano es **1,6 metros o menos** desde los ojos,
+para todo: es proximidad sobre el piso y no cuenta la altura. El desvío se mide
+respecto de la superficie visible. Entre varios candidatos gana el de menor desvío, y con el
+mismo desvío el más cercano.
 
 ### BR-PLY-005 — El foco avisa sólo cuando cambió
 
@@ -92,7 +94,8 @@ anuncia un objeto.
 
 ### BR-PLY-010 — Lo que se suelta se puede volver a agarrar
 
-El sistema DEBE soltar los objetos **dentro del alcance de la mira**. Las tres distancias de
+El sistema DEBE soltar los objetos **dentro del alcance de la mira**, y NO DEBE apoyar nada más
+allá de ese alcance. Las tres distancias de
 examinar, llevar y soltar van de la más cerca a la más lejos, y ninguna llega al alcance.
 
 ### BR-PLY-011 — La puerta es una intención y una hoja
@@ -196,7 +199,8 @@ su lugar y sin girar hasta él, aunque la noche anterior hayan quedado abiertas 
 
 SI una puerta está trabada, ENTONCES el primario NO DEBE abrirla ni girar la hoja, y
 DEBE contestar que está trabada, todas las veces. El secundario NO DEBE emitir ese aviso. El portón del depósito y
-la oficina del jefe están trabadas en todas las jornadas. La entrada permanece trabada salvo
+la oficina del jefe están trabadas en todas las jornadas, y la oficina cede sólo a la excepción de
+BR-PLY-060. La entrada permanece trabada salvo
 la salida habilitada de BR-PLY-041. La puerta que lleva del local al depósito
 DEBE abrir desde la primera jornada. La puerta del cuartito de
 limpieza DEBE estar trabada en las jornadas que no piden limpiar, y abrir en las que sí. La puerta
@@ -240,8 +244,8 @@ ningún otro (BR-STK-009). La mira elige entre casilleros como entre cualquier o
 MIENTRAS las manos están vacías, la mira DEBE poder enfocar cada unidad colocada en la fila de
 adelante de la góndola, y CUANDO el jugador hace clic, el sistema DEBE ponérsela en la mano
 (BR-STK-033). La unidad enfocada DEBE llevar el contorno del foco sobre su propio aspecto, y
-dibujarse una sola vez. La mira NO DEBE enfocar la fila de atrás, ni ninguna unidad colocada
-mientras la mano lleva algo: agarrar de la góndola es una cosa más por vez (BR-PLY-007).
+dibujarse una sola vez. La mira NO DEBE enfocar ninguna unidad colocada mientras la mano
+lleva algo: agarrar de la góndola es una cosa más por vez (BR-PLY-007).
 
 ### BR-PLY-025 — El balde se lleva vertical
 
@@ -255,7 +259,8 @@ CUANDO se lo suelta, queda derecho sobre el apoyo (BR-PLY-018).
 CUANDO se hace el primario sobre una puerta interior, de heladera o trabada, la computadora,
 la caja registradora o una nota pegada, el sistema DEBE resolver esa interacción
 con las manos vacías o con cualquier cosa en la mano. Las puertas habilitadas DEBEN alternar, salvo la salida de BR-PLY-041;
-las trabadas DEBEN avisar una vez por pulsación sin girar; los paneles DEBEN abrirse y las notas
+las trabadas DEBEN avisar una vez por pulsación sin girar, salvo la oficina del jefe con la
+palanca o la llave de BR-PLY-060; los paneles DEBEN abrirse y las notas
 DEBEN mostrar su lectura. Lo que se lleva DEBE seguir en la mano sin soltarse ni usarse.
 La atención DEBE iniciarse sobre la persona según BR-PLY-034, sin abrir el hueco.
 
@@ -264,6 +269,17 @@ alternarlos ni emitir el aviso de trabada. Una puerta NO DEBE pedir uso de herra
 reposición con ninguno de los dos gestos. SI el control está suspendido, ENTONCES ningún
 gesto DEBE abrir ni alternar lo fijo. El clic que cierra una interfaz DEBE consumirse antes
 de devolver el control: NO DEBE actuar también sobre el mundo.
+
+### BR-PLY-060 — Con la palanca o la llave en la mano, la oficina del jefe abre
+
+CUANDO se hace el primario sobre la puerta de la oficina del jefe con la palanca (BR-INV-141) o
+con la llave (BR-INV-144) en la mano, el sistema DEBE abrirla en vez de avisar que está trabada, y
+avisar una vez que se abrió (BR-PLY-020). Con las manos vacías o con cualquier otra cosa en la
+mano, la puerta DEBE seguir como en BR-PLY-020: trabada, con su aviso. El secundario, el control
+suspendido y la pausa NO DEBEN abrirla. Sólo cuenta la palanca o la llave en la mano: suelta, en el
+contenedor o en el piso, NO DEBE abrir nada. La traba sigue siendo de la puerta y la excepción es
+sólo por el objeto en la mano. NINGUNA otra puerta trabada DEBE ceder a la palanca ni a la llave, y
+la llave abre la oficina por el mismo camino que la palanca: no hay un segundo mecanismo.
 
 ### BR-PLY-027 — Asomarse encuadra los bordes visibles y devuelve la vista
 
@@ -297,8 +313,8 @@ ruteo del gesto. Al salir, lo que se llevaba DEBE seguir en la mano, salvo una e
 ### BR-PLY-029 — Leer una nota pegada
 
 CUANDO el clic izquierdo apunta a una nota pegada, el sistema DEBE mostrar su lectura y
-suspender el control. Sólo un clic derecho DEBE cerrar y reanudar; un clic izquierdo NO DEBE
-cerrarla. Lo que se lleva DEBE conservar su lugar en la mano, sin usarse ni soltarse. Una pantalla abierta o un examen NO DEBE permitir
+suspender el control. Sólo un clic derecho o Esc (BR-PLY-054) DEBE cerrar y reanudar; un clic
+izquierdo NO DEBE cerrarla. Lo que se lleva DEBE conservar su lugar en la mano, sin usarse ni soltarse. Una pantalla abierta o un examen NO DEBE permitir
 abrir otra hoja. Leer NO DEBE detener el turno.
 
 CUANDO termina el turno, la lectura DEBE cerrarse antes de la devolución. La pausa DEBE verse
@@ -316,6 +332,12 @@ A4, con el contenido visible en el mundo; NO DEBEN presentarse como post its ni 
 por tarea.
 Las hojas del cuartito y del baño DEBEN conservar sus imágenes artísticas.
 
+MIENTRAS una tarea de la jornada está cumplida, su renglón en «TAREAS A REALIZAR» DEBE llevar
+tachada toda la oración, número y nombre, con una línea roja, en la hoja pegada y en su lectura.
+El tachado DEBE aparecer en el momento en que la tarea se cumple, también con la lectura abierta,
+y DEBE irse si la tarea vuelve a quedar sin cumplir. Las tareas sin cumplir NO DEBEN llevar
+tachado, y el orden, los nombres y la numeración de los renglones NO DEBEN cambiar.
+
 La nota de tareas DEBE enumerar sólo las obligatorias que declara la jornada, en el orden
 atención al cliente, registro de productos vendidos, limpieza, reposición y, al final, la
 particular de esa jornada. Ordenar las cajas DEBE llamarse «Ordenar cajas en el depósito» y
@@ -327,8 +349,8 @@ renglones. La nota de ordenado DEBE presentar las tres viñetas de su criterio, 
 ### BR-PLY-031 — El programa abre sin soltar la mano
 
 CUANDO se hace clic izquierdo sobre la caja registradora, el sistema DEBE abrir su programa y
-suspender el control, conservando lo que se lleva y su lugar en la mano. Sólo un clic derecho
-DEBE cerrar y reanudar; un clic izquierdo, adentro o afuera del panel, NO DEBE cerrarlo. Una pantalla o examen
+suspender el control, conservando lo que se lleva y su lugar en la mano. Sólo un clic derecho o
+Esc (BR-PLY-054) DEBE cerrar y reanudar; un clic izquierdo, adentro o afuera del panel, NO DEBE cerrarlo. Una pantalla o examen
 abiertos NO DEBEN permitir abrir el programa.
 Leerlo NO DEBE detener el turno. La pausa DEBE dibujarse por encima y, al reanudar, DEBE
 continuar abierto y suspendido. El cierre del turno DEBE cerrarlo antes de mostrar la devolución.
@@ -421,11 +443,12 @@ primero el examen, después la acción primaria y por último el secundario disp
 Sacar y meter DEBEN respetar existencia y capacidad; una devolución coincidente rechazada
 NO DEBE presentarse como «Dejar». Las acciones fuera de esta lista DEBEN conservar su texto
 vigente, asociado al gesto que realmente ejecutan: lector, descarte de ticket, tacho y cuerpo
-del contenedor conservan «Interactuar» sobre el primario; la tapa usa «Abrir» o «Cerrar».
+del contenedor conservan «Interactuar» sobre el primario; la tapa usa «Abrir» o «Cerrar», salvo
+abierta del todo con algo en la mano, que conserva «Interactuar» como el cuerpo.
 Preparar las líneas Hablar y Entregar NO DEBE habilitar por sí mismo atención directa.
 
-El contador de tareas DEBE conservar su lugar sobre la primera línea. CUANDO cambian foco
-y mano en el mismo cuadro, la referencia DEBE usar ambos valores nuevos, sin combinación intermedia.
+CUANDO cambian foco y mano en el mismo cuadro, la referencia DEBE usar ambos valores nuevos, sin
+combinación intermedia.
 
 ### BR-PLY-036 — El contexto no adelanta el resultado
 
@@ -437,8 +460,9 @@ o vacío, la mopa seca o el jabón sea incorrecto: mirar una mancha NO DEBE reve
 El lector presente con una unidad, el inodoro con un ticket y el cuerpo del contenedor con
 un objeto DEBEN declarar interacción primaria, aunque el resultado pueda rechazarse.
 Un tacho sólo DEBE ofrecer extracción con bolsa y mano vacía; una puerta trabada DEBE
-ofrecer Abrir, salvo la entrada principal de BR-PLY-041. La tapa DEBE ofrecer sólo su
-alternancia, sin tirar además lo sostenido.
+ofrecer Abrir, salvo la entrada principal de BR-PLY-041. La tapa DEBE ofrecer
+su alternancia, salvo abierta del todo con algo en la mano: entonces DEBE ofrecer lo mismo que el
+cuerpo (BR-CLN-025), y nunca alternar y tirar con el mismo clic.
 El secundario sobre todos esos objetivos NO DEBE ofrecer los usos trasladados al primario;
 Sacar producto conserva el secundario, y las acciones ajenas conservan su contrato.
 
@@ -584,6 +608,46 @@ Sólo se patea la unidad de producto: la caja, la bolsa y los útiles conservan 
 unidad pateada NO cuenta como repuesta: reponer se cumple sólo con el gesto de colocarla en el
 estante ([`store-stock`](../store-stock/store-stock.md)).
 
+### BR-PLY-053 — La compuerta del mostrador se abre al empujarla desde afuera
+
+CUANDO el jugador camina contra la compuerta del mostrador desde afuera —el lado contrario a sus
+bisagras— y la compuerta no está trabada, el sistema DEBE abrirla hacia adentro, como si se
+accionara (BR-PLY-011). Empujar una compuerta abierta NO DEBE cerrarla: el cuerpo sigue contra la
+hoja mientras pasa. Desde adentro la compuerta NO DEBE ceder al empujarla. Cerrarla sigue siendo
+accionarla.
+
+### BR-PLY-054 — Esc sale de la computadora, de la caja y de las notas
+
+CUANDO el jugador aprieta Esc con la computadora, la caja registradora o una nota abiertas, el
+sistema DEBE cerrar esa interfaz igual que el clic derecho (BR-PLY-029, BR-PLY-031) y NO DEBE
+pausar la jornada. Lo que se lleva DEBE seguir en la mano, sin usarse ni soltarse, y el control
+DEBE volver. SI no hay ninguna interfaz abierta, ENTONCES Esc DEBE pausar (BR-SAV-016): el Esc
+que cierra una interfaz no pausa, y el siguiente sí.
+
+MIENTRAS el programa de la caja tiene una lista de productos desplegada, Esc DEBE cerrar esa
+lista y dejar la caja abierta y sin pausa; el Esc siguiente DEBE cerrar la caja. La
+ventanilla con un comprador hablando NO DEBE cerrarse con Esc: ahí Esc pausa (BR-PLY-034).
+
+### BR-PLY-055 — El joystick izquierdo camina
+
+CUANDO el jugador inclina el joystick izquierdo, el sistema DEBE caminar hacia esa dirección,
+igual que con las cuatro direcciones del teclado: la dirección sigue a la vista (BR-PLY-002), la
+diagonal no corre más (BR-PLY-001) y la velocidad nunca pasa de la de caminata. MIENTRAS la
+inclinación está dentro de la zona muerta de la entrada, **0,2**, el sistema NO DEBE caminar. SI no
+hay joystick —nunca se conectó, se desconectó en medio de la noche o el navegador todavía no lo
+entrega—, ENTONCES el sistema NO DEBE fallar ni mover al jugador, y el teclado y el mouse DEBEN
+seguir funcionando.
+
+### BR-PLY-056 — El joystick derecho gira la vista
+
+CUANDO el jugador inclina el joystick derecho, el sistema DEBE girar la vista en proporción a la
+inclinación: a fondo gira **180 grados por segundo**. De costado gira en horizontal, y hacia
+arriba o abajo en vertical. A inclinación cero, y dentro de la zona muerta (BR-PLY-055), NO DEBE
+girar. El vertical DEBE respetar BR-PLY-003: a fondo hacia arriba la vista llega a +1,4 radianes y
+se queda ahí. CUANDO el mouse y el joystick giran en el mismo paso, el sistema DEBE sumar los dos
+giros; ninguno DEBE anular al otro. MIENTRAS el control está suspendido (BR-PLY-006), el joystick
+izquierdo NO DEBE caminar y el derecho NO DEBE girar la vista.
+
 ## Criterios de aceptación
 
 ### AC-PLY-001 — La diagonal no corre *(verifica BR-PLY-001)*
@@ -603,9 +667,10 @@ DADO un giro hacia abajo enorme ENTONCES el ángulo vertical queda en `-1.4`; ha
 
 ### AC-PLY-004 — Los dos bordes de la mira *(verifica BR-PLY-004)*
 
-DADO un candidato a 2,5 metros ENTONCES se enfoca; a 2,6, no. DADO un objeto que no sea
-un producto ni un hueco de reposición a 15 grados de desvío
-ENTONCES se enfoca; a 16, no.
+DADO un producto u otro objeto a 1,6 metros de los ojos sobre el piso, a cualquier altura, ENTONCES
+se enfoca; a 1,7, no. DADO un objeto que no sea
+un producto ni un hueco de reposición a 8 grados de desvío
+ENTONCES se enfoca; a 9, no.
 
 DADO un producto o un hueco de reposición a 3 grados de desvío ENTONCES se enfoca;
 a 6 grados, no. Esta precisión NO DEBE reducir la tolerancia de los otros objetos.
@@ -774,7 +839,7 @@ dormida.
 
 DADO una superficie con la inclinación justo debajo del corte de horizontal ENTONCES no admite;
 con el corte exacto sobre el piso y los muebles del mundo fijo, sobre una caja contenedora o sobre
-una unidad que admite, sí; sobre el cuerpo del contenedor (BR-CLN-040) y sobre la mopa, no.
+una unidad que admite, sí; sobre el contenedor, cuerpo o tapa (BR-CLN-040) y sobre la mopa, no.
 Admiten otro encima exactamente las cajas contenedoras y las unidades de producto de caja, cajita
 y lata; ningún otro objeto del almacén lo admite. La cara de una lata acostada cuya normal queda
 por debajo del corte no admite.
@@ -872,7 +937,7 @@ clic ENTONCES esa unidad pasa a la mano, su casillero queda vacío y las de al l
 estaban. DADO las manos vacías CUANDO la mira enfoca una unidad colocada ENTONCES esa unidad lleva
 el contorno del foco sobre su propio aspecto, se dibuja una sola vez y ninguna otra cambia. DADO
 cualquier cosa en la mano ENTONCES la mira no enfoca ninguna unidad colocada, y el
-clic no la agarra. DADO la fila de atrás ENTONCES ninguna de sus unidades se enfoca.
+clic no la agarra.
 
 ### AC-PLY-050 — El balde en la mano permanece vertical *(verifica BR-PLY-025)*
 
@@ -1027,7 +1092,7 @@ y las viñetas «No dejar productos tirados.», «Dejar las cajas en el depósit
 DADO las obligatorias declaradas, ENTONCES «TAREAS A REALIZAR» las enumera en el orden de la
 regla. DADO limpieza y tirar la basura, ENTONCES da «1. Limpieza» y «2. Tirar la basura».
 DADO cero, ENTONCES conserva el título y cero renglones. Cada tipo declarado tiene nombre,
-y los títulos y renglones son iguales en la hoja y su lectura.
+y los títulos y renglones son iguales en la hoja y su lectura, con o sin tachado.
 
 ### AC-PLY-070 — El cuartito y el baño comparten la imagen artística completa *(verifica BR-PLY-030)*
 
@@ -1168,7 +1233,6 @@ DADO los controles de fábrica, mano vacía y lavatorio enfocado CUANDO se consu
 ENTONCES muestra sólo «[E] Examinar». DADO el balde sostenido ENTONCES muestra exactamente
 «[E] Examinar (mano)» y «[Click Izq] Llenar». DADO una caja apoyada con una unidad y mano vacía
 ENTONCES muestra «[E] Examinar», «[Click Izq] Agarrar» y «[Click Der] Sacar producto».
-El contador de tareas permanece encima de la primera línea.
 
 ### AC-PLY-083 — Sacar y meter usan gestos distintos *(verifica BR-PLY-035, BR-PLY-036)*
 
@@ -1200,8 +1264,11 @@ DADO tacho sin bolsa u objeto sostenido ENTONCES no ofrece extracción.
 
 DADO una bolsa sostenida y el cuerpo del contenedor enfocado CUANDO se consulta ENTONCES
 ofrece Interactuar por primario, sin Dejar ni acción secundaria. DADO la tapa abierta
-ENTONCES ofrece Cerrar por primario; cerrada, Abrir. Pulsar la tapa conserva la bolsa sin
-desecharla; pulsar el cuerpo con tapa cerrada rechaza sin soltar.
+del todo y la bolsa sostenida ENTONCES ofrece lo mismo que el cuerpo. DADO la tapa abierta y la
+mano vacía ENTONCES ofrece Cerrar por primario. DADO la tapa cerrada, también con la bolsa, ENTONCES
+ofrece Abrir. Mientras gira, ofrece la acción que invierte el giro: Cerrar si abre, Abrir si cierra.
+Pulsar la tapa cerrada conserva la bolsa sin desecharla; pulsar el cuerpo con tapa cerrada
+rechaza sin soltar.
 
 ### AC-PLY-087 — Sin nada que hacer, nada *(verifica BR-PLY-035)*
 
@@ -1542,6 +1609,111 @@ DADO el balde suelto en el piso CUANDO el jugador camina contra él hasta llevar
 y CUANDO algo lo golpea fuera de su eje ENTONCES su eje queda a menos de 1 grado de la vertical, y
 la mopa se puede mojar en él.
 
+### AC-PLY-162 — Empujar desde afuera abre la compuerta *(verifica BR-PLY-053)*
+
+DADO la compuerta del mostrador cerrada CUANDO un cuerpo camina contra ella desde afuera ENTONCES
+la hoja gira hacia adentro hasta abierta, y accionarla después la cierra.
+
+### AC-PLY-163 — Empujar no cierra ni destraba *(verifica BR-PLY-053)*
+
+DADO una puerta abierta CUANDO se la empuja ENTONCES sigue abierta. DADO una puerta trabada CUANDO
+se la empuja ENTONCES sigue cerrada.
+
+### AC-PLY-164 — Desde adentro la compuerta no cede *(verifica BR-PLY-053)*
+
+DADO la compuerta del mostrador cerrada CUANDO un cuerpo camina contra ella desde adentro ENTONCES
+sigue cerrada.
+
+### AC-PLY-165 — Una tarea cumplida se tacha en rojo y lo pierde al descumplirse *(verifica BR-PLY-030)*
+
+DADO las obligatorias limpieza y tirar la basura, y ninguna cumplida, ENTONCES ningún renglón
+va tachado. CUANDO se cumple limpieza ENTONCES «1. Limpieza» lleva una línea roja sobre toda la
+oración, y «2. Tirar la basura» no lleva ninguna, en la hoja y en la lectura, aunque la lectura
+esté abierta. CUANDO limpieza vuelve a quedar sin cumplir ENTONCES el tachado se va de las dos.
+DADO una jornada que abre con una tarea ya cumplida, ENTONCES su renglón arranca tachado. El
+orden, los nombres y la numeración son los mismos con y sin tachado.
+
+### AC-PLY-166 — Esc cierra la computadora, la caja y la nota como el derecho *(verifica BR-PLY-054, BR-PLY-029, BR-PLY-031)*
+
+DADO la computadora, la caja registradora o una nota abiertas, con la mano vacía y luego con
+una unidad en la mano, CUANDO llega Esc ENTONCES la interfaz se cierra, el control vuelve, el
+juego no queda en pausa y la mano conserva el mismo objeto en su lugar. Esc no usa, agarra ni
+suelta nada en el mundo.
+
+### AC-PLY-167 — Sin interfaz abierta Esc pausa, y el siguiente cierra *(verifica BR-PLY-054)*
+
+DADO ninguna interfaz abierta CUANDO llega Esc ENTONCES el juego queda en pausa. DADO la
+computadora, la caja o una nota abiertas CUANDO llega Esc ENTONCES se cierra sin pausa; CUANDO
+llega otro Esc ENTONCES el juego queda en pausa.
+
+### AC-PLY-168 — Con una lista desplegada Esc cierra primero la lista *(verifica BR-PLY-054)*
+
+DADO la caja abierta y una lista de productos desplegada CUANDO llega Esc ENTONCES la lista se
+cierra, la caja sigue abierta y el juego no queda en pausa. CUANDO llega otro Esc ENTONCES la caja
+se cierra, también sin pausa. CUANDO llega un tercero ENTONCES el juego queda en pausa.
+
+### AC-PLY-169 — La pausa sobre una interfaz no la cierra, y la ventanilla sigue pausando *(verifica BR-PLY-054, BR-PLY-034)*
+
+DADO la computadora, la caja o una nota abiertas y el juego en pausa CUANDO llega Esc ENTONCES
+se reanuda y la interfaz sigue abierta con el control suspendido. DADO un comprador hablando en la
+ventanilla CUANDO llega Esc ENTONCES el juego queda en pausa y la conversación no se cierra.
+
+### AC-PLY-170 — El cursor que suelta el Esc de salida no pausa *(verifica BR-PLY-054)*
+
+DADO la computadora, la caja o una nota abiertas y el cursor tomado, CUANDO llega Esc y el cursor
+queda suelto sin que el juego lo suelte ENTONCES la interfaz se cierra y el juego no queda en
+pausa.
+
+### AC-PLY-171 — El izquierdo camina, y su zona muerta no *(verifica BR-PLY-055)*
+
+DADO el joystick izquierdo a fondo hacia adelante y la vista de frente ENTONCES la velocidad es la
+de caminata, hacia adelante. DADO a fondo en una diagonal ENTONCES el módulo es la velocidad de
+caminata y no más. DADO una inclinación de 0,19 ENTONCES la velocidad es cero; DADO 0,21 ENTONCES
+camina. DADO la vista girada un cuarto de vuelta y el izquierdo hacia adelante ENTONCES camina hacia
+donde mira. DADO ningún joystick ENTONCES el juego no falla y el teclado camina.
+
+### AC-PLY-172 — El derecho gira 180 grados por segundo a fondo *(verifica BR-PLY-056)*
+
+DADO el joystick derecho a fondo hacia la derecha CUANDO pasa 1 segundo ENTONCES la vista gira 180
+grados hacia la derecha; CUANDO pasa medio segundo, 90. DADO la inclinación a la mitad CUANDO pasa
+1 segundo ENTONCES gira 90 grados. DADO inclinación cero ENTONCES no gira. DADO una inclinación de
+0,19 ENTONCES no gira; DADO 0,21 ENTONCES gira.
+
+### AC-PLY-173 — El vertical del joystick se clava *(verifica BR-PLY-056, BR-PLY-003)*
+
+DADO el joystick derecho a fondo hacia arriba CUANDO pasan 2 segundos ENTONCES el ángulo vertical
+queda en `1.4`; DADO hacia abajo, en `-1.4`. CUANDO sigue inclinado otro paso ENTONCES no cambia.
+
+### AC-PLY-174 — Mouse y joystick se suman *(verifica BR-PLY-056)*
+
+DADO un movimiento del mouse que gira la vista un ángulo A y el joystick derecho que gira otro B en
+el mismo paso ENTONCES el giro total es A más B.
+
+### AC-PLY-175 — Suspendido, el joystick no camina ni gira *(verifica BR-PLY-056, BR-PLY-055, BR-PLY-006)*
+
+DADO la computadora abierta y los dos joysticks a fondo ENTONCES el jugador no camina y la vista
+no gira. CUANDO se cierra la computadora y los joysticks siguen a fondo ENTONCES camina y gira.
+
+### AC-PLY-190 — La palanca en la mano abre la oficina del jefe *(verifica BR-PLY-060, BR-PLY-020, BR-PLY-026)*
+
+DADO la jornada 7 con la palanca en la mano CUANDO se pulsa el primario sobre la puerta de la oficina
+del jefe ENTONCES se abre, avisa una vez que se abrió y no avisa de trabada. DADO las manos vacías, la
+mopa en la mano o la palanca suelta en el piso CUANDO se pulsa diez veces el primario sobre esa
+puerta ENTONCES emite diez avisos de trabada y la hoja no gira. CUANDO se pulsa el secundario con la
+palanca en la mano, o el primario con el control suspendido o en pausa, ENTONCES la puerta sigue
+cerrada y trabada, sin avisos. CUANDO se pulsa el primario con la palanca en la mano sobre el portón
+del depósito o sobre la entrada ENTONCES avisan de trabada como siempre y no giran.
+
+### AC-PLY-191 — La llave en la mano abre la oficina del jefe *(verifica BR-PLY-060, BR-PLY-020, BR-PLY-026)*
+
+DADO la jornada 7 con la llave en la mano CUANDO se pulsa el primario sobre la puerta de la oficina
+del jefe ENTONCES se abre, avisa una vez que se abrió y no avisa de trabada. DADO las manos vacías, la
+mopa en la mano o la llave suelta en el piso CUANDO se pulsa diez veces el primario sobre esa
+puerta ENTONCES emite diez avisos de trabada y la hoja no gira. CUANDO se pulsa el secundario con la
+llave en la mano, o el primario con el control suspendido o en pausa, ENTONCES la puerta sigue
+cerrada y trabada, sin avisos. CUANDO se pulsa el primario con la llave en la mano sobre el portón
+del depósito o sobre la entrada ENTONCES avisan de trabada como siempre y no giran.
+
 ## No objetivos
 
 - Esta capacidad NO decide qué esconde un objeto: eso es de
@@ -1554,7 +1726,7 @@ la mopa se puede mojar en él.
 
 ## Contratos
 
-- **Entrada:** el vector de movimiento, el delta del mouse, el yaw del arranque, los candidatos
+- **Entrada:** el vector de movimiento, el delta del mouse, la inclinación del joystick derecho, el yaw del arranque, los candidatos
   que el rayo encontró, el objeto que se quiere agarrar, la superficie que la mira toca, los
   casilleros vacíos y ocupados de cada producto, los segundos del cuadro y el nombre del control
   asignado a cada gesto; la acción primaria o secundaria y el contexto declarado del par

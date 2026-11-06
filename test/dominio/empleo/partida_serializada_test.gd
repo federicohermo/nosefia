@@ -16,6 +16,7 @@ func _completo() -> Dictionary:
 		"noches_sin_sumar": 1,
 		"devoluciones": ["Buen día!", "Hola"],
 		"mopa_secada": true,
+		"primera_pista_pensada": true,
 		"expediente": ["2B"],
 		"notas": [{"texto": "Nota", "identidad": "NOTA_2B_TEXTO", "jornada": 2, "orden": 1}],
 		"cierre_pendiente": 2,
@@ -24,6 +25,7 @@ func _completo() -> Dictionary:
 		"apercibimientos_de_la_prueba": 3,
 		"ultima_de_la_prueba_completa": true,
 		"semilla": 1234,
+		"sorteos": {5: "2A"},
 		"poses_de_las_cajas":
 		{Producto.Id.MAROLINI: Transform3D(Basis.IDENTITY, Vector3(1.5, 2.0, 3.25))},
 	}
@@ -140,3 +142,18 @@ func test_sin_el_campo_o_con_otro_tipo_ninguna_caja_trae_pose() -> void:  # AC-S
 		assert_int(partida.jornada()).is_equal(3)
 		assert_dict(partida.poses_de_las_cajas).is_empty()
 	assert_dict(Partida.nueva().poses_de_las_cajas).is_empty()
+
+
+func test_sin_el_campo_o_con_otro_tipo_ningun_camino_viene_sorteado() -> void:  # AC-SAV-036
+	var clave := PartidaSerializada.clave(PartidaSerializada.Campo.SORTEOS)
+	assert_dict(PartidaSerializada.sanear({})[clave]).is_empty()
+	for crudo: Variant in [7, "sorteos", [5, "2A"]]:
+		var partida := Partida.desde({JORNADA: 5, clave: crudo})
+		assert_int(partida.jornada()).is_equal(5)
+		assert_dict(partida.expediente.sorteos()).is_empty()
+
+
+func test_un_sorteo_sin_respaldo_se_ignora_y_el_valido_se_conserva() -> void:  # AC-SAV-036
+	var clave := PartidaSerializada.clave(PartidaSerializada.Campo.SORTEOS)
+	var partida := Partida.desde({JORNADA: 5, clave: {5: "2A", 6: "9Z", "x": "2B", 7: 3}})
+	assert_dict(partida.expediente.sorteos()).is_equal({5: "2A"})

@@ -1,4 +1,5 @@
 import argparse
+from collections.abc import Mapping
 from dataclasses import asdict, dataclass
 import hashlib
 import json
@@ -13,11 +14,8 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[2] / ".claude/scripts"))
 from lib.godot import validar_motor
 
 
-IMPORTADORES = {
-    "assets/models/importar_modelo.gd": "0da71c1d2052f41124553e8187c1646b7a50206ea69643284ec75b036337310e",
-    "assets/models/importar_caja.gd": "f09d6fd85dec24b9544948637bbc12cbef8e8904ff362fa3aecc517fe2a24755",
-}
-CAJAS = {"caja_registradora", "lector_de_productos", "ticket_impreso"}
+IMPORTADORES = {"assets/models/importar_modelo.gd", "assets/models/importar_caja.gd"}
+IMPORTADOR_DE_CAJAS = "assets/models/importar_caja.gd"
 MATERIAL = "src/escenas/puestos/vidrio_del_local.tres"
 EXCLUIDOS = {".github", ".claude", ".agents", "docs", "reports", "specs", "tools"}
 
@@ -35,6 +33,7 @@ class IdentidadImportacion:
     binario_motor_sha256: str
     artefacto_motor_sha256: str
     alcance: str = "recursos"
+    prefijo: str = ""
 
 
 def archivos_versionados(raiz: Path) -> list[str]:
@@ -77,54 +76,41 @@ def identidad(
         if nombre.endswith(".import") and nombre[:-7] in nombres:
             seleccion.append(nombre[:-7])
     seleccion = sorted(set(seleccion))
-    for nombre, esperado in IMPORTADORES.items():
+    for nombre in seleccion:
         ruta = raiz / nombre
-        if ruta.is_symlink() or not ruta.is_file() or hashlib.sha256(
-            ruta.read_text(encoding="utf-8").encode("utf-8")
-        ).hexdigest() != esperado:
-            motivo = f"importador sin auditar: {nombre}"
+        if ruta.is_symlink():
+            motivo = f"entrada enlazada no soportada: {nombre}"
+            break
+        if nombre.endswith(".import"):
+            script, destinos = configuracion_importacion(ruta)
+            if script and script not in IMPORTADORES:
+                motivo = f"importador sin auditar: {script}"
+                break
+            if script == IMPORTADOR_DE_CAJAS:
+                if not destinos:
+                    motivo = f"salidas de importación no reconocidas: {nombre}"
+                    break
+                try:
+                    for destino in destinos:
+                        destino_privado(raiz, destino)
+                except ValueError:
+                    motivo = f"salidas de importación fuera del directorio privado: {nombre}"
+                    break
+        if nombre.endswith(".gd") and re.search(
+            r"\b(?:EditorImportPlugin|add_import_plugin)\b", ruta.read_text(encoding="utf-8")
+        ):
+            motivo = f"EditorImportPlugin no soportado: {nombre}"
             break
     else:
-        for nombre in seleccion:
-            ruta = raiz / nombre
-            if ruta.is_symlink():
-                motivo = f"entrada enlazada no soportada: {nombre}"
-                break
-            if nombre.endswith(".import"):
-                script, destinos = configuracion_importacion(ruta)
-                if script and script not in IMPORTADORES:
-                    motivo = f"importador sin auditar: {script}"
-                    break
-                if script.endswith("importar_caja.gd") and nombre not in {
-                    f"assets/models/{caja}.glb.import" for caja in CAJAS
-                }:
-                    motivo = f"salidas de importador sin auditar: {nombre}"
-                    break
-                if script.endswith("importar_caja.gd"):
-                    if not destinos:
-                        motivo = f"salidas de importación no reconocidas: {nombre}"
-                        break
-                    try:
-                        for destino in destinos:
-                            destino_privado(raiz, destino)
-                    except ValueError:
-                        motivo = f"salidas de importación fuera del directorio privado: {nombre}"
-                        break
-            if nombre.endswith(".gd") and re.search(
-                r"\b(?:EditorImportPlugin|add_import_plugin)\b", ruta.read_text(encoding="utf-8")
-            ):
-                motivo = f"EditorImportPlugin no soportado: {nombre}"
-                break
+        material = (raiz / MATERIAL).read_text(encoding="utf-8")
+        referencias = re.findall(r'res://([^"\s]+)', material)
+        if re.search(r'type\s*=\s*"(?:Script|GDScript|CSharpScript)"', material) or any(
+            ref.endswith((".gd", ".tres", ".res")) or ref not in seleccion
+            for ref in referencias
+        ):
+            motivo = "dependencia del material importado sin auditar"
         else:
-            material = (raiz / MATERIAL).read_text(encoding="utf-8")
-            referencias = re.findall(r'res://([^"\s]+)', material)
-            if re.search(r'type\s*=\s*"(?:Script|GDScript|CSharpScript)"', material) or any(
-                ref.endswith((".gd", ".tres", ".res")) or ref not in seleccion
-                for ref in referencias
-            ):
-                motivo = "dependencia del material importado sin auditar"
-            else:
-                motivo = ""
+            motivo = ""
     motor = (raiz / ".godot-version").read_text(encoding="utf-8").strip()
     if motivo:
         return IdentidadImportacion(
@@ -132,11 +118,13 @@ def identidad(
             receta, binario, artefacto,
         )
     huella = hashlib.sha256()
-    for valor in ("importaciones-v2", sistema, arquitectura, motor, receta, binario, artefacto):
+    for valor in ("importaciones-v3", sistema, arquitectura, motor, receta, binario, artefacto):
         datos = valor.encode("utf-8")
         huella.update(len(datos).to_bytes(8, "big") + datos)
-    politica = Path(__file__).read_bytes()
-    huella.update(hashlib.sha256(politica).digest())
+    huella.update(hashlib.sha256(Path(__file__).read_bytes()).digest())
+    for nombre in (*sorted(IMPORTADORES), MATERIAL):
+        huella.update(hashlib.sha256((raiz / nombre).read_bytes()).digest())
+    prefijo = f"godot-importaciones-v3-{huella.hexdigest()}"
     for nombre in seleccion:
         archivo = raiz / nombre
         ruta = nombre.encode("utf-8")
@@ -145,9 +133,9 @@ def identidad(
         with archivo.open("rb") as entrada:
             huella.update(hashlib.file_digest(entrada, "sha256").digest())
     return IdentidadImportacion(
-        f"godot-importaciones-v2-{huella.hexdigest()}", not motivo,
-        motivo or "importadores auditados y recursos cubiertos", len(seleccion),
-        motor, sistema, arquitectura, receta, binario, artefacto,
+        f"{prefijo}-{huella.hexdigest()}", True,
+        "importadores auditados y recursos cubiertos", len(seleccion),
+        motor, sistema, arquitectura, receta, binario, artefacto, prefijo=prefijo,
     )
 
 
@@ -165,17 +153,30 @@ def destino_privado(raiz: Path, destino: str) -> Path:
     return carpeta / nombre
 
 
-def preparar_verificacion(raiz: Path, exacta: bool) -> list[str]:
+def restauracion(datos: dict, entorno: Mapping[str, str]) -> str:
+    """Qué dejó la caché: `exacta`, `parcial` (mismo prefijo, otro contenido) o `ninguna`.
+
+    Sólo un prefijo propio se conserva: la clave restaurada llega de afuera, y una caché de otro
+    motor, de otros importadores o de otra política dejaría importaciones que nadie auditó.
+    """
+    clave = entorno.get("CACHE_CLAVE_RESTAURADA", "")
+    if not datos["cacheable"] or entorno.get("CACHE_RESULTADO") != "success" or not clave:
+        return "ninguna"
+    if clave == datos["key"] and entorno.get("CACHE_HIT") == "true":
+        return "exacta"
+    if datos["prefijo"] and clave.startswith(datos["prefijo"] + "-"):
+        return "parcial"
+    return "ninguna"
+
+
+def preparar_verificacion(raiz: Path, conservar: bool) -> list[str]:
     carpeta = destino_privado(raiz, "res://.godot/imported/comprobacion").parent
-    if not exacta and carpeta.exists():
+    if not conservar and carpeta.exists():
         shutil.rmtree(carpeta)
     eliminados = []
-    for caja in sorted(CAJAS):
-        ruta = raiz / "assets" / "models" / f"{caja}.glb.import"
-        if not ruta.exists():
-            continue
+    for ruta in sorted((raiz / "assets" / "models").glob("*.glb.import")):
         script, destinos = configuracion_importacion(ruta)
-        if script != "assets/models/importar_caja.gd":
+        if script != IMPORTADOR_DE_CAJAS:
             continue
         for destino in destinos:
             archivo = destino_privado(raiz, destino)
@@ -205,22 +206,24 @@ def main() -> int:
         resultado = identidad(raiz, sistema, os.environ["RUNNER_ARCH"], nativo)
         datos = asdict(resultado) | {"commit": os.environ.get("GITHUB_SHA", "")}
         with Path(os.environ["GITHUB_OUTPUT"]).open("a", encoding="utf-8") as salida:
-            salida.write(f"key={resultado.key}\ncacheable={str(resultado.cacheable).lower()}\n")
+            salida.write(
+                f"key={resultado.key}\nprefijo={resultado.prefijo}\n"
+                f"cacheable={str(resultado.cacheable).lower()}\n"
+            )
+        if not resultado.cacheable:
+            print(f"::warning::Caché de importaciones apagada: {resultado.motivo}")
     else:
         datos = json.loads(reporte.read_text(encoding="utf-8"))
-        exacta = (
-            datos["cacheable"] and os.environ.get("CACHE_HIT") == "true"
-            and os.environ.get("CACHE_RESULTADO") == "success"
-            and os.environ.get("CACHE_CLAVE_RESTAURADA") == datos["key"]
-        )
+        cual = restauracion(datos, os.environ)
         datos |= {
-            "hit": bool(exacta), "resultado_restore": os.environ.get("CACHE_RESULTADO", "skipped"),
-            "purgados": preparar_verificacion(raiz, exacta),
+            "hit": cual == "exacta", "restauracion": cual,
+            "resultado_restore": os.environ.get("CACHE_RESULTADO", "skipped"),
+            "purgados": preparar_verificacion(raiz, cual != "ninguna"),
         }
         resumen = os.environ.get("GITHUB_STEP_SUMMARY")
         if resumen:
             with Path(resumen).open("a", encoding="utf-8") as salida:
-                salida.write(f"Caché de importaciones. Hit exacto: {exacta}. Entradas: {datos['entradas']}.\n\n")
+                salida.write(f"Caché de importaciones. Restauración: {cual}. Entradas: {datos['entradas']}.\n\n")
                 salida.write(f"Clave `{datos['key']}`. {datos['motivo']}.\n")
     reporte.write_text(json.dumps(datos, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     print(json.dumps(datos, ensure_ascii=False))

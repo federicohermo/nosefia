@@ -1,0 +1,24 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://src/escenas/objetos/objeto_agarrable.gd" id="objeto"]
+[ext_resource type="Resource" path="res://src/dominio/investigacion/palanca.tres" id="datos"]
+[ext_resource type="PackedScene" path="res://assets/models/Crowbar/psx_crowbar/scene.gltf" id="modelo"]
+
+[sub_resource type="BoxShape3D" id="cuerpo"]
+margin = 0.001
+size = Vector3(0.1, 0.04, 0.8)
+
+[node name="Palanca" type="RigidBody3D" groups=["interactuable"]]
+mass = 0.5
+collision_mask = 9
+script = ExtResource("objeto")
+datos = ExtResource("datos")
+
+[node name="Forma" type="CollisionShape3D" parent="."]
+shape = SubResource("cuerpo")
+
+[node name="Visual" parent="." instance=ExtResource("modelo")]
+transform = Transform3D(1, 0, 0, 0, 0, -1, 0, 1, 0, 0, 0.0407, 0.0164)
+
+[node name="Crowbar_Material_0" parent="Visual/Sketchfab_model/3ef98e5c9c424bfe890bd89c0a752fdc_fbx/RootNode/Crowbar"]
+gi_mode = 2

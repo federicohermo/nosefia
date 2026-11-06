@@ -13,26 +13,15 @@ func test_los_tipos_conservan_su_identidad_al_sumar_ordenar() -> void:
 			"LIMPIAR": 3,
 			"SACAR_LA_BASURA": 4,
 			"ORDENAR_LAS_CAJAS": 5,
-			"DESECHAR_VENCIDOS": 6
+			"DESECHAR_VENCIDOS": 6,
+			"RESPONDER_QUEJAS": 7,
+			"PEDIR_AL_PROVEEDOR": 8
 		}
 	)
 
 
-func test_el_reloj_de_mesa_falla_adentro_de_la_partida() -> void:
-	# Una jornada posterior a la última dejaría la regla escrita y muerta: el reloj no fallaría
-	# nunca jugando, y los criterios seguirían en verde igual. Es una invariante entre
-	# constantes, y por eso se afirma contra ellas y no contra el número.
-	var primera := ReglasDeLaPartida.PRIMERA_JORNADA
-	var ultima := primera + ReglasDeLaPartida.JORNADAS_DE_LA_PARTIDA - 1
-	var falla := Reglas.JORNADA_EN_QUE_FALLA_EL_RELOJ
-	var fuera := "el reloj falla en la jornada %d y la partida va de la %d a la %d"
-	assert_int(falla).override_failure_message(fuera % [falla, primera, ultima]).is_between(
-		primera, ultima
-	)
-
-
 func test_la_noche_arranca_a_una_hora_del_dia() -> void:
-	# La hora de apertura es la que el reloj de mesa suma a lo transcurrido: fuera de las
+	# La hora de apertura es la que el reloj de pared suma a lo transcurrido: fuera de las
 	# veinticuatro, la lectura nacería con un `HH` que ningún reloj muestra.
 	assert_int(Reglas.HORA_DE_APERTURA).is_between(0, 23)
 

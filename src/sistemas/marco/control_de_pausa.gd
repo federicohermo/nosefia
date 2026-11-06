@@ -14,6 +14,10 @@ signal pausado
 signal reanudado
 signal volver_al_menu_pedido
 signal cierre_de_configuraciones_pedido
+signal cierre_de_logros_pedido
+## Esc cerró la foto o el celular. Quien lo escucha devuelve el cursor al juego. Las demás
+## interfaces devuelven el cursor ellas mismas, al cerrarse.
+signal esc_atendido_por_el_celular
 
 ## La devolución del cierre, mirada sólo por si está en pantalla: con ella, perder el cursor no
 ## pausa. Esc sí: abre la pausa por encima.
@@ -21,10 +25,31 @@ signal cierre_de_configuraciones_pedido
 ## Configuraciones abierta desde la pausa, mirada sólo por si está en pantalla. La cierra quien
 ## la abrió, al recibir `cierre_de_configuraciones_pedido`.
 @export var configuraciones: CanvasLayer
+## La pantalla de logros abierta desde la pausa, igual que configuraciones: Esc la cierra y deja la
+## pausa. La cierra quien la abrió, al recibir `cierre_de_logros_pedido`.
+@export var logros: CanvasLayer
+## El celular, mirado por si está libre y abierto: entonces Esc lo cierra y no pausa. Lo asigna
+## quien arma el almacén.
+var celular: CelularDelEmpleado
+## El epílogo de un final, mientras se ve: Esc no pausa y perder el cursor tampoco. Lo asigna quien
+## lo muestra, y se libera solo al terminar.
+var epilogo: CanvasLayer
+
+var _interfaces: Array[Interfaz] = []
 
 var _cursor_antes := false
 var _menu_pedido := false
 var _ventana_activa := true
+## Lo que falta de la gracia que deja un Esc atendido por el celular o por una interfaz del local.
+## Ver `Pausa`.
+var _gracia_tras_esc := 0.0
+
+
+## Una interfaz que Esc cierra: la computadora, la caja o una nota. Cada puesto dice si está
+## abierta y cómo cierra con Esc, que no es siempre cerrar del todo.
+class Interfaz:
+	var abierta: Callable
+	var cerrar_con_esc: Callable
 
 
 func _ready() -> void:
@@ -43,14 +68,62 @@ func _exit_tree() -> void:
 	get_tree().physics_frame.disconnect(_mirar_el_cursor)
 
 
+## Si el evento es el de volver atrás: la acción de cancelar —Esc o START— o CÍRCULO.
+static func es_volver(evento: InputEvent) -> bool:
+	return evento.is_action_pressed(&"ui_cancel") or _es_circulo(evento)
+
+
+static func _es_circulo(evento: InputEvent) -> bool:
+	var boton := evento as InputEventJoypadButton
+	return (
+		boton != null
+		and boton.pressed
+		and not boton.is_echo()
+		and boton.button_index == Pausa.BOTON_VOLVER
+	)
+
+
 func _input(evento: InputEvent) -> void:
 	if not evento.is_action_pressed("ui_cancel"):
 		return
 	get_viewport().set_input_as_handled()
-	_hacer(Pausa.ante_esc(get_tree().paused, _configuraciones_en_pantalla()))
+	_hacer(
+		Pausa.ante_esc(
+			get_tree().paused,
+			_configuraciones_en_pantalla(),
+			_celular_libre_abierto(),
+			_interfaz_abierta() != null,
+			_logros_en_pantalla(),
+			_epilogo_en_pantalla()
+		)
+	)
 
 
-func _physics_process(_delta: float) -> void:
+## CÍRCULO hace lo de Esc salvo pausar: con nada abierto deja el evento a la acción del celular.
+## Llega por `_unhandled_input` y no por `_input`: la pantalla de controles que espera un botón se
+## lo queda antes, porque CÍRCULO se puede asignar.
+func _unhandled_input(evento: InputEvent) -> void:
+	if _es_circulo(evento):
+		_volver_atras()
+
+
+func _volver_atras() -> void:
+	var accion := Pausa.ante_volver(
+		get_tree().paused,
+		_configuraciones_en_pantalla(),
+		_celular_libre_abierto(),
+		_interfaz_abierta() != null,
+		_logros_en_pantalla(),
+		_epilogo_en_pantalla()
+	)
+	if accion == Pausa.Accion.NADA:
+		return
+	get_viewport().set_input_as_handled()
+	_hacer(accion)
+
+
+func _physics_process(delta: float) -> void:
+	_gracia_tras_esc = maxf(_gracia_tras_esc - delta, 0.0)
 	_cursor_antes = _cursor_tomado()
 
 
@@ -66,7 +139,12 @@ func _notification(aviso: int) -> void:
 
 func _mirar_el_cursor() -> void:
 	var accion := Pausa.ante_el_cursor(
-		get_tree().paused, _placa_en_pantalla(), _cursor_antes, _cursor_tomado(), _ventana_activa
+		get_tree().paused,
+		_placa_en_pantalla(),
+		_cursor_antes,
+		_cursor_tomado(),
+		_ventana_activa,
+		_gracia_tras_esc > 0.0
 	)
 	_hacer(accion)
 
@@ -77,6 +155,9 @@ func _hacer(accion: Pausa.Accion) -> void:
 		Pausa.Accion.PAUSAR: pausar,
 		Pausa.Accion.REANUDAR: reanudar,
 		Pausa.Accion.CERRAR_CONFIGURACIONES: cierre_de_configuraciones_pedido.emit,
+		Pausa.Accion.CERRAR_LOGROS: cierre_de_logros_pedido.emit,
+		Pausa.Accion.CERRAR_CELULAR: _cerrar_el_celular,
+		Pausa.Accion.CERRAR_INTERFAZ: _cerrar_la_interfaz,
 	}
 	acciones[accion].call()
 
@@ -109,12 +190,49 @@ func pedir_volver_al_menu() -> void:
 	volver_al_menu_pedido.emit()
 
 
+func registrar_interfaz(abierta: Callable, cerrar_con_esc: Callable) -> void:
+	var interfaz := Interfaz.new()
+	interfaz.abierta = abierta
+	interfaz.cerrar_con_esc = cerrar_con_esc
+	_interfaces.append(interfaz)
+
+
+func _cerrar_la_interfaz() -> void:
+	_gracia_tras_esc = Pausa.GRACIA_TRAS_ESC
+	_interfaz_abierta().cerrar_con_esc.call()
+
+
+func _interfaz_abierta() -> Interfaz:
+	for interfaz in _interfaces:
+		if interfaz.abierta.call():
+			return interfaz
+	return null
+
+
+func _cerrar_el_celular() -> void:
+	if celular.pedir_esc():
+		_gracia_tras_esc = Pausa.GRACIA_TRAS_ESC
+		esc_atendido_por_el_celular.emit()
+
+
+func _celular_libre_abierto() -> bool:
+	return celular != null and celular.celular().abierto() and not celular.celular().fijo()
+
+
 func _placa_en_pantalla() -> bool:
-	return placa != null and placa.visible
+	return (placa != null and placa.visible) or _epilogo_en_pantalla()
+
+
+func _epilogo_en_pantalla() -> bool:
+	return is_instance_valid(epilogo) and epilogo.visible
 
 
 func _configuraciones_en_pantalla() -> bool:
 	return configuraciones != null and configuraciones.visible
+
+
+func _logros_en_pantalla() -> bool:
+	return logros != null and logros.visible
 
 
 func _cursor_tomado() -> bool:

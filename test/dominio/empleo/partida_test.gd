@@ -171,12 +171,6 @@ func test_con_el_despido_en_la_ultima_jornada_gana_el_despido() -> void:  # AC-E
 	assert_int(partida.final()).is_equal(Partida.Final.DESPEDIDO)
 
 
-func test_la_partida_tiene_tres_finales() -> void:
-	# En curso, contrato cumplido y despido. Un cuarto sin decidir dónde se alcanza dejaría a
-	# `terminada()` contestando que sí sobre un estado que nadie escribió.
-	assert_int(Partida.Final.size()).is_equal(3)
-
-
 func test_solo_la_ultima_jornada_es_la_ultima() -> void:  # AC-EMP-008
 	var partida := Partida.nueva()
 	assert_bool(partida.es_la_ultima_jornada()).is_false()
@@ -206,7 +200,7 @@ func _jugar(partida: Partida, cumplidas: int) -> void:
 	partida.cerrar_la_jornada(cumplidas)
 
 
-func test_la_ultima_de_la_prueba_cierra_con_cuatro_tres_y_dos() -> void:  # AC-SHF-027, AC-EMP-050
+func test_la_ultima_de_la_prueba_cierra_con_cuatro_tres_y_dos() -> void:  # AC-EMP-050
 	var partida := Partida.desde({"jornada": 2, "medios": 0})
 	var turno := partida.abrir_la_jornada()
 	assert_int(partida.obligatorias().size()).is_equal(4)

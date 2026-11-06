@@ -12,6 +12,7 @@ enum Campo {
 	NOCHES_SIN_SUMAR,
 	DEVOLUCIONES,
 	MOPA_SECADA,
+	PRIMERA_PISTA_PENSADA,
 	EXPEDIENTE,
 	NOTAS,
 	CIERRE_PENDIENTE,
@@ -21,6 +22,7 @@ enum Campo {
 	ULTIMA_DE_LA_PRUEBA_COMPLETA,
 	SEMILLA,
 	POSES_DE_LAS_CAJAS,
+	SORTEOS,
 }
 
 const VERSION: int = 3
@@ -37,6 +39,7 @@ const DEFECTOS: Dictionary[Campo, Variant] = {
 	Campo.NOCHES_SIN_SUMAR: 0,
 	Campo.DEVOLUCIONES: [],
 	Campo.MOPA_SECADA: false,
+	Campo.PRIMERA_PISTA_PENSADA: false,
 	Campo.EXPEDIENTE: [],
 	Campo.NOTAS: [],
 	Campo.CIERRE_PENDIENTE: 0,
@@ -49,6 +52,9 @@ const DEFECTOS: Dictionary[Campo, Variant] = {
 	## La pose de cada caja del depósito al cierre, por identidad de caja (BR-SAV-022). Quien lo
 	## lee descarta lo que no es una caja con su pose.
 	Campo.POSES_DE_LAS_CAJAS: {},
+	## El camino que sorteó el expediente, por jornada (BR-SAV-023). Quien lo lee descarta lo que
+	## ninguna hipótesis respalda.
+	Campo.SORTEOS: {},
 }
 
 

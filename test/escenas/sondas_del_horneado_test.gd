@@ -11,6 +11,15 @@ func test_una_sonda_de_afuera_toma_los_coeficientes_de_su_vecina_de_adentro() ->
 	assert_array(Array(resultado.sh).slice(0, 9)).is_equal(Array(sh).slice(9, 18))
 
 
+func test_la_ganancia_del_horneado_alcanza_a_toda_sonda_sin_ganancia_propia() -> void:
+	var ganancias: Dictionary = Sondas.ganancias(3, 1.5, {1: 6.0})
+	assert_dict(ganancias).is_equal({0: 1.5, 1: 6.0, 2: 1.5})
+
+
+func test_sin_ganancia_del_horneado_quedan_solo_las_propias() -> void:
+	assert_dict(Sondas.ganancias(3, 1.0, {1: 6.0})).is_equal({1: 6.0})
+
+
 func test_una_sonda_de_adentro_sin_luz_no_toma_la_de_una_vecina() -> void:
 	var puntos := PackedVector3Array([Vector3.ZERO, Vector3.RIGHT, Vector3.LEFT])
 	var sh := _coeficientes([Color(0, 0, 0), Color(0.1, 0.2, 0.15), Color(0.3, 0.3, 0.3)])
