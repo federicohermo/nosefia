@@ -29,14 +29,15 @@ const MARCO := Rect2(838.0, 385.0, 808.0, 326.0)
 const FLECHA := Vector2(861.0, 441.0)
 const TITULO := Rect2(903.0, 437.0, 720.0, 44.0)
 const TEXTO := Rect2(903.0, 499.0, 720.0, 200.0)
-const TAMANO_DEL_TEXTO := 27
-const TAMANO_MINIMO_DEL_TEXTO := 18
+const TAMANO_DEL_TEXTO := 30
 const PUNTOS := Vector2(1672.0, 694.0)
 const ANTERIOR := Rect2(1389.0, 748.0, 188.0, 45.0)
 const SIGUIENTE := Rect2(1596.0, 748.0, 188.0, 45.0)
 const ACCION := Rect2(1389.0, 811.0, 257.0, 62.0)
 
 var _lienzo: Control
+var _recuadro: Panel
+var _marco: Panel
 var _encabezado: Label
 var _flecha: Line2D
 var _titulo: Label
@@ -57,12 +58,14 @@ func _ready() -> void:
 	_lienzo.size = LienzoDeManada.TAMANO_DEL_DISENO
 	_lienzo.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	add_child(_lienzo)
-	_ubicar(_panel("Recuadro", FONDO, null), RECUADRO)
+	_recuadro = _panel("Recuadro", FONDO, null)
+	_ubicar(_recuadro, RECUADRO)
 	var marco := StyleBoxFlat.new()
 	marco.draw_center = false
 	marco.border_color = TINTA
 	marco.set_border_width_all(2)
-	_ubicar(_panel("Marco", Color.TRANSPARENT, marco), MARCO)
+	_marco = _panel("Marco", Color.TRANSPARENT, marco)
+	_ubicar(_marco, MARCO)
 	_encabezado = _etiqueta("Encabezado", 40, TINTA, ENCABEZADO)
 	_encabezado.vertical_alignment = VERTICAL_ALIGNMENT_BOTTOM
 	_flecha = Line2D.new()
@@ -104,7 +107,7 @@ func mostrar(reflexion: ReflexionDeCierre) -> void:
 	_titulo.text = opcion.titulo if con_opcion else ""
 	_texto.position.y = TEXTO.position.y if con_opcion else TITULO.position.y
 	_texto.text = opcion.texto if con_opcion else reflexion.texto_actual()
-	_texto.add_theme_font_size_override("font_size", _tamano_que_entra(_texto.text))
+	_crecer_con(_texto.text)
 	_identidad = opcion.identidad if con_opcion else reflexion.identidad_del_texto()
 	var opciones := reflexion.opciones()
 	var navegable := etapa == ReflexionDeCierre.Etapa.ELEGIR and opciones.size() > 1
@@ -160,21 +163,24 @@ func _pintar_puntos(mostrada: int, cuantas: int) -> void:
 		circulo.reparent(_puntos, false)
 
 
-## El tamaño de siempre, o el mayor menor que deja el texto adentro del marco.
-func _tamano_que_entra(contenido: String) -> int:
+## La letra no cambia: la tarjeta crece hacia abajo lo que el texto pide, con el margen de
+## siempre, y lo que está debajo baja con ella.
+func _crecer_con(contenido: String) -> void:
 	var tipografia := _texto.get_theme_font("font")
 	var separacion := _texto.get_theme_constant("line_spacing")
-	var disponible := MARCO.end.y - _texto.position.y
-	var tamano := TAMANO_DEL_TEXTO
-	while tamano > TAMANO_MINIMO_DEL_TEXTO:
-		var medida := tipografia.get_multiline_string_size(
-			contenido, HORIZONTAL_ALIGNMENT_LEFT, TEXTO.size.x, tamano
-		)
-		var lineas := roundi(medida.y / tipografia.get_height(tamano))
-		if medida.y + (lineas - 1) * separacion <= disponible:
-			break
-		tamano -= 1
-	return tamano
+	var medida := tipografia.get_multiline_string_size(
+		contenido, HORIZONTAL_ALIGNMENT_LEFT, TEXTO.size.x, TAMANO_DEL_TEXTO
+	)
+	var lineas := roundi(medida.y / tipografia.get_height(TAMANO_DEL_TEXTO))
+	_texto.size.y = maxf(TEXTO.size.y, medida.y + (lineas - 1) * separacion)
+	var margen := MARCO.end.y - TEXTO.end.y
+	var crece := maxf(0.0, _texto.position.y + _texto.size.y + margen - MARCO.end.y)
+	_marco.size.y = MARCO.size.y + crece
+	_recuadro.size.y = RECUADRO.size.y + crece
+	_puntos.position.y = PUNTOS.y + crece
+	_anterior.position.y = ANTERIOR.position.y + crece
+	_siguiente.position.y = SIGUIENTE.position.y + crece
+	_accion.position.y = ACCION.position.y + crece
 
 
 func _ajustar() -> void:
