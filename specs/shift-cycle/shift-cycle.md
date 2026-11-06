@@ -187,10 +187,9 @@ devolución del jefe, sin cierre de la jornada y sin elección de hipótesis. La
 evaluarse: las tareas pendientes, el turno que queda y los llamados no deciden nada, y la partida
 no puede terminar despedida ni con el contrato cumplido por esa jornada.
 
-La pantalla de final DEBE mostrarse en ese mismo paso, con el encabezado «/ FINAL 4», el título
-«JEFE SABOTEADOR» y sus dos botones (BR-SHF-071). Accionar otra vez la puerta NO DEBE mostrar dos
-pantallas. El guardado se borra (BR-SAV-002). El epílogo de este final (BR-SHF-072) va entre la
-puerta y la pantalla.
+La pantalla de final DEBE mostrarse después del epílogo de este final (BR-SHF-072), con el
+encabezado «/ FINAL 4», el título «JEFE SABOTEADOR» y sus dos botones (BR-SHF-071). Accionar otra
+vez la puerta NO DEBE mostrar dos pantallas. El guardado se borra (BR-SAV-002).
 
 ### BR-SHF-061 — Abrir la puerta del jefe con la llave termina la partida en el final 5
 
@@ -224,7 +223,8 @@ texto. El texto DEBE ser el de la ficha, con los saltos de renglón que la ficha
 acciona «SIGUIENTE», el sistema DEBE pasar a la placa siguiente, o a la pantalla de final si era
 la última. Un final con una sola placa lleva de su única placa a la pantalla de final.
 
-- El final 1 DEBE tener 6 placas, el final 2 DEBE tener 2 y el final 5 DEBE tener 7.
+- El final 1 DEBE tener 6 placas, el final 2 DEBE tener 2, el final 4 DEBE tener 9 y el final 5
+  DEBE tener 7.
 - Las placas de un mismo final DEBEN compartir su imagen de fondo; cada final usa la suya.
 
 ### BR-SHF-074 — Mientras se ve el epílogo, el juego queda quieto
