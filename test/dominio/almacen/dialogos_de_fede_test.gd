@@ -56,10 +56,9 @@ func test_fede_pide_durextra_primero_y_dos_tipos_mas_de_su_grupo() -> void:  # A
 	for producto in Catalogo.de_la_jornada(CUARTA):
 		vendibles.append(producto.id)
 	var elegibles: Array = Compradores.GRUPOS[PERSONAJE.FEDE].filter(
-		func(id: Producto.Id) -> bool: return id in vendibles
+		func(id: Producto.Id) -> bool: return id in vendibles and id != Producto.Id.DURONGA
 	)
 	var vistos: Dictionary = {}
-	var con_duronga := 0
 	for semilla in range(1, SEMILLAS + 1):
 		var fede := _fede(semilla)
 		var ids := _ids(fede)
@@ -69,12 +68,24 @@ func test_fede_pide_durextra_primero_y_dos_tipos_mas_de_su_grupo() -> void:  # A
 		for id: Producto.Id in ids.slice(1):
 			assert_array(elegibles).contains([id])
 			vistos[id] = true
-		if ids.has(Producto.Id.DURONGA):
-			con_duronga += 1
 		for producto in fede.pedido().productos():
 			assert_int(fede.pedido().unidades_de(producto)).is_equal(1)
 	assert_array(vistos.keys()).contains_exactly_in_any_order(elegibles)
-	assert_int(con_duronga).is_between(1, SEMILLAS - 1)
+
+
+func test_fede_de_la_cuarta_nunca_pide_duronga_aunque_se_venda() -> void:  # AC-CTR-186
+	var vendibles: Array[Producto.Id] = []
+	for producto in Catalogo.de_la_jornada(CUARTA):
+		vendibles.append(producto.id)
+	assert_array(vendibles).contains([Producto.Id.DURONGA])
+	for semilla in range(1, SEMILLAS + 1):
+		assert_array(_ids(_fede(semilla))).not_contains([Producto.Id.DURONGA])
+	var en_la_segunda := Compradores.segunda_jornada_definida()
+	var ids: Array[Producto.Id] = []
+	for comprador in en_la_segunda:
+		if comprador.personaje == PERSONAJE.FEDE:
+			ids = _ids(comprador)
+	assert_array(ids).contains([Producto.Id.DURONGA])
 
 
 func test_la_misma_semilla_repite_el_pedido_de_fede() -> void:  # AC-CTR-174
