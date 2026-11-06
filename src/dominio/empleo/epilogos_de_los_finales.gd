@@ -62,7 +62,62 @@ const TEXTOS: Dictionary[FinalConPantalla.Cual, Array] = {
 			+ "siempre... ¡¿Dónde están las pruebas?!"
 		),
 	],
-	FinalConPantalla.Cual.JEFE_SABOTEADOR: ["", ""],
+	FinalConPantalla.Cual.JEFE_SABOTEADOR:
+	[
+		(
+			"Detrás de esa puerta, pude encontrar las evidencias necesarias para apaciguar mis "
+			+ "dudas. Yo sabía que no estaba loco… ¡El desquiciado era Enrique!"
+		),
+		(
+			"Sobre el escritorio, dentro de los cajones e incluso en las paredes, encontré una "
+			+ "cantidad absurda de documentos sobre el funcionamiento de la estación de servicio "
+			+ "(y sus empleados). Papeles que se había encargado de mantener bien ocultos durante "
+			+ "nuestras entrevistas. Y era lógico: estas pilas de documentos parecían más el "
+			+ "diario de un villano que unos simples informes."
+		),
+		(
+			"Elementos esenciales que desaparecen, cortes de luz planificados, objetos fuera de "
+			+ "lugar… Enrique estaba entorpeciendo mi trabajo a propósito, de las formas más "
+			+ "rebuscadas e innecesarias, solamente para testear mi capacidad para resolver "
+			+ "problemas. Y se ve que tenía muchas más pruebas preparadas para mí, y también "
+			+ "para Yasmín."
+		),
+		(
+			"Profundizando en sus notas, descubrí que aquello que lo impulsaba a cometer estas "
+			+ "maldades era, en sus propias palabras, la necesidad de “curtir” a sus empleados "
+			+ "para mantener el elevadísimo nivel de su estación de servicio."
+		),
+		(
+			"Una filosofía muy interesante… sustentada por los argumentos de varios libros que "
+			+ "encontré sobre su mesa, que promovían el crecimiento profesional a través de la "
+			+ "mentalidad de tiburón. Y también por sus tendencias megalomaníacas, claro está."
+		),
+		(
+			"Por supuesto, saqué fotos de todo lo que pude y fui a contarle de inmediato a "
+			+ "Yasmín. No podíamos quedarnos de brazos cruzados. Teníamos que hacer algo para "
+			+ "frenar estos abusos de una vez por todas."
+		),
+		(
+			"Afortunadamente, Enrique había guardado los informes sobre sus exempleados: sujetos "
+			+ "de prueba que no habían soportado la presión del laburo y habían renunciado o sido "
+			+ "despedidos por no ser lo “suficientemente dignos” para trabajar bajo el mando del "
+			+ "señor Peldaño."
+		),
+		(
+			"Con esos datos, no tardamos en contactar a un buen número de personas dispuestas a "
+			+ "unirse para denunciar a Enrique, especialmente ahora que contábamos con pruebas "
+			+ "fehacientes de sus excesos maquiavélicos. Incluso Hernán, el proveedor, se sumó "
+			+ "con mucho gusto para manifestar su disgusto con las actitudes del “pelado garca”, "
+			+ "palabras suyas, no mías."
+		),
+		(
+			"Al final, Enrique consiguió lo que tanto quería: poner a prueba las capacidades de "
+			+ "sus empleados. Ganamos el juicio, aunque, claro, tanto Yasmín como yo nos "
+			+ "quedamos sin trabajo. Pero al menos nos fuimos con la satisfacción de haberle "
+			+ "arruinado el experimento al señor Peldaño y haber evitado que sometiera a más "
+			+ "gente a sus delirios de grandeza."
+		),
+	],
 	FinalConPantalla.Cual.JEFE_INCOMPETENTE:
 	[
 		(
