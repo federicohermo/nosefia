@@ -68,6 +68,9 @@ var _estado := Notificaciones.new()
 var _dibujadas: Array[int] = []
 var _activos: Dictionary[int, AvisoEnPantalla] = {}
 var _saliendo: Array[AvisoEnPantalla] = []
+var _entro := false
+var _salio := false
+var _avisando := false
 
 
 func _ready() -> void:
@@ -156,7 +159,21 @@ func _pintar(con_aviso_de_salida := true) -> void:
 			entro = true
 		_pila.move_child(_activos[clave].cartel, indice)
 	_dibujadas = actuales
-	if salio and con_aviso_de_salida:
+	_salio = _salio or (salio and con_aviso_de_salida)
+	_entro = _entro or entro
+	if (_entro or _salio) and not _avisando:
+		_avisando = true
+		_avisar_al_final_del_cuadro.call_deferred()
+
+
+## Junta lo que entró y salió en el cuadro: varios carteles seguidos suenan una sola vez.
+func _avisar_al_final_del_cuadro() -> void:
+	_avisando = false
+	var salio := _salio
+	var entro := _entro
+	_salio = false
+	_entro = false
+	if salio:
 		cartel_salido.emit()
 	if entro:
 		cartel_entrado.emit()

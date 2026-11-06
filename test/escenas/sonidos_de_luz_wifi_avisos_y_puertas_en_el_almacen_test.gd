@@ -105,8 +105,10 @@ func test_un_cartel_que_entra_y_sale_suena_una_vez_cada_uno() -> void:
 	var local := _local(ReglasDeLaPartida.PRIMERA_JORNADA)
 	var pila: PilaDeNotificaciones = local.get_node(PILA)
 	pila.avisar_pista()
+	await get_tree().process_frame
 	assert_array(_pedidos).is_equal([EntradaSonora.Evento.NOTIFICACION_ENTRADA])
 	pila._process(Notificaciones.DURACION + 1.0)
+	await get_tree().process_frame
 	assert_array(_pedidos).is_equal(
 		[EntradaSonora.Evento.NOTIFICACION_ENTRADA, EntradaSonora.Evento.NOTIFICACION_SALIDA]
 	)
@@ -117,8 +119,10 @@ func test_varios_carteles_en_el_mismo_cuadro_suenan_una_sola_entrada_y_una_sola_
 	var pila: PilaDeNotificaciones = local.get_node(PILA)
 	pila.avisar_pista()
 	pila.avisar_logro(Logros.Logro.values()[0])
+	await get_tree().process_frame
 	assert_array(_pedidos).is_equal([EntradaSonora.Evento.NOTIFICACION_ENTRADA])
 	pila._process(Notificaciones.DURACION + 1.0)
+	await get_tree().process_frame
 	assert_array(_pedidos).is_equal(
 		[EntradaSonora.Evento.NOTIFICACION_ENTRADA, EntradaSonora.Evento.NOTIFICACION_SALIDA]
 	)
@@ -128,9 +132,12 @@ func test_vaciar_la_pila_no_suena_la_salida() -> void:
 	var local := _local(ReglasDeLaPartida.PRIMERA_JORNADA)
 	var pila: PilaDeNotificaciones = local.get_node(PILA)
 	pila.avisar_pista()
+	await get_tree().process_frame
 	pila.vaciar()
+	await get_tree().process_frame
 	assert_array(_pedidos).is_equal([EntradaSonora.Evento.NOTIFICACION_ENTRADA])
 	pila.avisar_pista()
+	await get_tree().process_frame
 	assert_array(_pedidos).is_equal(
 		[EntradaSonora.Evento.NOTIFICACION_ENTRADA, EntradaSonora.Evento.NOTIFICACION_ENTRADA]
 	)
