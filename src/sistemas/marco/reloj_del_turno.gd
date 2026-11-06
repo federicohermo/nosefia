@@ -73,6 +73,16 @@ func hora() -> String:
 	return Marcador.hora(_turno.tiempo_restante()) if _turno != null else ""
 
 
+## Cuánto turno queda, o cero sin turno.
+func tiempo_restante() -> float:
+	return _turno.tiempo_restante() if _turno != null else 0.0
+
+
+## Cuántos segundos de turno pasan por cada segundo real.
+func ritmo() -> float:
+	return _ritmo
+
+
 ## La hora a la que empezó el cierre de este turno: la del reloj al irse antes, o las 08:00 si se
 ## cumplió entero. Vacía mientras el cierre no empezó.
 func hora_al_cierre() -> String:

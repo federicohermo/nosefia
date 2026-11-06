@@ -182,6 +182,43 @@ Para comprobar la plantilla guardada sin compilar, correr:
 python .github/scripts/preparar_plantilla_web.py --comprobar
 ```
 
+## Una partida de prueba por la URL
+
+Toda build web, también la publicada desde `main`, lee la búsqueda de la URL y arranca una partida
+de prueba. **Sin parámetros se juega igual que siempre.** Fuera de la web no hace nada. Ejemplo:
+
+```text
+…/?jornada=6&cierre=60&camino=6C&completas=1
+```
+
+| Parámetro | Valor | Qué hace |
+|---|---|---|
+| `jornada` | entero de una jornada de la partida | El guardado queda en esa jornada, y «Continuar» entra directo. Pisa el guardado del jugador. Con otro valor se ignoran todos los parámetros. |
+| `camino` | la hipótesis en que termina el camino | Elige las hipótesis de las jornadas anteriores a `jornada` y deja en el expediente las pistas que exigen. Sin `jornada` o con una identidad que el caso no tiene, se ignora. |
+| `cierre` | segundos reales | Al arrancar el turno de esa jornada, el reloj avanza hasta que faltan esos segundos para el cierre. Una sola vez por carga de la página. |
+| `completas` | `1` o `0` | Con `1`, las obligatorias de esa jornada arrancan cumplidas y siguen cumplidas hasta el cierre. |
+
+El guardado se escribe una sola vez por carga de la página: «Volver al menú» no lo repite. `cierre`
+y `completas` valen sólo en la jornada configurada.
+
+El camino se nombra por su última hipótesis. Las anteriores salen de los datos del caso. La
+anterior es la de la jornada previa cuyo camino contiene las pistas que la siguiente exige. Una
+hipótesis nueva entra sola. Estos son los caminos que el caso tiene hoy:
+
+| `camino` | Cadena de hipótesis |
+|---|---|
+| `2A` | `2A` |
+| `2B` | `2B` |
+| `2P` | `2P` |
+| `5A` | `2A` → `5A` |
+| `5B` | `2A` → `5B` |
+| `5P` | `5P` |
+| `6A` | `2A` → `5A` → `6A` |
+| `6B` | `2A` → `5A` → `6B` |
+| `6C` | `2A` → `5B` → `6C` |
+| `6L` | `6L` |
+| `6P` | `6P` |
+
 ## Rehacerlo a mano
 
 Para publicar sin pasar por Actions, o para reproducir un fallo del workflow, es esto. Va desde
