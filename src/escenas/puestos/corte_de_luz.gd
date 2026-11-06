@@ -95,6 +95,8 @@ static func abrir_a_la_calle(raiz: Node, horno: LightmapGI) -> void:
 	afuera.emission_energy_multiplier = ENERGIA_DE_AFUERA
 	afuera.cull_mode = BaseMaterial3D.CULL_DISABLED
 	for vidrio in vidrios_a_la_calle(raiz):
+		# El de la ventanilla no se ve en el juego, pero el hueco deja pasar la luz de afuera.
+		vidrio.show()
 		vidrio.gi_mode = GeometryInstance3D.GI_MODE_STATIC
 		vidrio.material_override = afuera
 
