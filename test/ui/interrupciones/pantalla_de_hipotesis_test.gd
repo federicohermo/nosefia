@@ -93,3 +93,12 @@ func test_las_comillas_del_dato_se_muestran() -> void:
 	opcion.texto = texto
 	assert_str(mostrado_titulo).is_equal(COMILLAS)
 	assert_str(mostrado_texto).is_equal(COMILLAS)
+
+
+func test_el_foco_de_la_hipotesis_queda_puesto_y_no_se_dibuja() -> void:  # AC-CFG-028
+	var pantalla := _pantalla()
+	pantalla.mostrar(_reflexion(["2A", "2B"]))
+	var foco := pantalla.get_viewport().gui_get_focus_owner()
+	assert_object(foco).is_not_null()
+	assert_bool(foco != null and pantalla.is_ancestor_of(foco) and foco.has_focus()).is_true()
+	assert_bool(foco != null and foco.has_focus(true)).is_false()
