@@ -4,6 +4,7 @@ extends GdUnitTestSuite
 const FINALES_CON_EPILOGO: Array[FinalConPantalla.Cual] = [
 	FinalConPantalla.Cual.EMPLEADO_ESTRESADO,
 	FinalConPantalla.Cual.LOCURA_PARANOICA,
+	FinalConPantalla.Cual.JEFE_SABOTEADOR,
 	FinalConPantalla.Cual.JEFE_INCOMPETENTE,
 ]
 
@@ -51,8 +52,10 @@ func test_cada_final_usa_su_propio_fondo() -> void:  # AC-SHF-135
 		fondos.append(fondo)
 
 
-func test_el_final_4_sin_texto_no_tiene_epilogo() -> void:  # AC-SHF-137
-	assert_array(EpilogosDeLosFinales.placas_de(FinalConPantalla.Cual.JEFE_SABOTEADOR)).is_empty()
+func test_el_final_4_tiene_nueve_placas() -> void:  # AC-SHF-142
+	var placas := EpilogosDeLosFinales.placas_de(FinalConPantalla.Cual.JEFE_SABOTEADOR)
+	assert_int(placas.size()).is_equal(9)
+	assert_int(_renglones(placas[0])).is_equal(1)
 
 
 func test_el_despido_y_la_partida_en_curso_no_tienen_epilogo() -> void:  # AC-SHF-137

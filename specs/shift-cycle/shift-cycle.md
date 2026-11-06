@@ -187,10 +187,9 @@ devolución del jefe, sin cierre de la jornada y sin elección de hipótesis. La
 evaluarse: las tareas pendientes, el turno que queda y los llamados no deciden nada, y la partida
 no puede terminar despedida ni con el contrato cumplido por esa jornada.
 
-La pantalla de final DEBE mostrarse en ese mismo paso, con el encabezado «/ FINAL 4», el título
-«JEFE SABOTEADOR» y sus dos botones (BR-SHF-071). Accionar otra vez la puerta NO DEBE mostrar dos
-pantallas. El guardado se borra (BR-SAV-002). El epílogo de este final (BR-SHF-072) va entre la
-puerta y la pantalla; mientras ninguna de sus placas tenga texto, NO DEBE intercalarse nada.
+La pantalla de final DEBE mostrarse después del epílogo de este final (BR-SHF-072), con el
+encabezado «/ FINAL 4», el título «JEFE SABOTEADOR» y sus dos botones (BR-SHF-071). Accionar otra
+vez la puerta NO DEBE mostrar dos pantallas. El guardado se borra (BR-SAV-002).
 
 ### BR-SHF-061 — Abrir la puerta del jefe con la llave termina la partida en el final 5
 
@@ -207,8 +206,7 @@ vez la puerta NO DEBE mostrar dos pantallas. El guardado se borra (BR-SAV-002).
 
 CUANDO la partida termina en un final con epílogo, el sistema DEBE mostrar ese epílogo antes de la
 pantalla de final, y llevar de ahí a la pantalla. Un final tiene epílogo si al menos una de sus
-placas tiene texto. Los finales 1, 2 y 5 lo tienen; el final 4 no lo tiene mientras ninguna de sus
-placas tenga texto; el despido nunca lo tiene.
+placas tiene texto. Los finales 1, 2, 4 y 5 lo tienen; el despido nunca lo tiene.
 
 - La transición hacia cada placa DEBE ser un fundido a negro de 1 segundo seguido de un fundido de
   entrada de 1 segundo. La misma transición DEBE llevar de la última placa a la pantalla de final.
@@ -225,7 +223,8 @@ texto. El texto DEBE ser el de la ficha, con los saltos de renglón que la ficha
 acciona «SIGUIENTE», el sistema DEBE pasar a la placa siguiente, o a la pantalla de final si era
 la última. Un final con una sola placa lleva de su única placa a la pantalla de final.
 
-- El final 1 DEBE tener 6 placas, el final 2 DEBE tener 2 y el final 5 DEBE tener 7.
+- El final 1 DEBE tener 6 placas, el final 2 DEBE tener 2, el final 4 DEBE tener 9 y el final 5
+  DEBE tener 7.
 - Las placas de un mismo final DEBEN compartir su imagen de fondo; cada final usa la suya.
 
 ### BR-SHF-074 — Mientras se ve el epílogo, el juego queda quieto
@@ -799,9 +798,9 @@ mano CUANDO se acciona la puerta ENTONCES la partida sigue en curso.
 
 ### AC-SHF-111 — El final 4 muestra su pantalla *(verifica BR-SHF-060, BR-SHF-027)*
 
-DADO el final 4 CUANDO termina la partida ENTONCES aparece, sin otra pantalla antes, la pantalla con
-«/ FINAL 4», «JEFE SABOTEADOR» y sus dos botones, y el menú todavía no se pidió. CUANDO se acciona
-otra vez la puerta ENTONCES se sigue mostrando una sola pantalla. DADO el
+DADO el final 4 CUANDO termina la partida y se recorre su epílogo (BR-SHF-072) ENTONCES aparece la
+pantalla con «/ FINAL 4», «JEFE SABOTEADOR» y sus dos botones, y el menú todavía no se pidió. CUANDO
+se acciona otra vez la puerta ENTONCES se sigue mostrando una sola pantalla. DADO el
 despido o el contrato cumplido sin pistas ENTONCES sus pantallas siguen como en AC-SHF-063 y
 AC-SHF-064.
 
@@ -848,12 +847,19 @@ seis veces, esperando cada fundido, ENTONCES se ven las placas 2 a 7 en orden, y
 ENTONCES, tras el fundido, aparece la pantalla con «/ FINAL 5». El texto de la placa 1 tiene dos
 renglones y el de la placa 7, dos.
 
-### AC-SHF-137 — Sin epílogo, directo a la pantalla *(verifica BR-SHF-072, BR-SHF-027, BR-SHF-060)*
+### AC-SHF-142 — El final 4 pasa por sus nueve placas *(verifica BR-SHF-072, BR-SHF-073, BR-SHF-060)*
+
+DADO la jornada 7 con la palanca en la mano CUANDO se abre la puerta del jefe ENTONCES, tras los
+fundidos, aparece la placa 1 del final 4 y no la pantalla de final, con una imagen de fondo distinta
+de la de los otros finales. CUANDO se acciona «SIGUIENTE» ocho veces, esperando cada fundido,
+ENTONCES se ven las placas 2 a 9 en orden, siempre con la misma imagen de fondo, y la pantalla con
+«/ FINAL 4» no aparece antes de accionarlo en la placa 9. CUANDO se acciona en la placa 9 ENTONCES,
+tras el fundido, aparece la pantalla con «/ FINAL 4». El texto de la placa 1 tiene un renglón.
+
+### AC-SHF-137 — Sin epílogo, directo a la pantalla *(verifica BR-SHF-072, BR-SHF-027)*
 
 DADO una partida despedida, en cualquier jornada, CUANDO el jugador elige la opción de la devolución
-ENTONCES aparece la pantalla «/ FIN DEL JUEGO» sin fundido ni placa antes. DADO el final 4, cuyas
-placas no tienen texto, CUANDO se abre la puerta del jefe con la palanca ENTONCES aparece la
-pantalla «/ FINAL 4» en ese mismo paso, sin fundido ni placa antes. DADO un final con una placa con
+ENTONCES aparece la pantalla «/ FIN DEL JUEGO» sin fundido ni placa antes. DADO un final con una placa con
 texto y otra sin él ENTONCES el epílogo muestra sólo la primera.
 
 ### AC-SHF-138 — Los fundidos duran un segundo cada uno *(verifica BR-SHF-072)*
