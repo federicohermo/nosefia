@@ -1,5 +1,6 @@
 extends GdUnitTestSuite
 
+const AvanceDelEpilogo := preload("res://test/avance_del_epilogo.gd")
 const JORNADA_7 := QuejasDeLaJornada.JORNADA
 const JORNADA_6 := JORNADA_7 - 1
 const JORNADA_5 := JORNADA_6 - 1
