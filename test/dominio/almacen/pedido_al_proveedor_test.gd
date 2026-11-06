@@ -20,9 +20,15 @@ func _marcar(pedido: PedidoAlProveedor, ids: Array[Producto.Id]) -> void:
 		pedido.marcar(id)
 
 
-func test_la_lista_ofrece_los_pedibles_todos_desmarcados_y_exige_uno() -> void:  # AC-INV-192
+func test_la_lista_ofrece_el_catalogo_todo_desmarcado_y_exige_uno() -> void:  # AC-INV-192
 	var pedido := _pedido()
-	assert_int(pedido.productos_de_la_lista().size()).is_equal(Producto.Id.size())
+	var ofrecidos: Array[Producto.Id] = []
+	for producto in pedido.productos_de_la_lista():
+		ofrecidos.append(producto.id)
+	var catalogo: Array[Producto.Id] = []
+	for producto in Catalogo.todos():
+		catalogo.append(producto.id)
+	assert_array(ofrecidos).contains_exactly(catalogo)
 	for producto in pedido.productos_de_la_lista():
 		assert_bool(pedido.esta_marcado(producto.id)).is_false()
 	assert_bool(pedido.puede_enviar()).is_false()
@@ -36,7 +42,7 @@ func test_la_lista_ofrece_los_pedibles_todos_desmarcados_y_exige_uno() -> void: 
 func test_cerrar_y_reabrir_deja_la_lista_sin_marcados_y_sin_mensajes() -> void:  # AC-INV-192
 	var pedido := _pedido()
 	pedido.marcar(Producto.Id.POETICO)
-	pedido.marcar(Producto.Id.GRINGO)
+	pedido.marcar(Producto.Id.PEPITO)
 	pedido.cerrar_lista()
 	assert_bool(pedido.lista_abierta()).is_false()
 	pedido.abrir_lista()
@@ -47,12 +53,12 @@ func test_cerrar_y_reabrir_deja_la_lista_sin_marcados_y_sin_mensajes() -> void: 
 
 func test_enviar_con_wifi_deja_un_mensaje_y_dos_respuestas_a_su_tiempo() -> void:  # AC-INV-193
 	var pedido := _pedido()
-	_marcar(pedido, [Producto.Id.POETICO, Producto.Id.FERNET_GOD, Producto.Id.SEI_TUQUI])
+	_marcar(pedido, [Producto.Id.POETICO, Producto.Id.FERNET_GOD, Producto.Id.MAROLINI])
 	var mensaje := pedido.enviar(true, "20:10")
 	assert_bool(mensaje.propio).is_true()
 	assert_bool(mensaje.con_error).is_false()
 	assert_str(mensaje.texto).starts_with(PedidoAlProveedor.SALUDO)
-	for id: Producto.Id in [Producto.Id.POETICO, Producto.Id.FERNET_GOD, Producto.Id.SEI_TUQUI]:
+	for id: Producto.Id in [Producto.Id.POETICO, Producto.Id.FERNET_GOD, Producto.Id.MAROLINI]:
 		assert_str(mensaje.texto).contains(Catalogo.de(id).nombre)
 	assert_bool(pedido.lista_abierta()).is_false()
 	var primera := PedidoAlProveedor.SEGUNDOS_HASTA_LA_PRIMERA
@@ -96,10 +102,10 @@ func test_se_puede_enviar_mas_de_un_pedido_y_cada_uno_se_contesta() -> void:  # 
 	pedido.marcar(Producto.Id.POETICO)
 	var primero := pedido.enviar(false, "20:10")
 	pedido.abrir_lista()
-	pedido.marcar(Producto.Id.GRINGO)
+	pedido.marcar(Producto.Id.PEPITO)
 	var segundo := pedido.enviar(true, "20:20")
 	pedido.abrir_lista()
-	pedido.marcar(Producto.Id.COFLOCO)
+	pedido.marcar(Producto.Id.DURONGA)
 	var tercero := pedido.enviar(true, "20:30")
 	assert_int(pedido.cantidad_de_enviados()).is_equal(3)
 	assert_bool(primero.con_error).is_true()
@@ -189,23 +195,23 @@ func test_el_chat_pide_la_pista_6a_solo_al_pulsar_la_frase() -> void:  # AC-INV-
 
 func test_cuenta_el_ultimo_enviado_con_wifi_y_ni_uno_mas_ni_uno_menos() -> void:  # AC-SHF-032
 	var vacias: Array[Producto.Id] = [
-		Producto.Id.FERNET_GOD, Producto.Id.ARVECOR, Producto.Id.GRINGO
+		Producto.Id.FERNET_GOD, Producto.Id.ARVECOR, Producto.Id.PEPITO
 	]
 	var pedido := _pedido()
 	assert_bool(pedido.cumplido(vacias)).is_false()
 	assert_bool(pedido.equivocado(vacias)).is_false()
-	_marcar(pedido, [Producto.Id.GRINGO, Producto.Id.FERNET_GOD, Producto.Id.ARVECOR])
+	_marcar(pedido, [Producto.Id.PEPITO, Producto.Id.FERNET_GOD, Producto.Id.ARVECOR])
 	pedido.enviar(true, "20:10")
 	assert_bool(pedido.cumplido(vacias)).is_true()
 	assert_bool(pedido.equivocado(vacias)).is_false()
 	pedido.abrir_lista()
-	_marcar(pedido, [Producto.Id.GRINGO, Producto.Id.FERNET_GOD])
+	_marcar(pedido, [Producto.Id.PEPITO, Producto.Id.FERNET_GOD])
 	pedido.enviar(false, "20:20")
 	assert_bool(pedido.cumplido(vacias)).is_true()
 	pedido.abrir_lista()
 	_marcar(
 		pedido,
-		[Producto.Id.GRINGO, Producto.Id.FERNET_GOD, Producto.Id.ARVECOR, Producto.Id.POETICO]
+		[Producto.Id.PEPITO, Producto.Id.FERNET_GOD, Producto.Id.ARVECOR, Producto.Id.POETICO]
 	)
 	pedido.enviar(true, "20:30")
 	assert_bool(pedido.cumplido(vacias)).is_false()

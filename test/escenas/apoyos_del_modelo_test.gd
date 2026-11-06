@@ -76,16 +76,8 @@ func test_los_objetos_y_manchas_quedan_sobre_el_modelo() -> void:
 				# modelo. Acá se cuida que el apoyo sea del escenario; que no flote ni se hunda
 				# lo mide el hueco de abajo.
 				var sostiene := str(almacen.get_path_to(apoyo.collider))
-				# Las siete cajas de la pila del fondo se apoyan en sus pallets de piso o unas en otras.
-				var de_la_pila := Catalogo.SOLO_CAJAS.has(objeto.get("producto"))
-				var apoyo_de_la_pila := (
-					sostiene.begins_with("PalletsDelFondo/")
-					or sostiene.begins_with("Objetos/CajaDe")
-				)
 				(
-					assert_bool(
-						sostiene.begins_with("Estructura/") or (de_la_pila and apoyo_de_la_pila)
-					)
+					assert_bool(sostiene.begins_with("Estructura/"))
 					. override_failure_message("%s se apoya en `%s`" % [objeto.name, sostiene])
 					. is_true()
 				)
