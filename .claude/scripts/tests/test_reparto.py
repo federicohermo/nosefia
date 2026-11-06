@@ -67,12 +67,7 @@ def _filas_del_catalogo() -> list[tuple[str, str]]:
     """Las filas de `FILAS` del catálogo del juego, en su orden: la clave del enum y el nombre."""
     texto = CATALOGO.read_text(encoding="utf-8")
     bloque = texto.split("const FILAS := {", 1)[1].split("\n}", 1)[0]
-    # Los que existen sólo como caja del depósito no tienen góndola, y el reparto es de la góndola.
-    solo_cajas = re.findall(
-        r"Producto\.Id\.(\w+)", texto.split("const SOLO_CAJAS", 1)[1].split("\n]", 1)[0]
-    )
-    filas = re.findall(r'Producto\.Id\.(\w+): \["([^"]+)"', bloque)
-    return [(clave, nombre) for clave, nombre in filas if clave not in solo_cajas]
+    return re.findall(r'Producto\.Id\.(\w+): \["([^"]+)"', bloque)
 
 
 class ElReparto(unittest.TestCase):
