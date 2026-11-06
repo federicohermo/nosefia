@@ -1558,6 +1558,8 @@ func _revisar_orden_del_deposito() -> void:
 					and apoyo.get_parent().name != &"deposito_pallet_piso"
 				):
 					estado.apoyo = OrdenDelDeposito.Apoyo.ESTANTERIA
+				elif _habitaciones.de(caja.global_position) == ReglasDelCierre.Habitacion.LOCAL:
+					estado.apoyo = OrdenDelDeposito.Apoyo.LOCAL
 		estados.append(estado)
 	_acomodador.revisar(estados)
 

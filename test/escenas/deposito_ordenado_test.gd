@@ -274,6 +274,30 @@ func _ordenar_en_sus_estanterias(local: Node3D) -> void:
 		await get_tree().physics_frame
 
 
+func _reposar(caja: Caja, donde: Vector3) -> void:
+	caja.global_position = donde
+	caja.quedarse_quieta()
+	caja.sleeping_state_changed.emit()
+	for _cuadro in 4:
+		await get_tree().physics_frame
+
+
+func _punto_del_piso_del_deposito(local: Node3D, caja: Caja) -> Vector3:
+	var piso: CollisionShape3D = local.get_node("Estructura/SueloSolido/Fondo")
+	var forma: BoxShape3D = piso.shape
+	var limites := piso.global_transform * AABB(-forma.size / 2.0, forma.size)
+	return Vector3(
+		limites.end.x - 1.0,
+		limites.end.y + caja.get_node("Cuerpo").scale.y,
+		limites.position.z + 1.0
+	)
+
+
+func _punto_del_local(local: Node3D) -> Vector3:
+	var lector: HabitacionesDelAlmacen = local.get("_habitaciones")
+	return lector.to_global(lector.local[0].get_center())
+
+
 func test_apoyar_descumplir_sostener_y_examinar_actualizan_ordenar() -> void:  # AC-STK-079
 	var local := await _abrir()
 	var reloj: RelojDelTurno = local.get("_reloj")
@@ -289,48 +313,82 @@ func test_apoyar_descumplir_sostener_y_examinar_actualizan_ordenar() -> void:  #
 	for candidata: Caja in local.get("_cajas_de_productos"):
 		if candidata.global_position.y > arriba.global_position.y:
 			arriba = candidata
-	caja.global_position = (
-		arriba.global_position
-		+ Vector3.UP * (arriba.get_node("Cuerpo").scale.y + caja.get_node("Cuerpo").scale.y)
+	await _reposar(
+		caja,
+		(
+			arriba.global_position
+			+ Vector3.UP * (arriba.get_node("Cuerpo").scale.y + caja.get_node("Cuerpo").scale.y)
+		)
 	)
-	caja.quedarse_quieta()
-	caja.sleeping_state_changed.emit()
-	for _cuadro in 4:
-		await get_tree().physics_frame
 	assert_object(_apoyo(local, caja).get("collider")).is_same(arriba)
 	assert_bool(tarea.completada()).is_true()
-	var piso: CollisionShape3D = local.get_node("Estructura/SueloSolido/Fondo")
-	var forma: BoxShape3D = piso.shape
-	var limites := piso.global_transform * AABB(-forma.size / 2.0, forma.size)
-	caja.global_position = Vector3(
-		limites.end.x - 1.0,
-		limites.end.y + caja.get_node("Cuerpo").scale.y,
-		limites.position.z + 1.0
-	)
-	caja.quedarse_quieta()
-	caja.sleeping_state_changed.emit()
-	for _cuadro in 4:
-		await get_tree().physics_frame
+	await _reposar(caja, _punto_del_piso_del_deposito(local, caja))
 	assert_bool(_estanteria(_apoyo(local, caja))).is_false()
 	assert_bool(tarea.completada()).is_false()
 	var agarre: Agarre = local.get("_agarre")
 	assert_bool(agarre.pedir_agarrar(caja.datos, caja)).is_true()
 	await get_tree().process_frame
-	assert_bool(tarea.completada()).is_false()
+	assert_bool(tarea.completada()).is_true()
 	assert_bool(local.get("_jugador").examen.iniciar()).is_true()
 	await get_tree().process_frame
-	assert_bool(tarea.completada()).is_false()
+	assert_bool(tarea.completada()).is_true()
 	local.get("_jugador").examen.terminar()
 	agarre.soltar(false)
+	await _reposar(caja, _punto_del_piso_del_deposito(local, caja))
+	assert_bool(tarea.completada()).is_false()
 	await _ordenar_en_sus_estanterias(local)
 	assert_bool(tarea.completada()).is_true()
 	assert_bool(agarre.pedir_agarrar(caja.datos, caja)).is_true()
 	await get_tree().process_frame
+	assert_bool(tarea.completada()).is_true()
+	agarre.soltar(false)
+	await _reposar(caja, _punto_del_piso_del_deposito(local, caja))
 	assert_bool(tarea.completada()).is_false()
 	RelojDePrueba.avanzar_turno(reloj, Reglas.DURACION_DEL_TURNO)
-	agarre.soltar(false)
 	await _ordenar_en_sus_estanterias(local)
 	assert_bool(tarea.completada()).is_false()
+
+
+func test_una_caja_en_el_local_cumple_y_dos_fuera_de_las_estanterias_no() -> void:  # AC-STK-132
+	var local := await _abrir()
+	var tarea := local.get("_reloj").obligatoria(Tarea.Tipo.ORDENAR_LAS_CAJAS)
+	await _ordenar_en_sus_estanterias(local)
+	assert_bool(tarea.completada()).is_true()
+	var cajas: Array = local.get("_cajas_de_productos")
+	var en_el_local: Caja = cajas[0]
+	var otra: Caja = cajas[1]
+	await _reposar(en_el_local, _punto_del_local(local))
+	assert_int(local.get("_habitaciones").de(en_el_local.global_position)).is_equal(
+		ReglasDelCierre.Habitacion.LOCAL
+	)
+	assert_bool(tarea.completada()).is_true()
+	var agarre: Agarre = local.get("_agarre")
+	assert_bool(agarre.pedir_agarrar(otra.datos, otra)).is_true()
+	await get_tree().process_frame
+	assert_bool(tarea.completada()).is_false()
+	agarre.soltar(false)
+	await _reposar(otra, otra.pose_de_estanteria().origin)
+	assert_bool(tarea.completada()).is_true()
+
+
+func test_la_jornada_cierra_con_la_ultima_caja_en_la_mano_o_en_el_local() -> void:  # AC-STK-133
+	# Cada fila: la primera caja en la mano, la segunda en el local, y si ordenar cierra cumplida.
+	for fila: Array in [[true, false, true], [false, true, true], [true, true, false]]:
+		var local := await _abrir()
+		var reloj: RelojDelTurno = local.get("_reloj")
+		var tarea := reloj.obligatoria(Tarea.Tipo.ORDENAR_LAS_CAJAS)
+		await _ordenar_en_sus_estanterias(local)
+		var cajas: Array = local.get("_cajas_de_productos")
+		if fila[1]:
+			await _reposar(cajas[1], _punto_del_local(local))
+		if fila[0]:
+			var agarre: Agarre = local.get("_agarre")
+			assert_bool(agarre.pedir_agarrar(cajas[0].datos, cajas[0])).is_true()
+		await get_tree().process_frame
+		RelojDePrueba.avanzar_turno(reloj, Reglas.DURACION_DEL_TURNO)
+		assert_bool(tarea.completada()).is_equal(fila[2])
+		local.queue_free()
+		await get_tree().process_frame
 
 
 func test_el_rescate_usa_el_origen_de_la_noche() -> void:  # AC-STK-080
