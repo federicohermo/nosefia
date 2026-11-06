@@ -6,11 +6,12 @@ const ID := &"ticket"
 
 const TEXTO_AL_EXAMINAR := "Un ticket de compra por %s"
 
-## Cuántos caracteres de ancho tiene un renglón cuando entra cómodo: los tres del diseño.
 ## Cuánto se ve el ticket al examinarlo, respecto de su tamaño de mundo: tanto como hace falta para
-## que los renglones se lean en 1920 × 1080. `escala_de_examen` es relativa a la mano.
+## que los renglones se lean en 1920 × 1080. En la mano ya viene escalado, y por eso
+## `escala_de_examen` lleva el cociente entre este tamaño y el de la mano.
 const TAMANO_AL_EXAMINAR := 3.0
 
+## Cuántos caracteres de ancho tiene un renglón cuando entra cómodo: los tres del diseño.
 const COLUMNAS_MINIMAS := 21
 const RELLENO := "."
 const MONEDA := "$"
