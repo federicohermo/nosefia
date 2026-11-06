@@ -285,3 +285,11 @@ func test_los_controles_desde_la_pausa_dejan_pausa_y_cursor_suelto() -> void:  #
 	assert_bool(pantalla.visible).is_true()
 	assert_bool(get_tree().paused).is_true()
 	assert_int(Input.mouse_mode).is_equal(Input.MOUSE_MODE_VISIBLE)
+
+
+func test_el_foco_de_configuraciones_queda_puesto_y_no_se_dibuja() -> void:  # AC-CFG-028
+	var pantalla := _pantalla()
+	var foco := pantalla.get_viewport().gui_get_focus_owner()
+	assert_object(foco).is_not_null()
+	assert_bool(foco != null and pantalla.is_ancestor_of(foco) and foco.has_focus()).is_true()
+	assert_bool(foco != null and foco.has_focus(true)).is_false()

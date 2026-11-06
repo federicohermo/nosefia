@@ -141,7 +141,7 @@ func _enfocar_el_primer_producto() -> void:
 	var items := _lista.get_node("Desplazamiento/Items")
 	var primero := items.get_child(mini(PRIMER_PRODUCTO, items.get_child_count() - 1)) as Button
 	if primero != null:
-		primero.grab_focus()
+		primero.grab_focus(true)
 
 
 ## Una lista que se cierra no deja al jugador sin foco: vuelve al renglón.
@@ -150,7 +150,7 @@ func _devolver_el_foco_a_la_cabecera() -> void:
 		return
 	var foco := get_viewport().gui_get_focus_owner()
 	if foco != null and _lista.is_ancestor_of(foco):
-		_cabecera.grab_focus()
+		_cabecera.grab_focus(true)
 
 
 func _ajustar_el_alto_de_la_lista() -> void:
