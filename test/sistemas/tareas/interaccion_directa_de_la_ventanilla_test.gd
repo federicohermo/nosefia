@@ -48,3 +48,62 @@ func test_entregar_publica_el_texto_sin_publicar_el_fin_de_una_conversacion() ->
 	ventanilla.pedir_interaccion(null)
 	assert_array(textos).has_size(2)
 	assert_array(finales).has_size(finales_de_la_inicial)
+
+
+## Una ventanilla con la primera entrada ya dicha, lista para recibir productos.
+func _lista_para_recibir() -> Array:
+	var reloj: RelojDelTurno = auto_free(RelojDelTurno.new())
+	var obligatorias := Apertura.obligatorias(4)
+	reloj.arrancar(Turno.new(Reglas.DURACION_DEL_TURNO, obligatorias), obligatorias)
+	var ventanilla: Ventanilla = auto_free(Ventanilla.new())
+	ventanilla.reloj = reloj
+	var inventario := Apertura.inventario_con_faltantes({}, {}, Catalogo.todos())
+	ventanilla.arrancar(
+		TareaDeAtender.new(Compradores.de_la_jornada(ReglasDeLaPartida.PRIMERA_JORNADA), inventario)
+	)
+	reloj.avanzar(120.0)
+	ventanilla.pedir_interaccion(null)
+	while ventanilla.atencion().abre_la_ventanilla():
+		ventanilla.pedir_interaccion(null)
+	return [ventanilla, Estante.new(inventario, Catalogo.todos())]
+
+
+func test_cada_producto_que_el_comprador_recibe_se_publica_una_vez() -> void:
+	var lista := _lista_para_recibir()
+	var ventanilla: Ventanilla = lista[0]
+	var estante: Estante = lista[1]
+	var entregados: Array[UnidadDeProducto] = []
+	ventanilla.producto_entregado.connect(
+		func(unidad: UnidadDeProducto) -> void: entregados.append(unidad)
+	)
+	var esperados: Array[UnidadDeProducto] = []
+	var pedido := ventanilla.atencion().comprador().pedido()
+	for producto in pedido.productos():
+		for _unidad in pedido.unidades_de(producto):
+			var unidad := estante.retirar(producto)
+			assert_array(entregados).has_size(esperados.size())
+			ventanilla.pedir_interaccion(unidad)
+			esperados.append(unidad)
+			assert_array(entregados).is_equal(esperados)
+
+
+func test_lo_que_el_comprador_rechaza_o_no_es_un_producto_no_se_publica() -> void:
+	var lista := _lista_para_recibir()
+	var ventanilla: Ventanilla = lista[0]
+	var estante: Estante = lista[1]
+	var entregados: Array[UnidadDeProducto] = []
+	ventanilla.producto_entregado.connect(
+		func(unidad: UnidadDeProducto) -> void: entregados.append(unidad)
+	)
+	var pedido := ventanilla.atencion().comprador().pedido()
+	var ajeno: Producto = null
+	for candidato in Catalogo.todos():
+		if not pedido.productos().has(candidato):
+			ajeno = candidato
+			break
+	assert_object(ajeno).is_not_null()
+	var rechazo := ventanilla.pedir_interaccion(estante.retirar(ajeno))
+	assert_int(rechazo).is_equal(RecepcionDeCompra.Resultado.RECHAZADA)
+	ventanilla.pedir_interaccion(Ticket.new([]))
+	ventanilla.pedir_interaccion(null)
+	assert_array(entregados).is_empty()

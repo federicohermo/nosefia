@@ -23,6 +23,8 @@ signal conversacion_iniciada(comprador: Comprador)
 signal conversacion_terminada
 ## Lo que dice el comprador al recibir, recordar o rechazar: no abre la ventanilla.
 signal entrega_dicha(texto: String)
+## Cada producto que el comprador acepta, y sólo ése: un rechazo o un ticket no lo publican.
+signal producto_entregado(unidad: UnidadDeProducto)
 signal atencion_despachada(despachados: int)
 ## Sólo cuando se cobró: despachar sin vender también despacha, y no es una compra.
 signal compra_realizada
@@ -47,6 +49,14 @@ func pedir_interaccion(objeto: ObjetoDelAlmacen) -> RecepcionDeCompra.Resultado:
 	var resultado := en_curso.interactuar(objeto)
 	if not iniciada and en_curso.conversacion_iniciada():
 		conversacion_iniciada.emit(en_curso.comprador())
+	if (
+		objeto is UnidadDeProducto
+		and (
+			resultado
+			in [RecepcionDeCompra.Resultado.ACEPTADA, RecepcionDeCompra.Resultado.COMPLETA]
+		)
+	):
+		producto_entregado.emit(objeto)
 	if resultado == RecepcionDeCompra.Resultado.COMPLETA:
 		compra_realizada.emit()
 		_al_despachar()
