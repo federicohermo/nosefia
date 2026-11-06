@@ -115,7 +115,6 @@ func _que_hay_debajo(almacen: Node3D, colilla: Node3D) -> String:
 func test_la_colilla_soltada_en_cualquier_lugar_del_deposito_queda_sobre_el_piso() -> void:
 	var almacen := await _almacen()
 	var jugador: CharacterBody3D = almacen.get("_jugador")
-	var agarre: Agarre = almacen.get("_agarre")
 	var lugares := _lugares_donde_pararse(almacen, jugador, jugador.global_position.y)
 	# La premisa: hay dónde pararse. Si el depósito cambia de lugar, esto sale rojo en vez de
 	# recorrer un piso vacío.
@@ -135,8 +134,6 @@ func test_la_colilla_soltada_en_cualquier_lugar_del_deposito_queda_sobre_el_piso
 			await get_tree().physics_frame
 			_mirar(jugador, deg_to_rad(GIROS[gesto]), deg_to_rad(ALTOS[gesto]))
 			_clic(jugador, colilla)
-			# Si adelante no hay lugar vuelve a la mano, y vaciarlas la deja a los pies.
-			agarre.vaciar_las_manos()
 			var nacio := colilla.global_position
 			var debajo := _que_hay_debajo(almacen, colilla)
 			await get_tree().physics_frame
