@@ -230,13 +230,17 @@ func test_una_caja_chica_soltada_hacia_la_gondola_no_atraviesa_sus_solidos() -> 
 
 
 ## La fachada de madera del fondo no tiene malla de colisión propia: lo único que frena es su
-## `Contorno`. Los puntos salen de su caja envolvente, y cada disparo va a un montante o a una
-## cabecera, nunca a un hueco de heladera ni al de la góndola.
-func _disparos_contra_la_fachada_del_fondo(fachada: AABB) -> Array[Dictionary]:
+## `Contorno`. Los puntos salen de su caja envolvente y de las cajas del contorno, y cada disparo
+## va a un montante o a una cabecera, nunca a un hueco de heladera ni al de la góndola.
+func _disparos_contra_la_fachada_del_fondo(fachada: AABB, contorno: Node3D) -> Array[Dictionary]:
 	var centro_z := fachada.position.z + fachada.size.z / 2.0
 	var derecha := fachada.end.x - 0.1
 	var izquierda := fachada.position.x + 0.1
+	var del_medio := (contorno.get_node("MontanteDelMedio") as Node3D).global_position.x
 	var cabecera := fachada.get_center().x
+	var cabecera_de_la_gondola := (
+		(contorno.get_node("CabeceraDeLaGondola") as Node3D).global_position.x
+	)
 	var casos: Array[Dictionary] = []
 	for altura: float in [0.2, 1.5, 3.2]:
 		casos.append(
@@ -246,7 +250,7 @@ func _disparos_contra_la_fachada_del_fondo(fachada: AABB) -> Array[Dictionary]:
 				"cara": fachada.end.x
 			}
 		)
-		for x: float in [derecha, izquierda]:
+		for x: float in [derecha, izquierda, del_medio]:
 			casos.append(
 				{
 					"desde": Vector3(x, altura, fachada.end.z + 0.6),
@@ -254,13 +258,14 @@ func _disparos_contra_la_fachada_del_fondo(fachada: AABB) -> Array[Dictionary]:
 					"cara": fachada.end.z
 				}
 			)
-	casos.append(
-		{
-			"desde": Vector3(cabecera, 3.2, fachada.end.z + 0.6),
-			"hacia": Vector3.FORWARD,
-			"cara": fachada.end.z
-		}
-	)
+	for x: float in [cabecera, cabecera_de_la_gondola]:
+		casos.append(
+			{
+				"desde": Vector3(x, 3.2, fachada.end.z + 0.6),
+				"hacia": Vector3.FORWARD,
+				"cara": fachada.end.z
+			}
+		)
 	return casos
 
 
@@ -275,7 +280,8 @@ func test_un_producto_tirado_contra_la_madera_del_fondo_no_la_atraviesa() -> voi
 	var fachada_malla := almacen.get_node("Estructura/mueble_continuo") as MeshInstance3D
 	var fachada := fachada_malla.global_transform * fachada_malla.get_aabb()
 	var mitad := 0.05
-	for caso: Dictionary in _disparos_contra_la_fachada_del_fondo(fachada):
+	var contorno := fachada_malla.get_node("Contorno") as Node3D
+	for caso: Dictionary in _disparos_contra_la_fachada_del_fondo(fachada, contorno):
 		var forma := CollisionShape3D.new()
 		var caja := BoxShape3D.new()
 		caja.size = Vector3.ONE * mitad * 2.0

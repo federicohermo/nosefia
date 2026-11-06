@@ -127,8 +127,8 @@ lugar = 18
 escala_visual = 0.667
 
 [node name="ManchaDeLaUltimaHeladera" parent="." instance=ExtResource("2_mancha")]
-transform = Transform3D(1, 0, 0, 0, 0, -1, 0, 1, 0, 4.55, 1.5, -7.866)
-editor_description = "Jornada 6. Moho, en la pared norte del local, en el primer tramo libre después de la fachada de madera del fondo, que tapa la pared junto a la última heladera. El disco va vertical: su arriba mira al local."
+transform = Transform3D(1, 0, 0, 0, 0, -1, 0, 1, 0, 1.98, 3.0, -6.921)
+editor_description = "Jornada 5. Moho, en la cara de la cabecera de madera de la fachada del fondo, junto a la última heladera: la fachada tapa la pared y los costados no dejan un tramo libre del ancho del disco. El disco va vertical: su arriba mira al local."
 lugar = 19
 escala_visual = 0.667
 
