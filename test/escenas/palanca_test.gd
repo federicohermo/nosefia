@@ -80,6 +80,20 @@ func _agarre() -> Agarre:
 	return _almacen.get("_agarre") as Agarre
 
 
+func _camara() -> Camera3D:
+	return (_almacen.get("_jugador") as CharacterBody3D).get("_camara") as Camera3D
+
+
+## El eje largo del cuerpo, en el mundo: el de la dimensión mayor de su forma.
+func _eje_largo(palanca: ObjetoAgarrable) -> Vector3:
+	var tamano := ((palanca.get_node("Forma") as CollisionShape3D).shape as BoxShape3D).size
+	var mayor := 0
+	for eje: int in 3:
+		if tamano[eje] > tamano[mayor]:
+			mayor = eje
+	return palanca.global_basis[mayor].normalized()
+
+
 func _la_mira_lo_encuentra(objeto: ObjetoAgarrable) -> bool:
 	var jugador := _almacen.get("_jugador") as CharacterBody3D
 	var camara: Camera3D = jugador.get("_camara")
@@ -190,6 +204,59 @@ func test_la_palanca_es_un_objeto_propio_con_su_licencia() -> void:  # AC-INV-17
 		assert_bool(FileAccess.file_exists("res://assets/models/Crowbar/psx_crowbar/license.txt"))
 		. is_true()
 	)
+
+
+func test_en_la_mano_la_palanca_queda_casi_vertical_con_el_gancho_arriba() -> void:
+	await _abrir(JORNADA_7, _por_la_6b())
+	var palanca := _palanca()
+	var camara := _camara()
+	assert_bool(_agarre().pedir_agarrar(palanca.datos, palanca)).is_true()
+	assert_bool(camara.is_ancestor_of(palanca)).is_true()
+	var eje := _eje_largo(palanca)
+	var arriba := camara.global_basis.y
+	var adelante := -camara.global_basis.z
+	assert_float(absf(eje.dot(arriba))).is_greater(absf(eje.dot(adelante)))
+	var gancho := palanca.get_node_or_null("Gancho") as Node3D
+	assert_object(gancho).is_not_null()
+	if gancho == null:
+		return
+	assert_float((gancho.global_position - palanca.global_position).dot(arriba)).is_greater(0.0)
+
+
+func test_la_palanca_en_la_mano_no_atraviesa_una_pared_delante() -> void:
+	await _abrir(JORNADA_7, _por_la_6b())
+	var palanca := _palanca()
+	var jugador := _almacen.get("_jugador") as CharacterBody3D
+	var camara := _camara()
+	assert_bool(_agarre().pedir_agarrar(palanca.datos, palanca)).is_true()
+	var forma := palanca.get_node("Forma") as CollisionShape3D
+	var pared := StaticBody3D.new()
+	var colision := CollisionShape3D.new()
+	var caja := BoxShape3D.new()
+	caja.size = Vector3(4.0, 4.0, 0.05)
+	colision.shape = caja
+	pared.add_child(colision)
+	_almacen.add_child(pared)
+	# La pared atraviesa la palanca: sin que la mano se retraiga, la forma la toca.
+	var profundidad := (palanca.global_position - camara.global_position).dot(
+		-camara.global_basis.z
+	)
+	pared.global_transform = Transform3D(
+		camara.global_basis, camara.global_position - camara.global_basis.z * profundidad
+	)
+	var consulta := PhysicsShapeQueryParameters3D.new()
+	consulta.shape = forma.shape
+	consulta.collision_mask = 1
+	consulta.exclude = [palanca.get_rid(), jugador.get_rid()]
+	await get_tree().physics_frame
+	consulta.transform = forma.global_transform
+	var espacio := _almacen.get_world_3d().direct_space_state
+	assert_array(espacio.intersect_shape(consulta)).is_not_empty()
+	for _cuadro: int in 4:
+		await get_tree().physics_frame
+		jugador.call("_acomodar_las_manos", 1.0 / 60.0)
+	consulta.transform = forma.global_transform
+	assert_array(espacio.intersect_shape(consulta)).is_empty()
 
 
 func test_con_la_palanca_en_la_mano_la_puerta_abre_y_termina_la_partida() -> void:  # AC-PLY-190
