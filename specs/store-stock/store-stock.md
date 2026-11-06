@@ -525,7 +525,7 @@ CUANDO se completa una compra de jornada 2 con productos y ticket exactos, el si
 retirar sus unidades registradas afuera una sola vez por identidad y contarlas como vendidas,
 sin descontar además el pedido completo. Una recepción parcial NO DEBE sumar ventas. SI vence
 sin completarse, ENTONCES las unidades recibidas DEBEN seguir registradas afuera y quedar
-recogibles en el piso interior del local frente a la ventanilla; depósito, caja y góndola DEBEN
+recogibles sobre el apoyo de la ventanilla, del lado de adentro; depósito, caja y góndola DEBEN
 conservarse como antes del vencimiento. El ticket aceptado DEBE descartarse. Esas unidades
 DEBEN poder colocarse, devolverse o recogerse como cualquier unidad suelta. Vender una unidad
 retirada de góndola NO DEBE rellenar su casillero ni cumplir reposición.
@@ -601,7 +601,7 @@ CUANDO se completa una compra de esas jornadas con productos y ticket exactos, e
 retirar sus unidades registradas afuera una sola vez por identidad y contarlas como vendidas, sin
 descontar además el pedido completo. Una recepción parcial NO DEBE sumar ventas. SI vence sin
 completarse, ENTONCES las unidades recibidas DEBEN seguir registradas afuera y quedar recogibles en
-el piso interior del local frente a la ventanilla, con depósito, caja y góndola como antes del
+el apoyo de la ventanilla, del lado de adentro, con depósito, caja y góndola como antes del
 vencimiento, y el ticket aceptado DEBE descartarse (BR-STK-041).
 
 MIENTRAS haya una compra en curso, registrar DEBE seguir pendiente aunque la planilla coincida
@@ -1212,11 +1212,11 @@ faltantes antes y después de construir atención, y se repiten ambas consultas 
 las mismas instancias de compradores y pedidos, con los seis productos fijos de BR-CTR-038,
 sin reconstrucción ni azar. Otra apertura crea estados propios sin heredar entregas.
 
-### AC-STK-082 — Vencer devuelve productos al piso interior sin venta *(verifica BR-STK-041)*
+### AC-STK-082 — Vencer deja los productos sobre el apoyo sin venta *(verifica BR-STK-041)*
 
 DADO jornada 2 y una compra parcial con dos unidades recibidas, una de caja y otra de góndola,
 CUANDO vence ENTONCES ambas identidades siguen afuera, los cuerpos quedan visibles y recogibles
-en el piso interior frente a ventanilla, sin superponerse con sólidos ni entre sí, y no suman
+sobre el apoyo de la ventanilla, sin superponerse con sólidos ni entre sí, y no suman
 venta ni descuento. El ticket aceptado desaparece. Repetir vencimiento no duplica cuerpos.
 Colocar o devolver esas unidades conserva los permisos habituales; dejarlas sueltas al cierre
 produce desorden, no objeto afuera; sostenerlas sin examen, colocarlas o devolverlas evita ese
@@ -1355,7 +1355,7 @@ DADO una compra de la jornada 3, 4 o 5 con sus tres productos y su ticket exacto
 la góndola y otro de la caja, CUANDO se completa ENTONCES las tres identidades se retiran una sola
 vez y cuentan como vendidas sin descontar además el pedido; repetir la entrega no vende otra vez.
 DADO una compra con dos productos recibidos CUANDO vence ENTONCES las dos unidades siguen
-registradas afuera y recogibles en el piso interior, sin venta, y depósito, caja y góndola quedan
+registradas afuera y recogibles sobre el apoyo de la ventanilla, sin venta, y depósito, caja y góndola quedan
 como antes del vencimiento.
 
 ### AC-STK-110 — El registro de la prueba no lista productos ausentes *(verifica BR-STK-019, BR-STK-046)*

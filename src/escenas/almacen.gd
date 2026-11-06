@@ -267,7 +267,7 @@ func _ready() -> void:
 	ventanilla.comprador_se_fue.connect(avisos.avisar_salida)
 	ventanilla.pista_pedida.connect(_pedir_pista.bind(Pista.Canal.COMPRADOR))
 	ventanilla.entregas_abandonadas.connect(
-		_reposicion_manual.recibir_abandonadas.bind(ventanilla.piso_de_entregas)
+		_reposicion_manual.recibir_abandonadas.bind(ventanilla.apoyo_de_entregas)
 	)
 	_reloj.tarea_completada.connect(_revisar_la_salida.unbind(1))
 	_reloj.tarea_descumplida.connect(_revisar_la_salida.unbind(1))

@@ -1818,7 +1818,8 @@ func limpiar() -> void:
 	_actualizar_zonas()
 
 
-## Conserva los cuerpos de la recepción y vuelve a agrupar sólo su dibujo.
+## Conserva los cuerpos de la recepción y vuelve a agrupar sólo su dibujo. Quedan sobre el apoyo
+## de la ventanilla; si ya no entra otra, bajan al piso de adelante en vez de perderse.
 func recibir_abandonadas(cuerpos: Array[Node3D], punto: Marker3D) -> void:
 	var ocupados: Array[AABB] = []
 	for suelta in unidades_sueltas():
@@ -1831,9 +1832,11 @@ func recibir_abandonadas(cuerpos: Array[Node3D], punto: Marker3D) -> void:
 	var posiciones: Array[Vector3] = []
 	for nodo in cuerpos:
 		var cuerpo := nodo as ObjetoAgarrable
-		var lugar := _lugar_para_abandonada(cuerpo, punto, ocupados)
+		var lugar := _lugar_para_abandonada(cuerpo, punto, ocupados, true)
 		if not lugar.is_finite():
-			push_error("No hay piso libre para la entrega abandonada frente a la ventanilla.")
+			lugar = _lugar_para_abandonada(cuerpo, punto, ocupados, false)
+		if not lugar.is_finite():
+			push_error("No hay lugar libre en el apoyo ni frente a la ventanilla para la entrega.")
 			return
 		preparados.append(cuerpo)
 		posiciones.append(lugar)
@@ -1858,8 +1861,13 @@ func recibir_abandonadas(cuerpos: Array[Node3D], punto: Marker3D) -> void:
 		_agrupar_suelto(cuerpo)
 
 
+## Con `sobre_el_apoyo`, sólo cuenta la cara de arriba del apoyo y se recorre su único renglón,
+## cuyo borde de adelante es `punto`: cada unidad queda entera de ese lado, fuera de la abertura.
+## Sin él, el piso del local desde ahí hacia adentro. **La abertura no estorba la consulta de
+## forma**: esa capa sólo detiene lo que cruza con un comprador. El apoyo vive en esa misma
+## capa, que sólo miran los productos: ni la mira ni la cámara lo ven.
 func _lugar_para_abandonada(
-	cuerpo: ObjetoAgarrable, punto: Marker3D, ocupados: Array[AABB]
+	cuerpo: ObjetoAgarrable, punto: Marker3D, ocupados: Array[AABB], sobre_el_apoyo: bool
 ) -> Vector3:
 	var forma: CollisionShape3D = cuerpo.get_node("Forma")
 	var limites := forma.transform * forma.shape.get_debug_mesh().get_aabb()
@@ -1867,14 +1875,21 @@ func _lugar_para_abandonada(
 	var espacio := get_world_3d().direct_space_state
 	var consulta := PhysicsShapeQueryParameters3D.new()
 	consulta.shape = forma.shape
-	consulta.collision_mask = ReglasDeLosObjetos.MASCARA_DEL_PRODUCTO
+	consulta.collision_mask = (
+		ReglasDeLosObjetos.MASCARA_DEL_PRODUCTO & ~ReglasDeLosObjetos.CAPA_DEL_HUECO
+	)
 	consulta.exclude = [cuerpo.get_rid()]
 	consulta.margin = TOLERANCIA_DEL_APOYO / 4.0
 	var pasos := ceili(ReglasDelJugador.ALCANCE_DE_LA_MIRA / paso)
+	var renglones := 0 if sobre_el_apoyo else pasos
+	var retiro := 0.0
+	if sobre_el_apoyo:
+		var hacia_la_abertura := punto.global_basis.z.normalized()
+		retiro = hacia_la_abertura.abs().dot(limites.size / 2.0)
 	var candidatos: Array[Vector3] = []
-	for profundidad in range(pasos + 1):
+	for profundidad in range(renglones + 1):
 		for lateral in range(-pasos, pasos + 1):
-			var desplazamiento := Vector3(lateral * paso, 0.0, -profundidad * paso)
+			var desplazamiento := Vector3(lateral * paso, 0.0, -profundidad * paso - retiro)
 			if desplazamiento.length() <= ReglasDelJugador.ALCANCE_DE_LA_MIRA:
 				candidatos.append(desplazamiento)
 	candidatos.sort_custom(
@@ -1883,11 +1898,15 @@ func _lugar_para_abandonada(
 	for desplazamiento in candidatos:
 		var lugar := punto.global_transform * desplazamiento
 		var rayo := PhysicsRayQueryParameters3D.create(
-			lugar + Vector3.UP, lugar + Vector3.DOWN, consulta.collision_mask
+			lugar + Vector3.UP, lugar + Vector3.DOWN * 3.0, ReglasDeLosObjetos.MASCARA_DEL_PRODUCTO
 		)
 		rayo.exclude = [cuerpo.get_rid()]
 		var piso := espacio.intersect_ray(rayo)
-		if piso.get("collider") != suelo:
+		var firme: Object = piso.get("collider")
+		if sobre_el_apoyo:
+			if not (firme is Node and (firme as Node).get_parent() == punto):
+				continue
+		elif firme != suelo:
 			continue
 		lugar.y = (
 			(piso["position"] as Vector3).y - limites.position.y + TOLERANCIA_DEL_APOYO * 4.0
