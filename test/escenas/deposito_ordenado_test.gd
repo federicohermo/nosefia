@@ -283,17 +283,6 @@ func _reposar(caja: Caja, donde: Vector3) -> void:
 		await get_tree().physics_frame
 
 
-func _punto_del_piso_del_deposito(local: Node3D, caja: Caja) -> Vector3:
-	var piso: CollisionShape3D = local.get_node("Estructura/SueloSolido/Fondo")
-	var forma: BoxShape3D = piso.shape
-	var limites := piso.global_transform * AABB(-forma.size / 2.0, forma.size)
-	return Vector3(
-		limites.end.x - 1.0,
-		limites.end.y + caja.get_node("Cuerpo").scale.y,
-		limites.position.z + 1.0
-	)
-
-
 func _punto_del_local(local: Node3D) -> Vector3:
 	var lector: Habitaciones = local.get("_habitaciones")
 	return lector.to_global(lector.local[0].get_center())
@@ -307,9 +296,23 @@ func test_apoyar_descumplir_sostener_y_examinar_actualizan_ordenar() -> void:  #
 	if tarea == null:
 		return
 	assert_bool(tarea.completada()).is_false()
+	# La pila de la apertura descansa en su pallet de entrega: en el depósito, sin ser estantería.
+	var llegadas := Apertura.productos_con_cajas_apiladas(
+		ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA
+	)
+	var caja: Caja = null
+	for candidata: Caja in local.get("_cajas_de_productos"):
+		if (
+			llegadas.has(candidata.producto)
+			and (caja == null or candidata.global_position.y < caja.global_position.y)
+		):
+			caja = candidata
+	var en_el_piso := caja.global_position
+	assert_int(local.get("_habitaciones").de(en_el_piso)).is_equal(
+		ReglasDelCierre.Habitacion.DEPOSITO
+	)
 	await _ordenar_en_sus_estanterias(local)
 	assert_bool(tarea.completada()).is_true()
-	var caja: Caja = local.get("_cajas_de_productos")[0]
 	var arriba: Caja = caja
 	for candidata: Caja in local.get("_cajas_de_productos"):
 		if candidata.global_position.y > arriba.global_position.y:
@@ -323,7 +326,7 @@ func test_apoyar_descumplir_sostener_y_examinar_actualizan_ordenar() -> void:  #
 	)
 	assert_object(_apoyo(local, caja).get("collider")).is_same(arriba)
 	assert_bool(tarea.completada()).is_true()
-	await _reposar(caja, _punto_del_piso_del_deposito(local, caja))
+	await _reposar(caja, en_el_piso)
 	assert_bool(_estanteria(_apoyo(local, caja))).is_false()
 	assert_bool(tarea.completada()).is_false()
 	var agarre: Agarre = local.get("_agarre")
@@ -335,7 +338,7 @@ func test_apoyar_descumplir_sostener_y_examinar_actualizan_ordenar() -> void:  #
 	assert_bool(tarea.completada()).is_true()
 	local.get("_jugador").examen.terminar()
 	agarre.soltar(false)
-	await _reposar(caja, _punto_del_piso_del_deposito(local, caja))
+	await _reposar(caja, en_el_piso)
 	assert_bool(tarea.completada()).is_false()
 	await _ordenar_en_sus_estanterias(local)
 	assert_bool(tarea.completada()).is_true()
@@ -343,7 +346,7 @@ func test_apoyar_descumplir_sostener_y_examinar_actualizan_ordenar() -> void:  #
 	await get_tree().process_frame
 	assert_bool(tarea.completada()).is_true()
 	agarre.soltar(false)
-	await _reposar(caja, _punto_del_piso_del_deposito(local, caja))
+	await _reposar(caja, en_el_piso)
 	assert_bool(tarea.completada()).is_false()
 	RelojDePrueba.avanzar_turno(reloj, Reglas.DURACION_DEL_TURNO)
 	await _ordenar_en_sus_estanterias(local)
