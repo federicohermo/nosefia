@@ -406,7 +406,7 @@ func _agregar_la_opcion() -> void:
 	_mensajes.add_child(_opcion)
 	_actualizar_desplazamiento.call_deferred()
 	if not _foto_ampliada.visible:
-		_opcion.grab_focus()
+		_opcion.grab_focus(true)
 
 
 func ampliar(foto: Mensaje, adjunto: Mensaje) -> void:
