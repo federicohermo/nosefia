@@ -44,29 +44,27 @@ const LADO_TOPE := "process/size_limit"
 ## los productos, y ése es el lado con el que viajan las de las cajas.
 const ETIQUETA_DE_LA_GONDOLA := "res://assets/models/SEPT_JUEGOS_PROTOTIPO_Actroncito completo.png"
 
-## Los productos con etiqueta propia, con el archivo del artista del que sale cada una.
-## La de Jorgillata es `caja jorgillata.png`: `CAJA JORGILLO.png` todavía dice «Jorgillo».
-const ORIGEN_DE_CADA_ETIQUETA := {
-	Producto.Id.ACTRONCITO: "CAJA ACTRÓNCITO.png",
-	Producto.Id.AMARGADITO: "CAJA AMARGADITO.png",
-	Producto.Id.BURBALOO: "CAJA BURBALOO.png",
-	Producto.Id.CINDOLOR: "CAJA CINDOLOR.png",
-	Producto.Id.COSA_DE_MANI: "CAJA COSA DE MANÍ.png",
-	Producto.Id.DON_SATURADOS: "CAJA DON SATURADOS.png",
-	Producto.Id.DUREXTRA: "CAJA DUREXTRA.png",
-	Producto.Id.DURONGA: "CAJA DURONGA.png",
-	Producto.Id.FERNET_GOD: "CAJA FERNET-GOD.png",
-	Producto.Id.FLIM_POF: "CAJA FLIN POF.png",
-	Producto.Id.FROT_LUPS: "CAJA FROTLUPS.png",
-	Producto.Id.JORGILLO: "caja jorgillata.png",
-	Producto.Id.LAYSNNT: "CAJA LAYSNT´T.png",
-	Producto.Id.MACUMBAS: "CAJA MACUMBAS.png",
-	Producto.Id.MAYONCHIS: "CAJA MAYONCHIS.png",
-	Producto.Id.OAAAA: "CAJA OAAAAA.png",
-	Producto.Id.PETISAS: "CAJA PETISAS.png",
-	Producto.Id.TERMINATOR: "CAJA TERMINATOR.png",
-	Producto.Id.ZUCARACHAS: "CAJA ZUCARACHAS.png",
-}
+const CON_ETIQUETA_PROPIA := [
+	Producto.Id.ACTRONCITO,
+	Producto.Id.AMARGADITO,
+	Producto.Id.BURBALOO,
+	Producto.Id.CINDOLOR,
+	Producto.Id.COSA_DE_MANI,
+	Producto.Id.DON_SATURADOS,
+	Producto.Id.DUREXTRA,
+	Producto.Id.DURONGA,
+	Producto.Id.FERNET_GOD,
+	Producto.Id.FLIM_POF,
+	Producto.Id.FROT_LUPS,
+	Producto.Id.JORGILLO,
+	Producto.Id.LAYSNNT,
+	Producto.Id.MACUMBAS,
+	Producto.Id.MAYONCHIS,
+	Producto.Id.OAAAA,
+	Producto.Id.PETISAS,
+	Producto.Id.TERMINATOR,
+	Producto.Id.ZUCARACHAS,
+]
 
 ## Los que el artista no dibujó: su caja lleva el logo del envase en tinta.
 const DEL_ENVASE := [
@@ -238,7 +236,7 @@ func test_la_caja_ya_no_despacha_por_su_cuenta() -> void:
 
 
 func test_cada_caja_con_textura_muestra_la_etiqueta_de_su_producto() -> void:
-	for id: Producto.Id in ORIGEN_DE_CADA_ETIQUETA:
+	for id: Producto.Id in CON_ETIQUETA_PROPIA:
 		var caja := _caja_armada(id)
 		(
 			assert_str(_material(caja).albedo_texture.resource_path)
@@ -261,7 +259,7 @@ func test_las_cajas_sin_arte_llevan_su_propia_etiqueta() -> void:
 ## Las dos listas cubren el catálogo, y ningún producto está en las dos. En el cruce del lote
 ## faltaba Malbardo en las dos: un producto nuevo tiene que decidir qué caja lleva.
 func test_cada_producto_tiene_decidida_su_caja() -> void:
-	var decididos: Array = ORIGEN_DE_CADA_ETIQUETA.keys() + DEL_ENVASE
+	var decididos: Array = CON_ETIQUETA_PROPIA + DEL_ENVASE
 	assert_int(decididos.size()).is_equal(Producto.Id.size())
 	for id: Producto.Id in Producto.Id.values():
 		(
@@ -276,7 +274,7 @@ func test_cada_producto_tiene_decidida_su_caja() -> void:
 func test_la_etiqueta_de_cada_producto_es_una_linea_del_script() -> void:
 	var texto := FileAccess.get_file_as_string(SCRIPT)
 	assert_str(texto).is_not_empty()
-	for id: Producto.Id in ORIGEN_DE_CADA_ETIQUETA.keys() + DEL_ENVASE:
+	for id: Producto.Id in CON_ETIQUETA_PROPIA + DEL_ENVASE:
 		var linea := (
 			'Producto.Id.%s: preload("%s"),' % [Producto.Id.keys()[id], _ruta_de_la_etiqueta(id)]
 		)
@@ -286,7 +284,7 @@ func test_la_etiqueta_de_cada_producto_es_una_linea_del_script() -> void:
 			. is_equal(1)
 		)
 	var cajas := _nombres_de_las_cajas()
-	assert_int(cajas.size()).is_equal(ORIGEN_DE_CADA_ETIQUETA.size() + DEL_ENVASE.size())
+	assert_int(cajas.size()).is_equal(CON_ETIQUETA_PROPIA.size() + DEL_ENVASE.size())
 	for ruta: String in ESCENAS_CON_CAJAS + [ESCENA]:
 		var escena := FileAccess.get_file_as_string(ruta)
 		assert_str(escena).is_not_empty()
@@ -348,7 +346,7 @@ func test_la_etiqueta_filtra_pixelado_como_la_caja_generica() -> void:
 	var gondola: Texture2D = load(ETIQUETA_DE_LA_GONDOLA)
 	var lado_de_la_gondola := maxi(gondola.get_width(), gondola.get_height())
 	assert_int(lado_de_la_gondola).is_less(generica.get_value("params", LADO_TOPE))
-	for id: Producto.Id in ORIGEN_DE_CADA_ETIQUETA:
+	for id: Producto.Id in CON_ETIQUETA_PROPIA:
 		var caja := _caja_armada(id)
 		var material := _material(caja)
 		(
@@ -397,7 +395,7 @@ func test_la_etiqueta_filtra_pixelado_como_la_caja_generica() -> void:
 ## El arte puede corregirse sin conservar sus bytes originales. La correspondencia entre
 ## producto y material se ejerce en los otros casos; acá se comprueba que la imagen se decodifica.
 func test_cada_etiqueta_contiene_una_imagen_valida() -> void:
-	for id: Producto.Id in ORIGEN_DE_CADA_ETIQUETA.keys() + DEL_ENVASE:
+	for id: Producto.Id in CON_ETIQUETA_PROPIA + DEL_ENVASE:
 		var imagen := Image.new()
 		var bytes := FileAccess.get_file_as_bytes(_ruta_de_la_etiqueta(id))
 		(
