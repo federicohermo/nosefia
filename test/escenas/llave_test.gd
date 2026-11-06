@@ -205,6 +205,33 @@ func test_la_llave_es_un_objeto_propio() -> void:  # AC-INV-185
 		assert_int(malla.gi_mode).is_equal(GeometryInstance3D.GI_MODE_DYNAMIC)
 
 
+func test_la_llave_queda_apoyada_en_el_piso_y_bajo_la_estanteria() -> void:  # AC-INV-185
+	await _abrir(JORNADA_7, _por_la_6c())
+	var llave := _llave()
+	assert_object(llave).is_not_null()
+	if llave == null:
+		return
+	for _cuadro: int in 90:
+		await get_tree().physics_frame
+	var mitad := ((llave.get_node("Forma") as CollisionShape3D).shape as BoxShape3D).size.y / 2.0
+	var espacio := llave.get_world_3d().direct_space_state
+	var centro := llave.global_position
+	var arriba := PhysicsRayQueryParameters3D.create(centro, centro + Vector3.UP * 3.0)
+	var abajo := PhysicsRayQueryParameters3D.create(centro, centro + Vector3.DOWN * 3.0)
+	for consulta: PhysicsRayQueryParameters3D in [arriba, abajo]:
+		consulta.exclude = [llave.get_rid()]
+		consulta.collision_mask = llave.collision_mask
+	var techo := espacio.intersect_ray(arriba)
+	var piso := espacio.intersect_ray(abajo)
+	assert_bool(techo.has("position")).is_true()
+	assert_bool(piso.has("position")).is_true()
+	if not (techo.has("position") and piso.has("position")):
+		return
+	assert_float((techo["position"] as Vector3).y).is_greater(centro.y + mitad)
+	assert_float((piso["position"] as Vector3).y).is_less_equal(centro.y - mitad + 0.005)
+	assert_float(llave.linear_velocity.length()).is_less(0.05)
+
+
 func test_con_la_llave_en_la_mano_la_puerta_abre_y_termina_la_partida() -> void:  # AC-PLY-191
 	await _abrir(JORNADA_7, _por_la_6c())
 	var llave := _llave()
