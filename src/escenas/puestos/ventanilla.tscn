@@ -1,4 +1,4 @@
-[gd_scene load_steps=5 format=3]
+[gd_scene load_steps=7 format=3]
 
 [ext_resource type="Script" path="res://src/escenas/puestos/ventanilla.gd" id="1_ventanilla"]
 [ext_resource type="Script" path="res://src/escenas/objetos/comprador_interactuable.gd" id="2_comprador"]
@@ -9,14 +9,20 @@ size = Vector3(1.2, 1.4, 0.001)
 [sub_resource type="BoxMesh" id="BoxMesh_antepecho"]
 size = Vector3(1.4, 0.08, 0.4)
 
-[node name="Ventanilla" type="StaticBody3D" node_paths=PackedStringArray("borde_superior", "antepecho", "comprador_visible", "piso_de_entregas", "objetivo", "acceso_al_cobro")]
+[sub_resource type="BoxShape3D" id="BoxShape3D_apoyo"]
+size = Vector3(1.4, 0.08, 0.4)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_tope"]
+size = Vector3(1.4, 0.12, 0.02)
+
+[node name="Ventanilla" type="StaticBody3D" node_paths=PackedStringArray("borde_superior", "antepecho", "comprador_visible", "apoyo_de_entregas", "objetivo", "acceso_al_cobro")]
 collision_layer = 0
 collision_mask = 0
 script = ExtResource("1_ventanilla")
 borde_superior = NodePath("BordeSuperior")
 antepecho = NodePath("Antepecho")
 comprador_visible = NodePath("Comprador")
-piso_de_entregas = NodePath("PisoDeEntregas")
+apoyo_de_entregas = NodePath("ApoyoDeEntregas")
 objetivo = NodePath("Comprador/Objetivo")
 acceso_al_cobro = NodePath("AccesoAlCobro")
 
@@ -51,6 +57,18 @@ gi_mode = 2
 position = Vector3(0, 1.4, 0.02)
 rotation = Vector3(0, 3.1415927, 0)
 
-[node name="PisoDeEntregas" type="Marker3D" parent="."]
-position = Vector3(0, -0.9377625, -0.8)
-editor_description = "Piso interior frente a la ventanilla; la consulta física elige un apoyo libre alrededor."
+[node name="ApoyoDeEntregas" type="Marker3D" parent="."]
+position = Vector3(0, 0.04, -0.15)
+editor_description = "Cara de arriba del apoyo de la ventanilla, del lado de adentro; las entregas abandonadas se apoyan acá."
+
+[node name="Superficie" type="StaticBody3D" parent="ApoyoDeEntregas"]
+collision_layer = 1
+collision_mask = 0
+
+[node name="Tapa" type="CollisionShape3D" parent="ApoyoDeEntregas/Superficie"]
+position = Vector3(0, -0.04, 0.15)
+shape = SubResource("BoxShape3D_apoyo")
+
+[node name="Tope" type="CollisionShape3D" parent="ApoyoDeEntregas/Superficie"]
+position = Vector3(0, 0.06, 0.35)
+shape = SubResource("BoxShape3D_tope")

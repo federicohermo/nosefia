@@ -18,7 +18,7 @@ extends StaticBody3D
 
 signal entregas_abandonadas(cuerpos: Array[Node3D])
 ## Sale una vez por compra vencida, con lo que el comprador ya había recibido: el aviso de salida
-## espera a saber si quedaron productos en el piso.
+## espera a saber si quedaron productos sobre el apoyo.
 signal comprador_se_fue(comprador: Comprador, dejo_productos: bool)
 ## Sale con la identidad de la pista cuando el jugador pulsa su fragmento en el diálogo.
 signal pista_pedida(identidad: String)
@@ -48,7 +48,7 @@ const VOLUMEN_DEL_HUECO := AABB(Vector3(-0.75, -0.05, -0.1), Vector3(1.5, 1.5, 0
 @export var borde_superior: Marker3D
 @export var antepecho: MeshInstance3D
 @export var comprador_visible: AnimatedSprite3D
-@export var piso_de_entregas: Marker3D
+@export var apoyo_de_entregas: Marker3D
 @export var objetivo: CompradorInteractuable
 @export var acceso_al_cobro: CollisionShape3D
 

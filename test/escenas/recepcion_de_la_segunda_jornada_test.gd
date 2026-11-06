@@ -51,7 +51,7 @@ func _abrir() -> Node3D:
 		"borde_superior",
 		"antepecho",
 		"comprador_visible",
-		"piso_de_entregas",
+		"apoyo_de_entregas",
 		"objetivo",
 		"acceso_al_cobro"
 	]:
@@ -294,6 +294,7 @@ func test_la_compra_parcial_vencida_conserva_unidades_reales_y_sus_destinos() ->
 	RelojDePrueba.avanzar_turno(almacen.get("_reloj"), 0.0)
 	assert_array(manual.call("unidades_sueltas")).contains_exactly_in_any_order(cuerpos)
 	var suelo: StaticBody3D = manual.get("suelo")
+	var apoyo: Marker3D = almacen.get_node("Estructura/Ventanilla").get("apoyo_de_entregas")
 	var habitaciones: Habitaciones = almacen.get("_habitaciones")
 	for indice in cuerpos.size():
 		var cuerpo := cuerpos[indice]
@@ -314,7 +315,9 @@ func test_la_compra_parcial_vencida_conserva_unidades_reales_y_sus_destinos() ->
 		consulta.transform = forma.global_transform
 		consulta.margin = 0.0
 		consulta.collision_mask = cuerpo.collision_mask
-		consulta.exclude = [cuerpo.get_rid(), suelo.get_rid()]
+		consulta.exclude = [
+			cuerpo.get_rid(), suelo.get_rid(), (apoyo.get_child(0) as CollisionObject3D).get_rid()
+		]
 		assert_array(manual.get_world_3d().direct_space_state.intersect_shape(consulta)).is_empty()
 	assert_bool(agarre.pedir_agarrar(unidades[0], cuerpos[0])).is_true()
 	manual.call("devolver", unidades[0].producto.id)

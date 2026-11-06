@@ -123,7 +123,7 @@ Estos pares se confunden seguido, y cada uno tiene su regla escrita en los dos s
   La apertura comparte una sola selección de compradores y pedidos entre atención y reposición.
   La segunda noche usa los pedidos fijos de Fede y Mía, sus conversaciones propias y sus figuras
   en el mundo. Ninguna consulta reconstruye la lista de apertura.
-  Sus compras vencidas también dejan las unidades recogibles en el piso interior, todavía
+  Sus compras vencidas también dejan las unidades recogibles sobre el apoyo de la ventanilla, todavía
   registradas afuera, y descartan el ticket.
 
   Atención figura cumplida mientras todos los que llegaron estén vendidos, y vuelve a pendiente al

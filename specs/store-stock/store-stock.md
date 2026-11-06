@@ -1237,7 +1237,7 @@ faltantes antes y después de construir atención, y se repiten ambas consultas 
 las mismas instancias de compradores y pedidos, con los seis productos fijos de BR-CTR-038,
 sin reconstrucción ni azar. Otra apertura crea estados propios sin heredar entregas.
 
-### AC-STK-082 — Vencer devuelve productos al piso interior sin venta *(verifica BR-STK-041)*
+### AC-STK-082 — Vencer deja los productos sobre el apoyo sin venta *(verifica BR-STK-041)*
 
 DADO jornada 2 y una compra parcial con dos unidades recibidas, una de caja y otra de góndola,
 CUANDO vence ENTONCES ambas identidades siguen afuera, los cuerpos quedan visibles y recogibles
@@ -1380,7 +1380,7 @@ DADO una compra de la jornada 3, 4 o 5 con sus tres productos y su ticket exacto
 la góndola y otro de la caja, CUANDO se completa ENTONCES las tres identidades se retiran una sola
 vez y cuentan como vendidas sin descontar además el pedido; repetir la entrega no vende otra vez.
 DADO una compra con dos productos recibidos CUANDO vence ENTONCES las dos unidades siguen
-registradas afuera y recogibles en el piso interior, sin venta, y depósito, caja y góndola quedan
+registradas afuera y recogibles sobre el apoyo de la ventanilla, sin venta, y depósito, caja y góndola quedan
 como antes del vencimiento.
 
 ### AC-STK-110 — El registro de la prueba no lista productos ausentes *(verifica BR-STK-019, BR-STK-046)*
