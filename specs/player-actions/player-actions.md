@@ -443,7 +443,8 @@ primero el examen, después la acción primaria y por último el secundario disp
 Sacar y meter DEBEN respetar existencia y capacidad; una devolución coincidente rechazada
 NO DEBE presentarse como «Dejar». Las acciones fuera de esta lista DEBEN conservar su texto
 vigente, asociado al gesto que realmente ejecutan: lector, descarte de ticket, tacho y cuerpo
-del contenedor conservan «Interactuar» sobre el primario; la tapa usa «Abrir» o «Cerrar».
+del contenedor conservan «Interactuar» sobre el primario; la tapa usa «Abrir» o «Cerrar», salvo
+abierta del todo con algo en la mano, que conserva «Interactuar» como el cuerpo.
 Preparar las líneas Hablar y Entregar NO DEBE habilitar por sí mismo atención directa.
 
 CUANDO cambian foco y mano en el mismo cuadro, la referencia DEBE usar ambos valores nuevos, sin
@@ -459,8 +460,9 @@ o vacío, la mopa seca o el jabón sea incorrecto: mirar una mancha NO DEBE reve
 El lector presente con una unidad, el inodoro con un ticket y el cuerpo del contenedor con
 un objeto DEBEN declarar interacción primaria, aunque el resultado pueda rechazarse.
 Un tacho sólo DEBE ofrecer extracción con bolsa y mano vacía; una puerta trabada DEBE
-ofrecer Abrir, salvo la entrada principal de BR-PLY-041. La tapa DEBE ofrecer sólo su
-alternancia, sin tirar además lo sostenido.
+ofrecer Abrir, salvo la entrada principal de BR-PLY-041. La tapa DEBE ofrecer
+su alternancia, salvo abierta del todo con algo en la mano: entonces DEBE ofrecer lo mismo que el
+cuerpo (BR-CLN-025), y nunca alternar y tirar con el mismo clic.
 El secundario sobre todos esos objetivos NO DEBE ofrecer los usos trasladados al primario;
 Sacar producto conserva el secundario, y las acciones ajenas conservan su contrato.
 
@@ -1262,8 +1264,10 @@ DADO tacho sin bolsa u objeto sostenido ENTONCES no ofrece extracción.
 
 DADO una bolsa sostenida y el cuerpo del contenedor enfocado CUANDO se consulta ENTONCES
 ofrece Interactuar por primario, sin Dejar ni acción secundaria. DADO la tapa abierta
-ENTONCES ofrece Cerrar por primario; cerrada, Abrir. Pulsar la tapa conserva la bolsa sin
-desecharla; pulsar el cuerpo con tapa cerrada rechaza sin soltar.
+del todo y la bolsa sostenida ENTONCES ofrece lo mismo que el cuerpo. DADO la tapa abierta y la
+mano vacía ENTONCES ofrece Cerrar por primario; cerrada o girando, Abrir, también con la bolsa.
+Pulsar la tapa cerrada conserva la bolsa sin desecharla; pulsar el cuerpo con tapa cerrada
+rechaza sin soltar.
 
 ### AC-PLY-087 — Sin nada que hacer, nada *(verifica BR-PLY-035)*
 
