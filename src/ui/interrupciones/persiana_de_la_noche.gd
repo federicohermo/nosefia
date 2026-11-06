@@ -155,7 +155,8 @@ func _pintar() -> void:
 	LienzoDeManada.ajustar(_marco, pantalla)
 	_persiana.size = pantalla
 	if _bajando:
-		_persiana.position = Vector2(0.0, -pantalla.y * (1.0 - _avance_de_la_bajada))
+		var bajado := EntradaALaNoche.avance_de_la_bajada(_avance_de_la_bajada)
+		_persiana.position = Vector2(0.0, -pantalla.y * (1.0 - bajado))
 		_placa.hide()
 	elif _entrada == null:
 		_persiana.position = Vector2.ZERO
