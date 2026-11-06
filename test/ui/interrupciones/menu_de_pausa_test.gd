@@ -171,3 +171,12 @@ func test_escala_con_el_lienzo_de_manada() -> void:
 		visible.y / LienzoDeManada.TAMANO_DEL_DISENO.y
 	)
 	assert_vector(marco.scale).is_equal_approx(Vector2.ONE * esperado, Vector2.ONE * 1e-4)
+
+
+func test_el_foco_de_la_pausa_queda_puesto_y_no_se_dibuja() -> void:  # AC-CFG-028
+	var menu := _menu()
+	menu.mostrar()
+	var foco := menu.get_viewport().gui_get_focus_owner()
+	assert_object(foco).is_not_null()
+	assert_bool(foco != null and menu.is_ancestor_of(foco) and foco.has_focus()).is_true()
+	assert_bool(foco != null and foco.has_focus(true)).is_false()

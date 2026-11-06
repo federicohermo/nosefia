@@ -314,3 +314,11 @@ func test_una_tecla_no_entra_al_boton_y_start_cancela_la_espera() -> void:  # AC
 	assert_bool(pantalla.atender(_boton_del_joystick(JOY_BUTTON_START))).is_true()
 	assert_bool(pantalla.capturando()).is_false()
 	assert_array(_avisos).is_empty()
+
+
+func test_el_foco_de_controles_queda_puesto_y_no_se_dibuja() -> void:  # AC-CFG-028
+	var pantalla := _pantalla()
+	var foco := pantalla.get_viewport().gui_get_focus_owner()
+	assert_object(foco).is_not_null()
+	assert_bool(foco != null and pantalla.is_ancestor_of(foco) and foco.has_focus()).is_true()
+	assert_bool(foco != null and foco.has_focus(true)).is_false()
