@@ -1604,7 +1604,7 @@ en un recurso por jornada; `inicial` y `despedida` reciben el pedido para resolv
   - Bloquea: nada. Sumaría productos al grupo de Fede en BR-CTR-047.
 - **OQ-CTR-008 — ¿Frigordo y Gringo se venden en el mostrador?**
   - Por qué sigue abierta: la ficha de atención al cliente suma Frigordo y Gringo al grupo de Fede,
-    pero hoy son productos que sólo llegan en cajas, no se venden y ningún comprador los pide
-    (BR-STK-054). En el grupo no tendrían efecto.
+    pero hoy no están en el catálogo: no se venden y ningún comprador los pide. En el grupo no
+    tendrían efecto.
   - Decide: game design.
   - Bloquea: nada. Sumaría esos dos productos al grupo de Fede en BR-CTR-047.

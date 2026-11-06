@@ -1047,11 +1047,10 @@ BR-INV-009.
 
 ### BR-INV-148 — El botón abre la lista de productos
 
-CUANDO el jugador pulsa «Hacer pedido», el sistema DEBE abrir una lista con los treinta y nueve
-productos pedibles: los treinta y dos del catálogo y los siete que existen sólo como caja
-(BR-STK-054), cada uno con una casilla para marcarlo. La lista DEBE llevar el texto
-«Seleccioná los productos que faltan.», el aviso «* Seleccioná uno o varios productos para enviar.»
-y el botón «Enviar». Marcar y desmarcar un producto DEBE ser libre. «Enviar» DEBE estar
+CUANDO el jugador pulsa «Hacer pedido», el sistema DEBE abrir una lista con los treinta y dos
+productos del catálogo (BR-STK-046), cada uno con una casilla para marcarlo. La lista DEBE llevar
+el texto «Seleccioná los productos que faltan.», el aviso «* Seleccioná uno o varios productos
+para enviar.» y el botón «Enviar». Marcar y desmarcar un producto DEBE ser libre. «Enviar» DEBE estar
 deshabilitado MIENTRAS no haya ninguno marcado. Cerrar la lista sin enviar NO DEBE dejar ningún
 mensaje, y reabrirla DEBE mostrarla sin ninguno marcado.
 
@@ -2080,11 +2079,10 @@ jornada 6, por transición y por separado desde un checkpoint, ENTONCES lo lista
 Enrique, su chat no tiene ningún mensaje y su contador de no leídos no se muestra. DADO esa
 jornada ENTONCES el botón «Hacer pedido» existe en su chat.
 
-### AC-INV-192 — La lista tiene los treinta y nueve y exige uno marcado *(verifica BR-INV-148)*
+### AC-INV-192 — La lista tiene los treinta y dos y exige uno marcado *(verifica BR-INV-148)*
 
-DADO la lista abierta ENTONCES muestra treinta y nueve productos distintos, los treinta y dos del
-catálogo y los siete que existen sólo como caja, todos desmarcados, con «Enviar» deshabilitado. CUANDO se marca uno
-ENTONCES «Enviar» se habilita, y CUANDO se lo desmarca ENTONCES se deshabilita. CUANDO se cierra la
+DADO la lista abierta ENTONCES muestra los treinta y dos productos del catálogo, todos desmarcados,
+con «Enviar» deshabilitado. CUANDO se marca uno ENTONCES «Enviar» se habilita, y CUANDO se lo desmarca ENTONCES se deshabilita. CUANDO se cierra la
 lista y se reabre ENTONCES no hay ninguno marcado y el chat no recibió ningún mensaje.
 
 ### AC-INV-193 — Enviar con wifi deja el pedido y las dos respuestas *(verifica BR-INV-125)*
