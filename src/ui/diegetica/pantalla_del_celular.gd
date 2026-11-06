@@ -70,8 +70,10 @@ const BURBUJA_CON_ERROR := Color("f7c9cc")
 const TEXTO_DE_HACER_PEDIDO := "Hacer pedido"
 const TEXTO_DE_ENVIAR := "Enviar"
 const NARANJA_DEL_AVISO := Color("ffa024")
-const DIAMETRO_DEL_AVISO := 30.0
-const TAMANO_DEL_NUMERO_DEL_AVISO := 20
+const DIAMETRO_DEL_AVISO := 40.0
+const TAMANO_DEL_NUMERO_DEL_AVISO := 26
+## Lo que separa al ícono del recordatorio del borde izquierdo y del borde de abajo.
+const MARGEN_DEL_RECORDATORIO := 36.0
 const FOTO := "Foto"
 const MENSAJE := "Mensaje..."
 const AYUDA := "ARRASTRÁ EL FONDO O USÁ LA RUEDA"
@@ -733,7 +735,15 @@ func _ajustar() -> void:
 	LienzoDeManada.ajustar(_lienzo, encuadre)
 	# El recordatorio pertenece al borde de la ventana, no al lienzo centrado del teléfono.
 	_recordatorio.scale = _lienzo.scale
-	_base_del_recordatorio = Vector2(36.0, -130.0) * _lienzo.scale + Vector2(0, encuadre.y)
+	var icono: Control = _recordatorio.get_node("Icono")
+	var alto_del_icono := icono.custom_minimum_size.y
+	_base_del_recordatorio = (
+		(
+			Vector2(MARGEN_DEL_RECORDATORIO, -(MARGEN_DEL_RECORDATORIO + alto_del_icono))
+			* _lienzo.scale
+		)
+		+ Vector2(0, encuadre.y)
+	)
 	_posar_el_recordatorio()
 	_pintar_posicion()
 
