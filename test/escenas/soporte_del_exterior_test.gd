@@ -155,21 +155,21 @@ func test_un_producto_soltado_mirando_recto_por_el_hueco_se_ve_y_se_agarra_desde
 	assert_float(unidad.global_position.z).is_greater(plano_exterior)
 	assert_float(unidad.global_position.y).is_less(hueco.position.y)
 	var camara: Camera3D = jugador.get_node("Giro/Camara")
-	var zona := _zona_visible(camara, antepecho, plano_exterior, unidad.global_position.y)
-	# El soltado natural puede caer en la zona ciega: se ubica el producto en la mitad de la visible.
-	unidad.global_position.z = plano_exterior + (zona.x + zona.y) / 2.0
-	unidad.linear_velocity = Vector3.ZERO
-	unidad.angular_velocity = Vector3.ZERO
-	for cuadro in 60:
-		await get_tree().physics_frame
+	# Se ve lo que tiene la parte alta a la vista: un centímetro por debajo del borde del cuerpo.
+	var punto := unidad.global_position
+	var malla: MeshInstance3D = unidad.get_node("Malla")
+	punto.y = (malla.global_transform * malla.get_aabb()).end.y - 0.01
+	assert_float(punto.y).is_greater(unidad.global_position.y)
+	var zona := _zona_visible(camara, antepecho, plano_exterior, punto.y)
+	# La premisa: el producto queda donde cayó, dentro de la zona visible.
 	assert_float(unidad.global_position.z - plano_exterior).is_between(zona.x, zona.y)
-	camara.look_at(unidad.global_position)
+	camara.look_at(punto)
 	for cuadro in 4:
 		await get_tree().physics_frame
 	# El foco es un rayo de física y el antepecho no tiene colisión: la vista se prueba con sus
 	# triángulos. El mismo punto, más pegado a la pared, queda tapado.
-	assert_bool(OclusionDePrueba.tapa(camara, unidad.global_position, antepecho)).is_false()
-	var pegado := unidad.global_position
+	assert_bool(OclusionDePrueba.tapa(camara, punto, antepecho)).is_false()
+	var pegado := punto
 	pegado.z = plano_exterior + zona.x / 2.0
 	assert_bool(OclusionDePrueba.tapa(camara, pegado, antepecho)).is_true()
 	jugador.call("_leer_la_mira")
