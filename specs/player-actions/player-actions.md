@@ -3,7 +3,7 @@ schema_version: 1
 capability_id: CAP-PLY
 status: ratified
 owner: por definir
-provenance: GDD «Controles»; fichas «8. Tarea: Reposición», «Notas», «Interfaces virtuales durante la jornada» y «Referencia de controles»; decisiones de #368, #369, #370, #373 y #382; migración de los specs 003, 004, 006, 014, 034, 043; fichas de interacción, limpieza y basura revisadas el 2026-10-15; decisiones de #425, bordes de GJ-52 (#428) e interacción directa con compradores (#429); ocho jornadas de #526; cuartito de limpieza de #541; depósito trabado en la jornada 1 y baño abierto en todas de #574; salida voluntaria de #573; ticket escrito de #580; agacharse de #177; empuje de útiles y bolsas de #563; hoja que se frena con lo pesado de #218; patada a la unidad de #219; compuerta del mostrador empujada de #695; Esc que sale de las interfaces de #607; joystick de #380; la fila «7B» de la lista de pistas e hipótesis y la fila «Palanca» de «Objetos interactuables», de #790; la fila «Llave» de «Objetos interactuables», de #810
+provenance: GDD «Controles»; fichas «8. Tarea: Reposición», «Notas», «Interfaces virtuales durante la jornada» y «Referencia de controles»; decisiones de #368, #369, #370, #373 y #382; migración de los specs 003, 004, 006, 014, 034, 043; fichas de interacción, limpieza y basura revisadas el 2026-10-15; decisiones de #425, bordes de GJ-52 (#428) e interacción directa con compradores (#429); ocho jornadas de #526; cuartito de limpieza de #541; depósito trabado en la jornada 1 y baño abierto en todas de #574; salida voluntaria de #573; ticket escrito de #580; agacharse de #177; empuje de útiles y bolsas de #563; hoja que se frena con lo pesado de #218; patada a la unidad de #219; compuerta del mostrador empujada de #695; Esc que sale de las interfaces de #607; joystick de #380; la fila «7B» de la lista de pistas e hipótesis y la fila «Palanca» de «Objetos interactuables», de #790; la fila «Llave» de «Objetos interactuables», de #810; la tapa del contenedor que ofrece lo mismo que el cuerpo de #868, ficha GJ-84
 ---
 
 # Capacidad: lo que el empleado puede hacer
@@ -443,7 +443,8 @@ primero el examen, después la acción primaria y por último el secundario disp
 Sacar y meter DEBEN respetar existencia y capacidad; una devolución coincidente rechazada
 NO DEBE presentarse como «Dejar». Las acciones fuera de esta lista DEBEN conservar su texto
 vigente, asociado al gesto que realmente ejecutan: lector, descarte de ticket, tacho y cuerpo
-del contenedor conservan «Interactuar» sobre el primario; la tapa usa «Abrir» o «Cerrar».
+del contenedor conservan «Interactuar» sobre el primario; la tapa usa «Abrir» o «Cerrar», salvo
+abierta del todo con algo en la mano, que conserva «Interactuar» como el cuerpo.
 Preparar las líneas Hablar y Entregar NO DEBE habilitar por sí mismo atención directa.
 
 CUANDO cambian foco y mano en el mismo cuadro, la referencia DEBE usar ambos valores nuevos, sin
@@ -459,8 +460,9 @@ o vacío, la mopa seca o el jabón sea incorrecto: mirar una mancha NO DEBE reve
 El lector presente con una unidad, el inodoro con un ticket y el cuerpo del contenedor con
 un objeto DEBEN declarar interacción primaria, aunque el resultado pueda rechazarse.
 Un tacho sólo DEBE ofrecer extracción con bolsa y mano vacía; una puerta trabada DEBE
-ofrecer Abrir, salvo la entrada principal de BR-PLY-041. La tapa DEBE ofrecer sólo su
-alternancia, sin tirar además lo sostenido.
+ofrecer Abrir, salvo la entrada principal de BR-PLY-041. La tapa DEBE ofrecer
+su alternancia, salvo abierta del todo con algo en la mano: entonces DEBE ofrecer lo mismo que el
+cuerpo (BR-CLN-025), y nunca alternar y tirar con el mismo clic.
 El secundario sobre todos esos objetivos NO DEBE ofrecer los usos trasladados al primario;
 Sacar producto conserva el secundario, y las acciones ajenas conservan su contrato.
 
@@ -837,7 +839,7 @@ dormida.
 
 DADO una superficie con la inclinación justo debajo del corte de horizontal ENTONCES no admite;
 con el corte exacto sobre el piso y los muebles del mundo fijo, sobre una caja contenedora o sobre
-una unidad que admite, sí; sobre el cuerpo del contenedor (BR-CLN-040) y sobre la mopa, no.
+una unidad que admite, sí; sobre el contenedor, cuerpo o tapa (BR-CLN-040) y sobre la mopa, no.
 Admiten otro encima exactamente las cajas contenedoras y las unidades de producto de caja, cajita
 y lata; ningún otro objeto del almacén lo admite. La cara de una lata acostada cuya normal queda
 por debajo del corte no admite.
@@ -1262,8 +1264,11 @@ DADO tacho sin bolsa u objeto sostenido ENTONCES no ofrece extracción.
 
 DADO una bolsa sostenida y el cuerpo del contenedor enfocado CUANDO se consulta ENTONCES
 ofrece Interactuar por primario, sin Dejar ni acción secundaria. DADO la tapa abierta
-ENTONCES ofrece Cerrar por primario; cerrada, Abrir. Pulsar la tapa conserva la bolsa sin
-desecharla; pulsar el cuerpo con tapa cerrada rechaza sin soltar.
+del todo y la bolsa sostenida ENTONCES ofrece lo mismo que el cuerpo. DADO la tapa abierta y la
+mano vacía ENTONCES ofrece Cerrar por primario. DADO la tapa cerrada, también con la bolsa, ENTONCES
+ofrece Abrir. Mientras gira, ofrece la acción que invierte el giro: Cerrar si abre, Abrir si cierra.
+Pulsar la tapa cerrada conserva la bolsa sin desecharla; pulsar el cuerpo con tapa cerrada
+rechaza sin soltar.
 
 ### AC-PLY-087 — Sin nada que hacer, nada *(verifica BR-PLY-035)*
 

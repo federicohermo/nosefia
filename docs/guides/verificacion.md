@@ -25,7 +25,7 @@ python .claude/scripts/verificar.py --particion-tests 0/6
 El índice empieza en cero. La última partición corre también los demás nodos; las otras sólo
 corren sus suites. En el reparto actual es más liviana y deja CPU libre en la partición más larga.
 La asignación prioriza las suites más lentas y las agrega al runner con menor carga estimada.
-Usa las duraciones medidas de veinte suites y reserva margen para los demás nodos en la última partición.
+Usa las duraciones de `SEGUNDOS_ESTIMADOS`: las suites de 8 s o más del JUnit de `staging`. Reserva margen para los demás nodos en la última partición.
 Las suites nuevas reciben un costo estimado por defecto. Los tiempos orientan el reparto;
 el inventario sigue saliendo de todos los archivos `_test.gd` actuales.
 El orden es determinista y conserva la selección en Windows y Linux.
@@ -95,8 +95,11 @@ Un grupo fallido o sin reporte mantiene rojo el nodo completo, aunque el otro pa
 
 ## Reutilizar importaciones entre revisiones
 
-Cada partición restaura `.godot/imported` con una clave exacta por contenido.
-La clave incluye nombres y bytes de recursos, opciones de importación, addons, identidad del motor nativo, sistema operativo concreto y arquitectura.
+Cada partición restaura `.godot/imported` con una clave por contenido y, si no hay coincidencia exacta, por prefijo.
+El prefijo incluye el motor nativo, el sistema operativo concreto, la arquitectura, los importadores, el material auditado y el propio helper.
+La clave completa agrega nombres y bytes de recursos, opciones de importación y addons.
+Con una restauración parcial, Godot reimporta sólo lo que cambió.
+Las salidas de `importar_caja.gd` se purgan en toda restauración, exacta o parcial.
 El helper `.github/scripts/cache_importaciones.py` concentra esa selección y la política de compatibilidad.
 Cambiar scripts normales de `src/` o `test/` conserva la clave, incluso al agregar clases.
 Cambiar modelos, materiales, shaders o recursos externos a `assets/` produce otra clave.
@@ -117,8 +120,8 @@ El importador de caja escribe recursos versionados fuera de `.godot/imported`.
 Para regenerarlos, cada worker elimina las salidas importadas declaradas por los tres GLB de caja antes de verificar.
 La caché nunca restaura esos recursos versionados.
 
-Una ausencia, un error del servicio o una coincidencia parcial limpia las importaciones restauradas y continúa con una verificación fría.
-No se usan claves aproximadas.
+Una ausencia, un error del servicio o una clave de otro prefijo limpia las importaciones restauradas y continúa con una verificación fría.
+Una coincidencia parcial del mismo prefijo conserva `.godot/imported`.
 La disponibilidad también depende del alcance de ramas y la retención de GitHub Actions.
 Las PR pueden leer la caché de su rama base. Una caché creada dentro de una PR sirve para sus siguientes corridas.
 El primer push a `staging` puede preparar en frío y publicar una caché para futuras PR dirigidas a esa rama.

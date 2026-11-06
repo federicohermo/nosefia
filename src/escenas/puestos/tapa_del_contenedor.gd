@@ -101,8 +101,16 @@ func recibe_objetos() -> bool:
 	return _tapa.recibe_objetos()
 
 
-func contexto_de_interaccion(_sostenido: ObjetoDelAlmacen) -> ReferenciaDeControles.Contexto:
-	return ReferenciaDeControles.contexto_de_lo_fijo(_tapa.abierta())
+## Abierta del todo, la tapa es parte del contenedor y desecha lo mismo que su cuerpo.
+func interactuar() -> ObjetoDelAlmacen:
+	recolector.pedir_tirar(_tapa.recibe_objetos())
+	return null
+
+
+func contexto_de_interaccion(sostenido: ObjetoDelAlmacen) -> ReferenciaDeControles.Contexto:
+	return ReferenciaDeControles.contexto_de_la_tapa(
+		_tapa.abierta(), _tapa.recibe_objetos(), sostenido != null
+	)
 
 
 ## El cuerpo y la tapa dicen lo mismo: son el mismo contenedor.
