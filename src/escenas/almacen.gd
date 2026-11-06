@@ -851,6 +851,7 @@ func _al_forzar_la_puerta_del_jefe() -> void:
 func _mostrar_el_final() -> void:
 	# La devolución suelta el celular antes de llegar acá, y eso reanuda al jugador.
 	_jugador.suspender()
+	_pantalla_del_celular.mostrar_recordatorio(false)
 	var placas := EpilogosDeLosFinales.placas_de(FinalConPantalla.de(_partida))
 	if placas.is_empty():
 		_mostrar_la_pantalla_del_final()
@@ -867,6 +868,7 @@ func _mostrar_el_final() -> void:
 func _mostrar_la_pantalla_del_final() -> void:
 	var pantalla: PantallaDeFinal = PANTALLA_DE_FINAL.instantiate()
 	add_child(pantalla)
+	(get_node("Interfaz/ControlDePausa") as ControlDePausa).pantalla_del_final = pantalla
 	pantalla.volver_al_menu_pedido.connect(func() -> void: _ir_al_menu.call())
 	pantalla.nueva_partida_pedida.connect(_comenzar_nueva_partida)
 	pantalla.mostrar(FinalConPantalla.de(_partida))

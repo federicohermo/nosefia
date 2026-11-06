@@ -25,7 +25,7 @@ const BOTON_VOLVER := JOY_BUTTON_B
 const GRACIA_TRAS_ESC := 0.5
 
 
-## Con el epílogo de un final en pantalla, Esc no hace nada (BR-SHF-074).
+## Con el epílogo de un final en pantalla (BR-SHF-074), o con su pantalla, Esc no hace nada.
 ##
 ## Con configuraciones o logros abierta desde la pausa, Esc la cierra y deja la pausa: el Esc
 ## siguiente reanuda. Con el celular libre o con otra interfaz abierta, Esc la cierra a ella y no
@@ -36,9 +36,9 @@ static func ante_esc(
 	celular_libre_abierto: bool = false,
 	interfaz_abierta: bool = false,
 	logros_abierta: bool = false,
-	epilogo_en_pantalla: bool = false
+	final_en_pantalla: bool = false
 ) -> Accion:
-	if epilogo_en_pantalla:
+	if final_en_pantalla:
 		return Accion.NADA
 	if configuraciones_abierta:
 		return Accion.CERRAR_CONFIGURACIONES
@@ -59,7 +59,7 @@ static func ante_volver(
 	celular_libre_abierto: bool = false,
 	interfaz_abierta: bool = false,
 	logros_abierta: bool = false,
-	epilogo_en_pantalla: bool = false
+	final_en_pantalla: bool = false
 ) -> Accion:
 	var accion := ante_esc(
 		en_pausa,
@@ -67,7 +67,7 @@ static func ante_volver(
 		celular_libre_abierto,
 		interfaz_abierta,
 		logros_abierta,
-		epilogo_en_pantalla
+		final_en_pantalla
 	)
 	return Accion.NADA if accion == Accion.PAUSAR else accion
 
