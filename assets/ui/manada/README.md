@@ -23,7 +23,7 @@ sombras ni degradados; centrado con margen del 12 %; legible a 72 px. Cada fila 
 | `logros/mi_talon_de_aquiles.png` | Planilla con cuatro cruces | Mi talón de Aquiles |
 | `logros/final_despedido.png` | Contrato partido con desgarro central | Final: despedido |
 | `logros/final_contrato_cumplido.png` | Contrato con una tilde grande | Final: contrato cumplido |
-| `logros/bloqueado.png` | Signo de pregunta grueso con ángulos rectos | Entrada sin desbloquear |
+| `logros/bloqueado.png` | Signo de pregunta grueso con ángulos rectos | Entrada sin desbloquear. Su RGB va en blanco porque `pantalla_de_logros.gd` lo tiñe con el color del texto |
 
 ## Recursos de la interfaz
 

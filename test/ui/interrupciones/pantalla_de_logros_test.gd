@@ -98,12 +98,21 @@ func test_el_signo_bloqueado_se_ve_del_color_del_texto_en_las_tres_columnas() ->
 	var opaco := _pixel_opaco(PantallaDeLogros.IMAGEN_BLOQUEADA)
 	for columna: StringName in [PISTAS, FINALES, LOGROS]:
 		for entrada: HBoxContainer in pantalla.entradas(columna):
+			assert_object(_imagen(entrada)).is_same(PantallaDeLogros.IMAGEN_BLOQUEADA)
 			var figura := entrada.get_child(0) as TextureRect
 			var signo := opaco * figura.self_modulate * figura.modulate
 			var letra := (entrada.get_child(1) as Label).get_theme_color(&"font_color")
 			assert_float(signo.r).is_equal_approx(letra.r, 0.01)
 			assert_float(signo.g).is_equal_approx(letra.g, 0.01)
 			assert_float(signo.b).is_equal_approx(letra.b, 0.01)
+
+
+func test_la_imagen_de_un_logro_desbloqueado_no_se_tine() -> void:  # AC-ACH-013
+	var logros := Logros.new()
+	logros.desbloquear(L.Y_SE_MARCHO)
+	var entrada: HBoxContainer = _pantalla(logros).entradas(LOGROS)[L.Y_SE_MARCHO]
+	assert_object(_imagen(entrada)).is_not_same(PantallaDeLogros.IMAGEN_BLOQUEADA)
+	assert_that((entrada.get_child(0) as TextureRect).self_modulate).is_equal(Color.WHITE)
 
 
 func test_un_logro_desbloqueado_muestra_su_nombre_y_los_demas_no() -> void:  # AC-ACH-013
