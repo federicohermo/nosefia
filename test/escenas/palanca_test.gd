@@ -304,6 +304,27 @@ func test_el_final_4_pasa_por_su_epilogo_y_borra_el_guardado() -> void:  # AC-SH
 	assert_bool(Guardado.new().hay_guardado()).is_false()
 
 
+func test_con_la_pantalla_del_final_4_ni_pausa_ni_icono_del_celular() -> void:  # AC-SAV-052
+	await _abrir(JORNADA_7, _por_la_6b())
+	var recordatorio: Control = _almacen.get("_pantalla_del_celular").get("_recordatorio")
+	assert_bool(recordatorio.is_visible_in_tree()).is_true()
+	var palanca := _palanca()
+	assert_bool(_agarre().pedir_agarrar(palanca.datos, palanca)).is_true()
+	_puerta_del_jefe().call("accionar")
+	await _cuadros()
+	var pantallas := _almacen.find_children("*", "PantallaDeFinal", true, false)
+	assert_bool((pantallas[0] as PantallaDeFinal).visible).is_true()
+	assert_bool(recordatorio.is_visible_in_tree()).is_false()
+	var pausa := _almacen.get_node("Interfaz/ControlDePausa") as ControlDePausa
+	var esc := InputEventAction.new()
+	esc.action = &"ui_cancel"
+	esc.pressed = true
+	pausa._input(esc)
+	pausa.set("_cursor_antes", true)
+	pausa.call("_mirar_el_cursor")
+	assert_bool(get_tree().paused).is_false()
+
+
 func test_el_final_4_se_anota_en_los_logros() -> void:  # AC-ACH-011
 	await _abrir(JORNADA_7, _por_la_6b())
 	var logros := _almacen.get("_logros") as Logros

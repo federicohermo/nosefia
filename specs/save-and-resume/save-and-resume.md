@@ -115,9 +115,9 @@ entrada (BR-SAV-021).
 
 CUANDO el jugador aprieta Esc en cualquier momento del juego en el almacén, con la partida en
 curso o terminada, el sistema DEBE pausarlo y mostrar el menú de pausa. Un segundo Esc DEBE
-reanudarlo, igual que «reanudar». Las excepciones son las interfaces abiertas: el celular
+reanudarlo, igual que «reanudar». Las excepciones por interfaces abiertas son el celular
 abierto en modo libre (BR-INV-021) y la computadora, la caja registradora o una nota (BR-PLY-054).
-Ahí Esc la cierra y NO DEBE pausar; el Esc siguiente, sin ninguna interfaz abierta, pausa. El
+La pantalla de final es otra excepción, más abajo. Con una interfaz abierta, Esc la cierra y NO DEBE pausar; el Esc siguiente, sin ninguna interfaz abierta, pausa. El
 celular fijo no es una excepción. La devolución no es una excepción: con la devolución en
 pantalla, Esc DEBE abrir la pausa por encima de ella, y reanudar DEBE dejar la misma devolución,
 con el turno todavía detenido y sin abrir la noche siguiente. MIENTRAS la pausa está en pantalla,
@@ -128,6 +128,9 @@ consume Esc para soltar el cursor. El cursor que suelta el Esc que cerró una in
 pausar: ese Esc ya lo atendió la interfaz. Soltarlo el propio juego NO DEBE pausar, y con la
 devolución o la reflexión de cierre en pantalla perder el cursor NO DEBE pausar. Cambiar de pestaña, minimizar o pasar a otra ventana NO DEBE pausar la jornada ni
 mostrar el menú de pausa; volver tampoco DEBE abrirlo.
+
+Con la pantalla de final visible, en cualquiera de los finales, ni Esc ni el cursor suelto DEBEN
+pausar: la pantalla suelta el cursor para sus botones, y eso no es perderlo.
 
 SI Configuraciones está abierta desde la pausa, ENTONCES Esc DEBE cerrarla y dejar el menú de
 pausa en pantalla, **sin reanudar**; el Esc siguiente reanuda, como siempre. SI Configuraciones
@@ -474,6 +477,11 @@ pausa, ENTONCES continuar sigue deshabilitado.
 DADO una partida guardada en la jornada 7 CUANDO se abre la puerta del jefe con la llave ENTONCES el
 guardado se borra y no se escribe otro. CUANDO se vuelve al menú, desde la pantalla de final o desde la
 pausa, ENTONCES continuar sigue deshabilitado.
+
+### AC-SAV-052 — La pantalla de final no se pausa *(verifica BR-SAV-016)*
+
+DADO la pantalla de final visible CUANDO llega Esc o el cursor queda suelto ENTONCES el juego no
+se pausa.
 
 ### AC-SAV-033 — Un guardado de otra numeración no se migra *(verifica BR-SAV-007)*
 
