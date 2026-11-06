@@ -205,6 +205,66 @@ func test_la_llave_es_un_objeto_propio() -> void:  # AC-INV-185
 		assert_int(malla.gi_mode).is_equal(GeometryInstance3D.GI_MODE_DYNAMIC)
 
 
+func test_la_llave_queda_apoyada_en_el_piso_y_bajo_la_estanteria() -> void:  # AC-INV-185
+	await _abrir(JORNADA_7, _por_la_6c())
+	var llave := _llave()
+	assert_object(llave).is_not_null()
+	if llave == null:
+		return
+	for _cuadro: int in 90:
+		await get_tree().physics_frame
+	var mitad := ((llave.get_node("Forma") as CollisionShape3D).shape as BoxShape3D).size.y / 2.0
+	var espacio := llave.get_world_3d().direct_space_state
+	var centro := llave.global_position
+	var arriba := PhysicsRayQueryParameters3D.create(centro, centro + Vector3.UP * 3.0)
+	var abajo := PhysicsRayQueryParameters3D.create(centro, centro + Vector3.DOWN * 3.0)
+	for consulta: PhysicsRayQueryParameters3D in [arriba, abajo]:
+		consulta.exclude = [llave.get_rid()]
+		consulta.collision_mask = llave.collision_mask
+	var techo := espacio.intersect_ray(arriba)
+	var piso := espacio.intersect_ray(abajo)
+	assert_bool(techo.has("position")).is_true()
+	assert_bool(piso.has("position")).is_true()
+	if not (techo.has("position") and piso.has("position")):
+		return
+	assert_float((techo["position"] as Vector3).y).is_greater(centro.y + mitad)
+	var separacion := centro.y - mitad - (piso["position"] as Vector3).y
+	assert_float(separacion).is_greater_equal(-0.005)
+	assert_float(separacion).is_less(0.005)
+	assert_float(llave.linear_velocity.length()).is_less(0.05)
+
+
+func test_en_la_mano_la_llave_se_ve_de_frente_con_el_ojo_arriba() -> void:  # AC-INV-185
+	await _abrir(JORNADA_7, _por_la_6c())
+	var llave := _llave()
+	var camara := (_almacen.get("_jugador") as CharacterBody3D).get("_camara") as Camera3D
+	assert_bool(_agarre().pedir_agarrar(llave.datos, llave)).is_true()
+	assert_bool(camara.is_ancestor_of(llave)).is_true()
+	var malla := llave.find_children("*", "MeshInstance3D", true, false)[0] as MeshInstance3D
+	var tamano := malla.get_aabb().size
+	var largo := 0
+	var fino := 0
+	for eje: int in 3:
+		if tamano[eje] > tamano[largo]:
+			largo = eje
+		if tamano[eje] < tamano[fino]:
+			fino = eje
+	var arriba := camara.global_basis.y
+	var derecha := camara.global_basis.x
+	var adelante := -camara.global_basis.z
+	var eje_largo := malla.global_basis[largo].normalized()
+	var cara := malla.global_basis[fino].normalized()
+	assert_float(absf(eje_largo.dot(arriba))).is_greater(absf(eje_largo.dot(derecha)))
+	assert_float(absf(eje_largo.dot(arriba))).is_greater(absf(eje_largo.dot(adelante)))
+	assert_float(absf(cara.dot(adelante))).is_greater(absf(cara.dot(arriba)))
+	assert_float(absf(cara.dot(adelante))).is_greater(absf(cara.dot(derecha)))
+	var ojo := llave.get_node_or_null("Ojo") as Node3D
+	assert_object(ojo).is_not_null()
+	if ojo == null:
+		return
+	assert_float((ojo.global_position - llave.global_position).dot(arriba)).is_greater(0.0)
+
+
 func test_con_la_llave_en_la_mano_la_puerta_abre_y_termina_la_partida() -> void:  # AC-PLY-191
 	await _abrir(JORNADA_7, _por_la_6c())
 	var llave := _llave()
