@@ -170,8 +170,9 @@ La barra «/» de la tabla separa los dos renglones del final 1.
 ### BR-SHF-071 — La pantalla de final ofrece comenzar de nuevo o volver al menú
 
 La pantalla de final DEBE ofrecer, abajo de todo, dos botones: «COMENZAR NUEVA PARTIDA» arriba y
-«VOLVER AL MENÚ» abajo. Al mostrarse, el foco DEBE estar en «COMENZAR NUEVA PARTIDA». Vale para el
-despido y para todos los finales con pantalla.
+«VOLVER AL MENÚ» abajo. Al mostrarse, el cursor del mouse DEBE verse y usarse, y los botones se
+pulsan con clic. Ningún botón DEBE tomar el foco del teclado ni del gamepad: las flechas y Enter NO
+DEBEN seleccionar ni confirmar ninguno. Vale para el despido y para todos los finales con pantalla.
 
 - CUANDO se pulsa «COMENZAR NUEVA PARTIDA», el sistema DEBE borrar el guardado y arrancar una
   partida nueva en la jornada 1, igual que «Nuevo juego» del menú de inicio, sin pasar por el menú.
@@ -713,11 +714,12 @@ de cierre y ninguno de los cinco tips. DADO la pantalla del final 5 ENTONCES est
 y ninguno de los cinco tips. DADO el mismo final mostrado varias veces ENTONCES el texto es siempre
 el mismo.
 
-### AC-SHF-127 — Los dos botones y el foco *(verifica BR-SHF-071)*
+### AC-SHF-127 — Los dos botones, el mouse y la ausencia de foco *(verifica BR-SHF-071)*
 
 DADO la pantalla de cada final con pantalla —el despido y los finales 1, 2, 4 y 5— CUANDO se muestra
-ENTONCES hay exactamente dos botones, «COMENZAR NUEVA PARTIDA» arriba y «VOLVER AL MENÚ» abajo, y el
-foco está en el de arriba.
+ENTONCES hay exactamente dos botones, «COMENZAR NUEVA PARTIDA» arriba y «VOLVER AL MENÚ» abajo, el
+cursor del mouse se ve y se usa, y ningún botón tiene el foco ni puede tomarlo. CUANDO se pulsan las
+flechas o Enter ENTONCES no se pide ninguna salida.
 
 ### AC-SHF-128 — Comenzar nueva partida borra el guardado y abre la jornada 1 *(verifica BR-SHF-071)*
 
