@@ -1,4 +1,5 @@
 import argparse
+from collections.abc import Mapping
 from dataclasses import asdict, dataclass
 import hashlib
 import json
@@ -32,6 +33,7 @@ class IdentidadImportacion:
     binario_motor_sha256: str
     artefacto_motor_sha256: str
     alcance: str = "recursos"
+    prefijo: str = ""
 
 
 def archivos_versionados(raiz: Path) -> list[str]:
@@ -116,11 +118,13 @@ def identidad(
             receta, binario, artefacto,
         )
     huella = hashlib.sha256()
-    for valor in ("importaciones-v2", sistema, arquitectura, motor, receta, binario, artefacto):
+    for valor in ("importaciones-v3", sistema, arquitectura, motor, receta, binario, artefacto):
         datos = valor.encode("utf-8")
         huella.update(len(datos).to_bytes(8, "big") + datos)
-    politica = Path(__file__).read_bytes()
-    huella.update(hashlib.sha256(politica).digest())
+    huella.update(hashlib.sha256(Path(__file__).read_bytes()).digest())
+    for nombre in (*sorted(IMPORTADORES), MATERIAL):
+        huella.update(hashlib.sha256((raiz / nombre).read_bytes()).digest())
+    prefijo = f"godot-importaciones-v3-{huella.hexdigest()}"
     for nombre in seleccion:
         archivo = raiz / nombre
         ruta = nombre.encode("utf-8")
@@ -129,9 +133,9 @@ def identidad(
         with archivo.open("rb") as entrada:
             huella.update(hashlib.file_digest(entrada, "sha256").digest())
     return IdentidadImportacion(
-        f"godot-importaciones-v2-{huella.hexdigest()}", not motivo,
-        motivo or "importadores auditados y recursos cubiertos", len(seleccion),
-        motor, sistema, arquitectura, receta, binario, artefacto,
+        f"{prefijo}-{huella.hexdigest()}", True,
+        "importadores auditados y recursos cubiertos", len(seleccion),
+        motor, sistema, arquitectura, receta, binario, artefacto, prefijo=prefijo,
     )
 
 
@@ -149,9 +153,25 @@ def destino_privado(raiz: Path, destino: str) -> Path:
     return carpeta / nombre
 
 
-def preparar_verificacion(raiz: Path, exacta: bool) -> list[str]:
+def restauracion(datos: dict, entorno: Mapping[str, str]) -> str:
+    """Qué dejó la caché: `exacta`, `parcial` (mismo prefijo, otro contenido) o `ninguna`.
+
+    Sólo un prefijo propio se conserva: la clave restaurada llega de afuera, y una caché de otro
+    motor, de otros importadores o de otra política dejaría importaciones que nadie auditó.
+    """
+    clave = entorno.get("CACHE_CLAVE_RESTAURADA", "")
+    if not datos["cacheable"] or entorno.get("CACHE_RESULTADO") != "success" or not clave:
+        return "ninguna"
+    if clave == datos["key"] and entorno.get("CACHE_HIT") == "true":
+        return "exacta"
+    if datos["prefijo"] and clave.startswith(datos["prefijo"] + "-"):
+        return "parcial"
+    return "ninguna"
+
+
+def preparar_verificacion(raiz: Path, conservar: bool) -> list[str]:
     carpeta = destino_privado(raiz, "res://.godot/imported/comprobacion").parent
-    if not exacta and carpeta.exists():
+    if not conservar and carpeta.exists():
         shutil.rmtree(carpeta)
     eliminados = []
     for ruta in sorted((raiz / "assets" / "models").glob("*.glb.import")):
@@ -186,24 +206,24 @@ def main() -> int:
         resultado = identidad(raiz, sistema, os.environ["RUNNER_ARCH"], nativo)
         datos = asdict(resultado) | {"commit": os.environ.get("GITHUB_SHA", "")}
         with Path(os.environ["GITHUB_OUTPUT"]).open("a", encoding="utf-8") as salida:
-            salida.write(f"key={resultado.key}\ncacheable={str(resultado.cacheable).lower()}\n")
+            salida.write(
+                f"key={resultado.key}\nprefijo={resultado.prefijo}\n"
+                f"cacheable={str(resultado.cacheable).lower()}\n"
+            )
         if not resultado.cacheable:
             print(f"::warning::Caché de importaciones apagada: {resultado.motivo}")
     else:
         datos = json.loads(reporte.read_text(encoding="utf-8"))
-        exacta = (
-            datos["cacheable"] and os.environ.get("CACHE_HIT") == "true"
-            and os.environ.get("CACHE_RESULTADO") == "success"
-            and os.environ.get("CACHE_CLAVE_RESTAURADA") == datos["key"]
-        )
+        cual = restauracion(datos, os.environ)
         datos |= {
-            "hit": bool(exacta), "resultado_restore": os.environ.get("CACHE_RESULTADO", "skipped"),
-            "purgados": preparar_verificacion(raiz, exacta),
+            "hit": cual == "exacta", "restauracion": cual,
+            "resultado_restore": os.environ.get("CACHE_RESULTADO", "skipped"),
+            "purgados": preparar_verificacion(raiz, cual != "ninguna"),
         }
         resumen = os.environ.get("GITHUB_STEP_SUMMARY")
         if resumen:
             with Path(resumen).open("a", encoding="utf-8") as salida:
-                salida.write(f"Caché de importaciones. Hit exacto: {exacta}. Entradas: {datos['entradas']}.\n\n")
+                salida.write(f"Caché de importaciones. Restauración: {cual}. Entradas: {datos['entradas']}.\n\n")
                 salida.write(f"Clave `{datos['key']}`. {datos['motivo']}.\n")
     reporte.write_text(json.dumps(datos, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     print(json.dumps(datos, ensure_ascii=False))

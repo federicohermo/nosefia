@@ -95,8 +95,11 @@ Un grupo fallido o sin reporte mantiene rojo el nodo completo, aunque el otro pa
 
 ## Reutilizar importaciones entre revisiones
 
-Cada partición restaura `.godot/imported` con una clave exacta por contenido.
-La clave incluye nombres y bytes de recursos, opciones de importación, addons, identidad del motor nativo, sistema operativo concreto y arquitectura.
+Cada partición restaura `.godot/imported` con una clave por contenido y, si no hay coincidencia exacta, por prefijo.
+El prefijo incluye el motor nativo, el sistema operativo concreto, la arquitectura, los importadores, el material auditado y el propio helper.
+La clave completa agrega nombres y bytes de recursos, opciones de importación y addons.
+Con una restauración parcial, Godot reimporta sólo lo que cambió.
+Las salidas de `importar_caja.gd` se purgan en toda restauración, exacta o parcial.
 El helper `.github/scripts/cache_importaciones.py` concentra esa selección y la política de compatibilidad.
 Cambiar scripts normales de `src/` o `test/` conserva la clave, incluso al agregar clases.
 Cambiar modelos, materiales, shaders o recursos externos a `assets/` produce otra clave.

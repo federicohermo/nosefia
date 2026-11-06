@@ -2,6 +2,7 @@
 
 import io
 import json
+import re
 import tempfile
 import unittest
 from collections import Counter
@@ -12,6 +13,9 @@ from unittest.mock import patch
 import verificar
 from lib import particiones_de_tests
 from lib.particiones_de_tests import (
+    SEGUNDOS_ESTIMADOS,
+    SEGUNDOS_POR_SUITE_NUEVA,
+    SEGUNDOS_RESERVADOS_PARA_GATES,
     ParticionTests,
     agrupar_suites,
     comprobar_cobertura,
@@ -20,6 +24,9 @@ from lib.particiones_de_tests import (
 )
 
 
+RAIZ = Path(__file__).resolve().parents[3]
+# La holgura que se tolera entre la partición más cargada y la más liviana.
+HOLGURA_ENTRE_PARTICIONES = 1.25
 SUITES = ["test/dominio/ejemplo_test.gd", "test/escenas/ejemplo_test.gd"]
 XML = """<testsuites tests="2">
 <testsuite name="ejemplo_test" package="test/dominio" tests="1">
@@ -139,6 +146,20 @@ class SeleccionDeSuites(unittest.TestCase):
             seleccionar_suites(suites, ParticionTests(i, 4), {}) for i in range(4)
         ]
         self.assertEqual(particiones, [["a.gd"], ["b.gd"], ["c.gd"], ["d.gd"]])
+
+    def test_las_estimaciones_vigentes_reparten_las_suites_del_checkout_parejo(self):
+        flujo = (RAIZ / ".github/workflows/verify.yml").read_text(encoding="utf-8")
+        total = len(re.findall(r"^\s+- particion: \d+$", flujo, re.MULTILINE))
+        self.assertGreater(total, 1)
+        suites = sorted(
+            ruta.relative_to(RAIZ).as_posix() for ruta in (RAIZ / "test").rglob("*_test.gd")
+        )
+        cargas = []
+        for indice in range(total):
+            elegidas = seleccionar_suites(suites, ParticionTests(indice, total))
+            carga = sum(SEGUNDOS_ESTIMADOS.get(ruta, SEGUNDOS_POR_SUITE_NUEVA) for ruta in elegidas)
+            cargas.append(carga + (SEGUNDOS_RESERVADOS_PARA_GATES if indice == total - 1 else 0.0))
+        self.assertLessEqual(max(cargas), min(cargas) * HOLGURA_ENTRE_PARTICIONES, cargas)
 
     def test_normaliza_barras_y_puntos_antes_de_asignar(self):
         unix = [f"test/dominio/ejemplo_{numero}_test.gd" for numero in range(100)]

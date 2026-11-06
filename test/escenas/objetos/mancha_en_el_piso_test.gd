@@ -103,35 +103,55 @@ static func _puntos_de_mira(mancha: Node3D) -> Array[Vector3]:
 	return puntos
 
 
-## Si la mira enfoca la mancha con el jugador parado en algún punto libre del piso, mirándola
-## sin pasar el tope del cuello. Lo libre se mide con el cuerpo del jugador contra lo que lo frena.
-func _enfocar(almacen: Node3D, mancha: Node3D) -> bool:
+## Si el jugador puede estar parado en ese punto del piso y mirar la mancha sin pasar el tope del
+## cuello. Lo libre se mide con el cuerpo del jugador contra lo que lo frena.
+func _se_puede_mirar_desde(almacen: Node3D, mancha: Node3D, punto: Vector3) -> bool:
 	var jugador: CharacterBody3D = almacen.get("_jugador")
 	var camara: Camera3D = jugador.get_node("Giro/Camara")
 	var cuerpo := jugador.get_node("Cuerpo") as CollisionShape3D
 	var espacio := almacen.get_world_3d().direct_space_state
 	camara.position = Vector3.UP * ReglasDelJugador.ALTURA_DE_LA_CAMARA
-	var blanco := mancha.global_position + _cara(mancha) * 0.03
+	jugador.global_position = punto
+	var consulta := PhysicsShapeQueryParameters3D.new()
+	consulta.shape = cuerpo.shape
+	consulta.transform = cuerpo.global_transform
+	consulta.collision_mask = jugador.collision_mask
+	consulta.exclude = [jugador.get_rid()]
+	if not espacio.intersect_shape(consulta, 1).is_empty():
+		return false
+	var hacia := _blanco(mancha) - camara.global_position
+	var inclinacion := atan2(absf(hacia.y), Vector2(hacia.x, hacia.z).length())
+	return inclinacion <= ReglasDelJugador.PITCH_MAXIMO
+
+
+## Si la mira enfoca la mancha con el jugador parado en ese punto.
+func _enfoca_desde(almacen: Node3D, mancha: Node3D, punto: Vector3) -> bool:
+	if not _se_puede_mirar_desde(almacen, mancha, punto):
+		return false
+	var jugador: CharacterBody3D = almacen.get("_jugador")
+	var camara: Camera3D = jugador.get_node("Giro/Camara")
+	camara.look_at(_blanco(mancha))
+	for cuadro in 4:
+		await get_tree().physics_frame
+	jugador.call("_leer_la_mira")
+	return jugador.get("_enfocado") == mancha
+
+
+## El primer punto de la lista desde donde la mira enfoca la mancha, o `null` si ninguno.
+func _punto_de_enfoque(almacen: Node3D, mancha: Node3D) -> Variant:
 	for punto in _puntos_de_mira(mancha):
-		jugador.global_position = punto
-		var consulta := PhysicsShapeQueryParameters3D.new()
-		consulta.shape = cuerpo.shape
-		consulta.transform = cuerpo.global_transform
-		consulta.collision_mask = jugador.collision_mask
-		consulta.exclude = [jugador.get_rid()]
-		if not espacio.intersect_shape(consulta, 1).is_empty():
-			continue
-		var hacia := blanco - camara.global_position
-		var inclinacion := atan2(absf(hacia.y), Vector2(hacia.x, hacia.z).length())
-		if inclinacion > ReglasDelJugador.PITCH_MAXIMO:
-			continue
-		camara.look_at(blanco)
-		for cuadro in 4:
-			await get_tree().physics_frame
-		jugador.call("_leer_la_mira")
-		if jugador.get("_enfocado") == mancha:
-			return true
-	return false
+		if await _enfoca_desde(almacen, mancha, punto):
+			return punto
+	return null
+
+
+## Si la mira enfoca la mancha con el jugador parado en algún punto libre del piso.
+func _enfocar(almacen: Node3D, mancha: Node3D) -> bool:
+	return await _punto_de_enfoque(almacen, mancha) != null
+
+
+static func _blanco(mancha: Node3D) -> Vector3:
+	return mancha.global_position + _cara(mancha) * 0.03
 
 
 ## Hacia dónde mira la cara de la mancha: el arriba del disco.
@@ -510,18 +530,37 @@ func test_las_manchas_de_otra_noche_no_se_ven_ni_se_enfocan() -> void:  # AC-CLN
 	var almacen: Node3D = await _almacen()
 	var jugador: Node3D = almacen.get("_jugador")
 	jugador.set_physics_process(false)
+	# Desde dónde se enfoca cada lugar con su cuerpo prendido, que es como lo deja su noche. Mirar
+	# la mancha ajena desde ese mismo punto cambia una sola cosa: el cuerpo está apagado.
+	var desde := {}
 	for jornada: int in JORNADAS:
 		await _abrir(almacen, jornada)
 		var ajenas := 0
 		for mancha: ManchaQueSeVe in almacen.get("_limpieza").call("_todas_las_manchas"):
-			if _piso(almacen).mancha_de(mancha.lugar_de_la_mancha()) != null:
+			var lugar := mancha.lugar_de_la_mancha()
+			if _piso(almacen).mancha_de(lugar) != null:
 				continue
 			ajenas += 1
 			assert_bool(mancha.visible).override_failure_message(mancha.name).is_false()
 			var cuerpo := mancha.get_node("Cuerpo") as CollisionShape3D
 			assert_bool(cuerpo.disabled).override_failure_message(mancha.name).is_true()
+			var punto: Variant = desde.get(lugar)
+			if punto == null or not _se_puede_mirar_desde(almacen, mancha, punto):
+				cuerpo.disabled = false
+				punto = await _punto_de_enfoque(almacen, mancha)
+				cuerpo.disabled = true
+				(
+					assert_bool(punto != null)
+					. override_failure_message(
+						"`%s` no se enfoca ni con el cuerpo prendido" % mancha.name
+					)
+					. is_true()
+				)
+				if punto == null:
+					continue
+				desde[lugar] = punto
 			(
-				assert_bool(await _enfocar(almacen, mancha))
+				assert_bool(await _enfoca_desde(almacen, mancha, punto))
 				. override_failure_message("`%s` se enfoca en otra noche" % mancha.name)
 				. is_false()
 			)
