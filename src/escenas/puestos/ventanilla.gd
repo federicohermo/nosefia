@@ -133,7 +133,7 @@ func _al_pulsar() -> void:
 	if comprador == null:
 		return
 	var resultado := atenciones.pedir_interaccion(jugador.agarre.manos().sostenido())
-	if resultado in [RecepcionDeCompra.Resultado.ACEPTADA, RecepcionDeCompra.Resultado.COMPLETA]:
+	if RecepcionDeCompra.aceptado(resultado):
 		var nodo := jugador.agarre.entregar()
 		if nodo != null:
 			nodo.reparent(self)

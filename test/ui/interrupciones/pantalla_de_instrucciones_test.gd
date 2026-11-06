@@ -328,3 +328,12 @@ func test_las_instrucciones_dejan_el_foco_en_un_boton_habilitado_por_pagina() ->
 		assert_bool(pantalla.is_ancestor_of(foco)).is_true()
 		assert_bool(foco.disabled).is_false()
 		_boton(pantalla, "_siguiente").pressed.emit()
+
+
+func test_el_foco_de_las_instrucciones_queda_puesto_y_no_se_dibuja() -> void:  # AC-CFG-028
+	var pantalla := _pantalla()
+	pantalla.mostrar(_mensajes_de_la_primera_jornada())
+	var foco := pantalla.get_viewport().gui_get_focus_owner()
+	assert_object(foco).is_not_null()
+	assert_bool(foco != null and pantalla.is_ancestor_of(foco) and foco.has_focus()).is_true()
+	assert_bool(foco != null and foco.has_focus(true)).is_false()

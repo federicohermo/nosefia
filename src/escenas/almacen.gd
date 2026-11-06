@@ -116,6 +116,9 @@ var compradores_de_la_apertura: Callable = _compradores_de_la_partida
 ## La partida es de la escena y no del ciclo porque también la lee el parte: el ciclo publica lo
 ## que pasó, y quien quiera un número lo pide acá. Sale del guardado: sin guardado, es nueva.
 var _partida := Partida.desde(Guardado.new().cargar())
+## La partida de prueba que pide la URL de la build web, o `null` fuera de ella y sin parámetros.
+var _prueba := PartidaDePrueba.desde_busqueda(ArranqueDePrueba.busqueda_de_la_pagina())
+var _arranque_de_prueba: ArranqueDePrueba
 ## Lo que dura más que la partida: se lee al abrir y se escribe en el momento de cada desbloqueo.
 var _archivo_de_logros := ArchivoDeLogros.new()
 var _logros := _archivo_de_logros.cargar()
@@ -180,6 +183,8 @@ func _ready() -> void:
 	# Acá y no al declararla: quien arma la escena puede reemplazar la partida antes de entrar.
 	_jornada_preparada = _partida.jornada()
 	azar_de_la_apertura.randomize()
+	_arranque_de_prueba = ArranqueDePrueba.new()
+	add_child(_arranque_de_prueba)
 	# La lista de la escena no la nombra: `almacen.tscn` no se mergea y no se toca a mano.
 	_puertas.append($Estructura/puerta_limpieza/CuerpoDeLaHoja)
 	_puertas.append($Estructura/compuerta_mostrador/CuerpoDeLaHoja)
@@ -214,6 +219,7 @@ func _ready() -> void:
 	_atenciones.comprador_llegado.connect(avisos.avisar_llegada)
 	_atenciones.conversacion_iniciada.connect(avisos.iniciar_conversacion)
 	_atenciones.entrega_dicha.connect(_decir_entrega)
+	_atenciones.producto_entregado.connect(_sonar_la_entrega)
 	_caja.lectura_rechazada.connect(avisos.avisar_lectura_rechazada)
 	_investigador.pista_nueva.connect(avisos.avisar_pista.unbind(1))
 	_investigador.pista_nueva.connect(_al_descubrir_una_pista)
@@ -1046,6 +1052,8 @@ func _al_subir_la_persiana(_jornada: int) -> void:
 	_pantalla_del_celular.soltar_los_no_leidos()
 	_reloj.soltar()
 	_jugador.reanudar()
+	# El turno arranca acá y no al abrir la jornada: una copia que el menú descarta también la abre.
+	_arranque_de_prueba.aplicar(_prueba, _reloj, _partida.jornada())
 
 
 ## Deja la partida y carga el menú de inicio. No abre ninguna jornada.
@@ -1186,6 +1194,15 @@ func _decir_entrega(texto: String) -> void:
 	var ventanilla: PuestoDeVentanilla = $Estructura/Ventanilla
 	_hud.decir_comprador(texto)
 	_anclar_en(ventanilla.comprador_visible.global_position)
+
+
+## Un producto entregado suena como al apoyarse, en el apoyo de la ventanilla. Va directo al
+## reproductor: no pasa por el contador de golpes, que cuenta caídas y esto no cae.
+func _sonar_la_entrega(unidad: UnidadDeProducto) -> void:
+	var ventanilla: PuestoDeVentanilla = $Estructura/Ventanilla
+	_audio.reproductor.pedir(
+		EntradaSonora.Evento.OBJETO_SOLTADO, unidad.sonoridad, null, ventanilla.apoyo_de_entregas
+	)
 
 
 func _process(delta: float) -> void:

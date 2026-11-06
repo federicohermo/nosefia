@@ -88,6 +88,10 @@ func _ready() -> void:
 	_logros_pantalla.preparar(ArchivoDeLogros.new().cargar(), CasoDeInvestigacion.de_la_partida())
 	_logros_pantalla.cerrada.connect(_al_cerrar_los_logros)
 	_sonar_el_tema()
+	# Antes de preguntar si hay guardado: la partida de prueba de la URL lo reemplaza.
+	ArranqueDePrueba.escribir_el_guardado(
+		PartidaDePrueba.desde_busqueda(ArranqueDePrueba.busqueda_de_la_pagina()), _guardado
+	)
 	var menu := MenuDeInicio.new(OS.has_feature("web"), _guardado.hay_guardado())
 	_pedidos.preparar(menu, _guardado)
 	for opcion: MenuDeInicio.Opcion in menu.opciones():
