@@ -118,7 +118,7 @@ var compradores_de_la_apertura: Callable = _compradores_de_la_partida
 var _partida := Partida.desde(Guardado.new().cargar())
 ## La partida de prueba que pide la URL de la build web, o `null` fuera de ella y sin parámetros.
 var _prueba := PartidaDePrueba.desde_busqueda(ArranqueDePrueba.busqueda_de_la_pagina())
-var _arranque_de_prueba := ArranqueDePrueba.new()
+var _arranque_de_prueba: ArranqueDePrueba
 ## Lo que dura más que la partida: se lee al abrir y se escribe en el momento de cada desbloqueo.
 var _archivo_de_logros := ArchivoDeLogros.new()
 var _logros := _archivo_de_logros.cargar()
@@ -183,6 +183,7 @@ func _ready() -> void:
 	# Acá y no al declararla: quien arma la escena puede reemplazar la partida antes de entrar.
 	_jornada_preparada = _partida.jornada()
 	azar_de_la_apertura.randomize()
+	_arranque_de_prueba = ArranqueDePrueba.new()
 	add_child(_arranque_de_prueba)
 	# La lista de la escena no la nombra: `almacen.tscn` no se mergea y no se toca a mano.
 	_puertas.append($Estructura/puerta_limpieza/CuerpoDeLaHoja)
