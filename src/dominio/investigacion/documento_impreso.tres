@@ -8,3 +8,4 @@ id = &"documento_impreso"
 nombre = "Documento impreso"
 subtitulo = "Una especie de… ¿nota impresa?"
 levantable = true
+escala_de_examen = 2.2
