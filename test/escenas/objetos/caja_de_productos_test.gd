@@ -48,7 +48,7 @@ const LADO_TOPE := "process/size_limit"
 const ETIQUETA_DE_LA_GONDOLA := "res://assets/models/SEPT_JUEGOS_PROTOTIPO_Actroncito completo.png"
 
 ## Los productos con etiqueta propia, con el archivo del artista del que sale cada una.
-## `caja jorgillata.png` es otra textura de Jorgillo, y no va: va `CAJA JORGILLO.png`.
+## La de Jorgillata es `caja jorgillata.png`: `CAJA JORGILLO.png` todavía dice «Jorgillo».
 const ORIGEN_DE_CADA_ETIQUETA := {
 	Producto.Id.ACTRONCITO: "CAJA ACTRÓNCITO.png",
 	Producto.Id.AMARGADITO: "CAJA AMARGADITO.png",
@@ -61,7 +61,7 @@ const ORIGEN_DE_CADA_ETIQUETA := {
 	Producto.Id.FERNET_GOD: "CAJA FERNET-GOD.png",
 	Producto.Id.FLIM_POF: "CAJA FLIN POF.png",
 	Producto.Id.FROT_LUPS: "CAJA FROTLUPS.png",
-	Producto.Id.JORGILLO: "CAJA JORGILLO.png",
+	Producto.Id.JORGILLO: "caja jorgillata.png",
 	Producto.Id.LAYSNNT: "CAJA LAYSNT´T.png",
 	Producto.Id.MACUMBAS: "CAJA MACUMBAS.png",
 	Producto.Id.MAYONCHIS: "CAJA MAYONCHIS.png",

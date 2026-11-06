@@ -22,7 +22,7 @@ const FAMILIAS := {
 		"Burbaloo",
 		"Durextra",
 		"Duronga",
-		"Jorgillo",
+		"Jorgillata",
 		"Malbardo",
 		"Oremos",
 		"Saladick",
