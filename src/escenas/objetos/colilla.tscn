@@ -11,6 +11,7 @@ size = Vector3(0.1025, 0.019, 0.019)
 [node name="Colilla" type="RigidBody3D" groups=["interactuable"]]
 mass = 0.01
 collision_mask = 9
+continuous_cd = true
 script = ExtResource("colilla")
 datos = ExtResource("datos")
 

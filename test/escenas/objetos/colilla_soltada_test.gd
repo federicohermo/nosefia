@@ -99,6 +99,19 @@ func _lugares_donde_pararse(
 	return lugares
 
 
+## Qué solido tiene justo debajo, para nombrarlo si la colilla se pierde.
+func _que_hay_debajo(almacen: Node3D, colilla: Node3D) -> String:
+	var consulta := PhysicsRayQueryParameters3D.create(
+		colilla.global_position, colilla.global_position + Vector3.DOWN * 4.0
+	)
+	consulta.exclude = [(colilla as CollisionObject3D).get_rid()]
+	var golpe := almacen.get_world_3d().direct_space_state.intersect_ray(consulta)
+	if golpe.is_empty():
+		return "nada"
+	var solido := golpe["collider"] as Node
+	return "`%s/%s` a %.2f" % [solido.get_parent().name, solido.name, golpe["position"].y]
+
+
 func test_la_colilla_soltada_en_cualquier_lugar_del_deposito_queda_sobre_el_piso() -> void:
 	var almacen := await _almacen()
 	var jugador: CharacterBody3D = almacen.get("_jugador")
@@ -125,10 +138,11 @@ func test_la_colilla_soltada_en_cualquier_lugar_del_deposito_queda_sobre_el_piso
 			# Si adelante no hay lugar vuelve a la mano, y vaciarlas la deja a los pies.
 			agarre.vaciar_las_manos()
 			var nacio := colilla.global_position
+			var debajo := _que_hay_debajo(almacen, colilla)
 			await get_tree().physics_frame
 			var donde := (
-				"desde %v mirando %.0f/%.0f, nació en %v y al cuadro siguiente en %v"
-				% [lugar, GIROS[gesto], ALTOS[gesto], nacio, colilla.global_position]
+				"desde %v mirando %.0f/%.0f, nació en %v con %s debajo"
+				% [lugar, GIROS[gesto], ALTOS[gesto], nacio, debajo]
 			)
 			soltadas.append({"colilla": colilla, "donde": donde})
 	for cuadro in CUADROS_DE_REPOSO:
