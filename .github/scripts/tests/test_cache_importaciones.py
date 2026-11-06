@@ -13,6 +13,7 @@ SPEC = importlib.util.spec_from_file_location("cache_importaciones", REPO / ".gi
 cache = importlib.util.module_from_spec(SPEC)
 sys.modules[SPEC.name] = cache
 SPEC.loader.exec_module(cache)
+CAJAS = ("caja_registradora", "lector_de_productos", "ticket_impreso")
 NATIVO = {"receta_sha256": "1" * 64, "binario_sha256": "2" * 64,
           "plataforma": "linux-x86_64", "archivos": {"Godot_v4": "2" * 64}}
 
@@ -126,9 +127,12 @@ class CacheImportacionesTests(unittest.TestCase):
         self.escribir("docs/diagrama.svg.import", 'import_script/path=""\ncompress/mode=2\n')
         self.assertNotEqual(original.key, self.identidad().key)
 
-    def test_importadores_nuevos_cambiados_y_plugins_desactivan(self):
+    def test_importador_cambiado_invalida_y_nuevos_o_plugins_desactivan(self):
+        original = self.identidad()
         self.escribir("assets/models/importar_modelo.gd", "modificado")
-        self.assertFalse(self.identidad().cacheable)
+        cambiado = self.identidad()
+        self.assertTrue(cambiado.cacheable)
+        self.assertNotEqual(original.key, cambiado.key)
         self.escribir("assets/models/importar_modelo.gd", (REPO / "assets/models/importar_modelo.gd").read_text(encoding="utf-8"))
         self.escribir("assets/models/modelo.glb.import", 'import_script/path="res://otro.gd"\n')
         self.assertFalse(self.identidad().cacheable)
@@ -168,7 +172,7 @@ class CacheImportacionesTests(unittest.TestCase):
         self.assertFalse(self.identidad().cacheable)
 
     def preparar_importados(self):
-        for caja in cache.CAJAS:
+        for caja in CAJAS:
             destino = f"res://.godot/imported/{caja}.glb-hash.scn"
             self.escribir(f"assets/models/{caja}.glb.import", f'import_script/path="res://assets/models/importar_caja.gd"\ndest_files=["{destino}"]\n')
             self.escribir(f".godot/imported/{caja}.glb-hash.scn", "escena vieja")
@@ -182,7 +186,7 @@ class CacheImportacionesTests(unittest.TestCase):
         self.preparar_importados()
         eliminados = cache.preparar_verificacion(self.raiz, True)
         self.assertEqual(len(eliminados), 6)
-        for caja in cache.CAJAS:
+        for caja in CAJAS:
             self.assertEqual((self.raiz / f"assets/models/{caja}.res").read_text(encoding="utf-8"), "versionado actual")
         for nombre in (".godot/imported/SEPT.glb-hash.scn", ".godot/uid_cache.bin", "reports/results.xml"):
             self.assertTrue((self.raiz / nombre).exists())
