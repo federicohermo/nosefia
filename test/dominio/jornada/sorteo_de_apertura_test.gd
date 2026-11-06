@@ -111,8 +111,9 @@ func test_con_mas_elegibles_que_tipos_faltan_exactamente_esos_tipos() -> void:  
 func test_con_exactamente_los_tipos_que_faltan_como_elegibles_faltan_todos() -> void:  # AC-STK-034
 	var minimo := ReglasDelEstante.MENOS_QUE_FALTA
 	var elegibles: Dictionary[Producto.Id, int] = {}
-	for producto in Catalogo.todos().slice(0, ReglasDelEstante.TIPOS_QUE_FALTAN):
-		elegibles[producto.id] = minimo
+	var todos := Catalogo.todos()
+	for indice in ReglasDelEstante.TIPOS_QUE_FALTAN:
+		elegibles[todos[indice].id] = minimo
 	for semilla in 200:
 		assert_dict(Apertura.faltantes_al_azar({}, elegibles, _azar(semilla))).is_equal(elegibles)
 
