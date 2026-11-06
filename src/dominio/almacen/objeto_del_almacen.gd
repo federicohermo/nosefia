@@ -48,9 +48,9 @@ const SIN_ID := &""
 ## dice nada.
 @export var subtitulo: String = ""
 
-## Cuántas veces su tamaño de mundo se ve al examinarlo. Un papel mide pocos centímetros y su texto
-## no se lee a la distancia de examen de siempre: crece, y no se acerca más, para que girarlo no
-## meta una esquina adentro de la cámara.
+## Cuántas veces crece la escala del cuerpo al examinarlo. Un papel mide pocos centímetros y su
+## texto no se lee a la distancia de examen de siempre: crece, y no se acerca más, para que girarlo
+## no meta una esquina adentro de la cámara.
 @export var escala_de_examen: float = 1.0
 
 
