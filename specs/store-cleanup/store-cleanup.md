@@ -3,7 +3,7 @@ schema_version: 1
 capability_id: CAP-CLN
 status: ratified
 owner: por definir
-provenance: GDD «Limpiar» y «Sacar la basura»; fichas «9. Tarea: Limpieza», «Particulares de cada jornada» y «Contenedor de basura»; decisiones de #370 y #372; migración de los specs 010, 015, 043; ajustes del dueño sobre duración de la mopa, mezcla, enjuague y agua temporal; fichas Limpieza, Particulares y Contenedor revisadas el 2026-10-15; decisiones de #425; anomalía J2 y sustitución por Poético de #432, 2026-10-15; ocho jornadas de #526; cuartito de limpieza de #541; exención de Poético en el desorden de #517, ficha «Llamados de atención extra» revisada el 2026-10-20; exención de ticket, pista, bolsa y producto vencido de #516; heladeras abiertas al cierre de #550, decisión del 2026-10-26; útiles fuera del contenedor de #552, ficha «Contenedor de basura» revisada el 2026-10-20; útil en la mano al cierre cuenta como guardado de #386, decisión del 2026-10-26; manchas de las jornadas 6 a 8 de #457, ficha Limpieza revisada el 2026-10-20
+provenance: GDD «Limpiar» y «Sacar la basura»; fichas «9. Tarea: Limpieza», «Particulares de cada jornada» y «Contenedor de basura»; decisiones de #370 y #372; migración de los specs 010, 015, 043; ajustes del dueño sobre duración de la mopa, mezcla, enjuague y agua temporal; fichas Limpieza, Particulares y Contenedor revisadas el 2026-10-15; decisiones de #425; anomalía J2 y sustitución por Poético de #432, 2026-10-15; ocho jornadas de #526; cuartito de limpieza de #541; exención de Poético en el desorden de #517, ficha «Llamados de atención extra» revisada el 2026-10-20; exención de ticket, pista, bolsa y producto vencido de #516; heladeras abiertas al cierre de #550, decisión del 2026-10-26; útiles fuera del contenedor de #552, ficha «Contenedor de basura» revisada el 2026-10-20; útil en la mano al cierre cuenta como guardado de #386, decisión del 2026-10-26; manchas de las jornadas 6 a 8 de #457, ficha Limpieza revisada el 2026-10-20; el contenedor abierto desecha desde cuerpo y tapa de #868, ficha GJ-84
 ---
 
 # Capacidad: dejar el local en orden
@@ -450,7 +450,7 @@ de todos ellos, por encima del alcance de la mira. Las posiciones se derivan del
 
 DADO una bolsa soltada en el piso a menos de 1 metro del contenedor o por su boca física
 CUANDO queda suelta ENTONCES no cuenta y se puede recoger. CUANDO después se la tira con el
-primario sobre el cuerpo completamente abierto ENTONCES sí cuenta; sobre la tapa no deposita.
+primario sobre el cuerpo o sobre la tapa completamente abiertos ENTONCES sí cuenta; con la tapa no abierta, no.
 
 ### AC-CLN-011 — El orden y la idempotencia *(verifica BR-CLN-010)*
 
@@ -611,7 +611,7 @@ muestra ambos líquidos durante la transición y termina con el color del jabón
 agua acepta inmediatamente mojar la mopa de ese jabón. Una actualización repetida no reinicia
 la transición; un uso rechazado no la dispara. Vaciar o abrir otra jornada cancela la mezcla.
 
-### AC-CLN-034 — La tapa alterna sin desechar *(verifica BR-CLN-025)*
+### AC-CLN-034 — La tapa alterna salvo abierta del todo con algo en la mano *(verifica BR-CLN-025)*
 
 DADO el contenedor al abrir ENTONCES tiene la tapa abierta. DADO mano vacía CUANDO se
 hace primario sobre la tapa abierta ENTONCES gira para cerrar; otro primario invierte el giro.
@@ -621,7 +621,7 @@ y colisión acompañan ambos estados y el movimiento; un objeto en el recorrido 
 cierre sin atravesarlo ni comprimirlo y retirarlo permite continuar. Dividir el tiempo entre
 cuadros conserva el giro y abrir otra jornada restaura la tapa abierta.
 
-### AC-CLN-035 — Sólo el cuerpo plenamente abierto recibe *(verifica BR-CLN-025, BR-CLN-026)*
+### AC-CLN-035 — Cuerpo y tapa abiertos del todo reciben; cerrados o girando, no *(verifica BR-CLN-025, BR-CLN-026)*
 
 DADO una bolsa sostenida y tapa cerrada o girando CUANDO se hace primario sobre el cuerpo
 ENTONCES la bolsa sigue sostenida y no cuenta. Terminar de abrir no la tira; el primario

@@ -3,7 +3,7 @@ schema_version: 1
 capability_id: CAP-PLY
 status: ratified
 owner: por definir
-provenance: GDD «Controles»; fichas «8. Tarea: Reposición», «Notas», «Interfaces virtuales durante la jornada» y «Referencia de controles»; decisiones de #368, #369, #370, #373 y #382; migración de los specs 003, 004, 006, 014, 034, 043; fichas de interacción, limpieza y basura revisadas el 2026-10-15; decisiones de #425, bordes de GJ-52 (#428) e interacción directa con compradores (#429); ocho jornadas de #526; cuartito de limpieza de #541; depósito trabado en la jornada 1 y baño abierto en todas de #574; salida voluntaria de #573; ticket escrito de #580; agacharse de #177; empuje de útiles y bolsas de #563; hoja que se frena con lo pesado de #218; patada a la unidad de #219; compuerta del mostrador empujada de #695; Esc que sale de las interfaces de #607; joystick de #380; la fila «7B» de la lista de pistas e hipótesis y la fila «Palanca» de «Objetos interactuables», de #790; la fila «Llave» de «Objetos interactuables», de #810
+provenance: GDD «Controles»; fichas «8. Tarea: Reposición», «Notas», «Interfaces virtuales durante la jornada» y «Referencia de controles»; decisiones de #368, #369, #370, #373 y #382; migración de los specs 003, 004, 006, 014, 034, 043; fichas de interacción, limpieza y basura revisadas el 2026-10-15; decisiones de #425, bordes de GJ-52 (#428) e interacción directa con compradores (#429); ocho jornadas de #526; cuartito de limpieza de #541; depósito trabado en la jornada 1 y baño abierto en todas de #574; salida voluntaria de #573; ticket escrito de #580; agacharse de #177; empuje de útiles y bolsas de #563; hoja que se frena con lo pesado de #218; patada a la unidad de #219; compuerta del mostrador empujada de #695; Esc que sale de las interfaces de #607; joystick de #380; la fila «7B» de la lista de pistas e hipótesis y la fila «Palanca» de «Objetos interactuables», de #790; la fila «Llave» de «Objetos interactuables», de #810; la tapa del contenedor que ofrece lo mismo que el cuerpo de #868, ficha GJ-84
 ---
 
 # Capacidad: lo que el empleado puede hacer
@@ -1265,7 +1265,8 @@ DADO tacho sin bolsa u objeto sostenido ENTONCES no ofrece extracción.
 DADO una bolsa sostenida y el cuerpo del contenedor enfocado CUANDO se consulta ENTONCES
 ofrece Interactuar por primario, sin Dejar ni acción secundaria. DADO la tapa abierta
 del todo y la bolsa sostenida ENTONCES ofrece lo mismo que el cuerpo. DADO la tapa abierta y la
-mano vacía ENTONCES ofrece Cerrar por primario; cerrada o girando, Abrir, también con la bolsa.
+mano vacía ENTONCES ofrece Cerrar por primario. DADO la tapa cerrada, también con la bolsa, ENTONCES
+ofrece Abrir. Mientras gira, ofrece la acción que invierte el giro: Cerrar si abre, Abrir si cierra.
 Pulsar la tapa cerrada conserva la bolsa sin desecharla; pulsar el cuerpo con tapa cerrada
 rechaza sin soltar.
 

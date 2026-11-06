@@ -6,7 +6,7 @@ const L := ReferenciaDeControles.Linea
 const M := ReferenciaDeControles.Mira
 
 
-func test_la_tapa_abierta_con_algo_en_la_mano_ofrece_lo_mismo_que_el_cuerpo() -> void:  # AC-CLN-036
+func test_la_tapa_abierta_con_algo_en_la_mano_ofrece_lo_mismo_que_el_cuerpo() -> void:  # AC-PLY-086
 	var cuerpo := R.contexto_del_contenedor(true)
 	var tapa := R.contexto_de_la_tapa(true, true, true)
 	assert_array(R.lineas(true, M.FIJO, tapa, false)).contains_exactly(
