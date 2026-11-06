@@ -454,7 +454,7 @@ no implica renombrar productos.
 | Mitad de snacks dulces junto a cereales, primera isla | Macumbas, Pepitos (Pepito) |
 | Lado de snacks dulces, segunda isla | Oremos, Petisas, Cosa de Maní, Feel Ricky Fort |
 | Lado/cabecera de snacks salados, isla de snacks | Donsaturados (Don Saturados), Prongles (Progres), Chisitos, Laysntt (Laysnnt), Saladik (Saladick) |
-| Cabeceras de golosinas, isla de snacks | Burbaloo, Flinpuf (Flim Pof), Jorgillo |
+| Cabeceras de golosinas, isla de snacks | Burbaloo, Flinpuf (Flim Pof), Jorgillata |
 
 La primera isla DEBE reunir almacén, cereales y la mitad de snacks dulces junto a cereales,
 con bebidas sin refrigerar en una cabecera. La segunda DEBE reunir los otros snacks dulces,
@@ -549,7 +549,7 @@ reposición DEBEN consumir los mismos pedidos fijos de la única lista construid
 
 HASTA la jornada anterior a la primera completa, el sistema DEBE tener únicamente los
 dieciséis productos del mapa de prueba. Sus identidades son Actroncito, Duronga, Arvecor,
-Marolini, Zucarachas, Malbardo, Progres, Jorgillo, Pepito, Pura-Cola, Don Saturados, Petisas,
+Marolini, Zucarachas, Malbardo, Progres, Jorgillata, Pepito, Pura-Cola, Don Saturados, Petisas,
 Mayonchis, Poético, Terminator y Fernet God, con sus nombres de catálogo vigentes.
 
 Los otros productos NO DEBEN tener unidades en góndola o depósito, cajas visibles, cuerpos
@@ -573,7 +573,7 @@ los mismos productos del mapa de prueba, sin estantes vacíos:
 | Cabecera opuesta de esa isla | Fernet God |
 | Lado de dulces de la segunda isla | Pepito y Petisas |
 | Lado de salados de la segunda isla | Progres y Don Saturados |
-| Cabecera que conserva Jorgillo en el mapa completo | Jorgillo |
+| Cabecera que conserva Jorgillata en el mapa completo | Jorgillata |
 | Cabecera opuesta de la segunda isla | Malbardo |
 | Estantería de no comestibles | Actroncito y Duronga |
 | Primera heladera funcional | Pura-Cola |
