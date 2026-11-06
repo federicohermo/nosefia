@@ -100,6 +100,27 @@ size = Vector3(0.480001, 2.280436, 2.174)
 [sub_resource type="BoxShape3D" id="contorno_de_gondola_del_fondo_sur"]
 size = Vector3(0.852138, 2.294011, 1.850017)
 
+[sub_resource type="BoxShape3D" id="contorno_del_mueble_continuo_montanteizquierdo"]
+size = Vector3(0.379, 3.397805, 0.944824)
+
+[sub_resource type="BoxShape3D" id="contorno_del_mueble_continuo_montantedelmedio"]
+size = Vector3(0.379, 3.397805, 0.944824)
+
+[sub_resource type="BoxShape3D" id="contorno_del_mueble_continuo_montantederecho"]
+size = Vector3(0.379, 3.397805, 0.944824)
+
+[sub_resource type="BoxShape3D" id="contorno_del_mueble_continuo_cabeceradelasheladeras"]
+size = Vector3(3.27, 0.707, 0.944824)
+
+[sub_resource type="BoxShape3D" id="contorno_del_mueble_continuo_cabeceradelagondola"]
+size = Vector3(2.174, 0.907, 0.944824)
+
+[sub_resource type="BoxShape3D" id="contorno_del_mueble_continuo_zocalodelagondola"]
+size = Vector3(2.174, 0.209805, 0.944824)
+
+[sub_resource type="BoxShape3D" id="contorno_del_mueble_continuo_fondodelagondola"]
+size = Vector3(2.174, 2.281, 0.469)
+
 [sub_resource type="BoxShape3D" id="suelo_local"]
 size = Vector3(10.574003, 0.206508, 14.65329)
 
@@ -3821,6 +3842,39 @@ collision_mask = 0
 [node name="Forma" type="CollisionShape3D" parent="gondolanueva_001/Contorno"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.43, -0.029782, 0)
 shape = SubResource("contorno_de_gondola_del_fondo_norte")
+
+[node name="Contorno" type="StaticBody3D" parent="mueble_continuo"]
+collision_layer = 8
+collision_mask = 0
+editor_description = "Montantes y cabeceras de madera de la fachada del fondo. Deja libres los huecos de las heladeras y el de la góndola."
+
+[node name="MontanteIzquierdo" type="CollisionShape3D" parent="mueble_continuo/Contorno"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.2705, 1.801098, -7.397588)
+shape = SubResource("contorno_del_mueble_continuo_montanteizquierdo")
+
+[node name="MontanteDelMedio" type="CollisionShape3D" parent="mueble_continuo/Contorno"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.3785, 1.801098, -7.397588)
+shape = SubResource("contorno_del_mueble_continuo_montantedelmedio")
+
+[node name="MontanteDerecho" type="CollisionShape3D" parent="mueble_continuo/Contorno"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.9315, 1.801098, -7.397588)
+shape = SubResource("contorno_del_mueble_continuo_montantederecho")
+
+[node name="CabeceraDeLasHeladeras" type="CollisionShape3D" parent="mueble_continuo/Contorno"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.446, 3.1465, -7.397588)
+shape = SubResource("contorno_del_mueble_continuo_cabeceradelasheladeras")
+
+[node name="CabeceraDeLaGondola" type="CollisionShape3D" parent="mueble_continuo/Contorno"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.655, 3.0465, -7.397588)
+shape = SubResource("contorno_del_mueble_continuo_cabeceradelagondola")
+
+[node name="ZocaloDeLaGondola" type="CollisionShape3D" parent="mueble_continuo/Contorno"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.655, 0.207097, -7.397588)
+shape = SubResource("contorno_del_mueble_continuo_zocalodelagondola")
+
+[node name="FondoDeLaGondola" type="CollisionShape3D" parent="mueble_continuo/Contorno"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.655, 1.4525, -7.6355)
+shape = SubResource("contorno_del_mueble_continuo_fondodelagondola")
 
 [node name="Fernetgod" parent="gondolanueva" groups=["geometria_de_referencia"]]
 visible = false
