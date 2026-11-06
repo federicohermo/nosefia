@@ -96,7 +96,7 @@ func test_el_celular_sube_tras_la_espera_despues_de_la_persiana() -> void:  # AC
 
 
 func test_la_persiana_de_la_tercera_noche_pasa_la_mitad_a_mitad_de_tiempo() -> void:  # AC-EMP-118
-	var almacen := await _cerrada(COMPLETA - 1)
+	var almacen := await _cerrada(COMPLETA)
 	assert_bool(_persiana(almacen).get("_bajando")).is_true()
 	assert_float(AvanceDeDevolucion.bajado_a_la_mitad_del_tiempo(_persiana(almacen))).is_greater(
 		0.5
