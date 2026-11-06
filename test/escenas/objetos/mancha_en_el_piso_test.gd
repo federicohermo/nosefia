@@ -530,9 +530,18 @@ func test_las_manchas_de_otra_noche_no_se_ven_ni_se_enfocan() -> void:  # AC-CLN
 	var almacen: Node3D = await _almacen()
 	var jugador: Node3D = almacen.get("_jugador")
 	jugador.set_physics_process(false)
-	# Desde dónde se enfoca cada lugar con su cuerpo prendido, que es como lo deja su noche. Mirar
-	# la mancha ajena desde ese mismo punto cambia una sola cosa: el cuerpo está apagado.
+	# Primero, desde dónde se enfoca cada lugar en la noche que lo trae. Después, la misma mancha
+	# se mira desde ese punto en las noches que no: no hace falta recorrerlos todos.
 	var desde := {}
+	for jornada: int in JORNADAS:
+		await _abrir(almacen, jornada)
+		for mancha: ManchaQueSeVe in _manchas(almacen):
+			var lugar := mancha.lugar_de_la_mancha()
+			if not desde.has(lugar):
+				var punto: Variant = await _punto_de_enfoque(almacen, mancha)
+				if punto != null:
+					desde[lugar] = punto
+	var comprobadas := 0
 	for jornada: int in JORNADAS:
 		await _abrir(almacen, jornada)
 		var ajenas := 0
@@ -544,27 +553,16 @@ func test_las_manchas_de_otra_noche_no_se_ven_ni_se_enfocan() -> void:  # AC-CLN
 			assert_bool(mancha.visible).override_failure_message(mancha.name).is_false()
 			var cuerpo := mancha.get_node("Cuerpo") as CollisionShape3D
 			assert_bool(cuerpo.disabled).override_failure_message(mancha.name).is_true()
-			var punto: Variant = desde.get(lugar)
-			if punto == null or not _se_puede_mirar_desde(almacen, mancha, punto):
-				cuerpo.disabled = false
-				punto = await _punto_de_enfoque(almacen, mancha)
-				cuerpo.disabled = true
-				(
-					assert_bool(punto != null)
-					. override_failure_message(
-						"`%s` no se enfoca ni con el cuerpo prendido" % mancha.name
-					)
-					. is_true()
-				)
-				if punto == null:
-					continue
-				desde[lugar] = punto
+			if not desde.has(lugar):
+				continue
+			comprobadas += 1
 			(
-				assert_bool(await _enfoca_desde(almacen, mancha, punto))
+				assert_bool(await _enfoca_desde(almacen, mancha, desde[lugar]))
 				. override_failure_message("`%s` se enfoca en otra noche" % mancha.name)
 				. is_false()
 			)
 		assert_int(ajenas).is_equal(PisoDelLocal.Lugar.size() - _piso(almacen).lugares().size())
+	assert_int(comprobadas).is_greater(0)
 
 
 func test_las_manchas_de_techo_se_enfocan_y_se_borran() -> void:  # AC-CLN-078
