@@ -119,7 +119,7 @@ listar todos los finales de la partida, entre ellos «Locura paranoica», con su
 ### BR-ACH-014 — Una entrada desbloqueada muestra, una bloqueada pregunta
 
 Una entrada desbloqueada DEBE mostrar su imagen pequeña y su nombre. Una pista descubierta muestra
-su foto y el texto de su nota. Una entrada bloqueada DEBE mostrar la imagen de signo de pregunta y el
+su foto y el título de su hipótesis, no el texto de su nota. Una entrada bloqueada DEBE mostrar la imagen de signo de pregunta y el
 texto «?????» en lugar de su nombre. Los nombres con «¿», «¡» y «…» DEBEN verse enteros.
 
 ### BR-ACH-015 — La pantalla se abre del menú de inicio y de la pausa
@@ -210,7 +210,7 @@ por cada pista del caso que deja nota: una pista sin foto ni texto no tiene entr
 
 DADO un logro desbloqueado ENTONCES su entrada muestra su imagen y su nombre. DADO uno bloqueado
 ENTONCES muestra el signo de pregunta y «?????». DADO una pista descubierta ENTONCES muestra su foto
-y el texto de su nota; sin descubrir, el signo de pregunta. DADO un final alcanzado y uno no
+y el título de la hipótesis que esa pista habilita, nunca el texto de su nota; sin descubrir, el signo de pregunta. DADO un final alcanzado y uno no
 ENTONCES lo mismo. Los nombres con «¿», «¡» y «…» se ven enteros con la fuente del tema.
 
 ### AC-ACH-014 — Se abre del menú de inicio y de la pausa *(verifica BR-ACH-015)*
