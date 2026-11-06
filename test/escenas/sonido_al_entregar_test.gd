@@ -44,8 +44,10 @@ func _anotar(evento: EntradaSonora.Evento) -> void:
 func _atender() -> Atencion:
 	var atenciones: Ventanilla = _almacen.get("_atenciones")
 	RelojDePrueba.avanzar_hasta(_almacen.get("_reloj"), Vector2i(20, 30))
-	while atenciones.atencion().abre_la_ventanilla():
+	atenciones.pedir_interaccion(null)
+	while not atenciones.puede_abandonar():
 		atenciones.pedir_interaccion(null)
+	assert_bool(atenciones.atencion().conversacion_iniciada()).is_true()
 	return atenciones.atencion()
 
 
