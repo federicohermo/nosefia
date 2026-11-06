@@ -260,11 +260,7 @@ func test_la_tercera_jornada_pide_del_catalogo_completo() -> void:  # AC-CTR-071
 	var vendibles: Array[Producto.Id] = []
 	for producto in Catalogo.de_la_jornada(TERCERA):
 		vendibles.append(producto.id)
-	var esperados: Array[Producto.Id] = []
-	for id: Producto.Id in Producto.Id.values():
-		if not Catalogo.SOLO_CAJAS.has(id):
-			esperados.append(id)
-	assert_array(vendibles).contains_exactly(esperados)
+	assert_array(vendibles).contains_exactly(Producto.Id.values())
 	for semilla in range(1, SEMILLAS + 1):
 		for comprador in Compradores.de_la_jornada(TERCERA, semilla):
 			for producto in comprador.pedido().productos():

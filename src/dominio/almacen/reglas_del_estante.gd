@@ -28,6 +28,7 @@ const UNIDADES_POR_CAJA := 8
 ## «Particulares de cada jornada» dice cinco, entre las de su góndola.
 const CINDOLOR_VENCIDOS := 5
 
-## Intervalos inclusivos de la ficha de reposición.
-const TIPOS_QUE_FALTAN := Vector2i(4, 6)
+## Cuántos productos distintos faltan cada noche, y el mínimo de unidades que falta de cada uno,
+## según la ficha de reposición.
+const TIPOS_QUE_FALTAN := 4
 const MENOS_QUE_FALTA := 3

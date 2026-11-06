@@ -33,11 +33,7 @@ func test_las_dos_jornadas_de_prueba_tienen_sus_dieciseis_productos() -> void:  
 
 func test_desde_la_tercera_jornada_se_recupera_el_catalogo_completo() -> void:  # AC-STK-095
 	for jornada: int in [3, 4, 7]:
-		var esperados: Array[int] = []
-		for id: Producto.Id in Producto.Id.values():
-			if not Catalogo.SOLO_CAJAS.has(id):
-				esperados.append(id)
-		assert_array(_ids(Catalogo.de_la_jornada(jornada))).contains_exactly(esperados)
+		assert_array(_ids(Catalogo.de_la_jornada(jornada))).contains_exactly(Producto.Id.values())
 
 
 func test_los_pedidos_de_cada_jornada_de_prueba_solo_incluyen_presentes() -> void:  # AC-STK-099

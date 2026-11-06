@@ -3,7 +3,7 @@ schema_version: 1
 capability_id: CAP-STK
 status: ratified
 owner: por definir
-provenance: GDD «Reponer» y «Registrar»; fichas «7. Tarea: Registro de productos vendidos», «8. Tarea: Reposición», «5. Formas de interacción con objetos» y «Particulares de cada jornada»; decisiones de #366, #367, #369, #376 y #425; base «Productos y cajas contenedoras»; migración de los specs 005, 008, 033, 042, 047; Mapa de góndolas y comentario de Tiago del 2026-10-15 a las 18:25 UTC que conserva Duronga en exhibición provisional (#434); decisión del dueño de #434 — Actroncito y Prongles conservan dos hileras y rige la lista de cinco del arte vigente; pedidos fijos y activación J2 de #433 y #444; ocho jornadas de #526; mapas de prueba y completo del 20/10/2026 (#575); Duronga en lugar de Durextra en las jornadas de prueba y compras de Fede en la jornada 2 (#605); decisión del dueño de #645 — sólo los productos de una sola fila conservan una unidad y pasan el vacío al estante vecino; correcciones y protección del aire y de los márgenes de cabeceras y laterales pedidas por el dueño en #621; paso uniforme entre productos de un estante y aire de Terminator pedidos por el dueño tras probar #621; compras físicas, pedidos sorteados y registro de las jornadas 3 a 5 de #459; registro de las noches de prueba con sólo los productos presentes (#625); cajas que amanecen donde el jugador las dejó, de la ficha «8. Tarea: Reposición» (#555); la unidad en la mano al cierre cuenta como puesta (#386); planilla en orden alfabético (#567); las cajas del pedido al proveedor y la pila del fondo, de #691
+provenance: GDD «Reponer» y «Registrar»; fichas «7. Tarea: Registro de productos vendidos», «8. Tarea: Reposición», «5. Formas de interacción con objetos» y «Particulares de cada jornada»; decisiones de #366, #367, #369, #376 y #425; base «Productos y cajas contenedoras»; migración de los specs 005, 008, 033, 042, 047; Mapa de góndolas y comentario de Tiago del 2026-10-15 a las 18:25 UTC que conserva Duronga en exhibición provisional (#434); decisión del dueño de #434 — Actroncito y Prongles conservan dos hileras y rige la lista de cinco del arte vigente; pedidos fijos y activación J2 de #433 y #444; ocho jornadas de #526; mapas de prueba y completo del 20/10/2026 (#575); Duronga en lugar de Durextra en las jornadas de prueba y compras de Fede en la jornada 2 (#605); decisión del dueño de #645 — sólo los productos de una sola fila conservan una unidad y pasan el vacío al estante vecino; correcciones y protección del aire y de los márgenes de cabeceras y laterales pedidas por el dueño en #621; paso uniforme entre productos de un estante y aire de Terminator pedidos por el dueño tras probar #621; compras físicas, pedidos sorteados y registro de las jornadas 3 a 5 de #459; registro de las noches de prueba con sólo los productos presentes (#625); cajas que amanecen donde el jugador las dejó, de la ficha «8. Tarea: Reposición» (#555); la unidad en la mano al cierre cuenta como puesta (#386); planilla en orden alfabético (#567); las cajas del pedido al proveedor, de #691
 ---
 
 # Capacidad: la mercadería del almacén
@@ -37,7 +37,7 @@ depósito son dos lugares distintos, y mover mercadería del fondo al estante cu
 | **Faltante** | un producto con algún casillero vacío en su fila de adelante | agotado, sin stock |
 | **Faltantes de la jornada** | cuántas unidades de cada producto faltan en la góndola cuando abre una jornada | pedido, reposición |
 | **Máximo reponible** | el menor entre los casilleros de la tanda reponible de un producto y las unidades de una caja menos sus unidades pedidas esa noche | cupo, vendibles |
-| **Producto elegible** | producto del catálogo cuyo máximo reponible es al menos una unidad | producto sorteado |
+| **Producto elegible** | producto del catálogo cuyo máximo reponible es al menos 3 unidades | producto sorteado |
 | **Vendibles** | lo que queda en la caja menos lo que a la góndola todavía le falta de ella: el depósito menos el mayor entre los casilleros vacíos de la fila de adelante y las unidades afuera | stock, disponible |
 | **Planilla** | la lista donde el jugador anota cuántas unidades se vendieron de cada producto | registro de caja, ticket |
 | **Lo vendido** | las unidades de un producto que salieron en ventas cobradas esa noche | stock, ventas del día |
@@ -229,8 +229,8 @@ góndola son huecos, y reponer queda cumplida cuando están todos llenos.
 Retomar la jornada 1 desde el menú DEBE abrirla completa otra vez.
 La jornada 2 DEBE abrir con su inventario nuevo y sus faltantes sorteados.
 Los huecos dejados por ventas en la jornada 1 NO DEBEN pasar a la siguiente.
-DEBE elegir entre 4 y 6 productos distintos y, de cada uno, entre 3 unidades y su máximo
-reponible. Ningún otro producto DEBE faltar. Los intervalos son los de la
+DEBE elegir cuatro productos distintos, ni más ni menos, y, de cada uno, entre 3 unidades y su
+máximo reponible. Ningún otro producto DEBE faltar. La cantidad y el intervalo son los de la
 [ficha «8. Tarea: Reposición»](https://app.notion.com/p/3cc86efecd9d81968a25c7cffca4b0dd).
 
 Para cada producto, el máximo reponible DEBE ser `mínimo(C − P, F)`: `C` son las unidades de una
@@ -243,10 +243,10 @@ DEBEN entrar al sorteo. Los pedidos DEBEN ser los mismos que recibe la atención
 incluidas las repeticiones de producto entre compradores. Consultarlos NO DEBE volver a sortear
 compradores ni pedidos.
 
-La cantidad de productos y las unidades de cada elegido DEBEN sortearse con reparto parejo
-entre los enteros de sus intervalos inclusivos. Los productos DEBEN elegirse sin repetición.
-SI hay menos elegibles que la cantidad sorteada, ENTONCES DEBEN faltar todos los elegibles
-y ninguno más. Con cero elegibles NO DEBE faltar nada.
+La cantidad de productos NO se sortea: sólo se sortea cuáles. Las unidades de cada elegido
+DEBEN sortearse con reparto parejo entre los enteros de su intervalo inclusivo. Los productos
+DEBEN elegirse sin repetición. SI hay menos de cuatro elegibles, ENTONCES DEBEN faltar todos
+los elegibles y ninguno más. Con cero elegibles NO DEBE faltar nada.
 
 El sistema DEBE recibir la fuente de azar: con la misma semilla inicial, pedidos y casilleros,
 DEBE producir los mismos faltantes y dejar vacíos los mismos casilleros. En juego, la fuente DEBE inicializarse al azar.
@@ -426,9 +426,14 @@ y AC-STK-111 a AC-STK-113.
 
 MIENTRAS queda turno y la jornada declara ordenar las cajas, el sistema DEBE contar esa
 obligatoria como cumplida si cada caja está suelta y su cadena de apoyos termina en un pallet
-de las tres estanterías del depósito. Una caja sostenida —también examinada desde la mano— o
-apoyada sobre una caja sostenida NO DEBE contar como ordenada.
-Un pallet del piso NO DEBE contar como estantería. Una cadena que termina en otra superficie,
+de las tres estanterías del depósito. Una única caja que no cumple esa condición DEBE contar
+como apoyada en una estantería si está sostenida —también examinada desde la mano— o apoyada
+en el local (BR-CLN-027), en cualquier superficie suya. Dos o más cajas fuera de las
+estanterías NO DEBEN ordenar, aunque una esté en la mano y otra en el local. Una caja apoyada
+sobre la sostenida o sobre la del local NO DEBE contar como ordenada.
+Un pallet del piso NO DEBE contar como estantería. Una caja en el piso del depósito, en el
+pallet del piso, en el baño, en el cuartito o afuera NO DEBE contar como la excepción. Una
+cadena que termina en otra superficie,
 en una caja ausente o en un ciclo NO DEBE contar como ordenada. Una lista vacía DEBE contestar
 que está ordenada. CUANDO una caja deja de cumplir la condición, el sistema DEBE descumplir
 ordenar; recuperar la condición DEBE volver a cumplirla. Con el turno cerrado, mover cajas NO
@@ -454,7 +459,7 @@ no implica renombrar productos.
 | Mitad de snacks dulces junto a cereales, primera isla | Macumbas, Pepitos (Pepito) |
 | Lado de snacks dulces, segunda isla | Oremos, Petisas, Cosa de Maní, Feel Ricky Fort |
 | Lado/cabecera de snacks salados, isla de snacks | Donsaturados (Don Saturados), Prongles (Progres), Chisitos, Laysntt (Laysnnt), Saladik (Saladick) |
-| Cabeceras de golosinas, isla de snacks | Burbaloo, Flinpuf (Flim Pof), Jorgillo |
+| Cabeceras de golosinas, isla de snacks | Burbaloo, Flinpuf (Flim Pof), Jorgillata |
 
 La primera isla DEBE reunir almacén, cereales y la mitad de snacks dulces junto a cereales,
 con bebidas sin refrigerar en una cabecera. La segunda DEBE reunir los otros snacks dulces,
@@ -549,7 +554,7 @@ reposición DEBEN consumir los mismos pedidos fijos de la única lista construid
 
 HASTA la jornada anterior a la primera completa, el sistema DEBE tener únicamente los
 dieciséis productos del mapa de prueba. Sus identidades son Actroncito, Duronga, Arvecor,
-Marolini, Zucarachas, Malbardo, Progres, Jorgillo, Pepito, Pura-Cola, Don Saturados, Petisas,
+Marolini, Zucarachas, Malbardo, Progres, Jorgillata, Pepito, Pura-Cola, Don Saturados, Petisas,
 Mayonchis, Poético, Terminator y Fernet God, con sus nombres de catálogo vigentes.
 
 Los otros productos NO DEBEN tener unidades en góndola o depósito, cajas visibles, cuerpos
@@ -573,7 +578,7 @@ los mismos productos del mapa de prueba, sin estantes vacíos:
 | Cabecera opuesta de esa isla | Fernet God |
 | Lado de dulces de la segunda isla | Pepito y Petisas |
 | Lado de salados de la segunda isla | Progres y Don Saturados |
-| Cabecera que conserva Jorgillo en el mapa completo | Jorgillo |
+| Cabecera que conserva Jorgillata en el mapa completo | Jorgillata |
 | Cabecera opuesta de la segunda isla | Malbardo |
 | Estantería de no comestibles | Actroncito y Duronga |
 | Primera heladera funcional | Pura-Cola |
@@ -633,29 +638,12 @@ subconjunto presente esa noche (BR-STK-046). Dos nombres que sólo difieren en m
 tildes DEBEN conservar el orden del catálogo entre sí. Ordenar la planilla NO DEBE cambiar
 qué productos tiene, sus precios ni lo anotado en cada fila.
 
-### BR-STK-054 — Siete productos existen sólo como caja del depósito
-
-El catálogo DEBE tener, además de los treinta y dos productos de BR-STK-046, siete productos que
-existen sólo como caja del depósito: Sei Tuqui, La Monteloca, Frigordo, Gringo, Masticul, Cofloco
-y Chocolocas. Cada uno DEBE tener su fila (BR-STK-002), su tamaño de caja y su sonoridad
-(BR-STK-023): chica y envoltorio plástico Sei Tuqui, La Monteloca, Masticul y Cofloco; grande y
-caja Frigordo, Gringo y Chocolocas. Cada caja DEBE llevar la etiqueta de su producto y decir su
-subtítulo al examinarla. Desde la primera jornada completa, cada una DEBE abrir con las unidades
-de una caja llena en el depósito (BR-STK-004), salvo la que salga en el sorteo de BR-STK-055.
-Hasta la jornada anterior NO DEBEN existir (BR-STK-046).
-
-Estos siete NO DEBEN tener góndola, unidades sueltas, cupo ni casilleros; NO DEBEN aparecer en la
-lista de ventas ni en el programa de la caja; NO DEBEN entrar en el pedido de ningún comprador ni
-en los faltantes de ninguna noche. Una unidad de estos productos no existe como objeto: pedirle
-una unidad a su caja NO DEBE entregar nada.
-
 ### BR-STK-055 — La jornada 6 abre con cinco cajas vacías
 
 CUANDO se abre la jornada 6, el sistema DEBE abrir exactamente cinco cajas del depósito con 0
 unidades. Una DEBE ser la de Fernet God. Las otras cuatro DEBEN salir de un sorteo con la semilla
-de la partida entre todas las cajas del depósito de esa noche —las treinta y dos y las siete de
-BR-STK-054—, sin contar las de un producto que falte esa noche (BR-STK-007) ni las de uno que
-pidan los compradores de esa noche. Abrir la jornada otra vez o retomarla desde su apertura DEBE
+de la partida entre todas las cajas del depósito de esa noche, sin contar las de un producto que
+falte esa noche (BR-STK-007) ni las de uno que pidan los compradores de esa noche. Abrir la jornada otra vez o retomarla desde su apertura DEBE
 dar las mismas cinco cajas. Las demás cajas DEBEN abrir como en BR-STK-004.
 
 Una de las cinco permanece en el depósito, visible, y DEBE poder agarrarse y examinarse como
@@ -663,23 +651,6 @@ cualquier caja del depósito: examinarla dice que tiene 0 (BR-STK-031) y pedirle
 entrega nada (BR-STK-016). Durante la jornada 6, Fernet God NO DEBE faltar en su góndola ni entrar
 en el pedido de ningún comprador, tampoco en los pedidos al azar. Las demás jornadas NO DEBEN abrir
 ninguna caja vacía por esta regla.
-
-### BR-STK-056 — Las siete cajas amanecen en dos tramos contra el fondo del depósito
-
-CUANDO se abre cada jornada desde la primera completa, el sistema DEBE poner las siete cajas de
-BR-STK-054 sobre el piso del depósito, contra la pared del fondo, en dos tramos separados, uno a
-cada lado de la estantería del fondo. Cada tramo lleva un pallet de piso; sobre los dos pallets se
-apoyan cuatro cajas y encima de ellas las otras tres, con las etiquetas hacia el interior del
-depósito. Los tramos NO DEBEN ocupar la zona junto al portón, la pared contraria a la del
-contenedor de basura ni el paso hasta la puerta del cuartito, ni el lugar de la palanca de la
-jornada 7 (BR-INV-141): ni la pisan ni la tapan a quien mira desde la entrada del depósito.
-Tampoco DEBEN tocar las estanterías ni otras cajas. Las siete
-DEBEN amanecer ahí cada noche aunque el jugador las haya movido: no siguen a BR-STK-051. Las
-demás cajas conservan su lugar.
-
-Las siete NO DEBEN contar para ordenar las cajas (BR-STK-039): ordenar se cumple con las demás
-apoyadas en estanterías, estén las siete en su lugar o no. Tampoco DEBEN contar como desorden del
-cierre mientras estén dentro del depósito.
 
 ## Criterios de aceptación
 
@@ -868,21 +839,21 @@ estante con las 200 semillas ENTONCES los dos bloques quedan en estantes contigu
 ### AC-STK-034 — Lo que falta en cada jornada *(verifica BR-STK-026)*
 
 DADO las 200 semillas enteras de 0 a 199, ocho casilleros principales por producto y los pedidos de
-cada jornada de la 1 a la 5 CUANDO se sortean sus faltantes ENTONCES cada sorteo contiene entre 4 y
-6 productos distintos. Cada faltante está entre 3 y `mínimo(C − P, F)`, y los productos no elegidos
-están completos. Para cada jornada, las semillas producen al menos dos cantidades de productos y dos
-conjuntos de productos distintos.
+cada jornada de la 2 a la 7 CUANDO se sortean sus faltantes ENTONCES cada sorteo contiene exactamente
+cuatro productos distintos. Cada faltante está entre 3 y `mínimo(C − P, F)`, y los productos no
+elegidos están completos. Para cada jornada, las semillas producen al menos dos conjuntos de
+productos distintos.
 
-DADO una fuente de azar controlada CUANDO se eligen los extremos de los intervalos ENTONCES
-se pueden obtener 4 y 6 productos, y 3 y el máximo reponible de cada elegido. La elección de
-cantidad tiene tres alternativas equiprobables; la de unidades tiene tantas alternativas
-equiprobables como enteros hay entre 3 y su máximo reponible.
+DADO una fuente de azar controlada CUANDO se eligen los extremos del intervalo de unidades ENTONCES
+se pueden obtener 3 y el máximo reponible de cada elegido. La elección de unidades tiene tantas
+alternativas equiprobables como enteros hay entre 3 y su máximo reponible.
 
 DADO una caja de 8 CUANDO un producto tiene 6 casilleros principales y 3 unidades pedidas ENTONCES
 su máximo es 5. Con 4 casilleros principales y 1 unidad pedida, el máximo es 4. Con 8 unidades
 pedidas o con cero casilleros principales, el producto nunca falta; con un máximo de 2, tampoco,
 y con un máximo de 3 es elegible y le faltan exactamente 3. DADO exactamente tres elegibles
-CUANDO la cantidad sorteada es 4 o 6 ENTONCES faltan los tres; con uno, sólo ese; con cero, ninguno.
+CUANDO se sortean los faltantes ENTONCES faltan los tres; con uno, sólo ese; con cero, ninguno.
+DADO exactamente cuatro elegibles ENTONCES faltan los cuatro.
 DADO dos compradores que piden 2 y 3 unidades del mismo producto, una caja de 8 y 6 casilleros
 principales CUANDO se calcula su máximo reponible ENTONCES es 3, porque se suman ambos pedidos.
 
@@ -893,7 +864,7 @@ al menú y se continúa, o se retoma en otra sesión ENTONCES se realiza un nuev
 
 ### AC-STK-035 — Se vende sin quitarle a la reposición *(verifica BR-STK-027)*
 
-DADO las 200 semillas enteras de 0 a 199, los casilleros del local y cada jornada de la 1 a la 5 CUANDO
+DADO las 200 semillas enteras de 0 a 199, los casilleros del local y cada jornada de la 2 a la 7 CUANDO
 se completan todas las compras de los pedidos usados para acotar los faltantes, por el
 recorrido de esa jornada, ENTONCES ningún cobro se rechaza. CUANDO después se repone todo lo
 que falta ENTONCES la góndola queda completa y reponer queda cumplida.
@@ -1155,7 +1126,8 @@ DADO el conjunto de cajas CUANDO se evalúa su orden ENTONCES:
 | Todas sobre estanterías salvo una en el piso | pendiente |
 | Una sobre otra apoyada en estantería; el resto, en estanterías | cumplida |
 | Una sobre otra que está en el piso | pendiente |
-| Todas en estanterías salvo una sostenida, incluso examinada desde la mano | pendiente |
+| Todas en estanterías salvo una sostenida, incluso examinada desde la mano | cumplida |
+| Una sostenida y otra en el piso del depósito; el resto, en estanterías | pendiente |
 | La misma caja soltada en el piso | pendiente |
 | Una sobre el pallet del piso | pendiente |
 | Dos que se declaran apoyadas una sobre otra | pendiente |
@@ -1166,13 +1138,16 @@ DADO el conjunto de cajas CUANDO se evalúa su orden ENTONCES:
 ### AC-STK-079 — La última caja cumple y puede descumplir *(verifica BR-STK-039)*
 
 DADO la jornada 3 y todas las cajas salvo una ordenadas CUANDO se apoya la última en una
-estantería ENTONCES ordenar se cumple. CUANDO se baja una caja al piso y queda
-en reposo ENTONCES se descumple. CUANDO se la sostiene o se la examina desde
-la mano ENTONCES sigue pendiente. CUANDO se la suelta sobre una estantería ENTONCES vuelve a
-cumplirse. CUANDO se levanta una caja de la estantería ENTONCES vuelve a quedar pendiente.
-DADO el turno cerrado CUANDO se mueve esa caja ENTONCES la
-cuenta permanece como al cierre. DADO una jornada que no declara ordenar CUANDO todas quedan
-en estanterías ENTONCES no se suma una obligatoria ajena.
+estantería ENTONCES ordenar se cumple. CUANDO se baja una caja al piso del depósito y queda
+en reposo ENTONCES se descumple. CUANDO se la sostiene o se la examina desde la mano ENTONCES
+se cumple. CUANDO se la suelta en el piso ENTONCES vuelve a quedar pendiente. CUANDO se la
+suelta sobre una estantería ENTONCES se cumple. DADO todas las cajas en estanterías CUANDO se
+levanta una ENTONCES sigue cumplida, y CUANDO se levanta además una segunda ENTONCES queda
+pendiente. DADO el turno cerrado con la última caja en la mano CUANDO se la suelta en el piso
+ENTONCES la cuenta permanece como al cierre: cumplida. DADO el turno cerrado con la última en
+el piso CUANDO se la agarra ENTONCES la cuenta permanece como al cierre: pendiente. DADO una
+jornada que no declara ordenar CUANDO todas quedan en estanterías ENTONCES no se suma una
+obligatoria ajena.
 
 ### AC-STK-080 — Rescatar vuelve al origen de esa noche *(verifica BR-STK-038, BR-STK-039)*
 
@@ -1433,27 +1408,11 @@ casillero vacío. DADO dos casilleros vacíos de ese producto, o uno vacío de o
 además del suyo, CUANDO se cierra con esa unidad en la mano ENTONCES reponer no cuenta cumplida. DADO la
 unidad en la mano que se suelta antes del cierre ENTONCES reponer no cuenta cumplida.
 
-### AC-STK-124 — Los siete existen sólo como caja *(verifica BR-STK-054)*
-
-DADO el catálogo de la etapa completa CUANDO se consulta cada uno de Sei Tuqui, La Monteloca,
-Frigordo, Gringo, Masticul, Cofloco y Chocolocas ENTONCES tiene fila con nombre y precio entero
-positivo, su caja es chica en Sei Tuqui, La Monteloca, Masticul y Cofloco y grande en los otros
-tres, y su sonoridad es la de BR-STK-054. CUANDO se pide la lista de ventas, el programa de la caja
-o los productos con góndola ENTONCES ninguno de los siete está. DADO la apertura de las jornadas
-3, 4, 5 y 7 ENTONCES cada uno tiene todas las unidades de una caja en el depósito y 0 en la
-góndola, y ninguno es faltante. DADO la apertura de las jornadas 1 y 2 ENTONCES ninguno existe.
-
-### AC-STK-125 — Los compradores nunca piden los siete *(verifica BR-STK-054)*
-
-DADO los compradores de cada jornada de la 1 a la 7, y por cada una veinte semillas distintas,
-CUANDO se leen sus pedidos ENTONCES ninguno incluye alguno de los siete.
-
 ### AC-STK-126 — La jornada 6 abre con cinco cajas vacías, una de Fernet God *(verifica BR-STK-055)*
 
 DADO la apertura de la jornada 6 con cualquiera de veinte semillas ENTONCES hay exactamente cinco
-cajas con 0 unidades en el depósito, entre ellas la de Fernet God, y las otras treinta y cuatro
-tienen todas las unidades de una caja. ENTONCES entre las veinte semillas, en alguna, una de las
-cinco es de uno de los siete.
+cajas con 0 unidades en el depósito, entre ellas la de Fernet God, y las otras veintisiete
+tienen todas las unidades de una caja.
 
 ### AC-STK-127 — Las vacías no son faltantes ni se piden *(verifica BR-STK-055)*
 
@@ -1476,21 +1435,28 @@ y cuántas le entran: una caja entera. CUANDO el jugador le pide una unidad ENTO
 nada y el depósito sigue en 0. DADO esa caja ENTONCES la apertura la deja presente en el depósito
 y no como caja agotada.
 
-### AC-STK-130 — Los dos tramos del fondo: cuatro abajo, tres arriba, sin estorbar *(verifica BR-STK-056)*
+### AC-STK-132 — Una caja en el local o en la mano no impide ordenar *(verifica BR-STK-039)*
 
-DADO la jornada 3 abierta ENTONCES las siete cajas están dentro del depósito, en dos tramos contra
-la pared del fondo: cuatro apoyadas en pallets de piso y tres apoyadas encima de otras cajas de
-los tramos. ENTONCES ninguna toca una
-estantería ni una de las otras treinta y dos cajas, y ninguna invade la zona de paso alrededor del
-portón ni de la puerta del cuartito, y ni ellas ni sus pallets pisan el lugar de la palanca ni la
-tapan desde la entrada del depósito. DADA una de las siete movida de su tramo CUANDO se abre la
-noche siguiente ENTONCES las siete amanecen otra vez en su lugar.
+DADO el conjunto de cajas con la regla de apilado vigente CUANDO se evalúa su orden ENTONCES:
 
-### AC-STK-131 — Ordenar no cuenta las siete *(verifica BR-STK-056, BR-STK-039)*
+| Estado | Ordenar |
+|---|---|
+| Todas en estanterías salvo una apoyada en el local | cumplida |
+| Todas en estanterías salvo una sostenida | cumplida |
+| Una sostenida, otra apoyada en el local; el resto, en estanterías | pendiente |
+| Dos apoyadas en el local; el resto, en estanterías | pendiente |
+| Una apoyada en el local y otra apilada sobre ella | pendiente |
+| Una sostenida y otra apilada sobre ella | pendiente |
+| Una apoyada en el baño, el cuartito o afuera; el resto, en estanterías | pendiente |
+| Una en el piso del depósito; el resto, en estanterías | pendiente |
+| Una sobre el pallet del piso; el resto, en estanterías | pendiente |
 
-DADO la jornada 3 con las treinta y dos cajas de las estanterías apoyadas en ellas y las siete en
-los tramos del fondo ENTONCES ordenar las cajas está cumplida. ENTONCES el cierre no suma desorden de
-cajas por las siete.
+### AC-STK-133 — La jornada cierra con la última caja en el local *(verifica BR-STK-039)*
+
+DADO la jornada 3 con todas las cajas en estanterías salvo una apoyada en el local CUANDO se
+agota el turno ENTONCES la jornada cierra con ordenar cumplida. DADO la misma situación con la
+caja en la mano ENTONCES también. DADO dos cajas fuera de las estanterías, una en la mano y otra
+en el local, CUANDO se agota el turno ENTONCES ordenar cierra pendiente.
 
 ## No objetivos
 
@@ -1522,8 +1488,8 @@ solo de sus consumidores.
   obligatoria está cumplida, y el motivo de cada rechazo.
 - **Apertura sorteada:** recibe los mismos pedidos que la atención, suma sus unidades por
   producto y devuelve faltantes dentro del máximo de sus casilleros de adelante, y cuáles quedan
-  vacíos. El inventario conserva el cupo total. Con menos elegibles que la
-  cantidad sorteada devuelve todos; con cero, ninguno. No modifica ni vuelve a sortear los pedidos.
+  vacíos. El inventario conserva el cupo total. Con menos de cuatro
+  elegibles devuelve todos; con cero, ninguno. No modifica ni vuelve a sortear los pedidos.
 - **Orden del depósito:** recibe la particular de la jornada, el conjunto de cajas, si cada
   una está sostenida y su apoyo directo; contesta disposición de apertura y si todas cumplen
   la condición de orden. Ciclos y apoyos ausentes contestan pendiente; el conjunto vacío,

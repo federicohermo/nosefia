@@ -59,7 +59,7 @@ func test_el_arranque_cabe_en_sus_habitaciones_y_no_produce_motivos() -> void:  
 	_abrir()
 	var lector: Habitaciones = _almacen.get("_habitaciones")
 	assert_object(lector).is_not_null()
-	var cajas: Array[Node3D] = _almacen.call("_todas_las_cajas")
+	var cajas: Array[Node3D] = _almacen.get("_cajas_de_productos")
 	var utiles: Array[Node3D] = _almacen.get("_utiles_de_limpieza")
 	var bolsas: Array[Node3D] = _almacen.get("_bolsas")
 	for caja: Node3D in cajas:
@@ -224,7 +224,7 @@ func test_bolsa_afuera_no_suma_motivo_y_recuperada_o_tirada_sale_de_afuera() -> 
 	assert_bool(CIERRE.hay_bolsa_afuera(_foto())).is_false()
 	assert_array(_foto()).has_size(
 		(
-			_almacen.call("_todas_las_cajas").size()
+			_almacen.get("_cajas_de_productos").size()
 			+ _utiles_disponibles()
 			+ _almacen.get("_bolsas").size()
 			- 1
@@ -234,7 +234,7 @@ func test_bolsa_afuera_no_suma_motivo_y_recuperada_o_tirada_sale_de_afuera() -> 
 	assert_array(contenedor.call("tirados")).is_empty()
 	assert_array(_foto()).has_size(
 		(
-			_almacen.call("_todas_las_cajas").size()
+			_almacen.get("_cajas_de_productos").size()
 			+ _utiles_disponibles()
 			+ _almacen.get("_bolsas").size()
 		)

@@ -5,9 +5,9 @@
 ## `Catalogo.de(id)` que devuelve `null`, y nada más lo caza.
 extends GdUnitTestSuite
 
-## Los 31 nombres, en el orden del enum. Fija las dos mitades del criterio del catálogo: los 23 de
+## Los 32 nombres, en el orden del enum. Fija las dos mitades del criterio del catálogo: los 23 de
 ## antes no cambian de nombre ni de lugar —una partida guardada nombra al producto por su
-## número— y los 8 que entran van al final, con el nombre de su ficha.
+## número— y los 9 que entran van al final, con el nombre de su ficha.
 const NOMBRES: Array[String] = [
 	"Actroncito",
 	"Durextra",
@@ -16,7 +16,7 @@ const NOMBRES: Array[String] = [
 	"Laysnnt",
 	"Malbardo",
 	"Progres",
-	"Jorgillo",
+	"Jorgillata",
 	"Arvecor",
 	"Chisitos",
 	"Oremos",
@@ -43,7 +43,7 @@ const NOMBRES: Array[String] = [
 	"Poético",
 ]
 
-## Los precios de los 8 que entran. La ficha no los trae: los decidió el issue que los sumó, en el
+## Los precios de los 9 que entran. La ficha no los trae: los decidió el issue que los sumó, en el
 ## rango de los que ya estaban.
 const PRECIOS_NUEVOS := {
 	"Cosa de Maní": 700,
@@ -57,7 +57,7 @@ const PRECIOS_NUEVOS := {
 	"Poético": 1800,
 }
 
-## La sonoridad de los 8 que entran, de la columna «Familia sonora» de su ficha.
+## La sonoridad de los 9 que entran, de la columna «Familia sonora» de su ficha.
 const SONORIDADES_NUEVAS := {
 	"Cosa de Maní": EntradaSonora.Sonoridad.ENVOLTORIO_PLASTICO,
 	"Duronga": EntradaSonora.Sonoridad.CAJITA,
@@ -74,7 +74,14 @@ const SONORIDADES_NUEVAS := {
 ## demás van en caja grande. **No sale del volumen de la unidad**: Actroncito es una caja grande
 ## de remedio y va en caja chica, y Zucarachas al revés.
 const EN_CAJA_CHICA: Array[String] = [
-	"Actroncito", "Arvecor", "Durextra", "Jorgillo", "Malbardo", "Duronga", "Oaaaa", "Cosa de Maní"
+	"Actroncito",
+	"Arvecor",
+	"Durextra",
+	"Jorgillata",
+	"Malbardo",
+	"Duronga",
+	"Oaaaa",
+	"Cosa de Maní"
 ]
 
 
@@ -145,9 +152,7 @@ func test_hay_exactamente_una_fila_por_cada_valor_del_enum() -> void:  # AC-STK-
 
 func test_hay_exactamente_un_producto_por_cada_valor_del_enum() -> void:  # AC-STK-002
 	# El AC que se pone en rojo el día que alguien agregue un producto al enum sin darle fila.
-	# `todos()` es lo que tiene góndola y venta: los siete que existen sólo como caja no están.
-	assert_array(Catalogo.todos()).has_size(Producto.Id.size() - Catalogo.SOLO_CAJAS.size())
-	assert_array(Catalogo.pedibles()).has_size(Producto.Id.size())
+	assert_array(Catalogo.todos()).has_size(Producto.Id.size())
 
 
 func test_el_catalogo_lista_los_productos_en_el_orden_del_enum() -> void:
@@ -156,11 +161,7 @@ func test_el_catalogo_lista_los_productos_en_el_orden_del_enum() -> void:
 	var ids: Array[int] = []
 	for producto in Catalogo.todos():
 		ids.append(producto.id)
-	var esperados: Array[int] = []
-	for id: Producto.Id in Producto.Id.values():
-		if not Catalogo.SOLO_CAJAS.has(id):
-			esperados.append(id)
-	assert_array(ids).contains_exactly(esperados)
+	assert_array(ids).contains_exactly(Producto.Id.values())
 
 
 func test_cada_producto_del_catalogo_esta_completo() -> void:  # AC-STK-002

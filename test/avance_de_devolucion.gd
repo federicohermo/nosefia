@@ -81,6 +81,18 @@ static func terminar_la_bajada(persiana: PersianaDeLaNoche) -> void:
 	persiana.set("_ahora", lectura)
 
 
+## Qué parte de la pantalla pintó la persiana al pasar la mitad de la duración de la bajada.
+static func bajado_a_la_mitad_del_tiempo(persiana: PersianaDeLaNoche) -> float:
+	var lectura: Callable = persiana.get("_ahora")
+	var ahora := [int(persiana.get("_ultimo"))]
+	persiana.set("_ahora", func() -> int: return ahora[0])
+	ahora[0] += int(EntradaALaNoche.SUBIDA_DE_LA_PERSIANA * 500000.0)
+	persiana.call("_process", 0.0)
+	persiana.set("_ahora", lectura)
+	var altura := persiana.get_viewport().get_visible_rect().size.y
+	return 1.0 + (persiana.get_node("Persiana") as TextureRect).position.y / altura
+
+
 ## Una jornada con instrucciones abre con ellas: se leen hasta su «OK», que anuncia la noche.
 static func leer_las_instrucciones(almacen: Node) -> void:
 	var instrucciones: PantallaDeInstrucciones = almacen.get_node(
