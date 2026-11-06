@@ -85,8 +85,7 @@ func iniciar(enfocado: ObjetoDelAlmacen = null, texto_del_enfocado: String = "")
 func terminar() -> void:
 	if _examinando == null:
 		return
-	if is_instance_valid(_examinando):
-		_examinando.scale = _escala_de_mundo
+	_examinando.scale = _escala_de_mundo
 	_examinando = null
 	if agarre != null:
 		agarre.devolver_a_la_mano()

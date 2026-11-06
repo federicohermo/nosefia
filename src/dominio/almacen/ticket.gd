@@ -7,6 +7,10 @@ const ID := &"ticket"
 const TEXTO_AL_EXAMINAR := "Un ticket de compra por %s"
 
 ## Cuántos caracteres de ancho tiene un renglón cuando entra cómodo: los tres del diseño.
+## Cuánto se ve el ticket al examinarlo, respecto de su tamaño de mundo: tanto como hace falta para
+## que los renglones se lean en 1920 × 1080. `escala_de_examen` es relativa a la mano.
+const TAMANO_AL_EXAMINAR := 3.0
+
 const COLUMNAS_MINIMAS := 21
 const RELLENO := "."
 const MONEDA := "$"
@@ -30,6 +34,7 @@ func _init(
 	hora = una_hora
 	nombre = "Ticket"
 	levantable = true
+	escala_de_examen = TAMANO_AL_EXAMINAR / ReglasDeLosObjetos.ESCALA_DEL_TICKET_EN_MANO
 	sonoridad = EntradaSonora.Sonoridad.PAPEL
 	_renglones.assign(productos)
 

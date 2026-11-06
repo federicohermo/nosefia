@@ -182,6 +182,14 @@ func test_un_objeto_se_examina_a_su_tamano_salvo_que_diga_otra_cosa() -> void:
 	assert_float(ObjetoDelAlmacen.new().escala_de_examen).is_equal(1.0)
 
 
+func test_el_ticket_se_examina_mas_grande_de_lo_que_se_ve_en_la_mano() -> void:  # AC-PLY-109
+	var ticket := Ticket.new()
+	assert_float(ticket.escala_de_examen).is_greater(1.0)
+	assert_float(ReglasDeLosObjetos.ESCALA_DEL_TICKET_EN_MANO * ticket.escala_de_examen).is_greater(
+		ReglasDeLosObjetos.ESCALA_DEL_TICKET_EN_MANO
+	)
+
+
 func test_las_pistas_de_papel_se_examinan_mas_grandes() -> void:
 	for id: StringName in [&"documento_impreso", &"nota_bajo_la_puerta"]:
 		var datos := load("res://src/dominio/investigacion/%s.tres" % id) as ObjetoDelAlmacen

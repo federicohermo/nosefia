@@ -42,8 +42,6 @@ func _ready() -> void:
 	caja.programa_arrancado.connect(
 		func(_manual: bool) -> void: _restante = Reglas.DURACION_DEL_TURNO
 	)
-	jugador.examen.examen_iniciado.connect(_al_examinar)
-	jugador.examen.examen_terminado.connect(_al_terminar_el_examen)
 	agarre.objeto_agarrado.connect(_al_agarrar)
 	agarre.objeto_soltado.connect(_al_soltar)
 	jugador.uso_pedido.connect(_al_usar)
@@ -183,17 +181,6 @@ func _al_soltar(objeto: Node3D) -> void:
 	var papel := objeto as ObjetoAgarrable
 	if papel != null and _tickets.has(papel):
 		_escalar(papel, 1.0)
-
-
-func _al_examinar(objeto: Node3D) -> void:
-	var papel := objeto as ObjetoAgarrable
-	if papel != null and _tickets.has(papel):
-		_escalar(papel, ReglasDeLosObjetos.ESCALA_DEL_TICKET_AL_EXAMINAR)
-
-
-func _al_terminar_el_examen() -> void:
-	if is_instance_valid(_papel):
-		_escalar(_papel, ReglasDeLosObjetos.ESCALA_DEL_TICKET_EN_MANO)
 
 
 ## El cuerpo del papel conserva su tamaño: se escalan su malla y su colisión, como en

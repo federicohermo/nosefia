@@ -28,9 +28,9 @@ Si la tarjeta de pista recorta la imagen, el recorte se hace en la tarjeta y no 
 ## La nota de Yasmín (pista 6C)
 
 `nota-bajo-la-puerta.png` es la textura frontal de la nota: el nodo `1865:867` de «Manada - UI» en
-Figma («Textura frontal de la pista 6C», 1342 × 986). La exportación trae un fondo liso que no es
+Figma («Textura frontal de la pista 6C», 1342 × 987). La exportación trae un fondo liso que no es
 del papel; `assets/props/nota/generar_nota.py` pasa a transparente ese fondo y deja el papel como
-está. Se tomó de la captura que entrega Figma (1342 × 987), de SHA-256
+está. La exportación original pesa lo que pesa su SHA-256:
 `6165afbb02a508129b19803c3b1e791a84db18286d62c8cac8c93605dfa3ffd9`. `nota-dorso.png` es el mismo
 contorno en blanco, de la misma generación. El texto es el de la ficha, con «Yasmín» donde la
 ficha dice «Jazmín».
