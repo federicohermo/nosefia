@@ -546,8 +546,11 @@ func _rid_del_apoyo(apoyo: Marker3D) -> RID:
 	return RID()
 
 
-## Con `sobre_el_apoyo` falso, lo único firme debajo de cada cuerpo es el piso del local.
-func _afirmar_apoyos_libres(cuerpos: Array[ObjetoAgarrable], sobre_el_apoyo: bool = true) -> void:
+## Con `sobre_el_apoyo` falso, lo único firme debajo de cada cuerpo es el piso del local. Con
+## `puede_bajar`, lo que no entró en el apoyo puede estar en el piso: es lo que BR-CTR-027 admite.
+func _afirmar_apoyos_libres(
+	cuerpos: Array[ObjetoAgarrable], sobre_el_apoyo: bool = true, puede_bajar: bool = false
+) -> void:
 	var manual: Node3D = _almacen.get("_reposicion_manual")
 	var suelo: StaticBody3D = manual.get("suelo")
 	var apoyo := _apoyo()
@@ -574,8 +577,11 @@ func _afirmar_apoyos_libres(cuerpos: Array[ObjetoAgarrable], sobre_el_apoyo: boo
 		rayo.exclude = excluidos
 		var golpe := espacio.intersect_ray(rayo)
 		var firme: Object = golpe.get("collider")
-		assert_bool(_es_el_apoyo(firme, apoyo)).is_equal(sobre_el_apoyo)
-		assert_bool(firme == suelo).is_equal(not sobre_el_apoyo)
+		if puede_bajar:
+			assert_bool(_es_el_apoyo(firme, apoyo) or firme == suelo).is_true()
+		else:
+			assert_bool(_es_el_apoyo(firme, apoyo)).is_equal(sobre_el_apoyo)
+			assert_bool(firme == suelo).is_equal(not sobre_el_apoyo)
 		var limites := forma.global_transform * forma.shape.get_debug_mesh().get_aabb()
 		assert_float(limites.position.y).is_equal_approx((golpe["position"] as Vector3).y, 0.03)
 
@@ -619,7 +625,7 @@ func test_dos_vencimientos_en_un_avance_separan_cinco_cuerpos() -> void:  # AC-C
 		huellas.append(huella)
 	for _cuadro in 90:
 		await get_tree().physics_frame
-	_afirmar_apoyos_libres(cuerpos)
+	_afirmar_apoyos_libres(cuerpos, true, true)
 	RelojDePrueba.avanzar_turno(reloj, 0.0)
 	assert_array(emisiones).has_size(2)
 	(
