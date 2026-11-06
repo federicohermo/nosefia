@@ -520,7 +520,7 @@ CUANDO se completa una compra de jornada 2 con productos y ticket exactos, el si
 retirar sus unidades registradas afuera una sola vez por identidad y contarlas como vendidas,
 sin descontar además el pedido completo. Una recepción parcial NO DEBE sumar ventas. SI vence
 sin completarse, ENTONCES las unidades recibidas DEBEN seguir registradas afuera y quedar
-recogibles en el piso interior del local frente a la ventanilla; depósito, caja y góndola DEBEN
+recogibles sobre el apoyo de la ventanilla, del lado de adentro; depósito, caja y góndola DEBEN
 conservarse como antes del vencimiento. El ticket aceptado DEBE descartarse. Esas unidades
 DEBEN poder colocarse, devolverse o recogerse como cualquier unidad suelta. Vender una unidad
 retirada de góndola NO DEBE rellenar su casillero ni cumplir reposición.
@@ -596,7 +596,7 @@ CUANDO se completa una compra de esas jornadas con productos y ticket exactos, e
 retirar sus unidades registradas afuera una sola vez por identidad y contarlas como vendidas, sin
 descontar además el pedido completo. Una recepción parcial NO DEBE sumar ventas. SI vence sin
 completarse, ENTONCES las unidades recibidas DEBEN seguir registradas afuera y quedar recogibles en
-el piso interior del local frente a la ventanilla, con depósito, caja y góndola como antes del
+el apoyo de la ventanilla, del lado de adentro, con depósito, caja y góndola como antes del
 vencimiento, y el ticket aceptado DEBE descartarse (BR-STK-041).
 
 MIENTRAS haya una compra en curso, registrar DEBE seguir pendiente aunque la planilla coincida
@@ -1241,7 +1241,7 @@ sin reconstrucción ni azar. Otra apertura crea estados propios sin heredar entr
 
 DADO jornada 2 y una compra parcial con dos unidades recibidas, una de caja y otra de góndola,
 CUANDO vence ENTONCES ambas identidades siguen afuera, los cuerpos quedan visibles y recogibles
-en el piso interior frente a ventanilla, sin superponerse con sólidos ni entre sí, y no suman
+sobre el apoyo de la ventanilla, sin superponerse con sólidos ni entre sí, y no suman
 venta ni descuento. El ticket aceptado desaparece. Repetir vencimiento no duplica cuerpos.
 Colocar o devolver esas unidades conserva los permisos habituales; dejarlas sueltas al cierre
 produce desorden, no objeto afuera; sostenerlas sin examen, colocarlas o devolverlas evita ese

@@ -218,15 +218,16 @@ padrón de BR-CTR-001 queda para las jornadas sin agenda.
 CUANDO se cruza una llegada, el sistema DEBE publicar una sola llegada aunque la ventanilla esté
 cerrada. Repetir un instante o reabrir NO DEBE llamar ni repetir al comprador.
 CUANDO se cruza el límite con una compra incompleta, el sistema DEBE publicar una sola salida,
-cerrar su conversación y dejar todos los productos recibidos apoyados en el piso del local
-frente a la ventanilla, del lado de adentro. DEBEN conservar su identidad y quedar visibles,
-con física y recogibles, sin superponerse entre sí, con el jugador ni con los sólidos del local.
+cerrar su conversación y dejar todos los productos recibidos sobre el apoyo de la ventanilla,
+del lado de adentro. Ninguno DEBE quedar en el piso. DEBEN conservar su identidad y quedar
+visibles, con física y recogibles, sin superponerse entre sí, con el jugador ni con los sólidos
+del local. Los que no entren en el apoyo NO DEBEN atravesar un sólido ni salir del local.
 DEBEN seguir registrados afuera de su caja, sin cambiar depósito, contenido de caja ni góndola
 por el vencimiento y sin contar como venta. DEBEN admitir los mismos gestos y consecuencias
 de cualquier unidad suelta: agarrar, colocar en su casillero vacío, devolver a su caja o tirar
-al contenedor. Dejarlos en el piso interior al cierre DEBE contar como desorden, sin producir
+al contenedor. Dejarlos sobre el apoyo al cierre DEBE contar como desorden, sin producir
 el motivo de objeto afuera, según [`store-cleanup`](../store-cleanup/store-cleanup.md).
-El ticket aceptado DEBE descartarse y NO DEBE aparecer en el piso. Sin productos recibidos
+El ticket aceptado DEBE descartarse y NO DEBE aparecer sobre el apoyo. Sin productos recibidos
 NO DEBE aparecer ninguna unidad. Repetir el vencimiento NO DEBE duplicar ni volver a soltar
 las unidades. Una compra completa DEBE retirar sus productos y ticket con el comprador.
 Un salto DEBE procesar todos los cruces en orden. Una compra completa NO DEBE vencer.
@@ -287,7 +288,7 @@ registrar DEBE evaluarse sólo si ambas compras quedaron cerradas. Un comprador 
 cuenta como compra no completa y no cerrada.
 Un comprador que se va antes de completar su compra DEBE contar como no atendido, tanto si
 recibió una parte de su pedido como si recibió todos sus productos sin el ticket. Los productos
-que deja en el piso NO DEBEN contar como vendidos.
+que deja sobre el apoyo NO DEBEN contar como vendidos.
 La finalización DEBE contarse una sola vez mientras siga cumplida y conservarse al reabrir.
 Una nueva jornada DEBE empezar sin agenda, conversación, entregas, cuerpos ni ventas heredados.
 
@@ -359,8 +360,8 @@ de turno declarada por el dominio. La agenda DEBE publicar una sola llegada y un
 por compra incompleta, conservar la identidad original y procesar todos los cruces en orden.
 La pausa DEBE detenerlos. Una compra completada antes de su límite NO DEBE vencer.
 Cada compra DEBE recibir unidades físicas y ticket exacto según BR-CTR-029 y vender una vez
-según BR-CTR-030, sin descuento automático adicional. Atención sigue BR-CTR-031. Al vencer, los productos recibidos DEBEN quedar recogibles en el piso del
-local frente a la ventanilla, del lado de adentro, sin venta; el ticket aceptado DEBE descartarse.
+según BR-CTR-030, sin descuento automático adicional. Atención sigue BR-CTR-031. Al vencer, los productos recibidos DEBEN quedar recogibles sobre el
+apoyo de la ventanilla, del lado de adentro, sin venta; el ticket aceptado DEBE descartarse.
 Una apertura nueva DEBE crear estados nuevos sin heredar entregas, conversaciones ni ventas.
 
 ### BR-CTR-038 — Un pedido fijo por comprador y apertura
@@ -917,8 +918,8 @@ y su imagen conserva la salida de BR-CTR-033.
 ### AC-CTR-040 — Perder una compra parcial *(verifica BR-CTR-027, BR-CTR-030, BR-CTR-031)*
 
 DADO una compra parcial, incluso hablando, CUANDO llega el límite ENTONCES sale una vez,
-se cierra el diálogo, sus productos quedan en el piso interior frente a la ventanilla y el
-ticket aceptado deja de existir sin aparecer en el piso.
+se cierra el diálogo, sus productos quedan sobre el apoyo de la ventanilla, del lado de adentro,
+y el ticket aceptado deja de existir sin aparecer sobre el apoyo.
 Las ventas de esa compra siguen en cero. Completar la otra no cumple atención.
 DADO por separado una compra sin elementos, sólo con ticket, con una unidad o con todos los
 productos pero sin ticket CUANDO vence ENTONCES aparecen respectivamente cero, cero, una
@@ -970,18 +971,20 @@ movimiento. Pausar lo congela y reanudar lo continúa; reiniciar o cerrar el tur
 
 DADO Tin con sus tres productos recibidos pero sin ticket, y el jugador asomado a la ventanilla,
 CUANDO vence la compra ENTONCES las tres unidades conservan sus identidades y quedan visibles,
-con física y recogibles, apoyadas en el piso del lado interior frente a la ventanilla,
-sin superponerse entre sí, con el jugador ni con un sólido. La pausa detiene su caída y reanudar
-la continúa. Repetir el vencimiento no crea otras unidades ni recoloca las recuperadas.
+con física y recogibles, apoyadas sobre el apoyo de la ventanilla, del lado interior, y ninguna
+en el piso, sin superponerse entre sí, con el jugador ni con un sólido. La pausa detiene su caída
+y reanudar la continúa. Repetir el vencimiento no crea otras unidades ni recoloca las recuperadas.
+DADO más unidades abandonadas que las que caben en el apoyo CUANDO vence la compra ENTONCES
+ninguna atraviesa un sólido ni queda fuera del local.
 
 DADO esas unidades como únicos cuerpos desordenados CUANDO se cierra la noche con las tres
-en el piso ENTONCES hay un único motivo de desorden y ninguno de objeto afuera. DADO el mismo
+sobre el apoyo ENTONCES hay un único motivo de desorden y ninguno de objeto afuera. DADO el mismo
 caso CUANDO se coloca cada una en un casillero vacío de su producto, se devuelven a sus cajas
 con espacio, o se colocan dos y se sostiene la tercera sin examinarla, y se cierra ENTONCES
 no hay ninguno de esos dos motivos. Agarrarlas conserva su producto e identidad; una unidad
 devuelta a una caja llena permanece en la mano. Tirar una al contenedor conserva el descuento
 y el motivo de objeto importante tirado de las unidades sueltas. Abrir la jornada siguiente
-retira las unidades que hayan quedado en el piso, sin heredarlas como nuevas entregas.
+retira las unidades que hayan quedado sobre el apoyo, sin heredarlas como nuevas entregas.
 
 ### AC-CTR-047 — Terminar devuelve automáticamente *(verifica BR-CTR-036, BR-CTR-013)*
 
@@ -1091,7 +1094,7 @@ vende ni retira otra vez. Al terminar, la vista vuelve y la imagen sale hacia la
 ### AC-CTR-062 — Vencimiento y cierre no fabrican despedida *(verifica BR-CTR-043, BR-CTR-037)*
 
 DADO Fede con compra parcial y diálogo abierto CUANDO llega 23:45 ENTONCES vence sin despedida
-de venta y sus productos vuelven al piso interior; el ticket aceptado se descarta. DADO Mía
+de venta y sus productos quedan sobre el apoyo de la ventanilla; el ticket aceptado se descarta. DADO Mía
 incompleta con diálogo abierto CUANDO llega 03:30 ENTONCES vence y atención queda pendiente.
 DADO ambas compras completas y Mía completada a 03:29:59 ENTONCES atención queda cumplida
 aunque siga en su despedida. Pausar conserva el estado hasta reanudar.
@@ -1319,7 +1322,7 @@ despide ya cuenta como vendido y cerrado.
 ### AC-CTR-144 — Entrega incompleta: el comprador que se va no cuenta *(verifica BR-CTR-031, BR-CTR-015)*
 
 DADO dos compradores, CUANDO al primero se le entrega una parte del pedido y se va al vencer su
-horario ENTONCES lo entregado queda en el piso, el primero no cuenta como atendido y lo vendido de
+horario ENTONCES lo entregado queda sobre el apoyo, el primero no cuenta como atendido y lo vendido de
 cada producto sigue en 0. CUANDO el segundo compra bien y se anotan sólo los productos del
 segundo ENTONCES registrar figura cumplido y atención figura pendiente, también al cierre. Anotar
 una unidad de más o de menos descumple registrar.
@@ -1327,7 +1330,7 @@ una unidad de más o de menos descumple registrar.
 ### AC-CTR-145 — Pedido completo sin ticket: el comprador que se va no cuenta *(verifica BR-CTR-031, BR-CTR-015)*
 
 DADO dos compradores, CUANDO al primero se le entregan todos los productos y no el ticket y se va
-al vencer su horario ENTONCES los productos quedan en el piso, el primero no cuenta como atendido
+al vencer su horario ENTONCES los productos quedan sobre el apoyo, el primero no cuenta como atendido
 y lo vendido de cada producto sigue en 0. CUANDO el segundo compra bien y se anotan sólo los
 productos del segundo ENTONCES registrar figura cumplido y atención figura pendiente, también al
 cierre.
@@ -1336,7 +1339,7 @@ cierre.
 
 DADO el primer comprador con todos los productos y el ticket entregados, antes de terminar su
 despedida, CUANDO llega el límite de su horario ENTONCES no vence: sigue vendido, sus productos no
-vuelven al piso y atención y registrar lo cuentan como cerrado.
+quedan sobre el apoyo y atención y registrar lo cuentan como cerrado.
 
 ### AC-CTR-147 — Con comprador, el producto soltado en el hueco se entrega *(verifica BR-CTR-053)*
 
@@ -1552,7 +1555,7 @@ en un recurso por jornada; `inicial` y `despedida` reciben el pedido para resolv
 - **Salida:** quién está en la ventanilla, el pedido, el total, la diferencia, el aviso de
   faltantes, cuántos van despachados, el desvío de la noche, lo vendido de cada producto y el
   papel impreso o desechado; al vencer una compra incompleta, las unidades recibidas que
-  vuelven al piso interior y el descarte del ticket aceptado; agenda, pedidos fijos, textos
+  quedan sobre el apoyo de la ventanilla y el descarte del ticket aceptado; agenda, pedidos fijos, textos
   comunes y conversaciones propias de jornada 2 con progreso independiente por atención.
 - **Falla:** un pedido que supera sus vendibles se rechaza entero; una atención despachada
   rechaza todo lo demás. Fuera de la entrega al comprador, usar un objeto que no sea ticket,
