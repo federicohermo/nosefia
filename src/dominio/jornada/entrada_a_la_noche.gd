@@ -4,7 +4,6 @@ extends RefCounted
 const PLACA_ENTERA := 1.0
 const FADE_DE_LA_PLACA := 0.5
 const SUBIDA_DE_LA_PERSIANA := 1.0
-## La persiana del cierre baja con un ease out cúbico, como el de Figma que pide la ficha.
 const POTENCIA_DEL_EASE_OUT := 3.0
 const DURACION := PLACA_ENTERA + FADE_DE_LA_PLACA + SUBIDA_DE_LA_PERSIANA
 

@@ -3,7 +3,7 @@ schema_version: 1
 capability_id: CAP-EMP
 status: ratified
 owner: por definir
-provenance: GDD «Consecuencias» y «Finales»; fichas «1. Ciclo de jornadas y sistema de puntos», «Pantalla entre jornadas» y «Chat con el jefe»; decisiones de #374, decisión del 2026-09-28 de #299, decisiones de #375 y corrección visual solicitada en #398; migración de los specs 002, 016, 017; metadatos temporales de devoluciones de #430; decisiones de #432 sobre el hecho de uso de Poético y de #22 sobre la titularidad del expediente, 2026-10-15; advertencia por Poético y paso a la reflexión de cierre de #436; ocho jornadas de #526; instrucciones por jornada de #527; cuartito de limpieza de #541; puntos de las jornadas de prueba de #572; devolución desde la jornada 4 y cierres de la ficha del 20/10 de #576; mensajes introductorios de la jornada 4 en pantalla, de la ficha «Chat con el jefe» del 2026-10-21; auditoría de la prueba contra las fichas del 2026-10-22; quinto llamado por heladeras abiertas de #550, ficha «Llamados de atención extra» del 2026-10-20 y filas de Reto 5 de «Chat con el jefe» y decisión del 2026-10-26 sobre el texto con P ≥ 4; Tarea 5 con la bolsa tirada por la ventana de #518, decisión del 2026-10-25; espera del celular tras la persiana de #628, ficha «Pantalla entre jornadas»; deslizamiento de las placas de Enrique de #675, ficha «Especificar animaciones» (GJ-69) y decisión del 2026-10-30; siete jornadas, con dos de prueba, de #693; la Tarea 5 del pedido al proveedor, de #691
+provenance: GDD «Consecuencias» y «Finales»; fichas «1. Ciclo de jornadas y sistema de puntos», «Pantalla entre jornadas» y «Chat con el jefe»; decisiones de #374, decisión del 2026-09-28 de #299, decisiones de #375 y corrección visual solicitada en #398; migración de los specs 002, 016, 017; metadatos temporales de devoluciones de #430; decisiones de #432 sobre el hecho de uso de Poético y de #22 sobre la titularidad del expediente, 2026-10-15; advertencia por Poético y paso a la reflexión de cierre de #436; ocho jornadas de #526; instrucciones por jornada de #527; cuartito de limpieza de #541; puntos de las jornadas de prueba de #572; devolución desde la jornada 4 y cierres de la ficha del 20/10 de #576; mensajes introductorios de la jornada 4 en pantalla, de la ficha «Chat con el jefe» del 2026-10-21; auditoría de la prueba contra las fichas del 2026-10-22; quinto llamado por heladeras abiertas de #550, ficha «Llamados de atención extra» del 2026-10-20 y filas de Reto 5 de «Chat con el jefe» y decisión del 2026-10-26 sobre el texto con P ≥ 4; Tarea 5 con la bolsa tirada por la ventana de #518, decisión del 2026-10-25; espera del celular tras la persiana de #628, ficha «Pantalla entre jornadas»; deslizamiento de las placas de Enrique de #675, ficha «Especificar animaciones» (GJ-69) y decisión del 2026-10-30; siete jornadas, con dos de prueba, de #693; la Tarea 5 del pedido al proveedor, de #691; la curva de la persiana del cierre de #674, ficha «Especificar animaciones» (GJ-69) y decisión del 2026-10-27
 ---
 
 # Capacidad: el legajo del empleado
@@ -1369,8 +1369,8 @@ sonido se ajusta para durar lo mismo que la bajada.
   - Por qué sigue abierta: la ficha «Especificar animaciones» dice «smart animate ease out» y no
     da la forma de la curva ni la duración.
   - Decide: una persona de game design, con arte.
-  - Bloquea: nada. Mientras tanto, la curva es una cúbica de ease out y la duración es la de
-    BR-EMP-030.
+  - Bloquea: nada. Mientras tanto, la curva es la fórmula provisoria `1 - (1 - t)^3` y la
+    duración es la de BR-EMP-030.
 
 - **OQ-EMP-014 — ¿Qué dice el mensaje 1 de la jornada 2 con cero clientes mal atendidos, el
   registro mal hecho y huecos vacíos en las góndolas?**
