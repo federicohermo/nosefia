@@ -4,6 +4,8 @@
 ## salir al menú con la partida en curso pasa por la pausa. El cursor que se pierde sobre la
 ## devolución, en cambio, no pausa: el cierre lo suelta a propósito. Las excepciones de Esc son las
 ## interfaces abiertas: el celular libre, la computadora, la caja y las notas. Las cierra a ellas.
+## Con el epílogo de un final en pantalla, o con su pantalla de final, Esc no hace nada y el
+## cursor suelto tampoco pausa.
 class_name Pausa
 extends RefCounted
 

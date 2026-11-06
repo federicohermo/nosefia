@@ -115,9 +115,9 @@ entrada (BR-SAV-021).
 
 CUANDO el jugador aprieta Esc en cualquier momento del juego en el almacén, con la partida en
 curso o terminada, el sistema DEBE pausarlo y mostrar el menú de pausa. Un segundo Esc DEBE
-reanudarlo, igual que «reanudar». Las excepciones son las interfaces abiertas: el celular
+reanudarlo, igual que «reanudar». Las excepciones por interfaces abiertas son el celular
 abierto en modo libre (BR-INV-021) y la computadora, la caja registradora o una nota (BR-PLY-054).
-Ahí Esc la cierra y NO DEBE pausar; el Esc siguiente, sin ninguna interfaz abierta, pausa. El
+La pantalla de final es otra excepción, más abajo. Con una interfaz abierta, Esc la cierra y NO DEBE pausar; el Esc siguiente, sin ninguna interfaz abierta, pausa. El
 celular fijo no es una excepción. La devolución no es una excepción: con la devolución en
 pantalla, Esc DEBE abrir la pausa por encima de ella, y reanudar DEBE dejar la misma devolución,
 con el turno todavía detenido y sin abrir la noche siguiente. MIENTRAS la pausa está en pantalla,
