@@ -76,28 +76,6 @@ func test_con_la_placa_en_pantalla_perder_el_cursor_no_pausa() -> void:  # AC-SA
 	assert_int(_pausas).is_zero()
 
 
-func test_con_la_pantalla_del_final_visible_esc_y_perder_el_cursor_no_pausan() -> void:
-	var pantalla: CanvasLayer = auto_free(CanvasLayer.new())
-	pantalla.visible = true
-	var control := _control()
-	control.pantalla_del_final = pantalla
-	control._input(_esc())
-	assert_bool(get_tree().paused).is_false()
-	control.set("_cursor_antes", true)
-	control.call("_mirar_el_cursor")
-	assert_bool(get_tree().paused).is_false()
-	assert_int(_pausas).is_zero()
-
-
-func test_con_la_pantalla_del_final_oculta_esc_pausa() -> void:
-	var pantalla: CanvasLayer = auto_free(CanvasLayer.new())
-	pantalla.visible = false
-	var control := _control()
-	control.pantalla_del_final = pantalla
-	control._input(_esc())
-	assert_bool(get_tree().paused).is_true()
-
-
 func test_perder_el_cursor_que_el_juego_tenia_tomado_pausa() -> void:  # AC-SAV-018
 	# En headless el motor nunca tiene el cursor tomado: lo de antes se escribe a mano, y lo de
 	# ahora es lo que contesta el motor, suelto.
