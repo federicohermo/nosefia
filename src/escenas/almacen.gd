@@ -219,6 +219,7 @@ func _ready() -> void:
 	_atenciones.comprador_llegado.connect(avisos.avisar_llegada)
 	_atenciones.conversacion_iniciada.connect(avisos.iniciar_conversacion)
 	_atenciones.entrega_dicha.connect(_decir_entrega)
+	_atenciones.producto_entregado.connect(_sonar_la_entrega)
 	_caja.lectura_rechazada.connect(avisos.avisar_lectura_rechazada)
 	_investigador.pista_nueva.connect(avisos.avisar_pista.unbind(1))
 	_investigador.pista_nueva.connect(_al_descubrir_una_pista)
@@ -1193,6 +1194,15 @@ func _decir_entrega(texto: String) -> void:
 	var ventanilla: PuestoDeVentanilla = $Estructura/Ventanilla
 	_hud.decir_comprador(texto)
 	_anclar_en(ventanilla.comprador_visible.global_position)
+
+
+## Un producto entregado suena como al apoyarse, en el apoyo de la ventanilla. Va directo al
+## reproductor: no pasa por el contador de golpes, que cuenta caídas y esto no cae.
+func _sonar_la_entrega(unidad: UnidadDeProducto) -> void:
+	var ventanilla: PuestoDeVentanilla = $Estructura/Ventanilla
+	_audio.reproductor.pedir(
+		EntradaSonora.Evento.OBJETO_SOLTADO, unidad.sonoridad, null, ventanilla.apoyo_de_entregas
+	)
 
 
 func _process(delta: float) -> void:
