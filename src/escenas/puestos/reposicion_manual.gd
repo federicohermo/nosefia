@@ -1864,8 +1864,8 @@ func recibir_abandonadas(cuerpos: Array[Node3D], punto: Marker3D) -> void:
 ## Con `sobre_el_apoyo`, sólo cuenta la cara de arriba del apoyo y se recorre su único renglón,
 ## cuyo borde de adelante es `punto`: cada unidad queda entera de ese lado, fuera de la abertura.
 ## Sin él, el piso del local desde ahí hacia adentro. **La abertura no estorba la consulta de
-## forma**: esa capa sólo detiene lo que cruza con un comprador. El apoyo vive en esa misma capa, que sólo miran los productos: ni la mira ni
-## la cámara lo ven.
+## forma**: esa capa sólo detiene lo que cruza con un comprador. El apoyo vive en esa misma
+## capa, que sólo miran los productos: ni la mira ni la cámara lo ven.
 func _lugar_para_abandonada(
 	cuerpo: ObjetoAgarrable, punto: Marker3D, ocupados: Array[AABB], sobre_el_apoyo: bool
 ) -> Vector3:
