@@ -3,7 +3,7 @@ schema_version: 1
 capability_id: CAP-SHF
 status: ratified
 owner: por definir
-provenance: GDD «Ciclo de jornadas»; fichas «Pantalla entre jornadas» y «Particulares de cada jornada»; decisiones de #364, #369, #436, #526, #527, #573, #691 y #693; migración de los specs 001, 007, 011, 016, 027, 031; quejas de la jornada 7 de #759, ficha «Particulares de cada jornada»; la ficha «Caminos narrativos y finales» y la fila «7B» de la lista de pistas e hipótesis, de #790; la sección «Epílogos» de la ficha «Caminos narrativos y finales», leída el 2026-11-05, de #836; cajas del proveedor de #788, filas «Caja de cartón del proveedor» y «Caja de madera» de «Objetos interactuables» leídas el 2026-11-04; hora del celular de #613, decisiones del 2026-10-29, 2026-10-30 y 2026-11-02; pantalla de final con tip y botones de #827, ficha «Pantalla de fin de juego» leída el 2026-11-05
+provenance: GDD «Ciclo de jornadas»; fichas «Pantalla entre jornadas» y «Particulares de cada jornada»; decisiones de #364, #369, #436, #526, #527, #573, #691 y #693; migración de los specs 001, 007, 011, 016, 027, 031; quejas de la jornada 7 de #759, ficha «Particulares de cada jornada»; la ficha «Caminos narrativos y finales» y la fila «7B» de la lista de pistas e hipótesis, de #790; la sección «Epílogos» de la ficha «Caminos narrativos y finales», leída el 2026-11-05, de #836; cajas del proveedor de #788, filas «Caja de cartón del proveedor» y «Caja de madera» de «Objetos interactuables» leídas el 2026-11-04; hora del celular de #613, decisiones del 2026-10-29, 2026-10-30 y 2026-11-02; pantalla de final con tip y botones de #827, ficha «Pantalla de fin de juego» leída el 2026-11-05; textos de cierre de los finales 4 y 5 de #872, misma ficha leída el 2026-11-06
 ---
 
 # Capacidad: el ciclo de la jornada
@@ -156,14 +156,14 @@ tip NO DEBE cambiar mientras esa pantalla sigue a la vista.
 
 CUANDO se muestra la pantalla de un final narrativo, el sistema NO DEBE mostrar ningún tip: DEBE
 mostrar en su lugar el texto de cierre de ese final, con su texto literal, en los renglones que
-indica la tabla. SI el final no tiene texto de cierre, ENTONCES el espacio queda vacío (OQ-SHF-009).
+indica la tabla.
 
 | Final | Texto de cierre |
 |---|---|
 | 1 | Conseguiste ignorar tus instintos paranoicos. / ¿Pero a qué costo? ¿Es esta la “cordura” que querías preservar? |
 | 2 | Perdiste el rastro. No pudiste encontrar suficientes pistas como para elaborar una hipótesis sólida. Tal vez la próxima… |
-| 4 | sin texto todavía |
-| 5 | sin texto todavía |
+| 4 | La unión hace la fuerza. Pero no garantiza la estabilidad laboral… |
+| 5 | El pueblo unido jamás será vencido. |
 
 La barra «/» de la tabla separa los dos renglones del final 1.
 
@@ -706,10 +706,12 @@ de cierre, en dos renglones, y ninguno de los cinco tips. DADO la pantalla del f
 su texto de cierre y ninguno de los cinco tips. DADO el mismo final mostrado varias veces ENTONCES el
 texto es siempre el mismo.
 
-### AC-SHF-126 — Los finales 4 y 5 dejan el espacio vacío *(verifica BR-SHF-070)*
+### AC-SHF-141 — Los finales 4 y 5 muestran su texto de cierre y ningún tip *(verifica BR-SHF-070)*
 
-DADO la pantalla del final 4 o la del final 5 CUANDO se muestra ENTONCES entre el título y los botones
-no hay texto, y no hay ninguno de los cinco tips.
+DADO la pantalla del final 4 CUANDO se muestra ENTONCES entre el título y los botones está su texto
+de cierre y ninguno de los cinco tips. DADO la pantalla del final 5 ENTONCES está su texto de cierre
+y ninguno de los cinco tips. DADO el mismo final mostrado varias veces ENTONCES el texto es siempre
+el mismo.
 
 ### AC-SHF-127 — Los dos botones y el foco *(verifica BR-SHF-071)*
 
@@ -972,9 +974,4 @@ instancia nueva y sin cumplir.
 
 ## Preguntas abiertas
 
-- **OQ-SHF-009 — ¿Qué texto de cierre llevan los finales 4 y 5?**
-  - Por qué sigue abierta: la ficha «Pantalla de fin de juego» tiene la tabla de textos de cierre con
-    esas dos filas vacías.
-  - Decide: game design, en esa ficha.
-  - Bloquea: mostrar el texto de esos dos finales; no bloquea su pantalla, que deja el espacio vacío
-    (BR-SHF-070).
+Ninguna.
