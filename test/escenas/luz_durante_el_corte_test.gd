@@ -74,8 +74,9 @@ func test_durante_el_corte_nada_toma_de_las_sondas_mas_luz_que_su_ambiente() -> 
 	)
 
 
-## Una pista de papel recibe la luz como el resto: si se alumbrara sola, brillaría en la oscuridad.
-func test_durante_el_corte_las_pistas_de_papel_no_se_alumbran_solas() -> void:
+## Una pista de papel toma su luz de las sondas, como el resto: si la emitiera o no tomara
+## ninguna, brillaría en la oscuridad.
+func test_durante_el_corte_las_pistas_de_papel_toman_la_luz_de_las_sondas() -> void:
 	var local := _local_cortado()
 	var horno: LightmapGI = local.get_node("LightmapGI")
 	var papeles: Array[Node3D] = []
@@ -84,19 +85,19 @@ func test_durante_el_corte_las_pistas_de_papel_no_se_alumbran_solas() -> void:
 		local.add_child(papel)
 		papeles.append(papel)
 	var de_cada_papel: Array[int] = [0, 0]
-	var emisores: Array[String] = []
+	var sin_sondas: Array[String] = []
 	for fila: Dictionary in Luz.clasificar(local, horno, Lector.new(HORNO_SIN_LUZ)):
 		for indice in papeles.size():
 			if not papeles[indice].is_ancestor_of(fila.objeto):
 				continue
 			de_cada_papel[indice] += 1
-			if fila.clase == Luz.Clase.EMISOR:
-				emisores.append(fila.ruta)
+			if fila.clase != Luz.Clase.SONDAS:
+				sin_sondas.append("%s (%s)" % [fila.ruta, Luz.Clase.keys()[fila.clase]])
 	for cantidad in de_cada_papel:
 		assert_int(cantidad).is_greater(0)
 	(
-		assert_array(emisores)
-		. override_failure_message("se alumbran solas con el corte: %s" % ", ".join(emisores))
+		assert_array(sin_sondas)
+		. override_failure_message("no toman la luz de las sondas: %s" % ", ".join(sin_sondas))
 		. is_empty()
 	)
 
