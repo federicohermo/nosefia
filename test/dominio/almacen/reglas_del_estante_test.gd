@@ -7,11 +7,8 @@
 extends GdUnitTestSuite
 
 
-func test_los_intervalos_de_faltantes_son_un_sorteo_posible() -> void:  # AC-STK-034
-	assert_int(ReglasDelEstante.TIPOS_QUE_FALTAN.x).is_greater(0)
-	assert_int(ReglasDelEstante.TIPOS_QUE_FALTAN.y).is_greater_equal(
-		ReglasDelEstante.TIPOS_QUE_FALTAN.x
-	)
+func test_los_faltantes_son_un_sorteo_posible() -> void:  # AC-STK-034
+	assert_int(ReglasDelEstante.TIPOS_QUE_FALTAN).is_greater(0)
 	assert_int(ReglasDelEstante.MENOS_QUE_FALTA).is_greater(0)
 	assert_int(ReglasDelEstante.MENOS_QUE_FALTA).is_less_equal(ReglasDelEstante.UNIDADES_POR_CAJA)
 

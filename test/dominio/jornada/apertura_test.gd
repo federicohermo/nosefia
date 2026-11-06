@@ -238,9 +238,7 @@ func test_la_segunda_jornada_sortea_faltantes() -> void:  # AC-STK-094
 	var inventario := Apertura.inventario_de_la_jornada(
 		2, Compradores.de_la_jornada(2), _casilleros(), _casilleros(), azar
 	)
-	assert_int(inventario.faltantes().size()).is_between(
-		ReglasDelEstante.TIPOS_QUE_FALTAN.x, ReglasDelEstante.TIPOS_QUE_FALTAN.y
-	)
+	assert_int(inventario.faltantes().size()).is_equal(ReglasDelEstante.TIPOS_QUE_FALTAN)
 
 
 func test_retomar_la_primera_y_abrir_la_segunda_no_hereda_huecos() -> void:  # AC-STK-094

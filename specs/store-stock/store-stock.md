@@ -37,7 +37,7 @@ depósito son dos lugares distintos, y mover mercadería del fondo al estante cu
 | **Faltante** | un producto con algún casillero vacío en su fila de adelante | agotado, sin stock |
 | **Faltantes de la jornada** | cuántas unidades de cada producto faltan en la góndola cuando abre una jornada | pedido, reposición |
 | **Máximo reponible** | el menor entre los casilleros de la tanda reponible de un producto y las unidades de una caja menos sus unidades pedidas esa noche | cupo, vendibles |
-| **Producto elegible** | producto del catálogo cuyo máximo reponible es al menos una unidad | producto sorteado |
+| **Producto elegible** | producto del catálogo cuyo máximo reponible es al menos 3 unidades | producto sorteado |
 | **Vendibles** | lo que queda en la caja menos lo que a la góndola todavía le falta de ella: el depósito menos el mayor entre los casilleros vacíos de la fila de adelante y las unidades afuera | stock, disponible |
 | **Planilla** | la lista donde el jugador anota cuántas unidades se vendieron de cada producto | registro de caja, ticket |
 | **Lo vendido** | las unidades de un producto que salieron en ventas cobradas esa noche | stock, ventas del día |
@@ -229,8 +229,8 @@ góndola son huecos, y reponer queda cumplida cuando están todos llenos.
 Retomar la jornada 1 desde el menú DEBE abrirla completa otra vez.
 La jornada 2 DEBE abrir con su inventario nuevo y sus faltantes sorteados.
 Los huecos dejados por ventas en la jornada 1 NO DEBEN pasar a la siguiente.
-DEBE elegir entre 4 y 6 productos distintos y, de cada uno, entre 3 unidades y su máximo
-reponible. Ningún otro producto DEBE faltar. Los intervalos son los de la
+DEBE elegir cuatro productos distintos, ni más ni menos, y, de cada uno, entre 3 unidades y su
+máximo reponible. Ningún otro producto DEBE faltar. La cantidad y el intervalo son los de la
 [ficha «8. Tarea: Reposición»](https://app.notion.com/p/3cc86efecd9d81968a25c7cffca4b0dd).
 
 Para cada producto, el máximo reponible DEBE ser `mínimo(C − P, F)`: `C` son las unidades de una
@@ -243,10 +243,10 @@ DEBEN entrar al sorteo. Los pedidos DEBEN ser los mismos que recibe la atención
 incluidas las repeticiones de producto entre compradores. Consultarlos NO DEBE volver a sortear
 compradores ni pedidos.
 
-La cantidad de productos y las unidades de cada elegido DEBEN sortearse con reparto parejo
-entre los enteros de sus intervalos inclusivos. Los productos DEBEN elegirse sin repetición.
-SI hay menos elegibles que la cantidad sorteada, ENTONCES DEBEN faltar todos los elegibles
-y ninguno más. Con cero elegibles NO DEBE faltar nada.
+La cantidad de productos NO se sortea: sólo se sortea cuáles. Las unidades de cada elegido
+DEBEN sortearse con reparto parejo entre los enteros de su intervalo inclusivo. Los productos
+DEBEN elegirse sin repetición. SI hay menos de cuatro elegibles, ENTONCES DEBEN faltar todos
+los elegibles y ninguno más. Con cero elegibles NO DEBE faltar nada.
 
 El sistema DEBE recibir la fuente de azar: con la misma semilla inicial, pedidos y casilleros,
 DEBE producir los mismos faltantes y dejar vacíos los mismos casilleros. En juego, la fuente DEBE inicializarse al azar.
@@ -459,7 +459,7 @@ no implica renombrar productos.
 | Mitad de snacks dulces junto a cereales, primera isla | Macumbas, Pepitos (Pepito) |
 | Lado de snacks dulces, segunda isla | Oremos, Petisas, Cosa de Maní, Feel Ricky Fort |
 | Lado/cabecera de snacks salados, isla de snacks | Donsaturados (Don Saturados), Prongles (Progres), Chisitos, Laysntt (Laysnnt), Saladik (Saladick) |
-| Cabeceras de golosinas, isla de snacks | Burbaloo, Flinpuf (Flim Pof), Jorgillo |
+| Cabeceras de golosinas, isla de snacks | Burbaloo, Flinpuf (Flim Pof), Jorgillata |
 
 La primera isla DEBE reunir almacén, cereales y la mitad de snacks dulces junto a cereales,
 con bebidas sin refrigerar en una cabecera. La segunda DEBE reunir los otros snacks dulces,
@@ -554,7 +554,7 @@ reposición DEBEN consumir los mismos pedidos fijos de la única lista construid
 
 HASTA la jornada anterior a la primera completa, el sistema DEBE tener únicamente los
 dieciséis productos del mapa de prueba. Sus identidades son Actroncito, Duronga, Arvecor,
-Marolini, Zucarachas, Malbardo, Progres, Jorgillo, Pepito, Pura-Cola, Don Saturados, Petisas,
+Marolini, Zucarachas, Malbardo, Progres, Jorgillata, Pepito, Pura-Cola, Don Saturados, Petisas,
 Mayonchis, Poético, Terminator y Fernet God, con sus nombres de catálogo vigentes.
 
 Los otros productos NO DEBEN tener unidades en góndola o depósito, cajas visibles, cuerpos
@@ -578,7 +578,7 @@ los mismos productos del mapa de prueba, sin estantes vacíos:
 | Cabecera opuesta de esa isla | Fernet God |
 | Lado de dulces de la segunda isla | Pepito y Petisas |
 | Lado de salados de la segunda isla | Progres y Don Saturados |
-| Cabecera que conserva Jorgillo en el mapa completo | Jorgillo |
+| Cabecera que conserva Jorgillata en el mapa completo | Jorgillata |
 | Cabecera opuesta de la segunda isla | Malbardo |
 | Estantería de no comestibles | Actroncito y Duronga |
 | Primera heladera funcional | Pura-Cola |
@@ -873,21 +873,21 @@ estante con las 200 semillas ENTONCES los dos bloques quedan en estantes contigu
 ### AC-STK-034 — Lo que falta en cada jornada *(verifica BR-STK-026)*
 
 DADO las 200 semillas enteras de 0 a 199, ocho casilleros principales por producto y los pedidos de
-cada jornada de la 1 a la 5 CUANDO se sortean sus faltantes ENTONCES cada sorteo contiene entre 4 y
-6 productos distintos. Cada faltante está entre 3 y `mínimo(C − P, F)`, y los productos no elegidos
-están completos. Para cada jornada, las semillas producen al menos dos cantidades de productos y dos
-conjuntos de productos distintos.
+cada jornada de la 2 a la 7 CUANDO se sortean sus faltantes ENTONCES cada sorteo contiene exactamente
+cuatro productos distintos. Cada faltante está entre 3 y `mínimo(C − P, F)`, y los productos no
+elegidos están completos. Para cada jornada, las semillas producen al menos dos conjuntos de
+productos distintos.
 
-DADO una fuente de azar controlada CUANDO se eligen los extremos de los intervalos ENTONCES
-se pueden obtener 4 y 6 productos, y 3 y el máximo reponible de cada elegido. La elección de
-cantidad tiene tres alternativas equiprobables; la de unidades tiene tantas alternativas
-equiprobables como enteros hay entre 3 y su máximo reponible.
+DADO una fuente de azar controlada CUANDO se eligen los extremos del intervalo de unidades ENTONCES
+se pueden obtener 3 y el máximo reponible de cada elegido. La elección de unidades tiene tantas
+alternativas equiprobables como enteros hay entre 3 y su máximo reponible.
 
 DADO una caja de 8 CUANDO un producto tiene 6 casilleros principales y 3 unidades pedidas ENTONCES
 su máximo es 5. Con 4 casilleros principales y 1 unidad pedida, el máximo es 4. Con 8 unidades
 pedidas o con cero casilleros principales, el producto nunca falta; con un máximo de 2, tampoco,
 y con un máximo de 3 es elegible y le faltan exactamente 3. DADO exactamente tres elegibles
-CUANDO la cantidad sorteada es 4 o 6 ENTONCES faltan los tres; con uno, sólo ese; con cero, ninguno.
+CUANDO se sortean los faltantes ENTONCES faltan los tres; con uno, sólo ese; con cero, ninguno.
+DADO exactamente cuatro elegibles ENTONCES faltan los cuatro.
 DADO dos compradores que piden 2 y 3 unidades del mismo producto, una caja de 8 y 6 casilleros
 principales CUANDO se calcula su máximo reponible ENTONCES es 3, porque se suman ambos pedidos.
 
@@ -898,7 +898,7 @@ al menú y se continúa, o se retoma en otra sesión ENTONCES se realiza un nuev
 
 ### AC-STK-035 — Se vende sin quitarle a la reposición *(verifica BR-STK-027)*
 
-DADO las 200 semillas enteras de 0 a 199, los casilleros del local y cada jornada de la 1 a la 5 CUANDO
+DADO las 200 semillas enteras de 0 a 199, los casilleros del local y cada jornada de la 2 a la 7 CUANDO
 se completan todas las compras de los pedidos usados para acotar los faltantes, por el
 recorrido de esa jornada, ENTONCES ningún cobro se rechaza. CUANDO después se repone todo lo
 que falta ENTONCES la góndola queda completa y reponer queda cumplida.
@@ -1554,8 +1554,8 @@ solo de sus consumidores.
   obligatoria está cumplida, y el motivo de cada rechazo.
 - **Apertura sorteada:** recibe los mismos pedidos que la atención, suma sus unidades por
   producto y devuelve faltantes dentro del máximo de sus casilleros de adelante, y cuáles quedan
-  vacíos. El inventario conserva el cupo total. Con menos elegibles que la
-  cantidad sorteada devuelve todos; con cero, ninguno. No modifica ni vuelve a sortear los pedidos.
+  vacíos. El inventario conserva el cupo total. Con menos de cuatro
+  elegibles devuelve todos; con cero, ninguno. No modifica ni vuelve a sortear los pedidos.
 - **Orden del depósito:** recibe la particular de la jornada, el conjunto de cajas, si cada
   una está sostenida y su apoyo directo; contesta disposición de apertura y si todas cumplen
   la condición de orden. Ciclos y apoyos ausentes contestan pendiente; el conjunto vacío,
