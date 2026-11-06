@@ -62,7 +62,7 @@ position = Vector3(0, 0.04, -0.15)
 editor_description = "Cara de arriba del apoyo de la ventanilla, del lado de adentro; las entregas abandonadas se apoyan acá."
 
 [node name="Superficie" type="StaticBody3D" parent="ApoyoDeEntregas"]
-collision_layer = 1
+collision_layer = 16
 collision_mask = 0
 
 [node name="Tapa" type="CollisionShape3D" parent="ApoyoDeEntregas/Superficie"]

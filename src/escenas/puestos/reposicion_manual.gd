@@ -1862,8 +1862,10 @@ func recibir_abandonadas(cuerpos: Array[Node3D], punto: Marker3D) -> void:
 
 
 ## Con `sobre_el_apoyo`, sólo cuenta la cara de arriba del apoyo y se recorre su único renglón;
-## sin él, el piso del local desde ahí hacia adentro. **La abertura no cuenta**: la ventanilla
-## todavía la tiene cerrada al vencer, y esa capa sólo detiene lo que cruza con un comprador.
+## sin él, el piso del local desde ahí hacia adentro. **La abertura no estorba la consulta de
+## forma**: la ventanilla todavía la tiene cerrada al vencer, y esa capa sólo detiene lo que cruza
+## con un comprador. El apoyo vive en esa misma capa, que sólo miran los productos: ni la mira ni
+## la cámara lo ven.
 func _lugar_para_abandonada(
 	cuerpo: ObjetoAgarrable, punto: Marker3D, ocupados: Array[AABB], sobre_el_apoyo: bool
 ) -> Vector3:
@@ -1892,7 +1894,7 @@ func _lugar_para_abandonada(
 	for desplazamiento in candidatos:
 		var lugar := punto.global_transform * desplazamiento
 		var rayo := PhysicsRayQueryParameters3D.create(
-			lugar + Vector3.UP, lugar + Vector3.DOWN * 3.0, consulta.collision_mask
+			lugar + Vector3.UP, lugar + Vector3.DOWN * 3.0, ReglasDeLosObjetos.MASCARA_DEL_PRODUCTO
 		)
 		rayo.exclude = [cuerpo.get_rid()]
 		var piso := espacio.intersect_ray(rayo)
