@@ -37,7 +37,7 @@ depósito son dos lugares distintos, y mover mercadería del fondo al estante cu
 | **Faltante** | un producto con algún casillero vacío en su fila de adelante | agotado, sin stock |
 | **Faltantes de la jornada** | cuántas unidades de cada producto faltan en la góndola cuando abre una jornada | pedido, reposición |
 | **Máximo reponible** | el menor entre los casilleros de la tanda reponible de un producto y las unidades de una caja menos sus unidades pedidas esa noche | cupo, vendibles |
-| **Producto elegible** | producto del catálogo cuyo máximo reponible es al menos una unidad | producto sorteado |
+| **Producto elegible** | producto del catálogo cuyo máximo reponible es al menos 3 unidades | producto sorteado |
 | **Vendibles** | lo que queda en la caja menos lo que a la góndola todavía le falta de ella: el depósito menos el mayor entre los casilleros vacíos de la fila de adelante y las unidades afuera | stock, disponible |
 | **Planilla** | la lista donde el jugador anota cuántas unidades se vendieron de cada producto | registro de caja, ticket |
 | **Lo vendido** | las unidades de un producto que salieron en ventas cobradas esa noche | stock, ventas del día |
@@ -868,7 +868,7 @@ estante con las 200 semillas ENTONCES los dos bloques quedan en estantes contigu
 ### AC-STK-034 — Lo que falta en cada jornada *(verifica BR-STK-026)*
 
 DADO las 200 semillas enteras de 0 a 199, ocho casilleros principales por producto y los pedidos de
-cada jornada de la 1 a la 5 CUANDO se sortean sus faltantes ENTONCES cada sorteo contiene exactamente
+cada jornada de la 2 a la 7 CUANDO se sortean sus faltantes ENTONCES cada sorteo contiene exactamente
 cuatro productos distintos. Cada faltante está entre 3 y `mínimo(C − P, F)`, y los productos no
 elegidos están completos. Para cada jornada, las semillas producen al menos dos conjuntos de
 productos distintos.
@@ -893,7 +893,7 @@ al menú y se continúa, o se retoma en otra sesión ENTONCES se realiza un nuev
 
 ### AC-STK-035 — Se vende sin quitarle a la reposición *(verifica BR-STK-027)*
 
-DADO las 200 semillas enteras de 0 a 199, los casilleros del local y cada jornada de la 1 a la 5 CUANDO
+DADO las 200 semillas enteras de 0 a 199, los casilleros del local y cada jornada de la 2 a la 7 CUANDO
 se completan todas las compras de los pedidos usados para acotar los faltantes, por el
 recorrido de esa jornada, ENTONCES ningún cobro se rechaza. CUANDO después se repone todo lo
 que falta ENTONCES la góndola queda completa y reponer queda cumplida.
