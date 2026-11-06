@@ -27,7 +27,7 @@ disabled = true
 
 [node name="Comprador" type="AnimatedSprite3D" parent="."]
 visible = false
-position = Vector3(0, 0.57, 0.16)
+position = Vector3(0, 0.57, 0.18)
 rotation = Vector3(0, 3.1415927, 0)
 pixel_size = 0.001
 texture_filter = 0
@@ -43,7 +43,8 @@ antepecho = NodePath("../../Antepecho")
 [node name="Forma" type="CollisionShape3D" parent="Comprador/Objetivo"]
 
 [node name="Antepecho" type="MeshInstance3D" parent="."]
-position = Vector3(0, 0, -0.2)
+position = Vector3(0, 0, -0.1795)
+editor_description = "Termina en el plano exterior de la pared y sobresale sólo hacia adentro. Medio milímetro por delante del dintel mantiene positiva la profundidad del encuadre."
 mesh = SubResource("BoxMesh_antepecho")
 gi_mode = 2
 
