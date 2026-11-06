@@ -102,6 +102,7 @@ func _la_mira_lo_encuentra(objeto: ObjetoAgarrable) -> bool:
 func _contar_avisos(puerta: Node) -> Dictionary:
 	var avisos := {"abierta": 0, "trabada": 0}
 	puerta.connect("puerta_abierta", func(_p: Node3D) -> void: avisos["abierta"] += 1)
+	puerta.connect("puerta_forzada_con_palanca", func(_p: Node3D) -> void: avisos["abierta"] += 1)
 	puerta.connect("puerta_trabada", func(_p: Node3D) -> void: avisos["trabada"] += 1)
 	puerta.connect("porton_trabado", func(_p: Node3D) -> void: avisos["trabada"] += 1)
 	return avisos

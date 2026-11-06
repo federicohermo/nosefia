@@ -18,6 +18,11 @@ extends Node
 ## cortada. Quien escucha cierra las interfaces o las deja abrir.
 signal luz_cambiada(hay_luz: bool)
 
+## El corte y el tablero cambian la luz en la noche. Abrir una jornada también cambia la luz si la
+## anterior terminó cortada, y eso no avisa por acá: no es un corte ni una vuelta.
+signal luz_cortada
+signal luz_vuelta
+
 const HORNEADO_SIN_LUZ := "res://src/escenas/almacen_sin_luz.lmbake"
 
 ## La única luz que sigue encendida mientras no hay luz. Va en un grupo y no por nombre para que
@@ -190,8 +195,11 @@ func ensayar(a_oscuras: bool) -> void:
 
 
 func _cambiar(nuevo: AnomaliasDeLaJornada.Corte) -> void:
+	var habia_luz := _hay_luz
 	_estado = nuevo
 	_aplicar()
+	if _hay_luz != habia_luz:
+		(luz_vuelta if _hay_luz else luz_cortada).emit()
 
 
 func _aplicar() -> void:
