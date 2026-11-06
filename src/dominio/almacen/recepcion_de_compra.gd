@@ -12,6 +12,11 @@ func _init(pedido: Venta) -> void:
 	_pedido = pedido
 
 
+## Si el comprador se quedó con lo que se le entregó.
+static func aceptado(resultado: Resultado) -> bool:
+	return resultado == Resultado.ACEPTADA or resultado == Resultado.COMPLETA
+
+
 func recibir(objeto: ObjetoDelAlmacen, conversacion_terminada: bool) -> Resultado:
 	if not conversacion_terminada or completa():
 		return Resultado.BLOQUEADA

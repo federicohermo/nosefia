@@ -224,3 +224,9 @@ func test_solo_productos_no_completan_y_el_ultimo_elemento_completa() -> void:
 	assert_int(recepcion.recibir(_ticket(), true)).is_equal(RecepcionDeCompra.Resultado.BLOQUEADA)
 	var otra := RecepcionDeCompra.new(_pedido())
 	assert_int(otra.unidades().size()).is_zero()
+
+
+func test_acepta_el_comprador_solo_lo_que_recibio() -> void:
+	var recibidos := [RecepcionDeCompra.Resultado.ACEPTADA, RecepcionDeCompra.Resultado.COMPLETA]
+	for resultado: RecepcionDeCompra.Resultado in RecepcionDeCompra.Resultado.values():
+		assert_bool(RecepcionDeCompra.aceptado(resultado)).is_equal(recibidos.has(resultado))

@@ -49,13 +49,7 @@ func pedir_interaccion(objeto: ObjetoDelAlmacen) -> RecepcionDeCompra.Resultado:
 	var resultado := en_curso.interactuar(objeto)
 	if not iniciada and en_curso.conversacion_iniciada():
 		conversacion_iniciada.emit(en_curso.comprador())
-	if (
-		objeto is UnidadDeProducto
-		and (
-			resultado
-			in [RecepcionDeCompra.Resultado.ACEPTADA, RecepcionDeCompra.Resultado.COMPLETA]
-		)
-	):
+	if objeto is UnidadDeProducto and RecepcionDeCompra.aceptado(resultado):
 		producto_entregado.emit(objeto)
 	if resultado == RecepcionDeCompra.Resultado.COMPLETA:
 		compra_realizada.emit()

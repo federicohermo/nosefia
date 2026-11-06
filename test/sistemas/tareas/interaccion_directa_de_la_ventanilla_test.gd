@@ -107,3 +107,29 @@ func test_lo_que_el_comprador_rechaza_o_no_es_un_producto_no_se_publica() -> voi
 	ventanilla.pedir_interaccion(Ticket.new([]))
 	ventanilla.pedir_interaccion(null)
 	assert_array(entregados).is_empty()
+
+
+func test_el_ultimo_producto_que_completa_el_pedido_se_publica_tras_el_ticket() -> void:
+	var lista := _lista_para_recibir()
+	var ventanilla: Ventanilla = lista[0]
+	var estante: Estante = lista[1]
+	var entregados: Array[UnidadDeProducto] = []
+	ventanilla.producto_entregado.connect(
+		func(unidad: UnidadDeProducto) -> void: entregados.append(unidad)
+	)
+	var pedido := ventanilla.atencion().comprador().pedido()
+	var renglones: Array[Producto] = []
+	for producto in pedido.productos():
+		for _unidad in pedido.unidades_de(producto):
+			renglones.append(producto)
+	var del_ticket := ventanilla.pedir_interaccion(Ticket.new(renglones))
+	assert_int(del_ticket).is_equal(RecepcionDeCompra.Resultado.ACEPTADA)
+	assert_array(entregados).is_empty()
+	var esperados: Array[UnidadDeProducto] = []
+	var ultimo := RecepcionDeCompra.Resultado.BLOQUEADA
+	for producto in renglones:
+		var unidad := estante.retirar(producto)
+		ultimo = ventanilla.pedir_interaccion(unidad)
+		esperados.append(unidad)
+		assert_array(entregados).is_equal(esperados)
+	assert_int(ultimo).is_equal(RecepcionDeCompra.Resultado.COMPLETA)
