@@ -180,3 +180,11 @@ static func contexto_del_contenedor(con_la_mano: bool) -> Contexto:
 	return contexto_primario(
 		Linea.INTERACTUAR_PRIMARIO if con_la_mano else Linea.NINGUNA, Ruta.INTERACTUAR
 	)
+
+
+## La tapa abierta del todo con algo en la mano es parte del contenedor: desecha como su cuerpo.
+## Con la mano vacía, o cerrada o girando, alterna.
+static func contexto_de_la_tapa(abierta: bool, recibe: bool, con_la_mano: bool) -> Contexto:
+	if recibe and con_la_mano:
+		return contexto_del_contenedor(true)
+	return contexto_de_lo_fijo(abierta)
