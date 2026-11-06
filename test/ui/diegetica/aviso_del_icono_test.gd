@@ -67,6 +67,7 @@ func _rectangulo_en_pantalla(control: Control) -> Rect2:
 func _pantalla_con_aviso_en(ventana: Vector2i) -> PantallaDelCelular:
 	get_window().size = ventana
 	await get_tree().process_frame
+	assert_vector(get_viewport().get_visible_rect().size).is_equal(Vector2(ventana))
 	var pantalla := _pantalla()
 	pantalla.mostrar_recordatorio(true)
 	pantalla.soltar_los_no_leidos()
@@ -80,21 +81,33 @@ func _cabe_en_pantalla(control: Control) -> bool:
 	return visible.encloses(_rectangulo_en_pantalla(control))
 
 
-func test_el_icono_y_el_circulo_no_se_cortan_a_1920x1080() -> void:  # AC-INV-180
+func test_el_icono_y_el_circulo_no_se_cortan_a_1920x1080() -> void:
 	var pantalla := await _pantalla_con_aviso_en(Vector2i(1920, 1080))
 	assert_bool(_circulo(pantalla).is_visible_in_tree()).is_true()
 	assert_bool(_cabe_en_pantalla(_recordatorio(pantalla).get_node("Icono"))).is_true()
 	assert_bool(_cabe_en_pantalla(_circulo(pantalla))).is_true()
 
 
-func test_el_icono_y_el_circulo_no_se_cortan_a_1280x720() -> void:  # AC-INV-180
+func test_el_icono_y_el_circulo_no_se_cortan_a_1280x720() -> void:
 	var pantalla := await _pantalla_con_aviso_en(Vector2i(1280, 720))
 	assert_bool(_circulo(pantalla).is_visible_in_tree()).is_true()
 	assert_bool(_cabe_en_pantalla(_recordatorio(pantalla).get_node("Icono"))).is_true()
 	assert_bool(_cabe_en_pantalla(_circulo(pantalla))).is_true()
 
 
-func test_la_tecla_queda_a_la_derecha_del_icono_sin_que_el_circulo_la_tape() -> void:  # AC-INV-180
+func test_el_icono_sigue_adentro_de_la_pantalla_si_crece_su_alto() -> void:
+	var pantalla := await _pantalla_con_aviso_en(Vector2i(1920, 1080))
+	var icono: Control = _recordatorio(pantalla).get_node("Icono")
+	var alto := icono.custom_minimum_size.y
+	icono.custom_minimum_size.y = alto * 2.0
+	await get_tree().process_frame
+	pantalla.call("_ajustar")
+	await get_tree().process_frame
+	assert_float(icono.size.y).is_greater_equal(alto * 2.0)
+	assert_bool(_cabe_en_pantalla(icono)).is_true()
+
+
+func test_la_tecla_queda_a_la_derecha_del_icono_sin_que_el_circulo_la_tape() -> void:
 	var pantalla := _pantalla()
 	pantalla.mostrar_recordatorio(true)
 	await get_tree().process_frame
