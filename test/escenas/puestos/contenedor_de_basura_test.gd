@@ -97,7 +97,6 @@ func test_cerrar_tapa_bloquea_la_boca_y_abrir_la_deja_libre() -> void:  # AC-CLN
 	var bisagra := tapa.bisagra.global_position
 	assert_bool(tapa.is_in_group(ReglasDelJugador.GRUPO_INTERACTUABLE)).is_true()
 	assert_array(tapa.mallas).has_size(2)
-	assert_bool(tapa.has_method(ReglasDeLosObjetos.METODO_INTERACTUAR)).is_false()
 	tapa.accionar()
 	await _terminar_el_giro(tapa)
 	var centro := _centro_interior(contenedor)
@@ -339,6 +338,104 @@ func test_parado_junto_al_contenedor_lo_soltado_sin_mira_no_queda_adentro() -> v
 	assert_int(probados).is_greater(0)
 
 
+func test_lo_soltado_mirando_la_tapa_no_se_apoya_en_ella() -> void:  # AC-CLN-079
+	var almacen := await _abrir_con_semilla()
+	var contenedor: StaticBody3D = almacen.get("_contenedor")
+	var tapa: TapaDelLocal = almacen.get("_tapa_del_contenedor")
+	var jugador: Node3D = almacen.get("_jugador")
+	var camara: Camera3D = jugador.get_node("Giro/Camara")
+	var caja: RigidBody3D = almacen.get("_cajas_de_productos")[0]
+	var bidon: RigidBody3D = almacen.get_node("Objetos/JabonAzul")
+	var limites := _limites(contenedor)
+	var delante := Vector3(limites.get_center().x, limites.position.y, limites.end.z + 1.2)
+	var piso := _rayo(almacen, delante + Vector3.UP, delante + Vector3.DOWN)
+	assert_bool(piso.is_empty()).is_false()
+	for cerrada: bool in [false, true]:
+		if cerrada:
+			tapa.accionar()
+			await _terminar_el_giro(tapa)
+		var toque := _tocar_la_tapa(almacen, tapa)
+		assert_bool(toque.is_empty()).is_false()
+		for cuerpo: RigidBody3D in [caja, bidon]:
+			jugador.call(
+				"ubicar", Transform3D(Basis.IDENTITY, piso["position"] + Vector3.UP * 0.005)
+			)
+			camara.global_position = toque["desde"]
+			camara.look_at(toque["posicion"])
+			assert_object(_golpe_de_la_mira(jugador, cuerpo).get("collider")).is_same(tapa)
+			_soltar(almacen, cuerpo)
+			_afirmar_fuera_del_contenedor(almacen, cuerpo, jugador, contenedor)
+
+
+func test_con_la_tapa_abierta_el_clic_tira_la_bolsa_mirando_desde_cada_lado() -> void:  # AC-CLN-036
+	var almacen := await _abrir()
+	var contenedor: StaticBody3D = almacen.get("_contenedor")
+	var tapa: TapaDelLocal = almacen.get("_tapa_del_contenedor")
+	var jugador: Node3D = almacen.get("_jugador")
+	jugador.set_physics_process(false)
+	var camara: Camera3D = jugador.get_node("Giro/Camara")
+	var agarre: Agarre = almacen.get("_agarre")
+	var recolector: RecolectorDeBasura = almacen.get("_recolector")
+	var cuerpo_del_jugador: CollisionShape3D = jugador.get_node("Cuerpo")
+	var limites := _limites(contenedor)
+	var separacion := (cuerpo_del_jugador.shape as CapsuleShape3D).radius + 0.3
+	var ejes: Dictionary[Vector3, bool] = {}
+	for lado: Vector3 in [Vector3.BACK, Vector3.FORWARD, Vector3.LEFT, Vector3.RIGHT]:
+		if ejes.size() == BolsaEnLaMano.RUTAS.size():
+			break
+		var junto := limites.get_center() + lado * (limites.size * 0.5 + Vector3.ONE * separacion)
+		junto.y = limites.position.y
+		var piso := _rayo(almacen, junto + Vector3.UP, junto + Vector3.DOWN)
+		if piso.is_empty() or piso["collider"] == contenedor:
+			continue
+		var lugar: Vector3 = piso["position"] + Vector3.UP * 0.005
+		var volumen := PhysicsShapeQueryParameters3D.new()
+		volumen.shape = cuerpo_del_jugador.shape
+		volumen.transform = Transform3D(Basis.IDENTITY, lugar) * cuerpo_del_jugador.transform
+		volumen.collision_mask = jugador.collision_mask
+		volumen.exclude = [jugador.get_rid()]
+		volumen.margin = 0.0
+		if not almacen.get_world_3d().direct_space_state.intersect_shape(volumen).is_empty():
+			continue
+		var vista := limites.get_center()
+		var visto := _rayo(
+			almacen, lugar + Vector3.UP * ReglasDelJugador.ALTURA_DE_LA_CAMARA, vista
+		)
+		if not [contenedor, tapa].has(visto.get("collider")):
+			continue
+		var bolsa := BolsaEnLaMano.sacar(almacen, ejes.size())
+		assert_object(bolsa).is_not_null()
+		jugador.call("ubicar", Transform3D(Basis.IDENTITY, lugar))
+		camara.look_at(vista)
+		for cuadro in 3:
+			await get_tree().physics_frame
+		jugador.call("_leer_la_mira")
+		# El foco cae en el cuerpo o en la tapa según el ángulo: las dos son el mismo contenedor.
+		assert_bool([contenedor, tapa].has(jugador.call("enfocado"))).is_true()
+		var clic := InputEventMouseButton.new()
+		clic.button_index = MOUSE_BUTTON_LEFT
+		clic.pressed = true
+		jugador.call("_unhandled_input", clic)
+		assert_bool(recolector.tarea().esta_depositada(bolsa.datos.id)).is_true()
+		assert_object(agarre.manos().sostenido()).is_null()
+		assert_bool(tapa.recibe_objetos()).is_true()
+		ejes[lado] = true
+	assert_bool(ejes.has(Vector3.BACK) or ejes.has(Vector3.FORWARD)).is_true()
+	assert_bool(ejes.has(Vector3.LEFT) or ejes.has(Vector3.RIGHT)).is_true()
+
+
+## Dónde toca un rayo la tapa y desde dónde sale: el lado que la deja a la vista depende de su giro.
+func _tocar_la_tapa(almacen: Node3D, tapa: TapaDelLocal) -> Dictionary:
+	var centro := (tapa.forma.global_transform * LimitesDeForma.de(tapa.forma.shape)).get_center()
+	for direccion: Vector3 in [
+		Vector3.UP, Vector3.BACK, Vector3.FORWARD, Vector3.LEFT, Vector3.RIGHT
+	]:
+		var golpe := _rayo(almacen, centro + direccion, centro)
+		if golpe.get("collider") == tapa:
+			return {"desde": centro + direccion, "posicion": golpe["position"]}
+	return {}
+
+
 func _abrir_con_semilla() -> Node3D:
 	var almacen: Node3D = auto_free(ALMACEN.instantiate())
 	add_child(almacen)
@@ -360,6 +457,7 @@ func _afirmar_fuera_del_contenedor(
 	var debajo := _debajo_de(almacen, cuerpo, jugador)
 	assert_object(debajo.get("collider")).is_not_null()
 	assert_object(debajo.get("collider")).is_not_same(contenedor)
+	assert_object(debajo.get("collider")).is_not_same(almacen.get("_tapa_del_contenedor"))
 	assert_bool(_encimado_con_algo(almacen, cuerpo, jugador)).is_false()
 
 

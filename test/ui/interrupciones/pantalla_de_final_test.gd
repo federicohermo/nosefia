@@ -108,13 +108,14 @@ func test_el_mensaje_del_despido_es_uno_de_los_tips() -> void:  # AC-SHF-124
 	assert_str(pantalla.mensaje()).is_equal(tip)
 
 
-func test_los_finales_muestran_su_cierre_y_no_un_tip() -> void:  # AC-SHF-125 AC-SHF-126
+func test_los_finales_muestran_su_cierre_y_no_un_tip() -> void:  # AC-SHF-125 AC-SHF-141
 	var pantalla := _pantalla()
 	for final: FinalConPantalla.Cual in FINALES:
 		if final == FinalConPantalla.Cual.DESPEDIDO:
 			continue
 		pantalla.mostrar(final)
-		assert_str(pantalla.mensaje()).is_equal(FinalConPantalla.CIERRES.get(final, ""))
+		assert_str(pantalla.mensaje()).is_not_empty()
+		assert_str(pantalla.mensaje()).is_equal(FinalConPantalla.CIERRES[final])
 		assert_array(FinalConPantalla.TIPS).not_contains([pantalla.mensaje()])
 
 
