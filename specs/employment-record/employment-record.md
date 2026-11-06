@@ -610,6 +610,18 @@ elegir un único texto para Tarea 5, letra por letra de la ficha «Chat con el j
 «Último» es el último enviado con wifi (BR-SHF-032). SI el pedido quedó cumplido, ENTONCES NO DEBE
 haber Tarea 5. Las demás jornadas NO DEBEN traer estos textos.
 
+### BR-EMP-048 — La persiana del cierre baja frenando al llegar abajo
+
+CUANDO cierra cualquier jornada, de la primera a la última, y también al despedir, el sistema DEBE
+bajar la persiana con ease out: la velocidad es máxima al empezar y decrece hasta cero al llegar
+abajo, sin rebote. La curva y la duración son valores de diseño; la duración es la de BR-EMP-030.
+El avance de la bajada DEBE ser 0 al empezar y 1 al terminar, y NO DEBE retroceder. La persiana
+bajada DEBE anunciarse una sola vez, cuando está entera abajo; BR-EMP-044 cuenta sus 0,5 segundos
+desde ese momento, y las noches de prueba abren lo que sigue (BR-EMP-011) recién entonces. El sonido
+de la bajada DEBE durar lo mismo que la bajada. MIENTRAS la pausa está en pantalla, la curva NO
+DEBE avanzar, y al reanudar sigue desde donde quedó. La subida de la persiana al abrir la noche
+(BR-SHF-019) NO DEBE cambiar.
+
 ## Criterios de aceptación
 
 ### AC-EMP-001 — Los tres cortes *(verifica BR-EMP-001)*
@@ -1275,6 +1287,22 @@ DADO el cierre de la jornada 6 con el pedido cumplido ENTONCES la devolución no
 los dos textos. DADO el cierre de cada jornada distinta de la 6 con el pedido sin cumplir ENTONCES
 la devolución no trae ninguno de los dos.
 
+### AC-EMP-118 — La persiana baja frenando, en cualquier jornada *(verifica BR-EMP-048, BR-EMP-030)*
+
+DADO el cierre de la jornada 1, y el de la jornada 3, CUANDO pasa la mitad de la duración de la
+bajada ENTONCES la persiana bajó más de la mitad de la pantalla y todavía no terminó. CUANDO se
+comparan el primer y el último décimo de la duración ENTONCES la persiana baja menos en el último
+que en el primero. CUANDO pasa la duración entera ENTONCES el avance es 1, la persiana está entera
+abajo y se anuncia la persiana bajada una sola vez; pasar más tiempo NO la anuncia otra vez. DADO
+la persiana bajando CUANDO se pausa a mitad de la bajada, pasan 5 s y se reanuda ENTONCES la
+posición es la misma de antes de pausar y termina de bajar con el tiempo que le faltaba.
+
+### AC-EMP-119 — La subida y el sonido no cambian con la curva *(verifica BR-EMP-048)*
+
+DADO la entrada a la noche CUANDO pasa la mitad de la duración de la subida ENTONCES la apertura de
+la persiana es la mitad, como antes. DADO la persiana bajando CUANDO suena la bajada ENTONCES el
+sonido se ajusta para durar lo mismo que la bajada.
+
 ## No objetivos
 
 - Esta capacidad NO cuenta el tiempo de la noche ni cuántas obligatorias hay: las recibe.
@@ -1336,6 +1364,13 @@ la devolución no trae ninguno de los dos.
   mensajes de pistas de la partida, conservados entre aperturas sin duplicar su titularidad.
 
 ## Preguntas abiertas
+
+- **OQ-EMP-015 — ¿Qué curva exacta de ease out y qué duración tiene la bajada de la persiana?**
+  - Por qué sigue abierta: la ficha «Especificar animaciones» dice «smart animate ease out» y no
+    da la forma de la curva ni la duración.
+  - Decide: una persona de game design, con arte.
+  - Bloquea: nada. Mientras tanto, la curva es una cúbica de ease out y la duración es la de
+    BR-EMP-030.
 
 - **OQ-EMP-014 — ¿Qué dice el mensaje 1 de la jornada 2 con cero clientes mal atendidos, el
   registro mal hecho y huecos vacíos en las góndolas?**
