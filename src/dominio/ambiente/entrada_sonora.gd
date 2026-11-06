@@ -57,6 +57,14 @@ enum Evento {
 	BOLSA_SACADA,
 	OBJETO_DESECHADO,
 	NOTA_ANOTADA,
+	LUZ_CORTADA,
+	LUZ_VUELTA,
+	WIFI_APAGADO,
+	WIFI_PRENDIDO,
+	NOTIFICACION_ENTRADA,
+	NOTIFICACION_SALIDA,
+	PUERTA_FORZADA_CON_LLAVE,
+	PUERTA_FORZADA_CON_PALANCA,
 }
 
 ## Cómo suena una cosa al agarrarla o al dejarla. Los valores salen de la ficha de sonido.

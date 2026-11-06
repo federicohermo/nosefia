@@ -133,3 +133,28 @@ func test_avisa_cada_cambio_una_sola_vez() -> void:  # AC-ANO-021
 	assert_array(avisos).is_equal(
 		[ESTADO.SIN_ENERGIA, ESTADO.DESCOMPUESTO, ESTADO.APAGADO, ESTADO.CON_WIFI]
 	)
+
+
+func test_el_jugador_apaga_y_prende_el_router_y_cada_gesto_avisa() -> void:
+	var wifi := _noche(AnomaliasDeLaJornada.JORNADA_DEL_CORTE, 0.0)
+	wifi.seguir_al_corte(CORTE.CORTADO)
+	wifi.seguir_al_corte(CORTE.RESTAURADO)
+	var gestos: Array[String] = []
+	wifi.router_apagado.connect(func() -> void: gestos.append("apagado"))
+	wifi.router_prendido.connect(func() -> void: gestos.append("prendido"))
+	wifi.accionar()
+	wifi.accionar()
+	wifi.accionar()
+	assert_array(gestos).is_equal(["apagado", "prendido"])
+
+
+func test_el_corte_y_la_apertura_no_avisan_ningun_gesto_del_router() -> void:
+	var wifi := WifiDelLocal.new()
+	var gestos: Array[String] = []
+	wifi.router_apagado.connect(func() -> void: gestos.append("apagado"))
+	wifi.router_prendido.connect(func() -> void: gestos.append("prendido"))
+	wifi.seguir_al_corte(CORTE.CORTADO)
+	wifi.seguir_al_corte(CORTE.RESTAURADO)
+	wifi.abrir_jornada()
+	wifi.accionar()
+	assert_array(gestos).is_empty()
