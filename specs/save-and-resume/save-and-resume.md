@@ -129,6 +129,9 @@ pausar: ese Esc ya lo atendió la interfaz. Soltarlo el propio juego NO DEBE pau
 devolución o la reflexión de cierre en pantalla perder el cursor NO DEBE pausar. Cambiar de pestaña, minimizar o pasar a otra ventana NO DEBE pausar la jornada ni
 mostrar el menú de pausa; volver tampoco DEBE abrirlo.
 
+Con la pantalla de final visible, en cualquiera de los finales, ni Esc ni el cursor suelto DEBEN
+pausar: la pantalla suelta el cursor para sus botones, y eso no es perderlo.
+
 SI Configuraciones está abierta desde la pausa, ENTONCES Esc DEBE cerrarla y dejar el menú de
 pausa en pantalla, **sin reanudar**; el Esc siguiente reanuda, como siempre. SI Configuraciones
 está abierta desde el menú de inicio, ENTONCES Esc DEBE cerrarla y dejar el menú de inicio.
@@ -474,6 +477,11 @@ pausa, ENTONCES continuar sigue deshabilitado.
 DADO una partida guardada en la jornada 7 CUANDO se abre la puerta del jefe con la llave ENTONCES el
 guardado se borra y no se escribe otro. CUANDO se vuelve al menú, desde la pantalla de final o desde la
 pausa, ENTONCES continuar sigue deshabilitado.
+
+### AC-SAV-052 — La pantalla de final no se pausa *(verifica BR-SAV-016)*
+
+DADO la pantalla de final visible CUANDO llega Esc o el cursor queda suelto ENTONCES el juego no
+se pausa.
 
 ### AC-SAV-033 — Un guardado de otra numeración no se migra *(verifica BR-SAV-007)*
 
