@@ -20,7 +20,7 @@ func _esc() -> InputEventAction:
 	return evento
 
 
-func test_con_la_pantalla_del_final_visible_esc_y_perder_el_cursor_no_pausan() -> void:
+func test_con_la_pantalla_del_final_visible_esc_y_cursor_suelto_no_pausan() -> void:  # AC-SAV-052
 	var pantalla: CanvasLayer = auto_free(CanvasLayer.new())
 	pantalla.visible = true
 	var control := _control(pantalla)

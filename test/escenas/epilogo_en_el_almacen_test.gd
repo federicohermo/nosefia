@@ -111,7 +111,7 @@ func test_durante_el_epilogo_esc_no_pausa_y_el_reloj_no_corre() -> void:  # AC-S
 	assert_bool(get_tree().paused).is_false()
 
 
-func test_con_la_pantalla_del_final_a_la_vista_ni_esc_ni_perder_el_cursor_pausan() -> void:
+func test_con_la_pantalla_del_final_a_la_vista_ni_esc_ni_el_cursor_pausan() -> void:  # AC-SAV-052
 	await _hasta_el_epilogo_del_final_1()
 	AvanceDelEpilogo.recorrer(_almacen)
 	var final: PantallaDeFinal = _almacen.get_node("PantallaDeFinal")

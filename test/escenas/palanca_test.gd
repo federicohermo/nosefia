@@ -230,7 +230,7 @@ func test_el_final_4_muestra_su_pantalla_y_borra_el_guardado() -> void:  # AC-SH
 	assert_bool(Guardado.new().hay_guardado()).is_false()
 
 
-func test_con_la_pantalla_del_final_4_ni_pausa_ni_icono_del_celular() -> void:
+func test_con_la_pantalla_del_final_4_ni_pausa_ni_icono_del_celular() -> void:  # AC-SAV-052
 	await _abrir(JORNADA_7, _por_la_6b())
 	var recordatorio: Control = _almacen.get("_pantalla_del_celular").get("_recordatorio")
 	assert_bool(recordatorio.is_visible_in_tree()).is_true()
