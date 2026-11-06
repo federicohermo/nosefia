@@ -54,7 +54,15 @@ func test_cada_final_tiene_texto() -> void:  # AC-SHF-063 AC-SHF-064 AC-SHF-066 
 		assert_int(titulos.count(titulo)).is_equal(1)
 
 
-func test_tiene_dos_botones_y_el_foco_esta_en_el_de_arriba() -> void:  # AC-SHF-127
+func _tecla(accion: StringName) -> void:
+	for pulsada: bool in [true, false]:
+		var evento := InputEventAction.new()
+		evento.action = accion
+		evento.pressed = pulsada
+		get_viewport().push_input(evento)
+
+
+func test_tiene_dos_botones_y_ninguno_toma_foco() -> void:  # AC-SHF-127
 	var pantalla := _pantalla()
 	for final: FinalConPantalla.Cual in FINALES:
 		pantalla.mostrar(final)
@@ -64,7 +72,31 @@ func test_tiene_dos_botones_y_el_foco_esta_en_el_de_arriba() -> void:  # AC-SHF-
 		assert_object(botones[1]).is_same(pantalla.boton_de_volver())
 		assert_str(botones[0].text).is_equal(PantallaDeFinal.TEXTO_DE_NUEVA_PARTIDA)
 		assert_str(botones[1].text).is_equal(PantallaDeFinal.TEXTO_DE_VOLVER)
-		assert_bool(pantalla.boton_de_nueva_partida().has_focus()).is_true()
+		for boton: Button in botones:
+			assert_int(boton.focus_mode).is_equal(Control.FOCUS_NONE)
+			assert_bool(boton.has_focus()).is_false()
+
+
+func test_flechas_y_enter_no_piden_ninguna_salida() -> void:  # AC-SHF-127
+	var pantalla := _pantalla()
+	for final: FinalConPantalla.Cual in FINALES:
+		pantalla.mostrar(final)
+		for accion: StringName in [&"ui_down", &"ui_up", &"ui_right", &"ui_accept", &"ui_select"]:
+			_tecla(accion)
+		assert_int(_nuevas).is_zero()
+		assert_int(_pedidos).is_zero()
+		for boton: Button in _botones(pantalla):
+			assert_bool(boton.has_focus()).is_false()
+
+
+func test_el_cursor_queda_visible_al_mostrarse() -> void:  # AC-SHF-127
+	var pantalla := _pantalla()
+	var modo_anterior := Input.mouse_mode
+	for final: FinalConPantalla.Cual in FINALES:
+		Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
+		pantalla.mostrar(final)
+		assert_int(Input.mouse_mode).is_equal(Input.MOUSE_MODE_VISIBLE)
+	Input.mouse_mode = modo_anterior
 
 
 func test_el_mensaje_del_despido_es_uno_de_los_tips() -> void:  # AC-SHF-124
