@@ -9,7 +9,7 @@ const ESCENA := "res://src/escenas/objetos/caja_de_productos.tscn"
 const SCRIPT := "res://src/escenas/objetos/caja_de_productos.gd"
 const CABLEADO := "res://src/escenas/almacen.gd"
 
-## Las escenas que declaran las 31 cajas. Ninguna les pisa el material.
+## Las escenas que declaran las 32 cajas. Ninguna les pisa el material.
 const ESCENAS_CON_CAJAS := [
 	"res://src/escenas/puestos/objetos_del_almacen.tscn", "res://src/escenas/almacen.tscn"
 ]
@@ -275,7 +275,7 @@ func test_cada_producto_tiene_decidida_su_caja() -> void:
 
 
 ## Agregar la etiqueta de un producto es una línea: la tabla del script de la caja. Treinta y
-## una sobreescrituras de material en las escenas serían treinta y un lugares para olvidarse.
+## dos sobreescrituras de material en las escenas serían treinta y dos lugares para olvidarse.
 func test_la_etiqueta_de_cada_producto_es_una_linea_del_script() -> void:
 	var texto := FileAccess.get_file_as_string(SCRIPT)
 	assert_str(texto).is_not_empty()
