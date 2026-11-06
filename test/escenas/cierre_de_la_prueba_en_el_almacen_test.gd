@@ -148,6 +148,15 @@ func test_la_tercera_noche_cierra_sin_celular_y_sigue_la_cuarta() -> void:  # AC
 	assert_int(await _cerrar_sin_celular(COMPLETA - 1)).is_equal(COMPLETA)
 
 
+func test_la_persiana_de_la_primera_noche_pasa_la_mitad_a_mitad_de_tiempo() -> void:  # AC-EMP-118
+	var almacen: Node3D = await _almacen(PRIMERA)
+	_cerrar_el_turno(almacen)
+	assert_bool(_persiana(almacen).get("_bajando")).is_true()
+	assert_float(AvanceDeDevolucion.bajado_a_la_mitad_del_tiempo(_persiana(almacen))).is_greater(
+		0.5
+	)
+
+
 func test_pausar_con_la_persiana_bajando_no_sube_el_celular() -> void:  # AC-EMP-094
 	var almacen: Node3D = await _almacen(PRIMERA)
 	_cerrar_el_turno(almacen)

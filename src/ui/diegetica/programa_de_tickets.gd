@@ -18,7 +18,7 @@ signal eleccion_pedida(renglon: int, producto: Producto)
 @export var renglon_lleno: StyleBox
 @export var renglon_vacio: StyleBox
 
-var _catalogo: Array[Producto] = Catalogo.todos()
+var _catalogo: Array[Producto] = Catalogo.en_orden_alfabetico(Catalogo.todos())
 
 
 func _ready() -> void:

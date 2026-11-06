@@ -165,9 +165,13 @@ func _entregar_a_tin(
 	var forma_jugador: CollisionShape3D = jugador.get_node("Cuerpo")
 	var capsula := forma_jugador.shape as CapsuleShape3D
 	var antepecho: MeshInstance3D = ventana.get("antepecho")
+	var borde_interior := antepecho.global_transform * antepecho.get_aabb()
 	var lugar := (
 		ventana.global_position
-		- ventana.global_basis.z * (capsula.radius + antepecho.get_aabb().size.z / 2.0 + 0.1)
+		- (
+			ventana.global_basis.z
+			* (ventana.global_position.z - borde_interior.position.z + capsula.radius + 0.1)
+		)
 	)
 	var suelo: StaticBody3D = _almacen.get("_reposicion_manual").get("suelo")
 	var consulta := PhysicsRayQueryParameters3D.create(
