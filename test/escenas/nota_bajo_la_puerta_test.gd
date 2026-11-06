@@ -1,5 +1,6 @@
 extends GdUnitTestSuite
 
+const PAPEL := preload("res://src/escenas/objetos/nota_bajo_la_puerta.tscn")
 const JORNADA_DE_LA_NOTA := GeneradorDeTickets.JORNADA_SIN_LECTOR + 1
 
 var _almacen: Node3D
@@ -209,7 +210,7 @@ func test_mirar_rechazar_o_pausar_no_registran_la_nota() -> void:  # AC-INV-122
 
 
 func test_la_nota_es_un_papel_manuscrito_propio() -> void:  # AC-INV-126
-	var escena := load("res://src/escenas/objetos/nota_bajo_la_puerta.tscn") as PackedScene
+	var escena := PAPEL
 	var nota: ObjetoAgarrable = auto_free(escena.instantiate())
 	var colilla := load("res://src/escenas/objetos/colilla.tscn") as PackedScene
 	var de_la_colilla: ObjetoAgarrable = auto_free(colilla.instantiate())
@@ -262,3 +263,13 @@ func test_la_nota_toca_la_puerta_del_jefe() -> void:
 		clampf(en_planta.y, hoja.position.z, hoja.end.z)
 	)
 	assert_float(en_planta.distance_to(cerca)).is_less_equal(papel.size.x / 2.0)
+
+
+func test_el_papel_conserva_la_proporcion_de_su_textura() -> void:
+	var papel: ObjetoAgarrable = auto_free(PAPEL.instantiate())
+	var cara := papel.get_node("Escrito") as MeshInstance3D
+	var textura := (cara.get_surface_override_material(0) as StandardMaterial3D).albedo_texture
+	var plano := cara.mesh as PlaneMesh
+	assert_float(plano.size.x / plano.size.y).is_equal_approx(
+		float(textura.get_width()) / textura.get_height(), 0.01
+	)

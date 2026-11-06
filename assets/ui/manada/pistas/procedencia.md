@@ -27,12 +27,13 @@ Si la tarjeta de pista recorta la imagen, el recorte se hace en la tarjeta y no 
 
 ## La nota de Yasmín (pista 6C)
 
-`nota-bajo-la-puerta.png` es la textura de la nota: el texto de la ficha de la pista 6C, con
-letra manuscrita, sobre `assets/models/SEPT_JUEGOS_PROTOTIPO_nota sin texto.png`, el papel del
-artista. Por decisión del usuario del 3 de noviembre de 2026, la hace el implementador y no un
-issue de arte aparte. La genera `assets/props/nota/generar_nota.py` con la fuente Ink Free de
-Windows y un azar fijo. El texto es el de la nota de la ficha, con «Yasmín» donde la ficha dice
-«Jazmín».
+`nota-bajo-la-puerta.png` es la textura frontal de la nota: el nodo `1865:867` de «Manada - UI» en
+Figma («Textura frontal de la pista 6C», 1342 × 987). La exportación trae un fondo liso que no es
+del papel; `assets/props/nota/generar_nota.py` pasa a transparente ese fondo y deja el papel como
+está. La exportación original pesa lo que pesa su SHA-256:
+`6165afbb02a508129b19803c3b1e791a84db18286d62c8cac8c93605dfa3ffd9`. `nota-dorso.png` es el mismo
+contorno en blanco, de la misma generación. El texto es el de la ficha, con «Yasmín» donde la
+ficha dice «Jazmín».
 
 `nota-examinada.png` es la foto de la pista: una captura de la nota examinada, con la mano y la
 cámara reales del jugador, en la jornada 6 con la 5B elegida. La genera `capturar_nota.gd`, con
