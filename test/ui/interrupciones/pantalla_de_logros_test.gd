@@ -150,14 +150,22 @@ func test_todo_final_alcanzado_muestra_su_nombre() -> void:  # AC-ACH-013
 		)
 
 
-func test_una_pista_descubierta_muestra_su_foto_y_su_texto() -> void:  # AC-ACH-013
+func test_una_pista_descubierta_muestra_su_foto_y_el_titulo_de_su_hipotesis() -> void:  # AC-ACH-013
+	var caso := CasoDeInvestigacion.de_la_partida()
 	var pistas := _pistas_con_nota()
+	var cigarrillo := pistas.find(caso.pista_de("2B"))
+	assert_int(cigarrillo).is_greater_equal(0)
 	var logros := Logros.new()
-	logros.descubrir_pista(pistas[0].identidad)
+	logros.descubrir_pista("2B")
 	var entradas := _pantalla(logros).entradas(PISTAS)
-	assert_str(_texto(entradas[0])).is_equal(pistas[0].texto)
-	assert_object(_imagen(entradas[0])).is_same(pistas[0].foto)
-	assert_str(_texto(entradas[1])).is_equal(PantallaDeLogros.TEXTO_BLOQUEADO)
+	assert_str(_texto(entradas[cigarrillo])).is_equal(
+		caso.opcion(pistas[cigarrillo].jornada, "2B").titulo
+	)
+	assert_str(_texto(entradas[cigarrillo])).is_not_equal(pistas[cigarrillo].texto)
+	assert_object(_imagen(entradas[cigarrillo])).is_same(pistas[cigarrillo].foto)
+	for i: int in entradas.size():
+		if i != cigarrillo:
+			assert_str(_texto(entradas[i])).is_equal(PantallaDeLogros.TEXTO_BLOQUEADO)
 
 
 func test_la_fuente_del_tema_dibuja_los_signos_de_los_nombres() -> void:  # AC-ACH-013
