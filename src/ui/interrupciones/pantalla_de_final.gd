@@ -1,12 +1,13 @@
-## La pantalla del final de la partida: su encabezado, su título y un solo botón para volver al
-## menú. Dibuja el final que le piden y avisa el gesto; no decide cuál es: lo decide `Partida`.
+## La pantalla del final de la partida: su encabezado, su título, el mensaje del final y dos
+## botones, uno para comenzar de nuevo y otro para volver al menú. Dibuja el final que le piden y
+## avisa el gesto; no decide cuál es: lo decide `Partida`.
 ##
-## Se dibuja sobre la persiana ya baja de la devolución. El lugar del mensaje del jefe queda en
-## el molde, vacío, hasta que el diseño lo defina (OQ-SHF-008).
+## Se dibuja sobre la persiana ya baja de la devolución.
 class_name PantallaDeFinal
 extends CanvasLayer
 
 signal volver_al_menu_pedido
+signal nueva_partida_pedida
 
 const ENCABEZADOS: Dictionary[FinalConPantalla.Cual, String] = {
 	FinalConPantalla.Cual.DESPEDIDO: "/ FIN DEL JUEGO",
@@ -17,25 +18,32 @@ const ENCABEZADOS: Dictionary[FinalConPantalla.Cual, String] = {
 }
 const TITULOS: Dictionary[FinalConPantalla.Cual, String] = {
 	FinalConPantalla.Cual.DESPEDIDO: "DESPEDIDO",
-	FinalConPantalla.Cual.EMPLEADO_ESTRESADO: "EMPLEADO ESTRESADO",
+	FinalConPantalla.Cual.EMPLEADO_ESTRESADO: "EMPLEADO EXPLOTADO",
 	FinalConPantalla.Cual.LOCURA_PARANOICA: "LOCURA PARANOICA",
 	FinalConPantalla.Cual.JEFE_SABOTEADOR: "JEFE SABOTEADOR",
 	FinalConPantalla.Cual.JEFE_INCOMPETENTE: "JEFE INCOMPETENTE",
 }
-const TEXTO_DEL_BOTON := MenuDePausa.TEXTO_DE_VOLVER_AL_MENU
+const TEXTO_DE_NUEVA_PARTIDA := "COMENZAR NUEVA PARTIDA"
+const TEXTO_DE_VOLVER := MenuDePausa.TEXTO_DE_VOLVER_AL_MENU
 
 @export var _marco: Control
 @export var _encabezado: Label
 @export var _titulo: Label
-@export var _boton: Button
+@export var _mensaje: Label
+@export var _boton_de_nueva_partida: Button
+@export var _boton_de_volver: Button
 
 var _pedido := false
+var _azar := RandomNumberGenerator.new()
 
 
 func _ready() -> void:
 	visible = false
-	_boton.text = TEXTO_DEL_BOTON
-	_boton.pressed.connect(_pedir_el_menu)
+	_azar.randomize()
+	_boton_de_nueva_partida.text = TEXTO_DE_NUEVA_PARTIDA
+	_boton_de_volver.text = TEXTO_DE_VOLVER
+	_boton_de_nueva_partida.pressed.connect(_pedir.bind(nueva_partida_pedida))
+	_boton_de_volver.pressed.connect(_pedir.bind(volver_al_menu_pedido))
 	get_viewport().size_changed.connect(_ajustar_al_viewport)
 	_ajustar_al_viewport()
 
@@ -47,9 +55,10 @@ func mostrar(final: FinalConPantalla.Cual) -> void:
 		return
 	_encabezado.text = ENCABEZADOS[final]
 	_titulo.text = TITULOS[final]
+	_mensaje.text = FinalConPantalla.mensaje(final, _azar)
 	_pedido = false
 	visible = true
-	_boton.grab_focus(true)
+	_boton_de_nueva_partida.grab_focus(true)
 
 
 func encabezado() -> String:
@@ -60,16 +69,24 @@ func titulo() -> String:
 	return _titulo.text
 
 
-func boton() -> Button:
-	return _boton
+func mensaje() -> String:
+	return _mensaje.text
 
 
-## Pulsarlo dos veces no pide dos veces el menú.
-func _pedir_el_menu() -> void:
+func boton_de_nueva_partida() -> Button:
+	return _boton_de_nueva_partida
+
+
+func boton_de_volver() -> Button:
+	return _boton_de_volver
+
+
+## Se sale una sola vez: pulsar dos veces, o un botón y después el otro, no pide una segunda salida.
+func _pedir(salida: Signal) -> void:
 	if _pedido:
 		return
 	_pedido = true
-	volver_al_menu_pedido.emit()
+	salida.emit()
 
 
 func _ajustar_al_viewport() -> void:

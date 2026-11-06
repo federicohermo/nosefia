@@ -892,7 +892,7 @@ jornada NO DEBE abrir una tanda ni aportar hora.
 ### BR-INV-103 — Al cumplir el contrato, las pistas deciden entre el final 1 y el final 2
 
 SI la partida termina con el contrato cumplido y el expediente no registró ninguna pista en
-ninguna jornada, ENTONCES el final DEBE ser «Empleado estresado» (final 1). SI registró al menos
+ninguna jornada, ENTONCES el final DEBE ser «Empleado explotado» (final 1). SI registró al menos
 una, de cualquier jornada, ENTONCES el final DEBE ser «Locura paranoica» (final 2): la
 investigación quedó incompleta. En los dos casos la devolución DEBE llevar a la pantalla de su
 final (BR-SHF-027). Una sola pista registrada DEBE bastar para el final 2. Elegir una hipótesis sin
@@ -2005,24 +2005,24 @@ DADO la nota del local ENTONCES su identidad no es la de ningún producto ni la 
 levantable, tiene subtítulo, se dibuja con una textura de papel distinta de la de las cajas, y su
 cara escrita usa la textura de la nota con texto.
 
-### AC-INV-127 — Sin ninguna pista, estresado *(verifica BR-INV-103)*
+### AC-INV-127 — Sin ninguna pista, explotado *(verifica BR-INV-103)*
 
 DADO la jornada 7 cerrada con el contrato cumplido y el expediente sin pistas, aunque la hipótesis P
-se haya elegido en las jornadas 4 a 6, ENTONCES el final es «Empleado estresado». DADO el mismo
+se haya elegido en las jornadas 4 a 6, ENTONCES el final es «Empleado explotado». DADO el mismo
 cierre con la pista 4A registrada en la jornada 4 y ninguna otra ENTONCES no lo es. DADO el mismo
 cierre con una única pista registrada en la jornada 7 ENTONCES tampoco.
 
-### AC-INV-128 — El despido no es estresado *(verifica BR-INV-103)*
+### AC-INV-128 — El despido no es explotado *(verifica BR-INV-103)*
 
 DADO una partida despedida al cerrar la jornada 5 con el expediente sin pistas ENTONCES el final es
-el despido y no «Empleado estresado». DADO una partida en curso sin pistas ENTONCES no hay final.
+el despido y no «Empleado explotado». DADO una partida en curso sin pistas ENTONCES no hay final.
 
 ### AC-INV-190 — Con alguna pista, locura paranoica *(verifica BR-INV-103)*
 
 DADO la jornada 7 cerrada con el contrato cumplido y una única pista registrada, en cualquier
-jornada de la 1 a la 7, ENTONCES el final es «Locura paranoica» y no «Empleado estresado». DADO el
+jornada de la 1 a la 7, ENTONCES el final es «Locura paranoica» y no «Empleado explotado». DADO el
 mismo cierre sin pistas y con la hipótesis P o L elegida en alguna jornada ENTONCES el final es
-«Empleado estresado». DADO una partida en curso con pistas ENTONCES no hay final.
+«Empleado explotado». DADO una partida en curso con pistas ENTONCES no hay final.
 
 ### AC-INV-191 — El despido y la puerta del jefe ganan sobre la locura paranoica *(verifica BR-INV-103)*
 
@@ -2364,12 +2364,6 @@ vuelve el wifi ENTONCES se ve el de conectado y no el de sin conexión.
     directamente con Enrique”.», que sólo repite la frase.
   - Decide: game design con narrativa.
   - Bloquea: fijar el texto final de la nota; no bloquea la pista ni su hipótesis.
-- **OQ-INV-010 — ¿Qué hay entre abrir la puerta de Enrique y la pantalla del final?**
-  - Por qué sigue abierta: las filas «7B» y «7C» dicen que la jornada termina y «pasa directamente
-    al epílogo», pero el epílogo no tiene contenido en Notion ni frame en Figma. Mientras no lo
-    tenga, la puerta lleva directo a la pantalla del final 4 o del 5 (BR-SHF-060, BR-SHF-061).
-  - Decide: game design con narrativa.
-  - Bloquea: intercalar el epílogo antes de la pantalla; no bloquea la pantalla ni el final.
 - **OQ-INV-007 — ¿Cuánto dura y qué curva tiene el deslizamiento del chat?**
   - Por qué sigue abierta: la ficha «Especificar animaciones» pide que el chat entre desde el
     margen derecho «como Instagram» y no da duración ni curva. El juego usa valores provisionales

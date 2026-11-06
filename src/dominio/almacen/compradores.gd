@@ -128,8 +128,8 @@ const DIALOGOS_AL_AZAR: Dictionary = {
 
 ## Los pedidos con forma propia: `jornada → personaje → forma`. Piden el máximo de tipos, salvo que
 ## la forma diga `tipos`. `ultimo` es el producto que cierra el pedido, `no_primero`, los que no
-## pueden abrirlo, `tipos`, cuántos tipos se sortean, y `fijo`, las líneas `[Producto.Id, unidades]`
-## que reemplazan el sorteo y no dependen del grupo.
+## pueden abrirlo, `tipos`, cuántos tipos lleva el pedido, y `fijo`, las líneas
+## `[Producto.Id, unidades]` que reemplazan el sorteo y no dependen del grupo.
 const PEDIDOS_CON_FORMA: Dictionary = {
 	ReglasDeLaPartida.PRIMERA_JORNADA + 2:
 	{
@@ -137,6 +137,7 @@ const PEDIDOS_CON_FORMA: Dictionary = {
 		DialogosDeCompradores.Personaje.TIN:
 		{"no_primero": [Producto.Id.PURA_COLA, Producto.Id.MALBARDO, Producto.Id.DON_SATURADOS]},
 	},
+	ReglasDeLaPartida.PRIMERA_JORNADA + 3: {DialogosDeCompradores.Personaje.FEDE: {"tipos": 3}},
 	ReglasDeLaPartida.PRIMERA_JORNADA + 4:
 	{
 		DialogosDeCompradores.Personaje.MIA:
@@ -163,7 +164,13 @@ const AGENDAS_AL_AZAR: Dictionary[int, Array] = {
 	ReglasDeLaPartida.PRIMERA_JORNADA + 3:
 	[
 		["Tia", DialogosDeCompradores.Personaje.TIA, Vector2i(22, 0), Vector2i(0, 30)],
-		["Fede", DialogosDeCompradores.Personaje.FEDE, Vector2i(4, 0), Vector2i(6, 30)],
+		[
+			"Fede",
+			DialogosDeCompradores.Personaje.FEDE,
+			Vector2i(4, 0),
+			Vector2i(6, 30),
+			[Producto.Id.DUREXTRA],
+		],
 	],
 	ReglasDeLaPartida.PRIMERA_JORNADA + 4:
 	[
