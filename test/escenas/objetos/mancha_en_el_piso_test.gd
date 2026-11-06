@@ -539,9 +539,14 @@ func test_las_manchas_de_otra_noche_no_se_ven_ni_se_enfocan() -> void:  # AC-CLN
 			var lugar := mancha.lugar_de_la_mancha()
 			if not desde.has(lugar):
 				var punto: Variant = await _punto_de_enfoque(almacen, mancha)
-				if punto != null:
-					desde[lugar] = punto
-	var comprobadas := 0
+				(
+					assert_bool(punto != null)
+					. override_failure_message(
+						"`%s` no se enfoca en la jornada %d" % [mancha.name, jornada]
+					)
+					. is_true()
+				)
+				desde[lugar] = punto
 	for jornada: int in JORNADAS:
 		await _abrir(almacen, jornada)
 		var ajenas := 0
@@ -553,16 +558,12 @@ func test_las_manchas_de_otra_noche_no_se_ven_ni_se_enfocan() -> void:  # AC-CLN
 			assert_bool(mancha.visible).override_failure_message(mancha.name).is_false()
 			var cuerpo := mancha.get_node("Cuerpo") as CollisionShape3D
 			assert_bool(cuerpo.disabled).override_failure_message(mancha.name).is_true()
-			if not desde.has(lugar):
-				continue
-			comprobadas += 1
 			(
 				assert_bool(await _enfoca_desde(almacen, mancha, desde[lugar]))
 				. override_failure_message("`%s` se enfoca en otra noche" % mancha.name)
 				. is_false()
 			)
 		assert_int(ajenas).is_equal(PisoDelLocal.Lugar.size() - _piso(almacen).lugares().size())
-	assert_int(comprobadas).is_greater(0)
 
 
 func test_las_manchas_de_techo_se_enfocan_y_se_borran() -> void:  # AC-CLN-078
