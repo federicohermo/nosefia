@@ -139,16 +139,17 @@ func test_tirar_sobre_la_tapa_abierta_entrega_lo_mismo_y_no_la_cierra() -> void:
 
 func test_la_caja_y_los_utiles_se_rechazan_sobre_la_tapa_sin_cerrarla() -> void:  # AC-CLN-037
 	var almacen := await _abrir()
+	almacen.call("_al_abrir_la_jornada", ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA)
 	var jugador: Node3D = almacen.get("_jugador")
 	var agarre: Agarre = almacen.get("_agarre")
 	var tapa: Node3D = almacen.get_node(TAPA)
-	var rechazados: Array[ObjetoAgarrable] = [almacen.get_node("Objetos/CajaDeActroncito")]
+	var rechazados: Array[RigidBody3D] = [almacen.get("_cajas_de_productos")[0]]
 	for nombre: String in ["Mopa", "Balde"]:
 		rechazados.append(almacen.get_node("Objetos/" + nombre))
 	for objeto in rechazados:
 		_agarrar(almacen, objeto)
 		_clic(jugador, tapa, MOUSE_BUTTON_LEFT)
-		assert_object(agarre.manos().sostenido()).is_same(objeto.datos)
+		assert_object(agarre.manos().sostenido()).is_same(objeto.get("datos"))
 		assert_bool(objeto.visible).is_true()
 		assert_bool(tapa.call("recibe_objetos")).is_true()
 		agarre.soltar(false)
