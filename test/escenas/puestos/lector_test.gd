@@ -293,7 +293,11 @@ func test_los_eventos_reales_piden_escaneo_error_impresion_y_botones() -> void:
 		"Servicios/AudioDelAlmacen/Reproductor"
 	)
 	var sonidos: Array[int] = []
-	reproductor.sonido_pedido.connect(func(evento: int) -> void: sonidos.append(evento))
+	reproductor.sonido_pedido.connect(
+		func(evento: int) -> void:
+			if evento != EntradaSonora.Evento.NOTIFICACION_ENTRADA:
+				sonidos.append(evento)
+	)
 	var jugador: Node3D = almacen.get_node("Jugador")
 	var lector: Node3D = almacen.get_node("Estructura/Lector")
 	_accion(jugador, lector, ReglasDeLosObjetos.ACCION_AGARRAR)
