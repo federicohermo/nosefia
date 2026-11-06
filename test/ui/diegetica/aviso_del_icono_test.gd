@@ -60,6 +60,46 @@ func test_el_circulo_es_naranja_y_va_en_la_esquina_superior_derecha() -> void:  
 	assert_float(centro.y).is_equal_approx(0.0, 0.5)
 
 
+func _rectangulo_en_pantalla(control: Control) -> Rect2:
+	return control.get_global_transform() * Rect2(Vector2.ZERO, control.size)
+
+
+func _comprobar_que_nada_se_corta(ventana: Vector2i) -> void:
+	get_window().size = ventana
+	await get_tree().process_frame
+	var pantalla := _pantalla()
+	pantalla.mostrar_recordatorio(true)
+	pantalla.soltar_los_no_leidos()
+	pantalla.mostrar_no_leidos(9)
+	await get_tree().process_frame
+	var icono: Control = _recordatorio(pantalla).get_node("Icono")
+	var pantalla_visible := Rect2(Vector2.ZERO, get_viewport().get_visible_rect().size)
+	assert_bool(_circulo(pantalla).is_visible_in_tree()).is_true()
+	assert_bool(pantalla_visible.encloses(_rectangulo_en_pantalla(icono))).is_true()
+	assert_bool(pantalla_visible.encloses(_rectangulo_en_pantalla(_circulo(pantalla)))).is_true()
+
+
+func test_el_icono_y_el_circulo_no_se_cortan_a_1920x1080() -> void:  # AC-INV-180
+	await _comprobar_que_nada_se_corta(Vector2i(1920, 1080))
+
+
+func test_el_icono_y_el_circulo_no_se_cortan_a_1280x720() -> void:  # AC-INV-180
+	await _comprobar_que_nada_se_corta(Vector2i(1280, 720))
+
+
+func test_la_tecla_queda_a_la_derecha_del_icono_sin_que_el_circulo_la_tape() -> void:  # AC-INV-180
+	var pantalla := _pantalla()
+	pantalla.mostrar_recordatorio(true)
+	await get_tree().process_frame
+	var recordatorio := _recordatorio(pantalla)
+	var icono: Control = recordatorio.get_node("Icono")
+	var tecla: Control = recordatorio.get_node("Tecla")
+	var circulo := _rectangulo_en_pantalla(_circulo(pantalla))
+	var rect_de_la_tecla := _rectangulo_en_pantalla(tecla)
+	assert_float(rect_de_la_tecla.position.x).is_greater_equal(_rectangulo_en_pantalla(icono).end.x)
+	assert_float(rect_de_la_tecla.position.x).is_greater_equal(circulo.end.x)
+
+
 func test_el_circulo_no_se_ve_con_el_icono_oculto_o_cubierto() -> void:  # AC-INV-180
 	var pantalla := _pantalla()
 	pantalla.soltar_los_no_leidos()
