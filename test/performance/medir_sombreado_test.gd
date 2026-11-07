@@ -137,7 +137,6 @@ func test_el_polvo_no_calcula_el_ruido_que_usan_el_moho_y_la_caca() -> void:
 	assert_int(caca.count("ruido(uv * 57.0)")).is_equal(1)
 	(
 		assert_int(moho.count("ruido("))
-		. override_failure_message("el moho pasa de cinco llamadas a ruido:
-" + moho)
+		. override_failure_message("el moho pasa de cinco llamadas a ruido:\n" + moho)
 		. is_between(1, 5)
 	)
