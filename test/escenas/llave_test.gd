@@ -291,7 +291,8 @@ func _extremo_mas_ancho(malla: MeshInstance3D, largo: int, fino: int) -> float:
 
 
 ## Un metal puro sin sondas de reflejo se dibuja negro. La llave conserva las texturas del modelo,
-## con menos metal, y responde a la luz del local: sin emisión y con luz ambiente.
+## con menos metal, y responde a la luz del local: sin emisión, sin borde de luz, sin albedo
+## aclarado y con luz ambiente: toda su luz sale de la escena y la sombra la oscurece.
 func test_la_llave_usa_la_textura_del_modelo_y_la_luz_la_alcanza() -> void:  # AC-INV-185
 	var llave: ObjetoAgarrable = auto_free(ESCENA.instantiate())
 	assert_array(llave.find_children("*", "MeshInstance3D", true, false)).is_not_empty()
@@ -321,6 +322,8 @@ func _afirmar_material_de_la_llave(llave: Node) -> void:
 			return
 		assert_object(material.albedo_texture).is_same(del_modelo.albedo_texture)
 		assert_bool(material.emission_enabled).is_false()
+		assert_bool(material.rim_enabled).is_false()
+		assert_bool(material.albedo_color.is_equal_approx(Color.WHITE)).is_true()
 		assert_bool(material.disable_ambient_light).is_false()
 
 

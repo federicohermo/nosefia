@@ -11,16 +11,12 @@ margin = 0.001
 size = Vector3(0.192, 0.06, 0.06)
 
 [sub_resource type="StandardMaterial3D" id="metal"]
-albedo_color = Color(2.2, 2.2, 2.2, 1)
 albedo_texture = ExtResource("color")
 metallic = 0.3
 metallic_texture = ExtResource("orm")
 metallic_texture_channel = 2
 roughness_texture = ExtResource("orm")
 roughness_texture_channel = 1
-rim_enabled = true
-rim = 0.4
-rim_tint = 0.5
 
 [node name="Llave" type="RigidBody3D" groups=["interactuable"]]
 mass = 0.05
