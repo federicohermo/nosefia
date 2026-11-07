@@ -290,28 +290,19 @@ func _extremo_mas_ancho(malla: MeshInstance3D, largo: int, fino: int) -> float:
 	return 1.0 if maximo[1] - minimo[1] > maximo[0] - minimo[0] else -1.0
 
 
-func test_la_llave_es_dorada_y_no_depende_de_la_luz_de_la_zona() -> void:  # AC-INV-185
+func test_la_llave_usa_el_material_del_modelo_y_la_luz_la_alcanza() -> void:  # AC-INV-185
 	var llave: ObjetoAgarrable = auto_free(ESCENA.instantiate())
 	var mallas := llave.find_children("*", "MeshInstance3D", true, false)
 	assert_array(mallas).is_not_empty()
 	for malla: MeshInstance3D in mallas:
-		var material := malla.material_override as StandardMaterial3D
-		assert_object(material).is_not_null()
-		if material == null:
-			return
-		var tono := material.albedo_color
-		assert_bool(tono.r > tono.g and tono.g > tono.b).is_true()
-		assert_bool(material.emission_enabled).is_true()
-		assert_bool(material.emission.r > material.emission.b).is_true()
-		# Las sondas de reflejo y la luz ambiente cambian de una zona a otra: sin ellas, la llave
-		# sólo recibe las luces del local y lo que emite, igual en todas partes.
-		assert_bool(material.disable_ambient_light).is_true()
+		assert_object(malla.material_override).is_null()
+		assert_object(malla.mesh.surface_get_material(0)).is_not_null()
 
 
 ## El export empaqueta la escena otra vez. Un ajuste sobre el modelo instanciado que la escena no
-## declara editable se pierde ahí, y en el juego exportado la llave queda con el material del
-## modelo: negra, sin luces que la reflejen.
-func test_el_material_de_la_llave_sobrevive_a_empaquetar_la_escena() -> void:  # AC-INV-185
+## declara editable se pierde ahí, y en el juego exportado la llave queda con el GI estático:
+## negra, sin sondas que la iluminen.
+func test_el_gi_dinamico_de_la_llave_sobrevive_a_empaquetar_la_escena() -> void:  # AC-INV-185
 	var original: Node = auto_free(ESCENA.instantiate())
 	var empaquetada := PackedScene.new()
 	assert_int(empaquetada.pack(original)).is_equal(OK)
@@ -319,7 +310,7 @@ func test_el_material_de_la_llave_sobrevive_a_empaquetar_la_escena() -> void:  #
 	var mallas := llave.find_children("*", "MeshInstance3D", true, false)
 	assert_array(mallas).is_not_empty()
 	for malla: MeshInstance3D in mallas:
-		assert_object(malla.material_override).is_not_null()
+		assert_object(malla.material_override).is_null()
 		assert_int(malla.gi_mode).is_equal(GeometryInstance3D.GI_MODE_DYNAMIC)
 
 
