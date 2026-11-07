@@ -95,6 +95,42 @@ func _eje_largo(palanca: ObjetoAgarrable) -> Vector3:
 	return palanca.global_basis[mayor].normalized()
 
 
+## La punta del extremo de la malla que más se aparta del eje largo: el gancho, no la uña.
+## Está en el espacio de la palanca. Se mide en la malla y no en un nodo, para no dar por
+## sentado lo que el test tiene que comprobar.
+func _extremo_mas_curvo(palanca: ObjetoAgarrable) -> Vector3:
+	var tamano := ((palanca.get_node("Forma") as CollisionShape3D).shape as BoxShape3D).size
+	var largo := 0
+	for eje: int in 3:
+		if tamano[eje] > tamano[largo]:
+			largo = eje
+	var puntos: Array[Vector3] = []
+	for malla: MeshInstance3D in palanca.find_children("*", "MeshInstance3D", true, false):
+		var a_palanca := palanca.global_transform.affine_inverse() * malla.global_transform
+		var vertices: PackedVector3Array = malla.mesh.surface_get_arrays(0)[Mesh.ARRAY_VERTEX]
+		for vertice: Vector3 in vertices:
+			puntos.append(a_palanca * vertice)
+	var menor := INF
+	var mayor := -INF
+	for punto: Vector3 in puntos:
+		menor = minf(menor, punto[largo])
+		mayor = maxf(mayor, punto[largo])
+	var zona := (mayor - menor) * 0.25
+	var desvios: Array[float] = [0.0, 0.0]
+	var puntas: Array[Vector3] = [Vector3(INF, INF, INF), Vector3(-INF, -INF, -INF)]
+	for punto: Vector3 in puntos:
+		var lateral := Vector2(punto[(largo + 1) % 3], punto[(largo + 2) % 3]).length()
+		if punto[largo] < menor + zona:
+			desvios[0] = maxf(desvios[0], lateral)
+			if punto[largo] < puntas[0][largo]:
+				puntas[0] = punto
+		elif punto[largo] > mayor - zona:
+			desvios[1] = maxf(desvios[1], lateral)
+			if punto[largo] > puntas[1][largo]:
+				puntas[1] = punto
+	return puntas[0] if desvios[0] > desvios[1] else puntas[1]
+
+
 func _la_mira_lo_encuentra(objeto: ObjetoAgarrable) -> bool:
 	var jugador := _almacen.get("_jugador") as CharacterBody3D
 	var camara: Camera3D = jugador.get("_camara")
@@ -217,11 +253,13 @@ func test_en_la_mano_la_palanca_queda_casi_vertical_con_el_gancho_arriba() -> vo
 	var arriba := camara.global_basis.y
 	var adelante := -camara.global_basis.z
 	assert_float(absf(eje.dot(arriba))).is_greater(absf(eje.dot(adelante)))
+	var del_gancho := palanca.to_global(_extremo_mas_curvo(palanca)) - palanca.global_position
+	assert_float(del_gancho.dot(arriba)).is_greater(0.0)
 	var gancho := palanca.get_node_or_null("Gancho") as Node3D
 	assert_object(gancho).is_not_null()
 	if gancho == null:
 		return
-	assert_float((gancho.global_position - palanca.global_position).dot(arriba)).is_greater(0.0)
+	assert_float((gancho.global_position - palanca.global_position).dot(del_gancho)).is_greater(0.0)
 
 
 func test_la_palanca_en_la_mano_no_atraviesa_una_pared_delante() -> void:

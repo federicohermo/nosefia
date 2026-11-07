@@ -171,6 +171,8 @@ func _agregar(columna: StringName, alcanzada: bool, imagen: Texture2D, nombre: S
 	texto.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 	entrada.add_child(texto)
 	_listas[columna].add_child(entrada)
+	if not alcanzada:
+		figura.self_modulate = texto.get_theme_color(&"font_color")
 
 
 func _ajustar_al_viewport() -> void:
