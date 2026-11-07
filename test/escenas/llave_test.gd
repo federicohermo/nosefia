@@ -237,7 +237,7 @@ func test_la_llave_queda_apoyada_en_el_piso_y_bajo_la_estanteria() -> void:  # A
 	assert_float(llave.linear_velocity.length()).is_less(0.05)
 
 
-func test_en_la_mano_la_llave_se_ve_de_frente_con_el_ojo_arriba() -> void:  # AC-INV-185
+func test_en_la_mano_la_llave_se_ve_de_frente_con_el_ojo_abajo() -> void:  # AC-INV-185
 	await _abrir(JORNADA_7, _por_la_6c())
 	var llave := _llave()
 	var camara := (_almacen.get("_jugador") as CharacterBody3D).get("_camara") as Camera3D
@@ -263,7 +263,7 @@ func test_en_la_mano_la_llave_se_ve_de_frente_con_el_ojo_arriba() -> void:  # AC
 	assert_float(absf(cara.dot(adelante))).is_greater(absf(cara.dot(derecha)))
 	var ancho := _extremo_mas_ancho(malla, largo, fino)
 	var punta := malla.global_basis[largo].normalized() * ancho
-	assert_float(punta.dot(arriba)).is_greater(0.0)
+	assert_float(punta.dot(arriba)).is_less(0.0)
 	var ojo := llave.get_node_or_null("Ojo") as Node3D
 	assert_object(ojo).is_not_null()
 	if ojo == null:
