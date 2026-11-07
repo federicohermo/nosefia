@@ -8,13 +8,13 @@
 margin = 0.001
 size = Vector3(0.192, 0.06, 0.06)
 
-[sub_resource type="StandardMaterial3D" id="plateado"]
-albedo_color = Color(0.82, 0.83, 0.85, 1)
-metallic = 0.9
-roughness = 0.4
+[sub_resource type="StandardMaterial3D" id="dorado"]
+albedo_color = Color(1, 0.78, 0.32, 1)
+metallic = 0.3
+roughness = 0.55
 emission_enabled = true
-emission = Color(0.55, 0.57, 0.6, 1)
-emission_energy_multiplier = 0.6
+emission = Color(0.9, 0.62, 0.2, 1)
+emission_energy_multiplier = 0.5
 rim_enabled = true
 rim = 0.3
 rim_tint = 0.5
@@ -38,4 +38,6 @@ scale = Vector3(3, 3, 3)
 
 [node name="Llave" parent="Visual"]
 gi_mode = 2
-material_override = SubResource("plateado")
+material_override = SubResource("dorado")
+
+[editable path="Visual"]
