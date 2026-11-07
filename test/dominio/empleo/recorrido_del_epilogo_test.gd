@@ -40,6 +40,51 @@ func test_la_primera_placa_entra_tras_un_fundido_a_negro_y_uno_de_entrada() -> v
 	assert_bool(recorrido.esperando_el_siguiente()).is_true()
 
 
+func test_entre_placas_del_mismo_fondo_se_funde_el_texto_y_no_el_negro() -> void:  # AC-SHF-138
+	var recorrido := RecorridoDelEpilogo.new(_placas(2))
+	_leyendo_la_placa(recorrido)
+	assert_float(recorrido.opacidad_del_texto()).is_equal(1.0)
+	recorrido.siguiente()
+	recorrido.avanzar(FUNDIDO / 2.0)
+	assert_float(recorrido.opacidad_del_texto()).is_equal_approx(0.5, 1e-6)
+	assert_float(recorrido.negro()).is_equal(0.0)
+	recorrido.avanzar(FUNDIDO / 2.0)
+	assert_float(recorrido.opacidad_del_texto()).is_equal_approx(0.0, 1e-6)
+	assert_float(recorrido.negro()).is_equal(0.0)
+	recorrido.avanzar(FUNDIDO / 2.0)
+	assert_float(recorrido.opacidad_del_texto()).is_equal_approx(0.5, 1e-6)
+	assert_float(recorrido.negro()).is_equal(0.0)
+	recorrido.avanzar(FUNDIDO / 2.0)
+	assert_float(recorrido.opacidad_del_texto()).is_equal(1.0)
+
+
+func test_entre_dos_placas_de_fondo_distinto_se_funde_la_pantalla() -> void:  # AC-SHF-138
+	var placas: Array[EpilogosDeLosFinales.Placa] = [
+		EpilogosDeLosFinales.Placa.new(EpilogosDeLosFinales.FONDO_DEL_FINAL_1, "primera"),
+		EpilogosDeLosFinales.Placa.new(EpilogosDeLosFinales.FONDO_DEL_FINAL_2, "segunda"),
+	]
+	var recorrido := RecorridoDelEpilogo.new(placas)
+	_leyendo_la_placa(recorrido)
+	recorrido.siguiente()
+	recorrido.avanzar(FUNDIDO)
+	assert_float(recorrido.negro()).is_equal_approx(1.0, 1e-6)
+	assert_object(recorrido.placa()).is_same(placas[1])
+
+
+func test_de_la_ultima_placa_a_la_pantalla_de_final_se_funde_la_pantalla() -> void:  # AC-SHF-138
+	var recorrido := RecorridoDelEpilogo.new(_placas(2))
+	_leyendo_la_placa(recorrido)
+	recorrido.siguiente()
+	_leyendo_la_placa(recorrido)
+	recorrido.siguiente()
+	recorrido.avanzar(FUNDIDO / 2.0)
+	assert_float(recorrido.negro()).is_equal_approx(0.5, 1e-6)
+	recorrido.avanzar(FUNDIDO / 2.0)
+	assert_float(recorrido.negro()).is_equal_approx(1.0, 1e-6)
+	recorrido.avanzar(FUNDIDO / 2.0)
+	assert_float(recorrido.negro()).is_equal_approx(0.5, 1e-6)
+
+
 func test_el_recorrido_muestra_cada_placa_en_orden() -> void:  # AC-SHF-134
 	var placas := _placas(6)
 	var recorrido := RecorridoDelEpilogo.new(placas)

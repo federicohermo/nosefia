@@ -32,7 +32,7 @@ static func recorrer(almacen: Node) -> Array[EpilogosDeLosFinales.Placa]:
 			return vistas
 		epilogo.avanzar(paso)
 		var placa := epilogo.placa_a_la_vista()
-		if placa != null and epilogo.negro() == 0.0:
+		if placa != null and epilogo.negro() == 0.0 and epilogo.opacidad_del_texto() == 1.0:
 			vistas.append(placa)
 			epilogo.boton().pressed.emit()
 	return vistas
