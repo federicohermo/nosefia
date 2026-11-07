@@ -32,6 +32,8 @@ const CENTRO := Vector2(960.0, 540.0)
 const CENTRO_A_LA_IZQUIERDA := Vector2(356.0, 540.0)
 ## Dónde queda el celular al lado del registro, en la pantalla conjunta.
 const CENTRO_A_LA_DERECHA := Vector2(1624.0, 540.0)
+## Cuánto sobresale la funda del teléfono por la izquierda y por la derecha.
+const SOBRESALE_LA_FUNDA := 24.5
 const TEXTO_DE_DAR_LA_RAZON := "DARLE LA RAZÓN"
 const TEXTO_DE_RECHAZAR := "RECHAZAR QUEJA"
 ## La captura de la transferencia: el tamaño del diseño y dónde va cada texto sobre la imagen.
@@ -261,6 +263,11 @@ func abrir_en_la_conjunta() -> void:
 	_lateral = -1.0
 	_destino_lateral = -1.0
 	subir()
+
+
+## El borde izquierdo del teléfono con su funda, en el lienzo, junto al registro.
+static func borde_izquierdo_en_la_conjunta() -> float:
+	return CENTRO_A_LA_DERECHA.x - TAMANO.x / 2.0 - SOBRESALE_LA_FUNDA
 
 
 ## Lleva el teléfono, ya arriba o subiendo, hasta la mitad izquierda sin bajarlo.
@@ -1082,8 +1089,8 @@ func _agregar_la_funda() -> void:
 	var estilo := _estilo(FONDO_DE_LA_FUNDA, 38)
 	estilo.set_border_width_all(2)
 	estilo.border_color = BORDE_DE_LA_FUNDA
-	estilo.expand_margin_left = 24.5
-	estilo.expand_margin_right = 24.5
+	estilo.expand_margin_left = SOBRESALE_LA_FUNDA
+	estilo.expand_margin_right = SOBRESALE_LA_FUNDA
 	estilo.expand_margin_top = 24.0
 	estilo.expand_margin_bottom = 24.0
 	estilo.shadow_color = Color(0.0, 0.0, 0.0, 0.42)

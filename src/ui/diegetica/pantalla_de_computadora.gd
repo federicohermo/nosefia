@@ -9,8 +9,9 @@ signal conjunta_pedida
 const TEXTO_DEL_TITULO := "TERMINAL DE VENTAS  /  REGISTRO DE PRODUCTOS"
 const TEXTO_DE_MOSTRAR_EL_CELULAR := "MOSTRAR CELULAR"
 const TEXTO_DE_OCULTAR_EL_CELULAR := "OCULTAR CELULAR"
-## Cuánto del ancho del diseño ocupa el registro cuando el celular está a su lado.
-const ANCHO_CON_EL_CELULAR := 1330.0
+## El margen, en el lienzo, entre el registro y el borde de la ventana y entre el registro y el
+## celular cuando están lado a lado.
+const MARGEN_CON_EL_CELULAR := 24.0
 const POSICION_DEL_BOTON := Vector2(1556.0, 54.0)
 const TAMANO_DEL_BOTON := Vector2(320.0, 56.0)
 
@@ -100,11 +101,16 @@ func _al_pulsar(boton: BaseButton) -> void:
 		boton_pulsado.emit()
 
 
+## En la conjunta el registro llena el área libre a la izquierda del celular, que se ubica en el
+## mismo lienzo que el resto de las pantallas.
 func _ajustar_al_viewport() -> void:
-	LienzoDeManada.ajustar(_marco, get_viewport().get_visible_rect().size)
+	var ventana := get_viewport().get_visible_rect().size
+	LienzoDeManada.ajustar(_marco, ventana)
 	if not _conjunta:
 		return
-	var reduccion := ANCHO_CON_EL_CELULAR / LienzoDeManada.TAMANO_DEL_DISENO.x
-	var factor := _marco.scale.x
-	_marco.position.y += LienzoDeManada.TAMANO_DEL_DISENO.y * (1.0 - reduccion) * factor / 2.0
-	_marco.scale *= reduccion
+	var lienzo := _marco.scale.x
+	var margen := MARGEN_CON_EL_CELULAR * lienzo
+	var celular := _marco.position.x + PantallaDelCelular.borde_izquierdo_en_la_conjunta() * lienzo
+	var libre := Rect2(margen, margen, celular - 2.0 * margen, ventana.y - 2.0 * margen)
+	LienzoDeManada.ajustar(_marco, libre.size)
+	_marco.position += libre.position
