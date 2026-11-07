@@ -37,8 +37,10 @@ func _caja_de_madera() -> StaticBody3D:
 
 func test_la_palanca_arranca_apoyada_en_el_piso_como_la_caja_de_madera() -> void:
 	var palanca := _palanca()
-	var alto := ((palanca.get_node("Forma") as CollisionShape3D).shape as BoxShape3D).size.y
-	var base := palanca.position.y - alto / 2.0
+	var base := INF
+	for forma: CollisionShape3D in palanca.find_children("*", "CollisionShape3D", true, false):
+		var alto := (forma.shape as BoxShape3D).size.y
+		base = minf(base, palanca.position.y + forma.position.y - alto / 2.0)
 	assert_float(base).is_equal_approx(_caja_de_madera().position.y, 0.01)
 
 

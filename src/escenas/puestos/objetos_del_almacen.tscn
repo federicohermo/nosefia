@@ -393,7 +393,7 @@ position = Vector3(7.804, 0.117, -10.18)
 position = Vector3(7.804, 0.117, -9.85)
 
 [node name="Palanca" parent="." instance=ExtResource("palanca")]
-transform = Transform3D(0, 0, 1, 0, 1, 0, -1, 0, 0, -2.1, 0.123, -9.3)
+transform = Transform3D(0, 0, 1, 0, 1, 0, -1, 0, 0, -2.1, 0.078, -9.3)
 
 [node name="Llave" parent="." instance=ExtResource("llave")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.63, 0.12, -9.13)
