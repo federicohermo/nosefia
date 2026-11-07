@@ -8,6 +8,9 @@ enum Heladera { PRIMERA, SEGUNDA, FUERA_DE_SERVICIO }
 
 const CAJAS_TOLERADAS_EN_EL_LOCAL := 1
 
+## Cuánto puede quedar el origen de un cuerpo apoyado bajo el piso de su habitación, en metros.
+const HUNDIMIENTO_TOLERADO := 0.1
+
 ## La fuera de servicio no enfría nada: dejarla abierta no es un descuido.
 const _FUNCIONALES: Array[Heladera] = [Heladera.PRIMERA, Heladera.SEGUNDA]
 
@@ -46,18 +49,26 @@ static func habitacion_de(
 	cuartito: Array[AABB],
 ) -> Habitacion:
 	for parte: AABB in local:
-		if parte.has_point(punto):
+		if _contiene(parte, punto):
 			return Habitacion.LOCAL
 	for parte: AABB in deposito:
-		if parte.has_point(punto):
+		if _contiene(parte, punto):
 			return Habitacion.DEPOSITO
 	for parte: AABB in bano:
-		if parte.has_point(punto):
+		if _contiene(parte, punto):
 			return Habitacion.BANO
 	for parte: AABB in cuartito:
-		if parte.has_point(punto):
+		if _contiene(parte, punto):
 			return Habitacion.CUARTITO
 	return Habitacion.AFUERA
+
+
+## El punto es el origen de un cuerpo, y la forma de un objeto chato no arranca en su origen:
+## apoyado en el piso, el origen puede quedar bajo la cara donde empieza la parte. Por eso el piso
+## baja `HUNDIMIENTO_TOLERADO`. Los costados y el techo no se mueven.
+static func _contiene(parte: AABB, punto: Vector3) -> bool:
+	var hundimiento := Vector3.UP * HUNDIMIENTO_TOLERADO
+	return AABB(parte.position - hundimiento, parte.size + hundimiento).has_point(punto)
 
 
 static func hay_desorden(estados: Array[Estado], jornada: int) -> bool:
