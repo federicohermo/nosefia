@@ -1,6 +1,7 @@
 extends GdUnitTestSuite
 
 const AvanceDelEpilogo := preload("res://test/avance_del_epilogo.gd")
+const ESCENA := preload("res://src/escenas/objetos/palanca.tscn")
 const JORNADA_7 := QuejasDeLaJornada.JORNADA
 const JORNADA_6 := JORNADA_7 - 1
 const JORNADA_5 := JORNADA_6 - 1
@@ -247,9 +248,7 @@ func test_levantar_y_soltar_la_palanca_no_registra_ni_avisa() -> void:  # AC-INV
 
 
 func test_la_palanca_es_un_objeto_propio_con_su_licencia() -> void:  # AC-INV-177
-	var palanca: ObjetoAgarrable = auto_free(
-		(load("res://src/escenas/objetos/palanca.tscn") as PackedScene).instantiate()
-	)
+	var palanca: ObjetoAgarrable = auto_free(ESCENA.instantiate())
 	var otros: Array[String] = ["colilla", "nota_bajo_la_puerta", "documento_impreso"]
 	for escena: String in otros:
 		var otro: ObjetoAgarrable = auto_free(
@@ -267,6 +266,19 @@ func test_la_palanca_es_un_objeto_propio_con_su_licencia() -> void:  # AC-INV-17
 		assert_bool(FileAccess.file_exists("res://assets/models/Crowbar/psx_crowbar/license.txt"))
 		. is_true()
 	)
+
+
+## El export empaqueta la escena otra vez. Un ajuste sobre el modelo instanciado que la escena no
+## declara editable se pierde ahí, y en el juego exportado la malla vuelve a la luz estática.
+func test_el_ajuste_de_la_malla_de_la_palanca_sobrevive_a_empaquetar_la_escena() -> void:
+	var original: Node = auto_free(ESCENA.instantiate())
+	var empaquetada := PackedScene.new()
+	assert_int(empaquetada.pack(original)).is_equal(OK)
+	var palanca: Node = auto_free(empaquetada.instantiate())
+	var mallas := palanca.find_children("*", "MeshInstance3D", true, false)
+	assert_array(mallas).is_not_empty()
+	for malla: MeshInstance3D in mallas:
+		assert_int(malla.gi_mode).is_equal(GeometryInstance3D.GI_MODE_DYNAMIC)
 
 
 func test_en_la_mano_la_palanca_queda_casi_vertical_con_el_gancho_arriba() -> void:
