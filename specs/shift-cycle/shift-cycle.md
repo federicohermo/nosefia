@@ -208,8 +208,12 @@ CUANDO la partida termina en un final con epílogo, el sistema DEBE mostrar ese 
 pantalla de final, y llevar de ahí a la pantalla. Un final tiene epílogo si al menos una de sus
 placas tiene texto. Los finales 1, 2, 4 y 5 lo tienen; el despido nunca lo tiene.
 
-- La transición hacia cada placa DEBE ser un fundido a negro de 1 segundo seguido de un fundido de
-  entrada de 1 segundo. La misma transición DEBE llevar de la última placa a la pantalla de final.
+- La transición hacia la primera placa DEBE ser un fundido a negro de 1 segundo seguido de un
+  fundido de entrada de 1 segundo. La misma transición DEBE llevar de la última placa a la pantalla
+  de final.
+- La transición entre dos placas DEBE fundir sólo el texto y el botón, de 1 segundo hacia afuera y
+  de 1 segundo hacia adentro; el fondo y la sombra de lectura NO DEBEN moverse. SI el fondo cambia
+  de una placa a la otra, ENTONCES la transición DEBE fundir la pantalla a negro.
 - SI el final no tiene epílogo, ENTONCES el sistema DEBE ir directo a la pantalla de final, sin
   fundido ni pantalla intermedia.
 - El epílogo DEBE mostrar sus placas en el orden de la ficha «Caminos narrativos y finales». Una
