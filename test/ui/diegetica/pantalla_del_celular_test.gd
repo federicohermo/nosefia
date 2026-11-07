@@ -565,7 +565,7 @@ func test_la_foto_real_abre_con_movimiento_sin_desplazar_el_chat() -> void:  # A
 	assert_int(scroll.scroll_vertical).is_greater(antes)
 
 
-func test_contactos_conservan_clics_con_movimiento_y_no_se_desplazan() -> void:
+func test_contactos_conservan_clics_con_movimiento_sin_arrastrar_la_lista() -> void:
 	var pantalla := _pantalla()
 	var conversacion := _conversacion()
 	var ahora: Array[int] = [0]
@@ -613,13 +613,6 @@ func test_contactos_conservan_clics_con_movimiento_y_no_se_desplazan() -> void:
 		assert_array(pedidos).is_equal(
 			[conversacion.interlocutor, conversacion.interlocutor, conversacion.interlocutor]
 		)
-	var rueda := InputEventMouseButton.new()
-	rueda.button_index = MOUSE_BUTTON_WHEEL_DOWN
-	rueda.pressed = true
-	rueda.position = scroll.get_global_rect().get_center()
-	get_viewport().push_input(rueda, true)
-	await get_tree().process_frame
-	assert_int(scroll.scroll_vertical).is_zero()
 
 
 func test_una_foto_sin_desborde_conserva_clics_con_movimiento() -> void:

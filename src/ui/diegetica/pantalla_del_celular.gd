@@ -762,9 +762,6 @@ func _pintar_posicion() -> void:
 
 
 func _componer(menu: bool, notas: bool = false) -> void:
-	_scroll.vertical_scroll_mode = (
-		ScrollContainer.SCROLL_MODE_DISABLED if menu else ScrollContainer.SCROLL_MODE_AUTO
-	)
 	var marco := _estilo(PAPEL if menu else FONDO_DE_LA_PANTALLA, 26, 12)
 	marco.shadow_color = Color(0.0, 0.0, 0.0, 0.35)
 	marco.shadow_size = 24
