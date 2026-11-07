@@ -294,6 +294,7 @@ func _extremo_mas_ancho(malla: MeshInstance3D, largo: int, fino: int) -> float:
 ## con menos metal, y responde a la luz del local: sin emisión y con luz ambiente.
 func test_la_llave_usa_la_textura_del_modelo_y_la_luz_la_alcanza() -> void:  # AC-INV-185
 	var llave: ObjetoAgarrable = auto_free(ESCENA.instantiate())
+	assert_array(llave.find_children("*", "MeshInstance3D", true, false)).is_not_empty()
 	_afirmar_material_de_la_llave(llave)
 
 
@@ -304,13 +305,13 @@ func test_el_ajuste_de_la_llave_sobrevive_a_empaquetar_la_escena() -> void:  # A
 	var original: Node = auto_free(ESCENA.instantiate())
 	var empaquetada := PackedScene.new()
 	assert_int(empaquetada.pack(original)).is_equal(OK)
-	_afirmar_material_de_la_llave(auto_free(empaquetada.instantiate()))
+	var llave: Node = auto_free(empaquetada.instantiate())
+	assert_array(llave.find_children("*", "MeshInstance3D", true, false)).is_not_empty()
+	_afirmar_material_de_la_llave(llave)
 
 
 func _afirmar_material_de_la_llave(llave: Node) -> void:
-	var mallas := llave.find_children("*", "MeshInstance3D", true, false)
-	assert_array(mallas).is_not_empty()
-	for malla: MeshInstance3D in mallas:
+	for malla: MeshInstance3D in llave.find_children("*", "MeshInstance3D", true, false):
 		assert_int(malla.gi_mode).is_equal(GeometryInstance3D.GI_MODE_DYNAMIC)
 		assert_object(malla.material_override).is_null()
 		var del_modelo := malla.mesh.surface_get_material(0) as BaseMaterial3D
