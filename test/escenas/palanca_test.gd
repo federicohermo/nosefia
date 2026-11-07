@@ -131,6 +131,32 @@ func _extremo_mas_curvo(palanca: ObjetoAgarrable) -> Vector3:
 	return puntas[0] if desvios[0] > desvios[1] else puntas[1]
 
 
+## La altura del vértice más bajo de la malla, en el mundo.
+func _altura_del_vertice_mas_bajo(palanca: ObjetoAgarrable) -> float:
+	var bajo := INF
+	for malla: MeshInstance3D in palanca.find_children("*", "MeshInstance3D", true, false):
+		var vertices: PackedVector3Array = malla.mesh.surface_get_arrays(0)[Mesh.ARRAY_VERTEX]
+		for vertice: Vector3 in vertices:
+			bajo = minf(bajo, (malla.global_transform * vertice).y)
+	return bajo
+
+
+## La altura del piso que hay debajo de un punto: la del primer sólido que pega un rayo hacia abajo.
+func _altura_del_piso_bajo(palanca: ObjetoAgarrable, desde: Vector3) -> float:
+	var consulta := PhysicsRayQueryParameters3D.create(desde, desde + Vector3.DOWN * 5.0)
+	consulta.exclude = [palanca.get_rid()]
+	var golpe := _almacen.get_world_3d().direct_space_state.intersect_ray(consulta)
+	assert_bool(golpe.is_empty()).is_false()
+	return (golpe["position"] as Vector3).y
+
+
+func _holgura_de_penetracion() -> float:
+	return (
+		ProjectSettings.get_setting("physics/jolt_physics_3d/simulation/penetration_slop", 0.02)
+		as float
+	)
+
+
 func _la_mira_lo_encuentra(objeto: ObjetoAgarrable) -> bool:
 	var jugador := _almacen.get("_jugador") as CharacterBody3D
 	var camara: Camera3D = jugador.get("_camara")
@@ -296,6 +322,41 @@ func test_la_palanca_en_la_mano_no_atraviesa_una_pared_delante() -> void:
 		jugador.call("_acomodar_las_manos", 1.0 / 60.0)
 	consulta.transform = forma.global_transform
 	assert_array(espacio.intersect_shape(consulta)).is_empty()
+
+
+func test_apoyada_en_el_piso_ninguna_parte_de_la_malla_queda_hundida() -> void:
+	await _abrir(JORNADA_7, _por_la_6b())
+	var palanca := _palanca()
+	var piso := _altura_del_piso_bajo(palanca, palanca.global_position + Vector3.UP * 0.3)
+	assert_float(_altura_del_vertice_mas_bajo(palanca)).is_greater_equal(
+		piso - _holgura_de_penetracion()
+	)
+	for _cuadro: int in 90:
+		await get_tree().physics_frame
+	assert_float(_altura_del_vertice_mas_bajo(palanca)).is_greater_equal(
+		piso - _holgura_de_penetracion()
+	)
+
+
+func test_soltada_con_velocidad_hacia_abajo_termina_sobre_el_piso() -> void:
+	await _abrir(JORNADA_7, _por_la_6b())
+	var palanca := _palanca()
+	var piso := _altura_del_piso_bajo(palanca, palanca.global_position + Vector3.UP * 0.3)
+	assert_bool(_agarre().pedir_agarrar(palanca.datos, palanca)).is_true()
+	var altura_de_la_mano := _camara().global_position.y - 0.4
+	_agarre().soltar(false)
+	var lugar := palanca.global_position
+	for orientacion: Basis in [Basis.IDENTITY, Basis(Vector3.RIGHT, deg_to_rad(90.0))]:
+		palanca.global_transform = Transform3D(
+			orientacion, Vector3(lugar.x, altura_de_la_mano, lugar.z)
+		)
+		palanca.linear_velocity = Vector3.DOWN * 12.0
+		palanca.angular_velocity = Vector3.ZERO
+		for _cuadro: int in 120:
+			await get_tree().physics_frame
+		var bajo := _altura_del_vertice_mas_bajo(palanca)
+		assert_float(bajo).is_greater_equal(piso - _holgura_de_penetracion())
+		assert_float(bajo).is_less(piso + 0.2)
 
 
 func test_con_la_palanca_en_la_mano_la_puerta_abre_y_termina_la_partida() -> void:  # AC-PLY-190
