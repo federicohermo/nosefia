@@ -16,10 +16,14 @@ float ruido(vec2 punto) {
 		mix(azar(celda + vec2(0.0, 1.0)), azar(celda + vec2(1.0)), mezcla.x), mezcla.y);
 }
 
+vec2 girar(vec2 punto, float coseno, float seno) {
+	return vec2(coseno * punto.x - seno * punto.y, seno * punto.x + coseno * punto.y);
+}
+
 float granos(vec2 punto) {
 	vec2 celda = floor(punto);
 	vec2 local = fract(punto) - 0.5;
-	vec2 centro = vec2(azar(celda + 7.0), azar(celda + 19.0)) * 0.6 - 0.3;
+	vec2 centro = vec2(azar(celda + 7.0), azar(celda + 19.0)) * 0.4 - 0.2;
 	float radio = mix(0.06, 0.24, azar(celda + 31.0));
 	return (1.0 - smoothstep(radio, radio + 0.04, length(local - centro)))
 		* step(0.35, azar(celda));
@@ -33,13 +37,23 @@ void pintar_mancha(vec2 uv, out vec3 albedo, out float alpha, out float rugosida
 	vec3 pintura = color_del_agua.rgb;
 	float opacidad = transparencia;
 	if (tipo_de_suciedad == 0) {
-		// Colonias de moho, con moteado y esporas alrededor del centro.
-		float grueso = ruido(uv * 12.0);
-		float fino = ruido(uv * 57.0);
-		float colonia = smoothstep(0.30, 0.72, grueso * 0.7 + fino * 0.3);
-		float nucleo = 1.0 - smoothstep(0.45, 0.88, distancia);
-		mascara *= max(nucleo * colonia, granos(uv * 30.0) * 0.65);
-		pintura *= mix(0.32, 1.55, colonia);
+		// Moho como el cartel: borde roto, huecos y grumos sueltos.
+		// Cada octava gira el dominio: ningún borde ni hueco queda alineado a la grilla.
+		vec2 giro_a = girar(uv, 0.7986, 0.6018);
+		vec2 giro_b = girar(uv, 0.9205, -0.3907);
+		float grueso = 0.65 * ruido(giro_a * 12.0 + vec2(17.3, 5.1))
+			+ 0.35 * ruido(giro_b * 27.0 + vec2(3.7, 29.9));
+		float medio = 0.6 * ruido(giro_b * 31.0 + vec2(41.1, 11.7))
+			+ 0.4 * ruido(giro_a * 67.0 + vec2(7.9, 23.3));
+		float fino = ruido(giro_a * 57.0 + vec2(13.1, 37.7));
+		grueso = (grueso - 0.5) * 1.3 + 0.5;
+		medio = (medio - 0.5) * 1.3 + 0.5;
+		float borde = 0.22 + 0.38 * grueso + 0.10 * medio;
+		float cuerpo = 1.0 - smoothstep(borde - 0.015, borde + 0.025, distancia);
+		float hueco = 0.36 * distancia / max(borde, 0.01);
+		cuerpo *= smoothstep(hueco - 0.12, hueco + 0.12, medio);
+		mascara *= max(cuerpo, granos(uv * 13.0));
+		pintura *= mix(0.6, 1.35, grueso * 0.65 + fino * 0.35);
 		rugosidad = 0.94;
 	} else if (tipo_de_suciedad == 1) {
 		// Suciedad marrón salpicada: borde roto y pequeños grumos.

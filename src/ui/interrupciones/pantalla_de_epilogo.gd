@@ -1,6 +1,6 @@
 ## El epílogo de un final en pantalla: la placa con su fondo, su texto y «SIGUIENTE», y el negro de
-## los fundidos (BR-SHF-072 a BR-SHF-074). Dibuja lo que `RecorridoDelEpilogo` decide: cuál placa y
-## cuánto negro.
+## los fundidos (BR-SHF-072 a BR-SHF-074). Dibuja lo que `RecorridoDelEpilogo` decide: cuál placa,
+## cuánto negro y cuánto se ve el texto.
 ##
 ## `terminado` avisa con la pantalla del todo negra, cuando la última placa se cerró: quien lo
 ## escucha pone debajo la pantalla de final, y el último fundido de entrada la descubre. La
@@ -17,6 +17,7 @@ const TEXTO_DEL_BOTON := "SIGUIENTE"
 @export var _fondo: TextureRect
 @export var _marco: Control
 @export var _lectura: TextureRect
+@export var _contenido: Control
 @export var _texto: Label
 @export var _boton: Button
 @export var _negro: ColorRect
@@ -71,6 +72,10 @@ func negro() -> float:
 	return _negro.color.a
 
 
+func opacidad_del_texto() -> float:
+	return _contenido.modulate.a
+
+
 func _pasar_a_la_siguiente() -> void:
 	_recorrido.siguiente()
 
@@ -84,6 +89,7 @@ func _pintar() -> void:
 			_fondo.texture = placa.fondo
 			_texto.text = placa.texto
 			_boton.grab_focus(true)
+	_contenido.modulate.a = _recorrido.opacidad_del_texto()
 	var oscuridad := _recorrido.negro()
 	_negro.color.a = oscuridad
 	_negro.mouse_filter = (
