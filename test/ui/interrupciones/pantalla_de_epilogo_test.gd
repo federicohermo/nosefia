@@ -108,6 +108,18 @@ func test_el_negro_cubre_la_pantalla_a_la_mitad_de_cada_fundido() -> void:  # AC
 	assert_float(pantalla.negro()).is_equal_approx(0.5, 1e-6)
 
 
+func test_la_sombra_de_lectura_cubre_los_dos_bordes_de_una_ventana_ancha() -> void:  # AC-SHF-134
+	var pantalla := _pantalla(_placas(1))
+	var ancho := 2560.0
+	pantalla.ajustar_a(Vector2(ancho, 1080.0))
+	var franja: TextureRect = pantalla.find_child("Lectura", true, false)
+	var transformacion := franja.get_global_transform_with_canvas()
+	var izquierda := (transformacion * Vector2.ZERO).x
+	var derecha := (transformacion * franja.size).x
+	assert_float(izquierda).is_less_equal(0.0)
+	assert_float(derecha).is_greater_equal(ancho)
+
+
 func test_siguiente_se_acciona_con_el_teclado() -> void:  # AC-SHF-140
 	var placas := _placas(3)
 	var pantalla := _pantalla(placas)

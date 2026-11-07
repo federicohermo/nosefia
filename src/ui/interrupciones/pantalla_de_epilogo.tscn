@@ -11,13 +11,14 @@ colors = PackedColorArray(0, 0, 0, 0, 0, 0, 0, 0.7, 0, 0, 0, 0.7, 0, 0, 0, 0)
 gradient = SubResource("Lectura")
 fill_to = Vector2(0, 1)
 
-[node name="PantallaDeEpilogo" type="CanvasLayer" node_paths=PackedStringArray("_placa", "_fondo", "_marco", "_texto", "_boton", "_negro")]
+[node name="PantallaDeEpilogo" type="CanvasLayer" node_paths=PackedStringArray("_placa", "_fondo", "_marco", "_lectura", "_texto", "_boton", "_negro")]
 layer = 6
 visible = false
 script = ExtResource("1_pantalla")
 _placa = NodePath("Placa")
 _fondo = NodePath("Placa/Fondo")
 _marco = NodePath("Placa/Marco")
+_lectura = NodePath("Placa/Marco/Lectura")
 _texto = NodePath("Placa/Marco/Contenido/Texto")
 _boton = NodePath("Placa/Marco/Contenido/Boton")
 _negro = NodePath("Negro")
