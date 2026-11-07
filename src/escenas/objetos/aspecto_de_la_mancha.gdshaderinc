@@ -40,7 +40,7 @@ void pintar_mancha(vec2 uv, out vec3 albedo, out float alpha, out float rugosida
 		float borde = 0.22 + 0.38 * grueso + 0.10 * fino;
 		float cuerpo = step(distancia, borde) * step(0.3 * distancia / max(borde, 0.01), fino);
 		mascara *= max(cuerpo, granos(uv * 13.0));
-		pintura *= mix(0.35, 1.3, floor((grueso + fino) * 1.5) / 3.0);
+		pintura *= mix(0.6, 1.6, floor((grueso + fino) * 1.5) / 3.0);
 		rugosidad = 0.94;
 	} else if (tipo_de_suciedad == 1) {
 		// Suciedad marrón salpicada: borde roto y pequeños grumos.
