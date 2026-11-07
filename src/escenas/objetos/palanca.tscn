@@ -6,17 +6,35 @@
 
 [sub_resource type="BoxShape3D" id="cuerpo"]
 margin = 0.001
-size = Vector3(0.1, 0.04, 0.8)
+size = Vector3(0.04, 0.03, 0.8)
+
+[sub_resource type="BoxShape3D" id="gancho"]
+margin = 0.001
+size = Vector3(0.21, 0.03, 0.2)
+
+[sub_resource type="BoxShape3D" id="curva"]
+margin = 0.001
+size = Vector3(0.13, 0.03, 0.06)
 
 [node name="Palanca" type="RigidBody3D" groups=["interactuable"]]
 mass = 0.5
 collision_mask = 9
+continuous_cd = true
 script = ExtResource("objeto")
 datos = ExtResource("datos")
 orientacion_en_mano = Basis(1, 0, 0, 0, -0.173648, 0.984808, 0, -0.984808, -0.173648)
 
 [node name="Forma" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.0405, 0)
 shape = SubResource("cuerpo")
+
+[node name="FormaDelGancho" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.105, 0.0405, 0.3)
+shape = SubResource("gancho")
+
+[node name="FormaDeLaCurva" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.065, 0.0405, -0.37)
+shape = SubResource("curva")
 
 [node name="Gancho" type="Marker3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.4)
@@ -26,3 +44,5 @@ transform = Transform3D(1, 0, 0, 0, 0, -1, 0, 1, 0, 0, 0.0407, 0.0164)
 
 [node name="Crowbar_Material_0" parent="Visual/Sketchfab_model/3ef98e5c9c424bfe890bd89c0a752fdc_fbx/RootNode/Crowbar"]
 gi_mode = 2
+
+[editable path="Visual"]

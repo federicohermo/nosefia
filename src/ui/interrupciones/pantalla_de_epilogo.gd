@@ -16,6 +16,7 @@ const TEXTO_DEL_BOTON := "SIGUIENTE"
 @export var _placa: Control
 @export var _fondo: TextureRect
 @export var _marco: Control
+@export var _lectura: TextureRect
 @export var _texto: Label
 @export var _boton: Button
 @export var _negro: ColorRect
@@ -90,5 +91,13 @@ func _pintar() -> void:
 	)
 
 
+## Acomoda el marco en `disponible`. La franja de lectura sale del marco hasta los dos bordes: con
+## una ventana más ancha que el diseño, la sombra no se corta a los costados.
+func ajustar_a(disponible: Vector2) -> void:
+	LienzoDeManada.ajustar(_marco, disponible)
+	_lectura.offset_left = -_marco.position.x / _marco.scale.x
+	_lectura.offset_right = (disponible.x - _marco.position.x) / _marco.scale.x
+
+
 func _ajustar_al_viewport() -> void:
-	LienzoDeManada.ajustar(_marco, get_viewport().get_visible_rect().size)
+	ajustar_a(get_viewport().get_visible_rect().size)
