@@ -19,7 +19,7 @@ float ruido(vec2 punto) {
 float granos(vec2 punto) {
 	vec2 celda = floor(punto);
 	vec2 local = fract(punto) - 0.5;
-	vec2 centro = vec2(azar(celda + 7.0), azar(celda + 19.0)) * 0.6 - 0.3;
+	vec2 centro = vec2(azar(celda + 7.0), azar(celda + 19.0)) * 0.4 - 0.2;
 	float radio = mix(0.06, 0.24, azar(celda + 31.0));
 	return (1.0 - smoothstep(radio, radio + 0.04, length(local - centro)))
 		* step(0.35, azar(celda));
@@ -36,12 +36,13 @@ void pintar_mancha(vec2 uv, out vec3 albedo, out float alpha, out float rugosida
 		// Moho como el cartel: borde roto, huecos y grumos sueltos.
 		float grueso = ruido(uv * 12.0);
 		float fino = ruido(uv * 57.0);
-		float borde = 0.22 + 0.38 * grueso + 0.10 * fino;
+		float medio = ruido(uv * 31.0);
+		float borde = 0.22 + 0.38 * grueso + 0.10 * medio;
 		float cuerpo = 1.0 - smoothstep(borde - 0.015, borde + 0.025, distancia);
-		float hueco = 0.3 * distancia / max(borde, 0.01);
-		cuerpo *= smoothstep(hueco - 0.04, hueco + 0.04, fino);
+		float hueco = 0.36 * distancia / max(borde, 0.01);
+		cuerpo *= smoothstep(hueco - 0.12, hueco + 0.12, medio);
 		mascara *= max(cuerpo, granos(uv * 13.0));
-		pintura *= mix(0.6, 1.6, (grueso + fino) * 0.5);
+		pintura *= mix(0.6, 1.35, grueso * 0.65 + fino * 0.35);
 		rugosidad = 0.94;
 	} else if (tipo_de_suciedad == 1) {
 		// Suciedad marrón salpicada: borde roto y pequeños grumos.
