@@ -120,6 +120,52 @@ func test_la_sombra_de_lectura_cubre_los_dos_bordes_de_una_ventana_ancha() -> vo
 	assert_float(derecha).is_greater_equal(ancho)
 
 
+func test_el_texto_de_toda_placa_queda_dentro_de_la_parte_oscura() -> void:  # AC-SHF-134
+	var placas: Array[EpilogosDeLosFinales.Placa] = []
+	for final: FinalConPantalla.Cual in FinalConPantalla.Cual.values():
+		placas.append_array(EpilogosDeLosFinales.placas_de(final))
+	assert_int(placas.size()).is_greater(0)
+	for placa in placas:
+		var pantalla := _pantalla([placa] as Array[EpilogosDeLosFinales.Placa])
+		pantalla.avanzar(FUNDIDO)
+		await get_tree().process_frame
+		await get_tree().process_frame
+		var franja: TextureRect = pantalla.find_child("Lectura", true, false)
+		var etiqueta: Label = pantalla.find_child("Texto", true, false)
+		var meseta := (franja.texture as GradientTexture2D).gradient.offsets
+		var arriba := (franja.get_global_transform_with_canvas() * Vector2.ZERO).y
+		var abajo := (franja.get_global_transform_with_canvas() * franja.size).y
+		var oscura_desde := arriba + (abajo - arriba) * meseta[1]
+		var oscura_hasta := arriba + (abajo - arriba) * meseta[2]
+		var rectangulo := (
+			etiqueta.get_global_transform_with_canvas() * Rect2(Vector2.ZERO, etiqueta.size)
+		)
+		assert_str(etiqueta.text).is_equal(placa.texto)
+		assert_float(rectangulo.position.y).is_greater_equal(oscura_desde)
+		assert_float(rectangulo.end.y).is_less_equal(oscura_hasta)
+
+
+func test_entre_placas_se_funde_el_texto_y_no_la_pantalla() -> void:  # AC-SHF-138
+	var pantalla := _leyendo()
+	assert_float(pantalla.opacidad_del_texto()).is_equal(1.0)
+	_accionar(_teclado())
+	pantalla.avanzar(FUNDIDO / 2.0)
+	assert_float(pantalla.negro()).is_equal(0.0)
+	assert_float(pantalla.opacidad_del_texto()).is_equal_approx(0.5, 1e-6)
+	pantalla.avanzar(FUNDIDO * 1.5)
+	assert_float(pantalla.negro()).is_equal(0.0)
+	assert_float(pantalla.opacidad_del_texto()).is_equal(1.0)
+
+
+func test_al_salir_de_la_ultima_placa_se_funde_la_pantalla_entera() -> void:  # AC-SHF-138
+	var pantalla := _leyendo(2)
+	_accionar(_teclado())
+	pantalla.avanzar(2.0 * FUNDIDO)
+	_accionar(_teclado())
+	pantalla.avanzar(FUNDIDO / 2.0)
+	assert_float(pantalla.negro()).is_equal_approx(0.5, 1e-6)
+
+
 func test_siguiente_se_acciona_con_el_teclado() -> void:  # AC-SHF-140
 	var placas := _placas(3)
 	var pantalla := _pantalla(placas)
