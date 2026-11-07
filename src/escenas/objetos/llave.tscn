@@ -3,10 +3,23 @@
 [ext_resource type="Script" path="res://src/escenas/objetos/objeto_agarrable.gd" id="objeto"]
 [ext_resource type="Resource" path="res://src/dominio/investigacion/llave.tres" id="datos"]
 [ext_resource type="PackedScene" path="res://assets/models/Llave/llave.glb" id="modelo"]
+[ext_resource type="Texture2D" path="res://assets/models/Llave/llave_llave_base_color.png" id="color"]
+[ext_resource type="Texture2D" path="res://assets/models/Llave/llave_llave_orm.png" id="orm"]
 
 [sub_resource type="BoxShape3D" id="cuerpo"]
 margin = 0.001
 size = Vector3(0.192, 0.06, 0.06)
+
+[sub_resource type="StandardMaterial3D" id="metal"]
+albedo_texture = ExtResource("color")
+metallic = 0.4
+metallic_texture = ExtResource("orm")
+metallic_texture_channel = 2
+roughness_texture = ExtResource("orm")
+roughness_texture_channel = 1
+rim_enabled = true
+rim = 0.4
+rim_tint = 0.5
 
 [node name="Llave" type="RigidBody3D" groups=["interactuable"]]
 mass = 0.05
@@ -26,5 +39,6 @@ scale = Vector3(3, 3, 3)
 
 [node name="Llave" parent="Visual"]
 gi_mode = 2
+surface_material_override/0 = SubResource("metal")
 
 [editable path="Visual"]
