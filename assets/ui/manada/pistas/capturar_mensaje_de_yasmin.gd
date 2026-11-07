@@ -46,10 +46,11 @@ func _capturar() -> void:
 	await _cuadros(2)
 	var yasmin := Conversacion.de(Conversacion.Interlocutor.YASMIN)
 	var bandeja := Bandeja.new([yasmin])
-	bandeja.abrir_jornada(2)
+	var jornada := (load("res://assets/investigacion/jornada_2/pista_2a.tres") as Pista).jornada
+	bandeja.abrir_jornada(jornada)
 	var mensajes := bandeja.mensajes_de(Conversacion.Interlocutor.YASMIN)
 	pantalla.subir()
-	pantalla.mostrar_chat(yasmin, mensajes, true, 2)
+	pantalla.mostrar_chat(yasmin, mensajes, true, jornada)
 	await _cuadros(40)
 	var burbuja: PanelContainer = null
 	for candidata: PanelContainer in pantalla.get("_burbujas"):
