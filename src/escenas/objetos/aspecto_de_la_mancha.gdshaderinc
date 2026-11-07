@@ -27,20 +27,21 @@ float granos(vec2 punto) {
 
 void pintar_mancha(vec2 uv, out vec3 albedo, out float alpha, out float rugosidad,
 	out float especular) {
-	uv = tipo_de_suciedad == 0 ? (floor(uv * 48.0) + 0.5) / 48.0 : uv;
 	vec2 punto = (uv - 0.5) * 2.0;
 	float distancia = length(punto);
 	float mascara = 1.0 - smoothstep(0.80, 0.98, distancia);
 	vec3 pintura = color_del_agua.rgb;
 	float opacidad = transparencia;
 	if (tipo_de_suciedad == 0) {
-		// Moho en píxeles gruesos, como el cartel: borde roto, huecos y grumos sueltos.
+		// Moho como el cartel: borde roto, huecos y grumos sueltos.
 		float grueso = ruido(uv * 12.0);
 		float fino = ruido(uv * 57.0);
 		float borde = 0.22 + 0.38 * grueso + 0.10 * fino;
-		float cuerpo = step(distancia, borde) * step(0.3 * distancia / max(borde, 0.01), fino);
+		float cuerpo = 1.0 - smoothstep(borde - 0.015, borde + 0.025, distancia);
+		float hueco = 0.3 * distancia / max(borde, 0.01);
+		cuerpo *= smoothstep(hueco - 0.04, hueco + 0.04, fino);
 		mascara *= max(cuerpo, granos(uv * 13.0));
-		pintura *= mix(0.6, 1.6, floor((grueso + fino) * 1.5) / 3.0);
+		pintura *= mix(0.6, 1.6, (grueso + fino) * 0.5);
 		rugosidad = 0.94;
 	} else if (tipo_de_suciedad == 1) {
 		// Suciedad marrón salpicada: borde roto y pequeños grumos.
