@@ -4,14 +4,14 @@
 [ext_resource type="Theme" path="res://assets/ui/manada/tema.tres" id="2_tema"]
 
 [sub_resource type="Gradient" id="Lectura"]
-offsets = PackedFloat32Array(0, 0.25, 0.75, 1)
+offsets = PackedFloat32Array(0, 0.2, 0.8, 1)
 colors = PackedColorArray(0, 0, 0, 0, 0, 0, 0, 0.7, 0, 0, 0, 0.7, 0, 0, 0, 0)
 
 [sub_resource type="GradientTexture2D" id="GradienteDeLectura"]
 gradient = SubResource("Lectura")
 fill_to = Vector2(0, 1)
 
-[node name="PantallaDeEpilogo" type="CanvasLayer" node_paths=PackedStringArray("_placa", "_fondo", "_marco", "_lectura", "_texto", "_boton", "_negro")]
+[node name="PantallaDeEpilogo" type="CanvasLayer" node_paths=PackedStringArray("_placa", "_fondo", "_marco", "_lectura", "_contenido", "_texto", "_boton", "_negro")]
 layer = 6
 visible = false
 script = ExtResource("1_pantalla")
@@ -19,6 +19,7 @@ _placa = NodePath("Placa")
 _fondo = NodePath("Placa/Fondo")
 _marco = NodePath("Placa/Marco")
 _lectura = NodePath("Placa/Marco/Lectura")
+_contenido = NodePath("Placa/Marco/Contenido")
 _texto = NodePath("Placa/Marco/Contenido/Texto")
 _boton = NodePath("Placa/Marco/Contenido/Boton")
 _negro = NodePath("Negro")
@@ -54,9 +55,9 @@ theme = ExtResource("2_tema")
 
 [node name="Lectura" type="TextureRect" parent="Placa/Marco"]
 layout_mode = 0
-offset_top = 360.0
+offset_top = 190.0
 offset_right = 1920.0
-offset_bottom = 780.0
+offset_bottom = 950.0
 mouse_filter = 2
 texture = SubResource("GradienteDeLectura")
 expand_mode = 1
