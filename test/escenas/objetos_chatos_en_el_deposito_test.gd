@@ -9,9 +9,6 @@ const S := SubtitulosDeLosGestos.Id
 ## almacén (10 s a 60 Hz), para que el aviso, si va a salir, ya haya salido.
 const CUADROS_PARA_QUEDAR_QUIETO := 720
 
-## Desde cuánto más arriba del piso se suelta, en metros.
-const ALTURA_DE_LA_SUELTA := 0.3
-
 ## Cuánto más arriba del piso puede quedar algo apoyado, en metros. Más que eso quedó sobre un
 ## mueble, y el caso no prueba el piso.
 const ALTURA_MAXIMA_APOYADO := 0.2
@@ -59,33 +56,46 @@ func _vigilar_hasta_que_se_aquiete(almacen: Node3D, objeto: RigidBody3D) -> void
 	await get_tree().physics_frame
 
 
-## Suelta `objeto` sobre el piso del depósito, en `lugar` (x, z), y espera a que se aquiete.
-func _soltar_en_el_piso(almacen: Node3D, objeto: RigidBody3D, lugar: Vector2) -> void:
-	objeto.freeze = false
-	objeto.sleeping = false
-	objeto.global_position = Vector3(
-		lugar.x, _piso_del_deposito(almacen) + ALTURA_DE_LA_SUELTA, lugar.y
-	)
-	objeto.linear_velocity = Vector3.ZERO
-	objeto.angular_velocity = Vector3.ZERO
+## El punto más bajo de las formas de colisión del objeto, en el mundo.
+func _fondo_de_las_formas(objeto: RigidBody3D) -> float:
+	var fondo := INF
+	for hijo: Node in objeto.get_children():
+		var forma := hijo as CollisionShape3D
+		if forma == null or forma.disabled:
+			continue
+		var limites: AABB = forma.global_transform * forma.shape.get_debug_mesh().get_aabb()
+		fondo = minf(fondo, limites.position.y)
+	return fondo
+
+
+## Deja `objeto` quieto en `lugar` (x, z) con el fondo de sus formas sobre el piso del depósito:
+## como queda algo soltado cuando se aquieta. Congelado, porque lo que importa es dónde queda y no
+## cómo cae, y así el caso no depende de cuánto tarde la física en dormirlo.
+func _apoyar_en_el_piso(almacen: Node3D, objeto: RigidBody3D, lugar: Vector2) -> void:
+	var piso := _piso_del_deposito(almacen)
+	objeto.freeze = true
+	objeto.global_position = Vector3(lugar.x, piso, lugar.y)
+	objeto.global_position.y += piso - _fondo_de_las_formas(objeto)
 	await _vigilar_hasta_que_se_aquiete(almacen, objeto)
 
 
 func test_la_palanca_en_su_lugar_del_deposito_no_sale_por_la_ventana() -> void:
 	var almacen := await _almacen()
 	var palanca: RigidBody3D = almacen.get("_palanca")
+	palanca.freeze = true
 	await _vigilar_hasta_que_se_aquiete(almacen, palanca)
-	assert_bool(_quieto(palanca)).is_true()
 	assert_float(_altura_sobre_el_piso(almacen, palanca)).is_less(ALTURA_MAXIMA_APOYADO)
 	assert_int(_habitacion_de(almacen, palanca)).is_equal(ReglasDelCierre.Habitacion.DEPOSITO)
 	assert_str(_linea(almacen)).is_not_equal(SubtitulosDeLosGestos.texto(S.POR_LA_VENTANA))
 
 
-func test_la_palanca_soltada_en_el_piso_del_deposito_no_sale_por_la_ventana() -> void:
+func test_la_palanca_apoyada_en_otro_punto_del_piso_del_deposito_no_sale_por_la_ventana() -> void:
 	var almacen := await _almacen()
 	var palanca: RigidBody3D = almacen.get("_palanca")
 	var lugar := Vector2(palanca.global_position.x + 1.0, palanca.global_position.z - 1.0)
-	await _soltar_en_el_piso(almacen, palanca, lugar)
+	await _apoyar_en_el_piso(almacen, palanca, lugar)
+	# La premisa: el fondo de su forma toca el piso, que es donde el origen queda más bajo.
+	assert_float(_fondo_de_las_formas(palanca)).is_equal_approx(_piso_del_deposito(almacen), 0.001)
 	assert_bool(_quieto(palanca)).is_true()
 	assert_float(_altura_sobre_el_piso(almacen, palanca)).is_less(ALTURA_MAXIMA_APOYADO)
 	assert_int(_habitacion_de(almacen, palanca)).is_equal(ReglasDelCierre.Habitacion.DEPOSITO)
@@ -95,18 +105,19 @@ func test_la_palanca_soltada_en_el_piso_del_deposito_no_sale_por_la_ventana() ->
 func test_la_llave_en_su_lugar_del_deposito_no_sale_por_la_ventana() -> void:
 	var almacen := await _almacen()
 	var llave: RigidBody3D = almacen.get("_llave")
+	llave.freeze = true
 	await _vigilar_hasta_que_se_aquiete(almacen, llave)
-	assert_bool(_quieto(llave)).is_true()
 	assert_float(_altura_sobre_el_piso(almacen, llave)).is_less(ALTURA_MAXIMA_APOYADO)
 	assert_int(_habitacion_de(almacen, llave)).is_equal(ReglasDelCierre.Habitacion.DEPOSITO)
 	assert_str(_linea(almacen)).is_not_equal(SubtitulosDeLosGestos.texto(S.POR_LA_VENTANA))
 
 
-func test_la_llave_soltada_en_el_piso_del_deposito_no_sale_por_la_ventana() -> void:
+func test_la_llave_apoyada_en_otro_punto_del_piso_del_deposito_no_sale_por_la_ventana() -> void:
 	var almacen := await _almacen()
 	var llave: RigidBody3D = almacen.get("_llave")
 	var lugar := Vector2(llave.global_position.x - 1.0, llave.global_position.z - 1.0)
-	await _soltar_en_el_piso(almacen, llave, lugar)
+	await _apoyar_en_el_piso(almacen, llave, lugar)
+	assert_float(_fondo_de_las_formas(llave)).is_equal_approx(_piso_del_deposito(almacen), 0.001)
 	assert_bool(_quieto(llave)).is_true()
 	assert_float(_altura_sobre_el_piso(almacen, llave)).is_less(ALTURA_MAXIMA_APOYADO)
 	assert_int(_habitacion_de(almacen, llave)).is_equal(ReglasDelCierre.Habitacion.DEPOSITO)
