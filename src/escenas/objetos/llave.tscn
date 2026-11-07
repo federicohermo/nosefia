@@ -9,12 +9,12 @@ margin = 0.001
 size = Vector3(0.192, 0.06, 0.06)
 
 [sub_resource type="StandardMaterial3D" id="dorado"]
-albedo_color = Color(1, 0.78, 0.32, 1)
+albedo_color = Color(1, 0.8, 0.3, 1)
 metallic = 0.3
 roughness = 0.55
 emission_enabled = true
-emission = Color(0.9, 0.62, 0.2, 1)
-emission_energy_multiplier = 0.5
+emission = Color(1, 0.72, 0.2, 1)
+emission_energy_multiplier = 0.9
 rim_enabled = true
 rim = 0.3
 rim_tint = 0.5
