@@ -1,5 +1,6 @@
 extends GdUnitTestSuite
 
+const ESCENA := preload("res://src/escenas/objetos/llave.tscn")
 const AvanceDelEpilogo := preload("res://test/avance_del_epilogo.gd")
 const JORNADA_7 := QuejasDeLaJornada.JORNADA
 const JORNADA_6 := JORNADA_7 - 1
@@ -187,9 +188,7 @@ func test_levantar_y_soltar_la_llave_no_registra_ni_avisa() -> void:  # AC-INV-1
 
 
 func test_la_llave_es_un_objeto_propio() -> void:  # AC-INV-185
-	var llave: ObjetoAgarrable = auto_free(
-		(load("res://src/escenas/objetos/llave.tscn") as PackedScene).instantiate()
-	)
+	var llave: ObjetoAgarrable = auto_free(ESCENA.instantiate())
 	var otros: Array[String] = ["colilla", "nota_bajo_la_puerta", "documento_impreso", "palanca"]
 	for escena: String in otros:
 		var otro: ObjetoAgarrable = auto_free(
@@ -229,12 +228,16 @@ func test_la_llave_queda_apoyada_en_el_piso_y_bajo_la_estanteria() -> void:  # A
 		return
 	assert_float((techo["position"] as Vector3).y).is_greater(centro.y + mitad)
 	var separacion := centro.y - mitad - (piso["position"] as Vector3).y
-	assert_float(separacion).is_greater_equal(-0.005)
+	# Jolt deja que un cuerpo se hunda hasta su holgura de penetración sin empujarlo.
+	var holgura: float = ProjectSettings.get_setting(
+		"physics/jolt_physics_3d/simulation/penetration_slop", 0.02
+	)
+	assert_float(separacion).is_greater_equal(-holgura)
 	assert_float(separacion).is_less(0.005)
 	assert_float(llave.linear_velocity.length()).is_less(0.05)
 
 
-func test_en_la_mano_la_llave_se_ve_de_frente_con_el_ojo_arriba() -> void:  # AC-INV-185
+func test_en_la_mano_la_llave_se_ve_de_frente_con_el_ojo_abajo() -> void:  # AC-INV-185
 	await _abrir(JORNADA_7, _por_la_6c())
 	var llave := _llave()
 	var camara := (_almacen.get("_jugador") as CharacterBody3D).get("_camara") as Camera3D
@@ -258,11 +261,49 @@ func test_en_la_mano_la_llave_se_ve_de_frente_con_el_ojo_arriba() -> void:  # AC
 	assert_float(absf(eje_largo.dot(arriba))).is_greater(absf(eje_largo.dot(adelante)))
 	assert_float(absf(cara.dot(adelante))).is_greater(absf(cara.dot(arriba)))
 	assert_float(absf(cara.dot(adelante))).is_greater(absf(cara.dot(derecha)))
+	var ancho := _extremo_mas_ancho(malla, largo, fino)
+	var punta := malla.global_basis[largo].normalized() * ancho
+	assert_float(punta.dot(arriba)).is_less(0.0)
 	var ojo := llave.get_node_or_null("Ojo") as Node3D
 	assert_object(ojo).is_not_null()
 	if ojo == null:
 		return
-	assert_float((ojo.global_position - llave.global_position).dot(arriba)).is_greater(0.0)
+	var centro := malla.global_transform * malla.get_aabb().get_center()
+	assert_float((ojo.global_position - centro).dot(punta)).is_greater(0.0)
+
+
+## Hacia qué lado del eje largo cae la punta más ancha: +1 o -1. Se mide sobre los vértices de la
+## malla, porque el ojo es el aro y es lo más ancho de la llave.
+func _extremo_mas_ancho(malla: MeshInstance3D, largo: int, fino: int) -> float:
+	var ancho := 3 - largo - fino
+	var centro := malla.get_aabb().get_center()[largo]
+	var minimo := [INF, INF]
+	var maximo := [-INF, -INF]
+	for superficie: int in malla.mesh.get_surface_count():
+		var vertices := (
+			malla.mesh.surface_get_arrays(superficie)[Mesh.ARRAY_VERTEX] as PackedVector3Array
+		)
+		for vertice: Vector3 in vertices:
+			var lado := 0 if vertice[largo] < centro else 1
+			minimo[lado] = minf(minimo[lado], vertice[ancho])
+			maximo[lado] = maxf(maximo[lado], vertice[ancho])
+	return 1.0 if maximo[1] - minimo[1] > maximo[0] - minimo[0] else -1.0
+
+
+func test_la_llave_es_plateada_y_no_depende_de_la_luz_de_la_zona() -> void:  # AC-INV-185
+	var llave: ObjetoAgarrable = auto_free(ESCENA.instantiate())
+	var mallas := llave.find_children("*", "MeshInstance3D", true, false)
+	assert_array(mallas).is_not_empty()
+	for malla: MeshInstance3D in mallas:
+		var material := malla.material_override as StandardMaterial3D
+		assert_object(material).is_not_null()
+		if material == null:
+			return
+		assert_float(material.metallic).is_greater(0.5)
+		assert_bool(material.emission_enabled).is_true()
+		# Las sondas de reflejo y la luz ambiente cambian de una zona a otra: sin ellas, la llave
+		# sólo recibe las luces del local y lo que emite, igual en todas partes.
+		assert_bool(material.disable_ambient_light).is_true()
 
 
 func test_con_la_llave_en_la_mano_la_puerta_abre_y_termina_la_partida() -> void:  # AC-PLY-191
