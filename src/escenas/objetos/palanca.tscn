@@ -13,13 +13,13 @@ mass = 0.5
 collision_mask = 9
 script = ExtResource("objeto")
 datos = ExtResource("datos")
-orientacion_en_mano = Basis(1, 0, 0, 0, 0.173648, -0.984808, 0, 0.984808, 0.173648)
+orientacion_en_mano = Basis(1, 0, 0, 0, -0.173648, 0.984808, 0, -0.984808, -0.173648)
 
 [node name="Forma" type="CollisionShape3D" parent="."]
 shape = SubResource("cuerpo")
 
 [node name="Gancho" type="Marker3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.4)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.4)
 
 [node name="Visual" parent="." instance=ExtResource("modelo")]
 transform = Transform3D(1, 0, 0, 0, 0, -1, 0, 1, 0, 0, 0.0407, 0.0164)
