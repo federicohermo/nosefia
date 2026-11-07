@@ -6,7 +6,19 @@
 
 [sub_resource type="BoxShape3D" id="cuerpo"]
 margin = 0.001
-size = Vector3(0.128, 0.04, 0.04)
+size = Vector3(0.192, 0.06, 0.06)
+
+[sub_resource type="StandardMaterial3D" id="plateado"]
+albedo_color = Color(0.82, 0.83, 0.85, 1)
+metallic = 0.9
+roughness = 0.4
+emission_enabled = true
+emission = Color(0.55, 0.57, 0.6, 1)
+emission_energy_multiplier = 0.6
+rim_enabled = true
+rim = 0.3
+rim_tint = 0.5
+disable_ambient_light = true
 
 [node name="Llave" type="RigidBody3D" groups=["interactuable"]]
 mass = 0.05
@@ -19,10 +31,11 @@ orientacion_en_mano = Basis(0, 0, -1, -1, 0, 0, 0, 1, 0)
 shape = SubResource("cuerpo")
 
 [node name="Ojo" type="Marker3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.05, 0, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.072, 0, 0)
 
 [node name="Visual" parent="." instance=ExtResource("modelo")]
-scale = Vector3(2, 2, 2)
+scale = Vector3(3, 3, 3)
 
 [node name="Llave" parent="Visual"]
 gi_mode = 2
+material_override = SubResource("plateado")
