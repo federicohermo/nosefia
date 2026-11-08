@@ -88,7 +88,8 @@ func test_cada_pestana_tiene_su_texto_y_el_dibujo_de_su_dispositivo() -> void:  
 	}
 	for nombre: String in esperadas:
 		var pestana: Button = pantalla.get(nombre)
-		assert_str(pestana.text).is_equal(esperadas[nombre][0])
+		var rotulos := pestana.find_children("*", "Label", true, false)
+		assert_str((rotulos[0] as Label).text).is_equal(esperadas[nombre][0])
 		var dibujos := pestana.find_children("*", "DibujoDeDispositivo", true, false)
 		assert_int(dibujos.size()).is_equal(1)
 		assert_int((dibujos[0] as DibujoDeDispositivo).dispositivo).is_equal(esperadas[nombre][1])

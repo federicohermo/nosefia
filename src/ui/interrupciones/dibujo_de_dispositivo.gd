@@ -7,6 +7,7 @@ enum Dispositivo { TECLADO, MANDO }
 
 const COLOR_DEL_TRAZO := Color("f4e6b5")
 const TAMANO := Vector2(64.0, 40.0)
+const ESCALA := 1.3
 
 var dispositivo: Dispositivo = Dispositivo.TECLADO
 
@@ -16,15 +17,15 @@ func _init() -> void:
 
 
 func _get_minimum_size() -> Vector2:
-	return TAMANO
+	return TAMANO * ESCALA
 
 
 func _draw() -> void:
-	var origen := (size - TAMANO) / 2.0
+	draw_set_transform((size - TAMANO * ESCALA) / 2.0, 0.0, Vector2.ONE * ESCALA)
 	if dispositivo == Dispositivo.TECLADO:
-		_dibujar_teclado(origen)
+		_dibujar_teclado(Vector2.ZERO)
 	else:
-		_dibujar_mando(origen)
+		_dibujar_mando(Vector2.ZERO)
 
 
 func _dibujar_teclado(origen: Vector2) -> void:

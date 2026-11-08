@@ -10,10 +10,18 @@ extends Control
 enum Forma { TECLA, MOUSE, CRUZ, CIRCULO, CUADRADO, TRIANGULO, PILDORA, PALANCA, CRUCETA }
 
 const ALTO := 36.0
-const ANCHO_DEL_MOUSE := 26.0
+const ANCHO_DEL_MOUSE := 30.0
 const MARGEN_DEL_TEXTO := 22.0
 const COLOR_DEL_BORDE := Color("f4e6b5")
 const COLOR_DEL_FONDO := Color(0.04, 0.1, 0.12, 0.9)
+const COLOR_DEL_BOTON_DEL_MOUSE := Color("d8b468")
+## Las flechas se dibujan: la fuente no trae sus glifos.
+const FLECHAS: Dictionary = {
+	KEY_UP: Vector2.UP,
+	KEY_DOWN: Vector2.DOWN,
+	KEY_LEFT: Vector2.LEFT,
+	KEY_RIGHT: Vector2.RIGHT,
+}
 const COLOR_DE_LA_CRUZ := Color("6fa8ff")
 const COLOR_DEL_CIRCULO := Color("ff5a64")
 const COLOR_DEL_CUADRADO := Color("f08fd0")
@@ -25,6 +33,8 @@ var forma: Forma = Forma.TECLA
 var texto: String = ""
 ## El botón del mouse que se pinta, o cero si ninguno.
 var boton_del_mouse: int = 0
+## Hacia dónde apunta una tecla de flecha, o cero si no lo es. Se dibuja su punta, no su nombre.
+var flecha: Vector2 = Vector2.ZERO
 
 
 ## Qué forma lleva una entrada.
@@ -56,6 +66,8 @@ static func de_la_entrada(entrada: Vector2i, leida: String) -> GlifoDeEntrada:
 	glifo.texto = leida
 	if glifo.forma == Forma.MOUSE:
 		glifo.boton_del_mouse = entrada.y
+	if glifo.forma == Forma.TECLA:
+		glifo.flecha = FLECHAS.get(entrada.y, Vector2.ZERO)
 	glifo.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	return glifo
 
@@ -110,6 +122,8 @@ func _draw() -> void:
 func _tamano_natural() -> Vector2:
 	match forma:
 		Forma.TECLA, Forma.PILDORA:
+			if flecha != Vector2.ZERO:
+				return Vector2(ALTO, ALTO)
 			return Vector2(maxf(ALTO, _ancho_del_texto() + MARGEN_DEL_TEXTO), ALTO)
 		Forma.MOUSE:
 			var del_texto := 0.0 if texto.is_empty() else _ancho_del_texto() + 10.0
@@ -161,7 +175,22 @@ func _escribir(marco: Rect2, lo_escrito: String) -> void:
 
 func _dibujar_tecla(marco: Rect2) -> void:
 	draw_style_box(_caja(4), marco)
-	_escribir(marco, texto)
+	if flecha == Vector2.ZERO:
+		_escribir(marco, texto)
+		return
+	var c := marco.get_center()
+	var largo := marco.size.y * 0.22
+	var de_lado := Vector2(-flecha.y, flecha.x)
+	draw_colored_polygon(
+		PackedVector2Array(
+			[
+				c + flecha * largo,
+				c - flecha * largo * 0.8 + de_lado * largo,
+				c - flecha * largo * 0.8 - de_lado * largo,
+			]
+		),
+		COLOR_DEL_BORDE
+	)
 
 
 func _dibujar_pildora(marco: Rect2) -> void:
@@ -204,9 +233,10 @@ func _dibujar_cruceta(marco: Rect2) -> void:
 
 func _dibujar_simbolo(marco: Rect2) -> void:
 	var c := marco.get_center()
-	var radio := marco.size.y / 2.0 - 2.0
+	var radio := marco.size.y / 2.0 - 1.0
 	var lado := radio * 0.5
 	draw_circle(c, radio, COLOR_DEL_FONDO)
+	draw_arc(c, radio - 1.0, 0.0, TAU, 32, COLOR_DEL_BORDE, 2.0)
 	match forma:
 		Forma.CRUZ:
 			draw_line(
@@ -266,7 +296,7 @@ func _dibujar_mouse(marco: Rect2) -> void:
 			pintado = Rect2(izquierdo - 3.0, mitad + 3.0, 5.0, 12.0)
 	draw_style_box(_caja(12), cuerpo)
 	if pintado.has_area():
-		draw_rect(pintado, COLOR_DEL_BORDE)
+		draw_rect(pintado, COLOR_DEL_BOTON_DEL_MOUSE)
 	draw_line(Vector2(izquierdo + 1.0, mitad), Vector2(derecho - 1.0, mitad), COLOR_DEL_BORDE, 2.0)
 	draw_line(
 		Vector2(al_medio, cuerpo.position.y + 1.0), Vector2(al_medio, mitad), COLOR_DEL_BORDE, 2.0
