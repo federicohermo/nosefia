@@ -56,6 +56,11 @@ class ElColorLineal(unittest.TestCase):
     def test_las_mensulas_son_mas_claras_que_el_cuerpo_porque_miran_hacia_abajo(self):
         self.assertTrue(all(m > c for m, c in zip(gondolas.TONO_DE_LA_PALETA, gondolas.TONO)))
 
+    def test_las_chapas_aspras_compensan_su_falta_de_brillo_con_mas_gris(self):
+        self.assertTrue(all(c > t for c, t in zip(gondolas.TONO_DE_LAS_CHAPAS, gondolas.TONO)))
+        for rugosidad in gondolas.ASPEROS.values():
+            self.assertTrue(0.0 <= rugosidad <= 1.0)
+
     def test_el_rojo_emite_una_parte_y_no_todo(self):
         self.assertTrue(0.0 < gondolas.EMISION_ROJO < 1.0)
 

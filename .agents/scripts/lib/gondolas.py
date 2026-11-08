@@ -39,6 +39,18 @@ CARPETA = RAIZ / "assets" / "source" / "textures" / "gondola"
 #: El gris del cuerpo de las góndolas centrales, en valores de imagen de 0 a 1.
 TONO = (0.24, 0.24, 0.25)
 
+#: El gris de las chapas, el panel perforado y los parantes. Con la rugosidad de `ASPEROS` ya no
+#: tienen el brillo que reflejaba las cajas, y para quedar tan claras como antes necesitan más gris.
+TONO_DE_LAS_CHAPAS = (0.29, 0.29, 0.30)
+
+#: Los materiales del cuerpo que pasan a rugosidad 1,0. Con 0,55 reflejaban las cajas rojas y la
+#: cara de abajo de los estantes salía marrón.
+ASPEROS = {
+    "GONDOLA | Chapa pintada blanca": 1.0,
+    "GONDOLA | Panel perforado 50 mm": 1.0,
+    "GONDOLA | Parante ranurado blanco": 1.0,
+}
+
 #: El gris de las ménsulas y los bordes de la paleta. Es más claro que el del cuerpo a propósito:
 #: miran hacia abajo y la luz que reciben es poca. Medido en el juego, con `TONO` salían marrones y
 #: más oscuras que el panel perforado.
@@ -63,9 +75,9 @@ ROJO = (0.95, 0.22, 0.25)
 
 #: Las imágenes del modelo que forman el cuerpo, y el tono al que va cada una.
 TEXTURAS = {
-    "gondola_chapa_blanca_512_basecolor_negra": TONO,
-    "gondola_panel_blanca_1024_basecolor_negra": TONO,
-    "gondola_parante_ranura_blanca": TONO,
+    "gondola_chapa_blanca_512_basecolor_negra": TONO_DE_LAS_CHAPAS,
+    "gondola_panel_blanca_1024_basecolor_negra": TONO_DE_LAS_CHAPAS,
+    "gondola_parante_ranura_blanca": TONO_DE_LAS_CHAPAS,
     "gondola_grilla_alambre": TONO,
     "exhibidor fondo.png": AZUL,
 }

@@ -180,6 +180,19 @@ def dielectricos() -> list[str]:
     return informe
 
 
+def asperos() -> list[str]:
+    informe = []
+    for nombre, rugosidad in gondolas.ASPEROS.items():
+        material = bpy.data.materials.get(nombre)
+        if material is None:
+            raise SystemExit(f"el modelo no tiene el material {nombre}")
+        next(n for n in material.node_tree.nodes if n.type == "BSDF_PRINCIPLED").inputs[
+            "Roughness"
+        ].default_value = rugosidad
+        informe.append(f"gondola: {nombre} rugosidad {rugosidad}")
+    return informe
+
+
 def salon() -> list[str]:
     """La base de las mesas toma el cromo, y las patas de las sillas toman madera."""
     acero = bpy.data.materials.get(gondolas.ACERO)
@@ -243,7 +256,7 @@ def main() -> None:
         ].default_value = (1.0, 1.0, 1.0, 1.0)
         print(f"gondola: {nombre} sin tinte")
     print(paleta())
-    for linea in colores_lisos() + dielectricos() + salon():
+    for linea in colores_lisos() + dielectricos() + asperos() + salon():
         print(linea)
     if "--sin-guardar" not in sys.argv:
         bpy.ops.file.make_paths_relative()
