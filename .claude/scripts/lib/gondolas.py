@@ -39,6 +39,15 @@ CARPETA = RAIZ / "assets" / "source" / "textures" / "gondola"
 #: El gris del cuerpo de las góndolas centrales, en valores de imagen de 0 a 1.
 TONO = (0.24, 0.24, 0.25)
 
+#: El gris de las ménsulas y los bordes de la paleta. Es más claro que el del cuerpo a propósito:
+#: miran hacia abajo y la luz que reciben es poca. Medido en el juego, con `TONO` salían marrones y
+#: más oscuras que el panel perforado.
+TONO_DE_LA_PALETA = (0.36, 0.36, 0.37)
+
+#: La rugosidad del material de la paleta. Con 0,5 reflejaba las cajas rojas y las ménsulas salían
+#: marrones.
+RUGOSIDAD_DE_LA_PALETA = 1.0
+
 #: El gris de los estantes del exhibidor, que no cambia con el del cuerpo.
 TONO_APARTE = (0.30, 0.30, 0.31)
 

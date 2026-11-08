@@ -127,7 +127,7 @@ def paleta() -> str:
         raise SystemExit(f"{gondolas.PALETA} ya no la usa ningún material: ¿ya está aplicada?")
     rgba = _pixeles(original).copy()
     for columna in gondolas.PIXELES_GRISES:
-        rgba[0, columna, :3] = gondolas.TONO
+        rgba[0, columna, :3] = gondolas.TONO_DE_LA_PALETA
     rgba[0, gondolas.PIXEL_DEL_EXHIBIDOR, :3] = gondolas.TONO_APARTE
     rgba[0, gondolas.PIXEL_ROJO, :3] = gondolas.ROJO
     emision = np.zeros_like(rgba)
@@ -143,6 +143,9 @@ def paleta() -> str:
         nodo.image = imagen
         nodo.interpolation = "Closest"
         if any(e.to_socket.name == "Base Color" for e in nodo.outputs["Color"].links):
+            next(n for n in material.node_tree.nodes if n.type == "BSDF_PRINCIPLED").inputs[
+                "Roughness"
+            ].default_value = gondolas.RUGOSIDAD_DE_LA_PALETA
             _emitir(material, nodo, luz)
     return (
         f"gondola: paleta, grises {gondolas.PIXELES_GRISES}, rojo {gondolas.PIXEL_ROJO} que emite "

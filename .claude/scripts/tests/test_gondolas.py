@@ -53,6 +53,9 @@ class ElColorLineal(unittest.TestCase):
     def test_el_cuerpo_central_es_mas_oscuro_que_la_grilla_y_el_exhibidor(self):
         self.assertTrue(all(c < a for c, a in zip(gondolas.TONO, gondolas.TONO_APARTE)))
 
+    def test_las_mensulas_son_mas_claras_que_el_cuerpo_porque_miran_hacia_abajo(self):
+        self.assertTrue(all(m > c for m, c in zip(gondolas.TONO_DE_LA_PALETA, gondolas.TONO)))
+
     def test_el_rojo_emite_una_parte_y_no_todo(self):
         self.assertTrue(0.0 < gondolas.EMISION_ROJO < 1.0)
 
