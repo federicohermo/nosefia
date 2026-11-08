@@ -20,13 +20,19 @@ vec2 girar(vec2 punto, float coseno, float seno) {
 	return vec2(coseno * punto.x - seno * punto.y, seno * punto.x + coseno * punto.y);
 }
 
-float granos(vec2 punto) {
+// Cada grumo sale entero o no sale: el desvanecido del borde y el recorte del quad se
+// deciden con su centro, no con el píxel.
+float granos(vec2 punto, float escala) {
 	vec2 celda = floor(punto);
 	vec2 local = fract(punto) - 0.5;
 	vec2 centro = vec2(azar(celda + 7.0), azar(celda + 19.0)) * 0.4 - 0.2;
 	float radio = mix(0.06, 0.24, azar(celda + 31.0));
+	vec2 centro_en_la_mancha = ((celda + 0.5 + centro) / escala - 0.5) * 2.0;
+	float alcance = (radio + 0.04) * 2.0 / escala;
+	float cabe = step(max(abs(centro_en_la_mancha.x), abs(centro_en_la_mancha.y)) + alcance, 1.0);
+	float desvanecido = 1.0 - smoothstep(0.80, 0.98, length(centro_en_la_mancha));
 	return (1.0 - smoothstep(radio, radio + 0.04, length(local - centro)))
-		* step(0.35, azar(celda));
+		* step(0.35, azar(celda)) * cabe * desvanecido;
 }
 
 void pintar_mancha(vec2 uv, out vec3 albedo, out float alpha, out float rugosidad,
@@ -52,7 +58,7 @@ void pintar_mancha(vec2 uv, out vec3 albedo, out float alpha, out float rugosida
 		float cuerpo = 1.0 - smoothstep(borde - 0.015, borde + 0.025, distancia);
 		float hueco = 0.36 * distancia / max(borde, 0.01);
 		cuerpo *= smoothstep(hueco - 0.12, hueco + 0.12, medio);
-		mascara *= max(cuerpo, granos(uv * 13.0));
+		mascara = max(mascara * cuerpo, granos(uv * 13.0, 13.0));
 		pintura *= mix(0.6, 1.35, grueso * 0.65 + fino * 0.35);
 		rugosidad = 0.94;
 	} else if (tipo_de_suciedad == 1) {
@@ -61,7 +67,7 @@ void pintar_mancha(vec2 uv, out vec3 albedo, out float alpha, out float rugosida
 		float fino = ruido(uv * 57.0);
 		float borde = 0.40 + 0.19 * ruido(uv * 13.0) + 0.085 * ruido(uv * 31.0);
 		float cuerpo = 1.0 - smoothstep(borde - 0.015, borde + 0.025, distancia);
-		mascara *= max(cuerpo, granos(uv * 19.0) * 0.65);
+		mascara = max(mascara * cuerpo, granos(uv * 19.0, 19.0) * 0.65);
 		pintura *= mix(0.50, 1.18, grueso * 0.65 + fino * 0.35);
 		rugosidad = 0.80;
 	} else {
