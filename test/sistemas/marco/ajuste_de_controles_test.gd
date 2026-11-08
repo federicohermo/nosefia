@@ -190,14 +190,36 @@ func test_el_esquema_que_se_guarda_vuelve_a_aplicarse_en_otro_arranque() -> void
 
 
 func test_un_boton_de_joystick_asignado_responde_y_el_anterior_no() -> void:  # AC-CFG-026
-	_ajuste.aplicar(_con([[AsignacionDeControles.EXAMINAR, 1, JOYSTICK, JOY_BUTTON_Y]]))
+	_ajuste.aplicar(
+		_con(
+			[
+				[
+					AsignacionDeControles.EXAMINAR,
+					AsignacionDeControles.RANURA_DEL_JOYSTICK,
+					JOYSTICK,
+					JOY_BUTTON_Y
+				]
+			]
+		)
+	)
 	assert_bool(_responde(_boton_del_joystick(JOY_BUTTON_Y), &"examinar")).is_true()
 	assert_bool(_responde(_boton_del_joystick(JOY_BUTTON_X), &"examinar")).is_false()
 	assert_bool(_responde(_tecla(KEY_E), &"examinar")).is_true()
 
 
 func test_intercambiar_dos_botones_de_joystick_los_cruza_en_el_motor() -> void:  # AC-CFG-026
-	_ajuste.aplicar(_con([[AsignacionDeControles.EXAMINAR, 1, JOYSTICK, JOY_BUTTON_LEFT_SHOULDER]]))
+	_ajuste.aplicar(
+		_con(
+			[
+				[
+					AsignacionDeControles.EXAMINAR,
+					AsignacionDeControles.RANURA_DEL_JOYSTICK,
+					JOYSTICK,
+					JOY_BUTTON_LEFT_SHOULDER
+				]
+			]
+		)
+	)
 	assert_bool(_responde(_boton_del_joystick(JOY_BUTTON_LEFT_SHOULDER), &"examinar")).is_true()
 	assert_bool(_responde(_boton_del_joystick(JOY_BUTTON_LEFT_SHOULDER), &"agacharse")).is_false()
 	assert_bool(_responde(_boton_del_joystick(JOY_BUTTON_X), &"agacharse")).is_true()
