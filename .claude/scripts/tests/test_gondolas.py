@@ -46,8 +46,19 @@ class ElColorLineal(unittest.TestCase):
     def test_la_paleta_no_mezcla_el_rojo_con_los_grises(self):
         self.assertNotIn(gondolas.PIXEL_ROJO, gondolas.PIXELES_GRISES)
 
-    def test_el_azul_casi_negro_de_la_paleta_es_del_cuerpo(self):
-        self.assertIn(4, gondolas.PIXELES_GRISES)
+    def test_el_azul_casi_negro_de_la_paleta_es_del_exhibidor_y_no_del_cuerpo(self):
+        self.assertNotIn(gondolas.PIXEL_DEL_EXHIBIDOR, gondolas.PIXELES_GRISES)
+        self.assertNotEqual(gondolas.PIXEL_DEL_EXHIBIDOR, gondolas.PIXEL_ROJO)
+
+    def test_el_cuerpo_central_es_mas_oscuro_que_la_grilla_y_el_exhibidor(self):
+        self.assertTrue(all(c < a for c, a in zip(gondolas.TONO, gondolas.TONO_APARTE)))
+
+    def test_el_rojo_emite_una_parte_y_no_todo(self):
+        self.assertTrue(0.0 < gondolas.EMISION_ROJO < 1.0)
+
+    def test_la_base_de_la_mesa_parte_del_cromo_y_las_patas_no_son_acero(self):
+        self.assertNotEqual(gondolas.BASE_DE_MESA, gondolas.CROMO)
+        self.assertNotEqual(gondolas.PATAS_DE_SILLA, gondolas.ACERO)
 
     def test_una_imagen_no_se_multiplica_y_se_eleva_a_la_vez(self):
         self.assertFalse(set(gondolas.TEXTURAS) & set(gondolas.PISOS))
@@ -88,6 +99,28 @@ PRUEBA = textwrap.dedent(
     """
 )
 
+ORIENTACION = textwrap.dedent(
+    """
+    import sys, tempfile
+    from pathlib import Path
+    import bpy
+    import numpy as np
+    sys.path.insert(0, r"{scripts}")
+    from blender import aclarar_gondolas as ag
+
+    original = np.zeros((4, 3, 4), dtype=np.float32)
+    original[..., 3] = 1.0
+    original[0, 0, 0] = 1.0
+    destino = Path(tempfile.mkdtemp()) / "orientacion.png"
+    ag._escribir(original, destino)
+    leida = bpy.data.images.load(str(destino))
+    leida.colorspace_settings.name = "sRGB"
+    de_vuelta = ag._pixeles(leida)
+    assert np.allclose(de_vuelta, original, atol=0.01), "la imagen volvió dada vuelta"
+    print("LISTO")
+    """
+)
+
 
 class ConBlender(unittest.TestCase):
     def test_aclarar_lleva_la_media_al_tono_y_conserva_el_detalle(self):
@@ -101,6 +134,25 @@ class ConBlender(unittest.TestCase):
         with tempfile.TemporaryDirectory() as carpeta:
             guion = Path(carpeta) / "prueba.py"
             guion.write_text(PRUEBA.format(scripts=str(scripts)), encoding="utf-8")
+            resultado = subprocess.run(
+                [ejecutable, "--factory-startup", "--background", "--python-exit-code", "1",
+                 "--python", str(guion)],
+                capture_output=True, text=True, encoding="utf-8", errors="replace", timeout=300,
+            )
+        self.assertEqual(resultado.returncode, 0, resultado.stdout + resultado.stderr)
+        self.assertIn("LISTO", resultado.stdout)
+
+    def test_escribir_no_da_vuelta_la_imagen(self):
+        ejecutable, _ = resolver(dict(os.environ))
+        if ejecutable is None:
+            raise unittest.SkipTest(
+                "no corre: falta Blender, así que no se probó la orientación de lo escrito. Se "
+                "declara con BLENDER_BIN."
+            )
+        scripts = RAIZ / ".claude" / "scripts"
+        with tempfile.TemporaryDirectory() as carpeta:
+            guion = Path(carpeta) / "orientacion.py"
+            guion.write_text(ORIENTACION.format(scripts=str(scripts)), encoding="utf-8")
             resultado = subprocess.run(
                 [ejecutable, "--factory-startup", "--background", "--python-exit-code", "1",
                  "--python", str(guion)],

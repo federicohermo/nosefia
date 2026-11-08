@@ -11,6 +11,8 @@ Lo lanza `aclarar_gondolas.py` de la raíz. **No se corre a mano.**
   apunta al PNG nuevo. La original queda sin usuarios y se pierde al guardar: para repetir hay
   que restaurar el `.blend` con git. La herramienta se niega a aplicarse dos veces.
 - **El color base de Blender es lineal y la imagen no.** Aquí todo se hace sobre valores de imagen.
+- **`Image.pixels` va de abajo hacia arriba**, igual que lo que lee `_pixeles`: se escribe en el
+  mismo orden. Invertir las filas al escribir da vuelta la textura.
 """
 
 import sys
@@ -54,7 +56,7 @@ def _escribir(rgba: np.ndarray, destino: Path) -> None:
     imagen = bpy.data.images.new(destino.stem, ancho, alto, alpha=False)
     try:
         imagen.colorspace_settings.name = "sRGB"
-        imagen.pixels.foreach_set(np.ascontiguousarray(rgba[::-1]).reshape(-1))
+        imagen.pixels.foreach_set(np.ascontiguousarray(rgba).reshape(-1))
         imagen.file_format = "PNG"
         imagen.filepath_raw = str(destino)
         destino.parent.mkdir(parents=True, exist_ok=True)
@@ -89,12 +91,15 @@ def aplicar(
 
 
 def paleta() -> str:
-    """Los píxeles grises de la paleta pasan a `TONO`, y la imagen se guarda como PNG."""
+    """Los píxeles grises de la paleta pasan a su tono, y la imagen se guarda como PNG.
+
+    El rojo también emite: una segunda imagen, con sólo el rojo, alimenta la emisión.
+    """
     original = bpy.data.images.get(gondolas.PALETA)
     if original is None:
         raise SystemExit(f"el modelo no tiene la imagen {gondolas.PALETA}")
     nodos = [
-        n for m in bpy.data.materials if m.use_nodes for n in m.node_tree.nodes
+        (m, n) for m in bpy.data.materials if m.use_nodes for n in m.node_tree.nodes
         if n.type == "TEX_IMAGE" and n.image == original
     ]
     if not nodos:
@@ -102,15 +107,86 @@ def paleta() -> str:
     rgba = _pixeles(original).copy()
     for columna in gondolas.PIXELES_GRISES:
         rgba[0, columna, :3] = gondolas.TONO
+    rgba[0, gondolas.PIXEL_DEL_EXHIBIDOR, :3] = gondolas.TONO_APARTE
     rgba[0, gondolas.PIXEL_ROJO, :3] = gondolas.ROJO
-    destino = gondolas.ruta_de_la_textura(gondolas.PALETA)
-    _escribir(rgba, destino)
-    imagen = bpy.data.images.load(str(destino), check_existing=False)
+    emision = np.zeros_like(rgba)
+    emision[..., 3] = 1.0
+    emision[0, gondolas.PIXEL_ROJO, :3] = np.array(gondolas.ROJO) * gondolas.EMISION_ROJO
+    for imagen_nueva, nombre in ((rgba, gondolas.PALETA), (emision, gondolas.EMISION)):
+        _escribir(imagen_nueva, gondolas.ruta_de_la_textura(nombre))
+    imagen = bpy.data.images.load(str(gondolas.ruta_de_la_textura(gondolas.PALETA)), check_existing=False)
     imagen.colorspace_settings.name = "sRGB"
-    for nodo in nodos:
+    luz = bpy.data.images.load(str(gondolas.ruta_de_la_textura(gondolas.EMISION)), check_existing=False)
+    luz.colorspace_settings.name = "sRGB"
+    for material, nodo in nodos:
         nodo.image = imagen
         nodo.interpolation = "Closest"
-    return f"gondola: paleta, grises {gondolas.PIXELES_GRISES} y rojo {gondolas.PIXEL_ROJO} en {len(nodos)} nodos"
+        if any(e.to_socket.name == "Base Color" for e in nodo.outputs["Color"].links):
+            _emitir(material, nodo, luz)
+    return (
+        f"gondola: paleta, grises {gondolas.PIXELES_GRISES}, rojo {gondolas.PIXEL_ROJO} que emite "
+        f"y exhibidor {gondolas.PIXEL_DEL_EXHIBIDOR} en {len(nodos)} nodos"
+    )
+
+
+def _emitir(material: "bpy.types.Material", paleta_: "bpy.types.Node", luz: "bpy.types.Image") -> None:
+    """Conecta la imagen de emisión al material, con las mismas coordenadas que la paleta."""
+    arbol = material.node_tree
+    principal = next(n for n in arbol.nodes if n.type == "BSDF_PRINCIPLED")
+    nodo = arbol.nodes.new("ShaderNodeTexImage")
+    nodo.image = luz
+    nodo.interpolation = "Closest"
+    nodo.location = (paleta_.location.x, paleta_.location.y - 300)
+    for enlace in paleta_.inputs["Vector"].links:
+        arbol.links.new(enlace.from_socket, nodo.inputs["Vector"])
+    arbol.links.new(nodo.outputs["Color"], principal.inputs["Emission Color"])
+    principal.inputs["Emission Strength"].default_value = 1.0
+
+
+def dielectricos() -> list[str]:
+    informe = []
+    for nombre, rugosidad in gondolas.DIELECTRICOS.items():
+        material = bpy.data.materials.get(nombre)
+        if material is None:
+            raise SystemExit(f"el modelo no tiene el material {nombre}")
+        principal = next(n for n in material.node_tree.nodes if n.type == "BSDF_PRINCIPLED")
+        principal.inputs["Metallic"].default_value = 0.0
+        principal.inputs["Roughness"].default_value = rugosidad
+        informe.append(f"gondola: {nombre} dieléctrico, rugosidad {rugosidad}")
+    return informe
+
+
+def salon() -> list[str]:
+    """La base de las mesas toma el cromo, y las patas de las sillas toman madera."""
+    acero = bpy.data.materials.get(gondolas.ACERO)
+    cromo = bpy.data.materials.get(gondolas.CROMO)
+    if acero is None or cromo is None:
+        raise SystemExit(f"el modelo no tiene {gondolas.ACERO} o {gondolas.CROMO}")
+    base = cromo.copy()
+    base.name = gondolas.BASE_DE_MESA
+    next(n for n in base.node_tree.nodes if n.type == "BSDF_PRINCIPLED").inputs[
+        "Roughness"
+    ].default_value = gondolas.RUGOSIDAD_DEL_CROMO
+    patas = bpy.data.materials.new(gondolas.PATAS_DE_SILLA)
+    patas.use_nodes = True
+    principal = next(n for n in patas.node_tree.nodes if n.type == "BSDF_PRINCIPLED")
+    principal.inputs["Base Color"].default_value = tuple(gondolas.a_lineal(c) for c in gondolas.MADERA) + (1.0,)
+    principal.inputs["Roughness"].default_value = 0.6
+    principal.inputs["Metallic"].default_value = 0.0
+    informe = []
+    for malla, nuevo in ((gondolas.MALLA_DE_MESA, base), (gondolas.MALLA_DE_SILLA, patas)):
+        datos = bpy.data.meshes.get(malla)
+        if datos is None:
+            raise SystemExit(f"el modelo no tiene la malla {malla}")
+        cambiadas = 0
+        for i, material in enumerate(datos.materials):
+            if material is acero:
+                datos.materials[i] = nuevo
+                cambiadas += 1
+        if cambiadas != 1:
+            raise SystemExit(f"{malla}: se esperaba un solo {gondolas.ACERO}, hay {cambiadas}")
+        informe.append(f"gondola: {malla} {gondolas.ACERO} -> {nuevo.name}")
+    return informe
 
 
 def colores_lisos() -> list[str]:
@@ -143,7 +219,7 @@ def main() -> None:
         ].default_value = (1.0, 1.0, 1.0, 1.0)
         print(f"gondola: {nombre} sin tinte")
     print(paleta())
-    for linea in colores_lisos():
+    for linea in colores_lisos() + dielectricos() + salon():
         print(linea)
     if "--sin-guardar" not in sys.argv:
         bpy.ops.file.make_paths_relative()

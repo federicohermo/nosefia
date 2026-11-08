@@ -56,6 +56,13 @@ menos el metal. La sonda del salón (`ReflejosDelSalon`) lleva intensidad 3,0. C
 de las mesas y las patas de las sillas salían grises mate. La sonda se captura una vez. Su
 intensidad es un factor y no cuesta nada por cuadro.
 
+Con esa intensidad, un metal con huecos refleja el local entero: la grilla de las cabeceras
+(metal 0,5) se teñía del rojo de los productos. Es un dieléctrico rugoso. La base de las mesas
+toma el cromo de las barandas.
+
+La luz de afuera es verde azulada, y un rojo bajo ella sale casi negro: las franjas rojas de los
+estantes también emiten (`lib/gondolas.py`).
+
 ## Cómo se hornea
 
 El exportador aplica `blender/separar_hojas_de_entrada.py` antes de generar el modelo. Ese paso

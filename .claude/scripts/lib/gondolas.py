@@ -10,10 +10,13 @@ Todo el cuerpo de la góndola pasa a **un solo gris**, `TONO`:
 - Las texturas de `TEXTURAS` se multiplican por un factor por canal hasta llegar a su tono: el
   detalle conserva su proporción y sólo cambia el nivel.
 - Los grises de la paleta (`PIXELES_GRISES`) valen `TONO`, y su rojo vale `ROJO`. El píxel 4 de la
-  paleta era un azul casi negro, el del frente de los estantes: ahora es del mismo gris.
+  paleta era un azul casi negro, el de los estantes del exhibidor: vale `TONO_APARTE`.
+- **El rojo de las franjas también emite** (`EMISION_ROJO`). La luz de afuera es verde azulada, y
+  un rojo bajo esa luz sale casi negro: el albedo solo no alcanza.
 - Los materiales lisos de `COLORES_LISOS` toman su tono como color base.
 - **La grilla de alambre de las cabeceras** viajaba con una textura de media 0,12 y un metal de
-  0,5, que sin reflejo se ve negro. Toma el mismo gris que el cuerpo.
+  0,5, que sin reflejo se ve negro. Toma `TONO_APARTE`. Pasa a ser un dieléctrico rugoso: con
+  metal 0,5 los huecos reflejaban la sonda del salón y se teñían del rojo de los productos.
 - **Los laterales de los exhibidores** (Oremos, Pepito) tenían un color base azul que teñía por
   segunda vez una textura ya oscura. Pasan a blanco, y la textura sube su negro hasta `PISO_AZUL`.
 - **El fondo de los exhibidores es azul marino.** Su textura ya era casi negra y el color base
@@ -30,8 +33,12 @@ from lib.repo import RAIZ
 
 CARPETA = RAIZ / "assets" / "source" / "textures" / "gondola"
 
-#: El gris del cuerpo de la góndola, en valores de imagen de 0 a 1.
-TONO = (0.30, 0.30, 0.31)
+#: El gris del cuerpo de las góndolas centrales, en valores de imagen de 0 a 1.
+TONO = (0.24, 0.24, 0.25)
+
+#: El gris de la grilla de las cabeceras y de los estantes del exhibidor, que no cambia con el
+#: del cuerpo.
+TONO_APARTE = (0.30, 0.30, 0.31)
 
 #: El azul marino del fondo de los exhibidores, en valores de imagen.
 AZUL = (0.14, 0.26, 0.46)
@@ -48,7 +55,7 @@ TEXTURAS = {
     "gondola_chapa_blanca_512_basecolor_negra": TONO,
     "gondola_panel_blanca_1024_basecolor_negra": TONO,
     "gondola_parante_ranura_blanca": TONO,
-    "gondola_grilla_alambre": TONO,
+    "gondola_grilla_alambre": TONO_APARTE,
     "exhibidor fondo.png": AZUL,
 }
 
@@ -69,20 +76,45 @@ SIN_TINTE = (
 
 #: La paleta de 5 píxeles de las ménsulas y los bordes, y cuáles de sus píxeles son grises.
 PALETA = "gondola_paleta"
-PIXELES_GRISES = (0, 1, 3, 4)
+PIXELES_GRISES = (0, 1, 3)
+PIXEL_DEL_EXHIBIDOR = 4
 PIXEL_ROJO = 2
+
+#: La imagen donde sólo el rojo de la paleta emite, y cuánto del `ROJO` emite. Es lo que lo
+#: sostiene rojo cuando la luz horneada es verde azulada.
+EMISION = "gondola_paleta_emision"
+EMISION_ROJO = 0.6
+
+#: Los materiales de la góndola que dejan de ser metal, y su rugosidad. La grilla reflejaba la
+#: sonda del salón en cada hueco.
+DIELECTRICOS = {"GONDOLA | Grilla de alambre": 0.8}
 
 #: Materiales de un solo color que forman el cuerpo, sin metal que los oscurezca, y su tono.
 COLORES_LISOS = {
-    "GONDOLA | Paleta cabecera": TONO,
     "ESTANTE | Nicho negro": TONO,
     "GONDOLA | Mensula blanca": TONO,
     "GONDOLA | Zocalo grafito": TONO,
+    "GONDOLA | Paleta cabecera": TONO,
     "GONDOLA | Metal negro": TONO,
     "GONDOLA | Parante gris claro": TONO,
     "EXHIBIDOR | Estante": AZUL,
     "GONDOLA | Portaprecio rojo": ROJO,
 }
+
+
+#: La base de las mesas: el cromo de las barandas de la góndola, y su rugosidad.
+BASE_DE_MESA = "MESA | Base cromada"
+CROMO = "GONDOLA | Alambre cromado"
+RUGOSIDAD_DEL_CROMO = 0.12
+
+#: Las patas de las sillas, de madera común. Color base en valores de imagen.
+PATAS_DE_SILLA = "SILLA | Patas de madera"
+MADERA = (0.55, 0.38, 0.22)
+
+#: El material del salón que se reemplaza, y las mallas donde se reemplaza.
+ACERO = "MOSTRADOR | Acero satinado"
+MALLA_DE_MESA = "salon_mesa"
+MALLA_DE_SILLA = "salon_silla"
 
 
 def a_lineal(valor: float) -> float:
