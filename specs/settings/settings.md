@@ -1,7 +1,7 @@
 ---
 schema_version: 1
 capability_id: CAP-CFG
-status: draft
+status: ratified
 owner: por definir
 provenance: fichas «2. Menú de inicio» (sección «Interfaz de configuraciones») y «Pausa y menú de pausa»; rangos, pasos y defectos decididos por el dueño en #378, provisorios hasta que el testing los ajuste; «Controles» (esquema de teclado y mouse) de la ficha «2. Menú de inicio», #379; esquema de joystick de la misma ficha y decisión del dueño del 2026-11-04, #380; pestañas y tecla secundaria de la pantalla de controles, bocetos aprobados por el dueño el 2026-11-08, #929
 ---

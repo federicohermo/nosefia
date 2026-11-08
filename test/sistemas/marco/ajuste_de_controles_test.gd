@@ -214,9 +214,11 @@ func test_aplicar_las_asignaciones_no_toca_start_ni_los_ejes() -> void:  # AC-CF
 	assert_bool(_responde(eje, &"mover_adelante")).is_true()
 
 
-func test_la_secundaria_responde_en_el_momento_y_vaciarla_la_apaga() -> void:  # AC-CFG-038, AC-CFG-020
+func test_la_secundaria_responde_y_vaciarla_la_apaga() -> void:  # AC-CFG-038, AC-CFG-020
 	var asignacion := AsignacionDeControles.new()
-	asignacion.asignar(AsignacionDeControles.EXAMINAR, AsignacionDeControles.RANURA_SECUNDARIA, TECLA, KEY_F)
+	asignacion.asignar(
+		AsignacionDeControles.EXAMINAR, AsignacionDeControles.RANURA_SECUNDARIA, TECLA, KEY_F
+	)
 	var preferencias := Preferencias.new()
 	preferencias.poner_controles(asignacion)
 	_ajuste.aplicar(preferencias)
@@ -231,7 +233,9 @@ func test_la_secundaria_responde_en_el_momento_y_vaciarla_la_apaga() -> void:  #
 
 func test_pausa_con_secundaria_pausa_con_las_dos() -> void:  # AC-CFG-038
 	var asignacion := AsignacionDeControles.new()
-	asignacion.asignar(AsignacionDeControles.PAUSA, AsignacionDeControles.RANURA_SECUNDARIA, TECLA, KEY_P)
+	asignacion.asignar(
+		AsignacionDeControles.PAUSA, AsignacionDeControles.RANURA_SECUNDARIA, TECLA, KEY_P
+	)
 	var preferencias := Preferencias.new()
 	preferencias.poner_controles(asignacion)
 	_ajuste.aplicar(preferencias)

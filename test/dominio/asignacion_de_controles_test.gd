@@ -234,7 +234,10 @@ func test_el_intercambio_vale_entre_direcciones() -> void:  # AC-CFG-018
 	(
 		assert_bool(
 			asignacion.asignar(
-				AsignacionDeControles.IZQUIERDA, AsignacionDeControles.RANURA_PRINCIPAL, TECLA, KEY_D
+				AsignacionDeControles.IZQUIERDA,
+				AsignacionDeControles.RANURA_PRINCIPAL,
+				TECLA,
+				KEY_D
 			)
 		)
 		. is_true()

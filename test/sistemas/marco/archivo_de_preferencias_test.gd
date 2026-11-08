@@ -131,7 +131,7 @@ func test_un_archivo_ilegible_deja_el_esquema_de_fabrica() -> void:  # AC-CFG-02
 	)
 
 
-func test_las_secundarias_y_las_vaciadas_vuelven_en_otro_arranque() -> void:  # AC-CFG-041, AC-CFG-022
+func test_las_secundarias_y_las_vaciadas_vuelven_al_arrancar() -> void:  # AC-CFG-041, AC-CFG-022
 	var archivo := _archivo()
 	var asignacion := AsignacionDeControles.new()
 	asignacion.asignar(

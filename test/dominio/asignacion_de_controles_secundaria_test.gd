@@ -67,7 +67,7 @@ func test_las_otras_seis_acciones_nacen_con_la_secundaria_vacia() -> void:  # AC
 		assert_vector(_entrada(asignacion, accion, PRINCIPAL)).is_not_equal(VACIA)
 
 
-func test_una_secundaria_acepta_una_tecla_y_un_clic_y_no_un_boton_del_joystick() -> void:  # AC-CFG-038
+func test_una_secundaria_acepta_tecla_y_clic_y_no_un_boton_de_joystick() -> void:  # AC-CFG-038
 	var asignacion := AsignacionDeControles.new()
 	var examinar := AsignacionDeControles.EXAMINAR
 	assert_bool(_asignar(asignacion, examinar, SECUNDARIA, KEY_F)).is_true()
@@ -163,7 +163,7 @@ func test_una_principal_recibe_la_entrada_de_la_secundaria_de_otra_accion() -> v
 	assert_bool(_sin_repetidas(asignacion)).is_true()
 
 
-func test_una_secundaria_vacia_toma_la_entrada_de_otra_secundaria_y_la_deja_vacia() -> void:  # AC-CFG-040
+func test_una_secundaria_vacia_mueve_la_entrada_de_otra_secundaria() -> void:  # AC-CFG-040
 	var asignacion := AsignacionDeControles.new()
 	var examinar := AsignacionDeControles.EXAMINAR
 	var agacharse := AsignacionDeControles.AGACHARSE
@@ -193,7 +193,7 @@ func test_una_secundaria_vacia_no_le_saca_la_principal_a_otra_accion() -> void: 
 	assert_dict(asignacion.datos()).is_equal(antes)
 
 
-func test_principal_que_ocupa_nombra_la_accion_que_tiene_la_entrada_como_principal() -> void:  # AC-CFG-040
+func test_principal_que_ocupa_nombra_a_la_accion_duena_de_la_entrada() -> void:  # AC-CFG-040
 	var asignacion := AsignacionDeControles.new()
 	assert_str(asignacion.principal_que_ocupa(_tecla(KEY_Q))).is_equal(
 		AsignacionDeControles.CELULAR
@@ -257,7 +257,7 @@ func test_un_archivo_de_antes_de_las_secundarias_conserva_cada_asignacion() -> v
 	)
 
 
-func test_una_secundaria_ilegible_o_una_principal_vacia_vuelven_a_la_entrada_de_fabrica() -> void:  # AC-CFG-041
+func test_una_secundaria_ilegible_o_una_principal_vacia_vuelven_a_fabrica() -> void:  # AC-CFG-041
 	var datos := AsignacionDeControles.new().datos()
 	var examinar: Array = datos[String(AsignacionDeControles.EXAMINAR)]
 	examinar[PRINCIPAL] = {"tipo": VACIA.x, "codigo": VACIA.y}
@@ -268,7 +268,7 @@ func test_una_secundaria_ilegible_o_una_principal_vacia_vuelven_a_la_entrada_de_
 	assert_array(leida.entradas()).is_equal(AsignacionDeControles.new().entradas())
 
 
-func test_una_secundaria_y_una_principal_en_la_misma_tecla_descartan_el_bloque() -> void:  # AC-CFG-041
+func test_una_secundaria_igual_a_otra_principal_descarta_el_bloque() -> void:  # AC-CFG-041
 	var datos := AsignacionDeControles.new().datos()
 	var examinar: Array = datos[String(AsignacionDeControles.EXAMINAR)]
 	examinar[SECUNDARIA] = {"tipo": TECLA, "codigo": KEY_SPACE}
