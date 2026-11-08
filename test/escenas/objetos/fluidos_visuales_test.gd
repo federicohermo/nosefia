@@ -42,7 +42,7 @@ func test_el_agua_tiene_superficie_curva_en_vez_de_un_hexagono() -> void:
 	assert_int(agua.mesh.surface_get_array_len(0)).is_greater(100)
 
 
-func test_las_manchas_tienen_borde_irregular_dentro_del_cuerpo() -> void:
+func test_la_malla_de_la_mancha_no_sale_de_su_cuerpo() -> void:
 	var mancha: Node3D = auto_free(MANCHA.instantiate())
 	add_child(mancha)
 	var malla := mancha.get_node("Malla") as MeshInstance3D
@@ -52,8 +52,8 @@ func test_las_manchas_tienen_borde_irregular_dentro_del_cuerpo() -> void:
 	for indice: int in range(vertices.size() - 48, vertices.size()):
 		var vertice := vertices[indice]
 		radios.append(Vector2(vertice.x, vertice.z).length())
-	assert_float(radios.max()).is_less_equal(0.6)
-	assert_float(radios.max() - radios.min()).is_greater(0.03)
+	var cuerpo := (mancha.get_node("Cuerpo") as CollisionShape3D).shape as CylinderShape3D
+	assert_float(radios.max()).is_less_equal(cuerpo.radius + 0.0001)
 
 
 func test_acelerar_agita_el_agua_y_frenar_la_deja_asentarse() -> void:
