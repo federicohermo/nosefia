@@ -406,18 +406,12 @@ func _crear_topologia() -> void:
 	_vertices.resize(1 + ANILLOS * SEGMENTOS)
 	_normales.resize(_vertices.size())
 	_puntos.resize(_vertices.size())
-	var fase := 0.0 if en_balde else float(get_parent().get("lugar")) * 1.7
 	for anillo: int in range(1, ANILLOS + 1):
 		for segmento: int in SEGMENTOS:
 			var angulo := TAU * segmento / SEGMENTOS
 			var radio := _radio_del_borde(angulo) if en_balde else _radio
-			var borde := (
-				1.0
-				if en_balde
-				else 0.84 + 0.08 * sin(angulo * 3.0 + fase) + 0.04 * cos(angulo * 7.0)
-			)
 			_puntos[1 + (anillo - 1) * SEGMENTOS + segmento] = (
-				Vector2(cos(angulo), sin(angulo)) * radio * float(anillo) / ANILLOS * borde
+				Vector2(cos(angulo), sin(angulo)) * radio * float(anillo) / ANILLOS
 			)
 	for punto: Vector2 in _puntos:
 		_coordenadas.append(punto / (_radio * 2.0) + Vector2(0.5, 0.5))

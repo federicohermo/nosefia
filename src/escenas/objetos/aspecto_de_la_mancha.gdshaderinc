@@ -20,8 +20,9 @@ vec2 girar(vec2 punto, float coseno, float seno) {
 	return vec2(coseno * punto.x - seno * punto.y, seno * punto.x + coseno * punto.y);
 }
 
-// Cada grumo sale entero o no sale: el desvanecido del borde y el recorte del quad se
-// deciden con su centro, no con el píxel.
+// Cada grumo sale entero o no sale: el desvanecido del borde y el recorte de la malla se
+// deciden con su centro, no con el píxel. La malla es el disco entero: un grumo que no cabe
+// en él se corta con un borde recto.
 float granos(vec2 punto, float escala) {
 	vec2 celda = floor(punto);
 	vec2 local = fract(punto) - 0.5;
@@ -29,7 +30,7 @@ float granos(vec2 punto, float escala) {
 	float radio = mix(0.06, 0.24, azar(celda + 31.0));
 	vec2 centro_en_la_mancha = ((celda + 0.5 + centro) / escala - 0.5) * 2.0;
 	float alcance = (radio + 0.04) * 2.0 / escala;
-	float cabe = step(max(abs(centro_en_la_mancha.x), abs(centro_en_la_mancha.y)) + alcance, 1.0);
+	float cabe = step(length(centro_en_la_mancha) + alcance, 0.99);
 	float desvanecido = 1.0 - smoothstep(0.80, 0.98, length(centro_en_la_mancha));
 	return (1.0 - smoothstep(radio, radio + 0.04, length(local - centro)))
 		* step(0.35, azar(celda)) * cabe * desvanecido;
