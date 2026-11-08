@@ -65,6 +65,19 @@ func _eventos_de_teclas_y_clics(accion: StringName) -> int:
 	return cuantos
 
 
+func _primer_evento_de_teclas_y_clics(accion: StringName) -> Vector2i:
+	for evento: InputEvent in InputMap.action_get_events(accion):
+		var entrada := AjusteDePreferencias.entrada_de(evento)
+		if AjusteDePreferencias.es_de_la_asignacion(accion, entrada):
+			return entrada
+	return AsignacionDeControles.VACIA
+
+
+func _entrada_en(asignacion: AsignacionDeControles, accion: StringName, ranura: int) -> Vector2i:
+	var guardada := asignacion.entrada(accion, ranura)
+	return Vector2i(guardada["tipo"], guardada["codigo"])
+
+
 func test_el_motor_arranca_con_el_esquema_de_fabrica() -> void:  # AC-CFG-016
 	var fabrica := AsignacionDeControles.new()
 	for accion: StringName in AsignacionDeControles.ACCIONES:
@@ -263,3 +276,20 @@ func test_pausa_con_secundaria_pausa_con_las_dos() -> void:  # AC-CFG-038
 	_ajuste.aplicar(preferencias)
 	assert_bool(_responde(_tecla(KEY_P), AsignacionDeControles.PAUSA)).is_true()
 	assert_bool(_responde(_tecla(KEY_ESCAPE), AsignacionDeControles.PAUSA)).is_true()
+
+
+func test_intercambiar_principal_y_secundaria_cambia_la_primera() -> void:  # AC-CFG-038
+	var asignacion := AsignacionDeControles.new()
+	var accion := AsignacionDeControles.EXAMINAR
+	var de_fabrica := _entrada_en(asignacion, accion, AsignacionDeControles.RANURA_PRINCIPAL)
+	asignacion.asignar(accion, AsignacionDeControles.RANURA_SECUNDARIA, TECLA, KEY_F)
+	var preferencias := Preferencias.new()
+	preferencias.poner_controles(asignacion)
+	_ajuste.aplicar(preferencias)
+	assert_vector(_primer_evento_de_teclas_y_clics(accion)).is_equal(de_fabrica)
+	asignacion.asignar(accion, AsignacionDeControles.RANURA_PRINCIPAL, TECLA, KEY_F)
+	preferencias.poner_controles(asignacion)
+	_ajuste.aplicar(preferencias)
+	assert_int(_primer_evento_de_teclas_y_clics(accion).y).is_equal(KEY_F)
+	assert_bool(_responde(_tecla(KEY_F), accion)).is_true()
+	assert_bool(_responde(_tecla(de_fabrica.y), accion)).is_true()

@@ -104,7 +104,7 @@ static func es_de_la_asignacion(accion: StringName, entrada: Vector2i) -> bool:
 
 
 ## Reemplaza en el `InputMap` las teclas y los botones de cada acción asignada. Si ya son las
-## pedidas no toca nada.
+## pedidas, y en el mismo orden, no toca nada: el HUD nombra la primera.
 func aplicar_controles(asignacion: AsignacionDeControles) -> void:
 	for accion: StringName in AsignacionDeControles.ACCIONES:
 		if not InputMap.has_action(accion):
@@ -121,7 +121,7 @@ func aplicar_controles(asignacion: AsignacionDeControles) -> void:
 			if es_de_la_asignacion(accion, entrada):
 				propios.append(evento)
 				tienen.append(entrada)
-		if _son_las_mismas(tienen, pedidas):
+		if tienen == pedidas:
 			continue
 		for evento: InputEvent in propios:
 			InputMap.action_erase_event(accion, evento)
@@ -144,15 +144,6 @@ func aplicar(preferencias: Preferencias) -> void:
 
 func actuales() -> Preferencias:
 	return _actuales.copia()
-
-
-static func _son_las_mismas(tienen: Array[Vector2i], pedidas: Array[Vector2i]) -> bool:
-	if tienen.size() != pedidas.size():
-		return false
-	for entrada: Vector2i in pedidas:
-		if entrada not in tienen:
-			return false
-	return true
 
 
 static func _evento_de(entrada: Vector2i) -> InputEvent:

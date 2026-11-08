@@ -78,6 +78,22 @@ func test_se_ve_una_sola_pestana_a_la_vez() -> void:  # AC-CFG-031
 	assert_bool(pantalla.filas(false)[0].is_visible_in_tree()).is_true()
 
 
+func test_cada_pestana_tiene_su_texto_y_el_dibujo_de_su_dispositivo() -> void:  # AC-CFG-031
+	var pantalla := _pantalla()
+	var esperadas := {
+		"_pestana_del_teclado":
+		[PantallaDeControles.TEXTO_DEL_TECLADO, DibujoDeDispositivo.Dispositivo.TECLADO],
+		"_pestana_del_joystick":
+		[PantallaDeControles.TEXTO_DEL_JOYSTICK, DibujoDeDispositivo.Dispositivo.MANDO],
+	}
+	for nombre: String in esperadas:
+		var pestana: Button = pantalla.get(nombre)
+		assert_str(pestana.text).is_equal(esperadas[nombre][0])
+		var dibujos := pestana.find_children("*", "DibujoDeDispositivo", true, false)
+		assert_int(dibujos.size()).is_equal(1)
+		assert_int((dibujos[0] as DibujoDeDispositivo).dispositivo).is_equal(esperadas[nombre][1])
+
+
 func test_las_pestanas_se_eligen_con_el_mouse_o_por_foco() -> void:  # AC-CFG-031, AC-CFG-033
 	var pantalla := _pantalla()
 	var del_joystick: Button = pantalla.get("_pestana_del_joystick")
