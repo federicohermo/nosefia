@@ -129,3 +129,32 @@ func test_un_archivo_ilegible_deja_el_esquema_de_fabrica() -> void:  # AC-CFG-02
 	assert_array(archivo.cargar().controles().entradas()).is_equal(
 		AsignacionDeControles.new().entradas()
 	)
+
+
+func test_las_secundarias_y_las_vaciadas_vuelven_en_otro_arranque() -> void:  # AC-CFG-041, AC-CFG-022
+	var archivo := _archivo()
+	var asignacion := AsignacionDeControles.new()
+	asignacion.asignar(
+		AsignacionDeControles.EXAMINAR,
+		AsignacionDeControles.RANURA_SECUNDARIA,
+		AsignacionDeControles.TipoDeEntrada.TECLA,
+		KEY_F
+	)
+	asignacion.vaciar(AsignacionDeControles.ADELANTE, AsignacionDeControles.RANURA_SECUNDARIA)
+	var preferencias := Preferencias.new()
+	preferencias.poner_controles(asignacion)
+	assert_bool(archivo.escribir(preferencias)).is_true()
+	var otro_arranque := ArchivoDePreferencias.new()
+	otro_arranque.ruta = archivo.ruta
+	var leidas := otro_arranque.cargar().controles()
+	assert_array(leidas.entradas()).is_equal(asignacion.entradas())
+	var examinar := leidas.entrada(
+		AsignacionDeControles.EXAMINAR, AsignacionDeControles.RANURA_SECUNDARIA
+	)
+	assert_int(examinar["codigo"]).is_equal(KEY_F)
+	var adelante := leidas.entrada(
+		AsignacionDeControles.ADELANTE, AsignacionDeControles.RANURA_SECUNDARIA
+	)
+	assert_vector(Vector2i(adelante["tipo"], adelante["codigo"])).is_equal(
+		AsignacionDeControles.VACIA
+	)

@@ -111,8 +111,9 @@ func aplicar_controles(asignacion: AsignacionDeControles) -> void:
 			continue
 		var pedidas: Array[Vector2i] = []
 		for guardada: Dictionary in asignacion.entradas():
-			if guardada["accion"] == accion:
-				pedidas.append(Vector2i(guardada["tipo"], guardada["codigo"]))
+			var entrada := Vector2i(guardada["tipo"], guardada["codigo"])
+			if guardada["accion"] == accion and entrada != AsignacionDeControles.VACIA:
+				pedidas.append(entrada)
 		var propios: Array[InputEvent] = []
 		var tienen: Array[Vector2i] = []
 		for evento: InputEvent in InputMap.action_get_events(accion):

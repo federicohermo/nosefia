@@ -70,7 +70,10 @@ func test_el_motor_arranca_con_el_esquema_de_fabrica() -> void:  # AC-CFG-016
 	for accion: StringName in AsignacionDeControles.ACCIONES:
 		var esperadas := 0
 		for entrada: Dictionary in fabrica.entradas():
-			if entrada["accion"] != accion:
+			if (
+				entrada["accion"] != accion
+				or Vector2i(entrada["tipo"], entrada["codigo"]) == AsignacionDeControles.VACIA
+			):
 				continue
 			esperadas += 1
 			var tiene := false
@@ -209,3 +212,28 @@ func test_aplicar_las_asignaciones_no_toca_start_ni_los_ejes() -> void:  # AC-CF
 	eje.axis = JOY_AXIS_LEFT_Y
 	eje.axis_value = -1.0
 	assert_bool(_responde(eje, &"mover_adelante")).is_true()
+
+
+func test_la_secundaria_responde_en_el_momento_y_vaciarla_la_apaga() -> void:  # AC-CFG-038, AC-CFG-020
+	var asignacion := AsignacionDeControles.new()
+	asignacion.asignar(AsignacionDeControles.EXAMINAR, AsignacionDeControles.RANURA_SECUNDARIA, TECLA, KEY_F)
+	var preferencias := Preferencias.new()
+	preferencias.poner_controles(asignacion)
+	_ajuste.aplicar(preferencias)
+	assert_bool(_responde(_tecla(KEY_F), AsignacionDeControles.EXAMINAR)).is_true()
+	assert_bool(_responde(_tecla(KEY_E), AsignacionDeControles.EXAMINAR)).is_true()
+	asignacion.vaciar(AsignacionDeControles.EXAMINAR, AsignacionDeControles.RANURA_SECUNDARIA)
+	preferencias.poner_controles(asignacion)
+	_ajuste.aplicar(preferencias)
+	assert_bool(_responde(_tecla(KEY_F), AsignacionDeControles.EXAMINAR)).is_false()
+	assert_bool(_responde(_tecla(KEY_E), AsignacionDeControles.EXAMINAR)).is_true()
+
+
+func test_pausa_con_secundaria_pausa_con_las_dos() -> void:  # AC-CFG-038
+	var asignacion := AsignacionDeControles.new()
+	asignacion.asignar(AsignacionDeControles.PAUSA, AsignacionDeControles.RANURA_SECUNDARIA, TECLA, KEY_P)
+	var preferencias := Preferencias.new()
+	preferencias.poner_controles(asignacion)
+	_ajuste.aplicar(preferencias)
+	assert_bool(_responde(_tecla(KEY_P), AsignacionDeControles.PAUSA)).is_true()
+	assert_bool(_responde(_tecla(KEY_ESCAPE), AsignacionDeControles.PAUSA)).is_true()
