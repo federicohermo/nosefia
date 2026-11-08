@@ -57,12 +57,14 @@ func _entrada(asignacion: AsignacionDeControles, accion: StringName, ranura: int
 	return Vector2i(entrada["tipo"], entrada["codigo"])
 
 
-## Los renglones de TECLADO Y MOUSE, en orden: las acciones, Visión y los de EN LOS MENÚS.
+## Los renglones de TECLADO Y MOUSE, en orden: las acciones con Visión después de Derecha, y los
+## de EN LOS MENÚS.
 func _nombres_de_los_renglones() -> Array[String]:
 	var nombres: Array[String] = []
 	for accion: StringName in AsignacionDeControles.ACCIONES:
 		nombres.append(AsignacionDeControles.nombre_de_la_accion(accion))
-	nombres.append(PantallaDeControles.TEXTO_DE_VISION)
+		if accion == AsignacionDeControles.DERECHA:
+			nombres.append(PantallaDeControles.TEXTO_DE_VISION)
 	nombres.append(PantallaDeControles.TEXTO_DE_NAVEGAR)
 	nombres.append(PantallaDeControles.TEXTO_DE_ACEPTAR)
 	nombres.append(PantallaDeControles.TEXTO_DE_VOLVER)
@@ -96,7 +98,7 @@ func test_muestra_un_renglon_por_accion_con_sus_teclas() -> void:  # AC-CFG-015,
 		pantalla.texto_de(AsignacionDeControles.INTERACTUAR, 0)
 	)
 	for entrada: Dictionary in AsignacionDeControles.new().entradas():
-		assert_str(pantalla.texto_de(entrada["accion"], entrada["ranura"])).is_not_empty()
+		assert_object(pantalla.glifo_de(entrada["accion"], entrada["ranura"])).is_not_null()
 
 
 func test_movimiento_se_reasigna_desde_sus_cuatro_renglones() -> void:  # AC-CFG-016, AC-CFG-019

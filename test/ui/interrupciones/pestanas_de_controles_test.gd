@@ -22,6 +22,7 @@ func _pantalla(con_el_joystick: bool = false) -> PantallaDeControles:
 	var pantalla: PantallaDeControles = auto_free(load(ESCENA).instantiate())
 	add_child(pantalla)
 	pantalla.preparar(AsignacionDeControles.new())
+	pantalla.poner_joystick_conectado(true)
 	pantalla.controles_cambiados.connect(func(a: AsignacionDeControles) -> void: _avisos.append(a))
 	pantalla.abrir(con_el_joystick)
 	return pantalla
@@ -180,19 +181,6 @@ func test_l1_esperando_un_boton_se_asigna_y_no_cambia_de_pestana() -> void:  # A
 	)
 
 
-func test_el_aviso_del_joystick_se_actualiza_sin_cambiar_de_pestana() -> void:  # AC-CFG-034
-	var pantalla := _pantalla()
-	pantalla.poner_joystick_conectado(true)
-	assert_str(pantalla.aviso_del_joystick()).is_equal(
-		PantallaDeControles.TEXTO_DEL_JOYSTICK_CONECTADO
-	)
-	assert_bool(pantalla.pestana_del_joystick()).is_false()
-	pantalla.elegir_pestana(true)
-	pantalla.poner_joystick_conectado(false)
-	assert_str(pantalla.aviso_del_joystick()).is_empty()
-	assert_bool(pantalla.pestana_del_joystick()).is_true()
-
-
 func test_lo_fijo_lleva_su_marca_y_no_tiene_nada_que_elegir() -> void:  # AC-CFG-035
 	var pantalla := _pantalla()
 	var del_teclado := _nombres(pantalla.filas(false), true)
@@ -317,12 +305,12 @@ func test_un_boton_sin_glifo_propio_se_lee_por_su_nombre() -> void:  # AC-CFG-03
 func test_las_secundarias_de_fabrica_se_muestran_vacias_salvo_las_flechas() -> void:  # AC-CFG-037
 	var pantalla := _pantalla()
 	for accion: StringName in AsignacionDeControles.ACCIONES:
-		var texto := pantalla.texto_de(accion, SECUNDARIA)
+		var forma := pantalla.glifo_de(accion, SECUNDARIA).forma
 		if accion in AsignacionDeControles.DIRECCIONES:
-			assert_str(texto).is_not_equal(PantallaDeControles.TEXTO_DE_LA_RANURA_VACIA)
+			assert_int(forma).is_equal(GlifoDeEntrada.Forma.TECLA)
 		else:
-			assert_str(texto).is_equal(PantallaDeControles.TEXTO_DE_LA_RANURA_VACIA)
-			assert_object(pantalla.glifo_de(accion, SECUNDARIA)).is_null()
+			assert_int(forma).is_equal(GlifoDeEntrada.Forma.RANURA_LIBRE)
+			assert_str(pantalla.texto_de(accion, SECUNDARIA)).is_empty()
 
 
 func test_una_secundaria_se_llena_con_una_tecla_y_la_principal_no_cambia() -> void:  # AC-CFG-038
@@ -348,8 +336,8 @@ func test_supr_vacia_una_secundaria_y_no_toca_una_principal() -> void:  # AC-CFG
 	assert_bool(pantalla.atender(_tecla(KEY_DELETE))).is_true()
 	assert_int(_avisos.size()).is_equal(2)
 	assert_vector(_entrada(_avisos[1], examinar, SECUNDARIA)).is_equal(AsignacionDeControles.VACIA)
-	assert_str(pantalla.texto_de(examinar, SECUNDARIA)).is_equal(
-		PantallaDeControles.TEXTO_DE_LA_RANURA_VACIA
+	assert_int(pantalla.glifo_de(examinar, SECUNDARIA).forma).is_equal(
+		GlifoDeEntrada.Forma.RANURA_LIBRE
 	)
 	pantalla.atender(_tecla(KEY_DELETE))
 	pantalla.boton_de(examinar, PRINCIPAL).grab_focus()
@@ -373,8 +361,8 @@ func test_una_secundaria_vacia_no_le_saca_la_principal_a_otra_y_lo_avisa() -> vo
 			]
 		)
 	)
-	assert_str(pantalla.texto_de(celular, SECUNDARIA)).is_equal(
-		PantallaDeControles.TEXTO_DE_LA_RANURA_VACIA
+	assert_int(pantalla.glifo_de(celular, SECUNDARIA).forma).is_equal(
+		GlifoDeEntrada.Forma.RANURA_LIBRE
 	)
 	pantalla.elegir(celular, SECUNDARIA)
 	assert_str(pantalla.aviso()).is_empty()

@@ -1,20 +1,26 @@
 ## El dibujo de una entrada de la pantalla de controles. No es un texto: una tecla es una tecla con
-## borde, un clic es un mouse con su botón pintado, y un botón del joystick es su glifo de
-## PlayStation. Se dibuja con formas y no con imágenes, así que escala con el lienzo.
+## borde, un clic es una tecla con un mouse adentro con su botón pintado, una ranura libre es un
+## recuadro punteado, y un botón del joystick es su glifo de PlayStation. Se dibuja con formas y no
+## con imágenes, así que escala con el lienzo.
 ##
 ## Qué forma lleva cada entrada lo contesta `forma_de`. El nombre que se lee en la forma lo trae
 ## quien lo crea: este script no sabe nombrar una entrada.
 class_name GlifoDeEntrada
 extends Control
 
-enum Forma { TECLA, MOUSE, CRUZ, CIRCULO, CUADRADO, TRIANGULO, PILDORA, PALANCA, CRUCETA }
+enum Forma {
+	TECLA, MOUSE, CRUZ, CIRCULO, CUADRADO, TRIANGULO, PILDORA, PALANCA, CRUCETA, RANURA_LIBRE
+}
 
 const ALTO := 36.0
-const ANCHO_DEL_MOUSE := 30.0
+const ANCHO_DEL_ICONO_DEL_MOUSE := 18.0
+const ANCHO_DE_LA_RANURA_LIBRE := 56.0
 const MARGEN_DEL_TEXTO := 22.0
+const ESPACIO_DEL_ICONO := 8.0
 const COLOR_DEL_BORDE := Color("f4e6b5")
 const COLOR_DEL_FONDO := Color(0.04, 0.1, 0.12, 0.9)
 const COLOR_DEL_BOTON_DEL_MOUSE := Color("d8b468")
+const COLOR_DE_LA_RANURA_LIBRE := Color("f4e6b540")
 ## Las flechas se dibujan: la fuente no trae sus glifos.
 const FLECHAS: Dictionary = {
 	KEY_UP: Vector2.UP,
@@ -77,7 +83,12 @@ static func de_una_tecla(leida: String) -> GlifoDeEntrada:
 	return _de(Forma.TECLA, leida)
 
 
-## Un mouse con un botón pintado, o sin ninguno si es el mouse entero.
+## Una secundaria sin entrada, que se lee como un lugar libre donde asignar.
+static func de_una_ranura_libre() -> GlifoDeEntrada:
+	return _de(Forma.RANURA_LIBRE, "")
+
+
+## Una tecla con un mouse adentro, con un botón pintado o con ninguno si es el mouse entero.
 static func de_un_mouse(boton: int = 0, leida: String = "") -> GlifoDeEntrada:
 	var glifo := _de(Forma.MOUSE, leida)
 	glifo.boton_del_mouse = boton
@@ -111,6 +122,8 @@ func _draw() -> void:
 			_dibujar_pildora(marco)
 		Forma.MOUSE:
 			_dibujar_mouse(marco)
+		Forma.RANURA_LIBRE:
+			_dibujar_ranura_libre(marco)
 		Forma.PALANCA:
 			_dibujar_palanca(marco)
 		Forma.CRUCETA:
@@ -126,8 +139,10 @@ func _tamano_natural() -> Vector2:
 				return Vector2(ALTO, ALTO)
 			return Vector2(maxf(ALTO, _ancho_del_texto() + MARGEN_DEL_TEXTO), ALTO)
 		Forma.MOUSE:
-			var del_texto := 0.0 if texto.is_empty() else _ancho_del_texto() + 10.0
-			return Vector2(ANCHO_DEL_MOUSE + del_texto, ALTO + 4.0)
+			var del_texto := 0.0 if texto.is_empty() else _ancho_del_texto() + ESPACIO_DEL_ICONO
+			return Vector2(ANCHO_DEL_ICONO_DEL_MOUSE + MARGEN_DEL_TEXTO + del_texto, ALTO)
+		Forma.RANURA_LIBRE:
+			return Vector2(ANCHO_DE_LA_RANURA_LIBRE, ALTO)
 	return Vector2(ALTO, ALTO)
 
 
@@ -266,35 +281,47 @@ func _dibujar_simbolo(marco: Rect2) -> void:
 			draw_polyline(vertices, COLOR_DEL_TRIANGULO, 3.0, true)
 
 
+func _dibujar_ranura_libre(marco: Rect2) -> void:
+	var caja := marco.grow(-1.0)
+	var esquinas: Array[Vector2] = [
+		caja.position,
+		Vector2(caja.end.x, caja.position.y),
+		caja.end,
+		Vector2(caja.position.x, caja.end.y),
+	]
+	for i: int in esquinas.size():
+		draw_dashed_line(
+			esquinas[i], esquinas[(i + 1) % esquinas.size()], COLOR_DE_LA_RANURA_LIBRE, 2.0, 5.0
+		)
+
+
+## Una tecla con el mouse adentro. Su texto, si lo hay, va adentro de la tecla, a la derecha.
 func _dibujar_mouse(marco: Rect2) -> void:
-	var cuerpo := Rect2(marco.position + Vector2(0.0, 2.0), Vector2(ANCHO_DEL_MOUSE, ALTO))
+	draw_style_box(_caja(4), marco)
+	var cuerpo := Rect2(
+		marco.position + Vector2(MARGEN_DEL_TEXTO / 2.0, 6.0),
+		Vector2(ANCHO_DEL_ICONO_DEL_MOUSE, marco.size.y - 12.0)
+	)
 	var mitad := cuerpo.position.y + cuerpo.size.y * 0.45
 	var izquierdo := cuerpo.position.x
 	var derecho := cuerpo.end.x
 	var al_medio := cuerpo.get_center().x
+	var alto_del_boton := mitad - cuerpo.position.y - 2.0
 	var pintado := Rect2()
 	match boton_del_mouse:
 		AsignacionDeControles.BOTON_IZQUIERDO:
 			pintado = Rect2(
-				izquierdo + 2.0,
-				cuerpo.position.y + 2.0,
-				al_medio - izquierdo - 2.0,
-				mitad - cuerpo.position.y - 2.0
+				izquierdo + 2.0, cuerpo.position.y + 2.0, al_medio - izquierdo - 2.0, alto_del_boton
 			)
 		AsignacionDeControles.BOTON_DERECHO:
 			pintado = Rect2(
-				al_medio,
-				cuerpo.position.y + 2.0,
-				derecho - al_medio - 2.0,
-				mitad - cuerpo.position.y - 2.0
+				al_medio, cuerpo.position.y + 2.0, derecho - al_medio - 2.0, alto_del_boton
 			)
 		AsignacionDeControles.BOTON_CENTRAL:
-			pintado = Rect2(
-				al_medio - 3.0, cuerpo.position.y + 4.0, 6.0, mitad - cuerpo.position.y - 8.0
-			)
+			pintado = Rect2(al_medio - 2.0, cuerpo.position.y + 3.0, 4.0, alto_del_boton - 2.0)
 		AsignacionDeControles.BOTON_LATERAL_ATRAS, AsignacionDeControles.BOTON_LATERAL_ADELANTE:
-			pintado = Rect2(izquierdo - 3.0, mitad + 3.0, 5.0, 12.0)
-	draw_style_box(_caja(12), cuerpo)
+			pintado = Rect2(izquierdo - 3.0, mitad + 2.0, 4.0, 9.0)
+	draw_style_box(_caja(8), cuerpo)
 	if pintado.has_area():
 		draw_rect(pintado, COLOR_DEL_BOTON_DEL_MOUSE)
 	draw_line(Vector2(izquierdo + 1.0, mitad), Vector2(derecho - 1.0, mitad), COLOR_DEL_BORDE, 2.0)
@@ -302,8 +329,8 @@ func _dibujar_mouse(marco: Rect2) -> void:
 		Vector2(al_medio, cuerpo.position.y + 1.0), Vector2(al_medio, mitad), COLOR_DEL_BORDE, 2.0
 	)
 	if not texto.is_empty():
-		var aparte := Rect2(
-			Vector2(cuerpo.end.x + 10.0, marco.position.y),
+		var del_texto := Rect2(
+			Vector2(cuerpo.end.x + ESPACIO_DEL_ICONO, marco.position.y),
 			Vector2(_ancho_del_texto(), marco.size.y)
 		)
-		_escribir(aparte, texto)
+		_escribir(del_texto, texto)

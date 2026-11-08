@@ -34,7 +34,7 @@ impide jugar.
 | **Ranura** | el lugar fijo de una entrada dentro de una acción. Toda acción reasignable tiene dos de teclado o mouse, la **principal** y la **secundaria**; las cinco de botón suman la del joystick | slot, alias |
 | **Principal** | la primera ranura de teclado o mouse de una acción. Nunca queda vacía | primaria, tecla 1 |
 | **Secundaria** | la segunda ranura de teclado o mouse de una acción. Puede estar vacía. Las de Movimiento traen las flechas de fábrica | alternativa, tecla 2 |
-| **Ranura vacía** | una secundaria sin entrada. La pantalla la muestra como «—» | libre, nula |
+| **Ranura vacía** | una secundaria sin entrada. La pantalla la muestra como un recuadro punteado tenue | libre, nula |
 | **Pestaña** | cada una de las dos vistas de la pantalla de controles: **TECLADO Y MOUSE** y **JOYSTICK**. Se muestra una sola a la vez | página, sección |
 | **FIJO** | la marca de un renglón que se muestra y no se puede cambiar | bloqueado |
 | **Esquema de fábrica** | la entrada que cada ranura tiene mientras nadie la cambió: las teclas que nombran los demás contratos, y las secundarias vacías, salvo las flechas de Movimiento | por omisión |
@@ -310,25 +310,37 @@ botones de joystick, ENTONCES cada acción DEBE tener su botón de fábrica.
 La pantalla de controles DEBE tener dos pestañas, **TECLADO Y MOUSE** y **JOYSTICK**, cada una con
 el dibujo de su dispositivo, y DEBE mostrar una sola a la vez. CUANDO se abre, DEBE elegir la
 pestaña del último dispositivo que el jugador usó: un botón o un eje del joystick elige JOYSTICK, y
-una tecla o el mouse, TECLADO Y MOUSE; sin ninguna entrada todavía, TECLADO Y MOUSE. L1 y R1 DEBEN
-cambiar de pestaña MIENTRAS la pantalla no espera una entrada; esperando una, DEBEN asignarse. La
-pestaña también DEBE poder elegirse con el mouse, y con la cruceta y X por foco (`BR-CFG-027`).
-La pestaña JOYSTICK DEBE mostrar «● JOYSTICK CONECTADO» SI hay un joystick conectado, y nada si no
-hay. CUANDO un joystick se conecta o se desconecta con la pantalla abierta, el aviso DEBE
-actualizarse y la pestaña NO DEBE cambiar. Cada pestaña DEBE tener dos bloques: **EN EL LOCAL**, con
-las acciones y Visión, y **EN LOS MENÚS**, con Navegar, Aceptar y Volver. Los renglones de EN LOS
-MENÚS, Visión, y en JOYSTICK Movimiento y Pausa, DEBEN llevar la marca **FIJO**, verse más tenues y
-no poder elegirse. En TECLADO Y MOUSE, Volver DEBE mostrar la entrada que tenga Pausa. Abajo, una
-ayuda DEBE decir con qué se cambia y con qué se vuelve, con la entrada que tenga asignada cada uno:
-en TECLADO Y MOUSE, ENTER para cambiar, SUPR para borrar y la tecla de Pausa para volver; en
-JOYSTICK, L1 R1 para la pestaña, X para cambiar y CÍRCULO para volver.
+una tecla o el mouse, TECLADO Y MOUSE; sin ninguna entrada todavía, o sin un joystick conectado,
+TECLADO Y MOUSE. Las pestañas DEBEN elegirse como cualquier botón: con el mouse y por foco, con las
+flechas, Tab o la cruceta, y X o ENTER. SI hay un joystick conectado, ENTONCES L1 y R1 DEBEN verse
+junto a las pestañas y cambiar de pestaña MIENTRAS la pantalla no espera una entrada; esperando una,
+DEBEN asignarse. La pestaña JOYSTICK DEBE mostrar «● JOYSTICK CONECTADO».
+
+SI no hay un joystick conectado, ENTONCES la pantalla NO DEBE mostrar ningún botón del joystick: ni
+L1 y R1 junto a las pestañas, ni glifos de joystick en la ayuda. La pestaña JOYSTICK DEBE seguir
+visible pero apagada, y SI se la elige DEBE mostrar el aviso «CONECTÁ UN JOYSTICK PARA
+CONFIGURARLO» en lugar de las acciones. CUANDO un joystick se conecta con la pantalla abierta, la
+pestaña DEBE habilitarse y L1 y R1 DEBEN aparecer; la pestaña elegida NO DEBE cambiar. CUANDO se
+desconecta, la pestaña DEBE apagarse, L1 y R1 DEBEN desaparecer, y SI JOYSTICK estaba elegida, la
+pantalla DEBE pasar a TECLADO Y MOUSE.
+
+Cada pestaña DEBE tener dos bloques: **EN EL LOCAL**, con las acciones y Visión, y **EN LOS MENÚS**,
+con Navegar, Aceptar y Volver. Visión DEBE ir en el mismo lugar en las dos pestañas: después de las
+direcciones de movimiento. EN LOS MENÚS DEBE ir debajo de EN EL LOCAL y a lo ancho de la pantalla.
+Los renglones de EN LOS MENÚS, Visión, y en JOYSTICK Movimiento y Pausa, DEBEN llevar la marca
+**FIJO**, verse más tenues y no poder elegirse. En TECLADO Y MOUSE, Volver DEBE mostrar la entrada
+que tenga Pausa. Abajo, una ayuda DEBE decir con qué se cambia y con qué se vuelve, con la entrada
+que tenga asignada cada uno: en TECLADO Y MOUSE, ENTER para cambiar, SUPR para borrar y la tecla de
+Pausa para volver; en JOYSTICK con un joystick conectado, L1 R1 para la pestaña, X para cambiar y
+CÍRCULO para volver, y sin joystick, nada.
 
 ### BR-CFG-032 — Cada entrada se dibuja con su glifo
 
 La pantalla de controles DEBE dibujar los botones del joystick como glifos y no como texto: ✕ ○ □ △
 con sus colores de PlayStation; L1, R1 y START como píldoras; los joysticks, como un círculo con L o
 R; la cruceta, con su forma. DEBE dibujar las teclas como teclas con borde, y cada clic del mouse
-como un mouse con ese botón pintado.
+como una tecla con un mouse con ese botón pintado, con su texto adentro de la tecla o sin texto. Una
+secundaria vacía DEBE dibujarse como un recuadro punteado tenue.
 
 ## Criterios de aceptación
 
@@ -588,50 +600,57 @@ DADO la pantalla de controles abierta ENTONCES tiene las pestañas TECLADO Y MOU
 una con el dibujo de su dispositivo, y se ve el contenido de una sola. DADO TECLADO Y MOUSE
 CUANDO se elige JOYSTICK ENTONCES se ve el contenido de JOYSTICK y no el de TECLADO Y MOUSE, y al
 revés. DADO cada pestaña ENTONCES tiene los bloques EN EL LOCAL y EN LOS MENÚS; EN LOS MENÚS tiene
-Navegar, Aceptar y Volver.
+Navegar, Aceptar y Volver, y va debajo de EN EL LOCAL. DADO TECLADO Y MOUSE ENTONCES Visión va justo
+después de Derecha, y DADO JOYSTICK, justo después de Movimiento.
 
 ### AC-CFG-032 — La pestaña con la que se abre *(verifica BR-CFG-031)*
 
 DADO que el último dispositivo usado fue un botón del joystick, o un eje inclinado a fondo CUANDO se
 abre la pantalla ENTONCES está elegida JOYSTICK. DADO que fue una tecla, un clic o mover el mouse
-ENTONCES está elegida TECLADO Y MOUSE. DADO que no hubo ninguna entrada todavía ENTONCES TECLADO Y
-MOUSE. DADO un eje del joystick en reposo ENTONCES no cuenta como una entrada.
+ENTONCES está elegida TECLADO Y MOUSE. DADO que no hubo ninguna entrada todavía, o que el último dispositivo fue el
+joystick y ya no hay ninguno conectado, ENTONCES TECLADO Y MOUSE. DADO un eje del joystick en reposo ENTONCES no cuenta como una entrada.
 
 ### AC-CFG-033 — L1 y R1 cambian de pestaña *(verifica BR-CFG-031)*
 
-DADO TECLADO Y MOUSE y la pantalla sin esperar una entrada CUANDO llega R1 ENTONCES se ve JOYSTICK;
+DADO un joystick conectado, TECLADO Y MOUSE y la pantalla sin esperar una entrada CUANDO llega R1
+ENTONCES se ve JOYSTICK;
 CUANDO llega L1 ENTONCES se ve TECLADO Y MOUSE; DADO JOYSTICK CUANDO llega R1 ENTONCES sigue en
 JOYSTICK, sin dar la vuelta. DADO la pantalla esperando un botón de joystick CUANDO llega L1
-ENTONCES se asigna a la ranura elegida y la pestaña no cambia. DADO la pestaña JOYSTICK CUANDO se
-la elige con el mouse, o con la cruceta y X, ENTONCES se ve.
+ENTONCES se asigna a la ranura elegida y la pestaña no cambia. DADO un joystick conectado CUANDO se
+elige JOYSTICK con el mouse, o por foco, ENTONCES se ve. DADO cada pestaña ENTONCES su botón puede
+tomar el foco.
 
-### AC-CFG-034 — El aviso del joystick conectado *(verifica BR-CFG-031)*
+### AC-CFG-034 — La pantalla detecta el joystick *(verifica BR-CFG-031)*
 
-DADO un joystick conectado ENTONCES la pestaña JOYSTICK dice «● JOYSTICK CONECTADO»; DADO ninguno
-ENTONCES no dice nada. DADO la pantalla abierta en TECLADO Y MOUSE CUANDO se conecta un joystick
-ENTONCES el aviso aparece y sigue elegida TECLADO Y MOUSE. DADO la pantalla abierta en JOYSTICK
-CUANDO se desconecta ENTONCES el aviso se va y sigue elegida JOYSTICK.
+DADO un joystick conectado ENTONCES la pestaña JOYSTICK dice «● JOYSTICK CONECTADO», está habilitada
+y L1 y R1 se ven junto a las pestañas; DADO ninguno ENTONCES no dice nada, está apagada y L1 y R1 no
+se ven. DADO ningún joystick CUANDO se elige JOYSTICK ENTONCES se ve el aviso de conectar un joystick
+y ninguna acción. DADO la pantalla abierta en TECLADO Y MOUSE CUANDO se conecta un joystick ENTONCES
+la pestaña se habilita, L1 y R1 aparecen y sigue elegida TECLADO Y MOUSE. DADO la pantalla abierta en
+JOYSTICK CUANDO se desconecta ENTONCES la pestaña se apaga, L1 y R1 desaparecen y pasa a TECLADO Y
+MOUSE.
 
 ### AC-CFG-035 — Los renglones fijos y la ayuda *(verifica BR-CFG-031)*
 
 DADO la pestaña TECLADO Y MOUSE ENTONCES Navegar, Aceptar, Volver y Visión llevan la marca FIJO y
 no se pueden elegir. DADO la pestaña JOYSTICK ENTONCES además Movimiento y Pausa la llevan. DADO
 Pausa en P ENTONCES Volver de TECLADO Y MOUSE muestra P, y la ayuda de abajo dice ENTER, SUPR y P.
-DADO la pestaña JOYSTICK ENTONCES la ayuda dice L1 R1, X y CÍRCULO.
+DADO la pestaña JOYSTICK con un joystick conectado ENTONCES la ayuda dice L1 R1, X y CÍRCULO. DADO
+ningún joystick ENTONCES la ayuda no lleva ningún glifo de joystick.
 
 ### AC-CFG-036 — Los glifos *(verifica BR-CFG-032)*
 
 DADO la pestaña JOYSTICK ENTONCES el botón de cada acción es un glifo y no un texto: X, CÍRCULO,
 CUADRADO y TRIÁNGULO con su color de PlayStation, L1 y R1 como píldoras, y START en Pausa. DADO la
-pestaña TECLADO Y MOUSE ENTONCES una tecla es una tecla con borde y el clic izquierdo, un mouse con
-el botón izquierdo pintado, distinto del clic derecho. DADO un botón de joystick sin glifo propio
+pestaña TECLADO Y MOUSE ENTONCES una tecla es una tecla con borde y cada clic, una tecla con un mouse adentro con su botón
+pintado, distinto del clic izquierdo al derecho; Visión también. DADO un botón de joystick sin glifo propio
 ENTONCES se lee por su nombre.
 
 ### AC-CFG-037 — Las secundarias de fábrica *(verifica BR-CFG-016)*
 
 DADO ninguna asignación guardada ENTONCES Adelante, Atrás, Izquierda y Derecha tienen la flecha de su
 dirección de secundaria. DADO Agarrar / Soltar, Interactuar, Examinar, Agacharse, el celular y
-Pausa ENTONCES su secundaria está vacía y la pantalla muestra «—».
+Pausa ENTONCES su secundaria está vacía y la pantalla la dibuja como un recuadro punteado, sin texto.
 
 ### AC-CFG-038 — Una secundaria acepta y vale *(verifica BR-CFG-019, BR-CFG-017, BR-CFG-020)*
 

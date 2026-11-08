@@ -6,6 +6,10 @@
 ## cada acción de botón tiene la celda de su botón, que se reasigna igual. Lo demás se muestra
 ## con la marca FIJO y no se elige. Cada entrada se dibuja con su glifo.
 ##
+## Sin un joystick conectado no se ve ningún botón de joystick: la pestaña JOYSTICK queda apagada y,
+## elegida, avisa que hay que conectar uno. Conectarlo o desconectarlo con la pantalla abierta la
+## actualiza.
+##
 ## Dibuja lo que contesta `AsignacionDeControles` y avisa cada asignación que cambió algo. No
 ## escribe ni aplica nada: eso lo cablea quien la abre.
 ##
@@ -31,7 +35,7 @@ const TEXTO_EN_EL_LOCAL := "EN EL LOCAL"
 const TEXTO_EN_LOS_MENUS := "EN LOS MENÚS"
 const TEXTO_DE_PRINCIPAL := "PRINCIPAL"
 const TEXTO_DE_SECUNDARIA := "SECUNDARIA"
-const TEXTO_DE_LA_RANURA_VACIA := "—"
+const TEXTO_SIN_JOYSTICK := "CONECTÁ UN JOYSTICK PARA CONFIGURARLO"
 const TEXTO_FIJO := "FIJO"
 const TEXTO_DEL_AVISO := "YA ES LA PRINCIPAL DE"
 const TEXTO_DE_MOVIMIENTO := "MOVIMIENTO"
@@ -49,18 +53,20 @@ const TEXTO_DEL_MOUSE := "MOUSE"
 const ANCHO_DEL_NOMBRE := 530.0
 const ANCHO_DEL_NOMBRE_DE_LOS_MENUS := 140.0
 const ANCHO_DE_LA_CELDA := 260.0
-const ANCHO_DE_LOS_MENUS := 430.0
-const ANCHO_DE_LOS_GLIFOS_DE_LOS_MENUS := 190.0
+const ANCHO_DE_LOS_GLIFOS_DE_LOS_MENUS := 180.0
 const ANCHO_DE_LA_MARCA := 64.0
 const ANCHO_DE_LA_PESTANA := 420.0
 const ALTO_DE_LA_PESTANA := 64.0
 const ALTO_DE_LA_FILA := 44.0
-const SEPARACION_DE_LAS_FILAS := 6
+const SEPARACION_DE_LAS_FILAS := 4
+const SEPARACION_DE_LOS_BLOQUES := 12
+const SEPARACION_DE_LOS_MENUS := 24
 const LETRA_CHICA := 24
 const COLOR_DE_LA_CELDA_ELEGIDA := Color("d8b468")
 const OPACIDAD_DE_LA_MARCA := 0.7
 const OPACIDAD_DE_LO_FIJO := 0.55
 const OPACIDAD_DE_LA_PESTANA_APAGADA := 0.5
+const OPACIDAD_DE_LA_PESTANA_SIN_JOYSTICK := 0.3
 const NOMBRES_DE_LAS_TECLAS: Dictionary = {
 	KEY_ESCAPE: "ESC",
 	KEY_SPACE: "ESPACIO",
@@ -83,8 +89,11 @@ var _botones: Dictionary = {}
 var _celdas: Dictionary = {}
 var _glifos: Dictionary = {}
 var _con_el_joystick: bool = false
-var _pagina_del_teclado: HBoxContainer
-var _pagina_del_joystick: HBoxContainer
+var _joystick_conectado: bool = false
+var _pagina_del_teclado: VBoxContainer
+var _pagina_del_joystick: VBoxContainer
+var _pildoras_de_las_pestanas: Array[GlifoDeEntrada] = []
+var _aviso_sin_joystick: Label
 var _pestana_del_teclado: Button
 var _pestana_del_joystick: Button
 var _aviso_del_joystick: Label
@@ -107,10 +116,11 @@ func _ready() -> void:
 	_volver.pressed.connect(cerrar)
 	_crear_los_estilos_de_la_celda()
 	_filas.add_child(_barra_de_pestanas())
-	_pagina_del_teclado = _pagina([_bloque_del_teclado(), _bloque_de_los_menus_del_teclado()])
-	_pagina_del_joystick = _pagina([_bloque_del_joystick(), _bloque_de_los_menus_del_joystick()])
+	_pagina_del_teclado = _pagina(_bloque_del_teclado(), _menus_del_teclado())
+	_pagina_del_joystick = _pagina(_bloque_del_joystick(), _menus_del_joystick())
 	_filas.add_child(_pagina_del_teclado)
 	_filas.add_child(_pagina_del_joystick)
+	_filas.add_child(_aviso_sin_el_joystick())
 	_crear_el_aviso_y_la_ayuda()
 	poner_joystick_conectado(not Input.get_connected_joypads().is_empty())
 	Input.joy_connection_changed.connect(_al_cambiar_un_joystick)
@@ -145,11 +155,14 @@ func preparar(asignacion: AsignacionDeControles) -> void:
 ## Se abre en la pestaña del último dispositivo que el jugador usó, y lo decide quien la abre.
 func abrir(con_el_joystick: bool = false) -> void:
 	_cancelar_la_espera()
-	elegir_pestana(con_el_joystick)
-	poner_joystick_conectado(not Input.get_connected_joypads().is_empty())
+	elegir_pestana(con_el_joystick and _joystick_conectado)
 	_pintar()
 	visible = true
-	var primero := _primer_boton_del_joystick if con_el_joystick else _primer_boton_del_teclado
+	var primero := (
+		_primer_boton_del_joystick
+		if con_el_joystick and _joystick_conectado
+		else _primer_boton_del_teclado
+	)
 	primero.grab_focus(true)
 
 
@@ -182,15 +195,20 @@ func elegir(accion: StringName, ranura: int) -> void:
 	_pintar()
 
 
-## Muestra una pestaña y esconde la otra. No toca el foco: eso es de quien la cambia.
+## Muestra una pestaña y esconde la otra. Sin joystick, JOYSTICK muestra su aviso y ninguna acción.
+## No toca el foco: eso es de quien la cambia.
 func elegir_pestana(del_joystick: bool) -> void:
 	_con_el_joystick = del_joystick
 	_pagina_del_teclado.visible = not del_joystick
-	_pagina_del_joystick.visible = del_joystick
+	_pagina_del_joystick.visible = del_joystick and _joystick_conectado
+	_aviso_sin_joystick.visible = del_joystick and not _joystick_conectado
 	_pestana_del_teclado.set_pressed_no_signal(not del_joystick)
 	_pestana_del_joystick.set_pressed_no_signal(del_joystick)
 	_pestana_del_teclado.modulate.a = 1.0 if not del_joystick else OPACIDAD_DE_LA_PESTANA_APAGADA
-	_pestana_del_joystick.modulate.a = 1.0 if del_joystick else OPACIDAD_DE_LA_PESTANA_APAGADA
+	if not _joystick_conectado:
+		_pestana_del_joystick.modulate.a = OPACIDAD_DE_LA_PESTANA_SIN_JOYSTICK
+	else:
+		_pestana_del_joystick.modulate.a = 1.0 if del_joystick else OPACIDAD_DE_LA_PESTANA_APAGADA
 	_limpiar_el_aviso()
 	_pintar_la_ayuda()
 
@@ -199,9 +217,17 @@ func pestana_del_joystick() -> bool:
 	return _con_el_joystick
 
 
-## El aviso de la pestaña JOYSTICK se actualiza, y la pestaña elegida no cambia.
+## Habilita o apaga la pestaña JOYSTICK y muestra u oculta L1 y R1. La pestaña elegida no cambia,
+## salvo JOYSTICK cuando se va el joystick: pasa a TECLADO Y MOUSE.
 func poner_joystick_conectado(conectado: bool) -> void:
+	_joystick_conectado = conectado
 	_aviso_del_joystick.text = TEXTO_DEL_JOYSTICK_CONECTADO if conectado else ""
+	for pildora: GlifoDeEntrada in _pildoras_de_las_pestanas:
+		pildora.visible = conectado
+	if _con_el_joystick and not conectado and visible:
+		_cambiar_de_pestana(false)
+		return
+	elegir_pestana(_con_el_joystick and conectado)
 
 
 func aviso_del_joystick() -> String:
@@ -232,7 +258,7 @@ func boton_de(accion: StringName, ranura: int) -> Button:
 	return _botones[_clave(accion, ranura)]
 
 
-## Lo que dice la celda de una ranura: su entrada, la espera, o «—» si está vacía.
+## Lo que dice la celda de una ranura: su entrada o la espera. Vacía no dice nada.
 func texto_de(accion: StringName, ranura: int) -> String:
 	var clave := _clave(accion, ranura)
 	var boton: Button = _botones[clave]
@@ -242,7 +268,7 @@ func texto_de(accion: StringName, ranura: int) -> String:
 	return glifo.texto
 
 
-## El glifo de la celda de una ranura, o nulo si está vacía o esperando.
+## El glifo de la celda de una ranura, o nulo si espera una entrada.
 func glifo_de(accion: StringName, ranura: int) -> GlifoDeEntrada:
 	return _glifos.get(_clave(accion, ranura))
 
@@ -341,14 +367,18 @@ func _limpiar_el_aviso() -> void:
 func _barra_de_pestanas() -> HBoxContainer:
 	var barra := HBoxContainer.new()
 	barra.add_theme_constant_override("separation", 16)
-	barra.add_child(GlifoDeEntrada.de_un_boton(GlifoDeEntrada.Forma.PILDORA, "L1"))
+	barra.alignment = BoxContainer.ALIGNMENT_CENTER
+	var izquierda := GlifoDeEntrada.de_un_boton(GlifoDeEntrada.Forma.PILDORA, "L1")
+	var derecha := GlifoDeEntrada.de_un_boton(GlifoDeEntrada.Forma.PILDORA, "R1")
+	_pildoras_de_las_pestanas = [izquierda, derecha]
+	barra.add_child(izquierda)
 	_pestana_del_teclado = _pestana(TEXTO_DEL_TECLADO, DibujoDeDispositivo.Dispositivo.TECLADO)
 	_pestana_del_joystick = _pestana(TEXTO_DEL_JOYSTICK, DibujoDeDispositivo.Dispositivo.MANDO)
 	_pestana_del_teclado.pressed.connect(elegir_pestana.bind(false))
 	_pestana_del_joystick.pressed.connect(elegir_pestana.bind(true))
 	barra.add_child(_pestana_del_teclado)
 	barra.add_child(_pestana_del_joystick)
-	barra.add_child(GlifoDeEntrada.de_un_boton(GlifoDeEntrada.Forma.PILDORA, "R1"))
+	barra.add_child(derecha)
 	return barra
 
 
@@ -373,12 +403,39 @@ func _pestana(texto: String, dispositivo: DibujoDeDispositivo.Dispositivo) -> Bu
 	return pestana
 
 
-func _pagina(bloques: Array[VBoxContainer]) -> HBoxContainer:
-	var pagina := HBoxContainer.new()
-	pagina.add_theme_constant_override("separation", 48)
-	for bloque: VBoxContainer in bloques:
-		pagina.add_child(bloque)
+## Lo del local arriba y lo de los menús debajo, a lo ancho, los dos centrados.
+func _pagina(en_el_local: VBoxContainer, en_los_menus: HBoxContainer) -> VBoxContainer:
+	var pagina := VBoxContainer.new()
+	pagina.add_theme_constant_override("separation", SEPARACION_DE_LOS_BLOQUES)
+	en_el_local.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
+	en_los_menus.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
+	pagina.add_child(en_el_local)
+	pagina.add_child(en_los_menus)
 	return pagina
+
+
+## En su lugar, la pestaña JOYSTICK sin joystick: sólo el aviso de conectar uno.
+func _aviso_sin_el_joystick() -> Label:
+	_aviso_sin_joystick = _etiqueta(TEXTO_SIN_JOYSTICK)
+	_aviso_sin_joystick.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	_aviso_sin_joystick.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	_aviso_sin_joystick.custom_minimum_size.y = ALTO_DE_LA_FILA * 8.0
+	_aviso_sin_joystick.modulate.a = OPACIDAD_DE_LO_FIJO
+	return _aviso_sin_joystick
+
+
+## EN LOS MENÚS en un solo renglón: el título y, al lado, cada acción con su glifo y su marca.
+func _banda_de_los_menus(renglones: Array[HBoxContainer]) -> HBoxContainer:
+	var banda := HBoxContainer.new()
+	banda.add_theme_constant_override("separation", SEPARACION_DE_LOS_MENUS)
+	var rotulo := _etiqueta(TEXTO_EN_LOS_MENUS)
+	rotulo.modulate.a = OPACIDAD_DE_LO_FIJO
+	rotulo.custom_minimum_size.y = ALTO_DE_LA_FILA
+	rotulo.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	banda.add_child(rotulo)
+	for renglon: HBoxContainer in renglones:
+		banda.add_child(renglon)
+	return banda
 
 
 ## El bloque con su encabezado en un renglón: el título a la izquierda y, a la derecha, lo que
@@ -406,7 +463,6 @@ func _bloque_del_teclado() -> VBoxContainer:
 		TEXTO_EN_EL_LOCAL,
 		[_titulo_de_la_columna(TEXTO_DE_PRINCIPAL), _titulo_de_la_columna(TEXTO_DE_SECUNDARIA)]
 	)
-	bloque.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	for accion: StringName in AsignacionDeControles.ACCIONES:
 		var fila := _fila_con_nombre(AsignacionDeControles.nombre_de_la_accion(accion))
 		var principal := _celda(accion, AsignacionDeControles.RANURA_PRINCIPAL)
@@ -415,34 +471,34 @@ func _bloque_del_teclado() -> VBoxContainer:
 		if _primer_boton_del_teclado == null:
 			_primer_boton_del_teclado = principal
 		bloque.add_child(fila)
-	bloque.add_child(_fila_fija(TEXTO_DE_VISION, [GlifoDeEntrada.de_un_mouse(0, TEXTO_DEL_MOUSE)]))
+		if accion == AsignacionDeControles.DERECHA:
+			bloque.add_child(
+				_fila_fija(TEXTO_DE_VISION, [GlifoDeEntrada.de_un_mouse(0, TEXTO_DEL_MOUSE)])
+			)
 	return bloque
 
 
-func _bloque_de_los_menus_del_teclado() -> VBoxContainer:
-	var bloque := _bloque(TEXTO_EN_LOS_MENUS)
-	bloque.custom_minimum_size.x = ANCHO_DE_LOS_MENUS
-	bloque.add_child(
-		_fila_fija(
-			TEXTO_DE_NAVEGAR,
-			[GlifoDeEntrada.de_una_tecla(TEXTO_DE_LAS_FLECHAS), GlifoDeEntrada.de_un_mouse()],
-			true
-		)
-	)
-	bloque.add_child(
-		_fila_fija(
-			TEXTO_DE_ACEPTAR,
-			[
-				GlifoDeEntrada.de_una_tecla(TEXTO_DE_ENTER),
-				GlifoDeEntrada.de_un_mouse(AsignacionDeControles.BOTON_IZQUIERDO)
-			],
-			true
-		)
-	)
+func _menus_del_teclado() -> HBoxContainer:
 	var volver := _fila_fija(TEXTO_DE_VOLVER, [], true)
 	_dibujos_del_volver = volver.get_child(1)
-	bloque.add_child(volver)
-	return bloque
+	return _banda_de_los_menus(
+		[
+			_fila_fija(
+				TEXTO_DE_NAVEGAR,
+				[GlifoDeEntrada.de_una_tecla(TEXTO_DE_LAS_FLECHAS), GlifoDeEntrada.de_un_mouse()],
+				true
+			),
+			_fila_fija(
+				TEXTO_DE_ACEPTAR,
+				[
+					GlifoDeEntrada.de_una_tecla(TEXTO_DE_ENTER),
+					GlifoDeEntrada.de_un_mouse(AsignacionDeControles.BOTON_IZQUIERDO)
+				],
+				true
+			),
+			volver,
+		]
+	)
 
 
 func _bloque_del_joystick() -> VBoxContainer:
@@ -450,7 +506,6 @@ func _bloque_del_joystick() -> VBoxContainer:
 	_aviso_del_joystick.add_theme_font_size_override("font_size", LETRA_CHICA)
 	_aviso_del_joystick.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 	var bloque := _bloque(TEXTO_EN_EL_LOCAL, [_aviso_del_joystick])
-	bloque.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	bloque.add_child(
 		_fila_fija(
 			TEXTO_DE_MOVIMIENTO, [GlifoDeEntrada.de_un_boton(GlifoDeEntrada.Forma.PALANCA, "L")]
@@ -476,28 +531,25 @@ func _bloque_del_joystick() -> VBoxContainer:
 	return bloque
 
 
-func _bloque_de_los_menus_del_joystick() -> VBoxContainer:
-	var bloque := _bloque(TEXTO_EN_LOS_MENUS)
-	bloque.custom_minimum_size.x = ANCHO_DE_LOS_MENUS
-	bloque.add_child(
-		_fila_fija(
-			TEXTO_DE_NAVEGAR,
-			[
-				GlifoDeEntrada.de_un_boton(GlifoDeEntrada.Forma.CRUCETA),
-				GlifoDeEntrada.de_un_boton(GlifoDeEntrada.Forma.PALANCA, "R")
-			],
-			true
-		)
+func _menus_del_joystick() -> HBoxContainer:
+	return _banda_de_los_menus(
+		[
+			_fila_fija(
+				TEXTO_DE_NAVEGAR,
+				[
+					GlifoDeEntrada.de_un_boton(GlifoDeEntrada.Forma.CRUCETA),
+					GlifoDeEntrada.de_un_boton(GlifoDeEntrada.Forma.PALANCA, "R")
+				],
+				true
+			),
+			_fila_fija(
+				TEXTO_DE_ACEPTAR, [GlifoDeEntrada.de_un_boton(GlifoDeEntrada.Forma.CRUZ)], true
+			),
+			_fila_fija(
+				TEXTO_DE_VOLVER, [GlifoDeEntrada.de_un_boton(GlifoDeEntrada.Forma.CIRCULO)], true
+			),
+		]
 	)
-	bloque.add_child(
-		_fila_fija(TEXTO_DE_ACEPTAR, [GlifoDeEntrada.de_un_boton(GlifoDeEntrada.Forma.CRUZ)], true)
-	)
-	bloque.add_child(
-		_fila_fija(
-			TEXTO_DE_VOLVER, [GlifoDeEntrada.de_un_boton(GlifoDeEntrada.Forma.CIRCULO)], true
-		)
-	)
-	return bloque
 
 
 func _crear_el_aviso_y_la_ayuda() -> void:
@@ -517,6 +569,8 @@ func _pintar_la_ayuda() -> void:
 		hijo.queue_free()
 	_glifos_de_la_ayuda = []
 	if _con_el_joystick:
+		if not _joystick_conectado:
+			return
 		_agregar_a_la_ayuda(
 			[
 				GlifoDeEntrada.de_un_boton(GlifoDeEntrada.Forma.PILDORA, "L1"),
@@ -658,7 +712,7 @@ func _al_cambiar_un_joystick(_dispositivo: int, _conectado: bool) -> void:
 	poner_joystick_conectado(not Input.get_connected_joypads().is_empty())
 
 
-## Cada celda dice su entrada con su glifo, «—» si está vacía, o qué espera.
+## Cada celda dice su entrada con su glifo, un recuadro punteado si está vacía, o qué espera.
 func _pintar() -> void:
 	for guardada: Dictionary in _asignacion.entradas():
 		var accion: StringName = guardada["accion"]
@@ -673,16 +727,16 @@ func _pintar() -> void:
 				if AsignacionDeControles.es_del_joystick(accion, ranura)
 				else TEXTO_DE_ESPERA
 			)
-		elif entrada == AsignacionDeControles.VACIA:
-			boton.text = TEXTO_DE_LA_RANURA_VACIA
-		else:
-			boton.text = ""
-			var glifo := GlifoDeEntrada.de_la_entrada(
-				entrada, nombre_de_la_entrada(entrada.x, entrada.y)
-			)
-			glifo.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-			boton.add_child(glifo)
-			_glifos[clave] = glifo
+			continue
+		boton.text = ""
+		var glifo := (
+			GlifoDeEntrada.de_una_ranura_libre()
+			if entrada == AsignacionDeControles.VACIA
+			else GlifoDeEntrada.de_la_entrada(entrada, nombre_de_la_entrada(entrada.x, entrada.y))
+		)
+		glifo.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+		boton.add_child(glifo)
+		_glifos[clave] = glifo
 	_pintar_el_volver()
 	_pintar_la_ayuda()
 
