@@ -114,7 +114,7 @@ func test_cada_direccion_responde_a_sus_dos_ranuras() -> void:  # AC-CFG-020
 			[
 				[
 					AsignacionDeControles.ADELANTE,
-					AsignacionDeControles.RANURA_DE_FLECHAS,
+					AsignacionDeControles.RANURA_SECUNDARIA,
 					TECLA,
 					KEY_H
 				]
