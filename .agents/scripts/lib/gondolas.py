@@ -15,8 +15,11 @@ Todo el cuerpo de la góndola pasa a **un solo gris**, `TONO`:
   un rojo bajo esa luz sale casi negro: el albedo solo no alcanza.
 - Los materiales lisos de `COLORES_LISOS` toman su tono como color base.
 - **La grilla de alambre de las cabeceras** viajaba con una textura de media 0,12 y un metal de
-  0,5, que sin reflejo se ve negro. Toma `TONO_APARTE`. Pasa a ser un dieléctrico rugoso: con
-  metal 0,5 los huecos reflejaban la sonda del salón y se teñían del rojo de los productos.
+  0,5, que sin reflejo se ve negro. Toma `TONO`, igual que el marco. Pasa a ser un dieléctrico
+  rugoso: con metal 0,5 los huecos reflejaban la sonda del salón y se teñían del rojo de los
+  productos.
+- **Los agujeros no se aclaran** (`AGUJEROS`): los del panel perforado, los de la grilla y las
+  ranuras del parante tienen que seguir negros para leerse como agujeros.
 - **Los laterales de los exhibidores** (Oremos, Pepito) tenían un color base azul que teñía por
   segunda vez una textura ya oscura. Pasan a blanco, y la textura sube su negro hasta `PISO_AZUL`.
 - **El fondo de los exhibidores es azul marino.** Su textura ya era casi negra y el color base
@@ -36,8 +39,7 @@ CARPETA = RAIZ / "assets" / "source" / "textures" / "gondola"
 #: El gris del cuerpo de las góndolas centrales, en valores de imagen de 0 a 1.
 TONO = (0.24, 0.24, 0.25)
 
-#: El gris de la grilla de las cabeceras y de los estantes del exhibidor, que no cambia con el
-#: del cuerpo.
+#: El gris de los estantes del exhibidor, que no cambia con el del cuerpo.
 TONO_APARTE = (0.30, 0.30, 0.31)
 
 #: El azul marino del fondo de los exhibidores, en valores de imagen.
@@ -55,9 +57,20 @@ TEXTURAS = {
     "gondola_chapa_blanca_512_basecolor_negra": TONO,
     "gondola_panel_blanca_1024_basecolor_negra": TONO,
     "gondola_parante_ranura_blanca": TONO,
-    "gondola_grilla_alambre": TONO_APARTE,
+    "gondola_grilla_alambre": TONO,
     "exhibidor fondo.png": AZUL,
 }
+
+#: Los agujeros de las imágenes del cuerpo: no se aclaran, quedan negros. «oscuros» son los píxeles
+#: bajo `UMBRAL_OSCURO`; «claros», los que están por encima del nivel del metal, como las ranuras
+#: del parante. El tono se calcula y se aplica sólo sobre el metal.
+AGUJEROS = {
+    "gondola_panel_blanca_1024_basecolor_negra": "oscuros",
+    "gondola_grilla_alambre": "oscuros",
+    "gondola_parante_ranura_blanca": "claros",
+}
+UMBRAL_OSCURO = 0.06
+SALTO_DE_RANURA = 0.004
 
 #: Las imágenes con arte que no se multiplican: su negro sube hasta el piso y el resto conserva
 #: su proporción, así el texto blanco no se pasa de 1.
@@ -85,6 +98,11 @@ PIXEL_ROJO = 2
 EMISION = "gondola_paleta_emision"
 EMISION_ROJO = 0.6
 
+#: Las dos imágenes de la paleta miden 5×1. Comprimidas a VRAM, el bloque de 4×4 se lleva el rojo y
+#: los grises de las ménsulas: la build sale con las franjas y las ménsulas negras. Se importan sin
+#: comprimir (`compress/mode=0`, sin mipmaps), y hay que dejar así su `.import`.
+SIN_COMPRIMIR = (PALETA, EMISION)
+
 #: Los materiales de la góndola que dejan de ser metal, y su rugosidad. La grilla reflejaba la
 #: sonda del salón en cada hueco.
 DIELECTRICOS = {"GONDOLA | Grilla de alambre": 0.8}
@@ -105,7 +123,9 @@ COLORES_LISOS = {
 #: La base de las mesas: el cromo de las barandas de la góndola, y su rugosidad.
 BASE_DE_MESA = "MESA | Base cromada"
 CROMO = "GONDOLA | Alambre cromado"
-RUGOSIDAD_DEL_CROMO = 0.12
+RUGOSIDAD_DEL_CROMO = 0.25
+#: Un metal casi puro: con 1,0 el pie, que mira al techo, sólo refleja lo oscuro y sale negro.
+METAL_DE_MESA = 0.9
 
 #: Las patas de las sillas, de madera común. Color base en valores de imagen.
 PATAS_DE_SILLA = "SILLA | Patas de madera"

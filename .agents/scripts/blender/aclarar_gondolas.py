@@ -33,12 +33,30 @@ def _pixeles(imagen: "bpy.types.Image") -> np.ndarray:
     return datos.reshape(alto, ancho, 4)
 
 
-def aclarar(rgba: np.ndarray, tono: tuple[float, float, float] = gondolas.TONO) -> np.ndarray:
-    """La imagen con cada canal multiplicado para llegar al tono, sin pasar de 1."""
-    medias = tuple(float(rgba[..., c].mean()) for c in range(3))
+def agujeros(rgba: np.ndarray, tipo: str) -> np.ndarray:
+    """Los píxeles que son agujero: `oscuros` bajo el umbral, `claros` sobre el nivel del metal."""
+    luz = rgba[..., :3].mean(axis=-1)
+    if tipo == "oscuros":
+        return luz < gondolas.UMBRAL_OSCURO
+    return luz > float(np.median(luz)) + gondolas.SALTO_DE_RANURA
+
+
+def aclarar(
+    rgba: np.ndarray,
+    tono: tuple[float, float, float] = gondolas.TONO,
+    quietos: np.ndarray | None = None,
+) -> np.ndarray:
+    """La imagen con cada canal multiplicado para llegar al tono, sin pasar de 1.
+
+    Los píxeles de `quietos` no cuentan para la media ni cambian.
+    """
+    if quietos is None:
+        quietos = np.zeros(rgba.shape[:2], dtype=bool)
+    metal = ~quietos
+    medias = tuple(float(rgba[..., c][metal].mean()) for c in range(3))
     nuevo = rgba.copy()
     for canal, factor in enumerate(gondolas.factores(medias, tono)):
-        nuevo[..., canal] = np.clip(rgba[..., canal] * factor, 0.0, 1.0)
+        nuevo[..., canal][metal] = np.clip(rgba[..., canal][metal] * factor, 0.0, 1.0)
     return nuevo
 
 
@@ -79,7 +97,10 @@ def aplicar(
         raise SystemExit(f"{nombre} ya no la usa ningún material: ¿ya está aplicada? Restaurá el .blend")
     rgba = _pixeles(original)
     antes = [round(float(rgba[..., c].mean()), 3) for c in range(3)]
-    nuevo = transformar(rgba, nivel)
+    if nombre in gondolas.AGUJEROS:
+        nuevo = transformar(rgba, nivel, agujeros(rgba, gondolas.AGUJEROS[nombre]))
+    else:
+        nuevo = transformar(rgba, nivel)
     destino = gondolas.ruta_de_la_textura(nombre)
     _escribir(nuevo, destino)
     imagen = bpy.data.images.load(str(destino), check_existing=False)
@@ -164,9 +185,9 @@ def salon() -> list[str]:
         raise SystemExit(f"el modelo no tiene {gondolas.ACERO} o {gondolas.CROMO}")
     base = cromo.copy()
     base.name = gondolas.BASE_DE_MESA
-    next(n for n in base.node_tree.nodes if n.type == "BSDF_PRINCIPLED").inputs[
-        "Roughness"
-    ].default_value = gondolas.RUGOSIDAD_DEL_CROMO
+    principal_base = next(n for n in base.node_tree.nodes if n.type == "BSDF_PRINCIPLED")
+    principal_base.inputs["Roughness"].default_value = gondolas.RUGOSIDAD_DEL_CROMO
+    principal_base.inputs["Metallic"].default_value = gondolas.METAL_DE_MESA
     patas = bpy.data.materials.new(gondolas.PATAS_DE_SILLA)
     patas.use_nodes = True
     principal = next(n for n in patas.node_tree.nodes if n.type == "BSDF_PRINCIPLED")

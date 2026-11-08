@@ -56,6 +56,15 @@ class ElColorLineal(unittest.TestCase):
     def test_el_rojo_emite_una_parte_y_no_todo(self):
         self.assertTrue(0.0 < gondolas.EMISION_ROJO < 1.0)
 
+    def test_los_agujeros_son_de_imagenes_del_cuerpo(self):
+        self.assertTrue(set(gondolas.AGUJEROS) <= set(gondolas.TEXTURAS))
+        self.assertTrue(set(gondolas.AGUJEROS.values()) <= {"oscuros", "claros"})
+
+    def test_la_paleta_y_su_emision_se_importan_sin_comprimir(self):
+        for nombre in gondolas.SIN_COMPRIMIR:
+            importado = RAIZ / "assets" / "models" / f"SEPT_JUEGOS_PROTOTIPO_{nombre}.png.import"
+            self.assertIn("compress/mode=0", importado.read_text(encoding="utf-8"), nombre)
+
     def test_la_base_de_la_mesa_parte_del_cromo_y_las_patas_no_son_acero(self):
         self.assertNotEqual(gondolas.BASE_DE_MESA, gondolas.CROMO)
         self.assertNotEqual(gondolas.PATAS_DE_SILLA, gondolas.ACERO)
@@ -91,6 +100,13 @@ PRUEBA = textwrap.dedent(
     assert correlacion > 0.999, "el detalle perdió su proporción"
     assert float(nuevo[..., :3].max()) <= 1.0
     assert np.all(nuevo[..., 3] == 1.0), "el alfa cambió"
+    con_huecos = original.copy()
+    con_huecos[:4, :4, :3] = 0.01
+    quietos = ag.agujeros(con_huecos, "oscuros")
+    despues = ag.aclarar(con_huecos, gondolas.TONO, quietos)
+    assert np.all(despues[:4, :4, :3] == 0.01), "un agujero se aclaró"
+    for canal, esperado in enumerate(gondolas.TONO):
+        assert abs(float(despues[..., canal][~quietos].mean()) - esperado) < 0.002, "el metal no llegó"
     elevada = ag.elevar(original, gondolas.PISO_AZUL)
     for canal, piso in enumerate(gondolas.PISO_AZUL):
         assert float(elevada[..., canal].min()) >= piso, f"canal {{canal}} bajo el piso"

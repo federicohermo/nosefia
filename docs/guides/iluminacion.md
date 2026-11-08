@@ -52,16 +52,20 @@ Cómo se mide el costo de las luces, en [rendimiento](./rendimiento.md).
 
 El entorno no refleja el cielo (`reflected_light_source` apagado). Un metal sólo recibe reflejo de
 las `ReflectionProbe` del local. Sin reflejo se ve negro: su luz difusa es el color base por uno
-menos el metal. La sonda del salón (`ReflejosDelSalon`) lleva intensidad 3,0. Con 0,65, las bases
-de las mesas y las patas de las sillas salían grises mate. La sonda se captura una vez. Su
+menos el metal. La sonda del salón (`ReflejosDelSalon`) lleva intensidad 1,0. Con 0,65, las bases
+de las mesas salían grises mate. Con 3,0, el plástico de las botellas se bordeaba de rosa: reflejaba
+las cajas rojas. La sonda se captura una vez. Su
 intensidad es un factor y no cuesta nada por cuadro.
 
-Con esa intensidad, un metal con huecos refleja el local entero: la grilla de las cabeceras
-(metal 0,5) se teñía del rojo de los productos. Es un dieléctrico rugoso. La base de las mesas
-toma el cromo de las barandas.
+Un metal con huecos refleja el local entero: la grilla de las cabeceras (metal 0,5) se teñía del
+rojo de los productos. Es un dieléctrico rugoso. La base de las mesas es un metal de 0,9 con el
+cromo de las barandas.
 
 La luz de afuera es verde azulada, y un rojo bajo ella sale casi negro: las franjas rojas de los
-estantes también emiten (`lib/gondolas.py`).
+estantes también emiten (`lib/gondolas.py`). **La paleta y su imagen de emisión miden 5×1 y se
+importan sin comprimir.** Comprimidas a VRAM, la build web y la de escritorio perdían el rojo y
+las ménsulas salían negras. Una corrida headless importa sin comprimir y no lo muestra: se mide
+con `--main-pack` sobre el `.pck` exportado.
 
 ## Cómo se hornea
 
