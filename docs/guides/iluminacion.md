@@ -39,6 +39,9 @@ Cómo se mide el costo de las luces, en [rendimiento](./rendimiento.md).
   entre las cuatro sondas del tetraedro que lo contiene. El horneador reparte las sondas por los
   bordes de las mallas. Muchas caen adentro de una pared o de un mueble, abajo del piso o arriba
   del techo. Un tetraedro cruza la pared y mezcla las dos puntas.
+- **La luz de afuera también entra en el horneado con luz.** El horneador hace que los vidrios que
+  dan a la calle emitan, igual que en el horneado del corte (`CorteDeLuz.emitir_por_los_vidrios`),
+  y los devuelve a su estado antes de guardar la escena. El cielo del horneado queda como estaba.
 - **El horneador reescribe cada sonda que no está adentro de un ambiente** con el promedio de sus
   vecinas de adentro (`addons/hornear/sondas.gd`). Una sonda está adentro si hacia los seis lados
   ve primero el frente de una superficie horneada, o un vidrio o una hoja que abre. Una sonda de
@@ -87,7 +90,8 @@ las sondas de los productos.
   luz de afuera. Las demás luces, los materiales emisivos de las lámparas, la niebla y los
   reflejos se apagan en tiempo real: no salen del horneado.
 - **La luz de afuera la emiten los vidrios que dan a la calle.** En el horneado oscuro, el
-  horneador les pone un material emisivo y le saca el cielo al `LightmapGI` (`corte_de_luz.gd`).
+  horneador les pone un material emisivo, el mismo del horneado con luz, y le saca el cielo al
+  `LightmapGI` (`corte_de_luz.gd`).
   Las sondas guardan esa luz con su dirección: un producto que mira al ventanal recibe más que uno
   que mira adentro del local. El juego no lo ve: la escena no se guarda.
 - **El cielo del horneado no sirve.** Alumbra también abajo del piso y arriba del techo. Desde ahí

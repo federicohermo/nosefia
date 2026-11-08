@@ -40,9 +40,10 @@ const MATERIALES_EMISIVOS := [
 	&"heladera_tubo_difusor",
 ]
 
-## La luz de afuera entra por los vidrios que dan a la calle en la noche sin luz. **Sólo existe en
-## el horneado oscuro**: ahí cada vidrio emite este color hacia adentro, y las sondas lo guardan
-## con su dirección. Así, lo que mira al ventanal recibe más luz que lo que mira adentro del local.
+## La luz de afuera entra por los vidrios que dan a la calle, y es la misma en los dos horneados.
+## **Sólo existe mientras se hornea**: cada vidrio emite este color hacia adentro, y las sondas lo
+## guardan con su dirección. Así, lo que mira al ventanal recibe más luz que lo que mira adentro
+## del local.
 ## No es el cielo del horneado: el cielo alumbra también abajo del piso y arriba del techo, y se
 ## filtra por cada junta de las paredes. Tampoco una luz puntual afuera: la sonda guarda sólo su
 ## rebote, que llega desde adentro del local.
@@ -93,17 +94,36 @@ static func luces_del_local(raiz: Node) -> Array[Light3D]:
 ## lo usa el horneador, que no guarda la escena: en el juego los vidrios quedan como estaban.
 static func abrir_a_la_calle(raiz: Node, horno: LightmapGI) -> void:
 	horno.environment_mode = LightmapGI.ENVIRONMENT_MODE_DISABLED
+	emitir_por_los_vidrios(raiz)
+
+
+## Hace que los vidrios a la calle emitan la luz de afuera, sin tocar el cielo del horneado. Es la
+## luz de afuera del horneado con luz. Devuelve cómo estaban los vidrios, para dejarlos así antes
+## de guardar la escena.
+static func emitir_por_los_vidrios(raiz: Node) -> Dictionary[MeshInstance3D, Array]:
 	var afuera := StandardMaterial3D.new()
 	afuera.albedo_color = Color.BLACK
 	afuera.emission_enabled = true
 	afuera.emission = COLOR_DE_AFUERA
 	afuera.emission_energy_multiplier = ENERGIA_DE_AFUERA
 	afuera.cull_mode = BaseMaterial3D.CULL_DISABLED
+	var antes: Dictionary[MeshInstance3D, Array] = {}
 	for vidrio in vidrios_a_la_calle(raiz):
+		antes[vidrio] = [vidrio.visible, vidrio.gi_mode, vidrio.material_override]
 		# El de la ventanilla no se ve en el juego, pero el hueco deja pasar la luz de afuera.
 		vidrio.show()
 		vidrio.gi_mode = GeometryInstance3D.GI_MODE_STATIC
 		vidrio.material_override = afuera
+	return antes
+
+
+## Deja los vidrios como los devolvió `emitir_por_los_vidrios`.
+static func cerrar_los_vidrios(antes: Dictionary[MeshInstance3D, Array]) -> void:
+	for vidrio in antes:
+		var estado: Array = antes[vidrio]
+		vidrio.visible = estado[0]
+		vidrio.gi_mode = estado[1]
+		vidrio.material_override = estado[2]
 
 
 static func vidrios_a_la_calle(raiz: Node) -> Array[MeshInstance3D]:
