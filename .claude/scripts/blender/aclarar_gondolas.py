@@ -40,6 +40,14 @@ def aclarar(rgba: np.ndarray, tono: tuple[float, float, float] = gondolas.TONO) 
     return nuevo
 
 
+def elevar(rgba: np.ndarray, piso: tuple[float, float, float]) -> np.ndarray:
+    """La imagen con su negro subido hasta el piso. El blanco queda en 1."""
+    nuevo = rgba.copy()
+    for canal, nivel in enumerate(piso):
+        nuevo[..., canal] = nivel + rgba[..., canal] * (1.0 - nivel)
+    return nuevo
+
+
 def _escribir(rgba: np.ndarray, destino: Path) -> None:
     """Escribe el PNG con `Image.save`, que no aplica la transformación de vista de la escena."""
     alto, ancho = rgba.shape[:2]
@@ -55,7 +63,9 @@ def _escribir(rgba: np.ndarray, destino: Path) -> None:
         bpy.data.images.remove(imagen)
 
 
-def aplicar(nombre: str, tono: tuple[float, float, float]) -> str:
+def aplicar(
+    nombre: str, nivel: tuple[float, float, float], transformar=aclarar
+) -> str:
     original = bpy.data.images.get(nombre)
     if original is None:
         raise SystemExit(f"el modelo no tiene la imagen {nombre}")
@@ -67,7 +77,7 @@ def aplicar(nombre: str, tono: tuple[float, float, float]) -> str:
         raise SystemExit(f"{nombre} ya no la usa ningún material: ¿ya está aplicada? Restaurá el .blend")
     rgba = _pixeles(original)
     antes = [round(float(rgba[..., c].mean()), 3) for c in range(3)]
-    nuevo = aclarar(rgba, tono)
+    nuevo = transformar(rgba, nivel)
     destino = gondolas.ruta_de_la_textura(nombre)
     _escribir(nuevo, destino)
     imagen = bpy.data.images.load(str(destino), check_existing=False)
@@ -122,6 +132,8 @@ def main() -> None:
         sys.stdout.reconfigure(encoding="utf-8", errors="replace")
     for nombre, tono in gondolas.TEXTURAS.items():
         print(aplicar(nombre, tono))
+    for nombre, piso in gondolas.PISOS.items():
+        print(aplicar(nombre, piso, elevar))
     for nombre in gondolas.SIN_TINTE:
         material = bpy.data.materials.get(nombre)
         if material is None:

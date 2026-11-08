@@ -48,6 +48,14 @@ Cómo se mide el costo de las luces, en [rendimiento](./rendimiento.md).
   adentro no se toca aunque esté negra: es la luz de un ambiente oscuro. Un horneado hecho a mano
   desde el editor no pasa por ese paso.
 
+## Los reflejos de los metales
+
+El entorno no refleja el cielo (`reflected_light_source` apagado). Un metal sólo recibe reflejo de
+las `ReflectionProbe` del local. Sin reflejo se ve negro: su luz difusa es el color base por uno
+menos el metal. La sonda del salón (`ReflejosDelSalon`) lleva intensidad 3,0. Con 0,65, las bases
+de las mesas y las patas de las sillas salían grises mate. La sonda se captura una vez. Su
+intensidad es un factor y no cuesta nada por cuadro.
+
 ## Cómo se hornea
 
 El exportador aplica `blender/separar_hojas_de_entrada.py` antes de generar el modelo. Ese paso

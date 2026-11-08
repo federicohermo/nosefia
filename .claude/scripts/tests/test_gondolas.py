@@ -43,9 +43,18 @@ class ElColorLineal(unittest.TestCase):
         self.assertAlmostEqual(gondolas.a_lineal(1.0), 1.0)
         self.assertLess(gondolas.a_lineal(0.5), 0.5)
 
-    def test_la_paleta_no_mezcla_el_rojo_ni_el_azul_con_los_grises(self):
+    def test_la_paleta_no_mezcla_el_rojo_con_los_grises(self):
         self.assertNotIn(gondolas.PIXEL_ROJO, gondolas.PIXELES_GRISES)
-        self.assertNotIn(4, gondolas.PIXELES_GRISES)
+
+    def test_el_azul_casi_negro_de_la_paleta_es_del_cuerpo(self):
+        self.assertIn(4, gondolas.PIXELES_GRISES)
+
+    def test_una_imagen_no_se_multiplica_y_se_eleva_a_la_vez(self):
+        self.assertFalse(set(gondolas.TEXTURAS) & set(gondolas.PISOS))
+
+    def test_ningun_piso_llega_a_cero(self):
+        for piso in gondolas.PISOS.values():
+            self.assertTrue(all(canal > 0 for canal in piso))
 
     def test_el_rojo_es_rojo_y_mas_claro_que_el_de_antes(self):
         rojo, verde, azul = gondolas.ROJO
@@ -71,6 +80,10 @@ PRUEBA = textwrap.dedent(
     assert correlacion > 0.999, "el detalle perdió su proporción"
     assert float(nuevo[..., :3].max()) <= 1.0
     assert np.all(nuevo[..., 3] == 1.0), "el alfa cambió"
+    elevada = ag.elevar(original, gondolas.PISO_AZUL)
+    for canal, piso in enumerate(gondolas.PISO_AZUL):
+        assert float(elevada[..., canal].min()) >= piso, f"canal {{canal}} bajo el piso"
+    assert float(elevada[..., :3].max()) <= 1.0
     print("LISTO")
     """
 )
