@@ -20,7 +20,7 @@ const ESPACIO_DEL_ICONO := 8.0
 const COLOR_DEL_BORDE := Color("f4e6b5")
 const COLOR_DEL_FONDO := Color(0.04, 0.1, 0.12, 0.9)
 const COLOR_DEL_BOTON_DEL_MOUSE := Color("d8b468")
-const COLOR_DE_LA_RANURA_LIBRE := Color("f4e6b540")
+const COLOR_DE_LA_RANURA_LIBRE := Color("f4e6b599")
 ## Las flechas se dibujan: la fuente no trae sus glifos.
 const FLECHAS: Dictionary = {
 	KEY_UP: Vector2.UP,

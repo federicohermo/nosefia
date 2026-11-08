@@ -57,17 +57,13 @@ func _entrada(asignacion: AsignacionDeControles, accion: StringName, ranura: int
 	return Vector2i(entrada["tipo"], entrada["codigo"])
 
 
-## Los renglones de TECLADO Y MOUSE, en orden: las acciones con Visión después de Derecha, y los
-## de EN LOS MENÚS.
+## Los renglones de TECLADO Y MOUSE, en orden: las acciones con Visión después de Derecha.
 func _nombres_de_los_renglones() -> Array[String]:
 	var nombres: Array[String] = []
 	for accion: StringName in AsignacionDeControles.ACCIONES:
 		nombres.append(AsignacionDeControles.nombre_de_la_accion(accion))
 		if accion == AsignacionDeControles.DERECHA:
 			nombres.append(PantallaDeControles.TEXTO_DE_VISION)
-	nombres.append(PantallaDeControles.TEXTO_DE_NAVEGAR)
-	nombres.append(PantallaDeControles.TEXTO_DE_ACEPTAR)
-	nombres.append(PantallaDeControles.TEXTO_DE_VOLVER)
 	return nombres
 
 

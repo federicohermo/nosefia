@@ -107,16 +107,18 @@ func test_las_pestanas_se_eligen_con_el_mouse_o_por_foco() -> void:  # AC-CFG-03
 	assert_bool(pantalla.pestana_del_joystick()).is_false()
 
 
-func test_cada_pestana_tiene_lo_del_local_y_lo_de_los_menus() -> void:  # AC-CFG-031
+func test_cada_accion_dice_en_su_renglon_sus_funciones_de_menu() -> void:  # AC-CFG-031, AC-CFG-042
 	var pantalla := _pantalla()
-	for del_joystick: bool in [false, true]:
-		var nombres := _nombres(pantalla.filas(del_joystick), true)
-		for en_los_menus: String in [
-			PantallaDeControles.TEXTO_DE_NAVEGAR,
-			PantallaDeControles.TEXTO_DE_ACEPTAR,
-			PantallaDeControles.TEXTO_DE_VOLVER,
-		]:
-			assert_array(nombres).contains([en_los_menus])
+	var en_el_joystick: Array[StringName] = [AsignacionDeControles.PAUSA]
+	en_el_joystick.append_array(AsignacionDeControles.ACCIONES_CON_BOTON)
+	var por_pestana: Dictionary = {false: AsignacionDeControles.ACCIONES, true: en_el_joystick}
+	for del_joystick: bool in por_pestana:
+		var nombres: Array[String] = []
+		for fila: HBoxContainer in pantalla.filas(del_joystick):
+			nombres.append((fila.get_child(0) as Label).text)
+		var acciones: Array = por_pestana[del_joystick]
+		for accion: StringName in acciones:
+			assert_array(nombres).contains([AsignacionDeControles.nombre_de_la_accion(accion)])
 
 
 func test_abre_en_la_pestana_que_le_piden_y_sin_dato_en_teclado_y_mouse() -> void:  # AC-CFG-032
@@ -185,17 +187,7 @@ func test_l1_esperando_un_boton_se_asigna_y_no_cambia_de_pestana() -> void:  # A
 func test_lo_fijo_lleva_su_marca_y_no_tiene_nada_que_elegir() -> void:  # AC-CFG-035
 	var pantalla := _pantalla()
 	var del_teclado := _nombres(pantalla.filas(false), true)
-	(
-		assert_array(del_teclado)
-		. contains_exactly_in_any_order(
-			[
-				PantallaDeControles.TEXTO_DE_VISION,
-				PantallaDeControles.TEXTO_DE_NAVEGAR,
-				PantallaDeControles.TEXTO_DE_ACEPTAR,
-				PantallaDeControles.TEXTO_DE_VOLVER,
-			]
-		)
-	)
+	assert_array(del_teclado).contains_exactly_in_any_order([PantallaDeControles.TEXTO_DE_VISION])
 	var pausa := AsignacionDeControles.nombre_de_la_accion(AsignacionDeControles.PAUSA)
 	var del_joystick := _nombres(pantalla.filas(true), true)
 	(
@@ -205,9 +197,6 @@ func test_lo_fijo_lleva_su_marca_y_no_tiene_nada_que_elegir() -> void:  # AC-CFG
 				PantallaDeControles.TEXTO_DE_MOVIMIENTO,
 				PantallaDeControles.TEXTO_DE_VISION,
 				pausa,
-				PantallaDeControles.TEXTO_DE_NAVEGAR,
-				PantallaDeControles.TEXTO_DE_ACEPTAR,
-				PantallaDeControles.TEXTO_DE_VOLVER,
 			]
 		)
 	)
@@ -221,16 +210,10 @@ func test_lo_fijo_lleva_su_marca_y_no_tiene_nada_que_elegir() -> void:  # AC-CFG
 	)
 
 
-func test_volver_y_la_ayuda_muestran_la_entrada_que_tiene_pausa() -> void:  # AC-CFG-035
+func test_la_ayuda_muestra_la_entrada_que_tiene_pausa() -> void:  # AC-CFG-035
 	var pantalla := _pantalla()
 	_asignar(pantalla, AsignacionDeControles.PAUSA, PRINCIPAL, KEY_P)
 	var leida := PantallaDeControles.nombre_de_la_entrada(TECLA, KEY_P)
-	var volver: HBoxContainer
-	for fila: HBoxContainer in pantalla.filas(false):
-		if (fila.get_child(0) as Label).text == PantallaDeControles.TEXTO_DE_VOLVER:
-			volver = fila
-	var glifo: GlifoDeEntrada = volver.get_child(1).get_child(0)
-	assert_str(glifo.texto).is_equal(leida)
 	var ayuda: Array[String] = []
 	for en_la_ayuda: GlifoDeEntrada in pantalla.glifos_de_la_ayuda():
 		ayuda.append(en_la_ayuda.texto)

@@ -35,17 +35,6 @@ func _nombre(fila: HBoxContainer) -> String:
 	return (fila.get_child(0) as Label).text
 
 
-func _es_de_los_menus(fila: HBoxContainer) -> bool:
-	return (
-		_nombre(fila)
-		in [
-			PantallaDeControles.TEXTO_DE_NAVEGAR,
-			PantallaDeControles.TEXTO_DE_ACEPTAR,
-			PantallaDeControles.TEXTO_DE_VOLVER,
-		]
-	)
-
-
 func _borde(caja: StyleBox) -> int:
 	if caja is StyleBoxFlat:
 		return (caja as StyleBoxFlat).get_border_width_min()
@@ -86,15 +75,16 @@ func test_la_ayuda_queda_arriba_de_la_linea_del_pie() -> void:
 	assert_bool(ayuda.get_global_rect().end.y <= linea).is_true()
 
 
-func test_el_joystick_alinea_sus_glifos() -> void:  # AC-CFG-031
-	var pantalla := await _pantalla(true)
-	var columna: Array[float] = []
-	for fila: HBoxContainer in pantalla.filas(true):
-		if not _es_de_los_menus(fila):
+func test_cada_pestana_alinea_sus_glifos_con_nombres_largos() -> void:  # AC-CFG-031, AC-CFG-042
+	var pantalla := await _pantalla()
+	for del_joystick: bool in [false, true]:
+		await _mostrar(pantalla, del_joystick)
+		var columna: Array[float] = []
+		for fila: HBoxContainer in pantalla.filas(del_joystick):
 			var celda := fila.get_child(1) as Control
 			columna.append(celda.get_global_rect().get_center().x)
-	for centro: float in columna:
-		assert_float(centro).is_equal_approx(columna[0], TOLERANCIA)
+		for centro: float in columna:
+			assert_float(centro).is_equal_approx(columna[0], TOLERANCIA)
 
 
 func test_la_marca_fijo_es_mas_chica_que_el_nombre_y_entra_en_su_bloque() -> void:  # AC-CFG-035
@@ -152,23 +142,6 @@ func test_cada_pestana_junta_su_dibujo_con_su_texto_y_los_centra() -> void:  # A
 		assert_float(centro_del_grupo).is_equal_approx(centro_de_la_pestana, TOLERANCIA * 4.0)
 		var separacion := texto.get_global_rect().position.x - dibujo.get_global_rect().end.x
 		assert_bool(separacion <= dibujo.size.x).is_true()
-
-
-func test_en_los_menus_va_debajo_de_lo_del_local_y_dentro_de_la_pantalla() -> void:  # AC-CFG-031
-	var pantalla := await _pantalla()
-	var area := _desplazador(pantalla).get_global_rect()
-	for del_joystick: bool in [false, true]:
-		await _mostrar(pantalla, del_joystick)
-		var fondo_del_local := 0.0
-		var arriba_de_los_menus := INF
-		for fila: HBoxContainer in pantalla.filas(del_joystick):
-			var caja := fila.get_global_rect()
-			if _es_de_los_menus(fila):
-				arriba_de_los_menus = minf(arriba_de_los_menus, caja.position.y)
-				assert_bool(caja.position.x >= area.position.x - TOLERANCIA).is_true()
-			else:
-				fondo_del_local = maxf(fondo_del_local, caja.end.y)
-		assert_bool(arriba_de_los_menus >= fondo_del_local - TOLERANCIA).is_true()
 
 
 func test_vision_va_en_el_mismo_lugar_en_las_dos_pestanas() -> void:  # AC-CFG-031

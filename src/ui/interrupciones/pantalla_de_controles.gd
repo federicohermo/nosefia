@@ -1,5 +1,4 @@
-## Controles: una pestaña por dispositivo, TECLADO Y MOUSE y JOYSTICK, y en cada una dos bloques,
-## EN EL LOCAL con las acciones y EN LOS MENÚS con lo que no se cambia.
+## Controles: una pestaña por dispositivo, TECLADO Y MOUSE y JOYSTICK, con el bloque EN EL LOCAL.
 ##
 ## En TECLADO Y MOUSE cada acción tiene una celda PRINCIPAL y otra SECUNDARIA. Se elige una celda,
 ## y apretar una tecla o un botón del mouse se la asigna; SUPR vacía una secundaria. En JOYSTICK
@@ -32,7 +31,6 @@ const TEXTO_DEL_TECLADO := "TECLADO Y MOUSE"
 const TEXTO_DEL_JOYSTICK := "JOYSTICK"
 const TEXTO_DEL_JOYSTICK_CONECTADO := "● JOYSTICK CONECTADO"
 const TEXTO_EN_EL_LOCAL := "EN EL LOCAL"
-const TEXTO_EN_LOS_MENUS := "EN LOS MENÚS"
 const TEXTO_DE_PRINCIPAL := "PRINCIPAL"
 const TEXTO_DE_SECUNDARIA := "SECUNDARIA"
 const TEXTO_SIN_JOYSTICK := "CONECTÁ UN JOYSTICK PARA CONFIGURARLO"
@@ -40,27 +38,19 @@ const TEXTO_FIJO := "FIJO"
 const TEXTO_DEL_AVISO := "YA ES LA PRINCIPAL DE"
 const TEXTO_DE_MOVIMIENTO := "MOVIMIENTO"
 const TEXTO_DE_VISION := "VISIÓN"
-const TEXTO_DE_NAVEGAR := "NAVEGAR"
-const TEXTO_DE_ACEPTAR := "ACEPTAR"
 const TEXTO_DE_CAMBIAR := "CAMBIAR"
 const TEXTO_DE_BORRAR := "BORRAR"
 const TEXTO_DE_LA_PESTANA := "PESTAÑA"
-const TEXTO_DE_LAS_FLECHAS := "FLECHAS"
 const TEXTO_DE_ENTER := "ENTER"
 const TEXTO_DE_SUPR := "SUPR"
 const TEXTO_DE_START := "START"
 const TEXTO_DEL_MOUSE := "MOUSE"
-const ANCHO_DEL_NOMBRE := 530.0
-const ANCHO_DEL_NOMBRE_DE_LOS_MENUS := 140.0
+const ANCHO_DEL_NOMBRE := 720.0
 const ANCHO_DE_LA_CELDA := 260.0
-const ANCHO_DE_LOS_GLIFOS_DE_LOS_MENUS := 180.0
-const ANCHO_DE_LA_MARCA := 64.0
 const ANCHO_DE_LA_PESTANA := 420.0
 const ALTO_DE_LA_PESTANA := 64.0
 const ALTO_DE_LA_FILA := 44.0
 const SEPARACION_DE_LAS_FILAS := 4
-const SEPARACION_DE_LOS_BLOQUES := 12
-const SEPARACION_DE_LOS_MENUS := 24
 const LETRA_CHICA := 24
 const COLOR_DE_LA_CELDA_ELEGIDA := Color("d8b468")
 const OPACIDAD_DE_LA_MARCA := 0.7
@@ -100,7 +90,6 @@ var _aviso_del_joystick: Label
 var _aviso: Label
 var _ayuda: HBoxContainer
 var _glifos_de_la_ayuda: Array[GlifoDeEntrada] = []
-var _dibujos_del_volver: HBoxContainer
 var _primer_boton_del_teclado: Button
 var _primer_boton_del_joystick: Button
 var _esperando_accion: StringName = &""
@@ -116,8 +105,8 @@ func _ready() -> void:
 	_volver.pressed.connect(cerrar)
 	_crear_los_estilos_de_la_celda()
 	_filas.add_child(_barra_de_pestanas())
-	_pagina_del_teclado = _pagina(_bloque_del_teclado(), _menus_del_teclado())
-	_pagina_del_joystick = _pagina(_bloque_del_joystick(), _menus_del_joystick())
+	_pagina_del_teclado = _bloque_del_teclado()
+	_pagina_del_joystick = _bloque_del_joystick()
 	_filas.add_child(_pagina_del_teclado)
 	_filas.add_child(_pagina_del_joystick)
 	_filas.add_child(_aviso_sin_el_joystick())
@@ -403,17 +392,6 @@ func _pestana(texto: String, dispositivo: DibujoDeDispositivo.Dispositivo) -> Bu
 	return pestana
 
 
-## Lo del local arriba y lo de los menús debajo, a lo ancho, los dos centrados.
-func _pagina(en_el_local: VBoxContainer, en_los_menus: HBoxContainer) -> VBoxContainer:
-	var pagina := VBoxContainer.new()
-	pagina.add_theme_constant_override("separation", SEPARACION_DE_LOS_BLOQUES)
-	en_el_local.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
-	en_los_menus.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
-	pagina.add_child(en_el_local)
-	pagina.add_child(en_los_menus)
-	return pagina
-
-
 ## En su lugar, la pestaña JOYSTICK sin joystick: sólo el aviso de conectar uno.
 func _aviso_sin_el_joystick() -> Label:
 	_aviso_sin_joystick = _etiqueta(TEXTO_SIN_JOYSTICK)
@@ -424,25 +402,12 @@ func _aviso_sin_el_joystick() -> Label:
 	return _aviso_sin_joystick
 
 
-## EN LOS MENÚS en un solo renglón: el título y, al lado, cada acción con su glifo y su marca.
-func _banda_de_los_menus(renglones: Array[HBoxContainer]) -> HBoxContainer:
-	var banda := HBoxContainer.new()
-	banda.add_theme_constant_override("separation", SEPARACION_DE_LOS_MENUS)
-	var rotulo := _etiqueta(TEXTO_EN_LOS_MENUS)
-	rotulo.modulate.a = OPACIDAD_DE_LO_FIJO
-	rotulo.custom_minimum_size.y = ALTO_DE_LA_FILA
-	rotulo.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
-	banda.add_child(rotulo)
-	for renglon: HBoxContainer in renglones:
-		banda.add_child(renglon)
-	return banda
-
-
 ## El bloque con su encabezado en un renglón: el título a la izquierda y, a la derecha, lo que
 ## acompaña a la columna.
 func _bloque(titulo: String, a_la_derecha: Array[Control] = []) -> VBoxContainer:
 	var bloque := VBoxContainer.new()
 	bloque.theme_type_variation = &"ColumnaDelMenu"
+	bloque.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
 	bloque.add_theme_constant_override("separation", SEPARACION_DE_LAS_FILAS)
 	var encabezado := HBoxContainer.new()
 	encabezado.add_theme_constant_override("separation", 16)
@@ -478,29 +443,6 @@ func _bloque_del_teclado() -> VBoxContainer:
 	return bloque
 
 
-func _menus_del_teclado() -> HBoxContainer:
-	var volver := _fila_fija(TEXTO_DE_VOLVER, [], true)
-	_dibujos_del_volver = volver.get_child(1)
-	return _banda_de_los_menus(
-		[
-			_fila_fija(
-				TEXTO_DE_NAVEGAR,
-				[GlifoDeEntrada.de_una_tecla(TEXTO_DE_LAS_FLECHAS), GlifoDeEntrada.de_un_mouse()],
-				true
-			),
-			_fila_fija(
-				TEXTO_DE_ACEPTAR,
-				[
-					GlifoDeEntrada.de_una_tecla(TEXTO_DE_ENTER),
-					GlifoDeEntrada.de_un_mouse(AsignacionDeControles.BOTON_IZQUIERDO)
-				],
-				true
-			),
-			volver,
-		]
-	)
-
-
 func _bloque_del_joystick() -> VBoxContainer:
 	_aviso_del_joystick = _etiqueta("")
 	_aviso_del_joystick.add_theme_font_size_override("font_size", LETRA_CHICA)
@@ -529,27 +471,6 @@ func _bloque_del_joystick() -> VBoxContainer:
 		)
 	)
 	return bloque
-
-
-func _menus_del_joystick() -> HBoxContainer:
-	return _banda_de_los_menus(
-		[
-			_fila_fija(
-				TEXTO_DE_NAVEGAR,
-				[
-					GlifoDeEntrada.de_un_boton(GlifoDeEntrada.Forma.CRUCETA),
-					GlifoDeEntrada.de_un_boton(GlifoDeEntrada.Forma.PALANCA, "R")
-				],
-				true
-			),
-			_fila_fija(
-				TEXTO_DE_ACEPTAR, [GlifoDeEntrada.de_un_boton(GlifoDeEntrada.Forma.CRUZ)], true
-			),
-			_fila_fija(
-				TEXTO_DE_VOLVER, [GlifoDeEntrada.de_un_boton(GlifoDeEntrada.Forma.CIRCULO)], true
-			),
-		]
-	)
 
 
 func _crear_el_aviso_y_la_ayuda() -> void:
@@ -608,28 +529,21 @@ func _glifo_de_pausa() -> GlifoDeEntrada:
 	)
 
 
-## El renglón con el nombre a la izquierda y, a la derecha, lo que se muestra y no se elige.
-## En el local, el glifo cae en la columna de las celdas y la marca en la de la secundaria. En los
-## menús, los glifos van pegados a la marca.
-func _fila_fija(
-	nombre: String, glifos: Array[GlifoDeEntrada], de_los_menus: bool = false
-) -> HBoxContainer:
-	var fila := _fila_con_nombre(nombre, de_los_menus)
+## El renglón con el nombre a la izquierda y, a la derecha, lo que se muestra y no se elige: el
+## glifo cae en la columna de las celdas y la marca en la de la secundaria.
+func _fila_fija(nombre: String, glifos: Array[GlifoDeEntrada]) -> HBoxContainer:
+	var fila := _fila_con_nombre(nombre)
 	fila.set_meta(&"fijo", true)
 	var dibujos := HBoxContainer.new()
-	dibujos.custom_minimum_size.x = (
-		ANCHO_DE_LOS_GLIFOS_DE_LOS_MENUS if de_los_menus else ANCHO_DE_LA_CELDA
-	)
-	dibujos.alignment = (
-		BoxContainer.ALIGNMENT_END if de_los_menus else BoxContainer.ALIGNMENT_CENTER
-	)
+	dibujos.custom_minimum_size.x = ANCHO_DE_LA_CELDA
+	dibujos.alignment = BoxContainer.ALIGNMENT_CENTER
 	dibujos.add_theme_constant_override("separation", 12)
 	for glifo: GlifoDeEntrada in glifos:
 		dibujos.add_child(glifo)
 	fila.add_child(dibujos)
 	var marca := _etiqueta(TEXTO_FIJO)
 	marca.add_theme_font_size_override("font_size", LETRA_CHICA)
-	marca.custom_minimum_size.x = ANCHO_DE_LA_MARCA if de_los_menus else ANCHO_DE_LA_CELDA
+	marca.custom_minimum_size.x = ANCHO_DE_LA_CELDA
 	marca.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	marca.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 	marca.modulate.a = OPACIDAD_DE_LA_MARCA
@@ -638,14 +552,12 @@ func _fila_fija(
 	return fila
 
 
-func _fila_con_nombre(nombre: String, de_los_menus: bool = false) -> HBoxContainer:
+func _fila_con_nombre(nombre: String) -> HBoxContainer:
 	var fila := HBoxContainer.new()
 	fila.theme_type_variation = &"FilaDeConfiguraciones"
 	fila.custom_minimum_size.y = ALTO_DE_LA_FILA
 	var etiqueta := _etiqueta(nombre)
-	etiqueta.custom_minimum_size.x = (
-		ANCHO_DEL_NOMBRE_DE_LOS_MENUS if de_los_menus else ANCHO_DEL_NOMBRE
-	)
+	etiqueta.custom_minimum_size.x = ANCHO_DEL_NOMBRE
 	etiqueta.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	etiqueta.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 	fila.add_child(etiqueta)
@@ -737,16 +649,7 @@ func _pintar() -> void:
 		glifo.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 		boton.add_child(glifo)
 		_glifos[clave] = glifo
-	_pintar_el_volver()
 	_pintar_la_ayuda()
-
-
-## El renglón de Volver de TECLADO Y MOUSE muestra la entrada que tenga Pausa.
-func _pintar_el_volver() -> void:
-	for hijo: Node in _dibujos_del_volver.get_children():
-		_dibujos_del_volver.remove_child(hijo)
-		hijo.queue_free()
-	_dibujos_del_volver.add_child(_glifo_de_pausa())
 
 
 func _quitar_el_glifo(clave: String, boton: Button) -> void:

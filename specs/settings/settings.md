@@ -324,13 +324,12 @@ pestaña DEBE habilitarse y L1 y R1 DEBEN aparecer; la pestaña elegida NO DEBE 
 desconecta, la pestaña DEBE apagarse, L1 y R1 DEBEN desaparecer, y SI JOYSTICK estaba elegida, la
 pantalla DEBE pasar a TECLADO Y MOUSE.
 
-Cada pestaña DEBE tener dos bloques: **EN EL LOCAL**, con las acciones y Visión, y **EN LOS MENÚS**,
-con Navegar, Aceptar y Volver. Visión DEBE ir en el mismo lugar en las dos pestañas: después de las
-direcciones de movimiento. EN LOS MENÚS DEBE ir debajo de EN EL LOCAL y a lo ancho de la pantalla.
-Los renglones de EN LOS MENÚS, Visión, y en JOYSTICK Movimiento y Pausa, DEBEN llevar la marca
-**FIJO**, verse más tenues y no poder elegirse. En TECLADO Y MOUSE, Volver DEBE mostrar la entrada
-que tenga Pausa. Abajo, una ayuda DEBE decir con qué se cambia y con qué se vuelve, con la entrada
-que tenga asignada cada uno: en TECLADO Y MOUSE, ENTER para cambiar, SUPR para borrar y la tecla de
+Cada pestaña DEBE tener un solo bloque, **EN EL LOCAL**, con las acciones y Visión. Visión DEBE ir
+en el mismo lugar en las dos pestañas: después de las direcciones de movimiento. Visión, y en
+JOYSTICK Movimiento y Pausa, DEBEN llevar la marca **FIJO**, verse más tenues y no poder elegirse.
+Lo que no depende de ninguna acción —ENTER y las flechas en las interfaces, X y CÍRCULO en el
+joystick— NO DEBE tener renglón: lo dice la ayuda. Abajo, una ayuda DEBE decir con qué se cambia y
+con qué se vuelve, con la entrada que tenga asignada cada uno: en TECLADO Y MOUSE, ENTER para cambiar, SUPR para borrar y la tecla de
 Pausa para volver; en JOYSTICK con un joystick conectado, L1 R1 para la pestaña, X para cambiar y
 CÍRCULO para volver, y sin joystick, nada.
 
@@ -341,6 +340,16 @@ con sus colores de PlayStation; L1, R1 y START como píldoras; los joysticks, co
 R; la cruceta, con su forma. DEBE dibujar las teclas como teclas con borde, y cada clic del mouse
 como una tecla con un mouse con ese botón pintado, con su texto adentro de la tecla o sin texto. Una
 secundaria vacía DEBE dibujarse como un recuadro punteado tenue.
+
+### BR-CFG-033 — El nombre de cada acción dice las funciones de menú que hace
+
+Cada acción que además hace algo en una interfaz abierta DEBE llevar esa función en su nombre, detrás
+de una barra: Interactuar cierra la nota encuadrada, la computadora, la caja y la ventanilla; Pausa
+vuelve atrás —cierra Configuraciones, los logros, las listas desplegadas y las interfaces— además de
+pausar y reanudar; Agarrar / Soltar pulsa al comprador en la ventanilla; el celular se cierra con la
+misma acción que lo abre. Una acción que no hace nada en una interfaz —Movimiento, Examinar y
+Agacharse— NO DEBE llevar ninguna. Cambiar la entrada de una acción cambia también su función de
+menú, y el nombre es lo que lo avisa.
 
 ## Criterios de aceptación
 
@@ -599,8 +608,7 @@ en 30 %. DADO un archivo sin botones de joystick ENTONCES cada acción tiene su 
 DADO la pantalla de controles abierta ENTONCES tiene las pestañas TECLADO Y MOUSE y JOYSTICK, cada
 una con el dibujo de su dispositivo, y se ve el contenido de una sola. DADO TECLADO Y MOUSE
 CUANDO se elige JOYSTICK ENTONCES se ve el contenido de JOYSTICK y no el de TECLADO Y MOUSE, y al
-revés. DADO cada pestaña ENTONCES tiene los bloques EN EL LOCAL y EN LOS MENÚS; EN LOS MENÚS tiene
-Navegar, Aceptar y Volver, y va debajo de EN EL LOCAL. DADO TECLADO Y MOUSE ENTONCES Visión va justo
+revés. DADO cada pestaña ENTONCES tiene el bloque EN EL LOCAL y ningún otro. DADO TECLADO Y MOUSE ENTONCES Visión va justo
 después de Derecha, y DADO JOYSTICK, justo después de Movimiento.
 
 ### AC-CFG-032 — La pestaña con la que se abre *(verifica BR-CFG-031)*
@@ -632,9 +640,9 @@ MOUSE.
 
 ### AC-CFG-035 — Los renglones fijos y la ayuda *(verifica BR-CFG-031)*
 
-DADO la pestaña TECLADO Y MOUSE ENTONCES Navegar, Aceptar, Volver y Visión llevan la marca FIJO y
-no se pueden elegir. DADO la pestaña JOYSTICK ENTONCES además Movimiento y Pausa la llevan. DADO
-Pausa en P ENTONCES Volver de TECLADO Y MOUSE muestra P, y la ayuda de abajo dice ENTER, SUPR y P.
+DADO la pestaña TECLADO Y MOUSE ENTONCES Visión lleva la marca FIJO y no se puede elegir. DADO la
+pestaña JOYSTICK ENTONCES además Movimiento y Pausa la llevan. DADO Pausa en P ENTONCES la ayuda de
+abajo dice ENTER, SUPR y P.
 DADO la pestaña JOYSTICK con un joystick conectado ENTONCES la ayuda dice L1 R1, X y CÍRCULO. DADO
 ningún joystick ENTONCES la ayuda no lleva ningún glifo de joystick.
 
@@ -694,6 +702,13 @@ ENTONCES vuelve a su entrada de fábrica. DADO una principal guardada como vací
 entrada de fábrica. DADO la secundaria de Examinar y la principal de Agacharse guardadas las dos en
 F ENTONCES se descarta el bloque completo y una música guardada en 30 % sigue en 30 %. DADO dos
 secundarias vacías ENTONCES no cuentan como una entrada repetida.
+
+### AC-CFG-042 — El nombre dice las funciones de menú *(verifica BR-CFG-033, BR-CFG-031)*
+
+DADO la lista de acciones ENTONCES el nombre de Interactuar y el del celular incluyen «cerrar»; el de
+Pausa, «volver»; el de Agarrar / Soltar, «pulsar»; y el de Movimiento, Examinar y Agacharse no
+agrega ninguna función. DADO cada pestaña ENTONCES cada acción se muestra con ese nombre completo, en
+una sola línea, y las celdas de todos los renglones quedan alineadas.
 
 ## No objetivos
 

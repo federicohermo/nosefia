@@ -15,6 +15,9 @@ extends RefCounted
 
 enum TipoDeEntrada { TECLA, BOTON_DEL_MOUSE, BOTON_DEL_JOYSTICK }
 
+## Lo que una acción hace además en una interfaz abierta. Cambiar su entrada cambia también eso.
+enum FuncionDeMenu { CERRAR, VOLVER, PULSAR }
+
 const ADELANTE := &"mover_adelante"
 const ATRAS := &"mover_atras"
 const IZQUIERDA := &"mover_izquierda"
@@ -79,6 +82,20 @@ const NOMBRES: Dictionary = {
 	AGARRAR: "AGARRAR / SOLTAR",
 	INTERACTUAR: "INTERACTUAR",
 	PAUSA: "PAUSA",
+}
+
+const TEXTOS_DE_LAS_FUNCIONES: Dictionary = {
+	FuncionDeMenu.CERRAR: "CERRAR",
+	FuncionDeMenu.VOLVER: "VOLVER",
+	FuncionDeMenu.PULSAR: "PULSAR",
+}
+
+## Las funciones de menú de cada acción. Una acción que no está acá no hace nada en una interfaz.
+const FUNCIONES_DE_MENU: Dictionary = {
+	CELULAR: [FuncionDeMenu.CERRAR],
+	AGARRAR: [FuncionDeMenu.PULSAR],
+	INTERACTUAR: [FuncionDeMenu.CERRAR],
+	PAUSA: [FuncionDeMenu.VOLVER],
 }
 
 ## Los botones del joystick, con los nombres de PlayStation de la ficha.
@@ -159,10 +176,22 @@ static func es_secundaria(accion: StringName, ranura: int) -> bool:
 	return accion in ACCIONES and ranura == RANURA_SECUNDARIA
 
 
-## El nombre de la acción en pantalla.
+## El nombre de la acción en pantalla, con sus funciones de menú detrás de una barra.
 static func nombre_de_la_accion(accion: StringName) -> String:
 	var nombre: String = NOMBRES.get(accion, "")
-	return nombre
+	var partes := PackedStringArray([nombre])
+	for funcion: FuncionDeMenu in funciones_de_menu(accion):
+		partes.append(texto_de_la_funcion(funcion))
+	return " / ".join(partes)
+
+
+static func funciones_de_menu(accion: StringName) -> Array:
+	return FUNCIONES_DE_MENU.get(accion, [])
+
+
+static func texto_de_la_funcion(funcion: FuncionDeMenu) -> String:
+	var texto: String = TEXTOS_DE_LAS_FUNCIONES.get(funcion, "")
+	return texto
 
 
 ## Si la ranura de esa acción acepta la entrada. En la web, Esc sólo lo acepta Pausa: con el
