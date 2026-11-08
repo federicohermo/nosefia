@@ -137,6 +137,7 @@ func test_configuraciones_abre_en_la_pestana_del_ultimo_dispositivo() -> void:  
 	configuraciones.abrir()
 	var ajustar: Button = configuraciones.get("_ajustar_controles")
 	var controles: PantallaDeControles = configuraciones.get("_controles")
+	controles.poner_joystick_conectado(true)
 	ajustar.pressed.emit()
 	assert_bool(controles.pestana_del_joystick()).is_false()
 	controles.cerrar()
