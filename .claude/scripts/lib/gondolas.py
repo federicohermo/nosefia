@@ -123,7 +123,7 @@ EMISION_ROJO = 0.6
 #: Eran más claras que el panel y estaban pegadas a los estantes. Ahora son más oscuras que el
 #: panel y van a medio camino entre un estante y el siguiente.
 PIXEL_DE_LAS_JUNTAS = 3
-TONO_DE_LAS_JUNTAS = (0.10, 0.10, 0.105)
+TONO_DE_LAS_JUNTAS = (0.05, 0.05, 0.055)
 #: Las cuatro caras del exhibidor. El modificador `Muebles` de `gondolanueva2-col` las une y no lee
 #: la malla de ese objeto: lo que se edita se edita acá.
 CARAS_DEL_EXHIBIDOR = tuple(
@@ -131,9 +131,11 @@ CARAS_DEL_EXHIBIDOR = tuple(
 )
 
 #: Los laterales del exhibidor son una sola cara con dos lados: por dentro mostraban el arte, y el
-#: cartel se leía al revés. La cara se cierra de un solo lado y un duplicado mira hacia adentro con
-#: el azul liso del costado.
+#: cartel se leía al revés. La cara se cierra de un solo lado. Lo que mira hacia los estantes —el
+#: panel de cada lateral, a 1,2 cm de su cara, y el panel curvo del fondo— tiene la textura del
+#: fondo, con sus galletitas: pasa al azul liso del costado.
 LATERALES = ("EXHIBIDOR | Lateral", "EXHIBIDOR | Lateral Pepito")
+PANEL_INTERIOR = "EXHIBIDOR | Azul"
 AZUL_LISO = "EXHIBIDOR | Azul liso"
 COLOR_DEL_AZUL_LISO = (31 / 255, 55 / 255, 103 / 255)
 
@@ -145,6 +147,16 @@ SIN_COMPRIMIR = (PALETA, EMISION)
 #: Los materiales de la góndola que dejan de ser metal, y su rugosidad. La grilla reflejaba la
 #: sonda del salón en cada hueco.
 DIELECTRICOS = {"GONDOLA | Grilla de alambre": 0.8}
+
+#: La cabecera de alambre: su grilla, el marco y los platos. La luz horneada del nivel de abajo
+#: llega casi apagada, porque cada estante le tapa la luz al de abajo: la grilla de abajo salía
+#: negra y la de arriba gris. Los tres suman una emisión de relleno, y ninguno se aclara más por
+#: arriba. La grilla emite su propia textura, así los agujeros siguen negros. El marco y los platos
+#: emiten un gris liso, en color lineal.
+GRILLA = "GONDOLA | Grilla de alambre"
+RELLENO = ("GONDOLA | Paleta cabecera", "GONDOLA | Alambre cromado")
+EMISION_DE_RELLENO = 0.045
+EMISION_DE_LA_GRILLA = 0.95
 
 #: Materiales de un solo color que forman el cuerpo, sin metal que los oscurezca, y su tono.
 COLORES_LISOS = {
