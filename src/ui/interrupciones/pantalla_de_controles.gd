@@ -6,9 +6,9 @@
 ## con la marca FIJO y no se elige. Cada entrada se dibuja con su glifo.
 ##
 ## Todo el texto va en el tamaño de Configuraciones, `GlifoDeEntrada.tamano_de_la_letra()`:
-## nombres, cabeceras y teclas. Cada tecla mide su ancho natural y arranca en el borde izquierdo de
-## su columna, igual que la cabecera de la columna; el recuadro del foco enmarca la tecla. La lista
-## reparte el alto del área entre sus renglones y se centra en el ancho.
+## nombres, cabeceras y teclas. Cada celda reasignable mide lo mismo, el ancho del glifo más ancho
+## de su pestaña, y la tecla que dibuja llena su celda: el borde de la tecla es el contenedor. La
+## lista reparte el alto del área entre sus renglones y se centra en el ancho.
 ##
 ## Abajo, a la izquierda de VOLVER, sólo se ve el mensaje de lo que pasa ahora: qué entrada espera
 ## la celda elegida, o el aviso de una asignación que no entró.
@@ -47,7 +47,7 @@ const TEXTO_DE_MOVIMIENTO := "MOVIMIENTO"
 const TEXTO_DE_VISION := "VISIÓN"
 const TEXTO_DE_START := "START"
 const TEXTO_DEL_MOUSE := "MOUSE"
-## Cuánto sobresale de la tecla el recuadro de la elegida, para no taparle el borde.
+## Cuánto sobresale de la celda el recuadro de la elegida, para no taparle el borde a la tecla.
 const SOBRESALE_EL_RECUADRO := 4.0
 const SEPARACION_DE_LAS_COLUMNAS := 64
 const ANCHO_DE_LA_PESTANA := 520.0
@@ -445,14 +445,16 @@ func _bloque_del_teclado() -> VBoxContainer:
 	)
 	for accion: StringName in AsignacionDeControles.ACCIONES:
 		var fila := _fila_con_nombre(AsignacionDeControles.nombre_de_la_accion(accion))
-		fila.add_child(_celda(accion, AsignacionDeControles.RANURA_PRINCIPAL))
+		var principal := _celda(accion, AsignacionDeControles.RANURA_PRINCIPAL)
+		fila.add_child(principal)
 		fila.add_child(_celda(accion, AsignacionDeControles.RANURA_SECUNDARIA))
 		if _primer_boton_del_teclado == null:
-			_primer_boton_del_teclado = boton_de(accion, AsignacionDeControles.RANURA_PRINCIPAL)
+			_primer_boton_del_teclado = principal
 		_agregar_la_fila(bloque, fila)
 		if accion == AsignacionDeControles.DERECHA:
 			_agregar_la_fila(
-				bloque, _fila_fija(TEXTO_DE_VISION, [GlifoDeEntrada.de_una_tecla(TEXTO_DEL_MOUSE)])
+				bloque,
+				_fila_fija(TEXTO_DE_VISION, [GlifoDeEntrada.de_un_mouse(0, TEXTO_DEL_MOUSE)])
 			)
 	return bloque
 
@@ -473,10 +475,11 @@ func _bloque_del_joystick() -> VBoxContainer:
 	)
 	for accion: StringName in AsignacionDeControles.ACCIONES_CON_BOTON:
 		var fila := _fila_con_nombre(AsignacionDeControles.nombre_de_la_accion(accion))
-		fila.add_child(_celda(accion, AsignacionDeControles.RANURA_DEL_JOYSTICK))
+		var celda := _celda(accion, AsignacionDeControles.RANURA_DEL_JOYSTICK)
+		fila.add_child(celda)
 		fila.add_child(_hueco())
 		if _primer_boton_del_joystick == null:
-			_primer_boton_del_joystick = boton_de(accion, AsignacionDeControles.RANURA_DEL_JOYSTICK)
+			_primer_boton_del_joystick = celda
 		_agregar_la_fila(bloque, fila)
 	_agregar_la_fila(
 		bloque,
@@ -505,15 +508,15 @@ func _crear_el_mensaje() -> void:
 
 
 ## El renglón con el nombre a la izquierda y, a la derecha, lo que se muestra y no se elige: el
-## glifo cae en la columna de las celdas, pegado a su borde izquierdo, y la marca en la de la
-## secundaria.
+## glifo cae en la columna de las celdas y la marca en la de la secundaria.
 func _fila_fija(nombre: String, glifos: Array[GlifoDeEntrada]) -> HBoxContainer:
 	var fila := _fila_con_nombre(nombre)
 	fila.set_meta(&"fijo", true)
 	var dibujos := HBoxContainer.new()
+	dibujos.alignment = BoxContainer.ALIGNMENT_CENTER
 	dibujos.add_theme_constant_override("separation", 12)
 	for glifo: GlifoDeEntrada in glifos:
-		glifo.size_flags_horizontal = Control.SIZE_SHRINK_BEGIN
+		glifo.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		glifo.size_flags_vertical = Control.SIZE_SHRINK_CENTER
 		dibujos.add_child(glifo)
 	fila.add_child(dibujos)
@@ -546,20 +549,17 @@ func _etiqueta(texto: String) -> Label:
 
 func _titulo_de_la_columna(texto: String) -> Label:
 	var etiqueta := _etiqueta(texto)
+	etiqueta.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	etiqueta.modulate.a = OPACIDAD_DE_LO_FIJO
 	return etiqueta
 
 
-## Una celda es el lugar de su columna y lleva adentro el botón de su tecla, pegado al borde
-## izquierdo. El botón mide lo que su glifo y muestra sólo el glifo: el recuadro aparece con el
-## foco, con el mouse encima o esperando una entrada. El ancho de la columna lo pone
-## `_ajustar_las_columnas`.
-func _celda(accion: StringName, ranura: int) -> HBoxContainer:
-	var lugar := HBoxContainer.new()
+## Una celda es el contenedor de su glifo y muestra sólo el glifo: el recuadro aparece con el foco,
+## con el mouse encima o esperando una entrada. Su ancho lo pone `_ajustar_las_columnas`.
+func _celda(accion: StringName, ranura: int) -> Button:
 	var boton := Button.new()
-	boton.size_flags_horizontal = Control.SIZE_SHRINK_BEGIN
 	boton.theme_type_variation = &"BotonDelMenu"
-	boton.custom_minimum_size.y = GlifoDeEntrada.ALTO
+	boton.custom_minimum_size = Vector2(0.0, GlifoDeEntrada.ALTO)
 	boton.size_flags_vertical = Control.SIZE_SHRINK_CENTER
 	boton.add_theme_stylebox_override("normal", _celda_sin_elegir)
 	boton.add_theme_stylebox_override("disabled", _celda_sin_elegir)
@@ -568,8 +568,7 @@ func _celda(accion: StringName, ranura: int) -> HBoxContainer:
 	boton.pressed.connect(elegir.bind(accion, ranura))
 	_botones[_clave(accion, ranura)] = boton
 	_celdas[_clave(accion, ranura)] = [accion, ranura]
-	lugar.add_child(boton)
-	return lugar
+	return boton
 
 
 func _crear_los_estilos_de_la_celda() -> void:
@@ -626,7 +625,6 @@ func _pintar() -> void:
 		)
 		glifo.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 		boton.add_child(glifo)
-		boton.custom_minimum_size.x = glifo.get_minimum_size().x
 		_glifos[clave] = glifo
 	_mostrar_el_mensaje()
 	_ajustar_las_columnas(_pagina_del_teclado)
@@ -634,9 +632,10 @@ func _pintar() -> void:
 
 
 ## Cada columna de una pestaña mide lo mismo en todos sus renglones: la de los nombres, lo que mide
-## el más largo; las de las celdas, el glifo más ancho de la pestaña o su cabecera. Cada tecla
-## arranca en el borde izquierdo de su columna con su ancho natural. La lista queda del ancho de lo
-## que dice. En JOYSTICK la segunda columna sólo lleva la marca FIJO.
+## el más largo; las de las celdas, el glifo más ancho de la pestaña. Así toda celda mide lo mismo
+## y cada tecla dibujada, de una letra o de un clic, llena su celda: el borde de la tecla es el
+## contenedor. La lista queda del ancho de lo que dice. En JOYSTICK la segunda columna sólo lleva
+## la marca FIJO.
 func _ajustar_las_columnas(pagina: VBoxContainer) -> void:
 	var renglones: Array[HBoxContainer] = [pagina.get_child(0) as HBoxContainer]
 	for hijo: Node in pagina.get_children():

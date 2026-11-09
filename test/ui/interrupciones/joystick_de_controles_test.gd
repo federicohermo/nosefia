@@ -4,7 +4,7 @@ extends GdUnitTestSuite
 
 const ESCENA := "res://src/ui/interrupciones/pantalla_de_controles.tscn"
 const FORMAS_DEL_TECLADO: Array[GlifoDeEntrada.Forma] = [
-	GlifoDeEntrada.Forma.TECLA, GlifoDeEntrada.Forma.RANURA_LIBRE
+	GlifoDeEntrada.Forma.TECLA, GlifoDeEntrada.Forma.MOUSE, GlifoDeEntrada.Forma.RANURA_LIBRE
 ]
 
 
