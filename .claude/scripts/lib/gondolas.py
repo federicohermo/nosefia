@@ -159,10 +159,11 @@ COLORES_LISOS = {
 }
 
 
-#: La base de las mesas: el cromo de las barandas de la góndola, y su rugosidad.
+#: La base de las mesas: el cromo de las barandas de la góndola, y su rugosidad. Con 0,25 y con 0,5 el
+#: pie reflejaba los estantes rosados y de madera del mostrador y salía salmón; con 0,7 es gris.
 BASE_DE_MESA = "MESA | Base cromada"
 CROMO = "GONDOLA | Alambre cromado"
-RUGOSIDAD_DEL_CROMO = 0.25
+RUGOSIDAD_DEL_CROMO = 0.7
 #: Un metal casi puro: con 1,0 el pie, que mira al techo, sólo refleja lo oscuro y sale negro.
 METAL_DE_MESA = 0.9
 
