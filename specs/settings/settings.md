@@ -330,9 +330,10 @@ JOYSTICK Movimiento y Pausa, DEBEN llevar la marca **FIJO**, verse más tenues y
 Lo que no depende de ninguna acción —ENTER y las flechas en las interfaces, X y CÍRCULO en el
 joystick— NO DEBE tener renglón, y la pantalla NO DEBE llevar una ayuda de teclas.
 
-Cada celda reasignable, principal o secundaria, DEBE ir dentro de un contenedor del mismo ancho y
-alto que todas las de su pestaña: el del glifo más ancho de esa pestaña, con el glifo centrado
-adentro. El recuadro del foco DEBE enmarcar ese contenedor. La lista DEBE repartirse en el alto
+Cada celda reasignable, principal o secundaria, DEBE medir lo mismo que todas las de su pestaña: el
+ancho del glifo más ancho de esa pestaña y el alto de una tecla. Cada tecla dibujada, de una letra,
+una flecha o un clic, DEBE llenar su celda —el borde de la tecla es el contenedor, sin otro recuadro
+alrededor—, con su texto o su dibujo centrado. El recuadro del foco DEBE enmarcar esa celda. La lista DEBE repartirse en el alto
 entre la cabecera y la línea del pie, con el mismo margen arriba y abajo, y la grilla —nombres y
 columnas— DEBE quedar centrada respecto de las pestañas. La pantalla DEBE decir qué entrada espera la
 celda elegida, y el aviso de una entrada que no se pudo asignar, en una línea debajo de la línea del
@@ -657,7 +658,7 @@ CUADRADO y TRIÁNGULO con su color de PlayStation, L1 y R1 como píldoras, y STA
 pestaña TECLADO Y MOUSE ENTONCES una tecla es una tecla con borde y cada clic, una tecla con un mouse adentro con su botón
 pintado, distinto del clic izquierdo al derecho; Visión también. DADO un botón de joystick sin glifo propio
 ENTONCES se lee por su nombre. DADO cada pestaña ENTONCES todas sus celdas reasignables miden lo mismo,
-al menos lo que el glifo más ancho, con su glifo centrado, y una ranura vacía llena su celda. DADO una
+al menos lo que el glifo más ancho, y cada tecla dibujada y cada ranura vacía llena su celda. DADO una
 celda esperando una entrada ENTONCES no cambia el tamaño ni la posición de ninguna celda.
 
 ### AC-CFG-037 — Las secundarias de fábrica *(verifica BR-CFG-016)*

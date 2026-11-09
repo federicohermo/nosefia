@@ -9,6 +9,12 @@ const PRINCIPAL := AsignacionDeControles.RANURA_PRINCIPAL
 const SECUNDARIA := AsignacionDeControles.RANURA_SECUNDARIA
 const EN_EL_JOYSTICK := AsignacionDeControles.RANURA_DEL_JOYSTICK
 const TOLERANCIA := 1.5
+const FORMAS_DE_TECLA: Array[GlifoDeEntrada.Forma] = [
+	GlifoDeEntrada.Forma.TECLA,
+	GlifoDeEntrada.Forma.MOUSE,
+	GlifoDeEntrada.Forma.PILDORA,
+	GlifoDeEntrada.Forma.RANURA_LIBRE,
+]
 
 
 func _pantalla(con_el_joystick: bool = false) -> PantallaDeControles:
@@ -214,7 +220,7 @@ func _celdas(del_joystick: bool) -> Array[Array]:
 	return celdas
 
 
-func test_toda_celda_mide_lo_mismo_y_centra_su_glifo() -> void:  # AC-CFG-036
+func test_toda_celda_mide_lo_mismo_y_su_tecla_la_llena() -> void:  # AC-CFG-036
 	var pantalla := await _pantalla()
 	for del_joystick: bool in [false, true]:
 		await _mostrar(pantalla, del_joystick)
@@ -230,6 +236,10 @@ func test_toda_celda_mide_lo_mismo_y_centra_su_glifo() -> void:  # AC-CFG-036
 				glifo.get_global_rect().get_center(), Vector2(TOLERANCIA, TOLERANCIA)
 			)
 			assert_bool(celda.size.x >= glifo.get_minimum_size().x).is_true()
+			var tecla := glifo.marco_dibujado()
+			if glifo.forma in FORMAS_DE_TECLA:
+				assert_float(tecla.size.x).is_equal_approx(primera.size.x, TOLERANCIA)
+				assert_float(tecla.size.y).is_equal_approx(primera.size.y, TOLERANCIA)
 		assert_bool(primera.size.x >= ancho_natural).is_true()
 
 

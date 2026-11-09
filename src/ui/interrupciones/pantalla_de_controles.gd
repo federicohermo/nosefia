@@ -6,9 +6,9 @@
 ## con la marca FIJO y no se elige. Cada entrada se dibuja con su glifo.
 ##
 ## Todo el texto va en el tamaño de Configuraciones, `GlifoDeEntrada.tamano_de_la_letra()`:
-## nombres, cabeceras y teclas. Cada celda reasignable es un contenedor del mismo ancho y alto, el
-## del glifo más ancho de su pestaña, con su glifo centrado adentro. La lista reparte el alto del
-## área entre sus renglones y se centra en el ancho.
+## nombres, cabeceras y teclas. Cada celda reasignable mide lo mismo, el ancho del glifo más ancho
+## de su pestaña, y la tecla que dibuja llena su celda: el borde de la tecla es el contenedor. La
+## lista reparte el alto del área entre sus renglones y se centra en el ancho.
 ##
 ## Abajo, a la izquierda de VOLVER, sólo se ve el mensaje de lo que pasa ahora: qué entrada espera
 ## la celda elegida, o el aviso de una asignación que no entró.
@@ -47,8 +47,8 @@ const TEXTO_DE_MOVIMIENTO := "MOVIMIENTO"
 const TEXTO_DE_VISION := "VISIÓN"
 const TEXTO_DE_START := "START"
 const TEXTO_DEL_MOUSE := "MOUSE"
-## Lo que sobra del glifo más ancho a cada lado, dentro del contenedor de la celda.
-const MARGEN_DEL_RECUADRO := 12.0
+## Cuánto sobresale de la celda el recuadro de la elegida, para no taparle el borde a la tecla.
+const SOBRESALE_EL_RECUADRO := 4.0
 const SEPARACION_DE_LAS_COLUMNAS := 64
 const ANCHO_DE_LA_PESTANA := 520.0
 const ALTO_DE_LA_PESTANA := 60.0
@@ -516,6 +516,8 @@ func _fila_fija(nombre: String, glifos: Array[GlifoDeEntrada]) -> HBoxContainer:
 	dibujos.alignment = BoxContainer.ALIGNMENT_CENTER
 	dibujos.add_theme_constant_override("separation", 12)
 	for glifo: GlifoDeEntrada in glifos:
+		glifo.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		glifo.size_flags_vertical = Control.SIZE_SHRINK_CENTER
 		dibujos.add_child(glifo)
 	fila.add_child(dibujos)
 	var marca := _etiqueta(TEXTO_FIJO)
@@ -557,7 +559,8 @@ func _titulo_de_la_columna(texto: String) -> Label:
 func _celda(accion: StringName, ranura: int) -> Button:
 	var boton := Button.new()
 	boton.theme_type_variation = &"BotonDelMenu"
-	boton.custom_minimum_size = Vector2(0.0, ALTO_DE_LA_FILA)
+	boton.custom_minimum_size = Vector2(0.0, GlifoDeEntrada.ALTO)
+	boton.size_flags_vertical = Control.SIZE_SHRINK_CENTER
 	boton.add_theme_stylebox_override("normal", _celda_sin_elegir)
 	boton.add_theme_stylebox_override("disabled", _celda_sin_elegir)
 	for estado: String in ["hover", "pressed", "hover_pressed", "focus"]:
@@ -574,6 +577,7 @@ func _crear_los_estilos_de_la_celda() -> void:
 	_celda_elegida.border_color = COLOR_DE_LA_CELDA_ELEGIDA
 	_celda_elegida.set_border_width_all(2)
 	_celda_elegida.set_content_margin_all(4.0)
+	_celda_elegida.set_expand_margin_all(SOBRESALE_EL_RECUADRO)
 
 
 ## Lo que ocupa el lugar de la segunda celda en un renglón que sólo tiene una.
@@ -628,9 +632,10 @@ func _pintar() -> void:
 
 
 ## Cada columna de una pestaña mide lo mismo en todos sus renglones: la de los nombres, lo que mide
-## el más largo; las de las celdas, el glifo más ancho de la pestaña y su margen. Así toda celda es
-## un contenedor del mismo ancho y alto, con su glifo centrado, y la lista queda del ancho de lo que
-## dice. En JOYSTICK la segunda columna sólo lleva la marca FIJO.
+## el más largo; las de las celdas, el glifo más ancho de la pestaña. Así toda celda mide lo mismo
+## y cada tecla dibujada, de una letra o de un clic, llena su celda: el borde de la tecla es el
+## contenedor. La lista queda del ancho de lo que dice. En JOYSTICK la segunda columna sólo lleva
+## la marca FIJO.
 func _ajustar_las_columnas(pagina: VBoxContainer) -> void:
 	var renglones: Array[HBoxContainer] = [pagina.get_child(0) as HBoxContainer]
 	for hijo: Node in pagina.get_children():
@@ -643,7 +648,7 @@ func _ajustar_las_columnas(pagina: VBoxContainer) -> void:
 		nombre = maxf(nombre, (renglon.get_child(0) as Control).get_minimum_size().x)
 		for glifo: Node in renglon.find_children("*", "GlifoDeEntrada", true, false):
 			var ancho := (glifo as GlifoDeEntrada).get_minimum_size().x
-			columna = maxf(columna, ancho + 2.0 * MARGEN_DEL_RECUADRO)
+			columna = maxf(columna, ancho)
 		if renglon.get_child_count() > 2:
 			segunda = maxf(segunda, (renglon.get_child(2) as Control).get_minimum_size().x)
 	for titulo: int in range(1, renglones[0].get_child_count()):

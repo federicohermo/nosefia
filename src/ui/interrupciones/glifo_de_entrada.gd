@@ -115,9 +115,18 @@ func _get_minimum_size() -> Vector2:
 	return _tamano_natural()
 
 
-func _draw() -> void:
+## El rectángulo que dibuja la forma. Una tecla, un clic, una píldora y una ranura libre son el
+## contenedor mismo: llenan el ancho que les dan y miden su alto natural, centrados en el alto.
+## Las demás formas son redondas y se centran con su tamaño natural.
+func marco_dibujado() -> Rect2:
 	var natural := _tamano_natural()
-	var marco := Rect2((size - natural) / 2.0, natural).abs()
+	if forma in [Forma.TECLA, Forma.PILDORA, Forma.MOUSE, Forma.RANURA_LIBRE]:
+		return Rect2(Vector2(0.0, (size.y - natural.y) / 2.0), Vector2(size.x, natural.y))
+	return Rect2((size - natural) / 2.0, natural).abs()
+
+
+func _draw() -> void:
+	var marco := marco_dibujado()
 	match forma:
 		Forma.TECLA:
 			_dibujar_tecla(marco)
@@ -126,7 +135,7 @@ func _draw() -> void:
 		Forma.MOUSE:
 			_dibujar_mouse(marco)
 		Forma.RANURA_LIBRE:
-			_dibujar_ranura_libre(Rect2(Vector2.ZERO, size))
+			_dibujar_ranura_libre(marco)
 		Forma.PALANCA:
 			_dibujar_palanca(marco)
 		Forma.CRUCETA:
@@ -302,11 +311,13 @@ func _dibujar_ranura_libre(marco: Rect2) -> void:
 		)
 
 
-## Una tecla con el mouse adentro. Su texto, si lo hay, va adentro de la tecla, a la derecha.
+## Una tecla con el mouse adentro. Su texto, si lo hay, va adentro de la tecla, a la derecha, y el
+## mouse con su texto quedan centrados en la tecla.
 func _dibujar_mouse(marco: Rect2) -> void:
 	draw_style_box(_caja(4), marco)
+	var sobra := (marco.size.x - _tamano_natural().x) / 2.0
 	var cuerpo := Rect2(
-		marco.position + Vector2(MARGEN_DEL_MOUSE / 2.0, 8.0),
+		marco.position + Vector2(sobra + MARGEN_DEL_MOUSE / 2.0, 8.0),
 		Vector2(ANCHO_DEL_ICONO_DEL_MOUSE, marco.size.y - 16.0)
 	)
 	var mitad := cuerpo.position.y + cuerpo.size.y * 0.45
