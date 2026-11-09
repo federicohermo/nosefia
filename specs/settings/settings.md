@@ -330,11 +330,11 @@ JOYSTICK Movimiento y Pausa, DEBEN llevar la marca **FIJO**, verse más tenues y
 Lo que no depende de ninguna acción —ENTER y las flechas en las interfaces, X y CÍRCULO en el
 joystick— NO DEBE tener renglón, y la pantalla NO DEBE llevar una ayuda de teclas.
 
-Cada celda reasignable, principal o secundaria, DEBE medir lo mismo que todas las de su pestaña: el
-ancho del glifo más ancho de esa pestaña y el alto de una tecla. Cada tecla dibujada, de una letra,
-una flecha o un clic, DEBE llenar su celda —el borde de la tecla es el contenedor, sin otro recuadro
-alrededor—, con su texto o su dibujo centrado. El recuadro del foco DEBE enmarcar esa celda. La lista DEBE repartirse en el alto
-entre la cabecera y la línea del pie, con el mismo margen arriba y abajo, y la grilla —nombres y
+Cada tecla dibujada, de una letra, una flecha o un clic, DEBE medir su ancho natural: una tecla
+angosta no se estira al ancho de la más ancha. En cada columna de una pestaña, PRINCIPAL y
+SECUNDARIA, todas las teclas y glifos DEBEN arrancar en el mismo borde izquierdo, y la cabecera de
+la columna también. El recuadro del foco DEBE enmarcar la tecla elegida con su ancho. La lista DEBE
+repartirse en el alto entre la cabecera y la línea del pie, con el mismo margen arriba y abajo, y la grilla —nombres y
 columnas— DEBE quedar centrada respecto de las pestañas. La pantalla DEBE decir qué entrada espera la
 celda elegida, y el aviso de una entrada que no se pudo asignar, en una línea debajo de la línea del
 pie, sin mover la grilla.
@@ -343,9 +343,10 @@ pie, sin mover la grilla.
 
 La pantalla de controles DEBE dibujar los botones del joystick como glifos y no como texto: ✕ ○ □ △
 con sus colores de PlayStation; L1, R1 y START como píldoras; los joysticks, como un círculo con L o
-R; la cruceta, con su forma. DEBE dibujar las teclas como teclas con borde, y cada clic del mouse
-como una tecla con un mouse con ese botón pintado, con su texto adentro de la tecla o sin texto. Una
-secundaria vacía DEBE dibujarse como un recuadro punteado tenue que llena el contenedor de su celda.
+R; la cruceta, con su forma. DEBE dibujar las teclas como teclas con borde, y cada clic del mouse y
+Visión también como teclas, con su nombre en letras —CLICK IZQ, CLICK DER, MOUSE— y sin dibujo del
+mouse. Una secundaria vacía DEBE dibujarse como un recuadro punteado tenue, del tamaño de una tecla
+de una letra, que arranca en el mismo borde izquierdo que las teclas de su columna.
 
 ### BR-CFG-033 — El nombre de cada acción dice las funciones de menú que hace
 
@@ -655,11 +656,12 @@ pestaña JOYSTICK ENTONCES además Movimiento y Pausa la llevan.
 
 DADO la pestaña JOYSTICK ENTONCES el botón de cada acción es un glifo y no un texto: X, CÍRCULO,
 CUADRADO y TRIÁNGULO con su color de PlayStation, L1 y R1 como píldoras, y START en Pausa. DADO la
-pestaña TECLADO Y MOUSE ENTONCES una tecla es una tecla con borde y cada clic, una tecla con un mouse adentro con su botón
-pintado, distinto del clic izquierdo al derecho; Visión también. DADO un botón de joystick sin glifo propio
-ENTONCES se lee por su nombre. DADO cada pestaña ENTONCES todas sus celdas reasignables miden lo mismo,
-al menos lo que el glifo más ancho, y cada tecla dibujada y cada ranura vacía llena su celda. DADO una
-celda esperando una entrada ENTONCES no cambia el tamaño ni la posición de ninguna celda.
+pestaña TECLADO Y MOUSE ENTONCES una tecla es una tecla con borde y cada clic, una tecla con su nombre en letras, distinto
+del clic izquierdo al derecho; Visión también. DADO un botón de joystick sin glifo propio
+ENTONCES se lee por su nombre. DADO cada pestaña ENTONCES cada tecla mide su ancho natural, una ranura
+vacía mide lo que una tecla de una letra, y en cada columna todas arrancan en el mismo borde
+izquierdo, como la cabecera de la columna. DADO una celda esperando una entrada ENTONCES no cambia el
+tamaño ni la posición de ninguna celda.
 
 ### AC-CFG-037 — Las secundarias de fábrica *(verifica BR-CFG-016)*
 

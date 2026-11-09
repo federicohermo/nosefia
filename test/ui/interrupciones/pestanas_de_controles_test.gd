@@ -236,16 +236,23 @@ func test_cada_boton_del_joystick_es_un_glifo_y_no_un_texto() -> void:  # AC-CFG
 	)
 
 
-func test_las_teclas_son_teclas_y_cada_clic_es_un_mouse_distinto() -> void:  # AC-CFG-036
+func test_las_teclas_son_teclas_y_cada_clic_es_una_tecla_con_su_nombre() -> void:  # AC-CFG-036
 	var pantalla := _pantalla()
 	assert_int(pantalla.glifo_de(AsignacionDeControles.EXAMINAR, PRINCIPAL).forma).is_equal(
 		GlifoDeEntrada.Forma.TECLA
 	)
 	var izquierdo := pantalla.glifo_de(AsignacionDeControles.AGARRAR, PRINCIPAL)
 	var derecho := pantalla.glifo_de(AsignacionDeControles.INTERACTUAR, PRINCIPAL)
-	assert_int(izquierdo.forma).is_equal(GlifoDeEntrada.Forma.MOUSE)
-	assert_int(derecho.forma).is_equal(GlifoDeEntrada.Forma.MOUSE)
-	assert_int(izquierdo.boton_del_mouse).is_not_equal(derecho.boton_del_mouse)
+	assert_int(izquierdo.forma).is_equal(GlifoDeEntrada.Forma.TECLA)
+	assert_int(derecho.forma).is_equal(GlifoDeEntrada.Forma.TECLA)
+	assert_str(izquierdo.texto).is_equal(
+		PantallaDeControles.nombre_de_la_entrada(
+			AsignacionDeControles.TipoDeEntrada.BOTON_DEL_MOUSE,
+			AsignacionDeControles.BOTON_IZQUIERDO
+		)
+	)
+	assert_str(derecho.texto).is_not_equal(izquierdo.texto)
+	assert_str(derecho.texto).is_not_empty()
 
 
 func test_un_boton_sin_glifo_propio_se_lee_por_su_nombre() -> void:  # AC-CFG-036
