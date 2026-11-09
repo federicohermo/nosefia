@@ -9,7 +9,6 @@ const GUIA_DE_MANCHAS := preload(
 	"res://assets/models/SEPT_JUEGOS_PROTOTIPO_Guía de jabones y manchas copy.png"
 )
 const LADO_DE_LAS_ONDAS := 64
-const HACIA_LA_LUZ := Vector3(-0.41, 0.88, 0.23)
 const OPACIDAD_DE_LA_MANCHA := 0.85
 
 ## El navegador llama a esta referencia: si se suelta, el pedido no llega.
@@ -34,20 +33,18 @@ static func casos() -> Dictionary[String, Dictionary]:
 	var ninguna: Color = ReglasDeLaLimpieza.COLOR_DEL_AGUA[ReglasDeLaLimpieza.Agua.NINGUNA]
 	var limpia: Color = ReglasDeLaLimpieza.COLOR_DEL_AGUA[ReglasDeLaLimpieza.Agua.LIMPIA]
 	var rosa: Color = ReglasDeLaLimpieza.COLOR_DEL_AGUA[ReglasDeLaLimpieza.Agua.ROSA]
-	# El balde trae sus normales en la malla y no asigna ninguna textura de ondas.
+	# El balde calcula su normal en el shader y no asigna ninguna textura de ondas.
 	var balde := {
 		"normal_de_la_malla": true,
+		"ondas_en_vertices": true,
 		"color_del_agua": rosa,
 		"densidad_de_solucion": 1.0,
 		"transparencia": 0.4,
-		"hacia_la_luz": HACIA_LA_LUZ,
-		"brillo": 0.65,
 	}
 	var mezcla := {"color_previo": limpia, "densidad_previa": 0.0, "progreso_de_mezcla": 0.5}
 	var sin_color := {"color_del_agua": ninguna, "densidad_de_solucion": 0.0}
 	var bano := {
 		"color_del_agua": Color(0.62, 0.66, 0.64, 0.3),
-		"hacia_la_luz": HACIA_LA_LUZ,
 		"ondas": ImageTexture.create_from_image(ondas()),
 		"texel": Vector2.ONE / LADO_DE_LAS_ONDAS,
 	}

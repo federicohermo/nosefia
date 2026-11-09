@@ -97,9 +97,7 @@ func configurar_agua(acuosa: bool) -> void:
 	pintura.set_shader_parameter("es_mancha", false)
 	pintura.set_shader_parameter("densidad_de_solucion", _densidad_visual(color_de_la_superficie()))
 	pintura.set_shader_parameter("normal_de_la_malla", true)
-	pintura.set_shader_parameter("transparencia", 0.65 if en_balde else 0.55)
-	pintura.set_shader_parameter("hacia_la_luz", Vector3(-0.41, 0.88, 0.23))
-	pintura.set_shader_parameter("brillo", 0.65)
+	pintura.set_shader_parameter("transparencia", 0.35 if en_balde else 0.55)
 	material_override = pintura
 	_cancelar_mezcla()
 	cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
