@@ -33,9 +33,10 @@ static func casos() -> Dictionary[String, Dictionary]:
 	var ninguna: Color = ReglasDeLaLimpieza.COLOR_DEL_AGUA[ReglasDeLaLimpieza.Agua.NINGUNA]
 	var limpia: Color = ReglasDeLaLimpieza.COLOR_DEL_AGUA[ReglasDeLaLimpieza.Agua.LIMPIA]
 	var rosa: Color = ReglasDeLaLimpieza.COLOR_DEL_AGUA[ReglasDeLaLimpieza.Agua.ROSA]
-	# El balde trae sus normales en la malla y no asigna ninguna textura de ondas.
+	# El balde calcula su normal en el shader y no asigna ninguna textura de ondas.
 	var balde := {
 		"normal_de_la_malla": true,
+		"ondas_en_vertices": true,
 		"color_del_agua": rosa,
 		"densidad_de_solucion": 1.0,
 		"transparencia": 0.4,
