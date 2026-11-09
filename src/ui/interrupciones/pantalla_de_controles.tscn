@@ -52,18 +52,18 @@ volteada = true
 [node name="Titulo" type="Label" parent="Fondo/Panel"]
 layout_mode = 0
 offset_left = 155.0
-offset_top = 56.0
+offset_top = 61.0
 offset_right = 700.0
-offset_bottom = 110.0
+offset_bottom = 103.0
 theme_type_variation = &"TextoDelMenu"
 vertical_alignment = 1
 
 [node name="Desplazador" type="ScrollContainer" parent="Fondo/Panel"]
 layout_mode = 0
 offset_left = 140.0
-offset_top = 124.0
+offset_top = 127.8
 offset_right = 1780.0
-offset_bottom = 920.0
+offset_bottom = 875.8
 follow_focus = true
 horizontal_scroll_mode = 0
 

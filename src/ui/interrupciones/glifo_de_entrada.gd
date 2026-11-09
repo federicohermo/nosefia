@@ -12,9 +12,10 @@ enum Forma {
 	TECLA, MOUSE, CRUZ, CIRCULO, CUADRADO, TRIANGULO, PILDORA, PALANCA, CRUCETA, RANURA_LIBRE
 }
 
-## El tamaño de todo el texto de la pantalla de controles, el de las teclas también.
-const TAMANO_DE_LA_LETRA := 48
-const ALTO := 50.0
+const TEMA := preload("res://assets/ui/manada/tema.tres")
+## El tipo del tema con que Configuraciones escribe sus nombres: de ahí sale el tamaño de la letra.
+const TIPO_DEL_TEXTO := &"TextoDelMenu"
+const ALTO := 46.0
 const ANCHO_DEL_ICONO_DEL_MOUSE := 18.0
 const MARGEN_DEL_TEXTO := 22.0
 const MARGEN_DEL_MOUSE := 36.0
@@ -154,8 +155,14 @@ func _ancho_del_texto() -> float:
 	)
 
 
+## El tamaño de todo el texto de la pantalla de controles, el de las teclas también: el del texto
+## de Configuraciones.
+static func tamano_de_la_letra() -> int:
+	return TEMA.get_font_size(&"font_size", TIPO_DEL_TEXTO)
+
+
 func _tamano_de_la_letra() -> int:
-	return TAMANO_DE_LA_LETRA
+	return tamano_de_la_letra()
 
 
 func _caja(radio: int) -> StyleBoxFlat:

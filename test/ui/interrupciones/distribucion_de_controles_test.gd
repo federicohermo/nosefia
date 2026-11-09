@@ -3,6 +3,7 @@
 extends GdUnitTestSuite
 
 const ESCENA := "res://src/ui/interrupciones/pantalla_de_controles.tscn"
+const CONFIGURACIONES := "res://src/ui/interrupciones/pantalla_de_configuraciones.tscn"
 const PRINCIPAL := AsignacionDeControles.RANURA_PRINCIPAL
 const SECUNDARIA := AsignacionDeControles.RANURA_SECUNDARIA
 const EN_EL_JOYSTICK := AsignacionDeControles.RANURA_DEL_JOYSTICK
@@ -64,15 +65,37 @@ func test_todos_los_renglones_de_una_pestana_miden_lo_mismo() -> void:  # AC-CFG
 			assert_float(fila.size.y).is_equal_approx(filas[0].size.y, TOLERANCIA)
 
 
-func test_la_ayuda_queda_arriba_de_la_linea_del_pie() -> void:
+## Lo que se ve, no la caja: la línea larga de la cabecera y del pie, el recuadro de una tecla.
+func test_los_margenes_de_arriba_abajo_son_parejos() -> void:  # AC-CFG-031
 	var pantalla := await _pantalla()
-	var pie: Control = pantalla.marco().get_node("Pie")
-	var ayuda: Control = pantalla.get("_ayuda")
-	var linea := (
-		pie.global_position.y
-		+ pie.size.y * 0.4 * pantalla.marco().get_global_transform().get_scale().y
+	var marco := pantalla.marco()
+	var escala := marco.get_global_transform().get_scale().y
+	var cabecera: Control = marco.get_node("Cabecera")
+	var pie: Control = marco.get_node("Pie")
+	var linea_de_arriba := (
+		cabecera.global_position.y
+		+ cabecera.size.y * escala * CabeceraConSolapa.Y_DE_LA_LINEA / CabeceraConSolapa.ALTO
+		+ CabeceraConSolapa.GROSOR / 2.0 * escala
 	)
-	assert_bool(ayuda.get_global_rect().end.y <= linea).is_true()
+	var linea_del_pie := (
+		pie.global_position.y
+		+ pie.size.y * escala * (1.0 - CabeceraConSolapa.Y_DE_LA_LINEA / CabeceraConSolapa.ALTO)
+		- CabeceraConSolapa.GROSOR / 2.0 * escala
+	)
+	var pestanas: Control = (pantalla.get("_filas") as Control).get_child(0)
+	var ultima := pantalla.glifo_de(AsignacionDeControles.PAUSA, PRINCIPAL)
+	var tecla_abajo := (
+		ultima.get_global_rect().get_center().y + ultima.get_minimum_size().y / 2.0 * escala
+	)
+	var ayuda: Control = pantalla.get("_ayuda")
+	var margenes: Array[float] = [
+		pestanas.get_global_rect().position.y - linea_de_arriba,
+		ayuda.get_global_rect().position.y - tecla_abajo,
+		linea_del_pie - ayuda.get_global_rect().end.y,
+	]
+	for margen: float in margenes:
+		assert_float(margen / escala).is_greater(0.0)
+		assert_float(margen).is_equal_approx(margenes[0], TOLERANCIA * escala)
 
 
 func test_cada_pestana_alinea_sus_glifos_con_nombres_largos() -> void:  # AC-CFG-031, AC-CFG-042
@@ -99,7 +122,24 @@ func test_la_marca_fijo_entra_en_su_bloque() -> void:  # AC-CFG-035
 			assert_bool(marca.get_global_rect().end.x <= area.end.x + TOLERANCIA).is_true()
 
 
-func test_nombres_cabeceras_teclas_y_ayuda_comparten_un_tamano_de_letra() -> void:  # AC-CFG-031
+## Configuraciones escribe con el tipo `TextoDelMenu` del tema: ese es el tamaño de la vara.
+func _tamano_de_configuraciones() -> int:
+	var configuraciones: Node = auto_free(load(CONFIGURACIONES).instantiate())
+	add_child(configuraciones)
+	await get_tree().process_frame
+	var tamanos: Array[int] = []
+	for nodo: Node in configuraciones.get_node("Fondo/Panel/Filas").find_children(
+		"*", "Label", true, false
+	):
+		tamanos.append((nodo as Label).get_theme_font_size("font_size"))
+	assert_int(tamanos.size()).is_greater(5)
+	for tamano: int in tamanos:
+		assert_int(tamano).is_equal(tamanos[0])
+	return tamanos[0]
+
+
+func test_todo_el_texto_tiene_el_tamano_de_letra_de_configuraciones() -> void:  # AC-CFG-031
+	var vara := await _tamano_de_configuraciones()
 	var pantalla := await _pantalla()
 	pantalla.elegir(AsignacionDeControles.ADELANTE, PRINCIPAL)
 	var tamanos: Array[int] = []
@@ -108,15 +148,28 @@ func test_nombres_cabeceras_teclas_y_ayuda_comparten_un_tamano_de_letra() -> voi
 		for etiqueta: Node in pantalla.find_children("*", "Label", true, false):
 			tamanos.append((etiqueta as Label).get_theme_font_size("font_size"))
 		for boton: Node in pantalla.find_children("*", "Button", true, false):
-			var texto := (boton as Button).text
-			if not texto.is_empty():
-				tamanos.append((boton as Button).get_theme_font_size("font_size"))
+			tamanos.append((boton as Button).get_theme_font_size("font_size"))
 		for glifo: Node in pantalla.find_children("*", "GlifoDeEntrada", true, false):
 			if not (glifo as GlifoDeEntrada).texto.is_empty():
 				tamanos.append(glifo.call("_tamano_de_la_letra"))
 	assert_int(tamanos.size()).is_greater(20)
 	for tamano: int in tamanos:
-		assert_int(tamano).is_equal(tamanos[0])
+		assert_int(tamano).is_equal(vara)
+
+
+func test_el_titulo_y_su_marco_son_los_de_configuraciones() -> void:  # AC-CFG-031
+	var configuraciones: Node = auto_free(load(CONFIGURACIONES).instantiate())
+	add_child(configuraciones)
+	var pantalla := await _pantalla()
+	await get_tree().process_frame
+	var de_configuraciones: Control = configuraciones.find_child("Panel", true, false)
+	var de_controles := pantalla.marco()
+	for nombre: String in ["Titulo", "Cabecera", "Pie", "Volver"]:
+		var uno := de_configuraciones.get_node(nombre) as Control
+		var otro := de_controles.get_node(nombre) as Control
+		assert_vector(otro.position).is_equal(uno.position)
+		assert_vector(otro.size).is_equal(uno.size)
+		assert_bool(otro.has_theme_font_size_override("font_size")).is_false()
 
 
 func test_cada_pestana_reparte_el_alto_y_centra_la_lista_en_el_ancho() -> void:  # AC-CFG-031

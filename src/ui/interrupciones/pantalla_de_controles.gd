@@ -5,9 +5,9 @@
 ## cada acción de botón tiene la celda de su botón, que se reasigna igual. Lo demás se muestra
 ## con la marca FIJO y no se elige. Cada entrada se dibuja con su glifo.
 ##
-## Todo el texto va en un solo tamaño, `GlifoDeEntrada.TAMANO_DE_LA_LETRA`: nombres, cabeceras,
-## teclas y ayuda. La
-## lista reparte el alto del área entre sus renglones y el ancho entre el nombre y las celdas.
+## Todo el texto va en el tamaño de Configuraciones, `GlifoDeEntrada.tamano_de_la_letra()`:
+## nombres, cabeceras, teclas y ayuda. La lista reparte el alto del área entre sus renglones y se
+## centra en el ancho.
 ##
 ## Sin un joystick conectado no se ve ningún botón de joystick: la pestaña JOYSTICK queda apagada y,
 ## elegida, avisa que hay que conectar uno. Conectarlo o desconectarlo con la pantalla abierta la
@@ -48,16 +48,19 @@ const TEXTO_DE_ENTER := "ENTER"
 const TEXTO_DE_SUPR := "SUPR"
 const TEXTO_DE_START := "START"
 const TEXTO_DEL_MOUSE := "MOUSE"
-const ANCHO_DEL_NOMBRE := 640.0
+const ANCHO_DEL_NOMBRE := 480.0
 const ANCHO_DE_LA_COLUMNA := 340.0
 const MARGEN_DEL_RECUADRO := 12.0
 const SEPARACION_DE_LAS_COLUMNAS := 64
 const ANCHO_DE_LA_PESTANA := 520.0
 const ALTO_DE_LA_PESTANA := 60.0
-const ALTO_DE_LA_FILA := 56.0
+const ALTO_DE_LA_FILA := 52.0
 const SEPARACION_DE_LA_AYUDA := 16
 const SEPARACION_ENTRE_AYUDAS := 48
 const SEPARACION_DE_LAS_FILAS := 4
+## Entre las pestañas y la cabecera de las columnas. La tinta del texto no llena su renglón: con
+## esta separación el margen se ve igual a los otros tres.
+const SEPARACION_DE_LA_CABECERA := 20
 const COLOR_DE_LA_CELDA_ELEGIDA := Color("d8b468")
 const OPACIDAD_DE_LA_MARCA := 0.7
 const OPACIDAD_DE_LO_FIJO := 0.55
@@ -108,11 +111,9 @@ func _ready() -> void:
 	visible = false
 	_titulo.text = TEXTO_DEL_TITULO
 	_volver.text = TEXTO_DE_VOLVER
-	_titulo.add_theme_font_size_override("font_size", GlifoDeEntrada.TAMANO_DE_LA_LETRA)
-	_volver.add_theme_font_size_override("font_size", GlifoDeEntrada.TAMANO_DE_LA_LETRA)
 	_volver.pressed.connect(cerrar)
 	_crear_los_estilos_de_la_celda()
-	_filas.add_theme_constant_override("separation", SEPARACION_DE_LAS_FILAS)
+	_filas.add_theme_constant_override("separation", SEPARACION_DE_LA_CABECERA)
 	_filas.add_child(_barra_de_pestanas())
 	_pagina_del_teclado = _bloque_del_teclado()
 	_pagina_del_joystick = _bloque_del_joystick()
@@ -489,19 +490,18 @@ func _bloque_del_joystick() -> VBoxContainer:
 
 func _crear_el_aviso_y_la_ayuda() -> void:
 	_aviso = _etiqueta("")
-	_aviso.position = Vector2(140.0, 928.0)
+	_aviso.position = Vector2(140.0, 905.6)
 	_marco.add_child(_aviso)
 	_ayuda = HBoxContainer.new()
 	_ayuda.add_theme_constant_override("separation", SEPARACION_ENTRE_AYUDAS)
-	_ayuda.position = Vector2(140.0, 928.0)
+	_ayuda.position = Vector2(140.0, 905.6)
 	_marco.add_child(_ayuda)
 
 
 ## La ayuda de abajo: con qué se cambia y con qué se vuelve, con lo que tenga asignado cada uno.
 func _pintar_la_ayuda() -> void:
 	for hijo: Node in _ayuda.get_children():
-		_ayuda.remove_child(hijo)
-		hijo.queue_free()
+		hijo.free()
 	_glifos_de_la_ayuda = []
 	if _con_el_joystick:
 		if not _joystick_conectado:
@@ -585,7 +585,6 @@ func _etiqueta(texto: String) -> Label:
 	var etiqueta := Label.new()
 	etiqueta.text = texto
 	etiqueta.theme_type_variation = &"TextoDelMenu"
-	etiqueta.add_theme_font_size_override("font_size", GlifoDeEntrada.TAMANO_DE_LA_LETRA)
 	return etiqueta
 
 
@@ -602,7 +601,6 @@ func _celda(accion: StringName, ranura: int) -> Button:
 	var boton := Button.new()
 	boton.theme_type_variation = &"BotonDelMenu"
 	boton.custom_minimum_size = Vector2(0.0, ALTO_DE_LA_FILA)
-	boton.add_theme_font_size_override("font_size", GlifoDeEntrada.TAMANO_DE_LA_LETRA)
 	boton.add_theme_stylebox_override("normal", _celda_sin_elegir)
 	boton.add_theme_stylebox_override("disabled", _celda_sin_elegir)
 	for estado: String in ["hover", "pressed", "hover_pressed", "focus"]:
