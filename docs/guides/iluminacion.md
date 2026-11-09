@@ -39,11 +39,33 @@ Cómo se mide el costo de las luces, en [rendimiento](./rendimiento.md).
   entre las cuatro sondas del tetraedro que lo contiene. El horneador reparte las sondas por los
   bordes de las mallas. Muchas caen adentro de una pared o de un mueble, abajo del piso o arriba
   del techo. Un tetraedro cruza la pared y mezcla las dos puntas.
+- **La luz de afuera también entra en el horneado con luz.** Los vidrios que dan a la calle emiten,
+  igual que en el horneado del corte (`CorteDeLuz.emitir_por_los_vidrios`). Antes de guardar la
+  escena, el horneador los devuelve a su estado. El cielo del horneado queda como estaba.
 - **El horneador reescribe cada sonda que no está adentro de un ambiente** con el promedio de sus
   vecinas de adentro (`addons/hornear/sondas.gd`). Una sonda está adentro si hacia los seis lados
   ve primero el frente de una superficie horneada, o un vidrio o una hoja que abre. Una sonda de
   adentro no se toca aunque esté negra: es la luz de un ambiente oscuro. Un horneado hecho a mano
   desde el editor no pasa por ese paso.
+
+## Los reflejos de los metales
+
+El entorno no refleja el cielo (`reflected_light_source` apagado). Un metal sólo recibe reflejo de
+las `ReflectionProbe` del local. Sin reflejo se ve negro: su luz difusa es el color base por uno
+menos el metal. La sonda del salón (`ReflejosDelSalon`) lleva intensidad 1,0. Con 0,65, las bases
+de las mesas salían grises mate. Con 3,0, el plástico de las botellas se bordeaba de rosa: reflejaba
+las cajas rojas. La sonda se captura una vez. Su
+intensidad es un factor y no cuesta nada por cuadro.
+
+Un metal con huecos refleja el local entero: la grilla de las cabeceras (metal 0,5) se teñía del
+rojo de los productos. Es un dieléctrico rugoso. La base de las mesas es un metal de 0,9 con el
+cromo de las barandas.
+
+La luz de afuera es verde azulada, y un rojo bajo ella sale casi negro: las franjas rojas de los
+estantes también emiten (`lib/gondolas.py`). **La paleta y su imagen de emisión miden 5×1 y se
+importan sin comprimir.** Comprimidas a VRAM, la build web y la de escritorio perdían el rojo y
+las ménsulas salían negras. Una corrida headless importa sin comprimir y no lo muestra: se mide
+con `--main-pack` sobre el `.pck` exportado.
 
 ## Cómo se hornea
 
@@ -87,7 +109,8 @@ las sondas de los productos.
   luz de afuera. Las demás luces, los materiales emisivos de las lámparas, la niebla y los
   reflejos se apagan en tiempo real: no salen del horneado.
 - **La luz de afuera la emiten los vidrios que dan a la calle.** En el horneado oscuro, el
-  horneador les pone un material emisivo y le saca el cielo al `LightmapGI` (`corte_de_luz.gd`).
+  horneador les pone un material emisivo, el mismo del horneado con luz, y le saca el cielo al
+  `LightmapGI` (`corte_de_luz.gd`).
   Las sondas guardan esa luz con su dirección: un producto que mira al ventanal recibe más que uno
   que mira adentro del local. El juego no lo ve: la escena no se guarda.
 - **El cielo del horneado no sirve.** Alumbra también abajo del piso y arriba del techo. Desde ahí
