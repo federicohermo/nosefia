@@ -218,12 +218,18 @@ def _huecos(objeto, techo: float) -> list[float]:
     Cada cara tiene los estantes a su altura: los de la cara de Marlboro no son los del resto, y
     tomar los de otra deja las tiras a un par de centímetros de un estante. Los estantes son las
     chapas que miran hacia arriba, sin el tope.
+
+    Un hueco se ve entre la chapa de abajo, donde toca el panel, y lo más bajo del estante de
+    arriba. Lo más bajo no es la chapa sino sus ménsulas, que cuelgan 8 cm: un triángulo contra el
+    panel por cada lado. El medio de la chapa de abajo a la chapa de arriba deja la tira pegada a
+    la ménsula, y se ve fuera de centro.
     """
+    mundo = objeto.matrix_world
     alturas = sorted(
-        round(max((objeto.matrix_world @ objeto.data.vertices[v].co).z for v in c.vertices), 3)
+        round(max((mundo @ objeto.data.vertices[v].co).z for v in c.vertices), 3)
         for c in objeto.data.polygons
         if objeto.data.materials[c.material_index].name == "GONDOLA | Chapa pintada blanca"
-        and (objeto.matrix_world.to_3x3() @ c.normal).z > 0.9
+        and (mundo.to_3x3() @ c.normal).z > 0.9
     )
     estantes: list[float] = []
     for altura in alturas:
@@ -235,11 +241,22 @@ def _huecos(objeto, techo: float) -> list[float]:
             estantes.append(altura)
     if len(estantes) != 4:
         raise SystemExit(f"{objeto.name}: se esperaban 4 estantes, hay {len(estantes)}")
-    return [(a + b) / 2 for a, b in zip(estantes, estantes[1:])] + [(estantes[-1] + techo) / 2]
+    mensulas = [
+        [(mundo @ objeto.data.vertices[v].co).z for v in c.vertices]
+        for c in objeto.data.polygons
+        if len(c.vertices) == 3 and objeto.data.materials[c.material_index].name == "GONDOLA | Paleta"
+    ]
+    lo_mas_bajo = []
+    for estante in estantes[1:]:
+        propias = [min(z) for z in mensulas if estante - 0.05 <= max(z) <= estante]
+        if not propias:
+            raise SystemExit(f"{objeto.name}: el estante de {estante:.2f} no tiene ménsulas")
+        lo_mas_bajo.append(min(propias))
+    return [(a + b) / 2 for a, b in zip(estantes, lo_mas_bajo)] + [(estantes[-1] + techo) / 2]
 
 
 def juntas() -> list[str]:
-    """Las tiras del fondo del exhibidor van a medio camino entre un estante y el siguiente.
+    """Las tiras del fondo del exhibidor van a medio camino del hueco que se ve.
 
     Son seis a 25 cm una de otra y los estantes están a 40: no pueden ir todas en medio. Quedan las
     de cada hueco, y la de arriba va a medio camino entre el último estante y el tope.
@@ -285,11 +302,12 @@ def juntas() -> list[str]:
 
 
 def traseras() -> list[str]:
-    """Todo lo que mira hacia los estantes del exhibidor pasa a un azul liso.
+    """El dorso del exhibidor pasa a un azul liso. Lo que mira hacia los estantes conserva su arte.
 
-    Son los paneles interiores de los laterales, a 1,2 cm de su cara, y el panel curvo del fondo:
-    los dos llevaban la textura del fondo, con sus galletitas. Un duplicado liso detrás de ellos no
-    se ve: queda tapado. Lo de afuera conserva su arte.
+    El panel curvo del fondo es una losa de 3 cm: su cara de adelante mira a los estantes y la de
+    atrás es el dorso, que se ve por encima de la góndola. Los paneles interiores de los laterales
+    miran a los estantes y tampoco se tocan. Pasan al liso el dorso, el canto de arriba y los
+    cantos de lado: todo lo que no mira hacia los estantes.
     """
     liso = bpy.data.materials.new(gondolas.AZUL_LISO)
     liso.use_nodes = True
@@ -303,20 +321,21 @@ def traseras() -> list[str]:
     informe = []
     for objeto in (bpy.data.objects[n] for n in gondolas.CARAS_DEL_EXHIBIDOR):
         malla = objeto.data
-        paneles = [
+        dorso = [
             c for c in malla.polygons
             if malla.materials[c.material_index]
-            and malla.materials[c.material_index].name == gondolas.PANEL_INTERIOR
-            and (len(c.vertices) > 8 or (objeto.matrix_world.to_3x3() @ c.normal).y < -0.5)
+            and malla.materials[c.material_index].name == gondolas.PANEL_CON_ARTE
+            and len(c.vertices) <= 8
+            and (objeto.matrix_world.to_3x3() @ c.normal).y > -0.45
         ]
-        if not paneles:
+        if not dorso:
             continue
         malla.materials.append(liso)
-        for cara in paneles:
+        for cara in dorso:
             cara.material_index = len(malla.materials) - 1
-        informe.append(f"gondola: {objeto.name}, {len(paneles)} paneles interiores de azul liso")
+        informe.append(f"gondola: {objeto.name}, {len(dorso)} caras del dorso de azul liso")
     if not informe:
-        raise SystemExit("no se encontró ningún panel interior de exhibidor")
+        raise SystemExit("no se encontró el dorso de ningún exhibidor")
     return informe
 
 

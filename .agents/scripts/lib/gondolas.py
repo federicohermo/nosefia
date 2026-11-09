@@ -121,7 +121,8 @@ EMISION_ROJO = 0.6
 
 #: Las juntas entre paneles del fondo del exhibidor: unas tiras de 1 cm con el píxel 3 de la paleta.
 #: Eran más claras que el panel y estaban pegadas a los estantes. Ahora son más oscuras que el
-#: panel y van a medio camino entre un estante y el siguiente.
+#: panel y van a medio camino del hueco que se ve: entre la chapa de abajo y lo más bajo del estante
+#: de arriba, que son sus ménsulas.
 PIXEL_DE_LAS_JUNTAS = 3
 TONO_DE_LAS_JUNTAS = (0.05, 0.05, 0.055)
 #: Las cuatro caras del exhibidor. El modificador `Muebles` de `gondolanueva2-col` las une y no lee
@@ -131,11 +132,12 @@ CARAS_DEL_EXHIBIDOR = tuple(
 )
 
 #: Los laterales del exhibidor son una sola cara con dos lados: por dentro mostraban el arte, y el
-#: cartel se leía al revés. La cara se cierra de un solo lado. Lo que mira hacia los estantes —el
-#: panel de cada lateral, a 1,2 cm de su cara, y el panel curvo del fondo— tiene la textura del
-#: fondo, con sus galletitas: pasa al azul liso del costado.
+#: cartel se leía al revés. La cara se cierra de un solo lado. El panel del fondo y el panel de cada
+#: lateral, a 1,2 cm de su cara, tienen la textura del fondo, con sus galletitas, y la conservan por
+#: el lado que mira a los estantes. El dorso del panel del fondo, que se ve por encima de la
+#: góndola, pasa al azul liso del costado.
 LATERALES = ("EXHIBIDOR | Lateral", "EXHIBIDOR | Lateral Pepito")
-PANEL_INTERIOR = "EXHIBIDOR | Azul"
+PANEL_CON_ARTE = "EXHIBIDOR | Azul"
 AZUL_LISO = "EXHIBIDOR | Azul liso"
 COLOR_DEL_AZUL_LISO = (31 / 255, 55 / 255, 103 / 255)
 
@@ -148,8 +150,8 @@ SIN_COMPRIMIR = (PALETA, EMISION)
 #: sonda del salón en cada hueco.
 DIELECTRICOS = {"GONDOLA | Grilla de alambre": 0.8}
 
-#: La grilla de la cabecera de alambre. La luz horneada del nivel de abajo llega casi apagada, porque
-#: cada estante le tapa la luz al de abajo: la grilla de abajo salía más oscura que la de arriba.
+#: La grilla de la cabecera de alambre. La luz horneada del nivel de abajo llega casi apagada,
+#: porque cada estante le tapa la luz al de abajo: la de abajo salía más oscura que la de arriba.
 #: La grilla emite su propia textura, así los agujeros siguen negros. Medido en la build web, sobre
 #: el alambre: con 0,95 más el gris que tenían el marco y los platos, todo el alambre salía claro;
 #: con 0,4 y el marco sin emisión, el de arriba queda cerca de su tono sin emisión y el de abajo no
