@@ -330,10 +330,11 @@ JOYSTICK Movimiento y Pausa, DEBEN llevar la marca **FIJO**, verse más tenues y
 Lo que no depende de ninguna acción —ENTER y las flechas en las interfaces, X y CÍRCULO en el
 joystick— NO DEBE tener renglón, y la pantalla NO DEBE llevar una ayuda de teclas.
 
-Cada tecla dibujada, de una letra, una flecha o un clic, DEBE medir su ancho natural: una tecla
-angosta no se estira al ancho de la más ancha. En cada columna de una pestaña, PRINCIPAL y
-SECUNDARIA, todas las teclas y glifos DEBEN arrancar en el mismo borde izquierdo, y la cabecera de
-la columna también. El recuadro del foco DEBE enmarcar la tecla elegida con su ancho. La lista DEBE
+Cada tecla dibujada, de una letra, una flecha o un clic, DEBE medir lo mismo: el ancho de la tecla
+más ancha, que es un clic con su nombre en letras. Una tecla angosta se estira a ese ancho, con su
+nombre centrado. En cada columna de una pestaña, PRINCIPAL y SECUNDARIA, todas las teclas y glifos
+DEBEN arrancar en el mismo borde izquierdo, y la cabecera de la columna también. El recuadro del
+foco DEBE enmarcar la tecla elegida con ese mismo ancho. La lista DEBE
 repartirse en el alto entre la cabecera y la línea del pie, con el mismo margen arriba y abajo, y la grilla —nombres y
 columnas— DEBE arrancar, igual que las pestañas, en el margen interno izquierdo del marco, alineada
 con el título, y no centrada. La pantalla DEBE decir qué entrada espera la
@@ -346,8 +347,7 @@ La pantalla de controles DEBE dibujar los botones del joystick como glifos y no 
 con sus colores de PlayStation; L1, R1 y START como píldoras; los joysticks, como un círculo con L o
 R; la cruceta, con su forma. DEBE dibujar las teclas como teclas con borde, y cada clic del mouse y
 Visión también como teclas, con su nombre en letras —CLICK IZQ, CLICK DER, MOUSE— y sin dibujo del
-mouse. Una secundaria vacía DEBE dibujarse como un recuadro punteado tenue, del tamaño de una tecla
-de una letra, que arranca en el mismo borde izquierdo que las teclas de su columna.
+mouse. Una secundaria vacía DEBE dibujarse como un recuadro punteado tenue, del ancho de las teclas, que arranca en el mismo borde izquierdo que las teclas de su columna.
 
 ### BR-CFG-033 — El nombre de cada acción dice las funciones de menú que hace
 
@@ -659,8 +659,8 @@ DADO la pestaña JOYSTICK ENTONCES el botón de cada acción es un glifo y no un
 CUADRADO y TRIÁNGULO con su color de PlayStation, L1 y R1 como píldoras, y START en Pausa. DADO la
 pestaña TECLADO Y MOUSE ENTONCES una tecla es una tecla con borde y cada clic, una tecla con su nombre en letras, distinto
 del clic izquierdo al derecho; Visión también. DADO un botón de joystick sin glifo propio
-ENTONCES se lee por su nombre. DADO cada pestaña ENTONCES cada tecla mide su ancho natural, una ranura
-vacía mide lo que una tecla de una letra, y en cada columna todas arrancan en el mismo borde
+ENTONCES se lee por su nombre. DADO cada pestaña ENTONCES cada tecla y cada ranura vacía miden lo mismo, el ancho de
+la tecla más ancha, y en cada columna todas arrancan en el mismo borde
 izquierdo, como la cabecera de la columna. DADO una celda esperando una entrada ENTONCES no cambia el
 tamaño ni la posición de ninguna celda.
 

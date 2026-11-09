@@ -1,8 +1,9 @@
 ## El dibujo de una entrada de la pantalla de controles. No es un texto: una tecla es una tecla con
-## borde, un clic también y lo dice con letras, una ranura libre es un recuadro punteado del tamaño
-## de una tecla de una letra, y un botón del joystick es su glifo de PlayStation. Cada uno mide su
-## ancho natural y se dibuja pegado a la izquierda de donde está. Se dibuja con formas y no con
-## imágenes, así que escala con el lienzo.
+## borde, un clic también y lo dice con letras, una ranura libre es un recuadro punteado, y un botón
+## del joystick es su glifo de PlayStation. Cada uno mide su
+## ancho natural, y quien lo pone en una columna le da el ancho de la tecla más ancha: la tecla, la
+## píldora y la ranura llenan ese ancho. Se dibuja con formas y no con imágenes, así que escala con
+## el lienzo.
 ##
 ## Qué forma lleva cada entrada lo contesta `forma_de`. El nombre que se lee en la forma lo trae
 ## quien lo crea: este script no sabe nombrar una entrada.
@@ -16,6 +17,7 @@ const TEMA := preload("res://assets/ui/manada/tema.tres")
 const TIPO_DEL_TEXTO := &"TextoDelMenu"
 const ALTO := 46.0
 const MARGEN_DEL_TEXTO := 22.0
+const FORMAS_QUE_LLENAN: Array[Forma] = [Forma.TECLA, Forma.PILDORA, Forma.RANURA_LIBRE]
 const COLOR_DEL_BORDE := Color("f4e6b5")
 const COLOR_DEL_FONDO := Color(0.04, 0.1, 0.12, 0.9)
 const COLOR_DE_LA_RANURA_LIBRE := Color("f4e6b599")
@@ -97,10 +99,13 @@ func _get_minimum_size() -> Vector2:
 	return _tamano_natural()
 
 
-## El rectángulo que dibuja la forma: su tamaño natural, a la izquierda y centrado en el alto.
+## El rectángulo que dibuja la forma, centrado en el alto y pegado a la izquierda. Una tecla, una
+## píldora y una ranura libre llenan el ancho que les dan: es el de la tecla más ancha. Las
+## demás formas son redondas y miden su tamaño natural.
 func marco_dibujado() -> Rect2:
 	var natural := _tamano_natural()
-	return Rect2(Vector2(0.0, (size.y - natural.y) / 2.0), natural)
+	var ancho := maxf(size.x, natural.x) if forma in FORMAS_QUE_LLENAN else natural.x
+	return Rect2(Vector2(0.0, (size.y - natural.y) / 2.0), Vector2(ancho, natural.y))
 
 
 func _draw() -> void:

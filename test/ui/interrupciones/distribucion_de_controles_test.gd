@@ -1,5 +1,5 @@
 ## Cómo se acomoda la pantalla de controles: cada pestaña entra entera sin desplazar, los renglones
-## tienen la misma altura, las columnas se alinean a la izquierda, cada tecla mide su ancho natural,
+## tienen la misma altura, las columnas se alinean a la izquierda, todas las teclas miden lo mismo,
 ## y la celda elegida se distingue de las demás.
 extends GdUnitTestSuite
 
@@ -216,19 +216,47 @@ func _celdas(del_joystick: bool) -> Array[Array]:
 	return celdas
 
 
-func test_cada_tecla_mide_su_ancho_natural_y_su_foco_la_enmarca() -> void:  # AC-CFG-036
+func test_todas_las_teclas_miden_lo_mismo_y_su_foco_las_enmarca() -> void:  # AC-CFG-036
 	var pantalla := await _pantalla()
 	for del_joystick: bool in [false, true]:
 		await _mostrar(pantalla, del_joystick)
+		var mas_ancho := 0.0
+		for par: Array in _celdas(del_joystick):
+			var glifo := pantalla.glifo_de(par[0], par[1])
+			mas_ancho = maxf(mas_ancho, glifo.get_minimum_size().x)
 		for par: Array in _celdas(del_joystick):
 			var celda := pantalla.boton_de(par[0], par[1])
 			var glifo := pantalla.glifo_de(par[0], par[1])
-			var natural := glifo.get_minimum_size()
-			assert_float(glifo.marco_dibujado().size.x).is_equal_approx(natural.x, TOLERANCIA)
-			assert_float(celda.size.x).is_equal_approx(natural.x, TOLERANCIA)
+			assert_float(celda.size.x).is_greater_equal(mas_ancho - TOLERANCIA)
+			assert_float(celda.size.x).is_equal_approx(
+				pantalla.boton_de(_celdas(del_joystick)[0][0], _celdas(del_joystick)[0][1]).size.x,
+				TOLERANCIA
+			)
+			if glifo.forma in GlifoDeEntrada.FORMAS_QUE_LLENAN:
+				assert_float(glifo.marco_dibujado().size.x).is_equal_approx(
+					celda.size.x, TOLERANCIA
+				)
 			assert_float(celda.get_global_rect().position.x).is_equal_approx(
 				glifo.get_global_rect().position.x, TOLERANCIA
 			)
+
+
+func test_la_tecla_mas_ancha_es_un_clic_y_la_marca_de_vision_mide_lo_mismo() -> void:  # AC-CFG-036
+	var pantalla := await _pantalla()
+	var clic := GlifoDeEntrada.de_una_tecla(
+		PantallaDeControles.nombre_de_la_entrada(
+			AsignacionDeControles.TipoDeEntrada.BOTON_DEL_MOUSE,
+			AsignacionDeControles.BOTON_IZQUIERDO
+		)
+	)
+	auto_free(clic)
+	var ancho := pantalla.boton_de(AsignacionDeControles.ADELANTE, PRINCIPAL).size.x
+	assert_float(ancho).is_greater_equal(clic.get_minimum_size().x - TOLERANCIA)
+	for fila: HBoxContainer in pantalla.filas(false):
+		if not fila.has_meta(&"fijo"):
+			continue
+		var glifo := fila.find_children("*", "GlifoDeEntrada", true, false)[0] as GlifoDeEntrada
+		assert_float(glifo.size.x).is_equal_approx(ancho, TOLERANCIA)
 
 
 func test_las_teclas_y_su_cabecera_arrancan_en_el_mismo_borde() -> void:  # AC-CFG-036
@@ -264,11 +292,14 @@ func test_esperar_una_entrada_no_mueve_la_grilla() -> void:  # AC-CFG-036
 	assert_vector(pantalla.filas()[0].size).is_equal(antes_de_la_fila)
 
 
-func test_una_ranura_vacia_mide_lo_que_una_tecla_de_una_letra() -> void:  # AC-CFG-031
+func test_una_ranura_vacia_mide_lo_que_una_tecla() -> void:  # AC-CFG-031
 	var pantalla := await _pantalla()
 	var vacia := pantalla.glifo_de(AsignacionDeControles.EXAMINAR, SECUNDARIA)
 	var letra := pantalla.glifo_de(AsignacionDeControles.EXAMINAR, PRINCIPAL)
-	assert_vector(vacia.get_minimum_size()).is_equal(letra.get_minimum_size())
+	assert_vector(vacia.marco_dibujado().size).is_equal(letra.marco_dibujado().size)
+	assert_float(vacia.marco_dibujado().size.x).is_equal_approx(
+		pantalla.boton_de(AsignacionDeControles.EXAMINAR, SECUNDARIA).size.x, TOLERANCIA
+	)
 
 
 func test_la_celda_sin_foco_no_lleva_recuadro_y_la_elegida_si() -> void:  # AC-CFG-037

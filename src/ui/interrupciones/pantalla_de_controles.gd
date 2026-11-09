@@ -6,10 +6,10 @@
 ## con la marca FIJO y no se elige. Cada entrada se dibuja con su glifo.
 ##
 ## Todo el texto va en el tamaño de Configuraciones, `GlifoDeEntrada.tamano_de_la_letra()`:
-## nombres, cabeceras y teclas. Cada tecla mide su ancho natural y arranca en el borde izquierdo de
-## su columna, igual que la cabecera de la columna; el recuadro del foco enmarca la tecla. La lista
-## reparte el alto del área entre sus renglones. Las pestañas y la lista arrancan en el margen
-## izquierdo del marco, alineadas con el título.
+## nombres, cabeceras y teclas. Todas las teclas miden lo mismo, el ancho de la más ancha, un clic
+## con su nombre, y arrancan en el borde izquierdo de su columna, igual que la cabecera; el
+## recuadro del foco enmarca la tecla. La lista reparte el alto del área entre sus renglones. Las
+## pestañas y la lista arrancan en el margen izquierdo del marco, alineadas con el título.
 ##
 ## Abajo, a la izquierda de VOLVER, sólo se ve el mensaje de lo que pasa ahora: qué entrada espera
 ## la celda elegida, o el aviso de una asignación que no entró.
@@ -89,6 +89,7 @@ var _con_el_joystick: bool = false
 var _joystick_conectado: bool = false
 var _pagina_del_teclado: VBoxContainer
 var _pagina_del_joystick: VBoxContainer
+var _teclas_de_referencia: Array[GlifoDeEntrada] = []
 var _pildoras_de_las_pestanas: Array[GlifoDeEntrada] = []
 var _aviso_sin_joystick: Label
 var _pestana_del_teclado: Button
@@ -110,6 +111,7 @@ func _ready() -> void:
 	_volver.text = TEXTO_DE_VOLVER
 	_volver.pressed.connect(cerrar)
 	_crear_los_estilos_de_la_celda()
+	_crear_las_teclas_de_referencia()
 	_filas.add_theme_constant_override("separation", SEPARACION_DE_LA_CABECERA)
 	_filas.add_child(_barra_de_pestanas())
 	_pagina_del_teclado = _bloque_del_teclado()
@@ -513,7 +515,7 @@ func _fila_fija(nombre: String, glifos: Array[GlifoDeEntrada]) -> HBoxContainer:
 	var dibujos := HBoxContainer.new()
 	dibujos.add_theme_constant_override("separation", 12)
 	for glifo: GlifoDeEntrada in glifos:
-		glifo.size_flags_horizontal = Control.SIZE_SHRINK_BEGIN
+		glifo.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		glifo.size_flags_vertical = Control.SIZE_SHRINK_CENTER
 		dibujos.add_child(glifo)
 	fila.add_child(dibujos)
@@ -551,13 +553,13 @@ func _titulo_de_la_columna(texto: String) -> Label:
 
 
 ## Una celda es el lugar de su columna y lleva adentro el botón de su tecla, pegado al borde
-## izquierdo. El botón mide lo que su glifo y muestra sólo el glifo: el recuadro aparece con el
+## izquierdo. El botón llena la columna y muestra sólo el glifo: el recuadro aparece con el
 ## foco, con el mouse encima o esperando una entrada. El ancho de la columna lo pone
 ## `_ajustar_las_columnas`.
 func _celda(accion: StringName, ranura: int) -> HBoxContainer:
 	var lugar := HBoxContainer.new()
 	var boton := Button.new()
-	boton.size_flags_horizontal = Control.SIZE_SHRINK_BEGIN
+	boton.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	boton.theme_type_variation = &"BotonDelMenu"
 	boton.custom_minimum_size.y = GlifoDeEntrada.ALTO
 	boton.size_flags_vertical = Control.SIZE_SHRINK_CENTER
@@ -570,6 +572,18 @@ func _celda(accion: StringName, ranura: int) -> HBoxContainer:
 	_celdas[_clave(accion, ranura)] = [accion, ranura]
 	lugar.add_child(boton)
 	return lugar
+
+
+## Los clics son las teclas más anchas: su ancho es el de todas. Se miden dentro de la pantalla, con
+## su letra, y no se ven.
+func _crear_las_teclas_de_referencia() -> void:
+	for boton: int in [AsignacionDeControles.BOTON_IZQUIERDO, AsignacionDeControles.BOTON_DERECHO]:
+		var referencia := GlifoDeEntrada.de_una_tecla(
+			nombre_de_la_entrada(AsignacionDeControles.TipoDeEntrada.BOTON_DEL_MOUSE, boton)
+		)
+		referencia.visible = false
+		_marco.add_child(referencia)
+		_teclas_de_referencia.append(referencia)
 
 
 func _crear_los_estilos_de_la_celda() -> void:
@@ -626,7 +640,6 @@ func _pintar() -> void:
 		)
 		glifo.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 		boton.add_child(glifo)
-		boton.custom_minimum_size.x = glifo.get_minimum_size().x
 		_glifos[clave] = glifo
 	_mostrar_el_mensaje()
 	_ajustar_las_columnas(_pagina_del_teclado)
@@ -634,9 +647,9 @@ func _pintar() -> void:
 
 
 ## Cada columna de una pestaña mide lo mismo en todos sus renglones: la de los nombres, lo que mide
-## el más largo; las de las celdas, el glifo más ancho de la pestaña o su cabecera. Cada tecla
-## arranca en el borde izquierdo de su columna con su ancho natural. La lista queda del ancho de lo
-## que dice. En JOYSTICK la segunda columna sólo lleva la marca FIJO.
+## el más largo; las de las celdas, el glifo más ancho de la pestaña o su cabecera, y en TECLADO Y
+## MOUSE también un clic. Cada tecla arranca en el borde izquierdo de su columna y la llena. La
+## lista queda del ancho de lo que dice. En JOYSTICK la segunda columna sólo lleva la marca FIJO.
 func _ajustar_las_columnas(pagina: VBoxContainer) -> void:
 	var renglones: Array[HBoxContainer] = [pagina.get_child(0) as HBoxContainer]
 	for hijo: Node in pagina.get_children():
@@ -652,6 +665,9 @@ func _ajustar_las_columnas(pagina: VBoxContainer) -> void:
 			columna = maxf(columna, ancho)
 		if renglon.get_child_count() > 2:
 			segunda = maxf(segunda, (renglon.get_child(2) as Control).get_minimum_size().x)
+	if pagina == _pagina_del_teclado:
+		for referencia: GlifoDeEntrada in _teclas_de_referencia:
+			columna = maxf(columna, referencia.get_minimum_size().x)
 	for titulo: int in range(1, renglones[0].get_child_count()):
 		columna = maxf(columna, (renglones[0].get_child(titulo) as Control).get_minimum_size().x)
 	if pagina == _pagina_del_teclado:
