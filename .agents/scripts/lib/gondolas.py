@@ -110,7 +110,7 @@ SIN_TINTE = (
 
 #: La paleta de 5 píxeles de las ménsulas y los bordes, y cuáles de sus píxeles son grises.
 PALETA = "gondola_paleta"
-PIXELES_GRISES = (0, 1, 3)
+PIXELES_GRISES = (0, 1)
 PIXEL_DEL_EXHIBIDOR = 4
 PIXEL_ROJO = 2
 
@@ -118,6 +118,24 @@ PIXEL_ROJO = 2
 #: sostiene rojo cuando la luz horneada es verde azulada.
 EMISION = "gondola_paleta_emision"
 EMISION_ROJO = 0.6
+
+#: Las juntas entre paneles del fondo del exhibidor: unas tiras de 1 cm con el píxel 3 de la paleta.
+#: Eran más claras que el panel y estaban pegadas a los estantes. Ahora son más oscuras que el
+#: panel y van a medio camino entre un estante y el siguiente.
+PIXEL_DE_LAS_JUNTAS = 3
+TONO_DE_LAS_JUNTAS = (0.10, 0.10, 0.105)
+#: Las cuatro caras del exhibidor. El modificador `Muebles` de `gondolanueva2-col` las une y no lee
+#: la malla de ese objeto: lo que se edita se edita acá.
+CARAS_DEL_EXHIBIDOR = tuple(
+    f"gondolanueva2-{cara}-noimp" for cara in ("este", "oeste", "norte", "sur")
+)
+
+#: Los laterales del exhibidor son una sola cara con dos lados: por dentro mostraban el arte, y el
+#: cartel se leía al revés. La cara se cierra de un solo lado y un duplicado mira hacia adentro con
+#: el azul liso del costado.
+LATERALES = ("EXHIBIDOR | Lateral", "EXHIBIDOR | Lateral Pepito")
+AZUL_LISO = "EXHIBIDOR | Azul liso"
+COLOR_DEL_AZUL_LISO = (31 / 255, 55 / 255, 103 / 255)
 
 #: Las dos imágenes de la paleta miden 5×1. Comprimidas a VRAM, el bloque de 4×4 se lleva el rojo y
 #: los grises de las ménsulas: la build sale con las franjas y las ménsulas negras. Se importan sin

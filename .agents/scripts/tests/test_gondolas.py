@@ -61,6 +61,14 @@ class ElColorLineal(unittest.TestCase):
         for rugosidad in gondolas.ASPEROS.values():
             self.assertTrue(0.0 <= rugosidad <= 1.0)
 
+    def test_las_juntas_son_mas_oscuras_que_el_panel_y_no_son_un_gris_del_cuerpo(self):
+        self.assertNotIn(gondolas.PIXEL_DE_LAS_JUNTAS, gondolas.PIXELES_GRISES)
+        self.assertTrue(all(j < c for j, c in zip(gondolas.TONO_DE_LAS_JUNTAS, gondolas.TONO_DE_LAS_CHAPAS)))
+
+    def test_el_exhibidor_se_edita_en_sus_cuatro_caras_y_no_en_la_malla_del_objeto(self):
+        self.assertEqual(len(gondolas.CARAS_DEL_EXHIBIDOR), 4)
+        self.assertTrue(all(n.endswith("-noimp") for n in gondolas.CARAS_DEL_EXHIBIDOR))
+
     def test_el_rojo_emite_una_parte_y_no_todo(self):
         self.assertTrue(0.0 < gondolas.EMISION_ROJO < 1.0)
 

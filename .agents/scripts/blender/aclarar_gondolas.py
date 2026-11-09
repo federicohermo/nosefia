@@ -18,7 +18,9 @@ Lo lanza `aclarar_gondolas.py` de la raíz. **No se corre a mano.**
 import sys
 from pathlib import Path
 
+import bmesh  # type: ignore[import-not-found]
 import bpy  # type: ignore[import-not-found]  # sólo existe adentro de Blender
+import mathutils  # type: ignore[import-not-found]
 import numpy as np
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
@@ -129,6 +131,7 @@ def paleta() -> str:
     for columna in gondolas.PIXELES_GRISES:
         rgba[0, columna, :3] = gondolas.TONO_DE_LA_PALETA
     rgba[0, gondolas.PIXEL_DEL_EXHIBIDOR, :3] = gondolas.TONO_APARTE
+    rgba[0, gondolas.PIXEL_DE_LAS_JUNTAS, :3] = gondolas.TONO_DE_LAS_JUNTAS
     rgba[0, gondolas.PIXEL_ROJO, :3] = gondolas.ROJO
     emision = np.zeros_like(rgba)
     emision[..., 3] = 1.0
@@ -190,6 +193,123 @@ def asperos() -> list[str]:
             "Roughness"
         ].default_value = rugosidad
         informe.append(f"gondola: {nombre} rugosidad {rugosidad}")
+    return informe
+
+
+def _pixel_de_la_paleta(cara, uv) -> int:
+    return int(sum(uv.data[i].uv[0] for i in cara.loop_indices) / len(cara.loop_indices) * 5)
+
+
+def _caras_con_pixel(objeto, pixel: int) -> list:
+    malla = objeto.data
+    uv = malla.uv_layers.active
+    paleta_ = [
+        i for i, m in enumerate(objeto.material_slots) if m.material and m.material.name == "GONDOLA | Paleta"
+    ]
+    return [
+        c for c in malla.polygons
+        if c.material_index in paleta_ and _pixel_de_la_paleta(c, uv) == pixel
+    ]
+
+
+def juntas() -> list[str]:
+    """Las tiras del fondo del exhibidor van a medio camino entre un estante y el siguiente.
+
+    Son seis a 25 cm una de otra y los estantes están a 40: no pueden ir todas en medio. Quedan las
+    de cada hueco, y la de arriba va a medio camino entre el último estante y el tope.
+    """
+    objetos = [bpy.data.objects[n] for n in gondolas.CARAS_DEL_EXHIBIDOR]
+    alturas = sorted(
+        round(max((o.matrix_world @ o.data.vertices[v].co).z for v in c.vertices), 3)
+        for o in objetos
+        for c in _caras_con_pixel(o, gondolas.PIXEL_DEL_EXHIBIDOR)
+        if (o.matrix_world.to_3x3() @ c.normal).z > 0.9
+    )
+    estantes: list[float] = []
+    for altura in alturas:
+        if estantes and altura - estantes[-1] < 0.1:
+            estantes[-1] = altura
+        else:
+            estantes.append(altura)
+    techo = max((o.matrix_world @ v.co).z for o in objetos for v in o.data.vertices)
+    if len(estantes) != 4:
+        raise SystemExit(f"el exhibidor ya no es el de siempre: {len(estantes)} estantes")
+    huecos = [(a + b) / 2 for a, b in zip(estantes, estantes[1:])] + [(estantes[-1] + techo) / 2]
+    niveles_que_quedan = {0: 0, 2: 1, 4: 2, 5: 3}
+    informe = []
+    for objeto in objetos:
+        malla = objeto.data
+        mundo = objeto.matrix_world
+        de_las_juntas = _caras_con_pixel(objeto, gondolas.PIXEL_DE_LAS_JUNTAS)
+        if not de_las_juntas:
+            continue
+        propias = {c.index for c in de_las_juntas}
+        usadas = {v for c in malla.polygons if c.index not in propias for v in c.vertices}
+        if any(v in usadas for c in de_las_juntas for v in c.vertices):
+            raise SystemExit(f"{objeto.name}: una tira comparte vértices con otra cara")
+        niveles: dict[int, list] = {}
+        for cara in de_las_juntas:
+            z = min((mundo @ malla.vertices[v].co).z for v in cara.vertices)
+            niveles.setdefault(round((z - 0.35) / 0.25), []).append(cara)
+        quitar = []
+        for nivel, de_este_nivel in sorted(niveles.items()):
+            if nivel not in niveles_que_quedan:
+                quitar += de_este_nivel
+                continue
+            z = min((mundo @ malla.vertices[v].co).z for c in de_este_nivel for v in c.vertices)
+            destino = huecos[niveles_que_quedan[nivel]]
+            local = mundo.to_3x3().inverted() @ mathutils.Vector((0.0, 0.0, destino - (z + 0.005)))
+            for v in {v for c in de_este_nivel for v in c.vertices}:
+                malla.vertices[v].co += local
+            informe.append(f"gondola: {objeto.name} junta de {z:.2f} a {destino:.2f}")
+        barra = bmesh.new()
+        barra.from_mesh(malla)
+        barra.faces.ensure_lookup_table()
+        bmesh.ops.delete(barra, geom=[barra.faces[c.index] for c in quitar], context="FACES")
+        barra.to_mesh(malla)
+        barra.free()
+        informe.append(f"gondola: {objeto.name}, {len(quitar)} caras de juntas de más quitadas")
+    return informe
+
+
+def traseras() -> list[str]:
+    """El lado de adentro de los laterales del exhibidor, de un azul liso."""
+    liso = bpy.data.materials.new(gondolas.AZUL_LISO)
+    liso.use_nodes = True
+    principal = next(n for n in liso.node_tree.nodes if n.type == "BSDF_PRINCIPLED")
+    principal.inputs["Base Color"].default_value = tuple(
+        gondolas.a_lineal(c) for c in gondolas.COLOR_DEL_AZUL_LISO
+    ) + (1.0,)
+    principal.inputs["Roughness"].default_value = 0.7
+    liso.use_backface_culling = True
+    for nombre in gondolas.LATERALES:
+        bpy.data.materials[nombre].use_backface_culling = True
+    informe = []
+    for objeto in (bpy.data.objects[n] for n in gondolas.CARAS_DEL_EXHIBIDOR):
+        malla = objeto.data
+        barra = bmesh.new()
+        barra.from_mesh(malla)
+        barra.faces.ensure_lookup_table()
+        laterales = [
+            f for f in barra.faces
+            if malla.materials[f.material_index] and malla.materials[f.material_index].name in gondolas.LATERALES
+        ]
+        if not laterales:
+            barra.free()
+            continue
+        malla.materials.append(liso)
+        copia = bmesh.ops.duplicate(barra, geom=laterales)["geom"]
+        nuevas = [e for e in copia if isinstance(e, bmesh.types.BMFace)]
+        bmesh.ops.reverse_faces(barra, faces=nuevas)
+        for cara in nuevas:
+            cara.material_index = len(malla.materials) - 1
+            for vertice in cara.verts:
+                vertice.co += cara.normal * 0.002
+        barra.to_mesh(malla)
+        barra.free()
+        informe.append(f"gondola: {objeto.name}, {len(nuevas)} laterales con respaldo liso")
+    if not informe:
+        raise SystemExit("no se encontró ningún lateral de exhibidor")
     return informe
 
 
@@ -256,7 +376,7 @@ def main() -> None:
         ].default_value = (1.0, 1.0, 1.0, 1.0)
         print(f"gondola: {nombre} sin tinte")
     print(paleta())
-    for linea in colores_lisos() + dielectricos() + asperos() + salon():
+    for linea in colores_lisos() + dielectricos() + asperos() + salon() + juntas() + traseras():
         print(linea)
     if "--sin-guardar" not in sys.argv:
         bpy.ops.file.make_paths_relative()
