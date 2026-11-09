@@ -7,7 +7,7 @@ const Superficie := preload("res://src/escenas/objetos/superficie_liquida.gd")
 func _superficies() -> Array[Superficie]:
 	var raiz: Node3D = auto_free(Node3D.new())
 	add_child(raiz)
-	return [Medicion.crear(raiz, true), Medicion.crear(raiz, false)]
+	return [Medicion.crear(raiz, false)]
 
 
 func test_las_poses_cruzan_cuatro_niveles_con_tres_fases_sin_repetir() -> void:
@@ -30,14 +30,12 @@ func test_cada_pose_dibuja_la_malla_entera_y_deja_activa_la_superficie() -> void
 			assert_bool(superficie.get("_estaba_quieta")).is_false()
 
 
-func test_el_nivel_cambia_la_malla_del_balde_y_la_fase_la_de_la_mancha() -> void:
-	var superficies := _superficies()
-	for caso: Array in [[superficies[0], 0.2, 0.0], [superficies[1], 1.0, 7.0]]:
-		var superficie: Superficie = caso[0]
-		Medicion.posar(superficie, 1.0, 0.0)
-		var llena: String = Medicion.huella(superficie).vertices_sha256
-		Medicion.posar(superficie, caso[1], caso[2])
-		assert_str(Medicion.huella(superficie).vertices_sha256).is_not_equal(llena)
+func test_la_fase_cambia_la_malla_de_la_mancha() -> void:
+	var superficie := _superficies()[0]
+	Medicion.posar(superficie, 1.0, 0.0)
+	var quieta: String = Medicion.huella(superficie).vertices_sha256
+	Medicion.posar(superficie, 1.0, 7.0)
+	assert_str(Medicion.huella(superficie).vertices_sha256).is_not_equal(quieta)
 
 
 func test_el_pedido_transitorio_ve_un_array_que_nace_y_muere_en_la_llamada() -> void:

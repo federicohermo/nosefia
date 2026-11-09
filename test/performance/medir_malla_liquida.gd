@@ -112,7 +112,8 @@ func _ejecutar() -> void:
 	camara.position = Vector3(0.0, 2.0, 1.0)
 	camara.look_at(Vector3.ZERO)
 	camara.current = true
-	var superficies := {"balde": crear(self, true), "mancha": crear(self, false)}
+	# El balde no arma su malla en la CPU: lo mueve el shader.
+	var superficies := {"mancha": crear(self, false)}
 	# Los primeros cuadros compilan los shaders de lo que entra en vista.
 	await get_tree().create_timer(1.0).timeout
 
