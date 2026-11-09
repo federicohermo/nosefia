@@ -13,12 +13,12 @@ enum Forma {
 }
 
 ## El tamaño de todo el texto de la pantalla de controles, el de las teclas también.
-const TAMANO_DE_LA_LETRA := 40
-const ALTO := 52.0
+const TAMANO_DE_LA_LETRA := 48
+const ALTO := 50.0
 const ANCHO_DEL_ICONO_DEL_MOUSE := 18.0
-const ANCHO_DE_LA_RANURA_LIBRE := 56.0
 const MARGEN_DEL_TEXTO := 22.0
-const ESPACIO_DEL_ICONO := 8.0
+const MARGEN_DEL_MOUSE := 36.0
+const ESPACIO_DEL_ICONO := 16.0
 const COLOR_DEL_BORDE := Color("f4e6b5")
 const COLOR_DEL_FONDO := Color(0.04, 0.1, 0.12, 0.9)
 const COLOR_DEL_BOTON_DEL_MOUSE := Color("d8b468")
@@ -142,9 +142,7 @@ func _tamano_natural() -> Vector2:
 			return Vector2(maxf(ALTO, _ancho_del_texto() + MARGEN_DEL_TEXTO), ALTO)
 		Forma.MOUSE:
 			var del_texto := 0.0 if texto.is_empty() else _ancho_del_texto() + ESPACIO_DEL_ICONO
-			return Vector2(ANCHO_DEL_ICONO_DEL_MOUSE + MARGEN_DEL_TEXTO + del_texto, ALTO)
-		Forma.RANURA_LIBRE:
-			return Vector2(ANCHO_DE_LA_RANURA_LIBRE, ALTO)
+			return Vector2(ANCHO_DEL_ICONO_DEL_MOUSE + MARGEN_DEL_MOUSE + del_texto, ALTO)
 	return Vector2(ALTO, ALTO)
 
 
@@ -301,8 +299,8 @@ func _dibujar_ranura_libre(marco: Rect2) -> void:
 func _dibujar_mouse(marco: Rect2) -> void:
 	draw_style_box(_caja(4), marco)
 	var cuerpo := Rect2(
-		marco.position + Vector2(MARGEN_DEL_TEXTO / 2.0, 6.0),
-		Vector2(ANCHO_DEL_ICONO_DEL_MOUSE, marco.size.y - 12.0)
+		marco.position + Vector2(MARGEN_DEL_MOUSE / 2.0, 8.0),
+		Vector2(ANCHO_DEL_ICONO_DEL_MOUSE, marco.size.y - 16.0)
 	)
 	var mitad := cuerpo.position.y + cuerpo.size.y * 0.45
 	var izquierdo := cuerpo.position.x

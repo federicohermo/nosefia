@@ -119,7 +119,7 @@ func test_nombres_cabeceras_teclas_y_ayuda_comparten_un_tamano_de_letra() -> voi
 		assert_int(tamano).is_equal(tamanos[0])
 
 
-func test_cada_pestana_reparte_el_area_entre_sus_renglones() -> void:  # AC-CFG-031
+func test_cada_pestana_reparte_el_alto_y_centra_la_lista_en_el_ancho() -> void:  # AC-CFG-031
 	var pantalla := await _pantalla()
 	var area := _desplazador(pantalla).get_global_rect()
 	for del_joystick: bool in [false, true]:
@@ -129,8 +129,57 @@ func test_cada_pestana_reparte_el_area_entre_sus_renglones() -> void:  # AC-CFG-
 		assert_float(ultima.end.y).is_equal_approx(area.end.y, TOLERANCIA)
 		for fila: HBoxContainer in filas:
 			var caja := fila.get_global_rect()
-			assert_float(caja.position.x).is_equal_approx(area.position.x, TOLERANCIA)
-			assert_float(caja.end.x).is_equal_approx(area.end.x, TOLERANCIA)
+			assert_float(caja.get_center().x).is_equal_approx(area.get_center().x, TOLERANCIA)
+			assert_bool(caja.size.x > area.size.x * 0.6).is_true()
+			assert_bool(caja.position.x >= area.position.x - TOLERANCIA).is_true()
+
+
+func test_las_teclas_de_renglones_vecinos_no_se_tocan() -> void:  # AC-CFG-031
+	var pantalla := await _pantalla()
+	var filas := pantalla.filas(false)
+	var tecla := pantalla.glifo_de(AsignacionDeControles.ADELANTE, PRINCIPAL).get_minimum_size()
+	var paso := filas[1].get_global_rect().position.y - filas[0].get_global_rect().position.y
+	var escala := pantalla.marco().get_global_transform().get_scale().y
+	assert_bool(paso / escala > tecla.y).is_true()
+
+
+func test_el_recuadro_de_una_celda_enmarca_su_tecla_centrado_en_su_columna() -> void:  # AC-CFG-037
+	var pantalla := await _pantalla()
+	for accion: StringName in AsignacionDeControles.ACCIONES:
+		for ranura: int in [PRINCIPAL, SECUNDARIA]:
+			var celda := pantalla.boton_de(accion, ranura)
+			var columna := celda.get_parent() as Control
+			var natural := pantalla.glifo_de(accion, ranura).get_minimum_size()
+			assert_bool(celda.size.x >= natural.x).is_true()
+			assert_bool(celda.size.x < columna.size.x).is_true()
+			assert_float(celda.get_global_rect().get_center().x).is_equal_approx(
+				columna.get_global_rect().get_center().x, TOLERANCIA
+			)
+
+
+func test_una_ranura_vacia_mide_lo_que_una_tecla_de_una_letra() -> void:  # AC-CFG-031
+	var pantalla := await _pantalla()
+	var vacia := pantalla.glifo_de(AsignacionDeControles.EXAMINAR, SECUNDARIA)
+	var letra := pantalla.glifo_de(AsignacionDeControles.EXAMINAR, PRINCIPAL)
+	assert_vector(vacia.get_minimum_size()).is_equal(letra.get_minimum_size())
+
+
+func test_la_ayuda_separa_cada_tecla_de_su_palabra_y_cada_par_del_siguiente() -> void:  # AC-CFG-035
+	var pantalla := await _pantalla()
+	var ayuda: Control = pantalla.get("_ayuda")
+	var pares := ayuda.get_children()
+	var dentro := 0.0
+	for par: Node in pares:
+		var tecla := par.get_child(0) as Control
+		var palabra := par.get_child(1) as Control
+		dentro = palabra.get_global_rect().position.x - tecla.get_global_rect().end.x
+		assert_bool(dentro > 0.0).is_true()
+	for i: int in range(1, pares.size()):
+		var entre := (
+			(pares[i] as Control).get_global_rect().position.x
+			- (pares[i - 1] as Control).get_global_rect().end.x
+		)
+		assert_bool(entre > dentro).is_true()
 
 
 func test_la_celda_sin_foco_no_lleva_recuadro_y_la_elegida_si() -> void:  # AC-CFG-037

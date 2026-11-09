@@ -29,8 +29,8 @@ signal cerrada
 
 const TEXTO_DEL_TITULO := "/ CONTROLES:"
 const TEXTO_DE_VOLVER := "VOLVER"
-const TEXTO_DE_ESPERA := "PRESIONÁ UNA TECLA"
-const TEXTO_DE_ESPERA_DEL_JOYSTICK := "PRESIONÁ UN BOTÓN"
+const TEXTO_DE_ESPERA := "¿QUÉ TECLA?"
+const TEXTO_DE_ESPERA_DEL_JOYSTICK := "¿QUÉ BOTÓN?"
 const TEXTO_DEL_TECLADO := "TECLADO Y MOUSE"
 const TEXTO_DEL_JOYSTICK := "JOYSTICK"
 const TEXTO_DEL_JOYSTICK_CONECTADO := "● JOYSTICK CONECTADO"
@@ -48,10 +48,15 @@ const TEXTO_DE_ENTER := "ENTER"
 const TEXTO_DE_SUPR := "SUPR"
 const TEXTO_DE_START := "START"
 const TEXTO_DEL_MOUSE := "MOUSE"
-const ANCHO_DE_LA_CELDA := 420.0
-const ANCHO_DE_LA_PESTANA := 420.0
-const ALTO_DE_LA_PESTANA := 64.0
-const ALTO_DE_LA_FILA := 52.0
+const ANCHO_DEL_NOMBRE := 640.0
+const ANCHO_DE_LA_COLUMNA := 340.0
+const MARGEN_DEL_RECUADRO := 12.0
+const SEPARACION_DE_LAS_COLUMNAS := 64
+const ANCHO_DE_LA_PESTANA := 520.0
+const ALTO_DE_LA_PESTANA := 60.0
+const ALTO_DE_LA_FILA := 56.0
+const SEPARACION_DE_LA_AYUDA := 16
+const SEPARACION_ENTRE_AYUDAS := 48
 const SEPARACION_DE_LAS_FILAS := 4
 const COLOR_DE_LA_CELDA_ELEGIDA := Color("d8b468")
 const OPACIDAD_DE_LA_MARCA := 0.7
@@ -350,11 +355,19 @@ func _vaciar_la_celda_con_el_foco() -> bool:
 func _avisar_de_quien_es(entrada: Vector2i) -> void:
 	var duena := _asignacion.principal_que_ocupa(entrada)
 	if duena != &"":
-		_aviso.text = "%s %s" % [TEXTO_DEL_AVISO, AsignacionDeControles.nombre_de_la_accion(duena)]
+		_poner_el_aviso(
+			"%s %s" % [TEXTO_DEL_AVISO, AsignacionDeControles.nombre_de_la_accion(duena)]
+		)
 
 
 func _limpiar_el_aviso() -> void:
-	_aviso.text = ""
+	_poner_el_aviso("")
+
+
+## El aviso ocupa el lugar de la ayuda mientras se lee: no entran los dos, a esta letra.
+func _poner_el_aviso(texto: String) -> void:
+	_aviso.text = texto
+	_ayuda.visible = texto.is_empty()
 
 
 func _barra_de_pestanas() -> HBoxContainer:
@@ -411,12 +424,13 @@ func _aviso_sin_el_joystick() -> Label:
 func _bloque(a_la_izquierda: Control, a_la_derecha: Array[Control] = []) -> VBoxContainer:
 	var bloque := VBoxContainer.new()
 	bloque.theme_type_variation = &"ColumnaDelMenu"
+	bloque.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
 	bloque.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	bloque.add_theme_constant_override("separation", SEPARACION_DE_LAS_FILAS)
 	var encabezado := HBoxContainer.new()
-	encabezado.add_theme_constant_override("separation", 16)
+	encabezado.add_theme_constant_override("separation", SEPARACION_DE_LAS_COLUMNAS)
 	encabezado.custom_minimum_size.y = ALTO_DE_LA_FILA
-	a_la_izquierda.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	a_la_izquierda.custom_minimum_size.x = ANCHO_DEL_NOMBRE
 	encabezado.add_child(a_la_izquierda)
 	for control: Control in a_la_derecha:
 		encabezado.add_child(control)
@@ -432,8 +446,8 @@ func _bloque_del_teclado() -> VBoxContainer:
 	for accion: StringName in AsignacionDeControles.ACCIONES:
 		var fila := _fila_con_nombre(AsignacionDeControles.nombre_de_la_accion(accion))
 		var principal := _celda(accion, AsignacionDeControles.RANURA_PRINCIPAL)
-		fila.add_child(principal)
-		fila.add_child(_celda(accion, AsignacionDeControles.RANURA_SECUNDARIA))
+		fila.add_child(_columna_de(principal))
+		fila.add_child(_columna_de(_celda(accion, AsignacionDeControles.RANURA_SECUNDARIA)))
 		if _primer_boton_del_teclado == null:
 			_primer_boton_del_teclado = principal
 		bloque.add_child(fila)
@@ -459,7 +473,7 @@ func _bloque_del_joystick() -> VBoxContainer:
 	for accion: StringName in AsignacionDeControles.ACCIONES_CON_BOTON:
 		var fila := _fila_con_nombre(AsignacionDeControles.nombre_de_la_accion(accion))
 		var celda := _celda(accion, AsignacionDeControles.RANURA_DEL_JOYSTICK)
-		fila.add_child(celda)
+		fila.add_child(_columna_de(celda))
 		fila.add_child(_hueco())
 		if _primer_boton_del_joystick == null:
 			_primer_boton_del_joystick = celda
@@ -475,11 +489,11 @@ func _bloque_del_joystick() -> VBoxContainer:
 
 func _crear_el_aviso_y_la_ayuda() -> void:
 	_aviso = _etiqueta("")
-	_aviso.position = Vector2(140.0, 882.0)
+	_aviso.position = Vector2(140.0, 928.0)
 	_marco.add_child(_aviso)
 	_ayuda = HBoxContainer.new()
-	_ayuda.add_theme_constant_override("separation", 12)
-	_ayuda.position = Vector2(140.0, 930.0)
+	_ayuda.add_theme_constant_override("separation", SEPARACION_ENTRE_AYUDAS)
+	_ayuda.position = Vector2(140.0, 928.0)
 	_marco.add_child(_ayuda)
 
 
@@ -512,10 +526,13 @@ func _pintar_la_ayuda() -> void:
 
 
 func _agregar_a_la_ayuda(glifos: Array[GlifoDeEntrada], texto: String) -> void:
+	var par := HBoxContainer.new()
+	par.add_theme_constant_override("separation", SEPARACION_DE_LA_AYUDA)
 	for glifo: GlifoDeEntrada in glifos:
-		_ayuda.add_child(glifo)
+		par.add_child(glifo)
 		_glifos_de_la_ayuda.append(glifo)
-	_ayuda.add_child(_etiqueta(texto))
+	par.add_child(_etiqueta(texto))
+	_ayuda.add_child(par)
 
 
 ## La entrada que tiene Pausa, como la tiene asignada ahora.
@@ -535,14 +552,14 @@ func _fila_fija(nombre: String, glifos: Array[GlifoDeEntrada]) -> HBoxContainer:
 	var fila := _fila_con_nombre(nombre)
 	fila.set_meta(&"fijo", true)
 	var dibujos := HBoxContainer.new()
-	dibujos.custom_minimum_size.x = ANCHO_DE_LA_CELDA
+	dibujos.custom_minimum_size.x = ANCHO_DE_LA_COLUMNA
 	dibujos.alignment = BoxContainer.ALIGNMENT_CENTER
 	dibujos.add_theme_constant_override("separation", 12)
 	for glifo: GlifoDeEntrada in glifos:
 		dibujos.add_child(glifo)
 	fila.add_child(dibujos)
 	var marca := _etiqueta(TEXTO_FIJO)
-	marca.custom_minimum_size.x = ANCHO_DE_LA_CELDA
+	marca.custom_minimum_size.x = ANCHO_DE_LA_COLUMNA
 	marca.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	marca.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 	marca.modulate.a = OPACIDAD_DE_LA_MARCA
@@ -556,8 +573,9 @@ func _fila_con_nombre(nombre: String) -> HBoxContainer:
 	fila.theme_type_variation = &"FilaDeConfiguraciones"
 	fila.custom_minimum_size.y = ALTO_DE_LA_FILA
 	fila.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	fila.add_theme_constant_override("separation", SEPARACION_DE_LAS_COLUMNAS)
 	var etiqueta := _etiqueta(nombre)
-	etiqueta.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	etiqueta.custom_minimum_size.x = ANCHO_DEL_NOMBRE
 	etiqueta.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 	fila.add_child(etiqueta)
 	return fila
@@ -573,7 +591,7 @@ func _etiqueta(texto: String) -> Label:
 
 func _titulo_de_la_columna(texto: String) -> Label:
 	var etiqueta := _etiqueta(texto)
-	etiqueta.custom_minimum_size.x = ANCHO_DE_LA_CELDA
+	etiqueta.custom_minimum_size.x = ANCHO_DE_LA_COLUMNA
 	etiqueta.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	etiqueta.modulate.a = OPACIDAD_DE_LO_FIJO
 	return etiqueta
@@ -583,7 +601,7 @@ func _titulo_de_la_columna(texto: String) -> Label:
 func _celda(accion: StringName, ranura: int) -> Button:
 	var boton := Button.new()
 	boton.theme_type_variation = &"BotonDelMenu"
-	boton.custom_minimum_size = Vector2(ANCHO_DE_LA_CELDA, ALTO_DE_LA_FILA)
+	boton.custom_minimum_size = Vector2(0.0, ALTO_DE_LA_FILA)
 	boton.add_theme_font_size_override("font_size", GlifoDeEntrada.TAMANO_DE_LA_LETRA)
 	boton.add_theme_stylebox_override("normal", _celda_sin_elegir)
 	boton.add_theme_stylebox_override("disabled", _celda_sin_elegir)
@@ -603,10 +621,18 @@ func _crear_los_estilos_de_la_celda() -> void:
 	_celda_elegida.set_content_margin_all(4.0)
 
 
+## Una celda en su columna: el recuadro del foco enmarca la tecla y queda centrado en la columna.
+func _columna_de(celda: Button) -> CenterContainer:
+	var columna := CenterContainer.new()
+	columna.custom_minimum_size.x = ANCHO_DE_LA_COLUMNA
+	columna.add_child(celda)
+	return columna
+
+
 ## Lo que ocupa el lugar de la segunda celda en un renglón que sólo tiene una.
 func _hueco() -> Control:
 	var hueco := Control.new()
-	hueco.custom_minimum_size.x = ANCHO_DE_LA_CELDA
+	hueco.custom_minimum_size.x = ANCHO_DE_LA_COLUMNA
 	hueco.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	return hueco
 
@@ -648,6 +674,7 @@ func _pintar() -> void:
 		)
 		glifo.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 		boton.add_child(glifo)
+		boton.custom_minimum_size.x = glifo.get_minimum_size().x + 2.0 * MARGEN_DEL_RECUADRO
 		_glifos[clave] = glifo
 	_pintar_la_ayuda()
 
