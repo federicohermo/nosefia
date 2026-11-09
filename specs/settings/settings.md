@@ -324,8 +324,8 @@ pestaña DEBE habilitarse y L1 y R1 DEBEN aparecer; la pestaña elegida NO DEBE 
 desconecta, la pestaña DEBE apagarse, L1 y R1 DEBEN desaparecer, y SI JOYSTICK estaba elegida, la
 pantalla DEBE pasar a TECLADO Y MOUSE.
 
-Cada pestaña DEBE tener un solo bloque, **EN EL LOCAL**, con las acciones y Visión. Visión DEBE ir
-en el mismo lugar en las dos pestañas: después de las direcciones de movimiento. Visión, y en
+Cada pestaña DEBE tener una sola lista, con las acciones y Visión, sin otro título que la cabecera
+de sus columnas. Visión DEBE ir en el mismo lugar en las dos pestañas: después de las direcciones de movimiento. Visión, y en
 JOYSTICK Movimiento y Pausa, DEBEN llevar la marca **FIJO**, verse más tenues y no poder elegirse.
 Lo que no depende de ninguna acción —ENTER y las flechas en las interfaces, X y CÍRCULO en el
 joystick— NO DEBE tener renglón: lo dice la ayuda. Abajo, una ayuda DEBE decir con qué se cambia y
@@ -608,7 +608,7 @@ en 30 %. DADO un archivo sin botones de joystick ENTONCES cada acción tiene su 
 DADO la pantalla de controles abierta ENTONCES tiene las pestañas TECLADO Y MOUSE y JOYSTICK, cada
 una con el dibujo de su dispositivo, y se ve el contenido de una sola. DADO TECLADO Y MOUSE
 CUANDO se elige JOYSTICK ENTONCES se ve el contenido de JOYSTICK y no el de TECLADO Y MOUSE, y al
-revés. DADO cada pestaña ENTONCES tiene el bloque EN EL LOCAL y ningún otro. DADO TECLADO Y MOUSE ENTONCES Visión va justo
+revés. DADO cada pestaña ENTONCES tiene una sola lista. DADO TECLADO Y MOUSE ENTONCES Visión va justo
 después de Derecha, y DADO JOYSTICK, justo después de Movimiento.
 
 ### AC-CFG-032 — La pestaña con la que se abre *(verifica BR-CFG-031)*

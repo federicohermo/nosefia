@@ -87,7 +87,7 @@ func test_cada_pestana_alinea_sus_glifos_con_nombres_largos() -> void:  # AC-CFG
 			assert_float(centro).is_equal_approx(columna[0], TOLERANCIA)
 
 
-func test_la_marca_fijo_es_mas_chica_que_el_nombre_y_entra_en_su_bloque() -> void:  # AC-CFG-035
+func test_la_marca_fijo_entra_en_su_bloque() -> void:  # AC-CFG-035
 	var pantalla := await _pantalla()
 	var area := _desplazador(pantalla).get_global_rect()
 	for del_joystick: bool in [false, true]:
@@ -96,14 +96,41 @@ func test_la_marca_fijo_es_mas_chica_que_el_nombre_y_entra_en_su_bloque() -> voi
 			if not fila.has_meta(&"fijo"):
 				continue
 			var marca := fila.get_child(fila.get_child_count() - 1) as Label
-			var nombre := fila.get_child(0) as Label
-			(
-				assert_bool(
-					marca.get_theme_font_size("font_size") < nombre.get_theme_font_size("font_size")
-				)
-				. is_true()
-			)
 			assert_bool(marca.get_global_rect().end.x <= area.end.x + TOLERANCIA).is_true()
+
+
+func test_nombres_cabeceras_teclas_y_ayuda_comparten_un_tamano_de_letra() -> void:  # AC-CFG-031
+	var pantalla := await _pantalla()
+	pantalla.elegir(AsignacionDeControles.ADELANTE, PRINCIPAL)
+	var tamanos: Array[int] = []
+	for del_joystick: bool in [false, true]:
+		await _mostrar(pantalla, del_joystick)
+		for etiqueta: Node in pantalla.find_children("*", "Label", true, false):
+			tamanos.append((etiqueta as Label).get_theme_font_size("font_size"))
+		for boton: Node in pantalla.find_children("*", "Button", true, false):
+			var texto := (boton as Button).text
+			if not texto.is_empty():
+				tamanos.append((boton as Button).get_theme_font_size("font_size"))
+		for glifo: Node in pantalla.find_children("*", "GlifoDeEntrada", true, false):
+			if not (glifo as GlifoDeEntrada).texto.is_empty():
+				tamanos.append(glifo.call("_tamano_de_la_letra"))
+	assert_int(tamanos.size()).is_greater(20)
+	for tamano: int in tamanos:
+		assert_int(tamano).is_equal(tamanos[0])
+
+
+func test_cada_pestana_reparte_el_area_entre_sus_renglones() -> void:  # AC-CFG-031
+	var pantalla := await _pantalla()
+	var area := _desplazador(pantalla).get_global_rect()
+	for del_joystick: bool in [false, true]:
+		await _mostrar(pantalla, del_joystick)
+		var filas := pantalla.filas(del_joystick)
+		var ultima := filas[filas.size() - 1].get_global_rect()
+		assert_float(ultima.end.y).is_equal_approx(area.end.y, TOLERANCIA)
+		for fila: HBoxContainer in filas:
+			var caja := fila.get_global_rect()
+			assert_float(caja.position.x).is_equal_approx(area.position.x, TOLERANCIA)
+			assert_float(caja.end.x).is_equal_approx(area.end.x, TOLERANCIA)
 
 
 func test_la_celda_sin_foco_no_lleva_recuadro_y_la_elegida_si() -> void:  # AC-CFG-037

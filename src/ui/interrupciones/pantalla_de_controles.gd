@@ -1,9 +1,12 @@
-## Controles: una pestaña por dispositivo, TECLADO Y MOUSE y JOYSTICK, con el bloque EN EL LOCAL.
+## Controles: una pestaña por dispositivo, TECLADO Y MOUSE y JOYSTICK, con la lista de acciones.
 ##
 ## En TECLADO Y MOUSE cada acción tiene una celda PRINCIPAL y otra SECUNDARIA. Se elige una celda,
 ## y apretar una tecla o un botón del mouse se la asigna; SUPR vacía una secundaria. En JOYSTICK
 ## cada acción de botón tiene la celda de su botón, que se reasigna igual. Lo demás se muestra
 ## con la marca FIJO y no se elige. Cada entrada se dibuja con su glifo.
+##
+## Todo el texto va en un solo tamaño, el de `TextoDelMenu`: nombres, cabeceras, teclas y ayuda. La
+## lista reparte el alto del área entre sus renglones y el ancho entre el nombre y las celdas.
 ##
 ## Sin un joystick conectado no se ve ningún botón de joystick: la pestaña JOYSTICK queda apagada y,
 ## elegida, avisa que hay que conectar uno. Conectarlo o desconectarlo con la pantalla abierta la
@@ -30,7 +33,6 @@ const TEXTO_DE_ESPERA_DEL_JOYSTICK := "PRESIONÁ UN BOTÓN"
 const TEXTO_DEL_TECLADO := "TECLADO Y MOUSE"
 const TEXTO_DEL_JOYSTICK := "JOYSTICK"
 const TEXTO_DEL_JOYSTICK_CONECTADO := "● JOYSTICK CONECTADO"
-const TEXTO_EN_EL_LOCAL := "EN EL LOCAL"
 const TEXTO_DE_PRINCIPAL := "PRINCIPAL"
 const TEXTO_DE_SECUNDARIA := "SECUNDARIA"
 const TEXTO_SIN_JOYSTICK := "CONECTÁ UN JOYSTICK PARA CONFIGURARLO"
@@ -45,13 +47,11 @@ const TEXTO_DE_ENTER := "ENTER"
 const TEXTO_DE_SUPR := "SUPR"
 const TEXTO_DE_START := "START"
 const TEXTO_DEL_MOUSE := "MOUSE"
-const ANCHO_DEL_NOMBRE := 720.0
-const ANCHO_DE_LA_CELDA := 260.0
+const ANCHO_DE_LA_CELDA := 420.0
 const ANCHO_DE_LA_PESTANA := 420.0
 const ALTO_DE_LA_PESTANA := 64.0
-const ALTO_DE_LA_FILA := 44.0
+const ALTO_DE_LA_FILA := 48.0
 const SEPARACION_DE_LAS_FILAS := 4
-const LETRA_CHICA := 24
 const COLOR_DE_LA_CELDA_ELEGIDA := Color("d8b468")
 const OPACIDAD_DE_LA_MARCA := 0.7
 const OPACIDAD_DE_LO_FIJO := 0.55
@@ -104,6 +104,7 @@ func _ready() -> void:
 	_volver.text = TEXTO_DE_VOLVER
 	_volver.pressed.connect(cerrar)
 	_crear_los_estilos_de_la_celda()
+	_filas.add_theme_constant_override("separation", SEPARACION_DE_LAS_FILAS)
 	_filas.add_child(_barra_de_pestanas())
 	_pagina_del_teclado = _bloque_del_teclado()
 	_pagina_del_joystick = _bloque_del_joystick()
@@ -397,26 +398,23 @@ func _aviso_sin_el_joystick() -> Label:
 	_aviso_sin_joystick = _etiqueta(TEXTO_SIN_JOYSTICK)
 	_aviso_sin_joystick.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	_aviso_sin_joystick.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
-	_aviso_sin_joystick.custom_minimum_size.y = ALTO_DE_LA_FILA * 8.0
+	_aviso_sin_joystick.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	_aviso_sin_joystick.modulate.a = OPACIDAD_DE_LO_FIJO
 	return _aviso_sin_joystick
 
 
-## El bloque con su encabezado en un renglón: el título a la izquierda y, a la derecha, lo que
-## acompaña a la columna.
-func _bloque(titulo: String, a_la_derecha: Array[Control] = []) -> VBoxContainer:
+## La página con su cabecera en un renglón: a la izquierda lo que acompaña a los nombres y, a la
+## derecha, el título de cada columna. Ocupa el ancho y el alto del área.
+func _bloque(a_la_izquierda: Control, a_la_derecha: Array[Control] = []) -> VBoxContainer:
 	var bloque := VBoxContainer.new()
 	bloque.theme_type_variation = &"ColumnaDelMenu"
-	bloque.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
+	bloque.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	bloque.add_theme_constant_override("separation", SEPARACION_DE_LAS_FILAS)
 	var encabezado := HBoxContainer.new()
 	encabezado.add_theme_constant_override("separation", 16)
 	encabezado.custom_minimum_size.y = ALTO_DE_LA_FILA
-	var rotulo := _etiqueta(titulo)
-	rotulo.modulate.a = OPACIDAD_DE_LO_FIJO
-	rotulo.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	rotulo.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
-	encabezado.add_child(rotulo)
+	a_la_izquierda.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	encabezado.add_child(a_la_izquierda)
 	for control: Control in a_la_derecha:
 		encabezado.add_child(control)
 	bloque.add_child(encabezado)
@@ -425,7 +423,7 @@ func _bloque(titulo: String, a_la_derecha: Array[Control] = []) -> VBoxContainer
 
 func _bloque_del_teclado() -> VBoxContainer:
 	var bloque := _bloque(
-		TEXTO_EN_EL_LOCAL,
+		_etiqueta(""),
 		[_titulo_de_la_columna(TEXTO_DE_PRINCIPAL), _titulo_de_la_columna(TEXTO_DE_SECUNDARIA)]
 	)
 	for accion: StringName in AsignacionDeControles.ACCIONES:
@@ -445,9 +443,8 @@ func _bloque_del_teclado() -> VBoxContainer:
 
 func _bloque_del_joystick() -> VBoxContainer:
 	_aviso_del_joystick = _etiqueta("")
-	_aviso_del_joystick.add_theme_font_size_override("font_size", LETRA_CHICA)
 	_aviso_del_joystick.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
-	var bloque := _bloque(TEXTO_EN_EL_LOCAL, [_aviso_del_joystick])
+	var bloque := _bloque(_aviso_del_joystick)
 	bloque.add_child(
 		_fila_fija(
 			TEXTO_DE_MOVIMIENTO, [GlifoDeEntrada.de_un_boton(GlifoDeEntrada.Forma.PALANCA, "L")]
@@ -475,11 +472,11 @@ func _bloque_del_joystick() -> VBoxContainer:
 
 func _crear_el_aviso_y_la_ayuda() -> void:
 	_aviso = _etiqueta("")
-	_aviso.position = Vector2(160.0, 878.0)
+	_aviso.position = Vector2(140.0, 878.0)
 	_marco.add_child(_aviso)
 	_ayuda = HBoxContainer.new()
 	_ayuda.add_theme_constant_override("separation", 12)
-	_ayuda.position = Vector2(160.0, 928.0)
+	_ayuda.position = Vector2(140.0, 928.0)
 	_marco.add_child(_ayuda)
 
 
@@ -542,7 +539,6 @@ func _fila_fija(nombre: String, glifos: Array[GlifoDeEntrada]) -> HBoxContainer:
 		dibujos.add_child(glifo)
 	fila.add_child(dibujos)
 	var marca := _etiqueta(TEXTO_FIJO)
-	marca.add_theme_font_size_override("font_size", LETRA_CHICA)
 	marca.custom_minimum_size.x = ANCHO_DE_LA_CELDA
 	marca.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	marca.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
@@ -556,8 +552,8 @@ func _fila_con_nombre(nombre: String) -> HBoxContainer:
 	var fila := HBoxContainer.new()
 	fila.theme_type_variation = &"FilaDeConfiguraciones"
 	fila.custom_minimum_size.y = ALTO_DE_LA_FILA
+	fila.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	var etiqueta := _etiqueta(nombre)
-	etiqueta.custom_minimum_size.x = ANCHO_DEL_NOMBRE
 	etiqueta.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	etiqueta.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 	fila.add_child(etiqueta)
@@ -584,7 +580,6 @@ func _celda(accion: StringName, ranura: int) -> Button:
 	var boton := Button.new()
 	boton.theme_type_variation = &"BotonDelMenu"
 	boton.custom_minimum_size = Vector2(ANCHO_DE_LA_CELDA, ALTO_DE_LA_FILA)
-	boton.add_theme_font_size_override("font_size", LETRA_CHICA)
 	boton.add_theme_stylebox_override("normal", _celda_sin_elegir)
 	boton.add_theme_stylebox_override("disabled", _celda_sin_elegir)
 	for estado: String in ["hover", "pressed", "hover_pressed", "focus"]:

@@ -12,7 +12,7 @@ enum Forma {
 	TECLA, MOUSE, CRUZ, CIRCULO, CUADRADO, TRIANGULO, PILDORA, PALANCA, CRUCETA, RANURA_LIBRE
 }
 
-const ALTO := 36.0
+const ALTO := 46.0
 const ANCHO_DEL_ICONO_DEL_MOUSE := 18.0
 const ANCHO_DE_LA_RANURA_LIBRE := 56.0
 const MARGEN_DEL_TEXTO := 22.0
@@ -154,8 +154,9 @@ func _ancho_del_texto() -> float:
 	)
 
 
+## El mismo tamaño que el texto de los menús: nombres, cabeceras y teclas se leen parejos.
 func _tamano_de_la_letra() -> int:
-	return maxi(roundi(get_theme_default_font_size() * 0.67), 14)
+	return get_theme_font_size(&"font_size", &"TextoDelMenu")
 
 
 func _caja(radio: int) -> StyleBoxFlat:
