@@ -249,7 +249,8 @@ func test_la_tecla_mas_ancha_es_un_clic_y_la_marca_de_vision_mide_lo_mismo() -> 
 			AsignacionDeControles.BOTON_IZQUIERDO
 		)
 	)
-	auto_free(clic)
+	clic.visible = false
+	pantalla.marco().add_child(clic)
 	var ancho := pantalla.boton_de(AsignacionDeControles.ADELANTE, PRINCIPAL).size.x
 	assert_float(ancho).is_greater_equal(clic.get_minimum_size().x - TOLERANCIA)
 	for fila: HBoxContainer in pantalla.filas(false):
