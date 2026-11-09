@@ -171,20 +171,23 @@ func test_el_titulo_y_su_marco_son_los_de_configuraciones() -> void:  # AC-CFG-0
 		assert_bool(otro.has_theme_font_size_override("font_size")).is_false()
 
 
-func test_cada_pestana_reparte_el_alto_y_alinea_todo_con_el_titulo() -> void:  # AC-CFG-031
+func test_cada_pestana_reparte_el_alto_y_centra_la_lista_con_las_pestanas() -> void:  # AC-CFG-031
 	var pantalla := await _pantalla()
 	var area := _desplazador(pantalla).get_global_rect()
 	var barra := (pantalla.get("_filas") as Control).get_child(0) as Control
-	var del_titulo := (pantalla.marco().get_node("Titulo") as Control).get_global_rect().position.x
+	var izquierda := barra.get_child(0) as Control
+	var derecha := barra.get_child(barra.get_child_count() - 1) as Control
+	var centro_de_las_pestanas := (
+		(izquierda.get_global_rect().position.x + derecha.get_global_rect().end.x) / 2.0
+	)
 	for del_joystick: bool in [false, true]:
 		await _mostrar(pantalla, del_joystick)
-		assert_float(barra.get_global_rect().position.x).is_equal_approx(del_titulo, TOLERANCIA)
 		var filas := pantalla.filas(del_joystick)
 		var ultima := filas[filas.size() - 1].get_global_rect()
 		assert_float(ultima.end.y).is_equal_approx(area.end.y, TOLERANCIA)
 		for fila: HBoxContainer in filas:
 			var caja := fila.get_global_rect()
-			assert_float(caja.position.x).is_equal_approx(del_titulo, TOLERANCIA)
+			assert_float(caja.get_center().x).is_equal_approx(centro_de_las_pestanas, TOLERANCIA)
 			assert_bool(caja.position.x >= area.position.x - TOLERANCIA).is_true()
 			assert_bool(caja.end.x <= area.end.x + TOLERANCIA).is_true()
 
