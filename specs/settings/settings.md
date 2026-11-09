@@ -335,7 +335,8 @@ angosta no se estira al ancho de la más ancha. En cada columna de una pestaña,
 SECUNDARIA, todas las teclas y glifos DEBEN arrancar en el mismo borde izquierdo, y la cabecera de
 la columna también. El recuadro del foco DEBE enmarcar la tecla elegida con su ancho. La lista DEBE
 repartirse en el alto entre la cabecera y la línea del pie, con el mismo margen arriba y abajo, y la grilla —nombres y
-columnas— DEBE quedar centrada respecto de las pestañas. La pantalla DEBE decir qué entrada espera la
+columnas— DEBE arrancar, igual que las pestañas, en el margen interno izquierdo del marco, alineada
+con el título, y no centrada. La pantalla DEBE decir qué entrada espera la
 celda elegida, y el aviso de una entrada que no se pudo asignar, en una línea debajo de la línea del
 pie, sin mover la grilla.
 
@@ -618,7 +619,7 @@ CUANDO se elige JOYSTICK ENTONCES se ve el contenido de JOYSTICK y no el de TECL
 revés. DADO cada pestaña ENTONCES tiene una sola lista. DADO TECLADO Y MOUSE ENTONCES Visión va justo
 después de Derecha, y DADO JOYSTICK, justo después de Movimiento. DADO cada pestaña ENTONCES su lista se
 reparte en el alto entre la cabecera y la línea del pie, con el mismo margen arriba y abajo, y queda
-centrada respecto de las pestañas.
+pegada, igual que las pestañas, al margen interno izquierdo, alineada con el título.
 
 ### AC-CFG-032 — La pestaña con la que se abre *(verifica BR-CFG-031)*
 

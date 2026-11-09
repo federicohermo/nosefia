@@ -8,7 +8,8 @@
 ## Todo el texto va en el tamaño de Configuraciones, `GlifoDeEntrada.tamano_de_la_letra()`:
 ## nombres, cabeceras y teclas. Cada tecla mide su ancho natural y arranca en el borde izquierdo de
 ## su columna, igual que la cabecera de la columna; el recuadro del foco enmarca la tecla. La lista
-## reparte el alto del área entre sus renglones y se centra en el ancho.
+## reparte el alto del área entre sus renglones. Las pestañas y la lista arrancan en el margen
+## izquierdo del marco, alineadas con el título.
 ##
 ## Abajo, a la izquierda de VOLVER, sólo se ve el mensaje de lo que pasa ahora: qué entrada espera
 ## la celda elegida, o el aviso de una asignación que no entró.
@@ -373,7 +374,7 @@ func _texto_de_la_espera() -> String:
 func _barra_de_pestanas() -> HBoxContainer:
 	var barra := HBoxContainer.new()
 	barra.add_theme_constant_override("separation", 16)
-	barra.alignment = BoxContainer.ALIGNMENT_CENTER
+	barra.alignment = BoxContainer.ALIGNMENT_BEGIN
 	var izquierda := GlifoDeEntrada.de_un_boton(GlifoDeEntrada.Forma.PILDORA, "L1")
 	var derecha := GlifoDeEntrada.de_un_boton(GlifoDeEntrada.Forma.PILDORA, "R1")
 	_pildoras_de_las_pestanas = [izquierda, derecha]
@@ -412,7 +413,6 @@ func _pestana(texto: String, dispositivo: DibujoDeDispositivo.Dispositivo) -> Bu
 ## En su lugar, la pestaña JOYSTICK sin joystick: sólo el aviso de conectar uno.
 func _aviso_sin_el_joystick() -> Label:
 	_aviso_sin_joystick = _etiqueta(TEXTO_SIN_JOYSTICK)
-	_aviso_sin_joystick.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	_aviso_sin_joystick.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 	_aviso_sin_joystick.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	_aviso_sin_joystick.modulate.a = OPACIDAD_DE_LO_FIJO
@@ -425,7 +425,7 @@ func _aviso_sin_el_joystick() -> Label:
 func _bloque(a_la_izquierda: Control, a_la_derecha: Array[Control] = []) -> VBoxContainer:
 	var bloque := VBoxContainer.new()
 	bloque.theme_type_variation = &"ColumnaDelMenu"
-	bloque.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
+	bloque.size_flags_horizontal = Control.SIZE_SHRINK_BEGIN
 	bloque.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	bloque.add_theme_constant_override("separation", 0)
 	var encabezado := HBoxContainer.new()

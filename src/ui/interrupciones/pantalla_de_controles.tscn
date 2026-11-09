@@ -60,7 +60,7 @@ vertical_alignment = 1
 
 [node name="Desplazador" type="ScrollContainer" parent="Fondo/Panel"]
 layout_mode = 0
-offset_left = 140.0
+offset_left = 155.0
 offset_top = 127.8
 offset_right = 1780.0
 offset_bottom = 955.2
