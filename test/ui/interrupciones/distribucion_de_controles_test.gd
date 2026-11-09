@@ -9,12 +9,6 @@ const PRINCIPAL := AsignacionDeControles.RANURA_PRINCIPAL
 const SECUNDARIA := AsignacionDeControles.RANURA_SECUNDARIA
 const EN_EL_JOYSTICK := AsignacionDeControles.RANURA_DEL_JOYSTICK
 const TOLERANCIA := 1.5
-const FORMAS_DE_TECLA: Array[GlifoDeEntrada.Forma] = [
-	GlifoDeEntrada.Forma.TECLA,
-	GlifoDeEntrada.Forma.MOUSE,
-	GlifoDeEntrada.Forma.PILDORA,
-	GlifoDeEntrada.Forma.RANURA_LIBRE,
-]
 
 
 func _pantalla(con_el_joystick: bool = false) -> PantallaDeControles:
@@ -104,16 +98,15 @@ func test_los_margenes_de_arriba_abajo_son_parejos_en_las_dos_pestanas() -> void
 		assert_float(margen_de_abajo).is_equal_approx(margen_de_arriba, TOLERANCIA * escala)
 
 
-func test_cada_pestana_alinea_sus_glifos_con_nombres_largos() -> void:  # AC-CFG-031, AC-CFG-042
+func test_cada_pestana_alinea_a_la_izquierda_sus_glifos() -> void:  # AC-CFG-031, AC-CFG-042
 	var pantalla := await _pantalla()
 	for del_joystick: bool in [false, true]:
 		await _mostrar(pantalla, del_joystick)
-		var columna: Array[float] = []
+		var bordes: Array[float] = []
 		for fila: HBoxContainer in pantalla.filas(del_joystick):
-			var celda := fila.get_child(1) as Control
-			columna.append(celda.get_global_rect().get_center().x)
-		for centro: float in columna:
-			assert_float(centro).is_equal_approx(columna[0], TOLERANCIA)
+			bordes.append(_borde_izquierdo(fila.get_child(1)))
+		for borde: float in bordes:
+			assert_float(borde).is_equal_approx(bordes[0], TOLERANCIA)
 
 
 func test_la_marca_fijo_entra_en_su_bloque() -> void:  # AC-CFG-035
@@ -208,6 +201,12 @@ func test_las_teclas_de_renglones_vecinos_no_se_tocan() -> void:  # AC-CFG-031
 	assert_bool(paso / escala > tecla.y).is_true()
 
 
+## Donde arranca el primer glifo que lleva ese nodo. Lo dibujado arranca ahí mismo.
+func _borde_izquierdo(nodo: Node) -> float:
+	var glifo := nodo.find_children("*", "GlifoDeEntrada", true, false)[0] as GlifoDeEntrada
+	return glifo.get_global_rect().position.x
+
+
 func _celdas(del_joystick: bool) -> Array[Array]:
 	var celdas: Array[Array] = []
 	if del_joystick:
@@ -220,42 +219,45 @@ func _celdas(del_joystick: bool) -> Array[Array]:
 	return celdas
 
 
-func test_toda_celda_mide_lo_mismo_y_su_tecla_la_llena() -> void:  # AC-CFG-036
+func test_cada_tecla_mide_su_ancho_natural_y_su_foco_la_enmarca() -> void:  # AC-CFG-036
 	var pantalla := await _pantalla()
 	for del_joystick: bool in [false, true]:
 		await _mostrar(pantalla, del_joystick)
-		var celdas := _celdas(del_joystick)
-		var primera := pantalla.boton_de(celdas[0][0], celdas[0][1])
-		var ancho_natural := 0.0
-		for par: Array in celdas:
+		for par: Array in _celdas(del_joystick):
 			var celda := pantalla.boton_de(par[0], par[1])
 			var glifo := pantalla.glifo_de(par[0], par[1])
-			ancho_natural = maxf(ancho_natural, glifo.get_minimum_size().x)
-			assert_vector(celda.size).is_equal_approx(primera.size, Vector2(TOLERANCIA, TOLERANCIA))
-			assert_vector(celda.get_global_rect().get_center()).is_equal_approx(
-				glifo.get_global_rect().get_center(), Vector2(TOLERANCIA, TOLERANCIA)
+			var natural := glifo.get_minimum_size()
+			assert_float(glifo.marco_dibujado().size.x).is_equal_approx(natural.x, TOLERANCIA)
+			assert_float(celda.size.x).is_equal_approx(natural.x, TOLERANCIA)
+			assert_float(celda.get_global_rect().position.x).is_equal_approx(
+				glifo.get_global_rect().position.x, TOLERANCIA
 			)
-			assert_bool(celda.size.x >= glifo.get_minimum_size().x).is_true()
-			var tecla := glifo.marco_dibujado()
-			if glifo.forma in FORMAS_DE_TECLA:
-				assert_float(tecla.size.x).is_equal_approx(primera.size.x, TOLERANCIA)
-				assert_float(tecla.size.y).is_equal_approx(primera.size.y, TOLERANCIA)
-		assert_bool(primera.size.x >= ancho_natural).is_true()
 
 
-func test_la_columna_principal_y_la_secundaria_usan_el_mismo_contenedor() -> void:  # AC-CFG-036
+func test_las_teclas_y_su_cabecera_arrancan_en_el_mismo_borde() -> void:  # AC-CFG-036
 	var pantalla := await _pantalla()
-	var principal := pantalla.boton_de(AsignacionDeControles.ADELANTE, PRINCIPAL)
-	var secundaria := pantalla.boton_de(AsignacionDeControles.ADELANTE, SECUNDARIA)
-	assert_vector(principal.size).is_equal_approx(secundaria.size, Vector2(TOLERANCIA, TOLERANCIA))
+	await _mostrar(pantalla, false)
+	var filas := pantalla.filas(false)
+	var cabecera := filas[0].get_parent().get_child(0) as HBoxContainer
+	for columna: int in [1, 2]:
+		var borde_de_la_cabecera := (
+			(cabecera.get_child(columna) as Control).get_global_rect().position.x
+		)
+		for fila: HBoxContainer in filas:
+			assert_float(_borde_izquierdo(fila.get_child(columna))).is_equal_approx(
+				borde_de_la_cabecera, TOLERANCIA
+			)
 
 
-func test_una_ranura_vacia_llena_su_contenedor() -> void:  # AC-CFG-036
+func test_una_ranura_vacia_mide_una_tecla_de_una_letra() -> void:  # AC-CFG-036
 	var pantalla := await _pantalla()
-	var celda := pantalla.boton_de(AsignacionDeControles.EXAMINAR, SECUNDARIA)
+	var una_letra := GlifoDeEntrada.de_una_tecla("W")
+	add_child(auto_free(una_letra))
 	var vacia := pantalla.glifo_de(AsignacionDeControles.EXAMINAR, SECUNDARIA)
 	assert_int(vacia.forma).is_equal(GlifoDeEntrada.Forma.RANURA_LIBRE)
-	assert_vector(vacia.size).is_equal_approx(celda.size, Vector2(TOLERANCIA, TOLERANCIA))
+	assert_vector(vacia.get_minimum_size()).is_equal_approx(
+		una_letra.get_minimum_size(), Vector2(TOLERANCIA, TOLERANCIA)
+	)
 
 
 func test_esperar_una_entrada_no_mueve_la_grilla() -> void:  # AC-CFG-036
