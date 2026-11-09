@@ -39,6 +39,8 @@ const TEXTOS: Dictionary[Preferencias.Campo, String] = {
 ## la letra y los márgenes son los de los botones del menú de inicio.
 const ANCHO_DEL_NOMBRE := 420.0
 const ANCHO_DEL_BOTON := 72.0
+## Cuánto hay que inclinar un eje del joystick para que cuente como una entrada: en reposo no.
+const INCLINACION_QUE_CUENTA := 0.5
 
 @export var _marco: Control
 @export var _titulo: Label
@@ -50,6 +52,7 @@ var _preferencias := Preferencias.new()
 var _barras: Dictionary[Preferencias.Campo, HSlider] = {}
 var _primer_boton: Control
 var _ajustar_controles: Button
+var _con_el_joystick: bool = false
 
 
 func _ready() -> void:
@@ -101,6 +104,28 @@ func filas() -> Array[HBoxContainer]:
 
 func marco() -> Control:
 	return _marco
+
+
+## Anota el último dispositivo que usó el jugador: el joystick con un botón o un eje inclinado, el
+## teclado y el mouse con una tecla, un clic o un movimiento. Con él se abre la pantalla de
+## controles, en la pestaña que corresponde.
+func anotar_el_dispositivo(evento: InputEvent) -> void:
+	if evento is InputEventJoypadButton:
+		_con_el_joystick = true
+	elif evento is InputEventJoypadMotion:
+		var eje := evento as InputEventJoypadMotion
+		if absf(eje.axis_value) >= INCLINACION_QUE_CUENTA:
+			_con_el_joystick = true
+	elif (
+		evento is InputEventKey
+		or evento is InputEventMouseButton
+		or evento is InputEventMouseMotion
+	):
+		_con_el_joystick = false
+
+
+func _input(evento: InputEvent) -> void:
+	anotar_el_dispositivo(evento)
 
 
 func _unhandled_input(evento: InputEvent) -> void:
@@ -175,7 +200,7 @@ func _fila_de_los_controles() -> HBoxContainer:
 func _abrir_los_controles() -> void:
 	_marco.hide()
 	_controles.layer = layer + 1
-	_controles.abrir()
+	_controles.abrir(_con_el_joystick)
 
 
 func _al_cerrar_los_controles() -> void:

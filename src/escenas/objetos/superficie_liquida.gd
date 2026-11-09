@@ -68,9 +68,14 @@ func _ready() -> void:
 	mesh = _superficie
 	if en_balde:
 		configurar_agua(true)
+		var pintura := material_override as ShaderMaterial
+		pintura.set_shader_parameter(&"ondas_en_vertices", true)
+		pintura.set_shader_parameter(&"radio_del_disco", _radio)
+		pintura.set_shader_parameter(&"relieve_de_las_ondas", RELIEVE_DE_LAS_ONDAS)
 		_gotas = Gotas.new()
 		add_child(_gotas)
 		_gotas.preparar(material_override)
+		_crear_superficie()
 	else:
 		_onda = float(absf(global_basis.y.normalized().dot(Vector3.UP)) > 0.8)
 	_dibujar()
@@ -92,9 +97,7 @@ func configurar_agua(acuosa: bool) -> void:
 	pintura.set_shader_parameter("es_mancha", false)
 	pintura.set_shader_parameter("densidad_de_solucion", _densidad_visual(color_de_la_superficie()))
 	pintura.set_shader_parameter("normal_de_la_malla", true)
-	pintura.set_shader_parameter("transparencia", 0.65 if en_balde else 0.55)
-	pintura.set_shader_parameter("hacia_la_luz", Vector3(-0.41, 0.88, 0.23))
-	pintura.set_shader_parameter("brillo", 0.65)
+	pintura.set_shader_parameter("transparencia", 0.35 if en_balde else 0.55)
 	material_override = pintura
 	_cancelar_mezcla()
 	cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
@@ -415,11 +418,9 @@ func _crear_topologia() -> void:
 			)
 	for punto: Vector2 in _puntos:
 		_coordenadas.append(punto / (_radio * 2.0) + Vector2(0.5, 0.5))
-	if en_balde:
-		var muestras := PackedVector2Array()
-		for punto: Vector2 in _puntos:
-			muestras.append(punto / _radio)
-		_ondas.preparar_muestras(muestras)
+	for indice: int in _puntos.size():
+		_vertices[indice] = Vector3(_puntos[indice].x, 0.0, _puntos[indice].y)
+	_normales.fill(Vector3.UP)
 	for segmento: int in SEGMENTOS:
 		_indices.append_array(PackedInt32Array([0, 1 + segmento, 1 + (segmento + 1) % SEGMENTOS]))
 	for anillo: int in range(1, ANILLOS):
@@ -431,65 +432,27 @@ func _crear_topologia() -> void:
 			_indices.append_array(PackedInt32Array([a, c, b, b, c, d]))
 
 
-## La caja entera de la malla contra el encuadre de la cámara de su viewport. Sin cámara, se ve.
-func _esta_en_cuadro() -> bool:
-	var camara := get_viewport().get_camera_3d()
-	if camara == null:
-		return true
-	var caja := global_transform * _superficie.custom_aabb
-	for plano: Plane in camara.get_frustum():
-		# Alcanza con que la esquina más metida toque el plano: una caja que cruza se ve.
-		if plano.distance_to(caja.get_support(-plano.normal)) > 0.0:
-			return false
-	return true
-
-
 func _dibujar() -> void:
 	var inclinacion := _inclinacion() if en_balde else Vector2.ZERO
 	var quieta := _onda < 0.0001 and (not en_balde or _ondas.amplitud() < 0.0001)
 	if quieta and _estaba_quieta and inclinacion.is_equal_approx(_ultima_inclinacion):
 		return
-	# Fuera de cuadro el dibujo queda pendiente: no se anota como hecho, y el primero que
-	# caiga adentro recalcula la malla con el estado de ese momento.
-	if (
-		en_balde
-		and not _recrea_la_superficie
-		and _superficie.get_surface_count() > 0
-		and not _esta_en_cuadro()
-	):
-		return
 	_estaba_quieta = quieta
 	_ultima_inclinacion = inclinacion
-	var alturas := _ondas.alturas_muestreadas() if en_balde else PackedFloat32Array()
-	var limite := maxf(0.145 - position.y, 0.0) if en_balde else 0.105
-	var descenso := (
-		maxf(inclinacion.length() * _radio * _nivel_visual - limite, 0.0) if en_balde else 0.0
-	)
-	var fondo := ALTURA_MINIMA - position.y if en_balde else -0.1
-	_vertices[0] = Vector3(
-		0.0, alturas[0] * RELIEVE_DE_LAS_ONDAS * _nivel_visual if en_balde else 0.0, 0.0
-	)
 	if en_balde:
-		_vertices[0].y = clampf(_vertices[0].y - descenso, fondo, limite)
-	var borde := (
-		lerpf(0.9, 1.0, _nivel_visual)
-		if en_balde
-		else 1.0 - _onda * 0.12 * (0.5 + 0.5 * cos(_tiempo * 5.0))
-	)
+		_pasar_el_oleaje(inclinacion)
+		return
+	_vertices[0] = Vector3.ZERO
+	var borde := 1.0 - _onda * 0.12 * (0.5 + 0.5 * cos(_tiempo * 5.0))
 	for anillo: int in range(1, ANILLOS + 1):
 		var proporcion := float(anillo) / ANILLOS
 		for segmento: int in SEGMENTOS:
 			var punto := _puntos[1 + (anillo - 1) * SEGMENTOS + segmento] * borde
-			var altura := inclinacion.dot(punto)
-			if en_balde:
-				altura += alturas[1 + (anillo - 1) * SEGMENTOS + segmento] * RELIEVE_DE_LAS_ONDAS
-				altura *= _nivel_visual
-			else:
-				var distancia := punto.distance_to(_centro_de_onda) / _radio
-				altura += sin(distancia * 12.0 - _tiempo * 9.0) * 0.0015 * _onda
-				altura = clampf(altura + 0.0015, 0.0002, 0.0015) * (1.0 - proporcion * 0.7)
+			var distancia := punto.distance_to(_centro_de_onda) / _radio
+			var altura := sin(distancia * 12.0 - _tiempo * 9.0) * 0.0015 * _onda
+			altura = clampf(altura + 0.0015, 0.0002, 0.0015) * (1.0 - proporcion * 0.7)
 			_vertices[1 + (anillo - 1) * SEGMENTOS + segmento] = Vector3(
-				punto.x, clampf(altura - descenso, fondo, limite), punto.y
+				punto.x, clampf(altura, -0.1, 0.105), punto.y
 			)
 	# Dos tangentes por vértice evitan acumular cada triángulo de la superficie.
 	_normales[0] = (
@@ -513,34 +476,88 @@ func _dibujar() -> void:
 	if _recrea_la_superficie:
 		_superficie.clear_surfaces()
 	if _superficie.get_surface_count() == 0:
-		var arrays: Array = []
-		arrays.resize(Mesh.ARRAY_MAX)
-		arrays[Mesh.ARRAY_VERTEX] = _vertices
-		arrays[Mesh.ARRAY_NORMAL] = _normales
-		arrays[Mesh.ARRAY_TEX_UV] = _coordenadas
-		arrays[Mesh.ARRAY_INDEX] = _indices
-		_superficie.add_surface_from_arrays(
-			Mesh.PRIMITIVE_TRIANGLES, arrays, [], {}, Mesh.ARRAY_FLAG_USE_DYNAMIC_UPDATE
+		_crear_superficie()
+		return
+	for indice: int in _normales.size():
+		var normal := _normales[indice].octahedron_encode() * 65535.0
+		_normales_empaquetadas[indice * _paso_de_normales] = (int(normal.x) | (int(normal.y) << 16))
+	_superficie.surface_update_vertex_region(0, 0, _vertices.to_byte_array())
+	_superficie.surface_update_vertex_region(
+		0, _inicio_de_normales, _normales_empaquetadas.to_byte_array()
+	)
+
+
+## El balde sólo pasa sus parámetros: el shader mueve los vértices y calcula las normales.
+func _pasar_el_oleaje(inclinacion: Vector2) -> void:
+	var pintura := material_override as ShaderMaterial
+	var limite := maxf(0.145 - position.y, 0.0)
+	var amplitudes := _ondas.amplitudes()
+	pintura.set_shader_parameter(&"inclinacion", inclinacion)
+	pintura.set_shader_parameter(&"nivel", _nivel_visual)
+	pintura.set_shader_parameter(
+		&"descenso", maxf(inclinacion.length() * _radio * _nivel_visual - limite, 0.0)
+	)
+	pintura.set_shader_parameter(&"fondo", ALTURA_MINIMA - position.y)
+	pintura.set_shader_parameter(&"limite", limite)
+	pintura.set_shader_parameter(&"borde", lerpf(0.9, 1.0, _nivel_visual))
+	pintura.set_shader_parameter(
+		&"modos_a", Vector4(amplitudes[0], amplitudes[1], amplitudes[2], amplitudes[3])
+	)
+	pintura.set_shader_parameter(
+		&"modos_b", Vector4(amplitudes[4], amplitudes[5], amplitudes[6], amplitudes[7])
+	)
+
+
+## Los vértices como los dibuja la GPU con lo que recibió en el último dibujo. El balde los
+## calcula en el shader, y esto los repite para mirarlos sin una GPU.
+func vertices_dibujados() -> PackedVector3Array:
+	if not en_balde:
+		return _vertices.duplicate()
+	var pintura := material_override as ShaderMaterial
+	var inclinacion: Vector2 = pintura.get_shader_parameter(&"inclinacion")
+	var nivel: float = pintura.get_shader_parameter(&"nivel")
+	var descenso: float = pintura.get_shader_parameter(&"descenso")
+	var fondo: float = pintura.get_shader_parameter(&"fondo")
+	var limite: float = pintura.get_shader_parameter(&"limite")
+	var borde: float = pintura.get_shader_parameter(&"borde")
+	var a: Vector4 = pintura.get_shader_parameter(&"modos_a")
+	var b: Vector4 = pintura.get_shader_parameter(&"modos_b")
+	var amplitudes: Array[float] = [a.x, a.y, a.z, a.w, b.x, b.y, b.z, b.w]
+	var vertices := PackedVector3Array()
+	for punto: Vector2 in _puntos:
+		var ondas := 0.0
+		for modo: int in Ondas.MODOS:
+			ondas += amplitudes[modo] * Ondas.forma_en(modo, punto / _radio)
+		var altura := (
+			(inclinacion.dot(punto * borde) + ondas * RELIEVE_DE_LAS_ONDAS) * nivel - descenso
 		)
-		_superficie.custom_aabb = AABB(
-			Vector3(-_radio, -0.1, -_radio), Vector3(_radio * 2.0, 0.205, _radio * 2.0)
+		vertices.append(Vector3(punto.x * borde, clampf(altura, fondo, limite), punto.y * borde))
+	return vertices
+
+
+func _crear_superficie() -> void:
+	var arrays: Array = []
+	arrays.resize(Mesh.ARRAY_MAX)
+	arrays[Mesh.ARRAY_VERTEX] = _vertices
+	arrays[Mesh.ARRAY_NORMAL] = _normales
+	arrays[Mesh.ARRAY_TEX_UV] = _coordenadas
+	arrays[Mesh.ARRAY_INDEX] = _indices
+	# El balde no se reescribe: su malla queda plana y el shader la mueve.
+	var banderas := 0 if en_balde else Mesh.ARRAY_FLAG_USE_DYNAMIC_UPDATE
+	_superficie.add_surface_from_arrays(Mesh.PRIMITIVE_TRIANGLES, arrays, [], {}, banderas)
+	_superficie.custom_aabb = AABB(
+		Vector3(-_radio, -0.1, -_radio), Vector3(_radio * 2.0, 0.205, _radio * 2.0)
+	)
+	if en_balde:
+		return
+	var formato_de_la_malla := _superficie.surface_get_format(0)
+	_inicio_de_normales = RenderingServer.mesh_surface_get_format_offset(
+		formato_de_la_malla, _vertices.size(), Mesh.ARRAY_NORMAL
+	)
+	_paso_de_normales = (
+		RenderingServer.mesh_surface_get_format_normal_tangent_stride(
+			formato_de_la_malla, _vertices.size()
 		)
-		var formato := _superficie.surface_get_format(0)
-		_inicio_de_normales = RenderingServer.mesh_surface_get_format_offset(
-			formato, _vertices.size(), Mesh.ARRAY_NORMAL
-		)
-		_paso_de_normales = (
-			RenderingServer.mesh_surface_get_format_normal_tangent_stride(formato, _vertices.size())
-			/ 4
-		)
-		_normales_empaquetadas.resize(_vertices.size() * _paso_de_normales)
-	else:
-		for indice: int in _normales.size():
-			var normal := _normales[indice].octahedron_encode() * 65535.0
-			_normales_empaquetadas[indice * _paso_de_normales] = (
-				int(normal.x) | (int(normal.y) << 16)
-			)
-		_superficie.surface_update_vertex_region(0, 0, _vertices.to_byte_array())
-		_superficie.surface_update_vertex_region(
-			0, _inicio_de_normales, _normales_empaquetadas.to_byte_array()
-		)
+		/ 4
+	)
+	_normales_empaquetadas.resize(_vertices.size() * _paso_de_normales)

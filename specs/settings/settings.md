@@ -3,7 +3,7 @@ schema_version: 1
 capability_id: CAP-CFG
 status: ratified
 owner: por definir
-provenance: fichas «2. Menú de inicio» (sección «Interfaz de configuraciones») y «Pausa y menú de pausa»; rangos, pasos y defectos decididos por el dueño en #378, provisorios hasta que el testing los ajuste; «Controles» (esquema de teclado y mouse) de la ficha «2. Menú de inicio», #379; esquema de joystick de la misma ficha y decisión del dueño del 2026-11-04, #380
+provenance: fichas «2. Menú de inicio» (sección «Interfaz de configuraciones») y «Pausa y menú de pausa»; rangos, pasos y defectos decididos por el dueño en #378, provisorios hasta que el testing los ajuste; «Controles» (esquema de teclado y mouse) de la ficha «2. Menú de inicio», #379; esquema de joystick de la misma ficha y decisión del dueño del 2026-11-04, #380; pestañas y tecla secundaria de la pantalla de controles, bocetos aprobados por el dueño el 2026-11-08, #929
 ---
 
 # Capacidad: configuraciones
@@ -31,8 +31,13 @@ impide jugar.
 | **Entrada** | una tecla o un botón del mouse. Mover el mouse y la rueda no lo son | evento, input |
 | **Botón de joystick** | un botón del joystick, nombrado como en PlayStation: X, CÍRCULO, CUADRADO, L1, R1. Los ejes y los gatillos analógicos no lo son | — |
 | **Esquema de joystick** | el botón que cada acción de botón tiene en el joystick, aparte de su tecla o clic | — |
-| **Ranura** | el lugar fijo de una entrada dentro de una acción: Movimiento tiene ocho, dos por dirección —la de WASD y la de flechas—, y cada una de las demás tiene una | slot, alias |
-| **Esquema de fábrica** | la entrada que cada ranura tiene mientras nadie la cambió. Son las teclas que nombran los demás contratos | por omisión |
+| **Ranura** | el lugar fijo de una entrada dentro de una acción. Toda acción reasignable tiene dos de teclado o mouse, la **principal** y la **secundaria**; las cinco de botón suman la del joystick | slot, alias |
+| **Principal** | la primera ranura de teclado o mouse de una acción. Nunca queda vacía | primaria, tecla 1 |
+| **Secundaria** | la segunda ranura de teclado o mouse de una acción. Puede estar vacía. Las de Movimiento traen las flechas de fábrica | alternativa, tecla 2 |
+| **Ranura vacía** | una secundaria sin entrada. La pantalla la muestra como un recuadro punteado tenue | libre, nula |
+| **Pestaña** | cada una de las dos vistas de la pantalla de controles: **TECLADO Y MOUSE** y **JOYSTICK**. Se muestra una sola a la vez | página, sección |
+| **FIJO** | la marca de un renglón que se muestra y no se puede cambiar | bloqueado |
+| **Esquema de fábrica** | la entrada que cada ranura tiene mientras nadie la cambió: las teclas que nombran los demás contratos, y las secundarias vacías, salvo las flechas de Movimiento | por omisión |
 
 ## Comportamiento normativo
 
@@ -144,27 +149,29 @@ no hay archivo, ENTONCES DEBE usar todos los defectos.
 ### BR-CFG-015 — La fila «CONTROLES» abre la pantalla de controles
 
 CUANDO se aprieta el botón «AJUSTAR» de la fila «CONTROLES», que está debajo de lenguaje, el
-sistema DEBE abrir la pantalla de controles, que DEBE ser una lista con un
-renglón por acción: su nombre y la tecla o el botón de cada una de sus entradas. CUANDO llega la
+sistema DEBE abrir la pantalla de controles, que DEBE tener una pestaña por dispositivo
+(`BR-CFG-031`) y mostrar, por cada acción, su nombre y su entrada. CUANDO llega la
 tecla de Pausa, el sistema DEBE cerrar la pantalla de controles y volver a Configuraciones.
 Abierta desde la pausa, el juego DEBE seguir en pausa y el cursor suelto, igual que
 Configuraciones.
 
 ### BR-CFG-016 — Siete acciones reasignables
 
-El jugador DEBE poder reasignar siete acciones, con estos nombres en pantalla: **Movimiento**,
-**Abrir la interfaz del celular**, **Examinar**, **Agacharse**, **Agarrar / Soltar**,
-**Interactuar** y **Pausa**. Ninguna otra acción se reasigna. Movimiento DEBE mostrar, en
-su único renglón, ocho entradas, dos por cada dirección —adelante, atrás, izquierda y
-derecha—, una de WASD y otra de flechas, y cada una DEBE poder reasignarse desde ese renglón. Las
-demás DEBEN mostrar una en su renglón. El esquema de fábrica DEBE ser: W, A, S, D y las cuatro
-flechas en Movimiento; Q en celular; E en Examinar; Espacio en Agacharse; el clic izquierdo en
-Agarrar / Soltar; el clic derecho en Interactuar; Esc en Pausa.
+El jugador DEBE poder reasignar siete acciones: **Movimiento**, **Abrir la interfaz del celular**,
+**Examinar**, **Agacharse**, **Agarrar / Soltar**, **Interactuar** y **Pausa**. Ninguna otra
+acción se reasigna. Movimiento DEBE abrirse en cuatro renglones, **Adelante**, **Atrás**,
+**Izquierda** y **Derecha**. Cada uno de esos renglones, igual que cada una de las otras seis
+acciones, DEBE tener una principal y una secundaria, y cada una DEBE poder reasignarse. El esquema
+de fábrica DEBE ser: en Movimiento, W, S, A y D de principal y la flecha de esa dirección de
+secundaria; Q en celular; E en Examinar; Espacio en Agacharse; el clic izquierdo en Agarrar /
+Soltar; el clic derecho en Interactuar; Esc en Pausa. Las secundarias de esas seis acciones DEBEN
+estar vacías de fábrica.
 
 ### BR-CFG-017 — Cualquier acción acepta una tecla o un botón del mouse
 
 CUANDO el jugador elige una entrada de la pantalla de controles y aprieta una tecla o un botón
-del mouse, el sistema DEBE asignársela a esa ranura. Toda acción DEBE aceptar las dos clases:
+del mouse, el sistema DEBE asignársela a esa ranura. Una secundaria DEBE aceptar lo mismo que una
+principal. Toda acción DEBE aceptar las dos clases:
 un clic se puede pasar a una tecla, y una tecla a un clic. Mover el mouse y la rueda NO DEBEN
 ser entradas aceptadas: apretarlos NO DEBE cambiar nada. CUANDO el jugador aprieta la tecla de
 Pausa mientras espera una entrada, el sistema DEBE cancelar la espera sin cambiar nada. EN LA WEB, el sistema NO DEBE aceptar
@@ -174,16 +181,24 @@ acción no se podría hacer.
 ### BR-CFG-018 — Una entrada nunca hace dos cosas
 
 CUANDO la entrada elegida ya la tiene otra ranura, el sistema DEBE intercambiarlas: la otra
-ranura DEBE recibir la entrada que tenía la elegida. Ninguna ranura DEBE quedar sin entrada y
-ninguna entrada DEBE estar en dos ranuras. El intercambio DEBE valer también entre las dos
-ranuras de una misma acción y entre direcciones. CUANDO la entrada elegida es la que la ranura
+ranura DEBE recibir la entrada que tenía la elegida. Ninguna principal DEBE quedar vacía y
+ninguna entrada DEBE estar en dos ranuras. El intercambio DEBE valer entre todas las ranuras de
+teclado o mouse: también entre la principal y la secundaria de una misma acción, y entre
+direcciones. CUANDO la ranura elegida es una secundaria vacía y la entrada elegida está en otra
+secundaria, el sistema DEBE moverla y dejar vacía a esa otra. CUANDO la ranura elegida es una
+secundaria vacía y la entrada elegida está en una principal, el intercambio dejaría vacía a esa
+principal: el sistema NO DEBE cambiar nada ni escribir nada, y la pantalla DEBE avisar
+«YA ES LA PRINCIPAL DE» y el nombre de esa acción. CUANDO la entrada elegida es la que la ranura
 ya tiene, el sistema NO DEBE cambiar nada ni escribir nada.
 
 ### BR-CFG-019 — Cada entrada tiene una ranura estable
 
-Elegir una entrada en pantalla DEBE identificar su acción y su ranura. Cambiar la ranura de
-flechas de una dirección DEBE conservar la de WASD de esa dirección, y al revés. El intercambio
-DEBE identificar las dos ranuras, también si pertenecen a la misma acción.
+Elegir una entrada en pantalla DEBE identificar su acción y su ranura: se elige una celda, no un
+renglón. Cambiar la secundaria de una acción DEBE conservar su principal, y al revés. El
+intercambio DEBE identificar las dos ranuras, también si pertenecen a la misma acción. Una acción
+DEBE responder a su principal y a su secundaria, las dos en el momento (`BR-CFG-020`). CUANDO el
+jugador aprieta SUPR sobre una secundaria, el sistema DEBE vaciarla. SUPR sobre una principal, sobre
+una ranura de joystick o sobre una secundaria ya vacía NO DEBE cambiar nada.
 
 ### BR-CFG-020 — Cada asignación vale en el momento, y las acciones leen la acción
 
@@ -204,9 +219,12 @@ aunque Pausa tenga otra entrada. Con Pausa en otra tecla, la tecla nueva y Esc D
 
 ### BR-CFG-022 — Las asignaciones se guardan con las preferencias
 
-El sistema DEBE guardar las asignaciones en el mismo archivo de las preferencias, con su propia
-clave, y cada cambio DEBE llegar al disco en el momento (`BR-CFG-012`). SI no hay asignaciones
-guardadas, ENTONCES cada ranura DEBE tener su entrada del esquema de fábrica. Volver al menú y
+El sistema DEBE guardar las asignaciones, las secundarias también, en el mismo archivo de las
+preferencias, con su propia clave, y cada cambio DEBE llegar al disco en el momento
+(`BR-CFG-012`). Una secundaria vacía DEBE guardarse como vacía, y NO DEBE contar como una entrada
+repetida. SI no hay asignaciones guardadas, ENTONCES cada ranura DEBE tener su entrada del esquema
+de fábrica. SI el archivo es de antes de las secundarias, ENTONCES DEBE cargar con las secundarias
+de fábrica y conservar cada asignación que guardaba, las del joystick incluidas. Volver al menú y
 entrar otra vez, y empezar un nuevo juego, NO DEBEN tocarlas (`BR-CFG-011`). CUANDO abre el
 juego, el sistema DEBE aplicarlas antes de que el jugador pueda usar una (`BR-CFG-013`).
 
@@ -214,8 +232,9 @@ juego, el sistema DEBE aplicarlas antes de que el jugador pueda usar una (`BR-CF
 
 CUANDO el sistema lee las asignaciones, DEBE cargarlas sobre las ranuras de fábrica y validar el
 conjunto resultante. SI una asignación es ilegible, o es de una acción o una ranura que no
-existe, ENTONCES DEBE ignorarla y esa ranura DEBE volver a su entrada de fábrica. SI el conjunto
-resultante deja una entrada en dos ranuras, ENTONCES el
+existe, ENTONCES DEBE ignorarla y esa ranura DEBE volver a su entrada de fábrica. Una principal
+guardada como vacía es ilegible. SI el conjunto resultante deja una entrada en dos ranuras,
+ENTONCES el
 sistema DEBE descartar el bloque de controles completo y restaurar el esquema de fábrica. NO
 DEBE aplicar nunca un esquema parcial con entradas repetidas o con una acción sin entrada. Las
 demás preferencias del archivo DEBEN conservarse (`BR-CFG-014`).
@@ -238,9 +257,9 @@ Pausa en el joystick es START (`BR-SAV-024`). La cruceta, el joystick derecho y 
 
 ### BR-CFG-026 — La pantalla de controles reasigna los botones del joystick
 
-La pantalla de controles DEBE sumar el esquema del joystick: un renglón por cada una de las cinco
-acciones de botón, con su botón, y dos renglones que sólo se muestran —joystick izquierdo,
-Movimiento, y joystick derecho, Visión—, que NO DEBEN poder reasignarse. CUANDO el jugador elige el
+La pestaña JOYSTICK DEBE mostrar un renglón por cada una de las cinco acciones de botón, con su
+botón, y tres renglones FIJO que NO DEBEN poder reasignarse: Movimiento, en el joystick izquierdo;
+Visión, en el derecho, y Pausa, en START. CUANDO el jugador elige el
 botón de un renglón y aprieta un botón de joystick, el sistema DEBE asignárselo a esa acción, con el
 intercambio de `BR-CFG-018` dentro del joystick: ninguna acción queda sin botón y ningún botón
 está en dos acciones. Una ranura de teclado o mouse NO DEBE aceptar un botón de joystick, y una de
@@ -285,6 +304,59 @@ validarlas como `BR-CFG-023`: un botón ilegible, que no es un botón, que es ST
 sin botón de joystick, se ignora y esa acción vuelve a su botón de fábrica; dos acciones con el
 mismo botón descartan el bloque de controles completo, también las teclas. SI el archivo no guarda
 botones de joystick, ENTONCES cada acción DEBE tener su botón de fábrica.
+
+### BR-CFG-031 — La pantalla de controles tiene una pestaña por dispositivo
+
+La pantalla de controles DEBE tener dos pestañas, **TECLADO Y MOUSE** y **JOYSTICK**, cada una con
+el dibujo de su dispositivo, y DEBE mostrar una sola a la vez. CUANDO se abre, DEBE elegir la
+pestaña del último dispositivo que el jugador usó: un botón o un eje del joystick elige JOYSTICK, y
+una tecla o el mouse, TECLADO Y MOUSE; sin ninguna entrada todavía, o sin un joystick conectado,
+TECLADO Y MOUSE. Las pestañas DEBEN elegirse como cualquier botón: con el mouse y por foco, con las
+flechas, Tab o la cruceta, y X o ENTER. SI hay un joystick conectado, ENTONCES L1 y R1 DEBEN verse
+junto a las pestañas y cambiar de pestaña MIENTRAS la pantalla no espera una entrada; esperando una,
+DEBEN asignarse. La pestaña JOYSTICK DEBE mostrar «● JOYSTICK CONECTADO».
+
+SI no hay un joystick conectado, ENTONCES la pantalla NO DEBE mostrar ningún botón del joystick, ni
+L1 y R1 junto a las pestañas. La pestaña JOYSTICK DEBE seguir
+visible pero apagada, y SI se la elige DEBE mostrar el aviso «CONECTÁ UN JOYSTICK PARA
+CONFIGURARLO» en lugar de las acciones. CUANDO un joystick se conecta con la pantalla abierta, la
+pestaña DEBE habilitarse y L1 y R1 DEBEN aparecer; la pestaña elegida NO DEBE cambiar. CUANDO se
+desconecta, la pestaña DEBE apagarse, L1 y R1 DEBEN desaparecer, y SI JOYSTICK estaba elegida, la
+pantalla DEBE pasar a TECLADO Y MOUSE.
+
+Cada pestaña DEBE tener una sola lista, con las acciones y Visión, sin otro título que la cabecera
+de sus columnas. Visión DEBE ir en el mismo lugar en las dos pestañas: después de las direcciones de movimiento. Visión, y en
+JOYSTICK Movimiento y Pausa, DEBEN llevar la marca **FIJO**, verse más tenues y no poder elegirse.
+Lo que no depende de ninguna acción —ENTER y las flechas en las interfaces, X y CÍRCULO en el
+joystick— NO DEBE tener renglón, y la pantalla NO DEBE llevar una ayuda de teclas.
+
+Cada tecla dibujada, de una letra, una flecha o un clic, DEBE medir lo mismo: el ancho de la tecla
+más ancha, que es un clic con su nombre en letras. Una tecla angosta se estira a ese ancho, con su
+nombre centrado. En cada columna de una pestaña, PRINCIPAL y SECUNDARIA, todas las teclas y glifos
+DEBEN arrancar en el mismo borde izquierdo, y la cabecera de la columna también. El recuadro del
+foco DEBE enmarcar la tecla elegida con ese mismo ancho. La lista DEBE
+repartirse en el alto entre la cabecera y la línea del pie, con el mismo margen arriba y abajo, y la grilla —nombres y
+columnas— DEBE quedar centrada respecto de las pestañas. La pantalla DEBE decir qué entrada espera la
+celda elegida, y el aviso de una entrada que no se pudo asignar, en una línea debajo de la línea del
+pie, sin mover la grilla.
+
+### BR-CFG-032 — Cada entrada se dibuja con su glifo
+
+La pantalla de controles DEBE dibujar los botones del joystick como glifos y no como texto: ✕ ○ □ △
+con sus colores de PlayStation; L1, R1 y START como píldoras; los joysticks, como un círculo con L o
+R; la cruceta, con su forma. DEBE dibujar las teclas como teclas con borde, y cada clic del mouse y
+Visión también como teclas, con su nombre en letras —CLICK IZQ, CLICK DER, MOUSE— y sin dibujo del
+mouse. Una secundaria vacía DEBE dibujarse como un recuadro punteado tenue, del ancho de las teclas, que arranca en el mismo borde izquierdo que las teclas de su columna.
+
+### BR-CFG-033 — El nombre de cada acción dice las funciones de menú que hace
+
+Cada acción que además hace algo en una interfaz abierta DEBE llevar esa función en su nombre, detrás
+de una barra: Interactuar cierra la nota encuadrada, la computadora, la caja y la ventanilla; Pausa
+vuelve atrás —cierra Configuraciones, los logros, las listas desplegadas y las interfaces— además de
+pausar y reanudar; Agarrar / Soltar pulsa al comprador en la ventanilla; el celular se cierra con la
+misma acción que lo abre. Una acción que no hace nada en una interfaz —Movimiento, Examinar y
+Agacharse— NO DEBE llevar ninguna. Cambiar la entrada de una acción cambia también su función de
+menú, y el nombre es lo que lo avisa.
 
 ## Criterios de aceptación
 
@@ -393,20 +465,21 @@ defecto.
 ### AC-CFG-015 — La fila y la pantalla de controles *(verifica BR-CFG-015)*
 
 DADO Configuraciones abierta ENTONCES la fila «CONTROLES», con el botón «AJUSTAR», está debajo de
-lenguaje. CUANDO se aprieta «AJUSTAR» ENTONCES la pantalla de controles está en pantalla, con un
-renglón por acción; CUANDO llega la tecla de Pausa ENTONCES vuelve Configuraciones y la pantalla
+lenguaje. CUANDO se aprieta «AJUSTAR» ENTONCES la pantalla de controles está en pantalla, con sus
+dos pestañas; CUANDO llega la tecla de Pausa ENTONCES vuelve Configuraciones y la pantalla
 de controles ya no está. DADO Configuraciones abierta desde la pausa CUANDO se abre y se cierra la pantalla de
 controles ENTONCES el juego sigue en pausa y el cursor sigue suelto.
 
 ### AC-CFG-016 — Las siete acciones y su esquema de fábrica *(verifica BR-CFG-016)*
 
-DADO ninguna asignación guardada ENTONCES la pantalla muestra siete renglones, uno por acción, con
-estos nombres: Movimiento, Abrir la interfaz del celular, Examinar, Agacharse, Agarrar / Soltar,
-Interactuar y Pausa. El renglón de Movimiento tiene ocho entradas: adelante en W y en la flecha arriba, atrás en S y en la
-flecha abajo, izquierda en A y en la flecha izquierda, derecha en D y en la flecha derecha. El
-celular está en Q, Examinar en E, Agacharse en Espacio, Agarrar / Soltar en el clic izquierdo,
-Interactuar en el clic derecho y Pausa en Esc. DADO la partida recién abierta ENTONCES las
-entradas de cada acción en el motor son esas.
+DADO ninguna asignación guardada ENTONCES la pestaña TECLADO Y MOUSE muestra diez renglones, con
+estos nombres: Adelante, Atrás, Izquierda, Derecha, Abrir la interfaz del celular, Examinar,
+Agacharse, Agarrar / Soltar, Interactuar y Pausa. Adelante tiene W de principal y la flecha arriba
+de secundaria, Atrás S y la flecha abajo, Izquierda A y la flecha izquierda, y Derecha D y la flecha
+derecha. El celular está en Q, Examinar en E, Agacharse en Espacio, Agarrar / Soltar en el clic
+izquierdo, Interactuar en el clic derecho y Pausa en Esc, y las secundarias de esas seis acciones
+están vacías. DADO la partida recién abierta ENTONCES las entradas de cada acción en el motor son
+esas.
 
 ### AC-CFG-017 — Una tecla o un botón, en cualquier acción *(verifica BR-CFG-017)*
 
@@ -424,19 +497,19 @@ DADO Examinar en E y Agacharse en Espacio CUANDO se asigna Espacio a Examinar EN
 queda en Espacio y Agacharse en E. DADO Agarrar / Soltar en el clic izquierdo e Interactuar en el
 clic derecho CUANDO se asigna el clic izquierdo a Interactuar ENTONCES Interactuar queda en el clic
 izquierdo y Agarrar / Soltar en el clic derecho. DADO adelante en W y en la flecha arriba CUANDO se
-asigna W a la ranura de flechas de adelante ENTONCES la ranura de flechas queda en W y la de WASD
-en la flecha arriba. DADO izquierda en A y derecha en D CUANDO se asigna D a la ranura de WASD de
-izquierda ENTONCES queda en D y la de WASD de derecha en A. En cada caso las catorce ranuras
-tienen, juntas, catorce entradas distintas. DADO Examinar en E CUANDO se asigna E a Examinar
+asigna W a la secundaria de adelante ENTONCES la secundaria queda en W y la principal en la flecha
+arriba. DADO izquierda en A y derecha en D CUANDO se asigna D a la principal de izquierda ENTONCES
+queda en D y la principal de derecha en A. En cada caso las entradas que no están
+vacías son todas distintas. DADO Examinar en E CUANDO se asigna E a Examinar
 ENTONCES nada cambia y no se escribe nada.
 
 ### AC-CFG-019 — Las ranuras *(verifica BR-CFG-019)*
 
-DADO Movimiento de fábrica CUANDO se asigna la tecla H a la ranura de flechas de adelante
-ENTONCES adelante tiene H y W, y las demás direcciones conservan sus dos entradas. DADO adelante
-en W y en la flecha arriba CUANDO se asigna la flecha arriba a la ranura de WASD de adelante
-ENTONCES la ranura de WASD queda en la flecha arriba y la de flechas en W, y ninguna otra acción
-cambia. DADO una asignación a una acción o a una ranura que no existe ENTONCES no cambia nada.
+DADO Movimiento de fábrica CUANDO se asigna la tecla H a la secundaria de adelante ENTONCES
+adelante tiene W de principal y H de secundaria, y las demás direcciones conservan sus dos
+entradas. DADO adelante en W y en la flecha arriba CUANDO se asigna la flecha arriba a la principal
+de adelante ENTONCES la principal queda en la flecha arriba y la secundaria en W, y ninguna otra
+acción cambia. DADO una asignación a una acción o a una ranura que no existe ENTONCES no cambia nada.
 
 ### AC-CFG-020 — Vale en el momento *(verifica BR-CFG-020)*
 
@@ -473,8 +546,8 @@ entrada de fábrica. DADO Examinar con una entrada ilegible —un tipo desconoci
 no es número— y Agacharse en F ENTONCES Examinar vuelve a E y Agacharse conserva F. DADO Examinar
 y Agacharse guardadas las dos en F ENTONCES se descarta el bloque completo: las siete acciones
 tienen su entrada de fábrica. DADO Examinar con una entrada ilegible y Agacharse guardada en E
-ENTONCES restaurar Examinar a E repite E, y se descarta el bloque completo. DADO la ranura de
-WASD de adelante y la de flechas guardadas las dos en H ENTONCES se descarta el bloque completo.
+ENTONCES restaurar Examinar a E repite E, y se descarta el bloque completo. DADO la principal
+y la secundaria de adelante guardadas las dos en H ENTONCES se descarta el bloque completo.
 DADO un archivo ilegible ENTONCES las cinco preferencias están en su defecto y las siete acciones
 en su entrada de fábrica. En cada caso de descarte, una música guardada en 30 % sigue en 30 %.
 
@@ -493,8 +566,8 @@ pueda reasignar.
 
 ### AC-CFG-026 — La pantalla de controles reasigna el joystick *(verifica BR-CFG-026)*
 
-DADO la pantalla de controles ENTONCES muestra cinco renglones de botón, cada uno con el suyo, y
-los dos joysticks, que no se pueden elegir para reasignar. DADO Examinar en CUADRADO CUANDO se
+DADO la pestaña JOYSTICK ENTONCES muestra cinco renglones de botón, cada uno con el suyo, y los
+renglones FIJO de Movimiento, Visión y Pausa, que no se pueden elegir para reasignar. DADO Examinar en CUADRADO CUANDO se
 elige su botón y se aprieta L1 ENTONCES Examinar queda en L1, Agacharse en CUADRADO, y las teclas
 de las dos no cambian. DADO Examinar eligiendo su botón CUANDO se aprieta una tecla o un clic
 ENTONCES no cambia nada; DADO Examinar eligiendo su tecla CUANDO se aprieta un botón de joystick
@@ -537,12 +610,120 @@ vuelve a CUADRADO. DADO Examinar y Agacharse guardadas las dos en L1 ENTONCES se
 completo: el joystick y las teclas tienen su entrada de fábrica y una música guardada en 30 % sigue
 en 30 %. DADO un archivo sin botones de joystick ENTONCES cada acción tiene su botón de fábrica.
 
+### AC-CFG-031 — Las dos pestañas *(verifica BR-CFG-031)*
+
+DADO la pantalla de controles abierta ENTONCES tiene las pestañas TECLADO Y MOUSE y JOYSTICK, cada
+una con el dibujo de su dispositivo, y se ve el contenido de una sola. DADO TECLADO Y MOUSE
+CUANDO se elige JOYSTICK ENTONCES se ve el contenido de JOYSTICK y no el de TECLADO Y MOUSE, y al
+revés. DADO cada pestaña ENTONCES tiene una sola lista. DADO TECLADO Y MOUSE ENTONCES Visión va justo
+después de Derecha, y DADO JOYSTICK, justo después de Movimiento. DADO cada pestaña ENTONCES su lista se
+reparte en el alto entre la cabecera y la línea del pie, con el mismo margen arriba y abajo, y queda
+centrada respecto de las pestañas.
+
+### AC-CFG-032 — La pestaña con la que se abre *(verifica BR-CFG-031)*
+
+DADO que el último dispositivo usado fue un botón del joystick, o un eje inclinado a fondo CUANDO se
+abre la pantalla ENTONCES está elegida JOYSTICK. DADO que fue una tecla, un clic o mover el mouse
+ENTONCES está elegida TECLADO Y MOUSE. DADO que no hubo ninguna entrada todavía, o que el último dispositivo fue el
+joystick y ya no hay ninguno conectado, ENTONCES TECLADO Y MOUSE. DADO un eje del joystick en reposo ENTONCES no cuenta como una entrada.
+
+### AC-CFG-033 — L1 y R1 cambian de pestaña *(verifica BR-CFG-031)*
+
+DADO un joystick conectado, TECLADO Y MOUSE y la pantalla sin esperar una entrada CUANDO llega R1
+ENTONCES se ve JOYSTICK;
+CUANDO llega L1 ENTONCES se ve TECLADO Y MOUSE; DADO JOYSTICK CUANDO llega R1 ENTONCES sigue en
+JOYSTICK, sin dar la vuelta. DADO la pantalla esperando un botón de joystick CUANDO llega L1
+ENTONCES se asigna a la ranura elegida y la pestaña no cambia. DADO un joystick conectado CUANDO se
+elige JOYSTICK con el mouse, o por foco, ENTONCES se ve. DADO cada pestaña ENTONCES su botón puede
+tomar el foco.
+
+### AC-CFG-034 — La pantalla detecta el joystick *(verifica BR-CFG-031)*
+
+DADO un joystick conectado ENTONCES la pestaña JOYSTICK dice «● JOYSTICK CONECTADO», está habilitada
+y L1 y R1 se ven junto a las pestañas; DADO ninguno ENTONCES no dice nada, está apagada y L1 y R1 no
+se ven. DADO ningún joystick CUANDO se elige JOYSTICK ENTONCES se ve el aviso de conectar un joystick
+y ninguna acción. DADO la pantalla abierta en TECLADO Y MOUSE CUANDO se conecta un joystick ENTONCES
+la pestaña se habilita, L1 y R1 aparecen y sigue elegida TECLADO Y MOUSE. DADO la pantalla abierta en
+JOYSTICK CUANDO se desconecta ENTONCES la pestaña se apaga, L1 y R1 desaparecen y pasa a TECLADO Y
+MOUSE.
+
+### AC-CFG-035 — Los renglones fijos *(verifica BR-CFG-031)*
+
+DADO la pestaña TECLADO Y MOUSE ENTONCES Visión lleva la marca FIJO y no se puede elegir. DADO la
+pestaña JOYSTICK ENTONCES además Movimiento y Pausa la llevan.
+
+### AC-CFG-036 — Los glifos *(verifica BR-CFG-032)*
+
+DADO la pestaña JOYSTICK ENTONCES el botón de cada acción es un glifo y no un texto: X, CÍRCULO,
+CUADRADO y TRIÁNGULO con su color de PlayStation, L1 y R1 como píldoras, y START en Pausa. DADO la
+pestaña TECLADO Y MOUSE ENTONCES una tecla es una tecla con borde y cada clic, una tecla con su nombre en letras, distinto
+del clic izquierdo al derecho; Visión también. DADO un botón de joystick sin glifo propio
+ENTONCES se lee por su nombre. DADO cada pestaña ENTONCES cada tecla y cada ranura vacía miden lo mismo, el ancho de
+la tecla más ancha, y en cada columna todas arrancan en el mismo borde
+izquierdo, como la cabecera de la columna. DADO una celda esperando una entrada ENTONCES no cambia el
+tamaño ni la posición de ninguna celda.
+
+### AC-CFG-037 — Las secundarias de fábrica *(verifica BR-CFG-016)*
+
+DADO ninguna asignación guardada ENTONCES Adelante, Atrás, Izquierda y Derecha tienen la flecha de su
+dirección de secundaria. DADO Agarrar / Soltar, Interactuar, Examinar, Agacharse, el celular y
+Pausa ENTONCES su secundaria está vacía y la pantalla la dibuja como un recuadro punteado, sin texto.
+
+### AC-CFG-038 — Una secundaria acepta y vale *(verifica BR-CFG-019, BR-CFG-017, BR-CFG-020)*
+
+DADO Examinar con la secundaria vacía CUANDO se elige esa celda y se aprieta F ENTONCES la
+secundaria queda en F y la principal sigue en E. DADO lo mismo CUANDO se aprieta el clic central
+ENTONCES queda en el clic central. DADO esa celda CUANDO se aprieta un botón de joystick ENTONCES no
+cambia nada. DADO Examinar con E y F CUANDO llega E ENTONCES la mano examina, y CUANDO llega F
+también. DADO Pausa con Esc y P CUANDO llega P ENTONCES se pausa, y CUANDO llega otra vez ENTONCES
+se reanuda. DADO la web CUANDO se elige la secundaria de Examinar y se aprieta Esc ENTONCES no cambia
+nada; CUANDO se elige la de Pausa ENTONCES queda en Esc.
+
+### AC-CFG-039 — SUPR vacía una secundaria *(verifica BR-CFG-019)*
+
+DADO Examinar con F de secundaria CUANDO se elige esa celda y se aprieta SUPR ENTONCES la secundaria
+queda vacía, la principal sigue en E y F ya no examina. DADO la flecha arriba de secundaria de
+Adelante CUANDO se le aprieta SUPR ENTONCES queda vacía. DADO la principal de Examinar CUANDO se
+aprieta SUPR ENTONCES sigue en E y no se escribe nada. DADO una secundaria vacía CUANDO se aprieta
+SUPR ENTONCES no se escribe nada.
+
+### AC-CFG-040 — El intercambio con las secundarias *(verifica BR-CFG-018)*
+
+DADO Examinar en E y Agacharse con F de secundaria CUANDO se asigna F a la principal de Examinar
+ENTONCES Examinar queda con F de principal y Agacharse con E de secundaria. DADO la secundaria de
+Examinar vacía y F en la secundaria de Agacharse CUANDO se asigna F a la de Examinar ENTONCES
+Examinar tiene F y la de Agacharse queda vacía. DADO la secundaria de Examinar vacía CUANDO se
+asigna Q, que es la principal del celular, ENTONCES no cambia nada, no se escribe nada y la pantalla
+avisa «YA ES LA PRINCIPAL DE» y el nombre del celular. DADO la secundaria de Agacharse vacía CUANDO se
+asigna W ENTONCES no cambia nada y la pantalla avisa «YA ES LA PRINCIPAL DE ADELANTE». DADO la
+principal de Examinar CUANDO se asigna la flecha arriba, que es la secundaria de Adelante, ENTONCES
+Examinar queda en la flecha arriba y Adelante con E de secundaria. En cada caso las entradas que no
+están vacías son todas distintas.
+
+### AC-CFG-041 — Las secundarias se guardan y se validan *(verifica BR-CFG-022, BR-CFG-023)*
+
+DADO Examinar con F de secundaria CUANDO se lee el archivo del disco, antes de cerrar la pantalla,
+ENTONCES la secundaria de Examinar está en F. DADO una secundaria vaciada CUANDO se vuelve a abrir
+el juego ENTONCES sigue vacía. DADO un archivo de antes de las secundarias, con Examinar en F y
+Agacharse en L1, ENTONCES Examinar tiene F de principal y la secundaria vacía, Agacharse tiene L1
+en el joystick, y las direcciones tienen las flechas de secundaria. DADO una secundaria ilegible
+ENTONCES vuelve a su entrada de fábrica. DADO una principal guardada como vacía ENTONCES vuelve a su
+entrada de fábrica. DADO la secundaria de Examinar y la principal de Agacharse guardadas las dos en
+F ENTONCES se descarta el bloque completo y una música guardada en 30 % sigue en 30 %. DADO dos
+secundarias vacías ENTONCES no cuentan como una entrada repetida.
+
+### AC-CFG-042 — El nombre dice las funciones de menú *(verifica BR-CFG-033, BR-CFG-031)*
+
+DADO la lista de acciones ENTONCES el nombre de Interactuar y el del celular incluyen «cerrar»; el de
+Pausa, «volver»; el de Agarrar / Soltar, «pulsar»; y el de Movimiento, Examinar y Agacharse no
+agrega ninguna función. DADO cada pestaña ENTONCES cada acción se muestra con ese nombre completo, en
+una sola línea, y las celdas de todos los renglones quedan alineadas.
+
 ## No objetivos
 
 - Esta capacidad NO ajusta el contraste, ni ofrece otro idioma que el español.
-- Esta capacidad NO ofrece una sensibilidad ni una vibración del joystick, NO muestra íconos de los
-  botones, NO ofrece un botón que restablezca el esquema de fábrica y NO acepta como entrada mover
-  el mouse ni la rueda.
+- Esta capacidad NO ofrece una sensibilidad ni una vibración del joystick, NO ofrece un botón que
+  restablezca el esquema de fábrica y NO acepta como entrada mover el mouse ni la rueda.
 - Esta capacidad NO guarda ni borra la partida: eso es de
   [`save-and-resume`](../save-and-resume/save-and-resume.md).
 - Esta capacidad NO decide qué suena ni por qué bus: eso es de

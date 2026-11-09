@@ -7,10 +7,7 @@ uniform float progreso_de_mezcla : hint_range(0.0, 1.0) = 1.0;
 // Sólo el balde con producto refuerza su tinte; el agua limpia mantiene su transparencia.
 uniform float densidad_de_solucion : hint_range(0.0, 1.0) = 0.0;
 uniform float densidad_previa : hint_range(0.0, 1.0) = 0.0;
-// El reflejo de la luz del techo es falso: la luz del baño está horneada y no da brillo.
-uniform vec3 hacia_la_luz = vec3(0.0, 1.0, 0.0);
-uniform float brillo = 1.2;
-// El balde trae alturas y normales calculadas en CPU; el baño sigue leyendo su textura.
+// El balde calcula su normal en el shader; el baño la lee de su textura de ondas.
 uniform bool normal_de_la_malla = false;
 
 float mezcla_en(vec2 uv) {
@@ -29,7 +26,7 @@ float onda_de_mezcla(vec2 uv) {
 }
 
 void pintar_agua(vec2 uv, mat4 vista, mat4 modelo, vec3 mirada, inout vec3 normal,
-	out vec3 albedo, out float alpha, out float rugosidad, out vec3 emision) {
+	out vec3 albedo, out float alpha, out float rugosidad) {
 	if (!normal_de_la_malla) {
 		float dx = texture(ondas, uv + vec2(texel.x, 0.0)).r
 			- texture(ondas, uv - vec2(texel.x, 0.0)).r;
@@ -55,11 +52,8 @@ void pintar_agua(vec2 uv, mat4 vista, mat4 modelo, vec3 mirada, inout vec3 norma
 	albedo = color_visible.rgb;
 	alpha = color_visible.a * mix(transparencia, 0.85, densidad_visible);
 	rugosidad = 0.05;
-	vec3 luz = normalize((vista * vec4(hacia_la_luz, 0.0)).xyz);
-	float reflejo = pow(max(dot(reflect(-mirada, normal), luz), 0.0), 12.0);
-	// El reflejo blanco y el fondo azul lavaban los colores rosa y amarillo según el ángulo.
-	float reflejo_visible = reflejo * mix(1.0, 0.4, densidad_visible);
-	vec3 tinte_del_reflejo = mix(vec3(1.0), vec3(0.5) + color_visible.rgb * 0.5, densidad_visible);
-	emision = tinte_del_reflejo * brillo * reflejo_visible;
-	alpha = max(alpha, reflejo_visible);
+	// Fresnel de Schlick con el índice del agua: de costado, el agua refleja en vez de dejar ver.
+	float fresnel = 0.02 + 0.98 * pow(1.0 - max(dot(normal, mirada), 0.0), 5.0);
+	alpha = mix(alpha, 1.0, fresnel);
+	albedo *= 1.0 - fresnel;
 }

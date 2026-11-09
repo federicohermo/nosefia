@@ -7,6 +7,7 @@ const BOTON := AsignacionDeControles.TipoDeEntrada.BOTON_DEL_MOUSE
 const JOYSTICK := AsignacionDeControles.TipoDeEntrada.BOTON_DEL_JOYSTICK
 
 ## Las ranuras del esquema de fábrica: la acción, la ranura y su entrada.
+const VACIA := AsignacionDeControles.VACIA
 const DE_FABRICA: Array = [
 	[AsignacionDeControles.ADELANTE, 0, TECLA, KEY_W],
 	[AsignacionDeControles.ADELANTE, 1, TECLA, KEY_UP],
@@ -17,16 +18,22 @@ const DE_FABRICA: Array = [
 	[AsignacionDeControles.DERECHA, 0, TECLA, KEY_D],
 	[AsignacionDeControles.DERECHA, 1, TECLA, KEY_RIGHT],
 	[AsignacionDeControles.CELULAR, 0, TECLA, KEY_Q],
-	[AsignacionDeControles.CELULAR, 1, JOYSTICK, JOY_BUTTON_B],
+	[AsignacionDeControles.CELULAR, 1, VACIA.x, VACIA.y],
+	[AsignacionDeControles.CELULAR, 2, JOYSTICK, JOY_BUTTON_B],
 	[AsignacionDeControles.EXAMINAR, 0, TECLA, KEY_E],
-	[AsignacionDeControles.EXAMINAR, 1, JOYSTICK, JOY_BUTTON_X],
+	[AsignacionDeControles.EXAMINAR, 1, VACIA.x, VACIA.y],
+	[AsignacionDeControles.EXAMINAR, 2, JOYSTICK, JOY_BUTTON_X],
 	[AsignacionDeControles.AGACHARSE, 0, TECLA, KEY_SPACE],
-	[AsignacionDeControles.AGACHARSE, 1, JOYSTICK, JOY_BUTTON_LEFT_SHOULDER],
+	[AsignacionDeControles.AGACHARSE, 1, VACIA.x, VACIA.y],
+	[AsignacionDeControles.AGACHARSE, 2, JOYSTICK, JOY_BUTTON_LEFT_SHOULDER],
 	[AsignacionDeControles.AGARRAR, 0, BOTON, MOUSE_BUTTON_LEFT],
-	[AsignacionDeControles.AGARRAR, 1, JOYSTICK, JOY_BUTTON_A],
+	[AsignacionDeControles.AGARRAR, 1, VACIA.x, VACIA.y],
+	[AsignacionDeControles.AGARRAR, 2, JOYSTICK, JOY_BUTTON_A],
 	[AsignacionDeControles.INTERACTUAR, 0, BOTON, MOUSE_BUTTON_RIGHT],
-	[AsignacionDeControles.INTERACTUAR, 1, JOYSTICK, JOY_BUTTON_RIGHT_SHOULDER],
+	[AsignacionDeControles.INTERACTUAR, 1, VACIA.x, VACIA.y],
+	[AsignacionDeControles.INTERACTUAR, 2, JOYSTICK, JOY_BUTTON_RIGHT_SHOULDER],
 	[AsignacionDeControles.PAUSA, 0, TECLA, KEY_ESCAPE],
+	[AsignacionDeControles.PAUSA, 1, VACIA.x, VACIA.y],
 ]
 
 
@@ -43,6 +50,8 @@ func _no_repite_ninguna(asignacion: AsignacionDeControles) -> bool:
 	var vistas: Dictionary = {}
 	for entrada: Dictionary in asignacion.entradas():
 		var par := Vector2i(entrada["tipo"], entrada["codigo"])
+		if par == VACIA:
+			continue
 		if vistas.has(par):
 			return false
 		vistas[par] = true
@@ -53,13 +62,13 @@ func _de_fabrica(asignacion: AsignacionDeControles) -> bool:
 	return asignacion.datos() == AsignacionDeControles.new().datos()
 
 
-func test_son_siete_acciones_y_una_ranura_por_entrada_del_esquema() -> void:  # AC-CFG-016
+func test_cada_accion_tiene_su_nombre_y_una_ranura_por_entrada_del_esquema() -> void:  # AC-CFG-016
 	var nombres: Dictionary = {}
 	for accion: StringName in AsignacionDeControles.ACCIONES:
 		var nombre := AsignacionDeControles.nombre_de_la_accion(accion)
 		assert_str(nombre).is_not_empty()
 		nombres[nombre] = true
-	assert_int(nombres.size()).is_equal(7)
+	assert_int(nombres.size()).is_equal(AsignacionDeControles.ACCIONES.size())
 	assert_int(AsignacionDeControles.new().entradas().size()).is_equal(DE_FABRICA.size())
 	for direccion: StringName in AsignacionDeControles.DIRECCIONES:
 		assert_int(AsignacionDeControles.ranuras_de(direccion)).is_equal(2)
@@ -194,7 +203,7 @@ func test_el_intercambio_vale_entre_las_dos_ranuras_de_una_misma_accion() -> voi
 		assert_bool(
 			asignacion.asignar(
 				AsignacionDeControles.ADELANTE,
-				AsignacionDeControles.RANURA_DE_FLECHAS,
+				AsignacionDeControles.RANURA_SECUNDARIA,
 				TECLA,
 				KEY_W
 			)
@@ -204,7 +213,7 @@ func test_el_intercambio_vale_entre_las_dos_ranuras_de_una_misma_accion() -> voi
 	(
 		assert_vector(
 			_entrada(
-				asignacion, AsignacionDeControles.ADELANTE, AsignacionDeControles.RANURA_DE_FLECHAS
+				asignacion, AsignacionDeControles.ADELANTE, AsignacionDeControles.RANURA_SECUNDARIA
 			)
 		)
 		. is_equal(_tecla(KEY_W))
@@ -212,7 +221,7 @@ func test_el_intercambio_vale_entre_las_dos_ranuras_de_una_misma_accion() -> voi
 	(
 		assert_vector(
 			_entrada(
-				asignacion, AsignacionDeControles.ADELANTE, AsignacionDeControles.RANURA_DE_WASD
+				asignacion, AsignacionDeControles.ADELANTE, AsignacionDeControles.RANURA_PRINCIPAL
 			)
 		)
 		. is_equal(_tecla(KEY_UP))
@@ -225,7 +234,10 @@ func test_el_intercambio_vale_entre_direcciones() -> void:  # AC-CFG-018
 	(
 		assert_bool(
 			asignacion.asignar(
-				AsignacionDeControles.IZQUIERDA, AsignacionDeControles.RANURA_DE_WASD, TECLA, KEY_D
+				AsignacionDeControles.IZQUIERDA,
+				AsignacionDeControles.RANURA_PRINCIPAL,
+				TECLA,
+				KEY_D
 			)
 		)
 		. is_true()
@@ -233,7 +245,7 @@ func test_el_intercambio_vale_entre_direcciones() -> void:  # AC-CFG-018
 	(
 		assert_vector(
 			_entrada(
-				asignacion, AsignacionDeControles.IZQUIERDA, AsignacionDeControles.RANURA_DE_WASD
+				asignacion, AsignacionDeControles.IZQUIERDA, AsignacionDeControles.RANURA_PRINCIPAL
 			)
 		)
 		. is_equal(_tecla(KEY_D))
@@ -241,7 +253,7 @@ func test_el_intercambio_vale_entre_direcciones() -> void:  # AC-CFG-018
 	(
 		assert_vector(
 			_entrada(
-				asignacion, AsignacionDeControles.DERECHA, AsignacionDeControles.RANURA_DE_WASD
+				asignacion, AsignacionDeControles.DERECHA, AsignacionDeControles.RANURA_PRINCIPAL
 			)
 		)
 		. is_equal(_tecla(KEY_A))
@@ -265,7 +277,7 @@ func test_cambiar_las_flechas_conserva_la_ranura_de_wasd() -> void:  # AC-CFG-01
 		assert_bool(
 			asignacion.asignar(
 				AsignacionDeControles.ADELANTE,
-				AsignacionDeControles.RANURA_DE_FLECHAS,
+				AsignacionDeControles.RANURA_SECUNDARIA,
 				TECLA,
 				KEY_H
 			)
@@ -275,7 +287,7 @@ func test_cambiar_las_flechas_conserva_la_ranura_de_wasd() -> void:  # AC-CFG-01
 	(
 		assert_vector(
 			_entrada(
-				asignacion, AsignacionDeControles.ADELANTE, AsignacionDeControles.RANURA_DE_FLECHAS
+				asignacion, AsignacionDeControles.ADELANTE, AsignacionDeControles.RANURA_SECUNDARIA
 			)
 		)
 		. is_equal(_tecla(KEY_H))
@@ -283,7 +295,7 @@ func test_cambiar_las_flechas_conserva_la_ranura_de_wasd() -> void:  # AC-CFG-01
 	(
 		assert_vector(
 			_entrada(
-				asignacion, AsignacionDeControles.ADELANTE, AsignacionDeControles.RANURA_DE_WASD
+				asignacion, AsignacionDeControles.ADELANTE, AsignacionDeControles.RANURA_PRINCIPAL
 			)
 		)
 		. is_equal(_tecla(KEY_W))
@@ -292,10 +304,10 @@ func test_cambiar_las_flechas_conserva_la_ranura_de_wasd() -> void:  # AC-CFG-01
 		AsignacionDeControles.ATRAS, AsignacionDeControles.IZQUIERDA, AsignacionDeControles.DERECHA
 	]:
 		(
-			assert_vector(_entrada(asignacion, direccion, AsignacionDeControles.RANURA_DE_FLECHAS))
+			assert_vector(_entrada(asignacion, direccion, AsignacionDeControles.RANURA_SECUNDARIA))
 			. is_equal(
 				_entrada(
-					AsignacionDeControles.new(), direccion, AsignacionDeControles.RANURA_DE_FLECHAS
+					AsignacionDeControles.new(), direccion, AsignacionDeControles.RANURA_SECUNDARIA
 				)
 			)
 		)
@@ -304,7 +316,7 @@ func test_cambiar_las_flechas_conserva_la_ranura_de_wasd() -> void:  # AC-CFG-01
 func test_una_accion_o_una_ranura_que_no_existe_no_cambia_nada() -> void:  # AC-CFG-019
 	var asignacion := AsignacionDeControles.new()
 	assert_bool(asignacion.asignar(&"accion_que_no_existe", 0, TECLA, KEY_H)).is_false()
-	assert_bool(asignacion.asignar(AsignacionDeControles.EXAMINAR, 1, TECLA, KEY_H)).is_false()
+	assert_bool(asignacion.asignar(AsignacionDeControles.EXAMINAR, 3, TECLA, KEY_H)).is_false()
 	assert_bool(asignacion.asignar(AsignacionDeControles.EXAMINAR, -1, TECLA, KEY_H)).is_false()
 	assert_bool(asignacion.asignar(AsignacionDeControles.ADELANTE, 2, TECLA, KEY_H)).is_false()
 	assert_bool(_de_fabrica(asignacion)).is_true()
@@ -315,7 +327,7 @@ func test_los_datos_vuelven_con_cada_accion_y_ranura() -> void:  # AC-CFG-022
 	asignacion.asignar(AsignacionDeControles.EXAMINAR, 0, TECLA, KEY_F)
 	asignacion.asignar(
 		AsignacionDeControles.ADELANTE,
-		AsignacionDeControles.RANURA_DE_FLECHAS,
+		AsignacionDeControles.RANURA_SECUNDARIA,
 		BOTON,
 		MOUSE_BUTTON_MIDDLE
 	)
@@ -324,7 +336,7 @@ func test_los_datos_vuelven_con_cada_accion_y_ranura() -> void:  # AC-CFG-022
 	assert_vector(_entrada(leida, AsignacionDeControles.EXAMINAR, 0)).is_equal(_tecla(KEY_F))
 	(
 		assert_vector(
-			_entrada(leida, AsignacionDeControles.ADELANTE, AsignacionDeControles.RANURA_DE_FLECHAS)
+			_entrada(leida, AsignacionDeControles.ADELANTE, AsignacionDeControles.RANURA_SECUNDARIA)
 		)
 		. is_equal(Vector2i(BOTON, MOUSE_BUTTON_MIDDLE))
 	)

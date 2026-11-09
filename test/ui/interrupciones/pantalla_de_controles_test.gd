@@ -57,23 +57,13 @@ func _entrada(asignacion: AsignacionDeControles, accion: StringName, ranura: int
 	return Vector2i(entrada["tipo"], entrada["codigo"])
 
 
-## Los nombres de las acciones, uno por renglón: las cuatro direcciones son un solo Movimiento.
+## Los renglones de TECLADO Y MOUSE, en orden: las acciones con Visión después de Derecha.
 func _nombres_de_los_renglones() -> Array[String]:
 	var nombres: Array[String] = []
 	for accion: StringName in AsignacionDeControles.ACCIONES:
-		var nombre := AsignacionDeControles.nombre_de_la_accion(accion)
-		if nombre not in nombres:
-			nombres.append(nombre)
-	return nombres
-
-
-## Lo que va después de las teclas: el encabezado, las cinco acciones de botón y los dos joysticks.
-func _nombres_del_joystick() -> Array[String]:
-	var nombres: Array[String] = [PantallaDeControles.TEXTO_DEL_JOYSTICK]
-	for accion: StringName in AsignacionDeControles.ACCIONES_CON_BOTON:
 		nombres.append(AsignacionDeControles.nombre_de_la_accion(accion))
-	nombres.append(PantallaDeControles.TEXTO_DEL_JOYSTICK_IZQUIERDO)
-	nombres.append(PantallaDeControles.TEXTO_DEL_JOYSTICK_DERECHO)
+		if accion == AsignacionDeControles.DERECHA:
+			nombres.append(PantallaDeControles.TEXTO_DE_VISION)
 	return nombres
 
 
@@ -90,15 +80,10 @@ func test_muestra_un_renglon_por_accion_con_sus_teclas() -> void:  # AC-CFG-015,
 	var botones: int = 0
 	for fila: HBoxContainer in pantalla.filas():
 		nombres.append((fila.get_child(0) as Label).text)
-		botones += fila.get_child(1).get_child_count()
-	assert_array(nombres).is_equal(_nombres_de_los_renglones() + _nombres_del_joystick())
-	# Los dos joysticks se muestran con una etiqueta y no tienen botón que reasignar.
-	assert_int(botones).is_equal(AsignacionDeControles.new().entradas().size() + 2)
-	var movimiento: Node = pantalla.filas()[0].get_child(1)
-	var ranuras_de_movimiento: int = 0
-	for direccion: StringName in AsignacionDeControles.DIRECCIONES:
-		ranuras_de_movimiento += AsignacionDeControles.ranuras_de(direccion)
-	assert_int(movimiento.get_child_count()).is_equal(ranuras_de_movimiento)
+		botones += fila.find_children("*", "Button", true, false).size()
+	assert_array(nombres).is_equal(_nombres_de_los_renglones())
+	# Cada acción tiene una celda principal y una secundaria, y lo fijo no tiene ninguna.
+	assert_int(botones).is_equal(AsignacionDeControles.ACCIONES.size() * 2)
 	assert_str(pantalla.texto_de(AsignacionDeControles.EXAMINAR, 0)).is_equal(
 		PantallaDeControles.nombre_de_la_entrada(TECLA, KEY_E)
 	)
@@ -109,15 +94,19 @@ func test_muestra_un_renglon_por_accion_con_sus_teclas() -> void:  # AC-CFG-015,
 		pantalla.texto_de(AsignacionDeControles.INTERACTUAR, 0)
 	)
 	for entrada: Dictionary in AsignacionDeControles.new().entradas():
-		assert_str(pantalla.texto_de(entrada["accion"], entrada["ranura"])).is_not_empty()
+		assert_object(pantalla.glifo_de(entrada["accion"], entrada["ranura"])).is_not_null()
 
 
-func test_movimiento_se_reasigna_desde_su_renglon() -> void:  # AC-CFG-016, AC-CFG-019
+func test_movimiento_se_reasigna_desde_sus_cuatro_renglones() -> void:  # AC-CFG-016, AC-CFG-019
 	var pantalla := _pantalla()
-	var renglon := pantalla.filas()[0]
+	var renglones := pantalla.filas()
 	for direccion: StringName in AsignacionDeControles.DIRECCIONES:
+		var indice := AsignacionDeControles.ACCIONES.find(direccion)
 		for ranura: int in AsignacionDeControles.ranuras_de(direccion):
-			assert_bool(renglon.is_ancestor_of(pantalla.boton_de(direccion, ranura))).is_true()
+			(
+				assert_bool(renglones[indice].is_ancestor_of(pantalla.boton_de(direccion, ranura)))
+				. is_true()
+			)
 	pantalla.boton_de(AsignacionDeControles.ADELANTE, 1).pressed.emit()
 	assert_bool(pantalla.atender(_tecla(KEY_H))).is_true()
 	assert_int(_avisos.size()).is_equal(1)
