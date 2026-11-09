@@ -65,12 +65,28 @@ func _eventos_de_teclas_y_clics(accion: StringName) -> int:
 	return cuantos
 
 
+func _primer_evento_de_teclas_y_clics(accion: StringName) -> Vector2i:
+	for evento: InputEvent in InputMap.action_get_events(accion):
+		var entrada := AjusteDePreferencias.entrada_de(evento)
+		if AjusteDePreferencias.es_de_la_asignacion(accion, entrada):
+			return entrada
+	return AsignacionDeControles.VACIA
+
+
+func _entrada_en(asignacion: AsignacionDeControles, accion: StringName, ranura: int) -> Vector2i:
+	var guardada := asignacion.entrada(accion, ranura)
+	return Vector2i(guardada["tipo"], guardada["codigo"])
+
+
 func test_el_motor_arranca_con_el_esquema_de_fabrica() -> void:  # AC-CFG-016
 	var fabrica := AsignacionDeControles.new()
 	for accion: StringName in AsignacionDeControles.ACCIONES:
 		var esperadas := 0
 		for entrada: Dictionary in fabrica.entradas():
-			if entrada["accion"] != accion:
+			if (
+				entrada["accion"] != accion
+				or Vector2i(entrada["tipo"], entrada["codigo"]) == AsignacionDeControles.VACIA
+			):
 				continue
 			esperadas += 1
 			var tiene := false
@@ -111,7 +127,7 @@ func test_cada_direccion_responde_a_sus_dos_ranuras() -> void:  # AC-CFG-020
 			[
 				[
 					AsignacionDeControles.ADELANTE,
-					AsignacionDeControles.RANURA_DE_FLECHAS,
+					AsignacionDeControles.RANURA_SECUNDARIA,
 					TECLA,
 					KEY_H
 				]
@@ -187,14 +203,36 @@ func test_el_esquema_que_se_guarda_vuelve_a_aplicarse_en_otro_arranque() -> void
 
 
 func test_un_boton_de_joystick_asignado_responde_y_el_anterior_no() -> void:  # AC-CFG-026
-	_ajuste.aplicar(_con([[AsignacionDeControles.EXAMINAR, 1, JOYSTICK, JOY_BUTTON_Y]]))
+	_ajuste.aplicar(
+		_con(
+			[
+				[
+					AsignacionDeControles.EXAMINAR,
+					AsignacionDeControles.RANURA_DEL_JOYSTICK,
+					JOYSTICK,
+					JOY_BUTTON_Y
+				]
+			]
+		)
+	)
 	assert_bool(_responde(_boton_del_joystick(JOY_BUTTON_Y), &"examinar")).is_true()
 	assert_bool(_responde(_boton_del_joystick(JOY_BUTTON_X), &"examinar")).is_false()
 	assert_bool(_responde(_tecla(KEY_E), &"examinar")).is_true()
 
 
 func test_intercambiar_dos_botones_de_joystick_los_cruza_en_el_motor() -> void:  # AC-CFG-026
-	_ajuste.aplicar(_con([[AsignacionDeControles.EXAMINAR, 1, JOYSTICK, JOY_BUTTON_LEFT_SHOULDER]]))
+	_ajuste.aplicar(
+		_con(
+			[
+				[
+					AsignacionDeControles.EXAMINAR,
+					AsignacionDeControles.RANURA_DEL_JOYSTICK,
+					JOYSTICK,
+					JOY_BUTTON_LEFT_SHOULDER
+				]
+			]
+		)
+	)
 	assert_bool(_responde(_boton_del_joystick(JOY_BUTTON_LEFT_SHOULDER), &"examinar")).is_true()
 	assert_bool(_responde(_boton_del_joystick(JOY_BUTTON_LEFT_SHOULDER), &"agacharse")).is_false()
 	assert_bool(_responde(_boton_del_joystick(JOY_BUTTON_X), &"agacharse")).is_true()
@@ -209,3 +247,49 @@ func test_aplicar_las_asignaciones_no_toca_start_ni_los_ejes() -> void:  # AC-CF
 	eje.axis = JOY_AXIS_LEFT_Y
 	eje.axis_value = -1.0
 	assert_bool(_responde(eje, &"mover_adelante")).is_true()
+
+
+func test_la_secundaria_responde_y_vaciarla_la_apaga() -> void:  # AC-CFG-038, AC-CFG-020
+	var asignacion := AsignacionDeControles.new()
+	asignacion.asignar(
+		AsignacionDeControles.EXAMINAR, AsignacionDeControles.RANURA_SECUNDARIA, TECLA, KEY_F
+	)
+	var preferencias := Preferencias.new()
+	preferencias.poner_controles(asignacion)
+	_ajuste.aplicar(preferencias)
+	assert_bool(_responde(_tecla(KEY_F), AsignacionDeControles.EXAMINAR)).is_true()
+	assert_bool(_responde(_tecla(KEY_E), AsignacionDeControles.EXAMINAR)).is_true()
+	asignacion.vaciar(AsignacionDeControles.EXAMINAR, AsignacionDeControles.RANURA_SECUNDARIA)
+	preferencias.poner_controles(asignacion)
+	_ajuste.aplicar(preferencias)
+	assert_bool(_responde(_tecla(KEY_F), AsignacionDeControles.EXAMINAR)).is_false()
+	assert_bool(_responde(_tecla(KEY_E), AsignacionDeControles.EXAMINAR)).is_true()
+
+
+func test_pausa_con_secundaria_pausa_con_las_dos() -> void:  # AC-CFG-038
+	var asignacion := AsignacionDeControles.new()
+	asignacion.asignar(
+		AsignacionDeControles.PAUSA, AsignacionDeControles.RANURA_SECUNDARIA, TECLA, KEY_P
+	)
+	var preferencias := Preferencias.new()
+	preferencias.poner_controles(asignacion)
+	_ajuste.aplicar(preferencias)
+	assert_bool(_responde(_tecla(KEY_P), AsignacionDeControles.PAUSA)).is_true()
+	assert_bool(_responde(_tecla(KEY_ESCAPE), AsignacionDeControles.PAUSA)).is_true()
+
+
+func test_intercambiar_principal_y_secundaria_cambia_la_primera() -> void:  # AC-CFG-038
+	var asignacion := AsignacionDeControles.new()
+	var accion := AsignacionDeControles.EXAMINAR
+	var de_fabrica := _entrada_en(asignacion, accion, AsignacionDeControles.RANURA_PRINCIPAL)
+	asignacion.asignar(accion, AsignacionDeControles.RANURA_SECUNDARIA, TECLA, KEY_F)
+	var preferencias := Preferencias.new()
+	preferencias.poner_controles(asignacion)
+	_ajuste.aplicar(preferencias)
+	assert_vector(_primer_evento_de_teclas_y_clics(accion)).is_equal(de_fabrica)
+	asignacion.asignar(accion, AsignacionDeControles.RANURA_PRINCIPAL, TECLA, KEY_F)
+	preferencias.poner_controles(asignacion)
+	_ajuste.aplicar(preferencias)
+	assert_int(_primer_evento_de_teclas_y_clics(accion).y).is_equal(KEY_F)
+	assert_bool(_responde(_tecla(KEY_F), accion)).is_true()
+	assert_bool(_responde(_tecla(de_fabrica.y), accion)).is_true()

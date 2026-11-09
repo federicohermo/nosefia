@@ -164,7 +164,7 @@ func test_un_boton_guardado_para_movimiento_o_pausa_se_ignora() -> void:  # AC-C
 	var datos := AsignacionDeControles.new().datos()
 	var boton := {"tipo": JOYSTICK, "codigo": JOY_BUTTON_Y}
 	var pausa: Array = datos[String(AsignacionDeControles.PAUSA)]
-	pausa.append(boton)
+	pausa[AsignacionDeControles.RANURA_SECUNDARIA] = boton
 	var adelante: Array = datos[String(AsignacionDeControles.ADELANTE)]
-	adelante[AsignacionDeControles.RANURA_DE_FLECHAS] = boton
+	adelante[AsignacionDeControles.RANURA_SECUNDARIA] = boton
 	assert_bool(_de_fabrica(AsignacionDeControles.desde(datos))).is_true()
