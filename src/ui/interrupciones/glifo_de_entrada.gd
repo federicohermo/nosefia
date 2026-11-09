@@ -12,7 +12,9 @@ enum Forma {
 	TECLA, MOUSE, CRUZ, CIRCULO, CUADRADO, TRIANGULO, PILDORA, PALANCA, CRUCETA, RANURA_LIBRE
 }
 
-const ALTO := 46.0
+## El tamaño de todo el texto de la pantalla de controles, el de las teclas también.
+const TAMANO_DE_LA_LETRA := 40
+const ALTO := 52.0
 const ANCHO_DEL_ICONO_DEL_MOUSE := 18.0
 const ANCHO_DE_LA_RANURA_LIBRE := 56.0
 const MARGEN_DEL_TEXTO := 22.0
@@ -154,9 +156,8 @@ func _ancho_del_texto() -> float:
 	)
 
 
-## El mismo tamaño que el texto de los menús: nombres, cabeceras y teclas se leen parejos.
 func _tamano_de_la_letra() -> int:
-	return get_theme_font_size(&"font_size", &"TextoDelMenu")
+	return TAMANO_DE_LA_LETRA
 
 
 func _caja(radio: int) -> StyleBoxFlat:

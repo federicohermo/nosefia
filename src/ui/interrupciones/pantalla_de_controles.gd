@@ -5,7 +5,8 @@
 ## cada acción de botón tiene la celda de su botón, que se reasigna igual. Lo demás se muestra
 ## con la marca FIJO y no se elige. Cada entrada se dibuja con su glifo.
 ##
-## Todo el texto va en un solo tamaño, el de `TextoDelMenu`: nombres, cabeceras, teclas y ayuda. La
+## Todo el texto va en un solo tamaño, `GlifoDeEntrada.TAMANO_DE_LA_LETRA`: nombres, cabeceras,
+## teclas y ayuda. La
 ## lista reparte el alto del área entre sus renglones y el ancho entre el nombre y las celdas.
 ##
 ## Sin un joystick conectado no se ve ningún botón de joystick: la pestaña JOYSTICK queda apagada y,
@@ -50,7 +51,7 @@ const TEXTO_DEL_MOUSE := "MOUSE"
 const ANCHO_DE_LA_CELDA := 420.0
 const ANCHO_DE_LA_PESTANA := 420.0
 const ALTO_DE_LA_PESTANA := 64.0
-const ALTO_DE_LA_FILA := 48.0
+const ALTO_DE_LA_FILA := 52.0
 const SEPARACION_DE_LAS_FILAS := 4
 const COLOR_DE_LA_CELDA_ELEGIDA := Color("d8b468")
 const OPACIDAD_DE_LA_MARCA := 0.7
@@ -102,6 +103,8 @@ func _ready() -> void:
 	visible = false
 	_titulo.text = TEXTO_DEL_TITULO
 	_volver.text = TEXTO_DE_VOLVER
+	_titulo.add_theme_font_size_override("font_size", GlifoDeEntrada.TAMANO_DE_LA_LETRA)
+	_volver.add_theme_font_size_override("font_size", GlifoDeEntrada.TAMANO_DE_LA_LETRA)
 	_volver.pressed.connect(cerrar)
 	_crear_los_estilos_de_la_celda()
 	_filas.add_theme_constant_override("separation", SEPARACION_DE_LAS_FILAS)
@@ -472,11 +475,11 @@ func _bloque_del_joystick() -> VBoxContainer:
 
 func _crear_el_aviso_y_la_ayuda() -> void:
 	_aviso = _etiqueta("")
-	_aviso.position = Vector2(140.0, 878.0)
+	_aviso.position = Vector2(140.0, 882.0)
 	_marco.add_child(_aviso)
 	_ayuda = HBoxContainer.new()
 	_ayuda.add_theme_constant_override("separation", 12)
-	_ayuda.position = Vector2(140.0, 928.0)
+	_ayuda.position = Vector2(140.0, 930.0)
 	_marco.add_child(_ayuda)
 
 
@@ -564,6 +567,7 @@ func _etiqueta(texto: String) -> Label:
 	var etiqueta := Label.new()
 	etiqueta.text = texto
 	etiqueta.theme_type_variation = &"TextoDelMenu"
+	etiqueta.add_theme_font_size_override("font_size", GlifoDeEntrada.TAMANO_DE_LA_LETRA)
 	return etiqueta
 
 
@@ -580,6 +584,7 @@ func _celda(accion: StringName, ranura: int) -> Button:
 	var boton := Button.new()
 	boton.theme_type_variation = &"BotonDelMenu"
 	boton.custom_minimum_size = Vector2(ANCHO_DE_LA_CELDA, ALTO_DE_LA_FILA)
+	boton.add_theme_font_size_override("font_size", GlifoDeEntrada.TAMANO_DE_LA_LETRA)
 	boton.add_theme_stylebox_override("normal", _celda_sin_elegir)
 	boton.add_theme_stylebox_override("disabled", _celda_sin_elegir)
 	for estado: String in ["hover", "pressed", "hover_pressed", "focus"]:
