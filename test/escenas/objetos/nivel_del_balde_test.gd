@@ -27,7 +27,7 @@ func test_llenar_sube_desde_el_fondo_y_repintar_no_lo_interrumpe() -> void:
 	assert_bool(agua.visible).is_true()
 	assert_float(agua.position.y).is_between(-.138, -.13)
 	agua.call("_process", 0.0)
-	var vertices: PackedVector3Array = agua.get("_vertices")
+	var vertices := agua.vertices_dibujados()
 	for vertice in vertices:
 		assert_float(Vector2(vertice.x, vertice.z).length()).is_less(.16)
 	agua.call("_physics_process", .125)
@@ -148,7 +148,7 @@ func test_los_niveles_quedan_dentro_de_las_paredes_del_modelo_real() -> void:
 		if paso > 0:
 			agua.call("_physics_process", .0625)
 		agua.call("_process", 0.0)
-		for vertice: Vector3 in agua.get("_vertices"):
+		for vertice: Vector3 in agua.vertices_dibujados():
 			var punto := agua.transform * vertice
 			assert_float(punto.y).is_greater(-.138054)
 			for pared in paredes:
