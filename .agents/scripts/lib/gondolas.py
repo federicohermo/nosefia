@@ -148,15 +148,14 @@ SIN_COMPRIMIR = (PALETA, EMISION)
 #: sonda del salón en cada hueco.
 DIELECTRICOS = {"GONDOLA | Grilla de alambre": 0.8}
 
-#: La cabecera de alambre: su grilla, el marco y los platos. La luz horneada del nivel de abajo
-#: llega casi apagada, porque cada estante le tapa la luz al de abajo: la grilla de abajo salía
-#: negra y la de arriba gris. Los tres suman una emisión de relleno, y ninguno se aclara más por
-#: arriba. La grilla emite su propia textura, así los agujeros siguen negros. El marco y los platos
-#: emiten un gris liso, en color lineal.
+#: La grilla de la cabecera de alambre. La luz horneada del nivel de abajo llega casi apagada, porque
+#: cada estante le tapa la luz al de abajo: la grilla de abajo salía más oscura que la de arriba.
+#: La grilla emite su propia textura, así los agujeros siguen negros. Medido en la build web, sobre
+#: el alambre: con 0,95 más el gris que tenían el marco y los platos, todo el alambre salía claro;
+#: con 0,4 y el marco sin emisión, el de arriba queda cerca de su tono sin emisión y el de abajo no
+#: baja del 90 % del de arriba.
 GRILLA = "GONDOLA | Grilla de alambre"
-RELLENO = ("GONDOLA | Paleta cabecera", "GONDOLA | Alambre cromado")
-EMISION_DE_RELLENO = 0.045
-EMISION_DE_LA_GRILLA = 0.95
+EMISION_DE_LA_GRILLA = 0.4
 
 #: Materiales de un solo color que forman el cuerpo, sin metal que los oscurezca, y su tono.
 COLORES_LISOS = {

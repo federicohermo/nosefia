@@ -321,8 +321,7 @@ def traseras() -> list[str]:
 
 
 def rellenar() -> list[str]:
-    """La grilla, el marco y los platos de la cabecera de alambre suman una emisión de relleno."""
-    informe = []
+    """La grilla de la cabecera de alambre suma una emisión de relleno, de su propia textura."""
     grilla = bpy.data.materials.get(gondolas.GRILLA)
     if grilla is None:
         raise SystemExit(f"el modelo no tiene el material {gondolas.GRILLA}")
@@ -330,17 +329,7 @@ def rellenar() -> list[str]:
     principal = next(n for n in grilla.node_tree.nodes if n.type == "BSDF_PRINCIPLED")
     grilla.node_tree.links.new(textura.outputs["Color"], principal.inputs["Emission Color"])
     principal.inputs["Emission Strength"].default_value = gondolas.EMISION_DE_LA_GRILLA
-    informe.append(f"gondola: {gondolas.GRILLA} emite su textura por {gondolas.EMISION_DE_LA_GRILLA}")
-    for nombre in gondolas.RELLENO:
-        material = bpy.data.materials.get(nombre)
-        if material is None:
-            raise SystemExit(f"el modelo no tiene el material {nombre}")
-        principal = next(n for n in material.node_tree.nodes if n.type == "BSDF_PRINCIPLED")
-        gris = gondolas.EMISION_DE_RELLENO
-        principal.inputs["Emission Color"].default_value = (gris, gris, gris, 1.0)
-        principal.inputs["Emission Strength"].default_value = 1.0
-        informe.append(f"gondola: {nombre} emite {gris}")
-    return informe
+    return [f"gondola: {gondolas.GRILLA} emite su textura por {gondolas.EMISION_DE_LA_GRILLA}"]
 
 
 def salon() -> list[str]:
