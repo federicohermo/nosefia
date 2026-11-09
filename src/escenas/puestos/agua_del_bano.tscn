@@ -9,7 +9,6 @@ render_priority = 0
 shader = ExtResource("2_superficie")
 shader_parameter/es_mancha = false
 shader_parameter/color_del_agua = Color(0.62, 0.66, 0.64, 0.3)
-shader_parameter/hacia_la_luz = Vector3(-0.41, 0.88, 0.23)
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_inodoro"]
 resource_local_to_scene = true
@@ -17,7 +16,6 @@ render_priority = 0
 shader = ExtResource("2_superficie")
 shader_parameter/es_mancha = false
 shader_parameter/color_del_agua = Color(0.6, 0.7, 0.72, 0.4)
-shader_parameter/hacia_la_luz = Vector3(-0.63, 0.76, 0.15)
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_gota"]
 transparency = 1

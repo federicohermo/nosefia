@@ -48,5 +48,22 @@ vec3 normal_del_balde(vec2 punto) {
 	float dx = altura_libre(punto + vec2(e, 0.0)) - altura_libre(punto - vec2(e, 0.0));
 	float dz = altura_libre(punto + vec2(0.0, e)) - altura_libre(punto - vec2(0.0, e));
 	// El borde se escala en xz; la pendiente se mide sobre el punto ya escalado.
-	return normalize(vec3(-dx, 2.0 * e * borde, -dz));
+	vec3 normal = normalize(vec3(-dx, 2.0 * e * borde, -dz));
+	// Los modos son ondas anchas. Los rizos que cortan el reflejo nacen del movimiento: anillos
+	// que rebotan en la pared, deformados por el oleaje, y círculos que se abren desde la pared
+	// donde el empujón levanta el agua.
+	float agitacion = smoothstep(0.0, 0.05,
+		dot(abs(modos_a), vec4(1.0)) + dot(abs(modos_b), vec4(1.0)));
+	float empuje = clamp(length(inclinacion) * 5.0, 0.0, 1.0);
+	vec2 hacia = empuje > 0.0 ? normalize(inclinacion) : vec2(1.0, 0.0);
+	vec2 p = punto / radio_del_disco;
+	float radio = length(p);
+	float deformacion = ondas_en(p) * 40.0;
+	vec2 desde_la_pared = p - hacia;
+	float distancia = length(desde_la_pared);
+	vec2 rizo = p / max(radio, 0.0001)
+			* cos((1.0 - radio) * 22.0 + deformacion + TIME * 6.0) * agitacion
+		+ desde_la_pared / max(distancia, 0.0001)
+			* cos(distancia * 18.0 - TIME * 5.0) * empuje * max(1.0 - distancia * 0.4, 0.0);
+	return normalize(normal - vec3(rizo.x, 0.0, rizo.y) * 0.12);
 }
