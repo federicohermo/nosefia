@@ -1,7 +1,7 @@
 ## El dibujo de una entrada de la pantalla de controles. No es un texto: una tecla es una tecla con
 ## borde, un clic es una tecla con un mouse adentro con su botón pintado, una ranura libre es un
-## recuadro punteado, y un botón del joystick es su glifo de PlayStation. Se dibuja con formas y no
-## con imágenes, así que escala con el lienzo.
+## recuadro punteado que llena el contenedor donde está, y un botón del joystick es su glifo de
+## PlayStation. Se dibuja con formas y no con imágenes, así que escala con el lienzo.
 ##
 ## Qué forma lleva cada entrada lo contesta `forma_de`. El nombre que se lee en la forma lo trae
 ## quien lo crea: este script no sabe nombrar una entrada.
@@ -126,7 +126,7 @@ func _draw() -> void:
 		Forma.MOUSE:
 			_dibujar_mouse(marco)
 		Forma.RANURA_LIBRE:
-			_dibujar_ranura_libre(marco)
+			_dibujar_ranura_libre(Rect2(Vector2.ZERO, size))
 		Forma.PALANCA:
 			_dibujar_palanca(marco)
 		Forma.CRUCETA:

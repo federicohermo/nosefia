@@ -316,8 +316,8 @@ flechas, Tab o la cruceta, y X o ENTER. SI hay un joystick conectado, ENTONCES L
 junto a las pestañas y cambiar de pestaña MIENTRAS la pantalla no espera una entrada; esperando una,
 DEBEN asignarse. La pestaña JOYSTICK DEBE mostrar «● JOYSTICK CONECTADO».
 
-SI no hay un joystick conectado, ENTONCES la pantalla NO DEBE mostrar ningún botón del joystick: ni
-L1 y R1 junto a las pestañas, ni glifos de joystick en la ayuda. La pestaña JOYSTICK DEBE seguir
+SI no hay un joystick conectado, ENTONCES la pantalla NO DEBE mostrar ningún botón del joystick, ni
+L1 y R1 junto a las pestañas. La pestaña JOYSTICK DEBE seguir
 visible pero apagada, y SI se la elige DEBE mostrar el aviso «CONECTÁ UN JOYSTICK PARA
 CONFIGURARLO» en lugar de las acciones. CUANDO un joystick se conecta con la pantalla abierta, la
 pestaña DEBE habilitarse y L1 y R1 DEBEN aparecer; la pestaña elegida NO DEBE cambiar. CUANDO se
@@ -328,10 +328,15 @@ Cada pestaña DEBE tener una sola lista, con las acciones y Visión, sin otro t�
 de sus columnas. Visión DEBE ir en el mismo lugar en las dos pestañas: después de las direcciones de movimiento. Visión, y en
 JOYSTICK Movimiento y Pausa, DEBEN llevar la marca **FIJO**, verse más tenues y no poder elegirse.
 Lo que no depende de ninguna acción —ENTER y las flechas en las interfaces, X y CÍRCULO en el
-joystick— NO DEBE tener renglón: lo dice la ayuda. Abajo, una ayuda DEBE decir con qué se cambia y
-con qué se vuelve, con la entrada que tenga asignada cada uno: en TECLADO Y MOUSE, ENTER para cambiar, SUPR para borrar y la tecla de
-Pausa para volver; en JOYSTICK con un joystick conectado, L1 R1 para la pestaña, X para cambiar y
-CÍRCULO para volver, y sin joystick, nada.
+joystick— NO DEBE tener renglón, y la pantalla NO DEBE llevar una ayuda de teclas.
+
+Cada celda reasignable, principal o secundaria, DEBE ir dentro de un contenedor del mismo ancho y
+alto que todas las de su pestaña: el del glifo más ancho de esa pestaña, con el glifo centrado
+adentro. El recuadro del foco DEBE enmarcar ese contenedor. La lista DEBE repartirse en el alto
+entre la cabecera y la línea del pie, con el mismo margen arriba y abajo, y la grilla —nombres y
+columnas— DEBE quedar centrada respecto de las pestañas. La pantalla DEBE decir qué entrada espera la
+celda elegida, y el aviso de una entrada que no se pudo asignar, en una línea debajo de la línea del
+pie, sin mover la grilla.
 
 ### BR-CFG-032 — Cada entrada se dibuja con su glifo
 
@@ -339,7 +344,7 @@ La pantalla de controles DEBE dibujar los botones del joystick como glifos y no 
 con sus colores de PlayStation; L1, R1 y START como píldoras; los joysticks, como un círculo con L o
 R; la cruceta, con su forma. DEBE dibujar las teclas como teclas con borde, y cada clic del mouse
 como una tecla con un mouse con ese botón pintado, con su texto adentro de la tecla o sin texto. Una
-secundaria vacía DEBE dibujarse como un recuadro punteado tenue.
+secundaria vacía DEBE dibujarse como un recuadro punteado tenue que llena el contenedor de su celda.
 
 ### BR-CFG-033 — El nombre de cada acción dice las funciones de menú que hace
 
@@ -609,7 +614,9 @@ DADO la pantalla de controles abierta ENTONCES tiene las pestañas TECLADO Y MOU
 una con el dibujo de su dispositivo, y se ve el contenido de una sola. DADO TECLADO Y MOUSE
 CUANDO se elige JOYSTICK ENTONCES se ve el contenido de JOYSTICK y no el de TECLADO Y MOUSE, y al
 revés. DADO cada pestaña ENTONCES tiene una sola lista. DADO TECLADO Y MOUSE ENTONCES Visión va justo
-después de Derecha, y DADO JOYSTICK, justo después de Movimiento.
+después de Derecha, y DADO JOYSTICK, justo después de Movimiento. DADO cada pestaña ENTONCES su lista se
+reparte en el alto entre la cabecera y la línea del pie, con el mismo margen arriba y abajo, y queda
+centrada respecto de las pestañas.
 
 ### AC-CFG-032 — La pestaña con la que se abre *(verifica BR-CFG-031)*
 
@@ -638,13 +645,10 @@ la pestaña se habilita, L1 y R1 aparecen y sigue elegida TECLADO Y MOUSE. DADO 
 JOYSTICK CUANDO se desconecta ENTONCES la pestaña se apaga, L1 y R1 desaparecen y pasa a TECLADO Y
 MOUSE.
 
-### AC-CFG-035 — Los renglones fijos y la ayuda *(verifica BR-CFG-031)*
+### AC-CFG-035 — Los renglones fijos *(verifica BR-CFG-031)*
 
 DADO la pestaña TECLADO Y MOUSE ENTONCES Visión lleva la marca FIJO y no se puede elegir. DADO la
-pestaña JOYSTICK ENTONCES además Movimiento y Pausa la llevan. DADO Pausa en P ENTONCES la ayuda de
-abajo dice ENTER, SUPR y P.
-DADO la pestaña JOYSTICK con un joystick conectado ENTONCES la ayuda dice L1 R1, X y CÍRCULO. DADO
-ningún joystick ENTONCES la ayuda no lleva ningún glifo de joystick.
+pestaña JOYSTICK ENTONCES además Movimiento y Pausa la llevan.
 
 ### AC-CFG-036 — Los glifos *(verifica BR-CFG-032)*
 
@@ -652,7 +656,9 @@ DADO la pestaña JOYSTICK ENTONCES el botón de cada acción es un glifo y no un
 CUADRADO y TRIÁNGULO con su color de PlayStation, L1 y R1 como píldoras, y START en Pausa. DADO la
 pestaña TECLADO Y MOUSE ENTONCES una tecla es una tecla con borde y cada clic, una tecla con un mouse adentro con su botón
 pintado, distinto del clic izquierdo al derecho; Visión también. DADO un botón de joystick sin glifo propio
-ENTONCES se lee por su nombre.
+ENTONCES se lee por su nombre. DADO cada pestaña ENTONCES todas sus celdas reasignables miden lo mismo,
+al menos lo que el glifo más ancho, con su glifo centrado, y una ranura vacía llena su celda. DADO una
+celda esperando una entrada ENTONCES no cambia el tamaño ni la posición de ninguna celda.
 
 ### AC-CFG-037 — Las secundarias de fábrica *(verifica BR-CFG-016)*
 

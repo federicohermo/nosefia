@@ -80,23 +80,15 @@ func test_con_joystick_la_pestana_se_elige_y_muestra_sus_acciones() -> void:  # 
 		assert_bool(_aviso_de_conectar(pantalla).is_visible_in_tree()).is_false()
 
 
-func test_sin_joystick_la_ayuda_no_lleva_glifos_de_joystick() -> void:  # AC-CFG-035
+func test_sin_joystick_no_se_ve_ningun_glifo_de_joystick() -> void:  # AC-CFG-034
 	var pantalla := _pantalla(false)
-	for del_joystick: bool in [false, true]:
-		pantalla.elegir_pestana(del_joystick)
-		for glifo: GlifoDeEntrada in pantalla.glifos_de_la_ayuda():
+	var vistos := 0
+	for nodo: Node in pantalla.find_children("*", "GlifoDeEntrada", true, false):
+		var glifo := nodo as GlifoDeEntrada
+		if glifo.is_visible_in_tree():
+			vistos += 1
 			assert_array(FORMAS_DEL_TECLADO).contains([glifo.forma])
-	pantalla.elegir_pestana(true)
-	assert_array(pantalla.glifos_de_la_ayuda()).is_empty()
-
-
-func test_con_joystick_la_ayuda_de_la_pestana_vuelve_con_sus_glifos() -> void:  # AC-CFG-035
-	var pantalla := _pantalla(false)
-	pantalla.poner_joystick_conectado(true)
-	pantalla.elegir_pestana(true)
-	assert_bool(pantalla.glifos_de_la_ayuda().size() > 0).is_true()
-	for glifo: GlifoDeEntrada in pantalla.glifos_de_la_ayuda():
-		assert_bool(glifo.forma in FORMAS_DEL_TECLADO).is_false()
+	assert_int(vistos).is_greater(0)
 
 
 func test_conectar_con_la_pantalla_abierta_habilita_la_pestana() -> void:  # AC-CFG-034

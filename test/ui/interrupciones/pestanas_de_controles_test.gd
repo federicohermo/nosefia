@@ -210,33 +210,6 @@ func test_lo_fijo_lleva_su_marca_y_no_tiene_nada_que_elegir() -> void:  # AC-CFG
 	)
 
 
-func test_la_ayuda_muestra_la_entrada_que_tiene_pausa() -> void:  # AC-CFG-035
-	var pantalla := _pantalla()
-	_asignar(pantalla, AsignacionDeControles.PAUSA, PRINCIPAL, KEY_P)
-	var leida := PantallaDeControles.nombre_de_la_entrada(TECLA, KEY_P)
-	var ayuda: Array[String] = []
-	for en_la_ayuda: GlifoDeEntrada in pantalla.glifos_de_la_ayuda():
-		ayuda.append(en_la_ayuda.texto)
-	assert_array(ayuda).is_equal(
-		[PantallaDeControles.TEXTO_DE_ENTER, PantallaDeControles.TEXTO_DE_SUPR, leida]
-	)
-
-
-func test_la_ayuda_del_joystick_lleva_las_pildoras_la_cruz_y_el_circulo() -> void:  # AC-CFG-035
-	var pantalla := _pantalla(true)
-	var formas: Array[GlifoDeEntrada.Forma] = []
-	for glifo: GlifoDeEntrada in pantalla.glifos_de_la_ayuda():
-		formas.append(glifo.forma)
-	assert_array(formas).is_equal(
-		[
-			GlifoDeEntrada.Forma.PILDORA,
-			GlifoDeEntrada.Forma.PILDORA,
-			GlifoDeEntrada.Forma.CRUZ,
-			GlifoDeEntrada.Forma.CIRCULO
-		]
-	)
-
-
 func test_cada_boton_del_joystick_es_un_glifo_y_no_un_texto() -> void:  # AC-CFG-036
 	var pantalla := _pantalla(true)
 	var esperadas: Dictionary[StringName, GlifoDeEntrada.Forma] = {
