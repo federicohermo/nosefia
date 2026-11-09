@@ -16,8 +16,6 @@ const TEMA := preload("res://assets/ui/manada/tema.tres")
 const TIPO_DEL_TEXTO := &"TextoDelMenu"
 const ALTO := 46.0
 const MARGEN_DEL_TEXTO := 22.0
-## La letra que mide una ranura libre: la más ancha del teclado.
-const LETRA_DE_LA_RANURA := "W"
 const COLOR_DEL_BORDE := Color("f4e6b5")
 const COLOR_DEL_FONDO := Color(0.04, 0.1, 0.12, 0.9)
 const COLOR_DE_LA_RANURA_LIBRE := Color("f4e6b599")
@@ -127,18 +125,14 @@ func _tamano_natural() -> Vector2:
 		Forma.TECLA, Forma.PILDORA:
 			if flecha != Vector2.ZERO:
 				return Vector2(ALTO, ALTO)
-			return Vector2(maxf(ALTO, _ancho_del_texto(texto) + MARGEN_DEL_TEXTO), ALTO)
-		Forma.RANURA_LIBRE:
-			return Vector2(
-				maxf(ALTO, _ancho_del_texto(LETRA_DE_LA_RANURA) + MARGEN_DEL_TEXTO), ALTO
-			)
+			return Vector2(maxf(ALTO, _ancho_del_texto() + MARGEN_DEL_TEXTO), ALTO)
 	return Vector2(ALTO, ALTO)
 
 
-func _ancho_del_texto(lo_escrito: String) -> float:
+func _ancho_del_texto() -> float:
 	return (
 		get_theme_default_font()
-		. get_string_size(lo_escrito, HORIZONTAL_ALIGNMENT_LEFT, -1.0, _tamano_de_la_letra())
+		. get_string_size(texto, HORIZONTAL_ALIGNMENT_LEFT, -1.0, _tamano_de_la_letra())
 		. x
 	)
 

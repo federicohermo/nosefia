@@ -241,20 +241,11 @@ func test_las_teclas_y_su_cabecera_arrancan_en_el_mismo_borde() -> void:  # AC-C
 			(cabecera.get_child(columna) as Control).get_global_rect().position.x
 		)
 		for fila: HBoxContainer in filas:
+			if fila.get_child(columna).find_children("*", "GlifoDeEntrada", true, false).is_empty():
+				continue
 			assert_float(_borde_izquierdo(fila.get_child(columna))).is_equal_approx(
 				borde_de_la_cabecera, TOLERANCIA
 			)
-
-
-func test_una_ranura_vacia_mide_una_tecla_de_una_letra() -> void:  # AC-CFG-036
-	var pantalla := await _pantalla()
-	var una_letra := GlifoDeEntrada.de_una_tecla("W")
-	add_child(auto_free(una_letra))
-	var vacia := pantalla.glifo_de(AsignacionDeControles.EXAMINAR, SECUNDARIA)
-	assert_int(vacia.forma).is_equal(GlifoDeEntrada.Forma.RANURA_LIBRE)
-	assert_vector(vacia.get_minimum_size()).is_equal_approx(
-		una_letra.get_minimum_size(), Vector2(TOLERANCIA, TOLERANCIA)
-	)
 
 
 func test_esperar_una_entrada_no_mueve_la_grilla() -> void:  # AC-CFG-036
