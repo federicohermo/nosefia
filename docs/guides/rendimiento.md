@@ -347,6 +347,8 @@ Los datos crudos quedan en `reports/plantilla-integrada-base-carga.json` y
 - El límite web del atlas de `ReflectionProbe` en `project.godot` evita reservar memoria para
   sondas que el local no usa. Limita cuántas pueden coexistir, sin cambiar la resolución de
   sus reflejos. Al agregar sondas, revisar ese límite y repetir `medir_memoria_de_texturas.mjs`.
+  Con más sondas que espacios, la que sobra no recibe lugar y la consola escribe un error por
+  cuadro; `test_atlas_de_reflejos.py` lo frena.
   Consultar [ProjectSettings](https://docs.godotengine.org/en/4.7/classes/class_projectsettings.html#class-projectsettings-property-rendering-reflections-reflection-atlas-reflection-count).
 - Compatibility limita las luces de cada tipo por objeto y por vista. Los dos topes son
   ajustes del proyecto, y subirlos sube el costo.
