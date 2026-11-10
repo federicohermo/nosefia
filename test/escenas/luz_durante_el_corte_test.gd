@@ -7,6 +7,7 @@ const RelojDePrueba := preload("res://test/reloj_de_prueba.gd")
 const Luz := preload("res://test/escenas/luz_de_cada_objeto.gd")
 const Lector := preload("res://test/escenas/sondas_del_horneado.gd")
 const Sondas := preload("res://addons/hornear/sondas.gd")
+const CorteDeLuz := preload("res://src/escenas/puestos/corte_de_luz.gd")
 const HORNO_SIN_LUZ := "res://src/escenas/almacen_sin_luz.lmbake"
 const PAPELES_DE_PISTA := [
 	"res://src/escenas/objetos/nota_bajo_la_puerta.tscn",
@@ -100,6 +101,62 @@ func test_durante_el_corte_las_pistas_de_papel_toman_la_luz_de_las_sondas() -> v
 		. override_failure_message("no toman la luz de las sondas: %s" % ", ".join(sin_sondas))
 		. is_empty()
 	)
+
+
+## Sólo la luz de emergencia sigue emitiendo. Lo que emite en el local, por el material que sea y
+## esté en la lista que esté, brilla en la oscuridad.
+func test_durante_el_corte_solo_emite_la_luz_de_emergencia() -> void:
+	var local := _local_cortado()
+	var emisores := _emisores(local)
+	var de_mas: Array[String] = []
+	for nombre in emisores:
+		if not CorteDeLuz.EMISION_DE_LA_EMERGENCIA.has(StringName(nombre)):
+			de_mas.append(nombre)
+	assert_array(emisores).is_not_empty()
+	(
+		assert_array(de_mas)
+		. override_failure_message("siguen emitiendo con el corte: %s" % ", ".join(de_mas))
+		. is_empty()
+	)
+
+
+## El corte no conoce a los materiales por su nombre: uno nuevo se apaga y la luz se lo devuelve.
+func test_un_material_emisivo_de_nombre_nuevo_se_apaga_con_el_corte_y_vuelve_con_la_luz() -> void:
+	var raiz: Node3D = auto_free(Node3D.new())
+	var material := StandardMaterial3D.new()
+	material.resource_name = "material_que_ninguna_lista_conoce"
+	material.emission_enabled = true
+	material.emission_energy_multiplier = 2.5
+	var malla := MeshInstance3D.new()
+	malla.mesh = BoxMesh.new()
+	malla.set_surface_override_material(0, material)
+	raiz.add_child(malla)
+	var corte: CorteDeLuz = auto_free(CorteDeLuz.new())
+	corte.preparar(raiz, auto_free(LightmapGI.new()), Environment.new())
+	var de_siempre := material.emission_energy_multiplier
+	corte.ensayar(true)
+	assert_float(material.emission_energy_multiplier).is_equal(0.0)
+	corte.ensayar(false)
+	assert_float(material.emission_energy_multiplier).is_equal(de_siempre)
+
+
+## Los nombres de los materiales con emisión encendida en el local, cada uno una vez.
+func _emisores(local: Node3D) -> Array[String]:
+	var nombres: Array[String] = []
+	for nodo: Node in local.find_children("*", "MeshInstance3D", true, false):
+		var malla := nodo as MeshInstance3D
+		if not malla.is_visible_in_tree():
+			continue
+		for superficie in malla.get_surface_override_material_count():
+			var material := malla.get_active_material(superficie) as BaseMaterial3D
+			if (
+				material != null
+				and material.emission_enabled
+				and material.emission_energy_multiplier > 0.0
+				and not nombres.has(material.resource_name)
+			):
+				nombres.append(material.resource_name)
+	return nombres
 
 
 func _local_cortado() -> Node3D:
