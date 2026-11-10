@@ -223,6 +223,7 @@ func test_el_foco_empieza_en_la_primera_accion_y_baja_por_la_lista() -> void:  #
 
 func test_cada_boton_del_joystick_es_un_glifo_y_no_un_texto() -> void:  # AC-CFG-036
 	var pantalla := _pantalla(true)
+	pantalla.poner_familia(FamiliaDeJoystick.Familia.PLAYSTATION)
 	var esperadas: Dictionary[StringName, GlifoDeEntrada.Forma] = {
 		AsignacionDeControles.AGARRAR: GlifoDeEntrada.Forma.CRUZ,
 		AsignacionDeControles.CELULAR: GlifoDeEntrada.Forma.CIRCULO,
@@ -233,11 +234,16 @@ func test_cada_boton_del_joystick_es_un_glifo_y_no_un_texto() -> void:  # AC-CFG
 	for accion: StringName in esperadas:
 		assert_int(pantalla.glifo_de(accion, EN_EL_JOYSTICK).forma).is_equal(esperadas[accion])
 		assert_str(pantalla.boton_de(accion, EN_EL_JOYSTICK).text).is_empty()
-	assert_int(GlifoDeEntrada.forma_de(DEL_JOYSTICK, JOY_BUTTON_Y)).is_equal(
-		GlifoDeEntrada.Forma.TRIANGULO
+	(
+		assert_int(
+			GlifoDeEntrada.forma_de(
+				DEL_JOYSTICK, JOY_BUTTON_Y, FamiliaDeJoystick.Familia.PLAYSTATION
+			)
+		)
+		. is_equal(GlifoDeEntrada.Forma.TRIANGULO)
 	)
 	assert_int(GlifoDeEntrada.forma_de(DEL_JOYSTICK, JOY_BUTTON_LEFT_STICK)).is_equal(
-		GlifoDeEntrada.Forma.PALANCA
+		GlifoDeEntrada.Forma.PILDORA
 	)
 	assert_int(GlifoDeEntrada.forma_de(DEL_JOYSTICK, JOY_BUTTON_DPAD_UP)).is_equal(
 		GlifoDeEntrada.Forma.CRUCETA
