@@ -279,7 +279,7 @@ func test_la_mopa_sobre_la_mancha_ofrece_limpiar_con_el_derecho() -> void:  # AC
 		[ReferenciaDeControles.texto(ReferenciaDeControles.Linea.LIMPIAR, derecho)]
 	)
 	for linea in lineas:
-		assert_str(linea).does_not_contain(
+		assert_str(linea).not_contains(
 			ReferenciaDeControles.TEXTOS[ReferenciaDeControles.Linea.DEJAR]
 		)
 
