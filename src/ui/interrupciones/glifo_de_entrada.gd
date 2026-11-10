@@ -329,10 +329,10 @@ func _dibujar_simbolo(marco: Rect2) -> void:
 		Forma.TRIANGULO:
 			var vertices := PackedVector2Array(
 				[
-					c + Vector2(0.0, -lado * 1.2),
-					c + Vector2(lado * 1.2, lado * 0.9),
-					c + Vector2(-lado * 1.2, lado * 0.9),
-					c + Vector2(0.0, -lado * 1.2),
+					c + Vector2(0.0, -lado * 1.05),
+					c + Vector2(lado * 1.2, lado * 1.05),
+					c + Vector2(-lado * 1.2, lado * 1.05),
+					c + Vector2(0.0, -lado * 1.05),
 				]
 			)
 			draw_polyline(vertices, COLOR_DEL_TRIANGULO, 3.0, true)
