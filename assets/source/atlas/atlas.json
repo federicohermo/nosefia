@@ -329,13 +329,13 @@
    "ancho": 2720,
    "alto": 3808,
    "formato": "bc1",
-   "huella": "192fd3c352ca80297c4662bcdfa14cb1952406065beeffa4ef94fc3b5a714cd4",
+   "huella": "2e8aa33e5d84732b25929f0a296db180382b1959b15a34ab24d4c2e02829bc19",
    "entradas": [
     {
      "ruta": "source/boxes/actroncito.png",
      "ancho": 512,
      "alto": 512,
-     "huella": "1d937ac1faee9f9a3bf21c73f39f2d3b09bad2bbfcd95a21070dd8984e746c5f",
+     "huella": "5b015162221c07f701a4f8c3296e27df8c95cb641490bba2e80bd0d9c539259a",
      "x": 16,
      "y": 16
     },
@@ -455,7 +455,7 @@
      "ruta": "source/boxes/jorgillo.png",
      "ancho": 512,
      "alto": 512,
-     "huella": "3392702aa3fe6bdc3c267c3ad530d6c4114d25cc8e3a0a3ac8fc59fbb917b8c7",
+     "huella": "041af339493cd65b792adf4940834d85930900294d1909e01c421732f5f04220",
      "x": 16,
      "y": 1648
     },
