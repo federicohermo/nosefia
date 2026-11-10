@@ -36,7 +36,6 @@ impide jugar.
 | **Secundaria** | la segunda ranura de teclado o mouse de una acción. Puede estar vacía. Las de Movimiento traen las flechas de fábrica | alternativa, tecla 2 |
 | **Ranura vacía** | una secundaria sin entrada. La pantalla la muestra como un recuadro punteado tenue | libre, nula |
 | **Pestaña** | cada una de las dos vistas de la pantalla de controles: **TECLADO Y MOUSE** y **JOYSTICK**. Se muestra una sola a la vez | página, sección |
-| **FIJO** | la marca de un renglón que se muestra y no se puede cambiar | bloqueado |
 | **Esquema de fábrica** | la entrada que cada ranura tiene mientras nadie la cambió: las teclas que nombran los demás contratos, y las secundarias vacías, salvo las flechas de Movimiento | por omisión |
 
 ## Comportamiento normativo
@@ -258,8 +257,9 @@ Pausa en el joystick es START (`BR-SAV-024`). La cruceta, el joystick derecho y 
 ### BR-CFG-026 — La pantalla de controles reasigna los botones del joystick
 
 La pestaña JOYSTICK DEBE mostrar un renglón por cada una de las cinco acciones de botón, con su
-botón, y tres renglones FIJO que NO DEBEN poder reasignarse: Movimiento, en el joystick izquierdo;
-Visión, en el derecho, y Pausa, en START. CUANDO el jugador elige el
+botón, y ningún otro: lo que no se puede configurar —Movimiento, Visión y Pausa— NO DEBE tener
+renglón. CUANDO el jugador abre la pestaña, el foco DEBE ir al botón de la primera acción, y la
+cruceta DEBE bajar de un renglón al siguiente. CUANDO el jugador elige el
 botón de un renglón y aprieta un botón de joystick, el sistema DEBE asignárselo a esa acción, con el
 intercambio de `BR-CFG-018` dentro del joystick: ninguna acción queda sin botón y ningún botón
 está en dos acciones. Una ranura de teclado o mouse NO DEBE aceptar un botón de joystick, y una de
@@ -325,9 +325,7 @@ desconecta, la pestaña DEBE apagarse, L1 y R1 DEBEN desaparecer, y SI JOYSTICK 
 pantalla DEBE pasar a TECLADO Y MOUSE.
 
 Cada pestaña DEBE tener una sola lista, con sus acciones, sin otro título que la cabecera
-de sus columnas. TECLADO Y MOUSE NO DEBE tener renglón de Visión. En JOYSTICK, Visión DEBE ir justo
-después de Movimiento, y Movimiento, Visión y Pausa DEBEN llevar la marca **FIJO**, verse más tenues
-y no poder elegirse.
+de sus columnas. Una pestaña NO DEBE mostrar lo que no se puede configurar.
 Lo que no depende de ninguna acción —ENTER y las flechas en las interfaces, X y CÍRCULO en el
 joystick— NO DEBE tener renglón, y la pantalla NO DEBE llevar una ayuda de teclas.
 
@@ -568,8 +566,10 @@ pueda reasignar.
 
 ### AC-CFG-026 — La pantalla de controles reasigna el joystick *(verifica BR-CFG-026)*
 
-DADO la pestaña JOYSTICK ENTONCES muestra cinco renglones de botón, cada uno con el suyo, y los
-renglones FIJO de Movimiento, Visión y Pausa, que no se pueden elegir para reasignar. DADO Examinar en CUADRADO CUANDO se
+DADO la pestaña JOYSTICK ENTONCES muestra cinco renglones de botón, cada uno con el suyo y todos
+elegibles para reasignar, y ningún renglón más: ni Movimiento, ni Visión, ni Pausa. DADO la pestaña
+abierta CUANDO se abre ENTONCES el foco está en el botón de la primera acción, y CUANDO se aprieta
+abajo en la cruceta ENTONCES pasa al renglón siguiente. DADO Examinar en CUADRADO CUANDO se
 elige su botón y se aprieta L1 ENTONCES Examinar queda en L1, Agacharse en CUADRADO, y las teclas
 de las dos no cambian. DADO Examinar eligiendo su botón CUANDO se aprieta una tecla o un clic
 ENTONCES no cambia nada; DADO Examinar eligiendo su tecla CUANDO se aprieta un botón de joystick
@@ -617,8 +617,7 @@ en 30 %. DADO un archivo sin botones de joystick ENTONCES cada acción tiene su 
 DADO la pantalla de controles abierta ENTONCES tiene las pestañas TECLADO Y MOUSE y JOYSTICK, cada
 una con el dibujo de su dispositivo, y se ve el contenido de una sola. DADO TECLADO Y MOUSE
 CUANDO se elige JOYSTICK ENTONCES se ve el contenido de JOYSTICK y no el de TECLADO Y MOUSE, y al
-revés. DADO cada pestaña ENTONCES tiene una sola lista. DADO TECLADO Y MOUSE ENTONCES no tiene renglón de
-Visión, y DADO JOYSTICK, Visión va justo después de Movimiento. DADO cada pestaña ENTONCES sus renglones
+revés. DADO cada pestaña ENTONCES tiene una sola lista, y sus renglones
 van pegados a la cabecera con el mismo paso, el alto que sobra queda debajo sin pisar la línea del
 pie, y la lista queda centrada respecto de las pestañas.
 
@@ -648,11 +647,6 @@ y ninguna acción. DADO la pantalla abierta en TECLADO Y MOUSE CUANDO se conecta
 la pestaña se habilita, L1 y R1 aparecen y sigue elegida TECLADO Y MOUSE. DADO la pantalla abierta en
 JOYSTICK CUANDO se desconecta ENTONCES la pestaña se apaga, L1 y R1 desaparecen y pasa a TECLADO Y
 MOUSE.
-
-### AC-CFG-035 — Los renglones fijos *(verifica BR-CFG-031)*
-
-DADO la pestaña TECLADO Y MOUSE ENTONCES ningún renglón lleva la marca FIJO. DADO la
-pestaña JOYSTICK ENTONCES Movimiento, Visión y Pausa la llevan y no se pueden elegir.
 
 ### AC-CFG-036 — Los glifos *(verifica BR-CFG-032)*
 

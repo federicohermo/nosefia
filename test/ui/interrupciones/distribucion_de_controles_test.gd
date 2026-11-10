@@ -33,10 +33,6 @@ func _desplazador(pantalla: PantallaDeControles) -> ScrollContainer:
 	return filas.get_parent() as ScrollContainer
 
 
-func _nombre(fila: HBoxContainer) -> String:
-	return (fila.get_child(0) as Label).text
-
-
 func _borde(caja: StyleBox) -> int:
 	if caja is StyleBoxFlat:
 		return (caja as StyleBoxFlat).get_border_width_min()
@@ -107,18 +103,6 @@ func test_cada_pestana_alinea_a_la_izquierda_sus_glifos() -> void:  # AC-CFG-031
 			bordes.append(_borde_izquierdo(fila.get_child(1)))
 		for borde: float in bordes:
 			assert_float(borde).is_equal_approx(bordes[0], TOLERANCIA)
-
-
-func test_la_marca_fijo_entra_en_su_bloque() -> void:  # AC-CFG-035
-	var pantalla := await _pantalla()
-	var area := _desplazador(pantalla).get_global_rect()
-	for del_joystick: bool in [false, true]:
-		await _mostrar(pantalla, del_joystick)
-		for fila: HBoxContainer in pantalla.filas(del_joystick):
-			if not fila.has_meta(&"fijo"):
-				continue
-			var marca := fila.get_child(fila.get_child_count() - 1) as Label
-			assert_bool(marca.get_global_rect().end.x <= area.end.x + TOLERANCIA).is_true()
 
 
 ## Configuraciones escribe con el tipo `TextoDelMenu` del tema: ese es el tamaño de la vara.
@@ -355,16 +339,3 @@ func test_cada_pestana_junta_su_dibujo_con_su_texto_y_los_centra() -> void:  # A
 		assert_float(centro_del_grupo).is_equal_approx(centro_de_la_pestana, TOLERANCIA * 4.0)
 		var separacion := texto.get_global_rect().position.x - dibujo.get_global_rect().end.x
 		assert_bool(separacion <= dibujo.size.x).is_true()
-
-
-func test_vision_va_solo_en_joystick_despues_de_movimiento() -> void:  # AC-CFG-031
-	var pantalla := await _pantalla()
-	for fila: HBoxContainer in pantalla.filas(false):
-		assert_str(_nombre(fila)).is_not_equal(PantallaDeControles.TEXTO_DE_VISION)
-	var del_joystick: Array[String] = []
-	for fila: HBoxContainer in pantalla.filas(true):
-		del_joystick.append(_nombre(fila))
-	(
-		assert_str(del_joystick[del_joystick.find(PantallaDeControles.TEXTO_DE_MOVIMIENTO) + 1])
-		. is_equal(PantallaDeControles.TEXTO_DE_VISION)
-	)

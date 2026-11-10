@@ -1,6 +1,6 @@
 ## Las pestañas de la pantalla de controles, sus glifos y la tecla secundaria: se ve una sola
-## pestaña, se abre en la del último dispositivo, L1 y R1 las cambian, lo fijo no se elige, y una
-## secundaria se llena con una tecla y se vacía con SUPR.
+## pestaña, se abre en la del último dispositivo, L1 y R1 las cambian, JOYSTICK lista sólo lo que se
+## reasigna, y una secundaria se llena con una tecla y se vacía con SUPR.
 extends GdUnitTestSuite
 
 const ESCENA := "res://src/ui/interrupciones/pantalla_de_controles.tscn"
@@ -54,11 +54,10 @@ func _entrada(asignacion: AsignacionDeControles, accion: StringName, ranura: int
 	return Vector2i(entrada["tipo"], entrada["codigo"])
 
 
-func _nombres(filas: Array[HBoxContainer], fijas: bool) -> Array[String]:
+func _nombres(filas: Array[HBoxContainer]) -> Array[String]:
 	var nombres: Array[String] = []
 	for fila: HBoxContainer in filas:
-		if fila.has_meta(&"fijo") == fijas:
-			nombres.append((fila.get_child(0) as Label).text)
+		nombres.append((fila.get_child(0) as Label).text)
 	return nombres
 
 
@@ -109,9 +108,9 @@ func test_las_pestanas_se_eligen_con_el_mouse_o_por_foco() -> void:  # AC-CFG-03
 
 func test_cada_accion_dice_en_su_renglon_sus_funciones_de_menu() -> void:  # AC-CFG-031, AC-CFG-042
 	var pantalla := _pantalla()
-	var en_el_joystick: Array[StringName] = [AsignacionDeControles.PAUSA]
-	en_el_joystick.append_array(AsignacionDeControles.ACCIONES_CON_BOTON)
-	var por_pestana: Dictionary = {false: AsignacionDeControles.ACCIONES, true: en_el_joystick}
+	var por_pestana: Dictionary = {
+		false: AsignacionDeControles.ACCIONES, true: AsignacionDeControles.ACCIONES_CON_BOTON
+	}
 	for del_joystick: bool in por_pestana:
 		var nombres: Array[String] = []
 		for fila: HBoxContainer in pantalla.filas(del_joystick):
@@ -184,29 +183,28 @@ func test_l1_esperando_un_boton_se_asigna_y_no_cambia_de_pestana() -> void:  # A
 	)
 
 
-func test_lo_fijo_lleva_su_marca_y_no_tiene_nada_que_elegir() -> void:  # AC-CFG-035
+func test_joystick_lista_solo_las_acciones_que_se_reasignan() -> void:  # AC-CFG-026, AC-CFG-031
 	var pantalla := _pantalla()
-	assert_array(_nombres(pantalla.filas(false), true)).is_empty()
-	var pausa := AsignacionDeControles.nombre_de_la_accion(AsignacionDeControles.PAUSA)
-	var del_joystick := _nombres(pantalla.filas(true), true)
-	(
-		assert_array(del_joystick)
-		. contains_exactly_in_any_order(
-			[
-				PantallaDeControles.TEXTO_DE_MOVIMIENTO,
-				PantallaDeControles.TEXTO_DE_VISION,
-				pausa,
-			]
-		)
-	)
+	var esperadas: Array[String] = []
+	for accion: StringName in AsignacionDeControles.ACCIONES_CON_BOTON:
+		esperadas.append(AsignacionDeControles.nombre_de_la_accion(accion))
+	assert_array(_nombres(pantalla.filas(true))).is_equal(esperadas)
 	for del_dispositivo: bool in [false, true]:
 		for fila: HBoxContainer in pantalla.filas(del_dispositivo):
-			if fila.has_meta(&"fijo"):
-				assert_array(fila.find_children("*", "Button", true, false)).is_empty()
-				assert_bool(fila.modulate.a < 1.0).is_true()
-	assert_int(_nombres(pantalla.filas(true), false).size()).is_equal(
-		AsignacionDeControles.ACCIONES_CON_BOTON.size()
-	)
+			assert_array(fila.find_children("*", "Button", true, false)).is_not_empty()
+			assert_float(fila.modulate.a).is_equal(1.0)
+
+
+func test_el_primer_foco_del_joystick_va_a_la_primera_accion_y_baja_por_la_lista() -> void:  # AC-CFG-026
+	var pantalla := _pantalla(true)
+	await get_tree().process_frame
+	await get_tree().process_frame
+	var celdas: Array[Button] = []
+	for accion: StringName in AsignacionDeControles.ACCIONES_CON_BOTON:
+		celdas.append(pantalla.boton_de(accion, EN_EL_JOYSTICK))
+	assert_object(get_viewport().gui_get_focus_owner()).is_same(celdas[0])
+	for i: int in range(1, celdas.size()):
+		assert_object(celdas[i - 1].find_valid_focus_neighbor(SIDE_BOTTOM)).is_same(celdas[i])
 
 
 func test_cada_boton_del_joystick_es_un_glifo_y_no_un_texto() -> void:  # AC-CFG-036
