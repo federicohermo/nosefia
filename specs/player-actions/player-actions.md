@@ -557,8 +557,7 @@ jornada NO DEBE saltear la placa del cierre.
 
 ### BR-PLY-061 — Correr multiplica la caminata mientras se mantiene apretado
 
-MIENTRAS se mantiene apretada la acción de correr —Shift por defecto, y L3, apretar la palanca
-izquierda, en el joystick—, el sistema DEBE caminar a **1,8 veces** la velocidad de caminata de
+MIENTRAS se mantiene apretada la acción de correr —Shift por defecto, y el gatillo derecho del joystick—, el sistema DEBE caminar a **1,8 veces** la velocidad de caminata de
 BR-PLY-002, en la misma dirección que sin correr. No es un interruptor: CUANDO se la suelta, la
 velocidad DEBE volver a la de caminata. Correr NO DEBE tener límite de tiempo, de distancia ni de
 cansancio, y NO DEBE cambiar la postura ni la altura de la vista. Apretada sin entrada de
@@ -1602,8 +1601,9 @@ es cero. CUANDO se reanuda con correr apretada ENTONCES corre.
 
 ### AC-PLY-197 — Correr tiene su acción, Shift y L3 *(verifica BR-PLY-061)*
 
-DADO el mapa de entradas del juego ENTONCES la acción de correr existe, su tecla es Shift, su botón
-de joystick es L3 y ninguna otra acción del juego tiene esa tecla ni ese botón. DADO el nombre de
+DADO el mapa de entradas del juego ENTONCES la acción de correr existe, su tecla es Shift, su
+entrada de joystick es el gatillo derecho y ninguna otra acción del juego tiene esa tecla ni ese
+gatillo. DADO el nombre de
 la acción en el dominio ENTONCES coincide con el del mapa de entradas.
 
 ### AC-PLY-150 — Un útil suelto se corre en el sentido del paso *(verifica BR-PLY-050)*

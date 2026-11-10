@@ -29,7 +29,8 @@ impide jugar.
 | **Sensibilidad de fábrica** | los radianes por píxel que el dominio del jugador declara para el giro de la vista y el del examen | — |
 | **Acción reasignable** | una de las ocho que el jugador puede cambiar de tecla: movimiento, celular, examinar, agacharse, correr, agarrar / soltar, interactuar y pausa | comando, bind |
 | **Entrada** | una tecla o un botón del mouse. Mover el mouse y la rueda no lo son | evento, input |
-| **Botón de joystick** | un botón del joystick. Los contratos lo nombran como en PlayStation —X, CÍRCULO, CUADRADO, TRIÁNGULO, L1, R1, L3, R3, START— y, en otra familia, es el que está en el mismo lugar del joystick: X es el de abajo, CÍRCULO el de la derecha, CUADRADO el de la izquierda y TRIÁNGULO el de arriba. Los ejes y los gatillos analógicos no lo son | — |
+| **Botón de joystick** | un botón del joystick. Los contratos lo nombran como en PlayStation —X, CÍRCULO, CUADRADO, TRIÁNGULO, L1, R1, L3, R3, START— y, en otra familia, es el que está en el mismo lugar del joystick: X es el de abajo, CÍRCULO el de la derecha, CUADRADO el de la izquierda y TRIÁNGULO el de arriba. Los ejes y los gatillos analógicos no lo son, salvo el gatillo derecho en Correr (`BR-CFG-036`) | — |
+| **Gatillo derecho** | el gatillo analógico derecho del joystick: R2 en PlayStation, RT en Xbox y ZR en Nintendo. Cuenta como apretado a partir de la mitad de su recorrido, y como suelto por debajo | disparador, trigger |
 | **Familia de joystick** | la marca del joystick conectado, de la que salen los rótulos y los glifos de sus botones: **PlayStation**, **Xbox** o **Nintendo** (Switch, Pro Controller y Joy-Con). Se lee del nombre que el joystick dice de sí mismo; el que no se reconoce es Xbox | marca, tipo de mando |
 | **Esquema de joystick** | el botón que cada acción de botón tiene en el joystick, aparte de su tecla o clic | — |
 | **Ranura** | el lugar fijo de una entrada dentro de una acción. Toda acción reasignable tiene dos de teclado o mouse, la **principal** y la **secundaria**; las seis de botón suman la del joystick | slot, alias |
@@ -249,9 +250,9 @@ ahora.
 
 ### BR-CFG-025 — El joystick tiene su esquema de fábrica
 
-Seis de las ocho acciones reasignables DEBEN tener además un botón de joystick, el de fábrica:
-**X** en Agarrar / Soltar, **R1** en Interactuar, **L1** en Agacharse, **L3** en Correr,
-**CÍRCULO** en Abrir la interfaz del celular y **CUADRADO** en Examinar. Movimiento y Pausa NO DEBEN tener botón de
+Seis de las ocho acciones reasignables DEBEN tener además una entrada de joystick, la de fábrica:
+**X** en Agarrar / Soltar, **R1** en Interactuar, **L1** en Agacharse, el **gatillo derecho** en
+Correr, **CÍRCULO** en Abrir la interfaz del celular y **CUADRADO** en Examinar. Movimiento y Pausa NO DEBEN tener botón de
 joystick reasignable: el joystick izquierdo camina y el derecho mira (`BR-PLY-055`, `BR-PLY-056`), y
 Pausa en el joystick es START (`BR-SAV-024`). La cruceta, el joystick derecho y X en las interfaces
 (`BR-CFG-027`) tampoco se reasignan.
@@ -267,7 +268,7 @@ botón de un renglón y aprieta un botón de joystick, el sistema DEBE asignárs
 intercambio de `BR-CFG-018` dentro del joystick: ninguna acción queda sin botón y ningún botón
 está en dos acciones. Una ranura de teclado o mouse NO DEBE aceptar un botón de joystick, y una de
 joystick NO DEBE aceptar una tecla ni un clic: apretarlos no cambia nada. START no se acepta, porque
-es la pausa; un eje o un gatillo analógico tampoco. CUANDO el jugador aprieta Pausa —la tecla o
+es la pausa; un eje o un gatillo analógico tampoco, salvo el derecho en Correr (`BR-CFG-036`). CUANDO el jugador aprieta Pausa —la tecla o
 START— mientras espera un botón, el sistema DEBE cancelar la espera sin cambiar nada. Cada
 asignación DEBE valer en el momento, como `BR-CFG-020`, y NO DEBE cambiar la tecla ni el clic de la
 acción.
@@ -384,14 +385,33 @@ DEBEN cambiar en el acto.
 
 Cada familia DEBE rotular los botones por su posición, con lo que dice el joystick:
 
-- **PlayStation:** ✕ ○ □ △ con sus colores —los glifos de siempre—, L1 y R1, L3 y R3, START.
+- **PlayStation:** ✕ ○ □ △ con sus colores —los glifos de siempre—, L1 y R1, L3 y R3, R2, START.
 - **Xbox:** A, B, X e Y, cada una en un círculo y con su color —A verde, B rojo, X azul, Y
-  amarillo—; LB y RB; LS y RS; MENU en lugar de START.
+  amarillo—; LB y RB; LS y RS; RT; MENU en lugar de START.
 - **Nintendo:** las letras van en la posición de Nintendo, no en la de Xbox: el botón de abajo es B,
-  el de la derecha A, el de la izquierda Y y el de arriba X, sin color; L y R; LS y RS; + en lugar
+  el de la derecha A, el de la izquierda Y y el de arriba X, sin color; L y R; LS y RS; ZR; + en lugar
   de START.
 
-Cada botón de una familia DEBE tener un rótulo distinto del de los demás de esa familia.
+El gatillo derecho DEBE dibujarse como una píldora con su texto, igual que L1 y R1. Cada botón y el
+gatillo de una familia DEBEN tener un rótulo distinto del de los demás de esa familia.
+
+### BR-CFG-036 — Correr acepta el gatillo derecho
+
+El gatillo derecho DEBE contar como apretado a partir de la mitad de su recorrido, y como suelto
+por debajo. La ranura del joystick de Correr DEBE aceptar el gatillo derecho además de un botón de
+joystick, y de fábrica DEBE tenerlo. Ninguna otra acción DEBE aceptar un gatillo, y ninguna
+acción DEBE aceptar el gatillo izquierdo ni el eje de una palanca. Una ranura de teclado o mouse
+NO DEBE aceptar un gatillo.
+
+CUANDO el jugador elige la ranura del joystick de Correr y aprieta el gatillo derecho a más de la
+mitad de su recorrido, el sistema DEBE asignárselo, y el botón que Correr tenía DEBE quedar libre
+sin pasar a otra acción. CUANDO elige un botón que tiene otra acción mientras Correr está en el
+gatillo, el sistema NO DEBE cambiar nada, porque esa otra acción no puede recibir un gatillo en el
+intercambio de `BR-CFG-018`; un botón que nadie tiene sí se asigna. Apretar el gatillo derecho
+esperando cualquier otra ranura NO DEBE cambiar nada y la espera DEBE seguir. La asignación con el
+gatillo DEBE guardarse y leerse como las demás (`BR-CFG-022`, `BR-CFG-023`): una acción que no es
+Correr guardada con un gatillo es ilegible. Correr DEBE responder apenas el gatillo pasa la mitad
+de su recorrido (`BR-CFG-020`).
 
 ### BR-CFG-035 — Un archivo de antes de Correr conserva lo que el jugador eligió
 
@@ -605,7 +625,7 @@ clic derecho lo hace G, y el clic derecho no lo hace. DADO Pausa asignada a P EN
 ### AC-CFG-025 — El esquema de fábrica del joystick *(verifica BR-CFG-025)*
 
 DADO ninguna asignación guardada ENTONCES Agarrar / Soltar está en X, Interactuar en R1, Agacharse
-en L1, Correr en L3, Abrir la interfaz del celular en CÍRCULO y Examinar en CUADRADO, y cada acción conserva su
+en L1, Correr en el gatillo derecho, Abrir la interfaz del celular en CÍRCULO y Examinar en CUADRADO, y cada acción conserva su
 tecla o clic de fábrica. DADO Movimiento o Pausa ENTONCES ninguna tiene botón de joystick que se
 pueda reasignar.
 
@@ -795,20 +815,35 @@ izquierda y el de arriba son un círculo con A, B, X e Y, cada uno con un color 
 ✕ ○ □ △; los botones de hombro junto a las pestañas dicen LB y RB y el renglón de Pausa, MENU. DADO
 un joystick Nintendo ENTONCES esos cuatro son un círculo con B, A, Y y X, sin color propio, los de
 hombro dicen L y R y Pausa, +. DADO un joystick PlayStation ENTONCES siguen ✕ ○ □ △, L1, R1 y
-START. DADO un joystick que cambia con la pantalla abierta ENTONCES las celdas, los botones de hombro y
+START. DADO la fila de Correr ENTONCES su gatillo se rotula R2 en PlayStation, RT en Xbox y ZR en
+Nintendo, como una píldora. DADO un joystick que cambia con la pantalla abierta ENTONCES las celdas, los botones de hombro y
 Pausa cambian en el acto, y la asignación guardada no cambia. DADO la espera de un botón de
 joystick ENTONCES el mensaje no nombra ninguna marca.
 
 ### AC-CFG-046 — Un archivo de antes de Correr migra Agacharse y respeta lo reasignado *(verifica BR-CFG-035)*
 
 DADO un archivo sin Correr, con Agacharse en Espacio y Examinar en E ENTONCES Agacharse está en Ctrl,
-Correr en Shift y L3, y Examinar en E. DADO un archivo sin Correr, con Agacharse en F ENTONCES
+Correr en Shift y el gatillo derecho, y Examinar en E. DADO un archivo sin Correr, con Agacharse en F ENTONCES
 Agacharse sigue en F y Correr está en Shift. DADO un archivo sin Correr, con Agacharse en Espacio y
 una secundaria en G, y L1 en el joystick ENTONCES la principal pasa a Ctrl y la secundaria y L1 se
 conservan. DADO un archivo sin Correr, con Agacharse en Espacio y Examinar en Ctrl ENTONCES Agacharse
 conserva Espacio y Examinar conserva Ctrl. DADO un archivo con Correr, y Agacharse en Espacio
 ENTONCES Agacharse conserva Espacio. DADO un archivo sin asignaciones ENTONCES Agacharse está en
 Ctrl y Correr en Shift.
+
+### AC-CFG-047 — El gatillo derecho de Correr *(verifica BR-CFG-036, BR-CFG-020)*
+
+DADO ninguna asignación guardada ENTONCES Correr responde al gatillo derecho apretado al 60 % de
+su recorrido y no al 40 %. DADO Correr en el gatillo CUANDO se elige su botón y se aprieta Y
+ENTONCES Correr queda en Y y el gatillo ya no la hace correr; CUANDO se elige otra vez y se
+aprieta el gatillo ENTONCES vuelve al gatillo e Y queda sin acción. DADO Correr en el gatillo y
+Examinar en CUADRADO CUANDO se elige el botón de Correr y se aprieta CUADRADO ENTONCES no cambia
+nada. DADO esperando el botón de Examinar CUANDO se aprieta el gatillo derecho ENTONCES no cambia
+nada y la espera sigue; DADO esperando la tecla de Correr ENTONCES tampoco. DADO esperando el botón
+de Correr CUANDO se aprieta el gatillo izquierdo ENTONCES no cambia nada. DADO Correr en el gatillo
+CUANDO se lee el archivo del disco ENTONCES guarda un tipo de entrada y el eje, sin nombrar ningún
+evento, y CUANDO se vuelve a abrir el juego ENTONCES sigue en el gatillo. DADO un archivo con el
+gatillo derecho guardado en Examinar ENTONCES Examinar vuelve a CUADRADO.
 
 ## No objetivos
 
