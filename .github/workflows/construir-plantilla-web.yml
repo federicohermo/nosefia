@@ -8,6 +8,8 @@ name: construir-plantilla-web
 
 on:
   workflow_dispatch:
+  push:
+    branches: [harness/530-plantilla-web-publicada]
 
 permissions:
   contents: read
