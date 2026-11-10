@@ -1,0 +1,30 @@
+{
+  "source": "../ambientcg/bricks-066/source.json",
+  "license": "CC0-1.0",
+  "original": "../ambientcg/bricks-066/Bricks066_1K-JPG_Color.jpg",
+  "original_sha256": "3a5b51dce8b672cbe022537d51c3cabf7af116d8e2e258e5da45b734fe02eca9",
+  "generator": ".claude/scripts/blender/texturizar_bloques_del_deposito.py",
+  "operation": "27 caras del original, un tono y un desgaste por bloque, juntas hundidas, humedad al pie; normal y rugosidad del mismo mapa de alturas",
+  "cobertura_metros": [
+    2.4,
+    3.5999999999999996
+  ],
+  "size": [
+    1024,
+    1024
+  ],
+  "files": {
+    "color": {
+      "file": "deposito_bloques_color.png",
+      "sha256": "6cf5c04b5a8fdd3dd40eed6b4ddf871a5d12e04821a46d88103272b27ad8eb18"
+    },
+    "normal": {
+      "file": "deposito_bloques_normal.png",
+      "sha256": "c3d96354dab6755e58c6be60ffe7a3139bd044c763657628b0452197d9a92fcd"
+    },
+    "rough": {
+      "file": "deposito_bloques_rough.png",
+      "sha256": "2bd77680bcd315837c45df0ebdd6007c528e1e20086c347893ac7aa07b91b177"
+    }
+  }
+}
