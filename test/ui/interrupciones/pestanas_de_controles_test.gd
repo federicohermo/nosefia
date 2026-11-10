@@ -195,7 +195,7 @@ func test_joystick_lista_solo_las_acciones_que_se_reasignan() -> void:  # AC-CFG
 			assert_float(fila.modulate.a).is_equal(1.0)
 
 
-func test_el_primer_foco_del_joystick_va_a_la_primera_accion_y_baja_por_la_lista() -> void:  # AC-CFG-026
+func test_el_foco_empieza_en_la_primera_accion_y_baja_por_la_lista() -> void:  # AC-CFG-026
 	var pantalla := _pantalla(true)
 	await get_tree().process_frame
 	await get_tree().process_frame
