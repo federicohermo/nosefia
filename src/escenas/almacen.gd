@@ -185,6 +185,9 @@ func _ready() -> void:
 	azar_de_la_apertura.randomize()
 	_arranque_de_prueba = ArranqueDePrueba.new()
 	add_child(_arranque_de_prueba)
+	var aviso_al_salir := AvisoAlSalir.new()
+	aviso_al_salir.vigilar(_reloj)
+	add_child(aviso_al_salir)
 	# La lista de la escena no la nombra: `almacen.tscn` no se mergea y no se toca a mano.
 	_puertas.append($Estructura/puerta_limpieza/CuerpoDeLaHoja)
 	_puertas.append($Estructura/compuerta_mostrador/CuerpoDeLaHoja)

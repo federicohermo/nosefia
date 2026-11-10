@@ -87,7 +87,7 @@ func test_producto_ajeno_y_otra_caja_conservan_dejar() -> void:  # AC-PLY-083
 		assert_int(R.ruta(false, contexto, false)).is_equal(R.Ruta.IGNORAR)
 
 
-func test_los_seis_pares_declaran_verbo_sin_consultar_agua_carga_o_jabon() -> void:  # AC-PLY-084
+func test_los_seis_pares_declaran_verbo_en_su_gesto_sin_consultar_estado() -> void:  # AC-PLY-084
 	var uso := Uso.para_el_almacen()
 	var pares := [
 		[&"balde", &"lavatorio", L.LLENAR],
@@ -100,9 +100,10 @@ func test_los_seis_pares_declaran_verbo_sin_consultar_agua_carga_o_jabon() -> vo
 		pares.append([jabon, &"balde", L.VERTIR])
 	for par: Array in pares:
 		var contexto := R.contexto_del_uso(uso.resolver(par[0], par[1]))
+		var primario: bool = par[2] != L.LIMPIAR
 		assert_array(_lineas(true, M.FIJO, contexto)).contains_exactly([L.EXAMINAR_LA_MANO, par[2]])
-		assert_int(R.ruta(true, contexto, false)).is_equal(R.Ruta.PEDIR_USO)
-		assert_int(R.ruta(false, contexto, false)).is_equal(R.Ruta.IGNORAR)
+		assert_int(R.ruta(primario, contexto, false)).is_equal(R.Ruta.PEDIR_USO)
+		assert_int(R.ruta(not primario, contexto, false)).is_equal(R.Ruta.IGNORAR)
 	assert_str(R.texto(L.VERTIR, "F")).is_equal("[F] Vertir")
 
 
@@ -207,12 +208,12 @@ func test_cada_verbo_usa_su_asignacion_y_sin_control_no_se_lee() -> void:  # AC-
 		L.LLENAR,
 		L.VACIAR,
 		L.VERTIR,
-		L.MOJAR,
-		L.LIMPIAR
+		L.MOJAR
 	]:
 		assert_str(String(R.accion(linea))).is_equal(ReglasDeLosObjetos.ACCION_AGARRAR)
 	assert_str(String(R.accion(L.SACAR_PRODUCTO))).is_equal(ReglasDelJugador.ACCION_USAR)
 	assert_str(String(R.accion(L.INTERACTUAR))).is_equal(ReglasDelJugador.ACCION_USAR)
+	assert_str(String(R.accion(L.LIMPIAR))).is_equal(ReglasDelJugador.ACCION_USAR)
 	assert_str(R.texto(L.EXAMINAR_LA_MANO, "Q")).is_equal("[Q] Examinar (mano)")
 	assert_str(R.texto(L.LLENAR, "F")).is_equal("[F] Llenar")
 	assert_str(R.texto(L.LLENAR, "")).is_empty()

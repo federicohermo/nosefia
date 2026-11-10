@@ -29,16 +29,10 @@ const HORNEADO_SIN_LUZ := "res://src/escenas/almacen_sin_luz.lmbake"
 ## mudarla de lugar o de escena no la apague.
 const GRUPO_DE_LA_EMERGENCIA := &"luz_de_emergencia"
 
-## Los materiales emisivos del local que se apagan con las luces. Son los que el modelo declara
-## con emisión; el del tubo del tablero queda afuera porque es la emergencia. Los tubos de las
-## heladeras tienen el suyo, para apagarse sin apagar la emergencia.
-const MATERIALES_EMISIVOS := [
-	&"local_cielorraso",
-	&"bano_difusor",
-	&"cuartito_tubo_difusor",
-	&"deposito_lampara_panel",
-	&"heladera_tubo_difusor",
-]
+## La única emisión que sigue encendida mientras no hay luz: el tubo del tablero, que es la
+## emergencia. **Se declara la que queda, no la que se apaga**: un material emisivo nuevo del local
+## se apaga con el corte sin que nadie lo anote.
+const EMISION_DE_LA_EMERGENCIA := [&"deposito_tubo_tablero_difusor"]
 
 ## La luz de afuera entra por los vidrios que dan a la calle, y es la misma en los dos horneados.
 ## **Sólo existe mientras se hornea**: cada vidrio emite este color hacia adentro, y las sondas lo
@@ -148,14 +142,19 @@ static func _reforzar(luz: SpotLight3D) -> void:
 	luz.shadow_enabled = true
 
 
-## Los materiales emisivos del local con su emisión de hoy, para devolvérsela al restaurar.
+## Los materiales emisivos del local con su emisión de hoy, para devolvérsela al restaurar. Son
+## todos los que emiten salvo el de la emergencia.
 static func emision_del_local(raiz: Node) -> Dictionary[BaseMaterial3D, float]:
 	var emision: Dictionary[BaseMaterial3D, float] = {}
 	for nodo: Node in raiz.find_children("*", "MeshInstance3D", true, false):
 		var malla := nodo as MeshInstance3D
 		for superficie in malla.get_surface_override_material_count():
 			var material := malla.get_active_material(superficie) as BaseMaterial3D
-			if material != null and MATERIALES_EMISIVOS.has(StringName(material.resource_name)):
+			if (
+				material != null
+				and material.emission_enabled
+				and not EMISION_DE_LA_EMERGENCIA.has(StringName(material.resource_name))
+			):
 				emision[material] = material.emission_energy_multiplier
 	return emision
 

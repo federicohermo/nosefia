@@ -3,7 +3,7 @@ schema_version: 1
 capability_id: CAP-PLY
 status: ratified
 owner: por definir
-provenance: GDD «Controles»; fichas «8. Tarea: Reposición», «Notas», «Interfaces virtuales durante la jornada» y «Referencia de controles»; decisiones de #368, #369, #370, #373 y #382; migración de los specs 003, 004, 006, 014, 034, 043; fichas de interacción, limpieza y basura revisadas el 2026-10-15; decisiones de #425, bordes de GJ-52 (#428) e interacción directa con compradores (#429); ocho jornadas de #526; cuartito de limpieza de #541; depósito trabado en la jornada 1 y baño abierto en todas de #574; salida voluntaria de #573; ticket escrito de #580; agacharse de #177; empuje de útiles y bolsas de #563; hoja que se frena con lo pesado de #218; patada a la unidad de #219; compuerta del mostrador empujada de #695; Esc que sale de las interfaces de #607; joystick de #380; la fila «7B» de la lista de pistas e hipótesis y la fila «Palanca» de «Objetos interactuables», de #790; la fila «Llave» de «Objetos interactuables», de #810; la tapa del contenedor que ofrece lo mismo que el cuerpo de #868, ficha GJ-84
+provenance: GDD «Controles»; fichas «8. Tarea: Reposición», «Notas», «Interfaces virtuales durante la jornada» y «Referencia de controles»; decisiones de #368, #369, #370, #373 y #382; migración de los specs 003, 004, 006, 014, 034, 043; fichas de interacción, limpieza y basura revisadas el 2026-10-15; decisiones de #425, bordes de GJ-52 (#428) e interacción directa con compradores (#429); ocho jornadas de #526; cuartito de limpieza de #541; depósito trabado en la jornada 1 y baño abierto en todas de #574; salida voluntaria de #573; ticket escrito de #580; agacharse de #177; empuje de útiles y bolsas de #563; hoja que se frena con lo pesado de #218; patada a la unidad de #219; compuerta del mostrador empujada de #695; Esc que sale de las interfaces de #607; joystick de #380; la fila «7B» de la lista de pistas e hipótesis y la fila «Palanca» de «Objetos interactuables», de #790; la fila «Llave» de «Objetos interactuables», de #810; la tapa del contenedor que ofrece lo mismo que el cuerpo de #868, ficha GJ-84; correr con Shift y agacharse en Ctrl, decididos por el dueño sin issue; correr a 1,4 y agacharse como interruptor, del QA de #942
 ---
 
 # Capacidad: lo que el empleado puede hacer
@@ -47,8 +47,8 @@ controlador de primera persona: no se nota jugando hasta que alguien lo aprovech
 ### BR-PLY-002 — El adelante gira con la mirada
 
 El sistema DEBE rotar la dirección de la caminata con el giro horizontal de la vista. La
-velocidad de caminata es de **3,5 metros por segundo**: un almacén se cruza caminando, no
-corriendo.
+velocidad de caminata es de **3,5 metros por segundo**: un almacén se cruza caminando, y correr
+es una elección del jugador (BR-PLY-061).
 
 ### BR-PLY-003 — La vista no se da vuelta
 
@@ -108,8 +108,8 @@ La salida por la entrada principal usa la secuencia de BR-PLY-041.
 ### BR-PLY-012 — Una herramienta sirve para algo o para nada
 
 CUANDO se acciona el primario —agarrar, clic izquierdo por defecto— con lo que se lleva
-sobre un objetivo que declara una interacción para ese par, el sistema DEBE pedir ese uso
-antes de considerar soltar. DEBE contestar el efecto declarado y ningún efecto de herramienta
+sobre un objetivo que declara una interacción primaria para ese par, el sistema DEBE pedir ese
+uso antes de considerar soltar. Qué gesto declara cada par lo asigna BR-PLY-036. DEBE contestar el efecto declarado y ningún efecto de herramienta
 para los demás pares o con las manos vacías. Un rechazo por estado DEBE consumir el gesto y
 conservar la mano, sin caer a soltado genérico ni ejecutar además el secundario.
 El ticket sobre el inodoro DEBE desecharse según `counter-service`; las herramientas DEBEN
@@ -117,8 +117,9 @@ conservar los resultados, carga, agua, animaciones y rechazos de `store-cleanup`
 
 SI la mira enfoca una puerta, ENTONCES el primario DEBE resolver la puerta según BR-PLY-026,
 sin usar la herramienta ni pedir reposición. El secundario —usar, clic derecho por defecto—
-NO DEBE ejecutar los pares anteriores. El uso de la mopa sobre piso despejado conserva su
-gesto secundario y sus resultados de BR-CLN-024: no pertenece a los pares que cambian al primario.
+NO DEBE ejecutar los pares anteriores, salvo Limpiar —mopa sobre mancha—, que es del secundario
+(BR-PLY-036). El uso de la mopa sobre piso despejado conserva su gesto secundario y sus
+resultados de BR-CLN-024: no pertenece a los pares que cambian al primario.
 Sin interacción contextual declarada, el primario DEBE conservar agarrar y dejar.
 
 ### BR-PLY-013 — Lo que se suelta queda quieto
@@ -434,9 +435,9 @@ primero el examen, después la acción primaria y por último el secundario disp
 | Vaciar | primario | balde sobre inodoro |
 | Vertir | primario | jabón o producto de limpieza habilitado sobre balde |
 | Mojar | primario | mopa sobre balde o inodoro |
-| Limpiar | primario | mopa sobre mancha |
 | Meter producto | primario | caja apoyada, unidad coincidente y capacidad de recibirla |
 | Sacar producto | secundario | caja apoyada, mano vacía y al menos una unidad |
+| Limpiar | secundario | mopa sobre mancha |
 
 «Vertir» DEBE conservar esa escritura literal. Una interacción primaria DEBE reemplazar
 «Dejar», nunca coexistir con ella para el mismo clic, incluso cuando el intento se rechace.
@@ -465,6 +466,8 @@ su alternancia, salvo abierta del todo con algo en la mano: entonces DEBE ofrece
 cuerpo (BR-CLN-025), y nunca alternar y tirar con el mismo clic.
 El secundario sobre todos esos objetivos NO DEBE ofrecer los usos trasladados al primario;
 Sacar producto conserva el secundario, y las acciones ajenas conservan su contrato.
+Limpiar DEBE declararse por el secundario, y el primario sobre la mancha con la mopa NO DEBE
+limpiar ni soltarla ni ofrecer Dejar.
 
 Con la mano vacía, lector, inodoro, lavatorio y balde NO DEBEN declarar uso de herramienta.
 Un tacho vacío u ocupado por la mano NO DEBE ofrecer extracción. El hueco del lector manual
@@ -526,16 +529,17 @@ sostenido por ninguno de estos intentos. El secundario NO DEBE cerrar la noche n
 Con control suspendido, pausa o jornada cerrada, ningún gesto DEBE volver a cerrar la noche.
 Las demás puertas DEBEN conservar su referencia y comportamiento.
 
-### BR-PLY-042 — Agacharse baja la vista mientras se mantiene apretado Espacio
+### BR-PLY-042 — Agacharse es un interruptor de Ctrl
 
-MIENTRAS se mantiene apretada la acción de agacharse —Espacio por defecto—, el sistema DEBE
-bajar la vista a la altura agachado, aproximadamente el centro del hueco del segundo estante
-desde el piso de las góndolas. CUANDO se la suelta, DEBE devolver la vista a la altura de pie. No
-es un interruptor: apretar y soltar NO DEBE dejar al jugador agachado. Las dos alturas salen del
+CUANDO se aprieta la acción de agacharse —Ctrl por defecto, y el botón que el joystick tenga
+asignado—, el sistema DEBE alternar la postura: de pie pasa a agachado, y agachado pasa a de pie.
+Soltar la acción NO DEBE cambiar la postura, y mantenerla apretada NO DEBE alternarla de nuevo.
+Agachado, la vista baja a la altura agachado, aproximadamente el centro del hueco del segundo
+estante desde el piso de las góndolas; de pie, está a la altura de pie. Las dos alturas salen del
 dominio, y la agachado es mayor que cero y menor que la de pie.
 
 La vista NO DEBE saltar de una altura a la otra: DEBE recorrer el trecho entre las dos en una
-fracción de segundo, a paso parejo. CUANDO la acción cambia a mitad del recorrido, la vista DEBE
+fracción de segundo, a paso parejo. CUANDO se aprieta la acción a mitad del recorrido, la vista DEBE
 seguir hacia la nueva altura desde la que tenga en ese momento.
 
 Agachado, el jugador DEBE caminar más lento que de pie: a una proporción de la velocidad de
@@ -545,12 +549,38 @@ su tecla a la caminata. La mira enfoca desde la altura vigente de la vista (BR-P
 cuerpo conserva su forma de colisión.
 
 MIENTRAS el control está suspendido (BR-PLY-006), la postura NO DEBE cambiar, apriete o suelte
-lo que apriete el jugador. CUANDO se reanuda, la postura DEBE seguir a la acción tal como esté
-en ese momento.
+lo que apriete el jugador, y la acción apretada al reanudar NO DEBE alternarla: sólo una apretada
+nueva lo hace. CUANDO abre una jornada, el jugador DEBE arrancar de pie, con la vista a la altura de
+pie.
 
-Espacio es una tecla del juego: NO DEBE aceptar ni activar el botón que tenga el foco. Enter y
+Espacio NO DEBE aceptar ni activar el botón que tenga el foco. Enter y
 el Enter del teclado numérico lo siguen haciendo, así que Espacio sostenido al terminar la
 jornada NO DEBE saltear la placa del cierre.
+
+### BR-PLY-061 — Correr multiplica la caminata mientras se mantiene apretado
+
+MIENTRAS se mantiene apretada la acción de correr —Shift por defecto, y el gatillo derecho del joystick—, el sistema DEBE caminar a **1,4 veces** la velocidad de caminata de
+BR-PLY-002, en la misma dirección que sin correr. No es un interruptor: CUANDO se la suelta, la
+velocidad DEBE volver a la de caminata. Correr NO DEBE tener límite de tiempo, de distancia ni de
+cansancio, y NO DEBE cambiar la postura ni la altura de la vista. Apretada sin entrada de
+movimiento, NO DEBE mover al jugador. La normalización de BR-PLY-001 se conserva: la diagonal
+corriendo no corre más que el adelante.
+
+MIENTRAS el jugador lleva en la mano una caja de reposición grande o el balde con agua, o está
+agachado (BR-PLY-042), correr DEBE acelerar poco y no nada: la velocidad DEBE ser la de caminata, o
+la agachado, por un multiplicador del dominio mayor que uno y menor que el de correr (OQ-PLY-007).
+Con las dos condiciones a la vez, el multiplicador DEBE aplicarse una sola vez, sobre la velocidad
+agachado. Sólo esas dos cosas son pesadas para correr.
+
+MIENTRAS el jugador lleva en la mano un bidón de jabón o una caja pequeña —la caja de reposición
+chica o la cajita—, correr DEBE acelerar más que con peso y menos que sin nada: la velocidad DEBE
+ser la de caminata por un multiplicador del dominio mayor que el de peso y menor que el de correr
+(OQ-PLY-007). Agachado manda el de peso, sin importar lo que se lleve. El balde vacío y todo lo
+demás que se lleva —unidades de producto, mopa, bolsas, ticket, llave, palanca— NO frenan, y con
+ellos correr da lo mismo que con la mano vacía.
+
+MIENTRAS el control está suspendido (BR-PLY-006), correr NO DEBE mover al jugador. Los pasos
+siguen contándose por distancia recorrida (BR-AMB-019): correr no cambia cuántos metros hay entre un paso y otro.
 
 ### BR-PLY-050 — Lo que está suelto en el piso se corre al caminar contra ello
 
@@ -632,7 +662,7 @@ ventanilla con un comprador hablando NO DEBE cerrarse con Esc: ahí Esc pausa (B
 
 CUANDO el jugador inclina el joystick izquierdo, el sistema DEBE caminar hacia esa dirección,
 igual que con las cuatro direcciones del teclado: la dirección sigue a la vista (BR-PLY-002), la
-diagonal no corre más (BR-PLY-001) y la velocidad nunca pasa de la de caminata. MIENTRAS la
+diagonal no corre más (BR-PLY-001) y la velocidad nunca pasa de la de caminata, sin correr. MIENTRAS la
 inclinación está dentro de la zona muerta de la entrada, **0,2**, el sistema NO DEBE caminar. SI no
 hay joystick —nunca se conectó, se desconectó en medio de la noche o el navegador todavía no lo
 entrega—, ENTONCES el sistema NO DEBE fallar ni mover al jugador, y el teclado y el mouse DEBEN
@@ -1247,8 +1277,9 @@ ofrece Examinar (mano) y Dejar. Ninguna consulta cambia unidades ni mano.
 
 DADO, por turno, mopa seca o de jabón incorrecto sobre mancha, balde lleno sobre lavatorio,
 balde vacío sobre inodoro, jabón sobre balde vacío o teñido y mopa sobre balde vacío CUANDO
-se consulta ENTONCES ofrece por primario Limpiar, Llenar, Vaciar, Vertir y Mojar respectivamente,
-sin Dejar ni mutación. DADO mopa sobre inodoro ENTONCES ofrece Mojar. DADO lector lleno y
+se consulta ENTONCES ofrece por primario Llenar, Vaciar, Vertir y Mojar, según el par, y la mopa
+sobre mancha ofrece Limpiar por secundario y ninguna línea primaria. Ningún caso ofrece Dejar ni
+muta. DADO mopa sobre inodoro ENTONCES ofrece Mojar. DADO lector lleno y
 unidad sostenida ENTONCES conserva Interactuar por primario, no por secundario. DADO una
 puerta cerrada o trabada ENTONCES ofrece Abrir, salvo la entrada principal de BR-PLY-041;
 abierta, Cerrar; nota, Mirar. Mano vacía ante
@@ -1337,8 +1368,9 @@ control permanece suspendido por el cierre. Pausar y reanudar conserva entrada y
 
 ### AC-PLY-097 — Un primario produce un solo efecto contextual *(verifica BR-PLY-012, BR-PLY-026, BR-PLY-036)*
 
-DADO un par declarado y, por separado, su estado aceptable y rechazado CUANDO se hace un
-primario ENTONCES hay una sola solicitud de ese uso y cero solicitudes de soltado o secundario.
+DADO un par que declara el primario (BR-PLY-036) y, por separado, su estado aceptable y
+rechazado CUANDO se hace un primario ENTONCES hay una sola solicitud de ese uso y cero
+solicitudes de soltado o secundario.
 El rechazo conserva el objeto sostenido. DADO una unidad ante un objetivo sin interacción
 declarada CUANDO se hace primario ENTONCES se suelta por el recorrido vigente; con mano vacía
 y levantable enfocado, se agarra una sola vez.
@@ -1482,14 +1514,15 @@ la del medio sobre lo que tenga debajo, y la de arriba sobre la del medio.
 
 ### AC-PLY-120 — Agachado, la vista baja *(verifica BR-PLY-042)*
 
-DADO el jugador de pie CUANDO se mantiene apretada la acción de agacharse ENTONCES la vista baja
-hasta la altura agachado, y no se queda en la de pie.
+DADO el jugador de pie CUANDO se aprieta la acción de agacharse ENTONCES la vista baja hasta la
+altura agachado, y no se queda en la de pie.
 
-### AC-PLY-121 — Soltar la acción levanta la vista y no es un interruptor *(verifica BR-PLY-042)*
+### AC-PLY-121 — Agacharse es un interruptor *(verifica BR-PLY-042)*
 
-DADO el jugador agachado CUANDO se suelta la acción ENTONCES la altura de la vista vuelve a la de
-pie. DADO el jugador de pie CUANDO se aprieta y se suelta la acción ENTONCES queda a la altura de
-pie, y apretarla de nuevo lo baja otra vez.
+DADO el jugador agachado CUANDO se suelta la acción ENTONCES la altura de la vista sigue siendo la
+agachado. CUANDO se aprieta otra vez ENTONCES vuelve a la de pie, y apretarla una tercera vez lo
+baja de nuevo. DADO la acción mantenida apretada durante cuadros seguidos ENTONCES la postura
+cambia una sola vez.
 
 ### AC-PLY-122 — La altura agachado está entre el piso y la de pie *(verifica BR-PLY-042)*
 
@@ -1497,21 +1530,22 @@ DADO las dos alturas de la vista ENTONCES la agachado es mayor que cero y menor 
 
 ### AC-PLY-124 — Suspendido, la postura no cambia *(verifica BR-PLY-042, BR-PLY-006)*
 
-DADO el jugador agachado y el control suspendido CUANDO se suelta la acción ENTONCES la altura
-sigue siendo la agachado. DADO el jugador de pie y el control suspendido CUANDO se aprieta la
-acción ENTONCES la altura sigue siendo la de pie. CUANDO se reanuda con la acción apretada
-ENTONCES la altura es la agachado; reanudada con la acción suelta, la de pie.
+DADO el jugador agachado y el control suspendido CUANDO se aprieta y se suelta la acción ENTONCES
+la altura sigue siendo la agachado. DADO el jugador de pie y el control suspendido CUANDO se
+aprieta la acción ENTONCES la altura sigue siendo la de pie. DADO la acción apretada desde antes de
+suspender CUANDO se reanuda ENTONCES la postura no cambia. CUANDO se reanuda y se aprieta de nuevo
+ENTONCES la postura alterna.
 
 ### AC-PLY-125 — La mira enfoca desde la altura agachado *(verifica BR-PLY-042, BR-PLY-004)*
 
 DADO el jugador agachado, con la bajada completa, ENTONCES la cámara de la mira está a la altura
 agachado sobre el piso, y un objeto interactuable apenas debajo de la altura de pie, en línea con la mira agachado, queda
-enfocado. CUANDO se suelta la acción ENTONCES la cámara vuelve a la altura de pie.
+enfocado. CUANDO se aprieta otra vez la acción ENTONCES la cámara vuelve a la altura de pie.
 
-### AC-PLY-126 — Espacio es de la acción y la acción tiene su nombre *(verifica BR-PLY-042)*
+### AC-PLY-126 — Ctrl es de la acción y la acción tiene su nombre *(verifica BR-PLY-042)*
 
-DADO el mapa de entradas del juego ENTONCES la acción de agacharse existe, su tecla es Espacio y
-ninguna otra acción del juego que ya existía la tiene. DADO el nombre de la acción en el dominio
+DADO el mapa de entradas del juego ENTONCES la acción de agacharse existe, su tecla es Ctrl y
+ninguna otra acción del juego la tiene. DADO el nombre de la acción en el dominio
 ENTONCES coincide con el del mapa de entradas.
 
 ### AC-PLY-127 — Espacio no acepta el botón con foco *(verifica BR-PLY-042)*
@@ -1522,26 +1556,76 @@ sigue teniendo Enter y el Enter del teclado numérico.
 ### AC-PLY-128 — La vista se mueve sin saltar *(verifica BR-PLY-042)*
 
 DADO el jugador de pie CUANDO se aprieta la acción ENTONCES un cuadro corto baja la vista sin
-llegar a la altura agachado. DADO el jugador agachado CUANDO se suelta ENTONCES un cuadro corto la
-sube sin llegar a la de pie. La vista llega al destino en una duración mayor que cero y menor que
+llegar a la altura agachado. DADO el jugador agachado CUANDO se aprieta otra vez ENTONCES un cuadro
+corto la sube sin llegar a la de pie. La vista llega al destino en una duración mayor que cero y menor que
 medio segundo, sin pasarse de él, y la misma duración da la misma altura con cuadros de cualquier
 largo.
 
 ### AC-PLY-129 — Cambiar a mitad del recorrido parte de la altura que haya *(verifica BR-PLY-042)*
 
-DADO el jugador bajando a mitad del recorrido CUANDO se suelta la acción ENTONCES la vista sube
-desde la altura que tenía, sin volver de golpe a la de pie ni terminar antes la bajada.
+DADO el jugador bajando a mitad del recorrido CUANDO se aprieta otra vez la acción ENTONCES la vista
+sube desde la altura que tenía, sin volver de golpe a la de pie ni terminar antes la bajada.
 
 ### AC-PLY-130 — Agachado se camina a la velocidad agachado *(verifica BR-PLY-042, BR-PLY-002)*
 
 DADO el jugador agachado y una entrada hacia adelante CUANDO se calcula la velocidad ENTONCES su
-módulo es la velocidad agachado. DADO una entrada en diagonal ENTONCES su módulo es el mismo, por
-la normalización de BR-PLY-001. CUANDO se suelta la acción ENTONCES la velocidad vuelve a la de
-caminata de BR-PLY-002.
+módulo es la velocidad agachado, también con la acción ya suelta. DADO una entrada en diagonal
+ENTONCES su módulo es el mismo, por la normalización de BR-PLY-001. CUANDO se aprieta otra vez la
+acción ENTONCES la velocidad vuelve a la de caminata de BR-PLY-002.
 
 ### AC-PLY-131 — La velocidad agachado es menor que la de pie y no es cero *(verifica BR-PLY-042)*
 
 DADO las dos velocidades de caminata ENTONCES la agachado es mayor que cero y menor que la de pie.
+
+### AC-PLY-192 — Correr camina a su multiplicador de la caminata *(verifica BR-PLY-061, BR-PLY-001)*
+
+DADO el jugador de pie con la mano vacía y una entrada hacia adelante CUANDO se aprieta correr
+ENTONCES la velocidad tiene la dirección de siempre y su módulo es el de caminata por el multiplicador de correr del dominio.
+DADO una entrada en diagonal ENTONCES su módulo es el mismo. CUANDO se suelta correr ENTONCES el
+módulo vuelve al de caminata. DADO correr apretada y ninguna entrada de movimiento ENTONCES la
+velocidad es cero.
+
+### AC-PLY-193 — Correr acelera según lo que se lleva: poco, algo menos o nada *(verifica BR-PLY-061)*
+
+DADO el jugador de pie con una caja de reposición grande en la mano, o con el balde con agua, y una
+entrada hacia adelante CUANDO se aprieta correr ENTONCES el módulo es el de caminata por el
+multiplicador del dominio, que es mayor que uno y menor que el de correr sin peso, y es mayor que
+el de caminata. DADO un jabón o una caja de reposición chica en la mano ENTONCES el módulo es el de
+caminata por el multiplicador intermedio del dominio, mayor que el de peso y menor que el de correr
+sin peso. DADO el balde vacío, una unidad de producto, la mopa, una bolsa de basura, un ticket, la
+llave o la palanca en la mano ENTONCES correr da lo mismo que con la mano vacía. DADO el balde que se llena o se vacía estando en la mano ENTONCES
+la velocidad al correr cambia con él. DADO una caja grande en la mano y correr suelta ENTONCES el
+módulo es el de caminata.
+
+### AC-PLY-194 — Agachado, correr acelera poco, y una sola vez *(verifica BR-PLY-061, BR-PLY-042)*
+
+DADO el jugador agachado y una entrada hacia adelante CUANDO se aprieta correr ENTONCES el módulo
+es la velocidad agachado por el multiplicador del dominio: mayor que la agachado caminando y menor
+que la de pie corriendo. DADO además una caja en la mano ENTONCES el módulo es el mismo, sin
+aplicar el multiplicador dos veces.
+
+### AC-PLY-195 — Correr no se cansa *(verifica BR-PLY-061)*
+
+DADO correr apretada con una entrada hacia adelante durante diez minutos de cuadros ENTONCES la
+velocidad del último cuadro es igual a la del primero.
+
+### AC-PLY-196 — Suspendido, correr no mueve *(verifica BR-PLY-061, BR-PLY-006)*
+
+DADO el control suspendido y correr apretada con una entrada hacia adelante ENTONCES la velocidad
+es cero. CUANDO se reanuda con correr apretada ENTONCES corre.
+
+### AC-PLY-197 — Correr tiene su acción, Shift y el gatillo derecho *(verifica BR-PLY-061)*
+
+DADO el mapa de entradas del juego ENTONCES la acción de correr existe, su tecla es Shift, su
+entrada de joystick es el gatillo derecho y ninguna otra acción del juego tiene esa tecla ni ese
+gatillo. DADO el nombre de
+la acción en el dominio ENTONCES coincide con el del mapa de entradas.
+
+### AC-PLY-198 — Una jornada nueva arranca de pie *(verifica BR-PLY-042)*
+
+DADO el jugador agachado CUANDO se abre una jornada ENTONCES la vista está a la altura de pie y la
+velocidad al caminar es la de caminata. DADO el jugador agachado con la acción apretada CUANDO se
+abre una jornada ENTONCES sigue de pie hasta que se la apriete de nuevo.
 
 ### AC-PLY-150 — Un útil suelto se corre en el sentido del paso *(verifica BR-PLY-050)*
 
@@ -1732,7 +1816,7 @@ del depósito o sobre la entrada ENTONCES avisan de trabada como siempre y no gi
   asignado a cada gesto; la acción primaria o secundaria y el contexto declarado del par
   mano/objetivo, independiente del resultado del intento; la vigencia del comprador, el
   estado de su conversación y su figura animada visible para foco, contorno e interacción directa;
-  si la acción de agacharse está apretada.
+  si las acciones de agacharse y de correr están apretadas.
 - **Salida:** la velocidad, los dos ángulos de la vista, su altura, qué está enfocado y si cambió, qué se
   lleva en la mano, qué casillero lleva el contorno, el motivo de cada rechazo, el ángulo de
   la hoja, el aviso de cada gesto sobre una puerta, el efecto de un uso y las líneas de la
@@ -1802,3 +1886,10 @@ del depósito o sobre la entrada ENTONCES avisan de trabada como siempre y no gi
   - Decide: el dueño del repo, jugando.
   - Bloquea: nada; mientras se decide, la unidad se corre menos que el alcance de la mira
     (BR-PLY-052).
+
+- **OQ-PLY-007 — ¿Cuánto acelera correr con peso, con un bidón o una caja pequeña, o agachado?**
+  - Por qué sigue abierta: el diseño pide que acelere «poco», y no fija el multiplicador. Hoy es un
+    valor provisional del dominio.
+  - Decide: el dueño del repo, jugando.
+  - Bloquea: nada; mientras se decide, es mayor que uno y menor que el de correr sin peso
+    (BR-PLY-061).

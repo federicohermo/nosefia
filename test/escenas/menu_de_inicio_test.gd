@@ -52,6 +52,13 @@ func _boton(menu: Control, texto: String) -> Button:
 	return null
 
 
+## Fuera de la web el menú no calienta ninguna copia: se le da una para preguntar si la usaría.
+func _camino(menu: Control) -> EntradaAlAlmacen.Camino:
+	if menu.get("_copia") == null:
+		menu.set("_copia", auto_free(Node3D.new()))
+	return menu.call("_camino_de_la_entrada")
+
+
 func _habilitados(menu: Control) -> Array[String]:
 	var habilitados: Array[String] = []
 	for boton: Button in menu.get_node("Marco").find_children("*", "Button", true, false):
@@ -214,15 +221,15 @@ func test_cerrar_configuraciones_sin_cambios_conserva_la_copia() -> void:
 	var menu := _menu()
 	menu.set_process(false)
 	var pantalla := _configuraciones(menu)
-	assert_bool(menu.call("_sirve_la_copia")).is_true()
+	assert_int(_camino(menu)).is_equal(EntradaAlAlmacen.Camino.LA_COPIA)
 	_boton(menu, "CONFIGURACIONES").pressed.emit()
 	pantalla._unhandled_input(_esc())
 	assert_bool(pantalla.visible).is_false()
-	assert_bool(menu.call("_sirve_la_copia")).is_true()
+	assert_int(_camino(menu)).is_equal(EntradaAlAlmacen.Camino.LA_COPIA)
 	_boton(menu, "CONFIGURACIONES").pressed.emit()
 	(pantalla.marco().get_node("Volver") as Button).pressed.emit()
 	assert_bool(pantalla.visible).is_false()
-	assert_bool(menu.call("_sirve_la_copia")).is_true()
+	assert_int(_camino(menu)).is_equal(EntradaAlAlmacen.Camino.LA_COPIA)
 
 
 func test_cambiar_una_preferencia_invalida_la_copia() -> void:
@@ -231,12 +238,12 @@ func test_cambiar_una_preferencia_invalida_la_copia() -> void:
 		menu.set_process(false)
 		var pantalla := _configuraciones(menu)
 		_boton(menu, "CONFIGURACIONES").pressed.emit()
-		assert_bool(menu.call("_sirve_la_copia")).is_true()
+		assert_int(_camino(menu)).is_equal(EntradaAlAlmacen.Camino.LA_COPIA)
 		var fila: HBoxContainer = pantalla.filas()[Preferencias.CAMPOS.find(campo)]
 		(fila.get_child(1) as Button).pressed.emit()
 		pantalla._unhandled_input(_esc())
 		assert_bool(pantalla.visible).is_false()
-		assert_bool(menu.call("_sirve_la_copia")).is_false()
+		assert_int(_camino(menu)).is_not_equal(EntradaAlAlmacen.Camino.LA_COPIA)
 		remove_child(menu)
 
 
@@ -245,7 +252,7 @@ func test_reasignar_una_tecla_invalida_la_copia() -> void:  # AC-CFG-022
 	menu.set_process(false)
 	var pantalla := _configuraciones(menu)
 	_boton(menu, "CONFIGURACIONES").pressed.emit()
-	assert_bool(menu.call("_sirve_la_copia")).is_true()
+	assert_int(_camino(menu)).is_equal(EntradaAlAlmacen.Camino.LA_COPIA)
 	var fila: HBoxContainer = pantalla.filas()[Preferencias.CAMPOS.size() + 1]
 	(fila.get_child(1) as Button).pressed.emit()
 	var controles: PantallaDeControles = pantalla.get_node("Controles")
@@ -254,7 +261,7 @@ func test_reasignar_una_tecla_invalida_la_copia() -> void:  # AC-CFG-022
 	tecla.physical_keycode = KEY_F
 	tecla.pressed = true
 	assert_bool(controles.atender(tecla)).is_true()
-	assert_bool(menu.call("_sirve_la_copia")).is_false()
+	assert_int(_camino(menu)).is_not_equal(EntradaAlAlmacen.Camino.LA_COPIA)
 
 
 func test_la_letra_cambia_al_volver_de_configuraciones() -> void:  # AC-CFG-008, AC-CFG-010

@@ -8,8 +8,9 @@
 ## Todo el texto va en el tamaño de Configuraciones, `GlifoDeEntrada.tamano_de_la_letra()`:
 ## nombres, cabeceras y teclas. Todas las teclas miden lo mismo, el ancho de la más ancha, un clic
 ## con su nombre, y arrancan en el borde izquierdo de su columna, igual que la cabecera; el
-## recuadro del foco enmarca la tecla. La lista reparte el alto del área entre sus renglones y se
-## centra en el ancho, igual que las pestañas.
+## recuadro del foco enmarca la tecla. Los renglones van pegados a la cabecera, con el mismo paso en
+## las dos pestañas, y la lista se centra en el ancho, igual que las pestañas. El alto que sobra
+## queda debajo.
 ##
 ## Abajo, a la izquierda de VOLVER, sólo se ve el mensaje de lo que pasa ahora: qué entrada espera
 ## la celda elegida, o el aviso de una asignación que no entró.
@@ -46,14 +47,16 @@ const TEXTO_FIJO := "FIJO"
 const TEXTO_DEL_AVISO := "YA ES LA PRINCIPAL DE"
 const TEXTO_DE_MOVIMIENTO := "MOVIMIENTO"
 const TEXTO_DE_VISION := "VISIÓN"
-const TEXTO_DE_START := "START"
-const TEXTO_DEL_MOUSE := "MOUSE"
 ## Cuánto sobresale de la tecla el recuadro de la elegida, para no taparle el borde.
 const SOBRESALE_EL_RECUADRO := 4.0
 const SEPARACION_DE_LAS_COLUMNAS := 64
 const ANCHO_DE_LA_PESTANA := 520.0
 const ALTO_DE_LA_PESTANA := 60.0
-const ALTO_DE_LA_FILA := 52.0
+const ALTO_DE_LA_FILA := 58.0
+## La cabecera de las columnas es sólo texto: no necesita el alto de una tecla.
+const ALTO_DEL_ENCABEZADO := 40.0
+## Entre un renglón y el siguiente.
+const SEPARACION_DE_LAS_FILAS := 5
 ## Entre las pestañas y la cabecera de las columnas. La tinta del texto no llena su renglón: con
 ## esta separación el margen se ve igual a los otros tres.
 const SEPARACION_DE_LA_CABECERA := 20
@@ -87,10 +90,12 @@ var _celdas: Dictionary = {}
 var _glifos: Dictionary = {}
 var _con_el_joystick: bool = false
 var _joystick_conectado: bool = false
+var _familia: FamiliaDeJoystick.Familia = FamiliaDeJoystick.Familia.XBOX
 var _pagina_del_teclado: VBoxContainer
 var _pagina_del_joystick: VBoxContainer
 var _teclas_de_referencia: Array[GlifoDeEntrada] = []
 var _pildoras_de_las_pestanas: Array[GlifoDeEntrada] = []
+var _pildora_de_pausa: GlifoDeEntrada
 var _aviso_sin_joystick: Label
 var _pestana_del_teclado: Button
 var _pestana_del_joystick: Button
@@ -107,6 +112,7 @@ var _celda_elegida := StyleBoxFlat.new()
 
 func _ready() -> void:
 	visible = false
+	_familia = _familia_conectada()
 	_titulo.text = TEXTO_DEL_TITULO
 	_volver.text = TEXTO_DE_VOLVER
 	_volver.pressed.connect(cerrar)
@@ -130,12 +136,14 @@ func _ready() -> void:
 
 ## Cómo se lee una entrada. El nombre de una tecla lo da el motor, y sin traducir a la
 ## distribución del teclado: se lee el código físico como está.
-static func nombre_de_la_entrada(tipo: int, codigo: int) -> String:
+static func nombre_de_la_entrada(
+	tipo: int, codigo: int, familia: FamiliaDeJoystick.Familia = FamiliaDeJoystick.Familia.XBOX
+) -> String:
+	if tipo == AsignacionDeControles.TipoDeEntrada.GATILLO_DEL_JOYSTICK:
+		return FamiliaDeJoystick.rotulo_del_gatillo(familia)
 	if tipo == AsignacionDeControles.TipoDeEntrada.BOTON_DEL_JOYSTICK:
-		var del_joystick: String = AsignacionDeControles.NOMBRES_DE_LOS_BOTONES_DEL_JOYSTICK.get(
-			codigo, "BOTÓN %d" % codigo
-		)
-		return del_joystick
+		var del_joystick := FamiliaDeJoystick.rotulo_de(familia, codigo)
+		return del_joystick if not del_joystick.is_empty() else "BOTÓN %d" % codigo
 	if tipo == AsignacionDeControles.TipoDeEntrada.BOTON_DEL_MOUSE:
 		var nombre: String = AsignacionDeControles.NOMBRES_DE_LOS_BOTONES.get(codigo, "")
 		return nombre.to_upper()
@@ -226,6 +234,14 @@ func poner_joystick_conectado(conectado: bool) -> void:
 		_cambiar_de_pestana(false)
 		return
 	elegir_pestana(_con_el_joystick and conectado)
+
+
+## Cambia la familia del joystick, de la que salen los rótulos y los glifos. Es lo que se llama
+## para ver la pantalla con una familia sin tener un joystick de esa marca.
+func poner_familia(familia: FamiliaDeJoystick.Familia) -> void:
+	_familia = familia
+	_rotular_las_pildoras()
+	_pintar()
 
 
 func aviso_del_joystick() -> String:
@@ -377,8 +393,12 @@ func _barra_de_pestanas() -> HBoxContainer:
 	var barra := HBoxContainer.new()
 	barra.add_theme_constant_override("separation", 16)
 	barra.alignment = BoxContainer.ALIGNMENT_CENTER
-	var izquierda := GlifoDeEntrada.de_un_boton(GlifoDeEntrada.Forma.PILDORA, "L1")
-	var derecha := GlifoDeEntrada.de_un_boton(GlifoDeEntrada.Forma.PILDORA, "R1")
+	var izquierda := GlifoDeEntrada.de_un_boton(
+		GlifoDeEntrada.Forma.PILDORA, _rotulo(JOY_BUTTON_LEFT_SHOULDER)
+	)
+	var derecha := GlifoDeEntrada.de_un_boton(
+		GlifoDeEntrada.Forma.PILDORA, _rotulo(JOY_BUTTON_RIGHT_SHOULDER)
+	)
 	_pildoras_de_las_pestanas = [izquierda, derecha]
 	barra.add_child(izquierda)
 	_pestana_del_teclado = _pestana(TEXTO_DEL_TECLADO, DibujoDeDispositivo.Dispositivo.TECLADO)
@@ -423,17 +443,15 @@ func _aviso_sin_el_joystick() -> Label:
 
 
 ## La página con su cabecera en un renglón: a la izquierda lo que acompaña a los nombres y, a la
-## derecha, el título de cada columna. Ocupa el alto del área: los renglones miden lo mismo y
-## entre uno y otro hay un resorte que reparte lo que sobra.
+## derecha, el título de cada columna. Los renglones miden lo mismo y los separa lo mismo.
 func _bloque(a_la_izquierda: Control, a_la_derecha: Array[Control] = []) -> VBoxContainer:
 	var bloque := VBoxContainer.new()
 	bloque.theme_type_variation = &"ColumnaDelMenu"
 	bloque.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
-	bloque.size_flags_vertical = Control.SIZE_EXPAND_FILL
-	bloque.add_theme_constant_override("separation", 0)
+	bloque.add_theme_constant_override("separation", SEPARACION_DE_LAS_FILAS)
 	var encabezado := HBoxContainer.new()
 	encabezado.add_theme_constant_override("separation", SEPARACION_DE_LAS_COLUMNAS)
-	encabezado.custom_minimum_size.y = ALTO_DE_LA_FILA
+	encabezado.custom_minimum_size.y = ALTO_DEL_ENCABEZADO
 	encabezado.add_child(a_la_izquierda)
 	for control: Control in a_la_derecha:
 		encabezado.add_child(control)
@@ -452,11 +470,7 @@ func _bloque_del_teclado() -> VBoxContainer:
 		fila.add_child(_celda(accion, AsignacionDeControles.RANURA_SECUNDARIA))
 		if _primer_boton_del_teclado == null:
 			_primer_boton_del_teclado = boton_de(accion, AsignacionDeControles.RANURA_PRINCIPAL)
-		_agregar_la_fila(bloque, fila)
-		if accion == AsignacionDeControles.DERECHA:
-			_agregar_la_fila(
-				bloque, _fila_fija(TEXTO_DE_VISION, [GlifoDeEntrada.de_una_tecla(TEXTO_DEL_MOUSE)])
-			)
+		bloque.add_child(fila)
 	return bloque
 
 
@@ -464,14 +478,12 @@ func _bloque_del_joystick() -> VBoxContainer:
 	_aviso_del_joystick = _etiqueta("")
 	_aviso_del_joystick.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 	var bloque := _bloque(_aviso_del_joystick)
-	_agregar_la_fila(
-		bloque,
+	bloque.add_child(
 		_fila_fija(
 			TEXTO_DE_MOVIMIENTO, [GlifoDeEntrada.de_un_boton(GlifoDeEntrada.Forma.PALANCA, "L")]
 		)
 	)
-	_agregar_la_fila(
-		bloque,
+	bloque.add_child(
 		_fila_fija(TEXTO_DE_VISION, [GlifoDeEntrada.de_un_boton(GlifoDeEntrada.Forma.PALANCA, "R")])
 	)
 	for accion: StringName in AsignacionDeControles.ACCIONES_CON_BOTON:
@@ -480,24 +492,17 @@ func _bloque_del_joystick() -> VBoxContainer:
 		fila.add_child(_hueco())
 		if _primer_boton_del_joystick == null:
 			_primer_boton_del_joystick = boton_de(accion, AsignacionDeControles.RANURA_DEL_JOYSTICK)
-		_agregar_la_fila(bloque, fila)
-	_agregar_la_fila(
-		bloque,
+		bloque.add_child(fila)
+	_pildora_de_pausa = GlifoDeEntrada.de_un_boton(
+		GlifoDeEntrada.Forma.PILDORA, _rotulo(AsignacionDeControles.BOTON_DE_PAUSA)
+	)
+	bloque.add_child(
 		_fila_fija(
 			AsignacionDeControles.nombre_de_la_accion(AsignacionDeControles.PAUSA),
-			[GlifoDeEntrada.de_un_boton(GlifoDeEntrada.Forma.PILDORA, TEXTO_DE_START)]
+			[_pildora_de_pausa]
 		)
 	)
 	return bloque
-
-
-## Un renglón después del anterior, con un resorte en el medio: reparte el alto que sobra.
-func _agregar_la_fila(bloque: VBoxContainer, fila: HBoxContainer) -> void:
-	var resorte := Control.new()
-	resorte.size_flags_vertical = Control.SIZE_EXPAND_FILL
-	resorte.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	bloque.add_child(resorte)
-	bloque.add_child(fila)
 
 
 ## Abajo, debajo de la línea del pie y a la izquierda de VOLVER: no pisa la lista.
@@ -516,6 +521,7 @@ func _fila_fija(nombre: String, glifos: Array[GlifoDeEntrada]) -> HBoxContainer:
 	var dibujos := HBoxContainer.new()
 	dibujos.add_theme_constant_override("separation", 12)
 	for glifo: GlifoDeEntrada in glifos:
+		glifo.en_tecla = true
 		glifo.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		glifo.size_flags_vertical = Control.SIZE_SHRINK_CENTER
 		dibujos.add_child(glifo)
@@ -613,7 +619,31 @@ func _cancelar_la_espera() -> void:
 
 
 func _al_cambiar_un_joystick(_dispositivo: int, _conectado: bool) -> void:
+	poner_familia(_familia_conectada())
 	poner_joystick_conectado(not Input.get_connected_joypads().is_empty())
+
+
+## La familia del primer joystick conectado, y Xbox si no hay ninguno.
+func _familia_conectada() -> FamiliaDeJoystick.Familia:
+	var nombres: Array[String] = []
+	for dispositivo: int in Input.get_connected_joypads():
+		nombres.append(Input.get_joy_name(dispositivo))
+	return FamiliaDeJoystick.de_los_nombres(nombres)
+
+
+func _rotulo(boton: int) -> String:
+	return FamiliaDeJoystick.rotulo_de(_familia, boton)
+
+
+## Los botones que no son de la asignación llevan el rótulo de la familia: los de hombro junto a las
+## pestañas y el botón de Pausa.
+func _rotular_las_pildoras() -> void:
+	_pildoras_de_las_pestanas[0].texto = _rotulo(JOY_BUTTON_LEFT_SHOULDER)
+	_pildoras_de_las_pestanas[1].texto = _rotulo(JOY_BUTTON_RIGHT_SHOULDER)
+	_pildora_de_pausa.texto = _rotulo(AsignacionDeControles.BOTON_DE_PAUSA)
+	for pildora: GlifoDeEntrada in _pildoras_de_las_pestanas + [_pildora_de_pausa]:
+		pildora.update_minimum_size()
+		pildora.queue_redraw()
 
 
 ## Cada celda dice su entrada con su glifo, un recuadro punteado si está vacía, o el recuadro de
@@ -637,7 +667,9 @@ func _pintar() -> void:
 		var glifo := (
 			GlifoDeEntrada.de_una_ranura_libre()
 			if entrada == AsignacionDeControles.VACIA
-			else GlifoDeEntrada.de_la_entrada(entrada, nombre_de_la_entrada(entrada.x, entrada.y))
+			else GlifoDeEntrada.de_la_entrada(
+				entrada, nombre_de_la_entrada(entrada.x, entrada.y, _familia), _familia
+			)
 		)
 		glifo.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 		boton.add_child(glifo)
@@ -648,8 +680,8 @@ func _pintar() -> void:
 
 
 ## Cada columna de una pestaña mide lo mismo en todos sus renglones: la de los nombres, lo que mide
-## el más largo; las de las celdas, el glifo más ancho de la pestaña o su cabecera, y en TECLADO Y
-## MOUSE también un clic. Cada tecla arranca en el borde izquierdo de su columna y la llena. La
+## el más largo; las de las celdas, el glifo más ancho de la pestaña, o la tecla de TECLADO Y MOUSE.
+## Cada tecla arranca en el borde izquierdo de su columna y la llena. La
 ## lista queda del ancho de lo que dice. En JOYSTICK la segunda columna sólo lleva la marca FIJO.
 func _ajustar_las_columnas(pagina: VBoxContainer) -> void:
 	var renglones: Array[HBoxContainer] = [pagina.get_child(0) as HBoxContainer]
@@ -657,26 +689,34 @@ func _ajustar_las_columnas(pagina: VBoxContainer) -> void:
 		if hijo is HBoxContainer and hijo != renglones[0]:
 			renglones.append(hijo as HBoxContainer)
 	var nombre := 0.0
-	var columna := 0.0
+	var columna := _ancho_de_la_tecla()
 	var segunda := 0.0
 	for renglon: HBoxContainer in renglones:
 		nombre = maxf(nombre, (renglon.get_child(0) as Control).get_minimum_size().x)
 		for glifo: Node in renglon.find_children("*", "GlifoDeEntrada", true, false):
-			var ancho := (glifo as GlifoDeEntrada).get_minimum_size().x
-			columna = maxf(columna, ancho)
+			columna = maxf(columna, (glifo as GlifoDeEntrada).get_minimum_size().x)
 		if renglon.get_child_count() > 2:
 			segunda = maxf(segunda, (renglon.get_child(2) as Control).get_minimum_size().x)
-	if pagina == _pagina_del_teclado:
-		for referencia: GlifoDeEntrada in _teclas_de_referencia:
-			columna = maxf(columna, referencia.get_minimum_size().x)
-	for titulo: int in range(1, renglones[0].get_child_count()):
-		columna = maxf(columna, (renglones[0].get_child(titulo) as Control).get_minimum_size().x)
 	if pagina == _pagina_del_teclado:
 		segunda = columna
 	for renglon: HBoxContainer in renglones:
 		(renglon.get_child(0) as Control).custom_minimum_size.x = nombre
 		for i: int in range(1, renglon.get_child_count()):
 			(renglon.get_child(i) as Control).custom_minimum_size.x = columna if i == 1 else segunda
+
+
+## El ancho de una tecla de TECLADO Y MOUSE, que es también el de todo glifo en una tecla: el de la
+## más ancha, un clic o su glifo, o el de la cabecera de su columna.
+func _ancho_de_la_tecla() -> float:
+	var ancho := 0.0
+	for referencia: GlifoDeEntrada in _teclas_de_referencia:
+		ancho = maxf(ancho, referencia.get_minimum_size().x)
+	for glifo: Node in _pagina_del_teclado.find_children("*", "GlifoDeEntrada", true, false):
+		ancho = maxf(ancho, (glifo as GlifoDeEntrada).get_minimum_size().x)
+	var cabecera := _pagina_del_teclado.get_child(0)
+	for titulo: int in range(1, cabecera.get_child_count()):
+		ancho = maxf(ancho, (cabecera.get_child(titulo) as Control).get_minimum_size().x)
+	return ancho
 
 
 func _quitar_el_glifo(clave: String, boton: Button) -> void:

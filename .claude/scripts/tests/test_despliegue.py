@@ -48,6 +48,7 @@ VERSION_DEL_MOTOR = RAIZ / ".godot-version"
 WORKFLOWS = RAIZ / ".github" / "workflows"
 VERIFY = WORKFLOWS / "verify.yml"
 DESPLEGAR = WORKFLOWS / "desplegar.yml"
+CONSTRUIR_PLANTILLA = WORKFLOWS / "construir-plantilla-web.yml"
 HUMO = RAIZ / ".github" / "scripts" / "humo_en_navegador.mjs"
 DOC = RAIZ / "docs" / "infra" / "despliegue.md"
 
@@ -348,20 +349,17 @@ class ElWorkflowDeDespliegue(unittest.TestCase):
             self.assertIn(secreto, self.texto, f"el workflow no nombra `{secreto}`.")
         self.assertIn("faltan", self.texto)
 
-    def test_las_templates_se_cachean_por_version(self):
-        self.assertIn("actions/cache", self.texto)
-        self.assertIn("build/templates", self.texto)
-        self.assertIn("env.GODOT_VERSION", self.texto)
-        for entrada in (
-            ".godot-version", ".github/patches/godot-web-compilacion.json",
-            ".github/patches/godot-web-compilacion.patch",
-            ".github/scripts/preparar_plantilla_web.py",
-        ):
-            self.assertIn(entrada, self.texto)
+    def test_la_plantilla_se_baja_y_el_despliegue_no_la_compila(self):
+        # Compilar el motor web es caro, y la caché de Actions vence a los 7 días: sin esto,
+        # una semana sin despliegues compilaría.
+        self.assertNotIn("actions/cache", self.texto)
+        self.assertNotIn("cache-de-scons", self.texto)
+        self.assertNotIn("--jobs", self.texto)
 
-    def test_la_plantilla_se_valida_aun_con_cache_y_se_cruza_con_el_export(self):
-        # Un cache-hit no prueba compatibilidad y un export completo puede usar otro motor.
-        preparacion = "python .github/scripts/preparar_plantilla_web.py --jobs 2"
+    def test_la_plantilla_se_valida_antes_del_export_y_se_cruza_con_el_export(self):
+        # Un export completo puede usar otro motor: la plantilla se baja y valida antes del
+        # export, y `--verificar-export` corre después.
+        preparacion = "python .github/scripts/preparar_plantilla_web.py --descargar"
         self.assertIn(preparacion, self.texto)
         paso = self.texto.split(preparacion, 1)[0].rsplit("      - name:", 1)[1]
         self.assertNotIn("if:", paso)
@@ -403,6 +401,27 @@ class ElWorkflowDeDespliegue(unittest.TestCase):
         self.assertIn("process.exit(1)", humo)
 
 
+class ElWorkflowQueConstruyeLaPlantilla(unittest.TestCase):
+    """La plantilla se compila a mano, en un workflow aparte, y el despliegue la baja."""
+
+    def setUp(self):
+        self.assertTrue(CONSTRUIR_PLANTILLA.is_file(), f"falta `{CONSTRUIR_PLANTILLA.name}`.")
+        self.texto = _texto(CONSTRUIR_PLANTILLA)
+
+    def test_corre_solo_a_mano(self):
+        disparadores = self.texto.split("on:", 1)[1].split("\npermissions:", 1)[0]
+        self.assertIn("workflow_dispatch", disparadores)
+        for otro in ("push", "pull_request", "schedule", "workflow_call"):
+            self.assertNotIn(otro, disparadores)
+
+    def test_compila_con_el_preparador_y_sube_el_zip_y_sus_huellas(self):
+        self.assertIn("python .github/scripts/preparar_plantilla_web.py", self.texto)
+        self.assertNotIn("--descargar", self.texto)
+        self.assertIn("actions/upload-artifact", self.texto)
+        for huella in ("receta_sha256", "zip_sha256", "wasm_sha256"):
+            self.assertIn(huella, self.texto)
+
+
 class LaDocumentacion(unittest.TestCase):
     """La documentación del despliegue."""
 
@@ -411,6 +430,11 @@ class LaDocumentacion(unittest.TestCase):
         texto = _texto(DOC)
         for tema in ("VERCEL_TOKEN", "workflow_dispatch", "a mano"):
             self.assertIn(tema, texto, f"el documento no dice nada de «{tema}».")
+
+    def test_dice_como_se_publica_una_plantilla_nueva(self):
+        texto = re.sub(r"\s+", " ", _texto(DOC))
+        for paso in ("construir-plantilla-web.yml", "release", "plantilla_publicada", "huellas"):
+            self.assertIn(paso, texto, f"el documento no dice nada de «{paso}».")
 
     def test_esta_indexado_donde_se_indexa_lo_demas(self):
         # Un documento que no está en el índice no lo encuentra nadie, y lo que no se encuentra

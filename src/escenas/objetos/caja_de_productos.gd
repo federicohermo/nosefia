@@ -119,6 +119,10 @@ func _ponerse_su_etiqueta() -> void:
 	malla.set_surface_override_material(0, rotulado)
 
 
+func es_grande() -> bool:
+	return Catalogo.caja_de(producto) == Catalogo.TamanoDeCaja.GRANDE
+
+
 func media() -> float:
 	return MEDIA_CAJA[Catalogo.caja_de(producto)]
 

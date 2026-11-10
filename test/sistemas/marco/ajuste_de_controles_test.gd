@@ -115,10 +115,10 @@ func test_examinar_en_el_clic_central_responde_al_clic_central() -> void:  # AC-
 
 
 func test_un_intercambio_se_ve_en_las_dos_acciones() -> void:  # AC-CFG-020
-	_ajuste.aplicar(_con([[AsignacionDeControles.EXAMINAR, 0, TECLA, KEY_SPACE]]))
-	assert_bool(_responde(_tecla(KEY_SPACE), AsignacionDeControles.EXAMINAR)).is_true()
+	_ajuste.aplicar(_con([[AsignacionDeControles.EXAMINAR, 0, TECLA, KEY_CTRL]]))
+	assert_bool(_responde(_tecla(KEY_CTRL), AsignacionDeControles.EXAMINAR)).is_true()
 	assert_bool(_responde(_tecla(KEY_E), AsignacionDeControles.AGACHARSE)).is_true()
-	assert_bool(_responde(_tecla(KEY_SPACE), AsignacionDeControles.AGACHARSE)).is_false()
+	assert_bool(_responde(_tecla(KEY_CTRL), AsignacionDeControles.AGACHARSE)).is_false()
 
 
 func test_cada_direccion_responde_a_sus_dos_ranuras() -> void:  # AC-CFG-020

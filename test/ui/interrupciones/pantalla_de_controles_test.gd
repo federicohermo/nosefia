@@ -57,13 +57,11 @@ func _entrada(asignacion: AsignacionDeControles, accion: StringName, ranura: int
 	return Vector2i(entrada["tipo"], entrada["codigo"])
 
 
-## Los renglones de TECLADO Y MOUSE, en orden: las acciones con Visión después de Derecha.
+## Los renglones de TECLADO Y MOUSE, en orden: uno por acción.
 func _nombres_de_los_renglones() -> Array[String]:
 	var nombres: Array[String] = []
 	for accion: StringName in AsignacionDeControles.ACCIONES:
 		nombres.append(AsignacionDeControles.nombre_de_la_accion(accion))
-		if accion == AsignacionDeControles.DERECHA:
-			nombres.append(PantallaDeControles.TEXTO_DE_VISION)
 	return nombres
 
 
@@ -82,7 +80,7 @@ func test_muestra_un_renglon_por_accion_con_sus_teclas() -> void:  # AC-CFG-015,
 		nombres.append((fila.get_child(0) as Label).text)
 		botones += fila.find_children("*", "Button", true, false).size()
 	assert_array(nombres).is_equal(_nombres_de_los_renglones())
-	# Cada acción tiene una celda principal y una secundaria, y lo fijo no tiene ninguna.
+	# Cada acción tiene una celda principal y una secundaria.
 	assert_int(botones).is_equal(AsignacionDeControles.ACCIONES.size() * 2)
 	assert_str(pantalla.texto_de(AsignacionDeControles.EXAMINAR, 0)).is_equal(
 		PantallaDeControles.nombre_de_la_entrada(TECLA, KEY_E)

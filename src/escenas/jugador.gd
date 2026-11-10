@@ -319,7 +319,7 @@ func _physics_process(delta: float) -> void:
 	if not is_on_floor():
 		velocity += get_gravity() * delta
 
-	var horizontal := _control.velocidad(_entrada())
+	var horizontal := _velocidad_horizontal()
 	velocity.x = horizontal.x
 	velocity.z = horizontal.z
 	var antes := global_position
@@ -332,6 +332,27 @@ func _physics_process(delta: float) -> void:
 	_acomodar_la_caja()
 	_leer_la_mira()
 	_publicar_la_referencia()
+
+
+## La velocidad que se le pide al cuerpo. El cuerpo en la mano dice si es una caja grande o un balde
+## con agua, y el dominio decide si eso frena al correr.
+func _velocidad_horizontal() -> Vector3:
+	var cuerpo := agarre.cuerpo_sostenido()
+	var balde_con_agua: bool = (
+		cuerpo != null and cuerpo.get(ReglasDeLosObjetos.PROPIEDAD_CON_AGUA) == true
+	)
+	var caja_grande: bool = (
+		cuerpo != null
+		and cuerpo.has_method(ReglasDeLosObjetos.METODO_ES_GRANDE)
+		and cuerpo.call(ReglasDeLosObjetos.METODO_ES_GRANDE) == true
+	)
+	return _control.velocidad(
+		_entrada(),
+		Input.is_action_pressed(ReglasDelJugador.ACCION_CORRER),
+		id_en_la_mano(),
+		balde_con_agua,
+		caja_grande
+	)
 
 
 ## Lee la acción y escribe la altura que el dominio contesta, sólo cuando cambia: un test que
@@ -733,6 +754,7 @@ func ubicar(lugar: Transform3D) -> void:
 	global_position = lugar.origin
 	velocity = Vector3.ZERO
 	_control.orientar(lugar.basis.get_euler().y)
+	_control.ponerse_de_pie()
 	_aplicar_la_rotacion()
 	reset_physics_interpolation()
 

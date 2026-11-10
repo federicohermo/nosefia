@@ -25,7 +25,7 @@ func _con_el_boton(accion: StringName, crudo: Variant) -> Dictionary:
 	return datos
 
 
-func test_las_cinco_acciones_de_boton_tienen_el_boton_de_la_ficha() -> void:  # AC-CFG-025
+func test_las_acciones_de_boton_tienen_el_boton_de_la_ficha() -> void:  # AC-CFG-025
 	var asignacion := AsignacionDeControles.new()
 	var esperados: Dictionary[StringName, int] = {
 		AsignacionDeControles.AGARRAR: JOY_BUTTON_A,
@@ -34,7 +34,8 @@ func test_las_cinco_acciones_de_boton_tienen_el_boton_de_la_ficha() -> void:  # 
 		AsignacionDeControles.CELULAR: JOY_BUTTON_B,
 		AsignacionDeControles.EXAMINAR: JOY_BUTTON_X,
 	}
-	assert_int(esperados.size()).is_equal(AsignacionDeControles.ACCIONES_CON_BOTON.size())
+	# Correr es la sexta: tiene el gatillo derecho y no un botón.
+	assert_int(esperados.size() + 1).is_equal(AsignacionDeControles.ACCIONES_CON_BOTON.size())
 	for accion: StringName in esperados:
 		assert_vector(_entrada(asignacion, accion, RANURA)).is_equal(
 			Vector2i(JOYSTICK, esperados[accion])
@@ -71,7 +72,7 @@ func test_un_boton_que_ya_tiene_otra_accion_las_intercambia() -> void:  # AC-CFG
 		Vector2i(JOYSTICK, JOY_BUTTON_X)
 	)
 	assert_vector(_entrada(asignacion, AsignacionDeControles.AGACHARSE, 0)).is_equal(
-		Vector2i(TECLA, KEY_SPACE)
+		Vector2i(TECLA, KEY_CTRL)
 	)
 
 

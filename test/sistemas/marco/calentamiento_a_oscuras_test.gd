@@ -84,3 +84,28 @@ func test_el_progreso_no_retrocede_al_pasar_a_oscuras() -> void:
 	assert_array(progresos).is_not_empty()
 	for indice: int in range(1, progresos.size()):
 		assert_float(progresos[indice]).is_greater_equal(progresos[indice - 1])
+
+
+## La pantalla de carga cuenta «preparados de total»: pasar a oscuras no la manda de vuelta a cero.
+func test_el_contador_de_objetos_no_vuelve_a_cero_al_pasar_a_oscuras() -> void:
+	var escena := _escena()
+	for _i: int in range(12):
+		var malla := MeshInstance3D.new()
+		malla.mesh = BoxMesh.new()
+		malla.material_override = StandardMaterial3D.new()
+		escena.add_child(malla)
+	var calentamiento := _calentamiento()
+	var preparados: Array[int] = []
+	calentamiento.avanzo.connect(
+		func(_progreso: float) -> void:
+			preparados.append(
+				calentamiento.objetos_a_preparar() - calentamiento.objetos_por_preparar()
+			)
+	)
+	calentamiento.calentar(escena)
+	await assert_signal(calentamiento).wait_until(ESPERA_MS).is_emitted("terminado")
+	assert_array(escena.cambios).is_equal([true, false])
+	assert_array(preparados).is_not_empty()
+	for indice: int in range(1, preparados.size()):
+		assert_int(preparados[indice]).is_greater_equal(preparados[indice - 1])
+	assert_int(calentamiento.objetos_por_preparar()).is_zero()
