@@ -2,11 +2,14 @@
 
 import hashlib
 import importlib.util
+import io
 import json
 import os
 import subprocess
+import sys
 import tempfile
 import unittest
+import urllib.error
 import zipfile
 from pathlib import Path
 from unittest.mock import patch
@@ -16,6 +19,10 @@ SPEC = importlib.util.spec_from_file_location("plantilla_web", SCRIPT)
 assert SPEC is not None and SPEC.loader is not None
 plantilla = importlib.util.module_from_spec(SPEC)
 SPEC.loader.exec_module(plantilla)
+
+
+URL = "https://github.com/federicohermo/nosefia/releases/download/godot-web-1/web_release.zip"
+WORKFLOW = "construir-plantilla-web.yml"
 
 
 def sha(contenido):
@@ -48,13 +55,14 @@ class PlantillaWebTest(unittest.TestCase):
             "archivos": {
                 "motor.cpp": {"original_sha256": "c" * 64, "modificado_sha256": "d" * 64},
             },
-            "plantilla_local": {
-                "zip_sha256": sha(self.local.read_bytes()), "wasm_sha256": sha(self.wasm),
+            "plantilla_publicada": {
+                "url": URL, "zip_sha256": sha(self.local.read_bytes()),
+                "wasm_sha256": sha(self.wasm),
             },
         }
         self._metadata()
         identidad = plantilla._identidad(self.archivo, self.raiz)[2]
-        self.datos["plantilla_local"]["receta_sha256"] = plantilla.receta_sha256(identidad)
+        self.datos["plantilla_publicada"]["receta_sha256"] = plantilla.receta_sha256(identidad)
         self._metadata()
         self._preset()
 
@@ -150,7 +158,7 @@ class PlantillaWebTest(unittest.TestCase):
         self._importar()
         original = self.destino.read_bytes()
         self._zip(self.local, self.wasm + b"otro motor")
-        with self.assertRaisesRegex(ValueError, "SHA|medid"):
+        with self.assertRaisesRegex(ValueError, "SHA"):
             self._preparar(desde=self.local)
         self.assertEqual(self.destino.read_bytes(), original)
 
@@ -179,10 +187,10 @@ class PlantillaWebTest(unittest.TestCase):
         crudo = self.local.read_bytes()
         self.local.write_bytes(crudo.replace(self.js, b"X" + self.js[1:], 1))
         with self.assertRaisesRegex(ValueError, "CRC|ZIP"):
-            self._preparar(desde=self.local)
+            plantilla.validar_zip(self.local)
         self._zip(self.local, b"no es wasm")
         with self.assertRaisesRegex(ValueError, "WASM|wasm"):
-            self._preparar(desde=self.local)
+            plantilla.validar_zip(self.local)
 
     def test_rechaza_la_consulta_sincrona_de_recorte_en_cada_cuadro(self):
         self.js = b"var prevScissorTest=gl.getParameter(3089);"
@@ -214,9 +222,9 @@ class PlantillaWebTest(unittest.TestCase):
         self.assertEqual(self.local.read_bytes(), original)
 
     def test_no_etiqueta_un_zip_desconocido_como_motor_parcheado(self):
-        del self.datos["plantilla_local"]
+        del self.datos["plantilla_publicada"]
         self._metadata()
-        with self.assertRaisesRegex(ValueError, "medida"):
+        with self.assertRaisesRegex(ValueError, "plantilla_publicada"):
             self._preparar(desde=self.local)
         self.assertFalse(self.destino.exists())
 
@@ -345,6 +353,96 @@ class PlantillaWebTest(unittest.TestCase):
         self.assertTrue(self.destino.exists())
         construir.assert_called_once()
         self._preparar(comprobar=True)
+
+    def _servir(self, contenido):
+        """Un `urlopen` que entrega `contenido` y anota qué se le pidió."""
+        pedidos = []
+
+        def abrir(url, timeout):
+            pedidos.append(url)
+            return io.BytesIO(contenido)
+
+        abrir.pedidos = pedidos
+        return abrir
+
+    def _descargar(self, abrir):
+        return plantilla.descargar_plantilla(self.archivo, self.destino, self.raiz, abrir)
+
+    def test_descargar_importa_la_plantilla_publicada_y_no_compila(self):
+        abrir = self._servir(self.local.read_bytes())
+        with patch.object(plantilla, "construir") as construir:
+            self._descargar(abrir)
+            self._preparar(comprobar=True)
+        construir.assert_not_called()
+        self.assertEqual(abrir.pedidos, [URL])
+        self.assertEqual(self.destino.read_bytes(), self.local.read_bytes())
+
+    def test_dos_descargas_seguidas_dejan_la_misma_plantilla(self):
+        abrir = self._servir(self.local.read_bytes())
+        self._descargar(abrir)
+        primera = self.destino.read_bytes()
+        self._descargar(abrir)
+        self.assertEqual(len(abrir.pedidos), 2)
+        self.assertEqual(self.destino.read_bytes(), primera)
+
+    def test_un_zip_con_otra_huella_no_se_extrae_ni_se_publica(self):
+        abrir = self._servir(b"no es la plantilla publicada")
+        with patch.object(plantilla, "validar_zip") as validar:
+            with self.assertRaisesRegex(ValueError, f"zip_sha256.*{WORKFLOW}"):
+                self._descargar(abrir)
+        validar.assert_not_called()
+        self.assertFalse(self.destino.exists())
+
+    def test_un_zip_con_otro_wasm_sale_rojo_por_su_huella(self):
+        self.datos["plantilla_publicada"]["wasm_sha256"] = sha(b"otro wasm")
+        self._metadata()
+        with self.assertRaisesRegex(ValueError, f"wasm_sha256.*{WORKFLOW}"):
+            self._descargar(self._servir(self.local.read_bytes()))
+        self.assertFalse(self.destino.exists())
+
+    def test_una_receta_cambiada_falla_sin_bajar_nada(self):
+        self._parche("parche nuevo")
+        abrir = self._servir(self.local.read_bytes())
+        with self.assertRaisesRegex(ValueError, f"receta.*{WORKFLOW}"):
+            self._descargar(abrir)
+        self.assertEqual(abrir.pedidos, [])
+
+    def test_sin_plantilla_publicada_falla_y_nombra_el_workflow(self):
+        del self.datos["plantilla_publicada"]
+        self._metadata()
+        abrir = self._servir(b"")
+        with self.assertRaisesRegex(ValueError, f"plantilla_publicada.*{WORKFLOW}"):
+            self._descargar(abrir)
+        self.assertEqual(abrir.pedidos, [])
+
+    def test_una_url_que_no_responde_se_nombra_y_conserva_la_cache(self):
+        self._descargar(self._servir(self.local.read_bytes()))
+        original = self.destino.read_bytes()
+
+        def abrir(url, timeout):
+            raise urllib.error.HTTPError(url, 404, "Not Found", {}, None)
+
+        with self.assertRaisesRegex(ValueError, f"{URL}.*{WORKFLOW}"):
+            self._descargar(abrir)
+        self.assertEqual(self.destino.read_bytes(), original)
+        self._preparar(comprobar=True)
+
+    def test_descargar_no_se_combina_con_desde_ni_con_comprobar(self):
+        for otro in (["--desde", "x.zip"], ["--comprobar"]):
+            with self.subTest(otro=otro):
+                with patch.object(sys, "argv", ["preparar", "--descargar", *otro]):
+                    with patch.object(plantilla, "preparar") as preparar:
+                        with self.assertRaises(SystemExit):
+                            plantilla.main()
+                preparar.assert_not_called()
+
+    def test_la_receta_del_repo_declara_una_sola_plantilla_publicada(self):
+        datos = json.loads(plantilla.METADATA.read_text(encoding="utf-8"))
+        self.assertNotIn("plantilla_local", datos)
+        publicada = datos["plantilla_publicada"]
+        self.assertRegex(publicada["url"], r"^https://github\.com/federicohermo/nosefia/releases/")
+        for campo in ("receta_sha256", "zip_sha256", "wasm_sha256"):
+            self.assertRegex(publicada[campo], r"^[0-9a-f]{64}$", campo)
 
 
 if __name__ == "__main__":

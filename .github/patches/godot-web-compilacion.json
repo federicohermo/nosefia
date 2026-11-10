@@ -41,7 +41,8 @@
       "modificado_sha256": "dbb13509d5054acc60c363f7f6f86ffa96a950141f4d69f91e46cd947dc9426a"
     }
   },
-  "plantilla_local": {
+  "plantilla_publicada": {
+    "url": "https://github.com/federicohermo/nosefia/releases/download/godot-web-1/web_release.zip",
     "receta_sha256": "1cf2f80a85d23feb6bfc1b62ba639d22c80167b67d91da7961dbda2a19f0d06b",
     "zip_sha256": "7a7bb1746d2885b9f478fd3868689879c8201a572cc08ed287f531a19df0bdb7",
     "wasm_sha256": "efa9ff1af0a2db4becb291f44a1b7ce0973eb6622afb543f56e94abd2c9bea17"
