@@ -8,6 +8,7 @@ import unittest
 
 from lib.repo import RAIZ
 from lib.union_de_mallas import (
+    PREFIJOS_CON_ALCANCE,
     PREFIJOS_DE_LUZ_DINAMICA,
     Candidata,
     agrupar,
@@ -70,9 +71,13 @@ class Fijos(unittest.TestCase):
         for prefijo in PREFIJOS_DE_LUZ_DINAMICA:
             self.assertFalse(es_fijo(prefijo + "_1"), prefijo)
 
+    def test_lo_que_tiene_alcance_de_dibujo_no_es_fijo(self):
+        for prefijo in PREFIJOS_CON_ALCANCE:
+            self.assertFalse(es_fijo(prefijo + "puerta_sur"), prefijo)
+
     def test_los_prefijos_son_los_de_importar_modelo(self):
         texto = (RAIZ / "assets/models/importar_modelo.gd").read_text(encoding="utf-8")
-        for prefijo in PREFIJOS_DE_LUZ_DINAMICA:
+        for prefijo in PREFIJOS_DE_LUZ_DINAMICA + PREFIJOS_CON_ALCANCE:
             self.assertIn(f'"{prefijo}"', texto, f"{prefijo} ya no está en importar_modelo.gd")
 
     def test_una_viga_es_fija(self):

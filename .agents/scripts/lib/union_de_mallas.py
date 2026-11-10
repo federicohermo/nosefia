@@ -39,6 +39,9 @@ PREFIJOS_DE_LUZ_DINAMICA = (
     "board",
 )
 
+#: Los prefijos a los que `importar_modelo.gd` les pone un alcance de dibujo: unidos lo perderían.
+PREFIJOS_CON_ALCANCE = ("deposito_esquinas_",)
+
 #: Lo que se mueve o se ve a través: un nombre de material o de objeto que lo contiene.
 CONTIENE_MOVIL = ("puerta", "hoja", "tapa", "vidrio", "ventana", "vidriera", "manija", "persiana")
 
@@ -94,7 +97,7 @@ def es_fijo(nombre: str) -> bool:
         sufijo + "." in minuscula for sufijo in SUFIJOS_DEL_IMPORTADOR
     ):
         return False
-    if minuscula.startswith(PREFIJOS_DE_LUZ_DINAMICA):
+    if minuscula.startswith(PREFIJOS_DE_LUZ_DINAMICA + PREFIJOS_CON_ALCANCE):
         return False
     return not any(palabra in minuscula for palabra in CONTIENE_MOVIL)
 

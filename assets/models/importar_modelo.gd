@@ -22,6 +22,9 @@ func _post_import(escena: Node) -> Object:
 			# estantería son más finos que un texel del mapa de luz y se horneaban negros: toman
 			# la luz de las sondas, como la góndola.
 			malla.gi_mode = GeometryInstance3D.GI_MODE_DYNAMIC
+		if str(malla.name).begins_with("deposito_esquinas_"):
+			# Los bloques que salen de las jambas sólo se ven de cerca: de lejos los cubre la textura.
+			malla.visibility_range_end = 6.0
 		if str(malla.name).begins_with("local_vidrio_ventanilla"):
 			# La ventanilla es un hueco abierto. La malla queda en el modelo porque los mapas de
 			# luz ya la nombran, y sólo se esconde.
