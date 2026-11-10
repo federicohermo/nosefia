@@ -16,6 +16,21 @@ const VELOCIDAD_DE_CAMINATA := 3.5
 ## un radián» sin una conversión escondida en el medio.
 const SENSIBILIDAD_DEL_MOUSE := 0.003
 
+## Veces la velocidad de caminata con que se corre. Correr no se cansa ni se acaba: es una
+## elección del jugador, y lo que cuesta es llevar menos cosas a la vez.
+const MULTIPLICADOR_DE_CORRER := 1.8
+
+## Lo mismo con una caja o el balde en la mano, o agachado: acelera poco y no nada. Provisional
+## hasta que el dueño lo juegue (OQ-PLY-007).
+const MULTIPLICADOR_DE_CORRER_CON_PESO := 1.2
+
+## Lo que pesa al correr: lo que se empuja como una caja (BR-PLY-050). La caja es la del depósito,
+## y el balde es el de la limpieza.
+const ID_DE_LA_CAJA_DE_REPOSICION := &"caja_de_reposicion"
+const PESADOS_AL_CORRER: Array[StringName] = [
+	ID_DE_LA_CAJA_DE_REPOSICION, ReglasDeLaLimpieza.ID_DEL_BALDE
+]
+
 ## Radianes por segundo con el joystick derecho a fondo: 180 grados. Lo decidió el dueño, y gira
 ## en proporción a la inclinación.
 const GIRO_DEL_JOYSTICK := deg_to_rad(180.0)
@@ -89,6 +104,14 @@ const ACCION_MIRAR_ABAJO: StringName = &"mirar_abajo"
 
 ## Se mantiene apretada: soltarla levanta la vista.
 const ACCION_AGACHARSE: StringName = &"agacharse"
+
+## Se mantiene apretada: soltarla vuelve a caminar.
+const ACCION_CORRER: StringName = &"correr"
+
+
+## Si lo que se lleva en la mano pesa al correr. `SIN_ID` es la mano vacía.
+static func pesa_al_correr(en_la_mano: StringName) -> bool:
+	return en_la_mano in PESADOS_AL_CORRER
 
 
 ## Lo que cuenta para el alcance: la distancia sobre el piso, sin la altura.

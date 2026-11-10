@@ -58,22 +58,22 @@ func test_suspendido_apretar_la_accion_no_baja_la_camara() -> void:  # AC-PLY-12
 	assert_float(camara.position.y).is_equal_approx(ReglasDelJugador.ALTURA_AGACHADO, 1e-5)
 
 
-func test_la_accion_de_agacharse_es_espacio_y_ninguna_otra_lo_tiene() -> void:  # AC-PLY-126
+func test_la_accion_de_agacharse_es_ctrl_y_ninguna_otra_lo_tiene() -> void:  # AC-PLY-126
 	var accion := ReglasDelJugador.ACCION_AGACHARSE
 	assert_bool(InputMap.has_action(accion)).is_true()
-	assert_bool(_tiene_espacio(accion)).is_true()
+	assert_bool(_tiene_tecla(accion, KEY_CTRL)).is_true()
 	for otra: StringName in InputMap.get_actions():
 		if otra == accion or String(otra).begins_with("ui_"):
 			continue
 		(
-			assert_bool(_tiene_espacio(otra))
-			. override_failure_message("la acción `%s` también usa Espacio" % otra)
+			assert_bool(_tiene_tecla(otra, KEY_CTRL))
+			. override_failure_message("la acción `%s` también usa Ctrl" % otra)
 			. is_false()
 		)
 
 
 func test_espacio_no_acepta_el_boton_con_foco_y_enter_si() -> void:  # AC-PLY-127
-	assert_bool(_tiene_espacio(&"ui_accept")).is_false()
+	assert_bool(_tiene_tecla(&"ui_accept", KEY_SPACE)).is_false()
 	var teclas: Array[Key] = []
 	for evento: InputEvent in InputMap.action_get_events(&"ui_accept"):
 		if evento is InputEventKey:
@@ -83,10 +83,10 @@ func test_espacio_no_acepta_el_boton_con_foco_y_enter_si() -> void:  # AC-PLY-12
 	assert_array(teclas).contains([KEY_ENTER, KEY_KP_ENTER])
 
 
-func _tiene_espacio(accion: StringName) -> bool:
+func _tiene_tecla(accion: StringName, buscada: Key) -> bool:
 	for evento: InputEvent in InputMap.action_get_events(accion):
 		var tecla := evento as InputEventKey
-		if tecla != null and (tecla.keycode == KEY_SPACE or tecla.physical_keycode == KEY_SPACE):
+		if tecla != null and (tecla.keycode == buscada or tecla.physical_keycode == buscada):
 			return true
 	return false
 

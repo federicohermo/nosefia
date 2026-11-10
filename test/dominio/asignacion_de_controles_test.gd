@@ -23,9 +23,12 @@ const DE_FABRICA: Array = [
 	[AsignacionDeControles.EXAMINAR, 0, TECLA, KEY_E],
 	[AsignacionDeControles.EXAMINAR, 1, VACIA.x, VACIA.y],
 	[AsignacionDeControles.EXAMINAR, 2, JOYSTICK, JOY_BUTTON_X],
-	[AsignacionDeControles.AGACHARSE, 0, TECLA, KEY_SPACE],
+	[AsignacionDeControles.AGACHARSE, 0, TECLA, KEY_CTRL],
 	[AsignacionDeControles.AGACHARSE, 1, VACIA.x, VACIA.y],
 	[AsignacionDeControles.AGACHARSE, 2, JOYSTICK, JOY_BUTTON_LEFT_SHOULDER],
+	[AsignacionDeControles.CORRER, 0, TECLA, KEY_SHIFT],
+	[AsignacionDeControles.CORRER, 1, VACIA.x, VACIA.y],
+	[AsignacionDeControles.CORRER, 2, JOYSTICK, JOY_BUTTON_LEFT_STICK],
 	[AsignacionDeControles.AGARRAR, 0, BOTON, MOUSE_BUTTON_LEFT],
 	[AsignacionDeControles.AGARRAR, 1, VACIA.x, VACIA.y],
 	[AsignacionDeControles.AGARRAR, 2, JOYSTICK, JOY_BUTTON_A],
@@ -172,9 +175,9 @@ func test_en_la_web_un_intercambio_no_le_da_esc_a_otra_accion() -> void:  # AC-C
 
 func test_la_tecla_de_otra_accion_se_intercambia() -> void:  # AC-CFG-018
 	var asignacion := AsignacionDeControles.new()
-	assert_bool(asignacion.asignar(AsignacionDeControles.EXAMINAR, 0, TECLA, KEY_SPACE)).is_true()
+	assert_bool(asignacion.asignar(AsignacionDeControles.EXAMINAR, 0, TECLA, KEY_CTRL)).is_true()
 	assert_vector(_entrada(asignacion, AsignacionDeControles.EXAMINAR, 0)).is_equal(
-		_tecla(KEY_SPACE)
+		_tecla(KEY_CTRL)
 	)
 	assert_vector(_entrada(asignacion, AsignacionDeControles.AGACHARSE, 0)).is_equal(_tecla(KEY_E))
 	assert_bool(_no_repite_ninguna(asignacion)).is_true()

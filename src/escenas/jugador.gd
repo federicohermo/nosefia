@@ -319,7 +319,9 @@ func _physics_process(delta: float) -> void:
 	if not is_on_floor():
 		velocity += get_gravity() * delta
 
-	var horizontal := _control.velocidad(_entrada())
+	var horizontal := _control.velocidad(
+		_entrada(), Input.is_action_pressed(ReglasDelJugador.ACCION_CORRER), id_en_la_mano()
+	)
 	velocity.x = horizontal.x
 	velocity.z = horizontal.z
 	var antes := global_position
