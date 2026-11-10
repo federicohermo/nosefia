@@ -107,12 +107,37 @@ func test_el_signo_bloqueado_se_ve_del_color_del_texto_en_las_tres_columnas() ->
 			assert_float(signo.b).is_equal_approx(letra.b, 0.01)
 
 
-func test_la_imagen_de_un_logro_desbloqueado_no_se_tine() -> void:  # AC-ACH-013
+func test_el_icono_de_un_final_o_logro_alcanzado_se_ve_del_color_del_texto() -> void:  # AC-ACH-013
 	var logros := Logros.new()
-	logros.desbloquear(L.Y_SE_MARCHO)
-	var entrada: HBoxContainer = _pantalla(logros).entradas(LOGROS)[L.Y_SE_MARCHO]
-	assert_object(_imagen(entrada)).is_not_same(PantallaDeLogros.IMAGEN_BLOQUEADA)
-	assert_that((entrada.get_child(0) as TextureRect).self_modulate).is_equal(Color.WHITE)
+	for logro: L in L.values():
+		if logro != L.OBELISCO_DE_CARTON and logro != L.ELEMENTAL:
+			logros.desbloquear(logro)
+	for final: F in Logros.finales():
+		logros.alcanzar_final(final)
+	var pantalla := _pantalla(logros)
+	var vistos := 0
+	for columna: StringName in [FINALES, LOGROS]:
+		for entrada: HBoxContainer in pantalla.entradas(columna):
+			var figura := entrada.get_child(0) as TextureRect
+			if figura.texture == null or figura.texture == PantallaDeLogros.IMAGEN_BLOQUEADA:
+				continue
+			vistos += 1
+			var icono := _pixel_opaco(figura.texture) * figura.self_modulate * figura.modulate
+			var letra := (entrada.get_child(1) as Label).get_theme_color(&"font_color")
+			# La compresión con pérdida corre el blanco un par de puntos.
+			assert_float(icono.r).is_equal_approx(letra.r, 0.05)
+			assert_float(icono.g).is_equal_approx(letra.g, 0.05)
+			assert_float(icono.b).is_equal_approx(letra.b, 0.05)
+	assert_int(vistos).is_greater(0)
+
+
+func test_la_foto_de_una_pista_descubierta_conserva_sus_colores() -> void:  # AC-ACH-013
+	var logros := Logros.new()
+	logros.descubrir_pista("2B")
+	var entradas := _pantalla(logros).entradas(PISTAS)
+	var cigarrillo := _pistas_con_nota().find(CasoDeInvestigacion.de_la_partida().pista_de("2B"))
+	var figura := entradas[cigarrillo].get_child(0) as TextureRect
+	assert_that(figura.self_modulate).is_equal(Color.WHITE)
 
 
 func test_un_logro_desbloqueado_muestra_su_nombre_y_los_demas_no() -> void:  # AC-ACH-013

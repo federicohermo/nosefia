@@ -47,7 +47,6 @@ const TEXTO_DEL_AVISO := "YA ES LA PRINCIPAL DE"
 const TEXTO_DE_MOVIMIENTO := "MOVIMIENTO"
 const TEXTO_DE_VISION := "VISIÓN"
 const TEXTO_DE_START := "START"
-const TEXTO_DEL_MOUSE := "MOUSE"
 ## Cuánto sobresale de la tecla el recuadro de la elegida, para no taparle el borde.
 const SOBRESALE_EL_RECUADRO := 4.0
 const SEPARACION_DE_LAS_COLUMNAS := 64
@@ -453,10 +452,6 @@ func _bloque_del_teclado() -> VBoxContainer:
 		if _primer_boton_del_teclado == null:
 			_primer_boton_del_teclado = boton_de(accion, AsignacionDeControles.RANURA_PRINCIPAL)
 		_agregar_la_fila(bloque, fila)
-		if accion == AsignacionDeControles.DERECHA:
-			_agregar_la_fila(
-				bloque, _fila_fija(TEXTO_DE_VISION, [GlifoDeEntrada.de_una_tecla(TEXTO_DEL_MOUSE)])
-			)
 	return bloque
 
 

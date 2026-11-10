@@ -25,6 +25,8 @@ sombras ni degradados; centrado con margen del 12 %; legible a 72 px. Cada fila 
 | `logros/final_contrato_cumplido.png` | Contrato con una tilde grande | Final: contrato cumplido |
 | `logros/bloqueado.png` | Signo de pregunta grueso con ángulos rectos | Entrada sin desbloquear. Su RGB va en blanco porque `pantalla_de_logros.gd` lo tiñe con el color del texto |
 
+Las nueve imágenes de arriba también llevan el RGB en blanco, sólo con la forma en el alfa: la pantalla las tiñe con el color del texto. Una imagen nueva se entrega igual.
+
 ## Recursos de la interfaz
 
 Recursos de [Manada — UI](https://www.figma.com/design/SQEAfczyRvyOHokmzPOee7/Manada---UI),

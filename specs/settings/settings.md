@@ -324,9 +324,10 @@ pestaña DEBE habilitarse y L1 y R1 DEBEN aparecer; la pestaña elegida NO DEBE 
 desconecta, la pestaña DEBE apagarse, L1 y R1 DEBEN desaparecer, y SI JOYSTICK estaba elegida, la
 pantalla DEBE pasar a TECLADO Y MOUSE.
 
-Cada pestaña DEBE tener una sola lista, con las acciones y Visión, sin otro título que la cabecera
-de sus columnas. Visión DEBE ir en el mismo lugar en las dos pestañas: después de las direcciones de movimiento. Visión, y en
-JOYSTICK Movimiento y Pausa, DEBEN llevar la marca **FIJO**, verse más tenues y no poder elegirse.
+Cada pestaña DEBE tener una sola lista, con sus acciones, sin otro título que la cabecera
+de sus columnas. TECLADO Y MOUSE NO DEBE tener renglón de Visión. En JOYSTICK, Visión DEBE ir justo
+después de Movimiento, y Movimiento, Visión y Pausa DEBEN llevar la marca **FIJO**, verse más tenues
+y no poder elegirse.
 Lo que no depende de ninguna acción —ENTER y las flechas en las interfaces, X y CÍRCULO en el
 joystick— NO DEBE tener renglón, y la pantalla NO DEBE llevar una ayuda de teclas.
 
@@ -344,8 +345,8 @@ pie, sin mover la grilla.
 
 La pantalla de controles DEBE dibujar los botones del joystick como glifos y no como texto: ✕ ○ □ △
 con sus colores de PlayStation; L1, R1 y START como píldoras; los joysticks, como un círculo con L o
-R; la cruceta, con su forma. DEBE dibujar las teclas como teclas con borde, y cada clic del mouse y
-Visión también como teclas, con su nombre en letras —CLICK IZQ, CLICK DER, MOUSE— y sin dibujo del
+R; la cruceta, con su forma. DEBE dibujar las teclas como teclas con borde, y cada clic del mouse
+también como tecla, con su nombre en letras —CLICK IZQ, CLICK DER— y sin dibujo del
 mouse. Una secundaria vacía DEBE dibujarse como un recuadro punteado tenue, del ancho de las teclas, que arranca en el mismo borde izquierdo que las teclas de su columna.
 
 ### BR-CFG-033 — El nombre de cada acción dice las funciones de menú que hace
@@ -615,8 +616,8 @@ en 30 %. DADO un archivo sin botones de joystick ENTONCES cada acción tiene su 
 DADO la pantalla de controles abierta ENTONCES tiene las pestañas TECLADO Y MOUSE y JOYSTICK, cada
 una con el dibujo de su dispositivo, y se ve el contenido de una sola. DADO TECLADO Y MOUSE
 CUANDO se elige JOYSTICK ENTONCES se ve el contenido de JOYSTICK y no el de TECLADO Y MOUSE, y al
-revés. DADO cada pestaña ENTONCES tiene una sola lista. DADO TECLADO Y MOUSE ENTONCES Visión va justo
-después de Derecha, y DADO JOYSTICK, justo después de Movimiento. DADO cada pestaña ENTONCES su lista se
+revés. DADO cada pestaña ENTONCES tiene una sola lista. DADO TECLADO Y MOUSE ENTONCES no tiene renglón de
+Visión, y DADO JOYSTICK, Visión va justo después de Movimiento. DADO cada pestaña ENTONCES su lista se
 reparte en el alto entre la cabecera y la línea del pie, con el mismo margen arriba y abajo, y queda
 centrada respecto de las pestañas.
 
@@ -649,15 +650,15 @@ MOUSE.
 
 ### AC-CFG-035 — Los renglones fijos *(verifica BR-CFG-031)*
 
-DADO la pestaña TECLADO Y MOUSE ENTONCES Visión lleva la marca FIJO y no se puede elegir. DADO la
-pestaña JOYSTICK ENTONCES además Movimiento y Pausa la llevan.
+DADO la pestaña TECLADO Y MOUSE ENTONCES ningún renglón lleva la marca FIJO. DADO la
+pestaña JOYSTICK ENTONCES Movimiento, Visión y Pausa la llevan y no se pueden elegir.
 
 ### AC-CFG-036 — Los glifos *(verifica BR-CFG-032)*
 
 DADO la pestaña JOYSTICK ENTONCES el botón de cada acción es un glifo y no un texto: X, CÍRCULO,
 CUADRADO y TRIÁNGULO con su color de PlayStation, L1 y R1 como píldoras, y START en Pausa. DADO la
 pestaña TECLADO Y MOUSE ENTONCES una tecla es una tecla con borde y cada clic, una tecla con su nombre en letras, distinto
-del clic izquierdo al derecho; Visión también. DADO un botón de joystick sin glifo propio
+del clic izquierdo al derecho. DADO un botón de joystick sin glifo propio
 ENTONCES se lee por su nombre. DADO cada pestaña ENTONCES cada tecla y cada ranura vacía miden lo mismo, el ancho de
 la tecla más ancha, y en cada columna todas arrancan en el mismo borde
 izquierdo, como la cabecera de la columna. DADO una celda esperando una entrada ENTONCES no cambia el

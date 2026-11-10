@@ -244,7 +244,7 @@ func test_todas_las_teclas_miden_lo_mismo_y_su_foco_las_enmarca() -> void:  # AC
 			)
 
 
-func test_la_tecla_mas_ancha_es_un_clic_y_la_marca_de_vision_mide_lo_mismo() -> void:  # AC-CFG-036
+func test_la_tecla_mas_ancha_es_un_clic() -> void:  # AC-CFG-036
 	var pantalla := await _pantalla()
 	var clic := GlifoDeEntrada.de_una_tecla(
 		PantallaDeControles.nombre_de_la_entrada(
@@ -256,11 +256,6 @@ func test_la_tecla_mas_ancha_es_un_clic_y_la_marca_de_vision_mide_lo_mismo() -> 
 	pantalla.marco().add_child(clic)
 	var ancho := pantalla.boton_de(AsignacionDeControles.ADELANTE, PRINCIPAL).size.x
 	assert_float(ancho).is_greater_equal(clic.get_minimum_size().x - TOLERANCIA)
-	for fila: HBoxContainer in pantalla.filas(false):
-		if not fila.has_meta(&"fijo"):
-			continue
-		var glifo := fila.find_children("*", "GlifoDeEntrada", true, false)[0] as GlifoDeEntrada
-		assert_float(glifo.size.x).is_equal_approx(ancho, TOLERANCIA)
 
 
 func test_las_teclas_y_su_cabecera_arrancan_en_el_mismo_borde() -> void:  # AC-CFG-036
@@ -344,15 +339,10 @@ func test_cada_pestana_junta_su_dibujo_con_su_texto_y_los_centra() -> void:  # A
 		assert_bool(separacion <= dibujo.size.x).is_true()
 
 
-func test_vision_va_en_el_mismo_lugar_en_las_dos_pestanas() -> void:  # AC-CFG-031
+func test_vision_va_solo_en_joystick_despues_de_movimiento() -> void:  # AC-CFG-031
 	var pantalla := await _pantalla()
-	var del_teclado: Array[String] = []
 	for fila: HBoxContainer in pantalla.filas(false):
-		del_teclado.append(_nombre(fila))
-	var derecha := AsignacionDeControles.nombre_de_la_accion(AsignacionDeControles.DERECHA)
-	assert_str(del_teclado[del_teclado.find(derecha) + 1]).is_equal(
-		PantallaDeControles.TEXTO_DE_VISION
-	)
+		assert_str(_nombre(fila)).is_not_equal(PantallaDeControles.TEXTO_DE_VISION)
 	var del_joystick: Array[String] = []
 	for fila: HBoxContainer in pantalla.filas(true):
 		del_joystick.append(_nombre(fila))

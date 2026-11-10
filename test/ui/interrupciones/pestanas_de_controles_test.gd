@@ -186,8 +186,7 @@ func test_l1_esperando_un_boton_se_asigna_y_no_cambia_de_pestana() -> void:  # A
 
 func test_lo_fijo_lleva_su_marca_y_no_tiene_nada_que_elegir() -> void:  # AC-CFG-035
 	var pantalla := _pantalla()
-	var del_teclado := _nombres(pantalla.filas(false), true)
-	assert_array(del_teclado).contains_exactly_in_any_order([PantallaDeControles.TEXTO_DE_VISION])
+	assert_array(_nombres(pantalla.filas(false), true)).is_empty()
 	var pausa := AsignacionDeControles.nombre_de_la_accion(AsignacionDeControles.PAUSA)
 	var del_joystick := _nombres(pantalla.filas(true), true)
 	(
