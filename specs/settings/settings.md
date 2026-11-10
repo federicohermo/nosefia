@@ -27,12 +27,12 @@ impide jugar.
 | **Tope** | el mínimo o el máximo de una preferencia | límite, borde |
 | **Defecto** | el valor de una preferencia que nadie ajustó. Es el juego de hoy | por omisión, inicial |
 | **Sensibilidad de fábrica** | los radianes por píxel que el dominio del jugador declara para el giro de la vista y el del examen | — |
-| **Acción reasignable** | una de las siete que el jugador puede cambiar de tecla: movimiento, celular, examinar, agacharse, agarrar / soltar, interactuar y pausa | comando, bind |
+| **Acción reasignable** | una de las ocho que el jugador puede cambiar de tecla: movimiento, celular, examinar, agacharse, correr, agarrar / soltar, interactuar y pausa | comando, bind |
 | **Entrada** | una tecla o un botón del mouse. Mover el mouse y la rueda no lo son | evento, input |
 | **Botón de joystick** | un botón del joystick. Los contratos lo nombran como en PlayStation —X, CÍRCULO, CUADRADO, TRIÁNGULO, L1, R1, L3, R3, START— y, en otra familia, es el que está en el mismo lugar del joystick: X es el de abajo, CÍRCULO el de la derecha, CUADRADO el de la izquierda y TRIÁNGULO el de arriba. Los ejes y los gatillos analógicos no lo son | — |
 | **Familia de joystick** | la marca del joystick conectado, de la que salen los rótulos y los glifos de sus botones: **PlayStation**, **Xbox** o **Nintendo** (Switch, Pro Controller y Joy-Con). Se lee del nombre que el joystick dice de sí mismo; el que no se reconoce es Xbox | marca, tipo de mando |
 | **Esquema de joystick** | el botón que cada acción de botón tiene en el joystick, aparte de su tecla o clic | — |
-| **Ranura** | el lugar fijo de una entrada dentro de una acción. Toda acción reasignable tiene dos de teclado o mouse, la **principal** y la **secundaria**; las cinco de botón suman la del joystick | slot, alias |
+| **Ranura** | el lugar fijo de una entrada dentro de una acción. Toda acción reasignable tiene dos de teclado o mouse, la **principal** y la **secundaria**; las seis de botón suman la del joystick | slot, alias |
 | **Principal** | la primera ranura de teclado o mouse de una acción. Nunca queda vacía | primaria, tecla 1 |
 | **Secundaria** | la segunda ranura de teclado o mouse de una acción. Puede estar vacía. Las de Movimiento traen las flechas de fábrica | alternativa, tecla 2 |
 | **Ranura vacía** | una secundaria sin entrada. La pantalla la muestra como un recuadro punteado tenue | libre, nula |
@@ -156,17 +156,17 @@ tecla de Pausa, el sistema DEBE cerrar la pantalla de controles y volver a Confi
 Abierta desde la pausa, el juego DEBE seguir en pausa y el cursor suelto, igual que
 Configuraciones.
 
-### BR-CFG-016 — Siete acciones reasignables
+### BR-CFG-016 — Ocho acciones reasignables
 
-El jugador DEBE poder reasignar siete acciones: **Movimiento**, **Abrir la interfaz del celular**,
-**Examinar**, **Agacharse**, **Agarrar / Soltar**, **Interactuar** y **Pausa**. Ninguna otra
+El jugador DEBE poder reasignar ocho acciones: **Movimiento**, **Abrir la interfaz del celular**,
+**Examinar**, **Agacharse**, **Correr**, **Agarrar / Soltar**, **Interactuar** y **Pausa**. Ninguna otra
 acción se reasigna. Movimiento DEBE abrirse en cuatro renglones, **Adelante**, **Atrás**,
-**Izquierda** y **Derecha**. Cada uno de esos renglones, igual que cada una de las otras seis
+**Izquierda** y **Derecha**. Cada uno de esos renglones, igual que cada una de las otras siete
 acciones, DEBE tener una principal y una secundaria, y cada una DEBE poder reasignarse. El esquema
 de fábrica DEBE ser: en Movimiento, W, S, A y D de principal y la flecha de esa dirección de
-secundaria; Q en celular; E en Examinar; Espacio en Agacharse; el clic izquierdo en Agarrar /
-Soltar; el clic derecho en Interactuar; Esc en Pausa. Las secundarias de esas seis acciones DEBEN
-estar vacías de fábrica.
+secundaria; Q en celular; E en Examinar; Ctrl en Agacharse; Shift en Correr; el clic izquierdo en
+Agarrar / Soltar; el clic derecho en Interactuar; Esc en Pausa. Las secundarias de esas siete
+acciones DEBEN estar vacías de fábrica.
 
 ### BR-CFG-017 — Cualquier acción acepta una tecla o un botón del mouse
 
@@ -242,23 +242,23 @@ demás preferencias del archivo DEBEN conservarse (`BR-CFG-014`).
 
 ### BR-CFG-024 — Las teclas que nombran los demás contratos son las de fábrica
 
-Las teclas que nombran los otros contratos —«clic derecho», «clic izquierdo», «Esc», «Espacio»,
-«E», «Q»— DEBEN leerse como las del esquema de fábrica de la acción. Una asignación las
+Las teclas que nombran los otros contratos —«clic derecho», «clic izquierdo», «Esc», «Ctrl»,
+«Shift», «E», «Q»— DEBEN leerse como las del esquema de fábrica de la acción. Una asignación las
 reemplaza: lo que un contrato atribuye a una tecla lo hace la entrada que la acción tiene
 ahora.
 
 ### BR-CFG-025 — El joystick tiene su esquema de fábrica
 
-Cinco de las siete acciones reasignables DEBEN tener además un botón de joystick, el de fábrica:
-**X** en Agarrar / Soltar, **R1** en Interactuar, **L1** en Agacharse, **CÍRCULO** en Abrir la
-interfaz del celular y **CUADRADO** en Examinar. Movimiento y Pausa NO DEBEN tener botón de
+Seis de las ocho acciones reasignables DEBEN tener además un botón de joystick, el de fábrica:
+**X** en Agarrar / Soltar, **R1** en Interactuar, **L1** en Agacharse, **L3** en Correr,
+**CÍRCULO** en Abrir la interfaz del celular y **CUADRADO** en Examinar. Movimiento y Pausa NO DEBEN tener botón de
 joystick reasignable: el joystick izquierdo camina y el derecho mira (`BR-PLY-055`, `BR-PLY-056`), y
 Pausa en el joystick es START (`BR-SAV-024`). La cruceta, el joystick derecho y X en las interfaces
 (`BR-CFG-027`) tampoco se reasignan.
 
 ### BR-CFG-026 — La pantalla de controles reasigna los botones del joystick
 
-La pestaña JOYSTICK DEBE mostrar un renglón por cada una de las cinco acciones de botón, con su
+La pestaña JOYSTICK DEBE mostrar un renglón por cada una de las seis acciones de botón, con su
 botón, y tres renglones FIJO que NO DEBEN poder reasignarse: Movimiento, en el joystick izquierdo;
 Visión, en el derecho, y Pausa, en START. CUANDO el jugador abre la pestaña, el foco DEBE ir al
 botón de la primera acción, y la cruceta DEBE bajar de un renglón de botón al siguiente. CUANDO el
@@ -393,6 +393,16 @@ Cada familia DEBE rotular los botones por su posición, con lo que dice el joyst
 
 Cada botón de una familia DEBE tener un rótulo distinto del de los demás de esa familia.
 
+### BR-CFG-035 — Un archivo de antes de Correr conserva lo que el jugador eligió
+
+SI el bloque de asignaciones guardado no tiene la acción Correr, ENTONCES el sistema DEBE cargar
+Correr con su entrada de fábrica. Y SI además la principal de Agacharse guardada es Espacio,
+ENTONCES DEBE cargarla como Ctrl, que es el esquema de fábrica de ahora: Espacio era el de antes de
+Correr. SI otra ranura del archivo ya tiene Ctrl, ENTONCES Agacharse DEBE conservar Espacio. Cualquier
+otra entrada de Agacharse —su secundaria, su botón de joystick o una principal distinta de
+Espacio— DEBE conservarse. Un archivo que ya tiene Correr NO DEBE cambiar Agacharse: lo que
+guarda lo eligió el jugador.
+
 ## Criterios de aceptación
 
 ### AC-CFG-001 — Las siete filas *(verifica BR-CFG-001)*
@@ -505,15 +515,15 @@ dos pestañas; CUANDO llega la tecla de Pausa ENTONCES vuelve Configuraciones y 
 de controles ya no está. DADO Configuraciones abierta desde la pausa CUANDO se abre y se cierra la pantalla de
 controles ENTONCES el juego sigue en pausa y el cursor sigue suelto.
 
-### AC-CFG-016 — Las siete acciones y su esquema de fábrica *(verifica BR-CFG-016)*
+### AC-CFG-016 — Las ocho acciones y su esquema de fábrica *(verifica BR-CFG-016)*
 
-DADO ninguna asignación guardada ENTONCES la pestaña TECLADO Y MOUSE muestra diez renglones, con
+DADO ninguna asignación guardada ENTONCES la pestaña TECLADO Y MOUSE muestra once renglones, con
 estos nombres: Adelante, Atrás, Izquierda, Derecha, Abrir la interfaz del celular, Examinar,
-Agacharse, Agarrar / Soltar, Interactuar y Pausa. Adelante tiene W de principal y la flecha arriba
+Agacharse, Correr, Agarrar / Soltar, Interactuar y Pausa. Adelante tiene W de principal y la flecha arriba
 de secundaria, Atrás S y la flecha abajo, Izquierda A y la flecha izquierda, y Derecha D y la flecha
-derecha. El celular está en Q, Examinar en E, Agacharse en Espacio, Agarrar / Soltar en el clic
-izquierdo, Interactuar en el clic derecho y Pausa en Esc, y las secundarias de esas seis acciones
-están vacías. DADO la partida recién abierta ENTONCES las entradas de cada acción en el motor son
+derecha. El celular está en Q, Examinar en E, Agacharse en Ctrl, Correr en Shift, Agarrar / Soltar en el
+clic izquierdo, Interactuar en el clic derecho y Pausa en Esc, y las secundarias de esas siete
+acciones están vacías. DADO la partida recién abierta ENTONCES las entradas de cada acción en el motor son
 esas.
 
 ### AC-CFG-017 — Una tecla o un botón, en cualquier acción *(verifica BR-CFG-017)*
@@ -528,8 +538,8 @@ Esc a Examinar ENTONCES queda en Esc, y Pausa recibe E.
 
 ### AC-CFG-018 — El intercambio *(verifica BR-CFG-018)*
 
-DADO Examinar en E y Agacharse en Espacio CUANDO se asigna Espacio a Examinar ENTONCES Examinar
-queda en Espacio y Agacharse en E. DADO Agarrar / Soltar en el clic izquierdo e Interactuar en el
+DADO Examinar en E y Agacharse en Ctrl CUANDO se asigna Ctrl a Examinar ENTONCES Examinar
+queda en Ctrl y Agacharse en E. DADO Agarrar / Soltar en el clic izquierdo e Interactuar en el
 clic derecho CUANDO se asigna el clic izquierdo a Interactuar ENTONCES Interactuar queda en el clic
 izquierdo y Agarrar / Soltar en el clic derecho. DADO adelante en W y en la flecha arriba CUANDO se
 asigna W a la secundaria de adelante ENTONCES la secundaria queda en W y la principal en la flecha
@@ -576,14 +586,14 @@ desde el primer cuadro.
 
 ### AC-CFG-023 — El esquema roto *(verifica BR-CFG-023)*
 
-DADO una asignación de una acción que no existe ENTONCES se ignora y las siete acciones tienen su
+DADO una asignación de una acción que no existe ENTONCES se ignora y las ocho acciones tienen su
 entrada de fábrica. DADO Examinar con una entrada ilegible —un tipo desconocido o un código que
 no es número— y Agacharse en F ENTONCES Examinar vuelve a E y Agacharse conserva F. DADO Examinar
-y Agacharse guardadas las dos en F ENTONCES se descarta el bloque completo: las siete acciones
+y Agacharse guardadas las dos en F ENTONCES se descarta el bloque completo: las ocho acciones
 tienen su entrada de fábrica. DADO Examinar con una entrada ilegible y Agacharse guardada en E
 ENTONCES restaurar Examinar a E repite E, y se descarta el bloque completo. DADO la principal
 y la secundaria de adelante guardadas las dos en H ENTONCES se descarta el bloque completo.
-DADO un archivo ilegible ENTONCES las cinco preferencias están en su defecto y las siete acciones
+DADO un archivo ilegible ENTONCES las cinco preferencias están en su defecto y las ocho acciones
 en su entrada de fábrica. En cada caso de descarte, una música guardada en 30 % sigue en 30 %.
 
 ### AC-CFG-024 — La tecla de fábrica es la de fábrica *(verifica BR-CFG-024)*
@@ -595,13 +605,13 @@ clic derecho lo hace G, y el clic derecho no lo hace. DADO Pausa asignada a P EN
 ### AC-CFG-025 — El esquema de fábrica del joystick *(verifica BR-CFG-025)*
 
 DADO ninguna asignación guardada ENTONCES Agarrar / Soltar está en X, Interactuar en R1, Agacharse
-en L1, Abrir la interfaz del celular en CÍRCULO y Examinar en CUADRADO, y cada acción conserva su
+en L1, Correr en L3, Abrir la interfaz del celular en CÍRCULO y Examinar en CUADRADO, y cada acción conserva su
 tecla o clic de fábrica. DADO Movimiento o Pausa ENTONCES ninguna tiene botón de joystick que se
 pueda reasignar.
 
 ### AC-CFG-026 — La pantalla de controles reasigna el joystick *(verifica BR-CFG-026)*
 
-DADO la pestaña JOYSTICK ENTONCES muestra cinco renglones de botón, cada uno con el suyo, y los
+DADO la pestaña JOYSTICK ENTONCES muestra seis renglones de botón, cada uno con el suyo, y los
 renglones FIJO de Movimiento, Visión y Pausa, que no se pueden elegir para reasignar. DADO la pestaña
 abierta CUANDO se abre ENTONCES el foco está en el botón de la primera acción, y CUANDO se aprieta
 abajo en la cruceta ENTONCES pasa al renglón de botón siguiente. DADO Examinar en CUADRADO CUANDO se
@@ -788,6 +798,17 @@ hombro dicen L y R y Pausa, +. DADO un joystick PlayStation ENTONCES siguen ✕ 
 START. DADO un joystick que cambia con la pantalla abierta ENTONCES las celdas, los botones de hombro y
 Pausa cambian en el acto, y la asignación guardada no cambia. DADO la espera de un botón de
 joystick ENTONCES el mensaje no nombra ninguna marca.
+
+### AC-CFG-046 — Un archivo de antes de Correr migra Agacharse y respeta lo reasignado *(verifica BR-CFG-035)*
+
+DADO un archivo sin Correr, con Agacharse en Espacio y Examinar en E ENTONCES Agacharse está en Ctrl,
+Correr en Shift y L3, y Examinar en E. DADO un archivo sin Correr, con Agacharse en F ENTONCES
+Agacharse sigue en F y Correr está en Shift. DADO un archivo sin Correr, con Agacharse en Espacio y
+una secundaria en G, y L1 en el joystick ENTONCES la principal pasa a Ctrl y la secundaria y L1 se
+conservan. DADO un archivo sin Correr, con Agacharse en Espacio y Examinar en Ctrl ENTONCES Agacharse
+conserva Espacio y Examinar conserva Ctrl. DADO un archivo con Correr, y Agacharse en Espacio
+ENTONCES Agacharse conserva Espacio. DADO un archivo sin asignaciones ENTONCES Agacharse está en
+Ctrl y Correr en Shift.
 
 ## No objetivos
 
