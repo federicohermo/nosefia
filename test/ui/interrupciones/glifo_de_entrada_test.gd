@@ -1,5 +1,6 @@
-## El texto de una píldora, de una palanca y de una tecla va en el tamaño de la pantalla, centrado
-## por su tinta adentro de su contorno, y el contorno crece hasta dejarle aire: el texto no se achica.
+## El texto de una píldora, de una palanca y de una tecla va en el tamaño de la pantalla,
+## centrado por su tinta adentro de su contorno, y el contorno crece hasta dejarle aire: el texto
+## no se achica.
 extends GdUnitTestSuite
 
 const TOLERANCIA := 0.5
