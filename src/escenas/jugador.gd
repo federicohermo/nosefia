@@ -735,6 +735,7 @@ func ubicar(lugar: Transform3D) -> void:
 	global_position = lugar.origin
 	velocity = Vector3.ZERO
 	_control.orientar(lugar.basis.get_euler().y)
+	_control.ponerse_de_pie()
 	_aplicar_la_rotacion()
 	reset_physics_interpolation()
 

@@ -18,7 +18,7 @@ const SENSIBILIDAD_DEL_MOUSE := 0.003
 
 ## Veces la velocidad de caminata con que se corre. Correr no se cansa ni se acaba: es una
 ## elección del jugador, y lo que cuesta es llevar menos cosas a la vez.
-const MULTIPLICADOR_DE_CORRER := 1.8
+const MULTIPLICADOR_DE_CORRER := 1.4
 
 ## Lo mismo con una caja o el balde en la mano, o agachado: acelera poco y no nada. Provisional
 ## hasta que el dueño lo juegue (OQ-PLY-007).

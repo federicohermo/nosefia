@@ -14,6 +14,7 @@ var _foco := Foco.new()
 var _velocidad_maxima: float
 var _suspendido: bool = false
 var _agachado: bool = false
+var _agache_apretado: bool = false
 var _altura_de_la_vista: float = ReglasDelJugador.ALTURA_DE_LA_CAMARA
 
 ## Cuánto del giro falta dibujar, en radianes: `x` de yaw, `y` de pitch.
@@ -88,17 +89,25 @@ func velocidad(
 	return Caminata.velocidad(entrada, _mirada.yaw(), maxima)
 
 
-## La altura de la vista tras `delta` segundos, yendo hacia la postura que pide la acción de
-## agacharse. Suspendido ignora la acción y sigue hacia la postura que había: reanudar la retoma de
-## lo que la tecla tenga en ese momento.
-func altura_de_la_vista(agachando: bool, delta: float) -> float:
-	if not _suspendido:
-		_agachado = agachando
+## La altura de la vista tras `delta` segundos. Agacharse es un interruptor: cada vez que la acción
+## pasa de suelta a apretada la postura alterna, y soltarla no la cambia. Suspendido ignora la
+## acción y sigue hacia la postura que había, pero igual recuerda si estaba apretada: reanudar con
+## la tecla todavía abajo no alterna.
+func altura_de_la_vista(apretada: bool, delta: float) -> float:
+	if apretada and not _agache_apretado and not _suspendido:
+		_agachado = not _agachado
+	_agache_apretado = apretada
 	var destino := (
 		ReglasDelJugador.ALTURA_AGACHADO if _agachado else ReglasDelJugador.ALTURA_DE_LA_CAMARA
 	)
 	_altura_de_la_vista = TransicionDeLaVista.siguiente(_altura_de_la_vista, destino, delta)
 	return _altura_de_la_vista
+
+
+## Arranca una jornada parado, sin esperar a que la vista suba: la noche anterior no deja postura.
+func ponerse_de_pie() -> void:
+	_agachado = false
+	_altura_de_la_vista = ReglasDelJugador.ALTURA_DE_LA_CAMARA
 
 
 func observar(id: int, distancia: float, interactuable: bool) -> bool:
