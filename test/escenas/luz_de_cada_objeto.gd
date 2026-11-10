@@ -5,7 +5,6 @@ extends RefCounted
 enum Clase { HORNEADO, SONDAS, EMISOR, TRANSPARENTE, SIN_SOMBREADO, SIN_GI, ESTATICO_SIN_HORNEAR }
 
 const Lector := preload("res://test/escenas/sondas_del_horneado.gd")
-const CorteDeLuz := preload("res://src/escenas/puestos/corte_de_luz.gd")
 
 
 ## Cada objeto visible del mundo del local con su clase. Los de sondas, con la luz más alta que
@@ -45,10 +44,7 @@ static func _clase(objeto: GeometryInstance3D, horneado: bool) -> Clase:
 				if base.transparency != BaseMaterial3D.TRANSPARENCY_DISABLED:
 					return Clase.TRANSPARENTE
 				return Clase.SIN_SOMBREADO
-			if (
-				base.emission_enabled
-				and not CorteDeLuz.MATERIALES_EMISIVOS.has(StringName(base.resource_name))
-			):
+			if base.emission_enabled and base.emission_energy_multiplier > 0.0:
 				return Clase.EMISOR
 		elif material is ShaderMaterial:
 			var shader := (material as ShaderMaterial).shader
