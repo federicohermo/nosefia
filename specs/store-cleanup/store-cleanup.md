@@ -399,11 +399,13 @@ un teñido aceptado ni alterar agua, mopa, manchas, mano o inventario.
 
 ### BR-CLN-036 — El primario ejecuta los pares de limpieza y el descarte de papel
 
-CUANDO el primario encuentra balde/lavatorio, jabón/balde, mopa/balde, mopa/inodoro,
-mopa/mancha o balde/inodoro, el sistema DEBE pedir respectivamente llenar, teñir, mojar,
-enjuagar, limpiar o vaciar, conservando los resultados y rechazos de BR-CLN-015 a BR-CLN-023.
-El secundario NO DEBE ejecutar esos pares. Un rechazo DEBE conservar el útil en la mano,
-sin soltarlo ni cambiar el agua, carga o manchas por un efecto adicional.
+CUANDO el primario encuentra balde/lavatorio, jabón/balde, mopa/balde, mopa/inodoro o
+balde/inodoro, el sistema DEBE pedir respectivamente llenar, teñir, mojar, enjuagar o vaciar,
+conservando los resultados y rechazos de BR-CLN-015 a BR-CLN-023. El secundario NO DEBE
+ejecutar esos pares. CUANDO el secundario encuentra mopa/mancha, el sistema DEBE pedir limpiar,
+con los mismos resultados y rechazos; el primario sobre esa mancha NO DEBE limpiar ni soltar la
+mopa. Un rechazo DEBE conservar el útil en la mano, sin soltarlo ni cambiar el agua, carga o
+manchas por un efecto adicional.
 El agua temporal sobre piso despejado DEBE conservar el secundario y BR-CLN-024.
 
 CUANDO se hace el primario con un ticket propio sobre el inodoro, el sistema DEBE pedir su
@@ -937,18 +939,20 @@ identidad de Poético. DADO el bidón azul en una jornada disponible CUANDO tiñ
 resultado identifica ese bidón. DADO pausa, examen, cierre, balde vacío o ya teñido ENTONCES
 no se publica teñido aceptado ni cambian mano o estados de limpieza.
 
-### AC-CLN-067 — Los seis pares usan el primario y conservan su efecto *(verifica BR-CLN-036, BR-CLN-015, BR-CLN-016, BR-CLN-017, BR-CLN-018, BR-CLN-019, BR-CLN-023)*
+### AC-CLN-067 — Los seis pares usan su gesto y conservan su efecto *(verifica BR-CLN-036, BR-CLN-015, BR-CLN-016, BR-CLN-017, BR-CLN-018, BR-CLN-019, BR-CLN-023)*
 
 DADO balde vacío sobre lavatorio, jabón sobre agua sola, mopa sobre balde con agua,
 mopa sobre inodoro, mopa del jabón correcto sobre mancha y balde lleno sobre inodoro,
-por turno CUANDO se hace un primario ENTONCES ocurre exactamente llenar, teñir, mojar,
-enjuagar, borrar o vaciar respectivamente, con el útil sostenido, las animaciones vigentes
-y sin efecto secundario adicional. El secundario no ejecuta ninguno de esos seis usos.
+por turno CUANDO se hace el gesto del par —primario, salvo la mopa sobre mancha, que es el
+secundario— ENTONCES ocurre exactamente llenar, teñir, mojar, enjuagar, borrar o vaciar
+respectivamente, con el útil sostenido, las animaciones vigentes y sin efecto adicional del
+otro gesto. El gesto contrario no ejecuta ninguno de esos seis usos: el primario sobre la
+mancha con la mopa no borra ni suelta.
 
 ### AC-CLN-068 — El uso rechazado no suelta ni recarga *(verifica BR-CLN-036, BR-CLN-020, BR-CLN-024)*
 
 DADO balde ya lleno al llenar, balde vacío o teñido al teñir, balde vacío al mojar o vaciar,
-mopa seca, sin jabón o con jabón incorrecto al limpiar CUANDO se hace primario ENTONCES se
+mopa seca, sin jabón o con jabón incorrecto al limpiar CUANDO se hace el gesto del par ENTONCES se
 conservan los rechazos vigentes, el útil sigue sostenido y no hay soltado, recarga ni otro
 cambio de agua o manchas. DADO mopa con agua sola sobre piso despejado CUANDO se hace
 secundario ENTONCES conserva el charco temporal; el primario sin par declarado conserva dejar.

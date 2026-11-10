@@ -117,8 +117,9 @@ conservar los resultados, carga, agua, animaciones y rechazos de `store-cleanup`
 
 SI la mira enfoca una puerta, ENTONCES el primario DEBE resolver la puerta según BR-PLY-026,
 sin usar la herramienta ni pedir reposición. El secundario —usar, clic derecho por defecto—
-NO DEBE ejecutar los pares anteriores. El uso de la mopa sobre piso despejado conserva su
-gesto secundario y sus resultados de BR-CLN-024: no pertenece a los pares que cambian al primario.
+NO DEBE ejecutar los pares anteriores, salvo Limpiar —mopa sobre mancha—, que es del secundario
+(BR-PLY-036). El uso de la mopa sobre piso despejado conserva su gesto secundario y sus
+resultados de BR-CLN-024: no pertenece a los pares que cambian al primario.
 Sin interacción contextual declarada, el primario DEBE conservar agarrar y dejar.
 
 ### BR-PLY-013 — Lo que se suelta queda quieto
@@ -434,9 +435,9 @@ primero el examen, después la acción primaria y por último el secundario disp
 | Vaciar | primario | balde sobre inodoro |
 | Vertir | primario | jabón o producto de limpieza habilitado sobre balde |
 | Mojar | primario | mopa sobre balde o inodoro |
-| Limpiar | primario | mopa sobre mancha |
 | Meter producto | primario | caja apoyada, unidad coincidente y capacidad de recibirla |
 | Sacar producto | secundario | caja apoyada, mano vacía y al menos una unidad |
+| Limpiar | secundario | mopa sobre mancha |
 
 «Vertir» DEBE conservar esa escritura literal. Una interacción primaria DEBE reemplazar
 «Dejar», nunca coexistir con ella para el mismo clic, incluso cuando el intento se rechace.
@@ -465,6 +466,8 @@ su alternancia, salvo abierta del todo con algo en la mano: entonces DEBE ofrece
 cuerpo (BR-CLN-025), y nunca alternar y tirar con el mismo clic.
 El secundario sobre todos esos objetivos NO DEBE ofrecer los usos trasladados al primario;
 Sacar producto conserva el secundario, y las acciones ajenas conservan su contrato.
+Limpiar DEBE declararse por el secundario, y el primario sobre la mancha con la mopa NO DEBE
+limpiar ni soltarla ni ofrecer Dejar.
 
 Con la mano vacía, lector, inodoro, lavatorio y balde NO DEBEN declarar uso de herramienta.
 Un tacho vacío u ocupado por la mano NO DEBE ofrecer extracción. El hueco del lector manual
@@ -1247,8 +1250,9 @@ ofrece Examinar (mano) y Dejar. Ninguna consulta cambia unidades ni mano.
 
 DADO, por turno, mopa seca o de jabón incorrecto sobre mancha, balde lleno sobre lavatorio,
 balde vacío sobre inodoro, jabón sobre balde vacío o teñido y mopa sobre balde vacío CUANDO
-se consulta ENTONCES ofrece por primario Limpiar, Llenar, Vaciar, Vertir y Mojar respectivamente,
-sin Dejar ni mutación. DADO mopa sobre inodoro ENTONCES ofrece Mojar. DADO lector lleno y
+se consulta ENTONCES ofrece por primario Llenar, Vaciar, Vertir y Mojar, según el par, y la mopa
+sobre mancha ofrece Limpiar por secundario y ninguna línea primaria. Ningún caso ofrece Dejar ni
+muta. DADO mopa sobre inodoro ENTONCES ofrece Mojar. DADO lector lleno y
 unidad sostenida ENTONCES conserva Interactuar por primario, no por secundario. DADO una
 puerta cerrada o trabada ENTONCES ofrece Abrir, salvo la entrada principal de BR-PLY-041;
 abierta, Cerrar; nota, Mirar. Mano vacía ante
