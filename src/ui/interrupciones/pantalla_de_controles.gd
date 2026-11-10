@@ -127,6 +127,7 @@ func _ready() -> void:
 	_filas.add_child(_aviso_sin_el_joystick())
 	_crear_el_mensaje()
 	poner_joystick_conectado(not Input.get_connected_joypads().is_empty())
+	aplicar_la_prueba(PartidaDePrueba.desde_busqueda(ArranqueDePrueba.busqueda_de_la_pagina()))
 	Input.joy_connection_changed.connect(_al_cambiar_un_joystick)
 	_pintar()
 	elegir_pestana(false)
@@ -242,6 +243,16 @@ func poner_familia(familia: FamiliaDeJoystick.Familia) -> void:
 	_familia = familia
 	_rotular_las_pildoras()
 	_pintar()
+
+
+## Lo que pide la URL de la build web: verla como con un joystick conectado, y con la familia de
+## glifos que fije. Sólo cambia lo que se muestra: las asignaciones no se tocan.
+func aplicar_la_prueba(prueba: PartidaDePrueba) -> void:
+	if prueba == null or not prueba.joystick:
+		return
+	poner_joystick_conectado(true)
+	if prueba.familia_del_joystick != PartidaDePrueba.SIN_FAMILIA:
+		poner_familia(prueba.familia_del_joystick as FamiliaDeJoystick.Familia)
 
 
 func aviso_del_joystick() -> String:

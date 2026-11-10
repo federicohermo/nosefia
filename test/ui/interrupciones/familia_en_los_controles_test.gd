@@ -193,3 +193,42 @@ func _gatillo(eje: int, valor: float) -> InputEventJoypadMotion:
 	evento.axis = eje as JoyAxis
 	evento.axis_value = valor
 	return evento
+
+
+func _pantalla_sin_joystick() -> PantallaDeControles:
+	var pantalla: PantallaDeControles = auto_free(load(ESCENA).instantiate())
+	add_child(pantalla)
+	pantalla.preparar(AsignacionDeControles.new())
+	pantalla.poner_joystick_conectado(false)
+	return pantalla
+
+
+func test_la_prueba_con_joystick_habilita_la_pestana_sin_cambiar_la_familia() -> void:
+	var pantalla := _pantalla_sin_joystick()
+	var antes := pantalla.glifo_de(AsignacionDeControles.AGARRAR, EN_EL_JOYSTICK).texto
+	pantalla.aplicar_la_prueba(PartidaDePrueba.desde_busqueda("?joystick=1"))
+	pantalla.abrir(true)
+	assert_bool(pantalla.pestana_del_joystick()).is_true()
+	assert_str(pantalla.aviso_del_joystick()).is_not_empty()
+	assert_str(pantalla.glifo_de(AsignacionDeControles.AGARRAR, EN_EL_JOYSTICK).texto).is_equal(
+		antes
+	)
+
+
+func test_la_prueba_con_una_familia_la_fija_en_los_glifos() -> void:
+	var pantalla := _pantalla_sin_joystick()
+	pantalla.aplicar_la_prueba(PartidaDePrueba.desde_busqueda("?joystick=nintendo"))
+	pantalla.abrir(true)
+	var rotulos: Array[String] = []
+	for pildora: GlifoDeEntrada in _pildoras(pantalla):
+		rotulos.append(pildora.texto)
+	assert_array(rotulos).is_equal(_rotulos_esperados(NINTENDO))
+
+
+func test_sin_prueba_o_sin_joystick_la_pantalla_queda_como_estaba() -> void:
+	for prueba: PartidaDePrueba in [null, PartidaDePrueba.desde_busqueda("?logros=1")]:
+		var pantalla := _pantalla_sin_joystick()
+		pantalla.aplicar_la_prueba(prueba)
+		pantalla.abrir(true)
+		assert_bool(pantalla.pestana_del_joystick()).is_false()
+		assert_str(pantalla.aviso_del_joystick()).is_empty()

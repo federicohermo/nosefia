@@ -85,13 +85,15 @@ func _ready() -> void:
 		func(_nuevas: Preferencias) -> void: _copia_con_las_preferencias = false
 	)
 	_configuraciones.cerrada.connect(_al_cerrar_las_configuraciones)
-	_logros_pantalla.preparar(ArchivoDeLogros.new().cargar(), CasoDeInvestigacion.de_la_partida())
+	var caso := CasoDeInvestigacion.de_la_partida()
+	var prueba := PartidaDePrueba.desde_busqueda(ArranqueDePrueba.busqueda_de_la_pagina())
+	_logros_pantalla.preparar(
+		ArranqueDePrueba.logros_a_mostrar(prueba, ArchivoDeLogros.new().cargar(), caso), caso
+	)
 	_logros_pantalla.cerrada.connect(_al_cerrar_los_logros)
 	_sonar_el_tema()
 	# Antes de preguntar si hay guardado: la partida de prueba de la URL lo reemplaza.
-	ArranqueDePrueba.escribir_el_guardado(
-		PartidaDePrueba.desde_busqueda(ArranqueDePrueba.busqueda_de_la_pagina()), _guardado
-	)
+	ArranqueDePrueba.escribir_el_guardado(prueba, _guardado)
 	var menu := MenuDeInicio.new(OS.has_feature("web"), _guardado.hay_guardado())
 	_pedidos.preparar(menu, _guardado)
 	for opcion: MenuDeInicio.Opcion in menu.opciones():
