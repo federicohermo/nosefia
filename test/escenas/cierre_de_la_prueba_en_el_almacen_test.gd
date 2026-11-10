@@ -70,8 +70,16 @@ func _sin_celular(almacen: Node3D) -> void:
 	assert_bool(_celular(almacen).celular().abierto()).is_false()
 
 
+## Sin cumplir nada, la última noche de la prueba se pierde; acá se prueba el cierre que sigue.
+func _cumplir_la_noche(almacen: Node3D) -> void:
+	for tarea: Tarea in (almacen.get("_partida") as Partida).obligatorias():
+		(almacen.get("_reloj") as RelojDelTurno).completar(tarea)
+
+
 func _cerrar_sin_celular(jornada: int) -> int:
 	var almacen: Node3D = await _almacen(jornada)
+	if jornada == COMPLETA - 1:
+		_cumplir_la_noche(almacen)
 	_cerrar_el_turno(almacen)
 	assert_bool(_persiana(almacen).en_pantalla()).is_true()
 	assert_bool((almacen.get("_jugador") as Node).call("suspendido")).is_true()
