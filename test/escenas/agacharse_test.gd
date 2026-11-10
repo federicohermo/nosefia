@@ -14,13 +14,20 @@ func after_test() -> void:
 	Input.action_release(ReglasDelJugador.ACCION_AGACHARSE)
 
 
-func test_agachado_la_camara_baja_y_al_soltar_vuelve() -> void:  # AC-PLY-125
+func test_apretar_agacha_la_camara_y_apretar_otra_vez_la_para() -> void:  # AC-PLY-125
 	var jugador := _jugador()
 	var camara: Camera3D = jugador.get_node("Giro/Camara")
-	Input.action_press(ReglasDelJugador.ACCION_AGACHARSE)
-	_asentar_la_vista(jugador)
+	_apretar_y_soltar(jugador)
 	assert_float(camara.position.y).is_equal_approx(ReglasDelJugador.ALTURA_AGACHADO, 1e-5)
-	Input.action_release(ReglasDelJugador.ACCION_AGACHARSE)
+	_apretar_y_soltar(jugador)
+	assert_float(camara.position.y).is_equal_approx(ReglasDelJugador.ALTURA_DE_LA_CAMARA, 1e-5)
+
+
+func test_una_jornada_nueva_arranca_de_pie() -> void:  # AC-PLY-198
+	var jugador := _jugador()
+	var camara: Camera3D = jugador.get_node("Giro/Camara")
+	_apretar_y_soltar(jugador)
+	jugador.ubicar(Transform3D.IDENTITY)
 	_asentar_la_vista(jugador)
 	assert_float(camara.position.y).is_equal_approx(ReglasDelJugador.ALTURA_DE_LA_CAMARA, 1e-5)
 
@@ -40,8 +47,7 @@ func test_la_mira_enfoca_desde_la_altura_agachado() -> void:  # AC-PLY-125
 	# La premisa: de pie, el objeto queda fuera del desvío de la mira.
 	await _actualizar(jugador)
 	assert_object(jugador.get("_enfocado")).is_null()
-	Input.action_press(ReglasDelJugador.ACCION_AGACHARSE)
-	_asentar_la_vista(jugador)
+	_apretar_y_soltar(jugador)
 	await _actualizar(jugador)
 	assert_object(jugador.get("_enfocado")).is_same(objeto)
 
@@ -53,27 +59,29 @@ func test_suspendido_apretar_la_accion_no_baja_la_camara() -> void:  # AC-PLY-12
 	Input.action_press(ReglasDelJugador.ACCION_AGACHARSE)
 	_asentar_la_vista(jugador)
 	assert_float(camara.position.y).is_equal_approx(ReglasDelJugador.ALTURA_DE_LA_CAMARA, 1e-5)
-	jugador.reanudar()
+	Input.action_release(ReglasDelJugador.ACCION_AGACHARSE)
 	_asentar_la_vista(jugador)
+	jugador.reanudar()
+	_apretar_y_soltar(jugador)
 	assert_float(camara.position.y).is_equal_approx(ReglasDelJugador.ALTURA_AGACHADO, 1e-5)
 
 
-func test_la_accion_de_agacharse_es_espacio_y_ninguna_otra_lo_tiene() -> void:  # AC-PLY-126
+func test_la_accion_de_agacharse_es_ctrl_y_ninguna_otra_lo_tiene() -> void:  # AC-PLY-126
 	var accion := ReglasDelJugador.ACCION_AGACHARSE
 	assert_bool(InputMap.has_action(accion)).is_true()
-	assert_bool(_tiene_espacio(accion)).is_true()
+	assert_bool(_tiene_tecla(accion, KEY_CTRL)).is_true()
 	for otra: StringName in InputMap.get_actions():
 		if otra == accion or String(otra).begins_with("ui_"):
 			continue
 		(
-			assert_bool(_tiene_espacio(otra))
-			. override_failure_message("la acción `%s` también usa Espacio" % otra)
+			assert_bool(_tiene_tecla(otra, KEY_CTRL))
+			. override_failure_message("la acción `%s` también usa Ctrl" % otra)
 			. is_false()
 		)
 
 
 func test_espacio_no_acepta_el_boton_con_foco_y_enter_si() -> void:  # AC-PLY-127
-	assert_bool(_tiene_espacio(&"ui_accept")).is_false()
+	assert_bool(_tiene_tecla(&"ui_accept", KEY_SPACE)).is_false()
 	var teclas: Array[Key] = []
 	for evento: InputEvent in InputMap.action_get_events(&"ui_accept"):
 		if evento is InputEventKey:
@@ -83,10 +91,10 @@ func test_espacio_no_acepta_el_boton_con_foco_y_enter_si() -> void:  # AC-PLY-12
 	assert_array(teclas).contains([KEY_ENTER, KEY_KP_ENTER])
 
 
-func _tiene_espacio(accion: StringName) -> bool:
+func _tiene_tecla(accion: StringName, buscada: Key) -> bool:
 	for evento: InputEvent in InputMap.action_get_events(accion):
 		var tecla := evento as InputEventKey
-		if tecla != null and (tecla.keycode == KEY_SPACE or tecla.physical_keycode == KEY_SPACE):
+		if tecla != null and (tecla.keycode == buscada or tecla.physical_keycode == buscada):
 			return true
 	return false
 
@@ -110,6 +118,14 @@ func _objeto_a_la_altura(y: float) -> StaticBody3D:
 	add_child(cuerpo)
 	cuerpo.global_position = Vector3(0.0, y, -DISTANCIA_AL_OBJETO)
 	return cuerpo
+
+
+## Un toque a la acción: apretada y soltada, con la vista asentada tras cada cambio.
+func _apretar_y_soltar(jugador: CharacterBody3D) -> void:
+	Input.action_press(ReglasDelJugador.ACCION_AGACHARSE)
+	_asentar_la_vista(jugador)
+	Input.action_release(ReglasDelJugador.ACCION_AGACHARSE)
+	_asentar_la_vista(jugador)
 
 
 ## Deja pasar más que lo que dura el agache, para medir la postura ya asentada.

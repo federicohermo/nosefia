@@ -137,3 +137,9 @@ func test_cada_familia_rotula_distinto_cada_boton() -> void:  # AC-CFG-044
 
 func test_un_boton_sin_rotulo_contesta_vacio() -> void:  # AC-CFG-044
 	assert_str(FamiliaDeJoystick.rotulo_de(XBOX, JOY_BUTTON_TOUCHPAD)).is_empty()
+
+
+func test_el_gatillo_derecho_se_rotula_por_familia() -> void:  # AC-CFG-044
+	assert_str(FamiliaDeJoystick.rotulo_del_gatillo(PLAYSTATION)).is_equal("R2")
+	assert_str(FamiliaDeJoystick.rotulo_del_gatillo(XBOX)).is_equal("RT")
+	assert_str(FamiliaDeJoystick.rotulo_del_gatillo(NINTENDO)).is_equal("ZR")

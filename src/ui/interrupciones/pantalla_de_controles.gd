@@ -53,8 +53,10 @@ const SEPARACION_DE_LAS_COLUMNAS := 64
 const ANCHO_DE_LA_PESTANA := 520.0
 const ALTO_DE_LA_PESTANA := 60.0
 const ALTO_DE_LA_FILA := 58.0
+## La cabecera de las columnas es sólo texto: no necesita el alto de una tecla.
+const ALTO_DEL_ENCABEZADO := 40.0
 ## Entre un renglón y el siguiente.
-const SEPARACION_DE_LAS_FILAS := 9
+const SEPARACION_DE_LAS_FILAS := 5
 ## Entre las pestañas y la cabecera de las columnas. La tinta del texto no llena su renglón: con
 ## esta separación el margen se ve igual a los otros tres.
 const SEPARACION_DE_LA_CABECERA := 20
@@ -137,6 +139,8 @@ func _ready() -> void:
 static func nombre_de_la_entrada(
 	tipo: int, codigo: int, familia: FamiliaDeJoystick.Familia = FamiliaDeJoystick.Familia.XBOX
 ) -> String:
+	if tipo == AsignacionDeControles.TipoDeEntrada.GATILLO_DEL_JOYSTICK:
+		return FamiliaDeJoystick.rotulo_del_gatillo(familia)
 	if tipo == AsignacionDeControles.TipoDeEntrada.BOTON_DEL_JOYSTICK:
 		var del_joystick := FamiliaDeJoystick.rotulo_de(familia, codigo)
 		return del_joystick if not del_joystick.is_empty() else "BOTÓN %d" % codigo
@@ -447,7 +451,7 @@ func _bloque(a_la_izquierda: Control, a_la_derecha: Array[Control] = []) -> VBox
 	bloque.add_theme_constant_override("separation", SEPARACION_DE_LAS_FILAS)
 	var encabezado := HBoxContainer.new()
 	encabezado.add_theme_constant_override("separation", SEPARACION_DE_LAS_COLUMNAS)
-	encabezado.custom_minimum_size.y = ALTO_DE_LA_FILA
+	encabezado.custom_minimum_size.y = ALTO_DEL_ENCABEZADO
 	encabezado.add_child(a_la_izquierda)
 	for control: Control in a_la_derecha:
 		encabezado.add_child(control)

@@ -154,3 +154,42 @@ func test_la_espera_de_un_boton_no_nombra_ninguna_marca() -> void:  # AC-CFG-045
 	assert_str(dicho).is_not_empty()
 	for marca: String in ["playstation", "xbox", "nintendo"]:
 		assert_bool(marca in dicho).is_false()
+
+
+func test_el_gatillo_de_correr_es_una_pildora_con_el_rotulo_de_la_familia() -> void:  # AC-CFG-045
+	for familia: FamiliaDeJoystick.Familia in FamiliaDeJoystick.Familia.values():
+		var glifo := _pantalla(familia).glifo_de(AsignacionDeControles.CORRER, EN_EL_JOYSTICK)
+		assert_int(glifo.forma).is_equal(GlifoDeEntrada.Forma.PILDORA)
+		assert_str(glifo.texto).is_equal(FamiliaDeJoystick.rotulo_del_gatillo(familia))
+
+
+func test_esperando_el_boton_de_correr_el_gatillo_derecho_se_asigna() -> void:  # AC-CFG-047
+	var pantalla := _pantalla(XBOX)
+	var correr := AsignacionDeControles.CORRER
+	pantalla.elegir(correr, EN_EL_JOYSTICK)
+	assert_bool(pantalla.atender(_boton(JOY_BUTTON_Y))).is_true()
+	assert_array(_avisos).has_size(1)
+	pantalla.elegir(correr, EN_EL_JOYSTICK)
+	assert_bool(pantalla.atender(_gatillo(JOY_AXIS_TRIGGER_RIGHT, 0.6))).is_true()
+	assert_array(_avisos).has_size(2)
+	var entrada := _avisos[1].entrada(correr, EN_EL_JOYSTICK)
+	assert_int(entrada["tipo"]).is_equal(AsignacionDeControles.TipoDeEntrada.GATILLO_DEL_JOYSTICK)
+	assert_int(entrada["codigo"]).is_equal(JOY_AXIS_TRIGGER_RIGHT)
+
+
+func test_el_gatillo_no_cambia_nada_esperando_otra_ranura_ni_otro_gatillo() -> void:  # AC-CFG-047
+	var pantalla := _pantalla(XBOX)
+	pantalla.elegir(AsignacionDeControles.EXAMINAR, EN_EL_JOYSTICK)
+	assert_bool(pantalla.atender(_gatillo(JOY_AXIS_TRIGGER_RIGHT, 0.9))).is_true()
+	assert_bool(pantalla.capturando()).is_true()
+	pantalla.elegir(AsignacionDeControles.CORRER, EN_EL_JOYSTICK)
+	assert_bool(pantalla.atender(_gatillo(JOY_AXIS_TRIGGER_LEFT, 0.9))).is_false()
+	assert_bool(pantalla.atender(_gatillo(JOY_AXIS_TRIGGER_RIGHT, 0.4))).is_false()
+	assert_array(_avisos).is_empty()
+
+
+func _gatillo(eje: int, valor: float) -> InputEventJoypadMotion:
+	var evento := InputEventJoypadMotion.new()
+	evento.axis = eje as JoyAxis
+	evento.axis_value = valor
+	return evento

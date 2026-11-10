@@ -89,14 +89,20 @@ static func entrada_de(evento: InputEvent) -> Vector2i:
 		return Vector2i(
 			AsignacionDeControles.TipoDeEntrada.BOTON_DEL_JOYSTICK, del_joystick.button_index
 		)
+	var eje := evento as InputEventJoypadMotion
+	if eje != null and eje.axis == JOY_AXIS_TRIGGER_RIGHT and eje.axis_value > 0.0:
+		return Vector2i(AsignacionDeControles.TipoDeEntrada.GATILLO_DEL_JOYSTICK, eje.axis)
 	return SIN_ENTRADA
 
 
 ## Si la asignación maneja esa entrada en esa acción. Un botón de joystick sólo lo maneja una de las
-## cinco acciones de botón: START, en la pausa, no lo reemplaza ninguna asignación.
+## acciones de botón: START, en la pausa, no lo reemplaza ninguna asignación. El gatillo derecho,
+## sólo Correr.
 static func es_de_la_asignacion(accion: StringName, entrada: Vector2i) -> bool:
 	if entrada == SIN_ENTRADA:
 		return false
+	if entrada.x == AsignacionDeControles.TipoDeEntrada.GATILLO_DEL_JOYSTICK:
+		return accion == AsignacionDeControles.CORRER
 	return (
 		entrada.x != AsignacionDeControles.TipoDeEntrada.BOTON_DEL_JOYSTICK
 		or accion in AsignacionDeControles.ACCIONES_CON_BOTON
@@ -157,6 +163,12 @@ static func _evento_de(entrada: Vector2i) -> InputEvent:
 		# Todos los joysticks, como los eventos de `project.godot`.
 		del_joystick.device = -1
 		return del_joystick
+	if entrada.x == AsignacionDeControles.TipoDeEntrada.GATILLO_DEL_JOYSTICK:
+		var gatillo := InputEventJoypadMotion.new()
+		gatillo.axis = entrada.y as JoyAxis
+		gatillo.axis_value = 1.0
+		gatillo.device = -1
+		return gatillo
 	var boton := InputEventMouseButton.new()
 	boton.button_index = entrada.y as MouseButton
 	return boton

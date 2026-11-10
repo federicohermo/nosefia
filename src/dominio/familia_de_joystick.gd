@@ -67,6 +67,13 @@ const ROTULOS: Dictionary[Familia, Dictionary] = {
 	},
 }
 
+## Cómo se rotula el gatillo derecho: el de arriba del hombro derecho.
+const ROTULOS_DEL_GATILLO_DERECHO: Dictionary[Familia, String] = {
+	Familia.PLAYSTATION: "R2",
+	Familia.XBOX: "RT",
+	Familia.NINTENDO: "ZR",
+}
+
 
 ## La familia que dice un nombre de joystick.
 static func de_el_nombre(nombre: String) -> Familia:
@@ -93,3 +100,8 @@ static func rotulo_de(familia: Familia, boton: int) -> String:
 	var propios: Dictionary = ROTULOS[familia]
 	var rotulo: String = propios.get(boton, ROTULOS_COMUNES.get(boton, ""))
 	return rotulo
+
+
+## Cómo se lee el gatillo derecho en esa familia.
+static func rotulo_del_gatillo(familia: Familia) -> String:
+	return ROTULOS_DEL_GATILLO_DERECHO[familia]
