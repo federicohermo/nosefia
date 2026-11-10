@@ -4,6 +4,7 @@ extends GdUnitTestSuite
 
 const TECLA := AsignacionDeControles.TipoDeEntrada.TECLA
 const DEL_JOYSTICK := AsignacionDeControles.TipoDeEntrada.BOTON_DEL_JOYSTICK
+const GATILLO := AsignacionDeControles.TipoDeEntrada.GATILLO_DEL_JOYSTICK
 const PRINCIPAL := AsignacionDeControles.RANURA_PRINCIPAL
 const SECUNDARIA := AsignacionDeControles.RANURA_SECUNDARIA
 const DEL_JOYSTICK_RANURA := AsignacionDeControles.RANURA_DEL_JOYSTICK
@@ -38,7 +39,7 @@ func test_el_espacio_de_antes_pasa_a_ctrl_y_correr_llega_de_fabrica() -> void:  
 	assert_vector(_entrada(leida, agacharse, PRINCIPAL)).is_equal(_tecla(KEY_CTRL))
 	assert_vector(_entrada(leida, correr, PRINCIPAL)).is_equal(_tecla(KEY_SHIFT))
 	assert_vector(_entrada(leida, correr, DEL_JOYSTICK_RANURA)).is_equal(
-		Vector2i(DEL_JOYSTICK, JOY_BUTTON_LEFT_STICK)
+		Vector2i(GATILLO, JOY_AXIS_TRIGGER_RIGHT)
 	)
 	assert_vector(_entrada(leida, AsignacionDeControles.EXAMINAR, PRINCIPAL)).is_equal(
 		_tecla(KEY_E)

@@ -31,11 +31,11 @@ func test_las_acciones_de_boton_tienen_el_boton_de_la_ficha() -> void:  # AC-CFG
 		AsignacionDeControles.AGARRAR: JOY_BUTTON_A,
 		AsignacionDeControles.INTERACTUAR: JOY_BUTTON_RIGHT_SHOULDER,
 		AsignacionDeControles.AGACHARSE: JOY_BUTTON_LEFT_SHOULDER,
-		AsignacionDeControles.CORRER: JOY_BUTTON_LEFT_STICK,
 		AsignacionDeControles.CELULAR: JOY_BUTTON_B,
 		AsignacionDeControles.EXAMINAR: JOY_BUTTON_X,
 	}
-	assert_int(esperados.size()).is_equal(AsignacionDeControles.ACCIONES_CON_BOTON.size())
+	# Correr es la sexta: tiene el gatillo derecho y no un botón.
+	assert_int(esperados.size() + 1).is_equal(AsignacionDeControles.ACCIONES_CON_BOTON.size())
 	for accion: StringName in esperados:
 		assert_vector(_entrada(asignacion, accion, RANURA)).is_equal(
 			Vector2i(JOYSTICK, esperados[accion])

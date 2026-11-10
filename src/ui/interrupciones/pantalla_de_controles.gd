@@ -139,6 +139,8 @@ func _ready() -> void:
 static func nombre_de_la_entrada(
 	tipo: int, codigo: int, familia: FamiliaDeJoystick.Familia = FamiliaDeJoystick.Familia.XBOX
 ) -> String:
+	if tipo == AsignacionDeControles.TipoDeEntrada.GATILLO_DEL_JOYSTICK:
+		return FamiliaDeJoystick.rotulo_del_gatillo(familia)
 	if tipo == AsignacionDeControles.TipoDeEntrada.BOTON_DEL_JOYSTICK:
 		var del_joystick := FamiliaDeJoystick.rotulo_de(familia, codigo)
 		return del_joystick if not del_joystick.is_empty() else "BOTÓN %d" % codigo

@@ -10,17 +10,19 @@ func after_test() -> void:
 	Input.action_release(ReglasDelJugador.ACCION_ADELANTE)
 
 
-func test_la_accion_de_correr_es_shift_y_l3_y_ninguna_otra_los_tiene() -> void:  # AC-PLY-197
+func test_la_accion_de_correr_es_shift_y_el_gatillo_derecho_y_ninguna_otra() -> void:  # AC-PLY-197
 	var accion := ReglasDelJugador.ACCION_CORRER
 	assert_bool(InputMap.has_action(accion)).is_true()
 	assert_bool(_tiene_tecla(accion, KEY_SHIFT)).is_true()
-	assert_bool(_tiene_boton(accion, JOY_BUTTON_LEFT_STICK)).is_true()
+	assert_bool(_tiene_gatillo(accion, JOY_AXIS_TRIGGER_RIGHT)).is_true()
 	for otra: StringName in InputMap.get_actions():
 		if otra == accion or String(otra).begins_with("ui_"):
 			continue
 		(
-			assert_bool(_tiene_tecla(otra, KEY_SHIFT) or _tiene_boton(otra, JOY_BUTTON_LEFT_STICK))
-			. override_failure_message("la acción `%s` también usa Shift o L3" % otra)
+			assert_bool(
+				_tiene_tecla(otra, KEY_SHIFT) or _tiene_gatillo(otra, JOY_AXIS_TRIGGER_RIGHT)
+			)
+			. override_failure_message("la acción `%s` también usa Shift o el gatillo" % otra)
 			. is_false()
 		)
 
@@ -52,10 +54,10 @@ func _tiene_tecla(accion: StringName, buscada: Key) -> bool:
 	return false
 
 
-func _tiene_boton(accion: StringName, buscado: JoyButton) -> bool:
+func _tiene_gatillo(accion: StringName, buscado: JoyAxis) -> bool:
 	for evento: InputEvent in InputMap.action_get_events(accion):
-		var boton := evento as InputEventJoypadButton
-		if boton != null and boton.button_index == buscado:
+		var eje := evento as InputEventJoypadMotion
+		if eje != null and eje.axis == buscado:
 			return true
 	return false
 

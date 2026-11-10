@@ -5,6 +5,7 @@ extends GdUnitTestSuite
 const TECLA := AsignacionDeControles.TipoDeEntrada.TECLA
 const BOTON := AsignacionDeControles.TipoDeEntrada.BOTON_DEL_MOUSE
 const JOYSTICK := AsignacionDeControles.TipoDeEntrada.BOTON_DEL_JOYSTICK
+const GATILLO := AsignacionDeControles.TipoDeEntrada.GATILLO_DEL_JOYSTICK
 
 ## Las ranuras del esquema de fábrica: la acción, la ranura y su entrada.
 const VACIA := AsignacionDeControles.VACIA
@@ -28,7 +29,7 @@ const DE_FABRICA: Array = [
 	[AsignacionDeControles.AGACHARSE, 2, JOYSTICK, JOY_BUTTON_LEFT_SHOULDER],
 	[AsignacionDeControles.CORRER, 0, TECLA, KEY_SHIFT],
 	[AsignacionDeControles.CORRER, 1, VACIA.x, VACIA.y],
-	[AsignacionDeControles.CORRER, 2, JOYSTICK, JOY_BUTTON_LEFT_STICK],
+	[AsignacionDeControles.CORRER, 2, GATILLO, JOY_AXIS_TRIGGER_RIGHT],
 	[AsignacionDeControles.AGARRAR, 0, BOTON, MOUSE_BUTTON_LEFT],
 	[AsignacionDeControles.AGARRAR, 1, VACIA.x, VACIA.y],
 	[AsignacionDeControles.AGARRAR, 2, JOYSTICK, JOY_BUTTON_A],

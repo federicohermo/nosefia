@@ -2,8 +2,9 @@
 ##
 ## Cada acción tiene dos **ranuras** estables de teclado o mouse, la principal y la secundaria, y
 ## las acciones de botón suman la del joystick. Una entrada es un par de números, el tipo y el
-## código físico de la tecla o el índice del botón: acá no se nombra `InputEvent`. Una ranura del
-## joystick sólo acepta un botón del joystick, y las demás no lo aceptan.
+## código físico de la tecla, el índice del botón o el eje del gatillo: acá no se nombra
+## `InputEvent`. Una ranura del joystick sólo acepta un botón del joystick, y las demás no lo
+## aceptan. La única excepción es el gatillo derecho, que acepta la de Correr.
 ##
 ## **Una entrada nunca está en dos ranuras.** Asignar una que ya tiene otra ranura las intercambia.
 ## La principal nunca queda vacía; la secundaria puede estarlo, y `VACIA` no cuenta como repetida.
@@ -13,7 +14,7 @@
 class_name AsignacionDeControles
 extends RefCounted
 
-enum TipoDeEntrada { TECLA, BOTON_DEL_MOUSE, BOTON_DEL_JOYSTICK }
+enum TipoDeEntrada { TECLA, BOTON_DEL_MOUSE, BOTON_DEL_JOYSTICK, GATILLO_DEL_JOYSTICK }
 
 ## Lo que una acción hace además en una interfaz abierta. Cambiar su entrada cambia también eso.
 enum FuncionDeMenu { CERRAR, VOLVER, PULSAR }
@@ -140,7 +141,7 @@ const DE_FABRICA: Dictionary = {
 	[
 		Vector2i(TipoDeEntrada.TECLA, KEY_SHIFT),
 		VACIA,
-		Vector2i(TipoDeEntrada.BOTON_DEL_JOYSTICK, JOY_BUTTON_LEFT_STICK)
+		Vector2i(TipoDeEntrada.GATILLO_DEL_JOYSTICK, JOY_AXIS_TRIGGER_RIGHT)
 	],
 	AGARRAR:
 	[
@@ -199,20 +200,21 @@ static func texto_de_la_funcion(funcion: FuncionDeMenu) -> String:
 ## Si la ranura de esa acción acepta la entrada. En la web, Esc sólo lo acepta Pausa: con el
 ## cursor tomado el navegador se come Esc, y cualquier otra acción no se podría hacer. La ranura
 ## del joystick sólo acepta un botón, y START no: es la pausa. Un eje o un gatillo analógico no es
-## un botón.
+## un botón: Correr acepta, además, el gatillo derecho.
 static func acepta(
 	accion: StringName, tipo: int, codigo: int, en_la_web: bool = false, ranura: int = 0
 ) -> bool:
 	if accion not in ACCIONES:
 		return false
-	if es_del_joystick(accion, ranura) or tipo == TipoDeEntrada.BOTON_DEL_JOYSTICK:
-		return (
-			es_del_joystick(accion, ranura)
-			and tipo == TipoDeEntrada.BOTON_DEL_JOYSTICK
-			and codigo >= JOY_BUTTON_A
-			and codigo < JOY_BUTTON_SDL_MAX
-			and codigo != BOTON_DE_PAUSA
-		)
+	var del_joystick := (
+		tipo == TipoDeEntrada.BOTON_DEL_JOYSTICK or tipo == TipoDeEntrada.GATILLO_DEL_JOYSTICK
+	)
+	if es_del_joystick(accion, ranura) or del_joystick:
+		if not (es_del_joystick(accion, ranura) and del_joystick):
+			return false
+		if tipo == TipoDeEntrada.GATILLO_DEL_JOYSTICK:
+			return accion == CORRER and codigo == JOY_AXIS_TRIGGER_RIGHT
+		return codigo >= JOY_BUTTON_A and codigo < JOY_BUTTON_SDL_MAX and codigo != BOTON_DE_PAUSA
 	if tipo == TipoDeEntrada.BOTON_DEL_MOUSE:
 		return codigo in BOTONES_ACEPTADOS
 	if tipo != TipoDeEntrada.TECLA or codigo <= KEY_NONE or codigo > KEY_CODE_MASK:
