@@ -72,15 +72,22 @@ func orientar(nuevo_yaw: float) -> void:
 	_suavizado = SuavizadoDelGiro.new(SuavizadoDelGiro.VENTANA)
 
 
-## Correr multiplica la velocidad de la postura: agachado o con algo pesado en la mano, por poco.
+## Correr multiplica la velocidad de la postura: agachado, con una caja grande o con el balde con
+## agua en la mano, por poco.
 func velocidad(
-	entrada: Vector2, corriendo: bool = false, en_la_mano: StringName = ObjetoDelAlmacen.SIN_ID
+	entrada: Vector2,
+	corriendo: bool = false,
+	en_la_mano: StringName = ObjetoDelAlmacen.SIN_ID,
+	balde_con_agua: bool = false,
+	caja_grande: bool = false
 ) -> Vector3:
 	if _suspendido:
 		return Vector3.ZERO
 	var maxima := ReglasDelJugador.VELOCIDAD_AGACHADO if _agachado else _velocidad_maxima
 	if corriendo:
-		var con_peso := _agachado or ReglasDelJugador.pesa_al_correr(en_la_mano)
+		var con_peso := (
+			_agachado or ReglasDelJugador.pesa_al_correr(en_la_mano, balde_con_agua, caja_grande)
+		)
 		maxima *= (
 			ReglasDelJugador.MULTIPLICADOR_DE_CORRER_CON_PESO
 			if con_peso

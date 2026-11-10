@@ -20,16 +20,12 @@ const SENSIBILIDAD_DEL_MOUSE := 0.003
 ## elección del jugador, y lo que cuesta es llevar menos cosas a la vez.
 const MULTIPLICADOR_DE_CORRER := 1.4
 
-## Lo mismo con una caja o el balde en la mano, o agachado: acelera poco y no nada. Provisional
-## hasta que el dueño lo juegue (OQ-PLY-007).
+## Lo mismo con una caja grande o el balde con agua en la mano, o agachado: acelera poco y no
+## nada. Provisional hasta que el dueño lo juegue (OQ-PLY-007).
 const MULTIPLICADOR_DE_CORRER_CON_PESO := 1.2
 
-## Lo que pesa al correr: lo que se empuja como una caja (BR-PLY-050). La caja es la del depósito,
-## y el balde es el de la limpieza.
+## La caja que se lleva con las dos manos es la del depósito, en su tamaño grande.
 const ID_DE_LA_CAJA_DE_REPOSICION := &"caja_de_reposicion"
-const PESADOS_AL_CORRER: Array[StringName] = [
-	ID_DE_LA_CAJA_DE_REPOSICION, ReglasDeLaLimpieza.ID_DEL_BALDE
-]
 
 ## Radianes por segundo con el joystick derecho a fondo: 180 grados. Lo decidió el dueño, y gira
 ## en proporción a la inclinación.
@@ -109,9 +105,14 @@ const ACCION_AGACHARSE: StringName = &"agacharse"
 const ACCION_CORRER: StringName = &"correr"
 
 
-## Si lo que se lleva en la mano pesa al correr. `SIN_ID` es la mano vacía.
-static func pesa_al_correr(en_la_mano: StringName) -> bool:
-	return en_la_mano in PESADOS_AL_CORRER
+## Si lo que se lleva en la mano pesa al correr: la caja de reposición grande y el balde con agua.
+## El balde vacío, la caja chica y todo lo demás no pesan. `SIN_ID` es la mano vacía.
+static func pesa_al_correr(
+	en_la_mano: StringName, balde_con_agua: bool = false, caja_grande: bool = false
+) -> bool:
+	if en_la_mano == ID_DE_LA_CAJA_DE_REPOSICION:
+		return caja_grande
+	return en_la_mano == ReglasDeLaLimpieza.ID_DEL_BALDE and balde_con_agua
 
 
 ## Lo que cuenta para el alcance: la distancia sobre el piso, sin la altura.

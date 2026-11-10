@@ -566,11 +566,13 @@ cansancio, y NO DEBE cambiar la postura ni la altura de la vista. Apretada sin e
 movimiento, NO DEBE mover al jugador. La normalización de BR-PLY-001 se conserva: la diagonal
 corriendo no corre más que el adelante.
 
-MIENTRAS el jugador lleva en la mano una caja de reposición o el balde —lo que se empuja como una
-caja, BR-PLY-050— o está agachado (BR-PLY-042), correr DEBE acelerar poco y no nada: la velocidad
-DEBE ser la de caminata, o la agachado, por un multiplicador del dominio mayor que uno y menor que
-el de correr (OQ-PLY-007). Con las dos condiciones a la vez, el multiplicador DEBE aplicarse una sola vez,
-sobre la velocidad agachado. Los jabones, la mopa y las bolsas NO son pesados para correr.
+MIENTRAS el jugador lleva en la mano una caja de reposición grande o el balde con agua, o está
+agachado (BR-PLY-042), correr DEBE acelerar poco y no nada: la velocidad DEBE ser la de caminata, o
+la agachado, por un multiplicador del dominio mayor que uno y menor que el de correr (OQ-PLY-007).
+Con las dos condiciones a la vez, el multiplicador DEBE aplicarse una sola vez, sobre la velocidad
+agachado. Sólo esas dos cosas son pesadas para correr: el balde vacío, la caja de reposición chica
+y todo lo demás que se lleva —unidades de producto, jabones, mopa, bolsas, ticket, llave, palanca—
+NO frenan, y con ellos correr da lo mismo que con la mano vacía.
 
 MIENTRAS el control está suspendido (BR-PLY-006), correr NO DEBE mover al jugador. Los pasos
 siguen contándose por distancia recorrida (BR-AMB-019): correr no cambia cuántos metros hay entre un paso y otro.
@@ -1578,13 +1580,16 @@ DADO una entrada en diagonal ENTONCES su módulo es el mismo. CUANDO se suelta c
 módulo vuelve al de caminata. DADO correr apretada y ninguna entrada de movimiento ENTONCES la
 velocidad es cero.
 
-### AC-PLY-193 — Con una caja o el balde en la mano, correr acelera poco *(verifica BR-PLY-061)*
+### AC-PLY-193 — Con una caja grande o el balde con agua en la mano, correr acelera poco *(verifica BR-PLY-061)*
 
-DADO el jugador de pie con una caja de reposición en la mano, o con el balde, y una entrada hacia
-adelante CUANDO se aprieta correr ENTONCES el módulo es el de caminata por el multiplicador del
-dominio, que es mayor que uno y menor que el de correr sin peso, y es mayor que el de caminata.
-DADO un jabón, la mopa o una bolsa de basura en la mano ENTONCES correr da lo mismo que con la mano
-vacía. DADO una caja en la mano y correr suelta ENTONCES el módulo es el de caminata.
+DADO el jugador de pie con una caja de reposición grande en la mano, o con el balde con agua, y una
+entrada hacia adelante CUANDO se aprieta correr ENTONCES el módulo es el de caminata por el
+multiplicador del dominio, que es mayor que uno y menor que el de correr sin peso, y es mayor que
+el de caminata. DADO el balde vacío, una caja de reposición chica, una unidad de producto, un
+jabón, la mopa, una bolsa de basura, un ticket, la llave o la palanca en la mano ENTONCES correr da
+lo mismo que con la mano vacía. DADO el balde que se llena o se vacía estando en la mano ENTONCES
+la velocidad al correr cambia con él. DADO una caja grande en la mano y correr suelta ENTONCES el
+módulo es el de caminata.
 
 ### AC-PLY-194 — Agachado, correr acelera poco, y una sola vez *(verifica BR-PLY-061, BR-PLY-042)*
 
@@ -1876,7 +1881,7 @@ del depósito o sobre la entrada ENTONCES avisan de trabada como siempre y no gi
   - Bloquea: nada; mientras se decide, la unidad se corre menos que el alcance de la mira
     (BR-PLY-052).
 
-- **OQ-PLY-007 — ¿Cuánto acelera correr con una caja, el balde o agachado?**
+- **OQ-PLY-007 — ¿Cuánto acelera correr con una caja grande, el balde con agua o agachado?**
   - Por qué sigue abierta: el diseño pide que acelere «poco», y no fija el multiplicador. Hoy es un
     valor provisional del dominio.
   - Decide: el dueño del repo, jugando.

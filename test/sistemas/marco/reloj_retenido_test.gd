@@ -42,3 +42,16 @@ func test_retener_no_rearma_el_turno_ni_impide_el_avance_explicito() -> void:  #
 	reloj.ahora_usec += 1000000
 	reloj._process(1.0)
 	assert_float(turno.tiempo_restante()).is_equal(Ritmo.escalar(16.0))
+
+
+func test_la_noche_esta_en_curso_con_turno_abierto_y_sin_retener() -> void:  # AC-SHF-143
+	var reloj: RelojConTiempo = auto_free(RelojConTiempo.new())
+	assert_bool(reloj.en_curso()).is_false()
+	reloj.arrancar(Turno.new(Ritmo.escalar(20.0), []), [])
+	assert_bool(reloj.en_curso()).is_true()
+	reloj.retener()
+	assert_bool(reloj.en_curso()).is_false()
+	reloj.soltar()
+	assert_bool(reloj.en_curso()).is_true()
+	reloj.avanzar(20.0)
+	assert_bool(reloj.en_curso()).is_false()

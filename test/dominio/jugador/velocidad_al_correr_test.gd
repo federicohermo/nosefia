@@ -3,6 +3,8 @@
 extends GdUnitTestSuite
 
 const CAJA_DE_REPOSICION := preload("res://src/dominio/almacen/caja_de_reposicion.tres")
+const CAJA_CHICA := preload("res://src/dominio/almacen/caja_de_fideos.tres")
+const LATA := preload("res://src/dominio/almacen/lata_de_tomate.tres")
 const BOLSA_DE_BASURA := preload("res://src/dominio/almacen/bolsa_de_basura_1.tres")
 const SENSIBILIDAD := 0.01
 const CUADRO := 1.0 / 60.0
@@ -32,25 +34,73 @@ func test_correr_camina_a_la_caminata_por_el_multiplicador() -> void:  # AC-PLY-
 	assert_vector(control.velocidad(Vector2.ZERO, true)).is_equal(Vector3.ZERO)
 
 
-func test_correr_con_una_caja_o_el_balde_acelera_poco() -> void:  # AC-PLY-193
+func test_correr_con_una_caja_grande_o_el_balde_con_agua_acelera_poco() -> void:  # AC-PLY-193
 	var control := _control()
 	var caminando := ReglasDelJugador.VELOCIDAD_DE_CAMINATA
-	for pesado: StringName in [CAJA_DE_REPOSICION.id, ReglasDeLaLimpieza.ID_DEL_BALDE]:
-		var corriendo := control.velocidad(Vector2(0.0, 1.0), true, pesado).length()
+	var adelante := Vector2(0.0, 1.0)
+	var con_peso := {
+		"caja grande": [CAJA_DE_REPOSICION.id, false, true],
+		"balde con agua": [ReglasDeLaLimpieza.ID_DEL_BALDE, true, false],
+	}
+	for cual: String in con_peso:
+		var mano: Array = con_peso[cual]
+		var corriendo := control.velocidad(adelante, true, mano[0], mano[1], mano[2]).length()
 		assert_float(corriendo).is_equal_approx(
 			caminando * ReglasDelJugador.MULTIPLICADOR_DE_CORRER_CON_PESO, 1e-4
 		)
 		assert_float(corriendo).is_greater(caminando)
 		assert_float(corriendo).is_less(caminando * ReglasDelJugador.MULTIPLICADOR_DE_CORRER)
-		assert_float(control.velocidad(Vector2(0.0, 1.0), false, pesado).length()).is_equal_approx(
-			caminando, 1e-4
+		(
+			assert_float(control.velocidad(adelante, false, mano[0], mano[1], mano[2]).length())
+			. is_equal_approx(caminando, 1e-4)
 		)
-	var livianos: Array[StringName] = [ReglasDeLaLimpieza.ID_DE_LA_MOPA, BOLSA_DE_BASURA.id]
+
+
+func test_correr_con_el_balde_vacio_o_una_caja_chica_no_frena() -> void:  # AC-PLY-193
+	var control := _control()
+	var libre := ReglasDelJugador.VELOCIDAD_DE_CAMINATA * ReglasDelJugador.MULTIPLICADOR_DE_CORRER
+	var adelante := Vector2(0.0, 1.0)
+	(
+		assert_float(
+			(
+				control
+				. velocidad(adelante, true, ReglasDeLaLimpieza.ID_DEL_BALDE, false, false)
+				. length()
+			)
+		)
+		. is_equal_approx(libre, 1e-4)
+	)
+	(
+		assert_float(
+			control.velocidad(adelante, true, CAJA_DE_REPOSICION.id, false, false).length()
+		)
+		. is_equal_approx(libre, 1e-4)
+	)
+
+
+func test_correr_con_lo_suelto_corre_como_con_la_mano_vacia() -> void:  # AC-PLY-193
+	var control := _control()
+	var libre := ReglasDelJugador.VELOCIDAD_DE_CAMINATA * ReglasDelJugador.MULTIPLICADOR_DE_CORRER
+	var livianos: Array[StringName] = [
+		ReglasDeLaLimpieza.ID_DE_LA_MOPA,
+		BOLSA_DE_BASURA.id,
+		CAJA_CHICA.id,
+		LATA.id,
+		UnidadDeProducto.new(Catalogo.todos()[0]).id,
+		Partida.PALANCA,
+		Partida.LLAVE,
+		Ticket.ID,
+	]
 	livianos.append_array(ReglasDeLaLimpieza.JABONES.keys())
 	for liviano: StringName in livianos:
-		assert_float(control.velocidad(Vector2(0.0, 1.0), true, liviano).length()).is_equal_approx(
-			caminando * ReglasDelJugador.MULTIPLICADOR_DE_CORRER, 1e-4
-		)
+		# El agua del balde y el tamaño de una caja no son de lo que no es ni balde ni caja.
+		for hecho: bool in [false, true]:
+			(
+				assert_float(
+					control.velocidad(Vector2(0.0, 1.0), true, liviano, hecho, hecho).length()
+				)
+				. is_equal_approx(libre, 1e-4)
+			)
 
 
 func test_agachado_correr_acelera_poco_y_una_sola_vez() -> void:  # AC-PLY-194
@@ -66,7 +116,9 @@ func test_agachado_correr_acelera_poco_y_una_sola_vez() -> void:  # AC-PLY-194
 		ReglasDelJugador.VELOCIDAD_DE_CAMINATA * ReglasDelJugador.MULTIPLICADOR_DE_CORRER
 	)
 	(
-		assert_float(control.velocidad(Vector2(0.0, 1.0), true, CAJA_DE_REPOSICION.id).length())
+		assert_float(
+			control.velocidad(Vector2(0.0, 1.0), true, CAJA_DE_REPOSICION.id, false, true).length()
+		)
 		. is_equal_approx(corriendo, 1e-4)
 	)
 
