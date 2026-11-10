@@ -20,10 +20,9 @@ La malla se rehace entera dentro de la misma caja que ocupaba la bolsa, y entra 
   dan la vuelta hasta el dorso. El grosor se cierra suave hacia arriba y hacia abajo, como una
   bolsa con aire, y no pasa del grosor de la bolsa anterior.
 - **Las costuras** son aletas planas arriba y abajo.
-- **La UV** sale del desplegado de cada textura: el frente, el dorso y los costados toman su
-  recorte, y las aletas el de la tapa y el de la base. Las texturas sin costados ni tapa usan el
-  borde del frente y del dorso. Los vértices se comparten entre recortes: la luz no marca la
-  costura de la UV.
+- **La UV** sale del desplegado de la textura: el frente, el dorso y los costados toman su
+  recorte, y las aletas el de la tapa y el de la base. Las dos texturas comparten el desplegado.
+  Los vértices se comparten entre recortes: la luz no marca la costura de la UV.
 
 ## Lo que cuesta
 
@@ -42,26 +41,18 @@ from lib.consola import configurar  # noqa: E402
 
 Rect = tuple[float, float, float, float]
 
-#: Los recortes del desplegado de cada textura, como (u0, u1, v0, v1). Medidos en la imagen, con
-#: un margen de 4 milésimas para que el borde negro del desplegado no se cuele.
-DESPLEGADOS: dict[str, dict[str, Rect]] = {
-    "chisitos2-convcol.001": {
-        "frente": (0.1388, 0.5032, 0.1499, 0.8206),
-        "dorso": (0.5423, 0.8668, 0.1499, 0.8206),
-        "izquierda": (0.0199, 0.1005, 0.1499, 0.8206),
-        "derecha": (0.9003, 0.9793, 0.1499, 0.8206),
-        "tapa": (0.1507, 0.8485, 0.8660, 0.9657),
-        "base": (0.1467, 0.8517, 0.0263, 0.1108),
-    },
-    # Las papas traen sólo frente y dorso, a sangre: los costados y las aletas usan sus bordes.
-    "snackpapas1-convcol.002": {
-        "frente": (0.0, 0.5, 0.03, 0.97),
-        "dorso": (0.5, 1.0, 0.03, 0.97),
-        "izquierda": (0.0, 0.03, 0.03, 0.97),
-        "derecha": (0.47, 0.5, 0.03, 0.97),
-        "tapa": (0.0, 1.0, 0.97, 1.0),
-        "base": (0.0, 1.0, 0.0, 0.03),
-    },
+#: Las bolsas que se arman: una unidad de cada producto, que comparte la malla con las demás.
+BOLSAS = ("chisitos2-convcol.001", "snackpapas1-convcol.002")
+
+#: Los recortes del desplegado, como (u0, u1, v0, v1). Las dos texturas lo comparten. Medidos en
+#: la imagen, con un margen de 4 milésimas para que el borde negro del desplegado no se cuele.
+DESPLEGADO: dict[str, Rect] = {
+    "frente": (0.1388, 0.5032, 0.1499, 0.8206),
+    "dorso": (0.5423, 0.8668, 0.1499, 0.8206),
+    "izquierda": (0.0199, 0.1005, 0.1499, 0.8206),
+    "derecha": (0.9003, 0.9793, 0.1499, 0.8206),
+    "tapa": (0.1507, 0.8485, 0.8660, 0.9657),
+    "base": (0.1467, 0.8517, 0.0263, 0.1108),
 }
 
 ANILLOS = 11
@@ -214,9 +205,9 @@ def armar(objeto, desplegado: dict[str, Rect]) -> tuple[int, int]:
 
 def main() -> None:
     configurar()
-    for nombre, desplegado in DESPLEGADOS.items():
+    for nombre in BOLSAS:
         objeto = bpy.data.objects[nombre]
-        antes, despues = armar(objeto, desplegado)
+        antes, despues = armar(objeto, DESPLEGADO)
         print(f"{nombre}: {antes} -> {despues} triángulos, en {objeto.data.users} unidades")
     if "--aplicar" in sys.argv:
         bpy.ops.wm.save_mainfile()

@@ -5,15 +5,15 @@
   {
    "archivo": "etiquetas_bc1.png",
    "ancho": 3264,
-   "alto": 3088,
+   "alto": 3120,
    "formato": "bc1",
-   "huella": "6661c02864c3626f570dedae76a8bab249a437990cfd4375fcfe7e1edcf49442",
+   "huella": "a39faea2b49e53904cae3a979e2eeaf7f8f432a75d0963786f0b3aa8e0e01594",
    "entradas": [
     {
      "ruta": "source/textures/props/jabón liquido amarillo.png",
      "ancho": 1024,
      "alto": 1024,
-     "huella": "0053ea0ef88667441f6c043e497ab3e365f780a1e46b7f624d4adca2c971c0bf",
+     "huella": "b500ee97bcbc3be4a14f01f84b465179445ae7e273eb9959ba900db5c78fcdd2",
      "x": 16,
      "y": 16
     },
@@ -21,7 +21,7 @@
      "ruta": "source/textures/props/jabón liquido rosa.png",
      "ancho": 1024,
      "alto": 1024,
-     "huella": "edb63a4b74e7065acf7a4c83176297c98ff64128b188b86b5f9c56efee2f6eff",
+     "huella": "df4064441c396b8fdcaa8b108aedb1bd765ab338f071d7bddba6f51b36552586",
      "x": 1072,
      "y": 16
     },
@@ -66,11 +66,19 @@
      "y": 1072
     },
     {
+     "ruta": "source/products-textured/Lay´snt´t/Lay´snt´t completo_1.png",
+     "ancho": 512,
+     "alto": 512,
+     "huella": "8fc0c338ec77fb1b566969da9b1517e7ead5cd04cb03f01983ff7407f97d5d0d",
+     "x": 2192,
+     "y": 1072
+    },
+    {
      "ruta": "source/products-textured/Marolini/fideos marolini.png",
      "ancho": 512,
      "alto": 512,
      "huella": "edae8c6d953628bf720480eaa5edbd3ccdb69404da0721300094985bcbf604f9",
-     "x": 2192,
+     "x": 2736,
      "y": 1072
     },
     {
@@ -78,15 +86,15 @@
      "ancho": 512,
      "alto": 512,
      "huella": "8a0146b3e601caf240c7f76cc1d93a164655fa97207720ed9955a20eefe1a058",
-     "x": 2736,
-     "y": 1072
+     "x": 16,
+     "y": 1616
     },
     {
      "ruta": "source/products-textured/cereales/frot lups.png",
      "ancho": 512,
      "alto": 512,
      "huella": "241475d2f5e9e14d00099e25714bbeb17e96f56651cd040cb25f2f8bba5760a7",
-     "x": 16,
+     "x": 560,
      "y": 1616
     },
     {
@@ -94,7 +102,7 @@
      "ancho": 512,
      "alto": 512,
      "huella": "b378ac2a77e85edd0e6818586172f32c140eb424856a4b63dc036d88d44e3317",
-     "x": 560,
+     "x": 1104,
      "y": 1616
     },
     {
@@ -102,7 +110,7 @@
      "ancho": 512,
      "alto": 512,
      "huella": "9beb96e41815fb3544e1560957a368c58fb68c96875b6fedeb16abd8657cb6bd",
-     "x": 1104,
+     "x": 1648,
      "y": 1616
     },
     {
@@ -110,7 +118,7 @@
      "ancho": 512,
      "alto": 512,
      "huella": "f7efaf9f7f691c5360dc7a64ab49de5c0e2e886a529e2b68d1f74d379e052249",
-     "x": 1648,
+     "x": 2192,
      "y": 1616
     },
     {
@@ -118,23 +126,23 @@
      "ancho": 512,
      "alto": 512,
      "huella": "8a64ba0bc13c7cd9ccefccac1938370b955d4d3ad4354b18594edf844c3ab78f",
-     "x": 2192,
+     "x": 2736,
      "y": 1616
     },
     {
      "ruta": "source/textures/props/jabón liquido.png",
      "ancho": 512,
      "alto": 512,
-     "huella": "37ed4d20a5e62aaecd5e2a5450a21dbf33b4c6c7de745344ce400314db6b93ea",
-     "x": 2736,
-     "y": 1616
+     "huella": "7afe0084d17e8d88b21035588d6eebafc21248c4ce19068b2a3f835f8b7772f3",
+     "x": 16,
+     "y": 2160
     },
     {
      "ruta": "source/textures/props/jorgillata.png",
      "ancho": 512,
      "alto": 512,
      "huella": "1160282acc809e78ad3b04ddeb2cabcf95e7fef6e83b4cd276d46cb061b99034",
-     "x": 16,
+     "x": 560,
      "y": 2160
     },
     {
@@ -142,7 +150,7 @@
      "ancho": 160,
      "alto": 512,
      "huella": "f4ec249e1db59940e977c5ca7beabed4b2bbf2783cd3485e11704aee7f5c45c0",
-     "x": 560,
+     "x": 1104,
      "y": 2160
     },
     {
@@ -150,7 +158,7 @@
      "ancho": 160,
      "alto": 512,
      "huella": "9c332cd44ff6cfade9770e896d39987d94efd8db2d681657c1b75b623c78cca0",
-     "x": 752,
+     "x": 1296,
      "y": 2160
     },
     {
@@ -158,7 +166,7 @@
      "ancho": 160,
      "alto": 512,
      "huella": "990f063b8946cdb9009589c5b975a324d2556f3a3d4bfa6b36ada3f24b75a72c",
-     "x": 944,
+     "x": 1488,
      "y": 2160
     },
     {
@@ -166,7 +174,7 @@
      "ancho": 512,
      "alto": 493,
      "huella": "3d126f771ecaf8a0219ad191d7a66b95b262254111c06dc2def22878888ad788",
-     "x": 1136,
+     "x": 1680,
      "y": 2160
     },
     {
@@ -174,7 +182,7 @@
      "ancho": 512,
      "alto": 462,
      "huella": "44351d869d76ee6c6d859e9b6fe10b2e7c23f6496033f092d3a8cdd72ce69444",
-     "x": 1680,
+     "x": 2224,
      "y": 2160
     },
     {
@@ -182,15 +190,15 @@
      "ancho": 1024,
      "alto": 385,
      "huella": "30c7502bb833b7f6f5f9d97e85ed5bddd9d45bb0617b65b607e2214513d0f86c",
-     "x": 2224,
-     "y": 2160
+     "x": 16,
+     "y": 2704
     },
     {
      "ruta": "source/textures/props/soap-labels/jabon_azul_sin_margenes.png",
      "ancho": 1024,
      "alto": 362,
      "huella": "48223fcb42f583455e7fb097724d78af7c2f9d3603386142c904f7df163ee683",
-     "x": 16,
+     "x": 1072,
      "y": 2704
     },
     {
@@ -198,7 +206,7 @@
      "ancho": 1024,
      "alto": 334,
      "huella": "fa4c68cf53ab2041c492768b25641c0335af69451311e4d77f4d21c94ed2d2f1",
-     "x": 1072,
+     "x": 2128,
      "y": 2704
     }
    ]
@@ -206,9 +214,9 @@
   {
    "archivo": "etiquetas_bc3.png",
    "ancho": 1088,
-   "alto": 2912,
+   "alto": 2848,
    "formato": "bc3",
-   "huella": "35810c7fa01595c821de9f5814ee5d96b4ecfc3b5eecbb4e5a769c7d7640087c",
+   "huella": "aca96d72bf3f5f5d2a18252bb65c52cea7d4d73535fab6283d73348654b12d8a",
    "entradas": [
     {
      "ruta": "source/products-cam/amargadito/amargadito completo.png",
@@ -275,19 +283,11 @@
      "y": 1472
     },
     {
-     "ruta": "source/products-textured/Lay´snt´t/Lay´snt´t completo_1.png",
-     "ancho": 512,
-     "alto": 363,
-     "huella": "50f10f4df88a4d38f47348a66103f03435b054d85c7d0edb717b9a92f2f44c17",
-     "x": 16,
-     "y": 1888
-    },
-    {
      "ruta": "source/products-cam/NUEVOS 22-9/Mayonchis/mayonchis@300x.png",
      "ancho": 512,
      "alto": 330,
      "huella": "037c6fd8dace2314500f7f0d347b0357795f24daeb975d3d7a13586a8e7fb53e",
-     "x": 560,
+     "x": 16,
      "y": 1888
     },
     {
@@ -295,32 +295,32 @@
      "ancho": 512,
      "alto": 302,
      "huella": "f61c367eb6b4ee6002e6a0a9633229fd123a9619be9a14c818e64e9d76b203fd",
-     "x": 16,
-     "y": 2288
+     "x": 560,
+     "y": 1888
     },
     {
      "ruta": "source/products-cam/petisas/petisas completo.png",
      "ancho": 512,
      "alto": 283,
      "huella": "58de91eb293af8c9f82e9c7c00ee357109b60a2d285974ce288058cff5680886",
-     "x": 560,
-     "y": 2288
+     "x": 16,
+     "y": 2256
     },
     {
      "ruta": "source/products-textured/Actroncito/Actroncito completo.png",
      "ancho": 512,
      "alto": 270,
      "huella": "271fcadb5a8bb9508cae877ff577dcaa15e8535a6f821c4d55caecb286c5742b",
-     "x": 16,
-     "y": 2624
+     "x": 560,
+     "y": 2256
     },
     {
      "ruta": "source/products-cam/macumbas/macumbas completo.png",
      "ancho": 512,
      "alto": 241,
      "huella": "1efede55fccdd3de568be9536beb92885aa586bdb88231d38e3c68831dac407c",
-     "x": 560,
-     "y": 2624
+     "x": 16,
+     "y": 2576
     }
    ]
   },
