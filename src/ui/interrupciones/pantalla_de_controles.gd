@@ -53,9 +53,9 @@ const SOBRESALE_EL_RECUADRO := 4.0
 const SEPARACION_DE_LAS_COLUMNAS := 64
 const ANCHO_DE_LA_PESTANA := 520.0
 const ALTO_DE_LA_PESTANA := 60.0
-const ALTO_DE_LA_FILA := 52.0
+const ALTO_DE_LA_FILA := 58.0
 ## Entre un renglón y el siguiente.
-const SEPARACION_DE_LAS_FILAS := 11
+const SEPARACION_DE_LAS_FILAS := 9
 ## Entre las pestañas y la cabecera de las columnas. La tinta del texto no llena su renglón: con
 ## esta separación el margen se ve igual a los otros tres.
 const SEPARACION_DE_LA_CABECERA := 20

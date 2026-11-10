@@ -16,13 +16,13 @@ enum Forma { TECLA, CRUZ, CIRCULO, CUADRADO, TRIANGULO, PILDORA, PALANCA, CRUCET
 const TEMA := preload("res://assets/ui/manada/tema.tres")
 ## El tipo del tema con que Configuraciones escribe sus nombres: de ahí sale el tamaño de la letra.
 const TIPO_DEL_TEXTO := &"TextoDelMenu"
-const ALTO := 46.0
+## Lo que mide una tecla de alto, y con ella el círculo más grande que entra en una celda.
+const ALTO := 58.0
 const MARGEN_DEL_TEXTO := 22.0
-## El texto de una píldora y la letra de una palanca van más chicos que el de una tecla, para que
-## no toquen el contorno. En una palanca la letra no pasa de esta parte del círculo, y un nombre
-## largo, como L3, se achica hasta entrar.
-const ESCALA_DE_LA_LETRA_EN_EL_CONTORNO := 0.6
-const ANCHO_DEL_TEXTO_EN_LA_PALANCA := 0.6
+## Lo que separa el borde de un círculo o de una píldora de la tinta de su texto: el texto no se
+## achica, el contorno crece hasta dejar este aire.
+const AIRE_DEL_TEXTO := 5.0
+const GROSOR_DEL_BORDE := 2
 const FORMAS_QUE_LLENAN: Array[Forma] = [Forma.TECLA, Forma.PILDORA, Forma.RANURA_LIBRE]
 ## Cuánto del alto de la tecla ocupa un glifo que va dentro de ella.
 const ESCALA_EN_LA_TECLA := 0.76
@@ -125,9 +125,9 @@ func _draw() -> void:
 	if en_tecla:
 		draw_style_box(_caja(4), marco)
 		if forma == Forma.PILDORA:
-			_escribir(marco, texto)
+			_escribir(texto)
 			return
-		marco = contorno_dibujado()
+	marco = contorno_dibujado()
 	match forma:
 		Forma.TECLA:
 			_dibujar_tecla(marco)
@@ -148,8 +148,8 @@ func _tamano_natural() -> Vector2:
 		Forma.TECLA, Forma.PILDORA:
 			if flecha != Vector2.ZERO:
 				return Vector2(ALTO, ALTO)
-			var margen := ALTO if texto_va_en_un_contorno() else MARGEN_DEL_TEXTO
-			return Vector2(maxf(ALTO, medida_del_texto().x + margen), ALTO)
+			var margen := ALTO if forma == Forma.PILDORA and not en_tecla else MARGEN_DEL_TEXTO
+			return Vector2(maxf(ALTO, _tinta_del_texto().size.x + margen), ALTO)
 	return Vector2(ALTO, ALTO)
 
 
@@ -159,36 +159,15 @@ static func tamano_de_la_letra() -> int:
 	return TEMA.get_font_size(&"font_size", TIPO_DEL_TEXTO)
 
 
-## Si el texto va adentro de un contorno que no es una tecla: una píldora suelta o una palanca.
-func texto_va_en_un_contorno() -> bool:
-	return forma == Forma.PALANCA or (forma == Forma.PILDORA and not en_tecla)
-
-
-## El tamaño de letra con que se dibuja `texto`.
-func tamano_de_la_letra_dibujada() -> int:
-	var en_el_contorno := int(ALTO * ESCALA_DE_LA_LETRA_EN_EL_CONTORNO)
-	if forma == Forma.PALANCA:
-		var cabe := contorno_dibujado().size.y * ANCHO_DEL_TEXTO_EN_LA_PALANCA
-		while en_el_contorno > 1 and _medida_con(en_el_contorno).x > cabe:
-			en_el_contorno -= 1
-		return en_el_contorno
-	if texto_va_en_un_contorno():
-		return en_el_contorno
-	return tamano_de_la_letra()
-
-
-## Lo que ocupa `texto` tal como se dibuja.
-func medida_del_texto() -> Vector2:
-	return _medida_con(tamano_de_la_letra_dibujada())
-
-
-func _medida_con(tamano: int) -> Vector2:
-	return get_theme_default_font().get_string_size(texto, HORIZONTAL_ALIGNMENT_LEFT, -1.0, tamano)
-
-
-## El rectángulo de la forma redonda o de la píldora: el que su borde recorre.
+## El rectángulo de la forma redonda o de la píldora: el que su borde recorre. El círculo de una
+## palanca crece con el texto hasta dejarle `AIRE_DEL_TEXTO`, y queda centrado en su marco.
 func contorno_dibujado() -> Rect2:
 	var marco := marco_dibujado()
+	if forma == Forma.PALANCA:
+		var diametro := maxf(
+			ALTO * ESCALA_EN_LA_TECLA, 2.0 * (_esquina_del_texto() + AIRE_DEL_TEXTO)
+		)
+		return Rect2(marco.get_center() - Vector2.ONE * diametro / 2.0, Vector2.ONE * diametro)
 	if not en_tecla or forma == Forma.PILDORA:
 		return marco
 	return Rect2(
@@ -197,32 +176,67 @@ func contorno_dibujado() -> Rect2:
 	)
 
 
+## La distancia del centro del texto a su esquina más lejana.
+func _esquina_del_texto() -> float:
+	return (_tinta_del_texto().size / 2.0).length()
+
+
+## Dónde cae la tinta de `texto` en el glifo: centrada en su contorno, en los dos ejes. Es la caja
+## de lo que se ve, no la de la línea de la fuente, que deja más aire arriba que abajo.
+func rect_del_texto() -> Rect2:
+	var tinta := _tinta_del_texto()
+	var centro := _marco_del_texto().get_center()
+	return Rect2((centro - tinta.size / 2.0).round(), tinta.size)
+
+
+## El marco en que se centra el texto: el contorno, o el rectángulo de la tecla.
+func _marco_del_texto() -> Rect2:
+	if en_tecla and forma != Forma.PALANCA:
+		return marco_dibujado()
+	return contorno_dibujado()
+
+
+## La caja de los trazos de `texto` con el origen en el inicio de su línea de base: lo que se ve,
+## sin el aire que la fuente deja arriba, abajo y a los lados de cada letra.
+func _tinta_del_texto() -> Rect2:
+	var fuente := get_theme_default_font()
+	var servidor := TextServerManager.get_primary_interface()
+	var tamano := tamano_de_la_letra()
+	var tinta := Rect2()
+	var hay_tinta := false
+	var avance := 0.0
+	for letra: String in texto:
+		var codigo := letra.unicode_at(0)
+		var rid: RID = fuente.get_rids()[0]
+		var trazo: Dictionary = servidor.font_get_glyph_contours(
+			rid, tamano, servidor.font_get_glyph_index(rid, tamano, codigo, 0)
+		)
+		for punto: Vector3 in trazo.get("points", PackedVector3Array()):
+			var en_la_linea := Vector2(avance + punto.x, punto.y)
+			tinta = tinta.expand(en_la_linea) if hay_tinta else Rect2(en_la_linea, Vector2.ZERO)
+			hay_tinta = true
+		avance += fuente.get_char_size(codigo, tamano).x
+	return tinta
+
+
 func _caja(radio: int) -> StyleBoxFlat:
 	var caja := StyleBoxFlat.new()
 	caja.bg_color = COLOR_DEL_FONDO
 	caja.border_color = COLOR_DEL_BORDE
-	caja.set_border_width_all(2)
+	caja.set_border_width_all(GROSOR_DEL_BORDE)
 	caja.set_corner_radius_all(radio)
 	return caja
 
 
-func _escribir(marco: Rect2, lo_escrito: String) -> void:
-	var fuente := get_theme_default_font()
-	var tamano_de_la_letra := tamano_de_la_letra_dibujada()
-	var medida := fuente.get_string_size(
-		lo_escrito, HORIZONTAL_ALIGNMENT_LEFT, -1.0, tamano_de_la_letra
-	)
-	var base := Vector2(
-		marco.position.x + (marco.size.x - medida.x) / 2.0,
-		marco.position.y + (marco.size.y + fuente.get_ascent(tamano_de_la_letra)) / 2.0 - 2.0
-	)
+func _escribir(lo_escrito: String) -> void:
+	var tinta := _tinta_del_texto()
 	draw_string(
-		fuente,
-		base,
+		get_theme_default_font(),
+		rect_del_texto().position - tinta.position,
 		lo_escrito,
 		HORIZONTAL_ALIGNMENT_LEFT,
 		-1.0,
-		tamano_de_la_letra,
+		tamano_de_la_letra(),
 		COLOR_DEL_BORDE
 	)
 
@@ -230,7 +244,7 @@ func _escribir(marco: Rect2, lo_escrito: String) -> void:
 func _dibujar_tecla(marco: Rect2) -> void:
 	draw_style_box(_caja(4), marco)
 	if flecha == Vector2.ZERO:
-		_escribir(marco, texto)
+		_escribir(texto)
 		return
 	var c := marco.get_center()
 	var largo := marco.size.y * 0.22
@@ -249,14 +263,14 @@ func _dibujar_tecla(marco: Rect2) -> void:
 
 func _dibujar_pildora(marco: Rect2) -> void:
 	draw_style_box(_caja(int(marco.size.y / 2.0)), marco)
-	_escribir(marco, texto)
+	_escribir(texto)
 
 
 func _dibujar_palanca(marco: Rect2) -> void:
 	var centro := marco.get_center()
 	draw_circle(centro, marco.size.y / 2.0, COLOR_DEL_FONDO)
 	draw_arc(centro, marco.size.y / 2.0 - 1.0, 0.0, TAU, 32, COLOR_DEL_BORDE, 2.0)
-	_escribir(marco, texto)
+	_escribir(texto)
 
 
 func _dibujar_cruceta(marco: Rect2) -> void:

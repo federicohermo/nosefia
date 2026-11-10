@@ -148,10 +148,6 @@ func test_todo_el_texto_tiene_el_tamano_de_letra_de_configuraciones() -> void:  
 			tamanos.append((etiqueta as Label).get_theme_font_size("font_size"))
 		for boton: Node in pantalla.find_children("*", "Button", true, false):
 			tamanos.append((boton as Button).get_theme_font_size("font_size"))
-		for nodo: Node in pantalla.find_children("*", "GlifoDeEntrada", true, false):
-			var glifo := nodo as GlifoDeEntrada
-			if not glifo.texto.is_empty() and not glifo.texto_va_en_un_contorno():
-				tamanos.append(glifo.tamano_de_la_letra_dibujada())
 	assert_int(tamanos.size()).is_greater(20)
 	for tamano: int in tamanos:
 		assert_int(tamano).is_equal(vara)

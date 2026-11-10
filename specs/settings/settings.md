@@ -351,7 +351,7 @@ con sus colores de PlayStation; L1, R1 y START como su texto; los joysticks, com
 R; la cruceta, con su forma. Cada glifo de un botón de una celda o de un renglón FIJO DEBE ir
 centrado dentro del rectángulo de una tecla, del mismo ancho y alto que las teclas de TECLADO Y
 MOUSE. L1 y R1 junto a las pestañas se dibujan como píldoras. El texto de una píldora y la letra de un
-círculo DEBEN quedar separados de su contorno, con un margen visible y parejo. DEBE dibujar las teclas como teclas
+círculo DEBEN ir en el tamaño de letra de la pantalla, centrados en su contorno y separados de él, con un margen visible y parejo. DEBE dibujar las teclas como teclas
 con borde, y cada clic del mouse
 también como tecla, con su nombre en letras —CLICK IZQ, CLICK DER— y sin dibujo del
 mouse. Una secundaria vacía DEBE dibujarse como un recuadro punteado tenue, del ancho de las teclas, que arranca en el mismo borde izquierdo que las teclas de su columna.
@@ -667,8 +667,8 @@ pestaña JOYSTICK ENTONCES Movimiento, Visión y Pausa la llevan y no se pueden 
 DADO la pestaña JOYSTICK ENTONCES el botón de cada acción es un glifo y no un texto: X, CÍRCULO,
 CUADRADO y TRIÁNGULO con su color de PlayStation, L1 y R1, y START en Pausa; cada uno, igual que los
 glifos de Movimiento y Visión, va centrado dentro de un rectángulo del mismo ancho y alto que una
-tecla de TECLADO Y MOUSE, y la letra de Movimiento y Visión, igual que L1 y R1 junto a las pestañas, no toca su
-contorno. DADO la
+tecla de TECLADO Y MOUSE, y la letra de Movimiento y Visión, igual que L1 y R1 junto a las pestañas, va centrada en su
+contorno, sin tocarlo. DADO la
 pestaña TECLADO Y MOUSE ENTONCES una tecla es una tecla con borde y cada clic, una tecla con su nombre en letras, distinto
 del clic izquierdo al derecho. DADO un botón de joystick sin glifo propio
 ENTONCES se lee por su nombre. DADO cada pestaña ENTONCES cada tecla y cada ranura vacía miden lo mismo, el ancho de
