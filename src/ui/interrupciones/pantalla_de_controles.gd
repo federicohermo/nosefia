@@ -8,8 +8,9 @@
 ## Todo el texto va en el tamaño de Configuraciones, `GlifoDeEntrada.tamano_de_la_letra()`:
 ## nombres, cabeceras y teclas. Todas las teclas miden lo mismo, el ancho de la más ancha, un clic
 ## con su nombre, y arrancan en el borde izquierdo de su columna, igual que la cabecera; el
-## recuadro del foco enmarca la tecla. La lista reparte el alto del área entre sus renglones y se
-## centra en el ancho, igual que las pestañas.
+## recuadro del foco enmarca la tecla. Los renglones van pegados a la cabecera, con el mismo paso en
+## las dos pestañas, y la lista se centra en el ancho, igual que las pestañas. El alto que sobra
+## queda debajo.
 ##
 ## Abajo, a la izquierda de VOLVER, sólo se ve el mensaje de lo que pasa ahora: qué entrada espera
 ## la celda elegida, o el aviso de una asignación que no entró.
@@ -53,6 +54,8 @@ const SEPARACION_DE_LAS_COLUMNAS := 64
 const ANCHO_DE_LA_PESTANA := 520.0
 const ALTO_DE_LA_PESTANA := 60.0
 const ALTO_DE_LA_FILA := 52.0
+## Entre un renglón y el siguiente.
+const SEPARACION_DE_LAS_FILAS := 11
 ## Entre las pestañas y la cabecera de las columnas. La tinta del texto no llena su renglón: con
 ## esta separación el margen se ve igual a los otros tres.
 const SEPARACION_DE_LA_CABECERA := 20
@@ -422,14 +425,12 @@ func _aviso_sin_el_joystick() -> Label:
 
 
 ## La página con su cabecera en un renglón: a la izquierda lo que acompaña a los nombres y, a la
-## derecha, el título de cada columna. Ocupa el alto del área: los renglones miden lo mismo y
-## entre uno y otro hay un resorte que reparte lo que sobra.
+## derecha, el título de cada columna. Los renglones miden lo mismo y los separa lo mismo.
 func _bloque(a_la_izquierda: Control, a_la_derecha: Array[Control] = []) -> VBoxContainer:
 	var bloque := VBoxContainer.new()
 	bloque.theme_type_variation = &"ColumnaDelMenu"
 	bloque.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
-	bloque.size_flags_vertical = Control.SIZE_EXPAND_FILL
-	bloque.add_theme_constant_override("separation", 0)
+	bloque.add_theme_constant_override("separation", SEPARACION_DE_LAS_FILAS)
 	var encabezado := HBoxContainer.new()
 	encabezado.add_theme_constant_override("separation", SEPARACION_DE_LAS_COLUMNAS)
 	encabezado.custom_minimum_size.y = ALTO_DE_LA_FILA
@@ -451,7 +452,7 @@ func _bloque_del_teclado() -> VBoxContainer:
 		fila.add_child(_celda(accion, AsignacionDeControles.RANURA_SECUNDARIA))
 		if _primer_boton_del_teclado == null:
 			_primer_boton_del_teclado = boton_de(accion, AsignacionDeControles.RANURA_PRINCIPAL)
-		_agregar_la_fila(bloque, fila)
+		bloque.add_child(fila)
 	return bloque
 
 
@@ -459,14 +460,12 @@ func _bloque_del_joystick() -> VBoxContainer:
 	_aviso_del_joystick = _etiqueta("")
 	_aviso_del_joystick.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 	var bloque := _bloque(_aviso_del_joystick)
-	_agregar_la_fila(
-		bloque,
+	bloque.add_child(
 		_fila_fija(
 			TEXTO_DE_MOVIMIENTO, [GlifoDeEntrada.de_un_boton(GlifoDeEntrada.Forma.PALANCA, "L")]
 		)
 	)
-	_agregar_la_fila(
-		bloque,
+	bloque.add_child(
 		_fila_fija(TEXTO_DE_VISION, [GlifoDeEntrada.de_un_boton(GlifoDeEntrada.Forma.PALANCA, "R")])
 	)
 	for accion: StringName in AsignacionDeControles.ACCIONES_CON_BOTON:
@@ -475,24 +474,14 @@ func _bloque_del_joystick() -> VBoxContainer:
 		fila.add_child(_hueco())
 		if _primer_boton_del_joystick == null:
 			_primer_boton_del_joystick = boton_de(accion, AsignacionDeControles.RANURA_DEL_JOYSTICK)
-		_agregar_la_fila(bloque, fila)
-	_agregar_la_fila(
-		bloque,
+		bloque.add_child(fila)
+	bloque.add_child(
 		_fila_fija(
 			AsignacionDeControles.nombre_de_la_accion(AsignacionDeControles.PAUSA),
 			[GlifoDeEntrada.de_un_boton(GlifoDeEntrada.Forma.PILDORA, TEXTO_DE_START)]
 		)
 	)
 	return bloque
-
-
-## Un renglón después del anterior, con un resorte en el medio: reparte el alto que sobra.
-func _agregar_la_fila(bloque: VBoxContainer, fila: HBoxContainer) -> void:
-	var resorte := Control.new()
-	resorte.size_flags_vertical = Control.SIZE_EXPAND_FILL
-	resorte.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	bloque.add_child(resorte)
-	bloque.add_child(fila)
 
 
 ## Abajo, debajo de la línea del pie y a la izquierda de VOLVER: no pisa la lista.

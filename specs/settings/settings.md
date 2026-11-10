@@ -335,8 +335,9 @@ Cada tecla dibujada, de una letra, una flecha o un clic, DEBE medir lo mismo: el
 más ancha, que es un clic con su nombre en letras. Una tecla angosta se estira a ese ancho, con su
 nombre centrado. En cada columna de una pestaña, PRINCIPAL y SECUNDARIA, todas las teclas y glifos
 DEBEN arrancar en el mismo borde izquierdo, y la cabecera de la columna también. El recuadro del
-foco DEBE enmarcar la tecla elegida con ese mismo ancho. La lista DEBE
-repartirse en el alto entre la cabecera y la línea del pie, con el mismo margen arriba y abajo, y la grilla —nombres y
+foco DEBE enmarcar la tecla elegida con ese mismo ancho. Los
+renglones DEBEN ir pegados a la cabecera, con el mismo paso en las dos pestañas y sin repartir el
+alto que sobra, que queda debajo de la lista sin llegar a la línea del pie, y la grilla —nombres y
 columnas— DEBE quedar centrada respecto de las pestañas. La pantalla DEBE decir qué entrada espera la
 celda elegida, y el aviso de una entrada que no se pudo asignar, en una línea debajo de la línea del
 pie, sin mover la grilla.
@@ -617,9 +618,9 @@ DADO la pantalla de controles abierta ENTONCES tiene las pestañas TECLADO Y MOU
 una con el dibujo de su dispositivo, y se ve el contenido de una sola. DADO TECLADO Y MOUSE
 CUANDO se elige JOYSTICK ENTONCES se ve el contenido de JOYSTICK y no el de TECLADO Y MOUSE, y al
 revés. DADO cada pestaña ENTONCES tiene una sola lista. DADO TECLADO Y MOUSE ENTONCES no tiene renglón de
-Visión, y DADO JOYSTICK, Visión va justo después de Movimiento. DADO cada pestaña ENTONCES su lista se
-reparte en el alto entre la cabecera y la línea del pie, con el mismo margen arriba y abajo, y queda
-centrada respecto de las pestañas.
+Visión, y DADO JOYSTICK, Visión va justo después de Movimiento. DADO cada pestaña ENTONCES sus renglones
+van pegados a la cabecera con el mismo paso, el alto que sobra queda debajo sin pisar la línea del
+pie, y la lista queda centrada respecto de las pestañas.
 
 ### AC-CFG-032 — La pestaña con la que se abre *(verifica BR-CFG-031)*
 
