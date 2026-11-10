@@ -46,6 +46,7 @@ func _preparar() -> void:
 			var animada := ShaderMaterial.new()
 			animada.shader = PINTURA
 			animada.set_shader_parameter("color", original.albedo_color)
+			animada.set_shader_parameter("textura", original.albedo_texture)
 			animada.set_shader_parameter("rugosidad", original.roughness)
 			animada.set_shader_parameter("metal", original.metallic)
 			_pinturas.append(animada)
