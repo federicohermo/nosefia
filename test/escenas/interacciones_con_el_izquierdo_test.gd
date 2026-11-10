@@ -48,7 +48,10 @@ func _mancha(almacen: Node3D) -> Node3D:
 	return null
 
 
-func _un_uso(almacen: Node3D, objeto: Node3D, objetivo: Node3D) -> void:
+## El gesto del par pide el uso; el contrario no pide nada ni suelta.
+func _un_uso(
+	almacen: Node3D, objeto: Node3D, objetivo: Node3D, gesto_primario: bool = true
+) -> void:
 	_agarrar(almacen, objeto)
 	var jugador: Node3D = almacen.get("_jugador")
 	var agarre: Agarre = almacen.get("_agarre")
@@ -58,10 +61,11 @@ func _un_uso(almacen: Node3D, objeto: Node3D, objetivo: Node3D) -> void:
 	var soltado := func(nodo: Node3D) -> void: soltados.append(nodo)
 	jugador.uso_pedido.connect(pedido)
 	agarre.objeto_soltado.connect(soltado)
-	_accion(almacen, objetivo, false)
+	_accion(almacen, objetivo, not gesto_primario)
 	assert_array(pedidos).is_empty()
+	assert_array(soltados).is_empty()
 	assert_object(agarre.cuerpo_sostenido()).is_same(objeto)
-	_accion(almacen, objetivo, true)
+	_accion(almacen, objetivo, gesto_primario)
 	assert_array(pedidos).contains_exactly([objetivo])
 	assert_array(soltados).is_empty()
 	assert_object(agarre.cuerpo_sostenido()).is_same(objeto)
@@ -69,7 +73,7 @@ func _un_uso(almacen: Node3D, objeto: Node3D, objetivo: Node3D) -> void:
 	agarre.objeto_soltado.disconnect(soltado)
 
 
-func test_los_seis_pares_ejecutan_un_uso_y_el_derecho_ninguno() -> void:  # AC-CLN-067 AC-PLY-097
+func test_los_seis_pares_usan_su_gesto_y_el_otro_no() -> void:  # AC-CLN-067 AC-PLY-097
 	var almacen := await _abrir()
 	var balde: Node3D = almacen.get_node("Objetos/Balde")
 	var mopa: Node3D = almacen.get_node("Objetos/Mopa")
@@ -95,7 +99,7 @@ func test_los_seis_pares_ejecutan_un_uso_y_el_derecho_ninguno() -> void:  # AC-C
 	assert_int(limpiador.piso().mopa().agua()).is_equal(ReglasDeLaLimpieza.Agua.AMARILLO)
 	var mancha := _mancha(almacen)
 	assert_object(mancha).is_not_null()
-	_un_uso(almacen, mopa, mancha)
+	_un_uso(almacen, mopa, mancha, false)
 	assert_bool(limpiador.piso().mancha_de(PisoDelLocal.Lugar.ENTRADA).esta_limpia()).is_true()
 	_un_uso(almacen, mopa, inodoro)
 	assert_int(limpiador.piso().mopa().agua()).is_equal(ReglasDeLaLimpieza.Agua.LIMPIA)
@@ -122,16 +126,16 @@ func test_rechazar_conserva_util_agua_y_carga() -> void:  # AC-CLN-068 AC-PLY-09
 	_un_uso(almacen, mopa, balde)
 	_un_uso(almacen, balde, inodoro)
 	_un_uso(almacen, amarillo, balde)
-	_un_uso(almacen, mopa, _mancha(almacen))
+	_un_uso(almacen, mopa, _mancha(almacen), false)
 	_un_uso(almacen, balde, lavatorio)
 	_un_uso(almacen, mopa, balde)
-	_un_uso(almacen, mopa, _mancha(almacen))
+	_un_uso(almacen, mopa, _mancha(almacen), false)
 	_un_uso(almacen, balde, lavatorio)
 	_un_uso(almacen, azul, balde)
 	_un_uso(almacen, amarillo, balde)
 	_un_uso(almacen, mopa, balde)
 	var carga := limpiador.piso().mopa().carga_restante()
-	_un_uso(almacen, mopa, _mancha(almacen))
+	_un_uso(almacen, mopa, _mancha(almacen), false)
 	assert_float(limpiador.piso().mopa().carga_restante()).is_equal(carga)
 	assert_int(limpiador.piso().balde().agua()).is_equal(ReglasDeLaLimpieza.Agua.AZUL)
 	assert_bool(limpiador.piso().mancha_de(PisoDelLocal.Lugar.ENTRADA).esta_limpia()).is_false()

@@ -353,7 +353,7 @@ func _limpiar(almacen: Node3D) -> void:
 			_usar_sobre(jugador, balde)
 			await _enfocar_mancha(jugador, mancha)
 			var clic := InputEventMouseButton.new()
-			clic.button_index = MOUSE_BUTTON_LEFT
+			clic.button_index = MOUSE_BUTTON_RIGHT
 			clic.pressed = true
 			get_viewport().push_input(clic)
 			(
