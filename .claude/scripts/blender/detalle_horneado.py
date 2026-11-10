@@ -1,6 +1,6 @@
 """Las capas que se hornean desde la malla para pintar detalle en el color de un objeto.
 
-Lo usan `texturizar_utiles.py` y `texturizar_bidones.py`. Cada capa sale de Cycles como una
+Lo usa `texturizar_utiles.py`. Cada capa sale de Cycles como una
 emisión, en la UV del objeto, y vuelve como una matriz en lineal. Quien llama decide cómo se
 mezclan. La copia que se hornea trae el color de cada cara en el atributo `color_base`.
 """
