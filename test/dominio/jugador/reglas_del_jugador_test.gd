@@ -99,6 +99,9 @@ func test_agachado_se_camina_mas_lento_que_de_pie_y_no_se_queda_quieto() -> void
 
 func test_correr_acelera_mas_que_caminar_y_con_peso_acelera_menos() -> void:  # AC-PLY-193
 	assert_float(ReglasDelJugador.MULTIPLICADOR_DE_CORRER_CON_PESO).is_greater(1.0)
-	assert_float(ReglasDelJugador.MULTIPLICADOR_DE_CORRER_CON_PESO).is_less(
+	assert_float(ReglasDelJugador.MULTIPLICADOR_DE_CORRER_INTERMEDIO).is_greater(
+		ReglasDelJugador.MULTIPLICADOR_DE_CORRER_CON_PESO
+	)
+	assert_float(ReglasDelJugador.MULTIPLICADOR_DE_CORRER_INTERMEDIO).is_less(
 		ReglasDelJugador.MULTIPLICADOR_DE_CORRER
 	)

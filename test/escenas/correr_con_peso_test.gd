@@ -1,4 +1,5 @@
-## Qué frena al correr en el almacén real: la caja grande y el balde con agua, y nada más. La regla
+## Qué frena al correr en el almacén real: la caja grande y el balde con agua, y la chica menos.
+## La regla
 ## se prueba en `velocidad_al_correr_test.gd`; acá, que el cuerpo en la mano contesta lo que el
 ## dominio pregunta.
 extends GdUnitTestSuite
@@ -63,8 +64,10 @@ func test_el_balde_con_agua_frena_y_vacio_no() -> void:  # AC-PLY-193
 	assert_float(_rapidez_corriendo()).is_equal_approx(libre, 1e-3)
 
 
-func test_la_caja_grande_frena_y_la_chica_no() -> void:  # AC-PLY-193
-	var libre := ReglasDelJugador.VELOCIDAD_DE_CAMINATA * ReglasDelJugador.MULTIPLICADOR_DE_CORRER
+func test_la_caja_grande_frena_y_la_chica_frena_menos() -> void:  # AC-PLY-193
+	var intermedio := (
+		ReglasDelJugador.VELOCIDAD_DE_CAMINATA * ReglasDelJugador.MULTIPLICADOR_DE_CORRER_INTERMEDIO
+	)
 	var frenado := (
 		ReglasDelJugador.VELOCIDAD_DE_CAMINATA * ReglasDelJugador.MULTIPLICADOR_DE_CORRER_CON_PESO
 	)
@@ -86,6 +89,6 @@ func test_la_caja_grande_frena_y_la_chica_no() -> void:  # AC-PLY-193
 	)
 	var caja := _caja_de(chica)
 	_llevar(caja)
-	assert_float(_rapidez_corriendo()).is_equal_approx(libre, 1e-3)
+	assert_float(_rapidez_corriendo()).is_equal_approx(intermedio, 1e-3)
 	caja.set("producto", grande)
 	assert_float(_rapidez_corriendo()).is_equal_approx(frenado, 1e-3)

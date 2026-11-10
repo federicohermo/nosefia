@@ -34,73 +34,68 @@ func test_correr_camina_a_la_caminata_por_el_multiplicador() -> void:  # AC-PLY-
 	assert_vector(control.velocidad(Vector2.ZERO, true)).is_equal(Vector3.ZERO)
 
 
+## La velocidad corriendo adelante con lo que se pide en la mano.
+func _corriendo(
+	control: ControlDelJugador, mano: StringName, con_agua := false, grande := false
+) -> float:
+	return control.velocidad(Vector2(0.0, 1.0), true, mano, con_agua, grande).length()
+
+
 func test_correr_con_una_caja_grande_o_el_balde_con_agua_acelera_poco() -> void:  # AC-PLY-193
 	var control := _control()
 	var caminando := ReglasDelJugador.VELOCIDAD_DE_CAMINATA
-	var adelante := Vector2(0.0, 1.0)
-	var con_peso := {
-		"caja grande": [CAJA_DE_REPOSICION.id, false, true],
-		"balde con agua": [ReglasDeLaLimpieza.ID_DEL_BALDE, true, false],
+	var pesados := {
+		"caja grande": _corriendo(control, CAJA_DE_REPOSICION.id, false, true),
+		"balde con agua": _corriendo(control, ReglasDeLaLimpieza.ID_DEL_BALDE, true),
 	}
-	for cual: String in con_peso:
-		var mano: Array = con_peso[cual]
-		var corriendo := control.velocidad(adelante, true, mano[0], mano[1], mano[2]).length()
-		assert_float(corriendo).is_equal_approx(
+	for cual: String in pesados:
+		assert_float(pesados[cual]).is_equal_approx(
 			caminando * ReglasDelJugador.MULTIPLICADOR_DE_CORRER_CON_PESO, 1e-4
 		)
-		assert_float(corriendo).is_greater(caminando)
+	(
+		assert_float(
+			control.velocidad(Vector2(0.0, 1.0), false, CAJA_DE_REPOSICION.id, false, true).length()
+		)
+		. is_equal_approx(caminando, 1e-4)
+	)
+
+
+func test_correr_con_un_bidon_o_una_caja_pequena_acelera_algo_menos() -> void:  # AC-PLY-193
+	var control := _control()
+	var caminando := ReglasDelJugador.VELOCIDAD_DE_CAMINATA
+	var intermedios: Array[float] = [
+		_corriendo(control, CAJA_DE_REPOSICION.id, false, false),
+		_corriendo(control, CAJA_CHICA.id),
+	]
+	for jabon: StringName in ReglasDeLaLimpieza.JABONES:
+		intermedios.append(_corriendo(control, jabon))
+	for corriendo in intermedios:
+		assert_float(corriendo).is_equal_approx(
+			caminando * ReglasDelJugador.MULTIPLICADOR_DE_CORRER_INTERMEDIO, 1e-4
+		)
+		assert_float(corriendo).is_greater(
+			caminando * ReglasDelJugador.MULTIPLICADOR_DE_CORRER_CON_PESO
+		)
 		assert_float(corriendo).is_less(caminando * ReglasDelJugador.MULTIPLICADOR_DE_CORRER)
-		(
-			assert_float(control.velocidad(adelante, false, mano[0], mano[1], mano[2]).length())
-			. is_equal_approx(caminando, 1e-4)
-		)
 
 
-func test_correr_con_el_balde_vacio_o_una_caja_chica_no_frena() -> void:  # AC-PLY-193
+func test_correr_con_el_balde_vacio_o_lo_liviano_no_frena() -> void:  # AC-PLY-193
 	var control := _control()
 	var libre := ReglasDelJugador.VELOCIDAD_DE_CAMINATA * ReglasDelJugador.MULTIPLICADOR_DE_CORRER
-	var adelante := Vector2(0.0, 1.0)
-	(
-		assert_float(
-			(
-				control
-				. velocidad(adelante, true, ReglasDeLaLimpieza.ID_DEL_BALDE, false, false)
-				. length()
-			)
-		)
-		. is_equal_approx(libre, 1e-4)
-	)
-	(
-		assert_float(
-			control.velocidad(adelante, true, CAJA_DE_REPOSICION.id, false, false).length()
-		)
-		. is_equal_approx(libre, 1e-4)
-	)
-
-
-func test_correr_con_lo_suelto_corre_como_con_la_mano_vacia() -> void:  # AC-PLY-193
-	var control := _control()
-	var libre := ReglasDelJugador.VELOCIDAD_DE_CAMINATA * ReglasDelJugador.MULTIPLICADOR_DE_CORRER
+	assert_float(_corriendo(control, ReglasDeLaLimpieza.ID_DEL_BALDE)).is_equal_approx(libre, 1e-4)
 	var livianos: Array[StringName] = [
 		ReglasDeLaLimpieza.ID_DE_LA_MOPA,
 		BOLSA_DE_BASURA.id,
-		CAJA_CHICA.id,
 		LATA.id,
 		UnidadDeProducto.new(Catalogo.todos()[0]).id,
 		Partida.PALANCA,
 		Partida.LLAVE,
 		Ticket.ID,
 	]
-	livianos.append_array(ReglasDeLaLimpieza.JABONES.keys())
 	for liviano: StringName in livianos:
 		# El agua del balde y el tamaño de una caja no son de lo que no es ni balde ni caja.
 		for hecho: bool in [false, true]:
-			(
-				assert_float(
-					control.velocidad(Vector2(0.0, 1.0), true, liviano, hecho, hecho).length()
-				)
-				. is_equal_approx(libre, 1e-4)
-			)
+			assert_float(_corriendo(control, liviano, hecho, hecho)).is_equal_approx(libre, 1e-4)
 
 
 func test_agachado_correr_acelera_poco_y_una_sola_vez() -> void:  # AC-PLY-194

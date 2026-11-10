@@ -24,8 +24,14 @@ const MULTIPLICADOR_DE_CORRER := 1.4
 ## nada. Provisional hasta que el dueño lo juegue (OQ-PLY-007).
 const MULTIPLICADOR_DE_CORRER_CON_PESO := 1.2
 
-## La caja que se lleva con las dos manos es la del depósito, en su tamaño grande.
+## Lo mismo con un bidón de jabón o una caja pequeña en la mano: más que con peso y menos que sin
+## nada. Provisional hasta que el dueño lo juegue (OQ-PLY-007).
+const MULTIPLICADOR_DE_CORRER_INTERMEDIO := 1.3
+
+## Las cajas se llevan con las dos manos en su tamaño grande, y se llevan más livianas en el chico.
+## La de reposición es la del depósito; la de fideos es una cajita.
 const ID_DE_LA_CAJA_DE_REPOSICION := &"caja_de_reposicion"
+const ID_DE_LA_CAJA_DE_FIDEOS := &"caja_de_fideos"
 
 ## Radianes por segundo con el joystick derecho a fondo: 180 grados. Lo decidió el dueño, y gira
 ## en proporción a la inclinación.
@@ -105,14 +111,22 @@ const ACCION_AGACHARSE: StringName = &"agacharse"
 const ACCION_CORRER: StringName = &"correr"
 
 
-## Si lo que se lleva en la mano pesa al correr: la caja de reposición grande y el balde con agua.
-## El balde vacío, la caja chica y todo lo demás no pesan. `SIN_ID` es la mano vacía.
-static func pesa_al_correr(
+## Cuánto multiplica la caminata correr con lo que se lleva en la mano, de pie.
+##
+## Pesa la caja de reposición grande y el balde con agua; frenan menos los bidones de jabón y las
+## cajas pequeñas. El balde vacío y todo lo demás no frenan. `SIN_ID` es la mano vacía.
+static func multiplicador_de_correr(
 	en_la_mano: StringName, balde_con_agua: bool = false, caja_grande: bool = false
-) -> bool:
+) -> float:
 	if en_la_mano == ID_DE_LA_CAJA_DE_REPOSICION:
-		return caja_grande
-	return en_la_mano == ReglasDeLaLimpieza.ID_DEL_BALDE and balde_con_agua
+		return (
+			MULTIPLICADOR_DE_CORRER_CON_PESO if caja_grande else MULTIPLICADOR_DE_CORRER_INTERMEDIO
+		)
+	if en_la_mano == ReglasDeLaLimpieza.ID_DEL_BALDE and balde_con_agua:
+		return MULTIPLICADOR_DE_CORRER_CON_PESO
+	if en_la_mano == ID_DE_LA_CAJA_DE_FIDEOS or ReglasDeLaLimpieza.JABONES.has(en_la_mano):
+		return MULTIPLICADOR_DE_CORRER_INTERMEDIO
+	return MULTIPLICADOR_DE_CORRER
 
 
 ## Lo que cuenta para el alcance: la distancia sobre el piso, sin la altura.
