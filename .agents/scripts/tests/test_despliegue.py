@@ -350,8 +350,8 @@ class ElWorkflowDeDespliegue(unittest.TestCase):
         self.assertIn("faltan", self.texto)
 
     def test_la_plantilla_se_baja_y_el_despliegue_no_la_compila(self):
-        # Compilar el motor web tarda 12 minutos con la caché de objetos tibia, y la caché de
-        # Actions vence a los 7 días: sin esto, una semana sin despliegues compilaría.
+        # Compilar el motor web es caro, y la caché de Actions vence a los 7 días: sin esto,
+        # una semana sin despliegues compilaría.
         self.assertNotIn("actions/cache", self.texto)
         self.assertNotIn("cache-de-scons", self.texto)
         self.assertNotIn("--jobs", self.texto)

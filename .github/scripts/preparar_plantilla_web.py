@@ -279,9 +279,8 @@ def descargar_plantilla(
 ) -> dict:
     """Baja la plantilla que la receta publica y la importa. Nunca compila.
 
-    Compilar el motor web tarda 12 minutos con la caché de objetos tibia y 30 sin ella, y la
-    caché de Actions vence a los 7 días sin uso: el despliegue compilaría sin que la receta
-    cambie. La plantilla la compila `construir-plantilla-web.yml` a mano, y la receta apunta a
+    Compilar el motor web es caro, y la caché de Actions vence a los 7 días sin uso: el
+    despliegue compilaría sin que la receta cambie. La plantilla la compila `construir-plantilla-web.yml` a mano, y la receta apunta a
     ella. Cada falla nombra ese workflow, que es lo que hay que correr.
     """
     try:

@@ -176,7 +176,7 @@ publicar una plantilla nueva deja el despliegue rojo, y no compila.
 Cuando cambian el parche, las opciones o `.godot-version`:
 
 1. Correr `construir-plantilla-web.yml` desde la pestaña Actions (`workflow_dispatch`), en la
-   rama con la receta nueva. Tarda unos 30 minutos y deja el artefacto `plantilla-web`: el ZIP
+   rama con la receta nueva. Tarda unos 20 minutos y deja el artefacto `plantilla-web`: el ZIP
    y `plantilla.json` con las tres huellas.
 2. Crear una release del repo, por ejemplo `godot-web-2`, y subirle `web_release.zip`.
 3. Abrir un PR que pone la URL de esa release y las huellas de `plantilla.json` en
