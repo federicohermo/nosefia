@@ -3,6 +3,7 @@ extends GdUnitTestSuite
 const M := Reglas.MEDIOS_POR_APERCIBIMIENTO
 const T := Tarea.Tipo
 const UMBRAL := Reglas.APERCIBIMIENTOS_QUE_PIERDEN_LA_PRUEBA
+const ARRASTRE := Reglas.APERCIBIMIENTOS_QUE_ARRASTRAN_A_LA_TERCERA
 const SEGUNDA := ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA - 1
 const TERCERA := ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA
 const CAMPO := PartidaSerializada.Campo
@@ -111,11 +112,19 @@ func test_la_tercera_arranca_en_cero_si_la_prueba_no_llego_al_umbral() -> void: 
 	assert_bool(partida.legajo().ultima_de_la_prueba_completa()).is_false()
 
 
-func test_la_tercera_arranca_con_uno_si_la_prueba_llego_al_umbral() -> void:  # AC-EMP-081
+func test_la_tercera_arranca_en_cero_si_la_prueba_en_el_umbral_se_cumplio() -> void:  # AC-EMP-081
 	var partida := _con(SEGUNDA, UMBRAL)
 	_noche(partida, [])
-	assert_int(partida.medios()).is_equal(Reglas.APERCIBIMIENTOS_TRAS_UNA_PRUEBA_EXCEDIDA * M)
+	assert_int(partida.medios()).is_zero()
 	assert_int(partida.legajo().apercibimientos_de_la_prueba()).is_equal(UMBRAL)
+	assert_bool(partida.legajo().ultima_de_la_prueba_completa()).is_true()
+
+
+func test_la_tercera_arranca_con_uno_si_la_prueba_llego_al_arrastre() -> void:  # AC-EMP-081
+	var partida := _con(SEGUNDA, ARRASTRE)
+	_noche(partida, [])
+	assert_int(partida.medios()).is_equal(Reglas.APERCIBIMIENTOS_TRAS_UNA_PRUEBA_EXCEDIDA * M)
+	assert_int(partida.legajo().apercibimientos_de_la_prueba()).is_equal(ARRASTRE)
 	assert_bool(partida.legajo().ultima_de_la_prueba_completa()).is_true()
 
 
@@ -150,12 +159,12 @@ func test_los_apercibimientos_de_la_prueba_cruzan_el_guardado() -> void:  # AC-E
 
 
 func test_el_resultado_de_la_prueba_cruza_el_guardado() -> void:  # AC-EMP-083
-	var partida := _con(SEGUNDA, UMBRAL)
+	var partida := _con(SEGUNDA, ARRASTRE)
 	_noche(partida, [])
 	var retomada := Partida.desde(PoliticaDeGuardado.datos(partida))
 	assert_int(retomada.jornada()).is_equal(TERCERA)
 	assert_int(retomada.medios()).is_equal(partida.medios())
-	assert_int(retomada.legajo().apercibimientos_de_la_prueba()).is_equal(UMBRAL)
+	assert_int(retomada.legajo().apercibimientos_de_la_prueba()).is_equal(ARRASTRE)
 	assert_bool(retomada.legajo().ultima_de_la_prueba_completa()).is_true()
 
 

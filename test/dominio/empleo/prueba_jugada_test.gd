@@ -314,13 +314,15 @@ func test_la_tercera_cuenta_su_primera_falla() -> void:  # AC-EMP-059
 	todos.assign(Partida.Llamado.values())
 	var partida := jugar_la_prueba(
 		[
-			juego({"atiende": atiende(false, true), "anota": false, "llamados": todos}),
+			juego({"atiende": atiende(false, true), "llamados": todos}),
 			juego({"repone": false, "limpia": false, "llamados": todos}),
 		]
 	)
 	assert_bool(partida.terminada()).is_false()
 	assert_int(partida.jornada()).is_equal(TERCERA)
-	assert_int(partida.legajo().apercibimientos_de_la_prueba()).is_equal(4)
+	assert_int(partida.legajo().apercibimientos_de_la_prueba()).is_equal(
+		3 * Reglas.APERCIBIMIENTOS_POR_FALLA_DE_LA_PRUEBA
+	)
 	for tipo: Tarea.Tipo in Antecedentes.FIJAS:
 		assert_int(partida.antecedentes().fallas(tipo)).is_zero()
 	assert_int(partida.antecedentes().noches_sin_sumar()).is_zero()
