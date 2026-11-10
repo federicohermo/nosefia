@@ -7,13 +7,13 @@
    "ancho": 3264,
    "alto": 3120,
    "formato": "bc1",
-   "huella": "f1127d411af19e38e06b7f236d53d691313214d69ef06fac15e557db08a7264d",
+   "huella": "42178f37231d4b1c084a92a21eec71202a8308f3855f61606061517c587e56da",
    "entradas": [
     {
      "ruta": "source/textures/props/jabón liquido amarillo.png",
      "ancho": 1024,
      "alto": 1024,
-     "huella": "437541c7e2f5cbb752a7649eb1785ad3e3ade9020ba65eb33e12184248ffa9bb",
+     "huella": "1f0e766159d38ed99d0bf3627bc275cc5f62e0d55db165c41f49df2b3723005b",
      "x": 16,
      "y": 16
     },
@@ -21,7 +21,7 @@
      "ruta": "source/textures/props/jabón liquido rosa.png",
      "ancho": 1024,
      "alto": 1024,
-     "huella": "c12857c23172f2276ded1ca0c78acc04b953f04aedc43246a772ad609da02ad6",
+     "huella": "f0e9eee1b32d0a6c519c1ab8fdcab99fce9cb464cd8b7966b9eaefc83cbd4ab8",
      "x": 1072,
      "y": 16
     },
@@ -133,7 +133,7 @@
      "ruta": "source/textures/props/jabón liquido.png",
      "ancho": 512,
      "alto": 512,
-     "huella": "70582843ee33ccc53dcc082d2d215c324805e07974711eccbc31663465bd3935",
+     "huella": "858dfb8a0b2cdfbc3819463b95d2ce7f60a0200e53caa2a3c248e7abe40bd150",
      "x": 16,
      "y": 2160
     },
