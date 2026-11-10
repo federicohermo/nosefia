@@ -137,8 +137,10 @@ func test_la_despedida_en_la_segunda_recuerda_su_resultado_sin_reiniciar() -> vo
 
 
 func test_desde_la_tercera_suman_las_bandas_y_los_llamados() -> void:  # AC-EMP-082
-	var partida := _con(SEGUNDA, UMBRAL - 2)
-	_noche(partida, [T.LIMPIAR])
+	var partida := _con(SEGUNDA, UMBRAL)
+	_noche(partida, [])
+	assert_int(partida.legajo().apercibimientos_de_la_prueba()).is_equal(UMBRAL)
+	assert_bool(partida.legajo().ultima_de_la_prueba_completa()).is_true()
 	var grave: Array[Tarea.Tipo] = [T.CAJA, T.REGISTRAR, T.LIMPIAR]
 	_noche(partida, grave, 0, [Partida.Llamado.OBJETO_AFUERA])
 	assert_int(partida.medios()).is_equal(
