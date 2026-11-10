@@ -63,13 +63,17 @@ static func _de_la_segunda(primera: ResultadoDeLaNoche) -> StringName:
 
 
 ## La prueba perdida no llega acá: la despide el legajo al cerrar la segunda. Con menos fallas que
-## ese umbral y la segunda cumplida, la ficha no tiene fila y van los altibajos (OQ-EMP-011).
+## el corte del arrastre y la segunda cumplida, la ficha no tiene fila y van los altibajos
+## (OQ-EMP-011).
 static func _de_la_tercera(noches: Dictionary[int, ResultadoDeLaNoche]) -> StringName:
 	var fallas := 0
 	for noche: ResultadoDeLaNoche in noches.values():
 		fallas += noche.fallas()
 	if fallas == 0:
 		return J3_SIN_FALLAS
-	if fallas >= Reglas.APERCIBIMIENTOS_QUE_PIERDEN_LA_PRUEBA and noches[_SEGUNDA].fallas() == 0:
+	if (
+		fallas >= Reglas.APERCIBIMIENTOS_QUE_ARRASTRAN_A_LA_TERCERA
+		and noches[_SEGUNDA].fallas() == 0
+	):
 		return J3_REDIMIDO
 	return J3_CON_ALTIBAJOS

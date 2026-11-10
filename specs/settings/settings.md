@@ -3,7 +3,7 @@ schema_version: 1
 capability_id: CAP-CFG
 status: ratified
 owner: por definir
-provenance: fichas «2. Menú de inicio» (sección «Interfaz de configuraciones») y «Pausa y menú de pausa»; rangos, pasos y defectos decididos por el dueño en #378, provisorios hasta que el testing los ajuste; «Controles» (esquema de teclado y mouse) de la ficha «2. Menú de inicio», #379; esquema de joystick de la misma ficha y decisión del dueño del 2026-11-04, #380; pestañas y tecla secundaria de la pantalla de controles, bocetos aprobados por el dueño el 2026-11-08, #929
+provenance: fichas «2. Menú de inicio» (sección «Interfaz de configuraciones») y «Pausa y menú de pausa»; rangos, pasos y defectos decididos por el dueño en #378, provisorios hasta que el testing los ajuste; «Controles» (esquema de teclado y mouse) de la ficha «2. Menú de inicio», #379; esquema de joystick de la misma ficha y decisión del dueño del 2026-11-04, #380; pestañas y tecla secundaria de la pantalla de controles, bocetos aprobados por el dueño el 2026-11-08, #929; glifos según el joystick conectado y L3 y R3 como píldora, decisión del dueño del 2026-11-10
 ---
 
 # Capacidad: configuraciones
@@ -29,7 +29,8 @@ impide jugar.
 | **Sensibilidad de fábrica** | los radianes por píxel que el dominio del jugador declara para el giro de la vista y el del examen | — |
 | **Acción reasignable** | una de las siete que el jugador puede cambiar de tecla: movimiento, celular, examinar, agacharse, agarrar / soltar, interactuar y pausa | comando, bind |
 | **Entrada** | una tecla o un botón del mouse. Mover el mouse y la rueda no lo son | evento, input |
-| **Botón de joystick** | un botón del joystick, nombrado como en PlayStation: X, CÍRCULO, CUADRADO, L1, R1. Los ejes y los gatillos analógicos no lo son | — |
+| **Botón de joystick** | un botón del joystick. Los contratos lo nombran como en PlayStation —X, CÍRCULO, CUADRADO, TRIÁNGULO, L1, R1, L3, R3, START— y, en otra familia, es el que está en el mismo lugar del joystick: X es el de abajo, CÍRCULO el de la derecha, CUADRADO el de la izquierda y TRIÁNGULO el de arriba. Los ejes y los gatillos analógicos no lo son | — |
+| **Familia de joystick** | la marca del joystick conectado, de la que salen los rótulos y los glifos de sus botones: **PlayStation**, **Xbox** o **Nintendo** (Switch, Pro Controller y Joy-Con). Se lee del nombre que el joystick dice de sí mismo; el que no se reconoce es Xbox | marca, tipo de mando |
 | **Esquema de joystick** | el botón que cada acción de botón tiene en el joystick, aparte de su tecla o clic | — |
 | **Ranura** | el lugar fijo de una entrada dentro de una acción. Toda acción reasignable tiene dos de teclado o mouse, la **principal** y la **secundaria**; las cinco de botón suman la del joystick | slot, alias |
 | **Principal** | la primera ranura de teclado o mouse de una acción. Nunca queda vacía | primaria, tecla 1 |
@@ -259,7 +260,9 @@ Pausa en el joystick es START (`BR-SAV-024`). La cruceta, el joystick derecho y 
 
 La pestaña JOYSTICK DEBE mostrar un renglón por cada una de las cinco acciones de botón, con su
 botón, y tres renglones FIJO que NO DEBEN poder reasignarse: Movimiento, en el joystick izquierdo;
-Visión, en el derecho, y Pausa, en START. CUANDO el jugador elige el
+Visión, en el derecho, y Pausa, en START. CUANDO el jugador abre la pestaña, el foco DEBE ir al
+botón de la primera acción, y la cruceta DEBE bajar de un renglón de botón al siguiente. CUANDO el
+jugador elige el
 botón de un renglón y aprieta un botón de joystick, el sistema DEBE asignárselo a esa acción, con el
 intercambio de `BR-CFG-018` dentro del joystick: ninguna acción queda sin botón y ningún botón
 está en dos acciones. Una ranura de teclado o mouse NO DEBE aceptar un botón de joystick, y una de
@@ -324,9 +327,10 @@ pestaña DEBE habilitarse y L1 y R1 DEBEN aparecer; la pestaña elegida NO DEBE 
 desconecta, la pestaña DEBE apagarse, L1 y R1 DEBEN desaparecer, y SI JOYSTICK estaba elegida, la
 pantalla DEBE pasar a TECLADO Y MOUSE.
 
-Cada pestaña DEBE tener una sola lista, con las acciones y Visión, sin otro título que la cabecera
-de sus columnas. Visión DEBE ir en el mismo lugar en las dos pestañas: después de las direcciones de movimiento. Visión, y en
-JOYSTICK Movimiento y Pausa, DEBEN llevar la marca **FIJO**, verse más tenues y no poder elegirse.
+Cada pestaña DEBE tener una sola lista, con sus acciones, sin otro título que la cabecera
+de sus columnas. TECLADO Y MOUSE NO DEBE tener renglón de Visión. En JOYSTICK, Visión DEBE ir justo
+después de Movimiento, y Movimiento, Visión y Pausa DEBEN llevar la marca **FIJO**, verse más tenues
+y no poder elegirse.
 Lo que no depende de ninguna acción —ENTER y las flechas en las interfaces, X y CÍRCULO en el
 joystick— NO DEBE tener renglón, y la pantalla NO DEBE llevar una ayuda de teclas.
 
@@ -334,18 +338,26 @@ Cada tecla dibujada, de una letra, una flecha o un clic, DEBE medir lo mismo: el
 más ancha, que es un clic con su nombre en letras. Una tecla angosta se estira a ese ancho, con su
 nombre centrado. En cada columna de una pestaña, PRINCIPAL y SECUNDARIA, todas las teclas y glifos
 DEBEN arrancar en el mismo borde izquierdo, y la cabecera de la columna también. El recuadro del
-foco DEBE enmarcar la tecla elegida con ese mismo ancho. La lista DEBE
-repartirse en el alto entre la cabecera y la línea del pie, con el mismo margen arriba y abajo, y la grilla —nombres y
+foco DEBE enmarcar la tecla elegida con ese mismo ancho. Los
+renglones DEBEN ir pegados a la cabecera, con el mismo paso en las dos pestañas y sin repartir el
+alto que sobra, que queda debajo de la lista sin llegar a la línea del pie, y la grilla —nombres y
 columnas— DEBE quedar centrada respecto de las pestañas. La pantalla DEBE decir qué entrada espera la
 celda elegida, y el aviso de una entrada que no se pudo asignar, en una línea debajo de la línea del
 pie, sin mover la grilla.
 
 ### BR-CFG-032 — Cada entrada se dibuja con su glifo
 
-La pantalla de controles DEBE dibujar los botones del joystick como glifos y no como texto: ✕ ○ □ △
-con sus colores de PlayStation; L1, R1 y START como píldoras; los joysticks, como un círculo con L o
-R; la cruceta, con su forma. DEBE dibujar las teclas como teclas con borde, y cada clic del mouse y
-Visión también como teclas, con su nombre en letras —CLICK IZQ, CLICK DER, MOUSE— y sin dibujo del
+La pantalla de controles DEBE dibujar los botones del joystick como glifos y no como texto: con un
+joystick PlayStation, ✕ ○ □ △ con sus colores; L1, R1, L3, R3 y START como su texto, y los de otra
+familia como dice `BR-CFG-034`; los joysticks de Movimiento y Visión, como un círculo con L o
+R; la cruceta, con su forma. L3 y R3, cuando una acción se reasigna a ellos, DEBEN dibujarse como
+píldora, igual que L1 y R1, y no como círculo: dos caracteres no tienen aire dentro de un círculo
+del alto de la tecla. Cada glifo de un botón de una celda o de un renglón FIJO DEBE ir
+centrado dentro del rectángulo de una tecla, del mismo ancho y alto que las teclas de TECLADO Y
+MOUSE. Los botones de hombro junto a las pestañas se dibujan como píldoras. El texto de una píldora y la letra de un
+círculo DEBEN ir en el tamaño de letra de la pantalla, centrados en su contorno y separados de él, con un margen visible y parejo. DEBE dibujar las teclas como teclas
+con borde, y cada clic del mouse
+también como tecla, con su nombre en letras —CLICK IZQ, CLICK DER— y sin dibujo del
 mouse. Una secundaria vacía DEBE dibujarse como un recuadro punteado tenue, del ancho de las teclas, que arranca en el mismo borde izquierdo que las teclas de su columna.
 
 ### BR-CFG-033 — El nombre de cada acción dice las funciones de menú que hace
@@ -357,6 +369,29 @@ pausar y reanudar; Agarrar / Soltar pulsa al comprador en la ventanilla; el celu
 misma acción que lo abre. Una acción que no hace nada en una interfaz —Movimiento, Examinar y
 Agacharse— NO DEBE llevar ninguna. Cambiar la entrada de una acción cambia también su función de
 menú, y el nombre es lo que lo avisa.
+
+### BR-CFG-034 — Los glifos siguen al joystick conectado
+
+La pantalla de controles DEBE rotular y dibujar cada botón del joystick según la familia del
+joystick conectado, y lo mismo vale para los botones de hombro junto a las pestañas, el de Pausa y
+el texto de cualquier botón que la pantalla nombre. La familia sale del nombre que el joystick dice
+de sí mismo, que incluye el del fabricante cuando el navegador lo informa: un nombre de
+PlayStation, DualShock o DualSense es PlayStation; uno de Nintendo, Switch, Joy-Con o Pro
+Controller es Nintendo; cualquier otro, o ninguno reconocido, es Xbox. SI hay varios joysticks
+conectados, ENTONCES manda el primero de la lista de conectados, el de menor número de dispositivo,
+y no el último que se usó. CUANDO el joystick conectado cambia con la pantalla abierta, los glifos
+DEBEN cambiar en el acto.
+
+Cada familia DEBE rotular los botones por su posición, con lo que dice el joystick:
+
+- **PlayStation:** ✕ ○ □ △ con sus colores —los glifos de siempre—, L1 y R1, L3 y R3, START.
+- **Xbox:** A, B, X e Y, cada una en un círculo y con su color —A verde, B rojo, X azul, Y
+  amarillo—; LB y RB; LS y RS; MENU en lugar de START.
+- **Nintendo:** las letras van en la posición de Nintendo, no en la de Xbox: el botón de abajo es B,
+  el de la derecha A, el de la izquierda Y y el de arriba X, sin color; L y R; LS y RS; + en lugar
+  de START.
+
+Cada botón de una familia DEBE tener un rótulo distinto del de los demás de esa familia.
 
 ## Criterios de aceptación
 
@@ -567,7 +602,9 @@ pueda reasignar.
 ### AC-CFG-026 — La pantalla de controles reasigna el joystick *(verifica BR-CFG-026)*
 
 DADO la pestaña JOYSTICK ENTONCES muestra cinco renglones de botón, cada uno con el suyo, y los
-renglones FIJO de Movimiento, Visión y Pausa, que no se pueden elegir para reasignar. DADO Examinar en CUADRADO CUANDO se
+renglones FIJO de Movimiento, Visión y Pausa, que no se pueden elegir para reasignar. DADO la pestaña
+abierta CUANDO se abre ENTONCES el foco está en el botón de la primera acción, y CUANDO se aprieta
+abajo en la cruceta ENTONCES pasa al renglón de botón siguiente. DADO Examinar en CUADRADO CUANDO se
 elige su botón y se aprieta L1 ENTONCES Examinar queda en L1, Agacharse en CUADRADO, y las teclas
 de las dos no cambian. DADO Examinar eligiendo su botón CUANDO se aprieta una tecla o un clic
 ENTONCES no cambia nada; DADO Examinar eligiendo su tecla CUANDO se aprieta un botón de joystick
@@ -615,10 +652,10 @@ en 30 %. DADO un archivo sin botones de joystick ENTONCES cada acción tiene su 
 DADO la pantalla de controles abierta ENTONCES tiene las pestañas TECLADO Y MOUSE y JOYSTICK, cada
 una con el dibujo de su dispositivo, y se ve el contenido de una sola. DADO TECLADO Y MOUSE
 CUANDO se elige JOYSTICK ENTONCES se ve el contenido de JOYSTICK y no el de TECLADO Y MOUSE, y al
-revés. DADO cada pestaña ENTONCES tiene una sola lista. DADO TECLADO Y MOUSE ENTONCES Visión va justo
-después de Derecha, y DADO JOYSTICK, justo después de Movimiento. DADO cada pestaña ENTONCES su lista se
-reparte en el alto entre la cabecera y la línea del pie, con el mismo margen arriba y abajo, y queda
-centrada respecto de las pestañas.
+revés. DADO cada pestaña ENTONCES tiene una sola lista. DADO TECLADO Y MOUSE ENTONCES no tiene renglón de
+Visión, y DADO JOYSTICK, Visión va justo después de Movimiento. DADO cada pestaña ENTONCES sus renglones
+van pegados a la cabecera con el mismo paso, el alto que sobra queda debajo sin pisar la línea del
+pie, y la lista queda centrada respecto de las pestañas.
 
 ### AC-CFG-032 — La pestaña con la que se abre *(verifica BR-CFG-031)*
 
@@ -649,16 +686,20 @@ MOUSE.
 
 ### AC-CFG-035 — Los renglones fijos *(verifica BR-CFG-031)*
 
-DADO la pestaña TECLADO Y MOUSE ENTONCES Visión lleva la marca FIJO y no se puede elegir. DADO la
-pestaña JOYSTICK ENTONCES además Movimiento y Pausa la llevan.
+DADO la pestaña TECLADO Y MOUSE ENTONCES ningún renglón lleva la marca FIJO. DADO la
+pestaña JOYSTICK ENTONCES Movimiento, Visión y Pausa la llevan y no se pueden elegir.
 
 ### AC-CFG-036 — Los glifos *(verifica BR-CFG-032)*
 
-DADO la pestaña JOYSTICK ENTONCES el botón de cada acción es un glifo y no un texto: X, CÍRCULO,
-CUADRADO y TRIÁNGULO con su color de PlayStation, L1 y R1 como píldoras, y START en Pausa. DADO la
+DADO la pestaña JOYSTICK de un joystick PlayStation ENTONCES el botón de cada acción es un glifo y no
+un texto: X, CÍRCULO, CUADRADO y TRIÁNGULO con su color de PlayStation, L1 y R1, y START en Pausa; cada uno, igual que los
+glifos de Movimiento y Visión, va centrado dentro de un rectángulo del mismo ancho y alto que una
+tecla de TECLADO Y MOUSE, y la letra de Movimiento y Visión, igual que L1 y R1 junto a las pestañas, va centrada en su
+contorno, sin tocarlo. DADO la
 pestaña TECLADO Y MOUSE ENTONCES una tecla es una tecla con borde y cada clic, una tecla con su nombre en letras, distinto
-del clic izquierdo al derecho; Visión también. DADO un botón de joystick sin glifo propio
-ENTONCES se lee por su nombre. DADO cada pestaña ENTONCES cada tecla y cada ranura vacía miden lo mismo, el ancho de
+del clic izquierdo al derecho. DADO un botón de joystick sin glifo propio
+ENTONCES se lee por su nombre. DADO Examinar con L3 o con R3 CUANDO se mira su celda ENTONCES el
+glifo es una píldora y no un círculo, igual que el de L1, y su texto no toca el borde. DADO cada pestaña ENTONCES cada tecla y cada ranura vacía miden lo mismo, el ancho de
 la tecla más ancha, y en cada columna todas arrancan en el mismo borde
 izquierdo, como la cabecera de la columna. DADO una celda esperando una entrada ENTONCES no cambia el
 tamaño ni la posición de ninguna celda.
@@ -718,6 +759,35 @@ DADO la lista de acciones ENTONCES el nombre de Interactuar y el del celular inc
 Pausa, «volver»; el de Agarrar / Soltar, «pulsar»; y el de Movimiento, Examinar y Agacharse no
 agrega ninguna función. DADO cada pestaña ENTONCES cada acción se muestra con ese nombre completo, en
 una sola línea, y las celdas de todos los renglones quedan alineadas.
+
+### AC-CFG-043 — La familia sale del nombre del joystick *(verifica BR-CFG-034)*
+
+DADO el nombre «PS4 Controller», «DualSense Wireless Controller» o «Sony Interactive Entertainment
+Wireless Controller» ENTONCES la familia es PlayStation. DADO «Nintendo Switch Pro Controller»,
+«Joy-Con (L)» o un nombre con el fabricante 057e ENTONCES es Nintendo. DADO «Xbox 360 Controller»,
+«Controller (XInput)» o un nombre desconocido o vacío ENTONCES es Xbox. DADO ningún joystick
+ENTONCES es Xbox. DADO un joystick PlayStation conectado primero y uno Xbox después ENTONCES manda
+PlayStation, y al revés manda Xbox.
+
+### AC-CFG-044 — Cada familia rotula sus botones *(verifica BR-CFG-034, BR-CFG-032)*
+
+DADO Xbox ENTONCES los botones de abajo, derecha, izquierda y arriba se rotulan A, B, X e Y, los de
+hombro LB y RB, los de palanca LS y RS, y START, MENU. DADO Nintendo ENTONCES el de abajo se rotula
+como el de la derecha de Xbox, el de la derecha como el de abajo de Xbox, el de la izquierda como el
+de arriba de Xbox y el de arriba como el de la izquierda de Xbox, los de hombro L y R, los de palanca LS y RS, y START, +.
+DADO PlayStation ENTONCES se rotulan X, CÍRCULO, CUADRADO y TRIÁNGULO, L1 y R1, L3 y R3, y START.
+DADO cada familia ENTONCES no hay dos botones con el mismo rótulo.
+
+### AC-CFG-045 — Los glifos de la pantalla siguen a la familia *(verifica BR-CFG-034, BR-CFG-032)*
+
+DADO la pestaña JOYSTICK con un joystick Xbox ENTONCES el botón de abajo, el de la derecha, el de la
+izquierda y el de arriba son un círculo con A, B, X e Y, cada uno con un color distinto, y no
+✕ ○ □ △; los botones de hombro junto a las pestañas dicen LB y RB y el renglón de Pausa, MENU. DADO
+un joystick Nintendo ENTONCES esos cuatro son un círculo con B, A, Y y X, sin color propio, los de
+hombro dicen L y R y Pausa, +. DADO un joystick PlayStation ENTONCES siguen ✕ ○ □ △, L1, R1 y
+START. DADO un joystick que cambia con la pantalla abierta ENTONCES las celdas, los botones de hombro y
+Pausa cambian en el acto, y la asignación guardada no cambia. DADO la espera de un botón de
+joystick ENTONCES el mensaje no nombra ninguna marca.
 
 ## No objetivos
 

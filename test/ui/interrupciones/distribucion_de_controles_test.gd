@@ -67,7 +67,7 @@ func test_todos_los_renglones_de_una_pestana_miden_lo_mismo() -> void:  # AC-CFG
 
 
 ## Lo que se ve, no la caja: la línea larga de la cabecera y del pie, el recuadro de una tecla.
-func test_los_margenes_de_arriba_abajo_son_parejos_en_las_dos_pestanas() -> void:  # AC-CFG-031
+func test_la_lista_no_pisa_la_linea_del_pie_en_las_dos_pestanas() -> void:  # AC-CFG-031
 	var pantalla := await _pantalla()
 	var marco := pantalla.marco()
 	var escala := marco.get_global_transform().get_scale().y
@@ -95,7 +95,7 @@ func test_los_margenes_de_arriba_abajo_son_parejos_en_las_dos_pestanas() -> void
 		var margen_de_arriba := pestanas.get_global_rect().position.y - linea_de_arriba
 		var margen_de_abajo := linea_del_pie - tecla_abajo
 		assert_float(margen_de_arriba / escala).is_greater(0.0)
-		assert_float(margen_de_abajo).is_equal_approx(margen_de_arriba, TOLERANCIA * escala)
+		assert_float(margen_de_abajo / escala).is_greater(0.0)
 
 
 func test_cada_pestana_alinea_a_la_izquierda_sus_glifos() -> void:  # AC-CFG-031, AC-CFG-042
@@ -148,9 +148,6 @@ func test_todo_el_texto_tiene_el_tamano_de_letra_de_configuraciones() -> void:  
 			tamanos.append((etiqueta as Label).get_theme_font_size("font_size"))
 		for boton: Node in pantalla.find_children("*", "Button", true, false):
 			tamanos.append((boton as Button).get_theme_font_size("font_size"))
-		for glifo: Node in pantalla.find_children("*", "GlifoDeEntrada", true, false):
-			if not (glifo as GlifoDeEntrada).texto.is_empty():
-				tamanos.append(glifo.call("_tamano_de_la_letra"))
 	assert_int(tamanos.size()).is_greater(20)
 	for tamano: int in tamanos:
 		assert_int(tamano).is_equal(vara)
@@ -171,7 +168,7 @@ func test_el_titulo_y_su_marco_son_los_de_configuraciones() -> void:  # AC-CFG-0
 		assert_bool(otro.has_theme_font_size_override("font_size")).is_false()
 
 
-func test_cada_pestana_reparte_el_alto_y_centra_la_lista_con_las_pestanas() -> void:  # AC-CFG-031
+func test_cada_pestana_centra_la_lista_con_las_pestanas() -> void:  # AC-CFG-031
 	var pantalla := await _pantalla()
 	var area := _desplazador(pantalla).get_global_rect()
 	var barra := (pantalla.get("_filas") as Control).get_child(0) as Control
@@ -182,14 +179,32 @@ func test_cada_pestana_reparte_el_alto_y_centra_la_lista_con_las_pestanas() -> v
 	)
 	for del_joystick: bool in [false, true]:
 		await _mostrar(pantalla, del_joystick)
-		var filas := pantalla.filas(del_joystick)
-		var ultima := filas[filas.size() - 1].get_global_rect()
-		assert_float(ultima.end.y).is_equal_approx(area.end.y, TOLERANCIA)
-		for fila: HBoxContainer in filas:
+		for fila: HBoxContainer in pantalla.filas(del_joystick):
 			var caja := fila.get_global_rect()
 			assert_float(caja.get_center().x).is_equal_approx(centro_de_las_pestanas, TOLERANCIA)
 			assert_bool(caja.position.x >= area.position.x - TOLERANCIA).is_true()
 			assert_bool(caja.end.x <= area.end.x + TOLERANCIA).is_true()
+
+
+## El alto que sobra no se reparte entre los renglones: el paso es el de un renglón con su
+## separación, igual en las dos pestañas, y el hueco queda debajo de la lista.
+func test_las_dos_pestanas_tienen_el_mismo_paso_y_la_lista_queda_arriba() -> void:  # AC-CFG-031
+	var pantalla := await _pantalla()
+	var area := _desplazador(pantalla).get_global_rect()
+	var escala := pantalla.marco().get_global_transform().get_scale().y
+	var paso_esperado := (
+		PantallaDeControles.ALTO_DE_LA_FILA + PantallaDeControles.SEPARACION_DE_LAS_FILAS
+	)
+	for del_joystick: bool in [false, true]:
+		await _mostrar(pantalla, del_joystick)
+		var filas := pantalla.filas(del_joystick)
+		for i: int in range(1, filas.size()):
+			var paso := (
+				filas[i].get_global_rect().position.y - filas[i - 1].get_global_rect().position.y
+			)
+			assert_float(paso / escala).is_equal_approx(paso_esperado, TOLERANCIA)
+		var ultima := filas[filas.size() - 1].get_global_rect()
+		assert_float(ultima.end.y).is_less(area.end.y - TOLERANCIA * escala)
 
 
 func test_las_teclas_de_renglones_vecinos_no_se_tocan() -> void:  # AC-CFG-031
@@ -244,7 +259,7 @@ func test_todas_las_teclas_miden_lo_mismo_y_su_foco_las_enmarca() -> void:  # AC
 			)
 
 
-func test_la_tecla_mas_ancha_es_un_clic_y_la_marca_de_vision_mide_lo_mismo() -> void:  # AC-CFG-036
+func test_la_tecla_mas_ancha_es_un_clic() -> void:  # AC-CFG-036
 	var pantalla := await _pantalla()
 	var clic := GlifoDeEntrada.de_una_tecla(
 		PantallaDeControles.nombre_de_la_entrada(
@@ -256,11 +271,6 @@ func test_la_tecla_mas_ancha_es_un_clic_y_la_marca_de_vision_mide_lo_mismo() -> 
 	pantalla.marco().add_child(clic)
 	var ancho := pantalla.boton_de(AsignacionDeControles.ADELANTE, PRINCIPAL).size.x
 	assert_float(ancho).is_greater_equal(clic.get_minimum_size().x - TOLERANCIA)
-	for fila: HBoxContainer in pantalla.filas(false):
-		if not fila.has_meta(&"fijo"):
-			continue
-		var glifo := fila.find_children("*", "GlifoDeEntrada", true, false)[0] as GlifoDeEntrada
-		assert_float(glifo.size.x).is_equal_approx(ancho, TOLERANCIA)
 
 
 func test_las_teclas_y_su_cabecera_arrancan_en_el_mismo_borde() -> void:  # AC-CFG-036
@@ -344,15 +354,10 @@ func test_cada_pestana_junta_su_dibujo_con_su_texto_y_los_centra() -> void:  # A
 		assert_bool(separacion <= dibujo.size.x).is_true()
 
 
-func test_vision_va_en_el_mismo_lugar_en_las_dos_pestanas() -> void:  # AC-CFG-031
+func test_vision_va_solo_en_joystick_despues_de_movimiento() -> void:  # AC-CFG-031
 	var pantalla := await _pantalla()
-	var del_teclado: Array[String] = []
 	for fila: HBoxContainer in pantalla.filas(false):
-		del_teclado.append(_nombre(fila))
-	var derecha := AsignacionDeControles.nombre_de_la_accion(AsignacionDeControles.DERECHA)
-	assert_str(del_teclado[del_teclado.find(derecha) + 1]).is_equal(
-		PantallaDeControles.TEXTO_DE_VISION
-	)
+		assert_str(_nombre(fila)).is_not_equal(PantallaDeControles.TEXTO_DE_VISION)
 	var del_joystick: Array[String] = []
 	for fila: HBoxContainer in pantalla.filas(true):
 		del_joystick.append(_nombre(fila))

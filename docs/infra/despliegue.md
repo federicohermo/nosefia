@@ -161,19 +161,40 @@ guardada en `build/templates` y compila cuando falta o quedó desactualizada. La
 SDK y las opciones de compilación. Los ZIP generados quedan fuera de Git.
 
 La primera compilación local medida tarda unos 30 minutos. Las siguientes preparaciones
-reutilizan la plantilla validada. Actions guarda `build/templates` en caché. Su clave incluye
-la versión, el parche, la receta y el script. Restaurar la caché no reemplaza las comprobaciones.
-El workflow prepara la plantilla con `--jobs 2` para limitar la memoria de compilación.
+reutilizan la plantilla validada.
 
-Los objetos compilados quedan en `build/godot-web/cache-de-scons`, acá y en la caché de
-Actions. SCons reusa un objeto sólo si sus entradas son idénticas. Cambiar el parche recompila
-los archivos que toca, no el motor entero.
+**El despliegue no compila la plantilla: la baja.** La receta declara en `plantilla_publicada`
+la URL del ZIP en una release del repo, y su `receta_sha256`, `zip_sha256` y `wasm_sha256`. El
+paso de `desplegar.yml` corre `preparar_plantilla_web.py --descargar`. Comprueba la receta, baja
+el ZIP, comprueba `zip_sha256` antes de abrirlo y lo importa. Sale con 1 en cuatro casos: falta
+`plantilla_publicada`, su receta no coincide con la actual, la descarga falla o una huella no
+coincide. El mensaje nombra `construir-plantilla-web.yml`. Un PR que cambia el parche sin
+publicar una plantilla nueva deja el despliegue rojo, y no compila.
+
+### Publicar una plantilla nueva
+
+Cuando cambian el parche, las opciones o `.godot-version`:
+
+1. Correr `construir-plantilla-web.yml` desde la pestaña Actions (`workflow_dispatch`), en la
+   rama con la receta nueva. Tarda unos 20 minutos y deja el artefacto `plantilla-web`: el ZIP
+   y `plantilla.json` con las tres huellas.
+2. Crear una release del repo, por ejemplo `godot-web-2`, y subirle `web_release.zip`.
+3. Abrir un PR que pone la URL de esa release y las huellas de `plantilla.json` en
+   `plantilla_publicada`, en `.github/patches/godot-web-compilacion.json`.
+
+El workflow se corre desde una rama sólo si su archivo ya está en la rama por defecto.
 
 Para importar una plantilla local ya compilada, correr el comando de abajo. El ZIP tiene que
-ser el que la receta declara en `plantilla_local`:
+ser el que la receta declara en `plantilla_publicada`:
 
 ```bash
 python .github/scripts/preparar_plantilla_web.py --desde tmp/godot-web/web-enlace-en-paralelo.zip
+```
+
+Para bajar la plantilla publicada, como lo hace el despliegue:
+
+```bash
+python .github/scripts/preparar_plantilla_web.py --descargar
 ```
 
 Para comprobar la plantilla guardada sin compilar, correr:

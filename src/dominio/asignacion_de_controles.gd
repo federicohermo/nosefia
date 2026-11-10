@@ -98,24 +98,6 @@ const FUNCIONES_DE_MENU: Dictionary = {
 	PAUSA: [FuncionDeMenu.VOLVER],
 }
 
-## Los botones del joystick, con los nombres de PlayStation de la ficha.
-const NOMBRES_DE_LOS_BOTONES_DEL_JOYSTICK: Dictionary[int, String] = {
-	JOY_BUTTON_A: "X",
-	JOY_BUTTON_B: "CÍRCULO",
-	JOY_BUTTON_X: "CUADRADO",
-	JOY_BUTTON_Y: "TRIÁNGULO",
-	JOY_BUTTON_BACK: "SELECT",
-	JOY_BUTTON_GUIDE: "GUÍA",
-	JOY_BUTTON_LEFT_STICK: "L3",
-	JOY_BUTTON_RIGHT_STICK: "R3",
-	JOY_BUTTON_LEFT_SHOULDER: "L1",
-	JOY_BUTTON_RIGHT_SHOULDER: "R1",
-	JOY_BUTTON_DPAD_UP: "CRUCETA ARRIBA",
-	JOY_BUTTON_DPAD_DOWN: "CRUCETA ABAJO",
-	JOY_BUTTON_DPAD_LEFT: "CRUCETA IZQUIERDA",
-	JOY_BUTTON_DPAD_RIGHT: "CRUCETA DERECHA",
-}
-
 ## Cada entrada es un `Vector2i(tipo, código)`. Las de una acción van por ranura.
 const DE_FABRICA: Dictionary = {
 	ADELANTE: [Vector2i(TipoDeEntrada.TECLA, KEY_W), Vector2i(TipoDeEntrada.TECLA, KEY_UP)],
