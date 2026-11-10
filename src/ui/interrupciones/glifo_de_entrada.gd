@@ -1,6 +1,8 @@
 ## El dibujo de una entrada de la pantalla de controles. No es un texto: una tecla es una tecla con
 ## borde, un clic también y lo dice con letras, una ranura libre es un recuadro punteado, y un botón
-## del joystick es su glifo de PlayStation. Cada uno mide su ancho natural, y quien lo pone en una
+## del joystick es el glifo que le toca en la familia del joystick conectado. Un círculo con una
+## letra, `PALANCA`, es lo mismo para una palanca que para un botón de cara de Xbox o Nintendo.
+## Cada uno mide su ancho natural, y quien lo pone en una
 ## columna le da el ancho de la tecla más ancha: la tecla, la píldora y la ranura llenan ese ancho.
 ## El botón de una celda va `en_tecla`: dentro del rectángulo de una tecla, que llena el ancho de la
 ## columna, con su glifo centrado. Se dibuja con formas y no con imágenes, así que escala con el
@@ -43,6 +45,22 @@ const COLOR_DE_LA_CRUZ := Color("6fa8ff")
 const COLOR_DEL_CIRCULO := Color("ff5a64")
 const COLOR_DEL_CUADRADO := Color("f08fd0")
 const COLOR_DEL_TRIANGULO := Color("4fd8a0")
+const COLOR_DE_LA_A := Color("5fd36b")
+const COLOR_DE_LA_Y := Color("f2cf4a")
+## Los botones de cara de PlayStation se dibujan como símbolos.
+const SIMBOLOS_DE_PLAYSTATION: Dictionary[int, Forma] = {
+	JOY_BUTTON_A: Forma.CRUZ,
+	JOY_BUTTON_B: Forma.CIRCULO,
+	JOY_BUTTON_X: Forma.CUADRADO,
+	JOY_BUTTON_Y: Forma.TRIANGULO,
+}
+## La letra de cada botón de cara de Xbox lleva su color.
+const COLORES_DE_XBOX: Dictionary[int, Color] = {
+	JOY_BUTTON_A: COLOR_DE_LA_A,
+	JOY_BUTTON_B: COLOR_DEL_CIRCULO,
+	JOY_BUTTON_X: COLOR_DE_LA_CRUZ,
+	JOY_BUTTON_Y: COLOR_DE_LA_Y,
+}
 
 var forma: Forma = Forma.TECLA
 ## Lo que se lee: el nombre de la tecla, de la píldora o la letra de la palanca. Vacío en un
@@ -52,33 +70,40 @@ var texto: String = ""
 var flecha: Vector2 = Vector2.ZERO
 ## Si va dentro del rectángulo de una tecla. Una píldora dibuja entonces sólo su texto.
 var en_tecla: bool = false
+## El color con que se escribe el texto.
+var color_del_texto: Color = COLOR_DEL_BORDE
 
 
-## Qué forma lleva una entrada.
-static func forma_de(tipo: int, codigo: int) -> Forma:
+## Qué forma lleva una entrada. Los cuatro botones de cara son un símbolo en PlayStation y, en las
+## otras familias, un círculo con su letra. L3 y R3 son píldoras, como L1 y R1.
+static func forma_de(
+	tipo: int, codigo: int, familia: FamiliaDeJoystick.Familia = FamiliaDeJoystick.Familia.XBOX
+) -> Forma:
 	if tipo != AsignacionDeControles.TipoDeEntrada.BOTON_DEL_JOYSTICK:
 		return Forma.TECLA
-	match codigo:
-		JOY_BUTTON_A:
-			return Forma.CRUZ
-		JOY_BUTTON_B:
-			return Forma.CIRCULO
-		JOY_BUTTON_X:
-			return Forma.CUADRADO
-		JOY_BUTTON_Y:
-			return Forma.TRIANGULO
-		JOY_BUTTON_LEFT_STICK, JOY_BUTTON_RIGHT_STICK:
+	if codigo in SIMBOLOS_DE_PLAYSTATION:
+		if familia != FamiliaDeJoystick.Familia.PLAYSTATION:
 			return Forma.PALANCA
+		var simbolo: Forma = SIMBOLOS_DE_PLAYSTATION[codigo]
+		return simbolo
+	match codigo:
 		JOY_BUTTON_DPAD_UP, JOY_BUTTON_DPAD_DOWN, JOY_BUTTON_DPAD_LEFT, JOY_BUTTON_DPAD_RIGHT:
 			return Forma.CRUCETA
 	return Forma.PILDORA
 
 
-## El glifo de una entrada de la asignación, con su nombre ya leído.
-static func de_la_entrada(entrada: Vector2i, leida: String) -> GlifoDeEntrada:
+## El glifo de una entrada de la asignación, con su nombre ya leído. Un botón de cara de Xbox lleva
+## el color de su letra.
+static func de_la_entrada(
+	entrada: Vector2i,
+	leida: String,
+	familia: FamiliaDeJoystick.Familia = FamiliaDeJoystick.Familia.XBOX
+) -> GlifoDeEntrada:
 	var glifo := GlifoDeEntrada.new()
-	glifo.forma = forma_de(entrada.x, entrada.y)
+	glifo.forma = forma_de(entrada.x, entrada.y, familia)
 	glifo.texto = leida
+	if glifo.forma == Forma.PALANCA and familia == FamiliaDeJoystick.Familia.XBOX:
+		glifo.color_del_texto = COLORES_DE_XBOX.get(entrada.y, COLOR_DEL_BORDE)
 	if glifo.forma == Forma.TECLA:
 		glifo.flecha = FLECHAS.get(entrada.y, Vector2.ZERO)
 	else:
@@ -241,7 +266,7 @@ func _escribir(lo_escrito: String) -> void:
 		HORIZONTAL_ALIGNMENT_LEFT,
 		-1.0,
 		tamano_de_la_letra(),
-		COLOR_DEL_BORDE
+		color_del_texto
 	)
 
 

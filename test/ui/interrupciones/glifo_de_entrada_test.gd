@@ -17,10 +17,10 @@ func _glifo(forma: GlifoDeEntrada.Forma, leida: String, en_tecla: bool) -> Glifo
 
 func _con_contorno() -> Array[GlifoDeEntrada]:
 	var glifos: Array[GlifoDeEntrada] = []
-	for leida: String in ["L", "R", "L3", "R3"]:
+	for leida: String in ["L", "R"]:
 		for en_tecla: bool in [true, false]:
 			glifos.append(_glifo(GlifoDeEntrada.Forma.PALANCA, leida, en_tecla))
-	for leida: String in ["L1", "R1"]:
+	for leida: String in ["L1", "R1", "L3", "R3"]:
 		glifos.append(_glifo(GlifoDeEntrada.Forma.PILDORA, leida, false))
 	return glifos
 
@@ -59,14 +59,14 @@ func test_una_palanca_deja_aire_entre_las_esquinas_del_texto_y_su_borde() -> voi
 
 
 func test_una_pildora_deja_aire_arriba_y_abajo_del_texto() -> void:  # AC-CFG-036
-	for leida: String in ["L1", "R1"]:
+	for leida: String in ["L1", "R1", "L3", "R3"]:
 		var pildora := _glifo(GlifoDeEntrada.Forma.PILDORA, leida, false)
 		var aire := (pildora.contorno_dibujado().size.y - pildora.rect_del_texto().size.y) / 2.0
 		assert_float(aire).is_greater_equal(GlifoDeEntrada.AIRE_DEL_TEXTO)
 
 
 func test_una_pildora_deja_de_cada_lado_del_texto_el_radio_de_sus_puntas() -> void:  # AC-CFG-036
-	for leida: String in ["L1", "R1"]:
+	for leida: String in ["L1", "R1", "L3", "R3"]:
 		var pildora := _glifo(GlifoDeEntrada.Forma.PILDORA, leida, false)
 		var contorno := pildora.contorno_dibujado()
 		var aire := (contorno.size.x - pildora.rect_del_texto().size.x) / 2.0
@@ -74,8 +74,22 @@ func test_una_pildora_deja_de_cada_lado_del_texto_el_radio_de_sus_puntas() -> vo
 
 
 func test_el_circulo_de_una_palanca_entra_en_el_rectangulo_de_la_tecla() -> void:  # AC-CFG-036
-	for leida: String in ["L", "R", "L3", "R3"]:
+	for leida: String in ["L", "R"]:
 		var palanca := _glifo(GlifoDeEntrada.Forma.PALANCA, leida, true)
 		palanca.size = palanca.get_minimum_size()
 		var dentro := palanca.marco_dibujado().grow(-float(GlifoDeEntrada.GROSOR_DEL_BORDE))
 		assert_bool(dentro.encloses(palanca.contorno_dibujado())).is_true()
+
+
+func test_l3_y_r3_en_una_tecla_son_pildoras_y_su_texto_cabe_en_el_marco() -> void:  # AC-CFG-036
+	for boton: int in [JOY_BUTTON_LEFT_STICK, JOY_BUTTON_RIGHT_STICK]:
+		for familia: FamiliaDeJoystick.Familia in FamiliaDeJoystick.Familia.values():
+			var tipo := AsignacionDeControles.TipoDeEntrada.BOTON_DEL_JOYSTICK
+			var glifo := GlifoDeEntrada.de_la_entrada(
+				Vector2i(tipo, boton), FamiliaDeJoystick.rotulo_de(familia, boton), familia
+			)
+			glifo.theme = GlifoDeEntrada.TEMA
+			add_child(auto_free(glifo))
+			glifo.size = glifo.get_minimum_size()
+			assert_int(glifo.forma).is_equal(GlifoDeEntrada.Forma.PILDORA)
+			assert_bool(glifo.marco_dibujado().encloses(glifo.rect_del_texto())).is_true()
