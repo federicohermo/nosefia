@@ -47,7 +47,6 @@ const TEXTO_FIJO := "FIJO"
 const TEXTO_DEL_AVISO := "YA ES LA PRINCIPAL DE"
 const TEXTO_DE_MOVIMIENTO := "MOVIMIENTO"
 const TEXTO_DE_VISION := "VISIÓN"
-const TEXTO_DE_START := "START"
 ## Cuánto sobresale de la tecla el recuadro de la elegida, para no taparle el borde.
 const SOBRESALE_EL_RECUADRO := 4.0
 const SEPARACION_DE_LAS_COLUMNAS := 64
@@ -89,10 +88,12 @@ var _celdas: Dictionary = {}
 var _glifos: Dictionary = {}
 var _con_el_joystick: bool = false
 var _joystick_conectado: bool = false
+var _familia: FamiliaDeJoystick.Familia = FamiliaDeJoystick.Familia.XBOX
 var _pagina_del_teclado: VBoxContainer
 var _pagina_del_joystick: VBoxContainer
 var _teclas_de_referencia: Array[GlifoDeEntrada] = []
 var _pildoras_de_las_pestanas: Array[GlifoDeEntrada] = []
+var _pildora_de_pausa: GlifoDeEntrada
 var _aviso_sin_joystick: Label
 var _pestana_del_teclado: Button
 var _pestana_del_joystick: Button
@@ -109,6 +110,7 @@ var _celda_elegida := StyleBoxFlat.new()
 
 func _ready() -> void:
 	visible = false
+	_familia = _familia_conectada()
 	_titulo.text = TEXTO_DEL_TITULO
 	_volver.text = TEXTO_DE_VOLVER
 	_volver.pressed.connect(cerrar)
@@ -132,12 +134,12 @@ func _ready() -> void:
 
 ## Cómo se lee una entrada. El nombre de una tecla lo da el motor, y sin traducir a la
 ## distribución del teclado: se lee el código físico como está.
-static func nombre_de_la_entrada(tipo: int, codigo: int) -> String:
+static func nombre_de_la_entrada(
+	tipo: int, codigo: int, familia: FamiliaDeJoystick.Familia = FamiliaDeJoystick.Familia.XBOX
+) -> String:
 	if tipo == AsignacionDeControles.TipoDeEntrada.BOTON_DEL_JOYSTICK:
-		var del_joystick: String = AsignacionDeControles.NOMBRES_DE_LOS_BOTONES_DEL_JOYSTICK.get(
-			codigo, "BOTÓN %d" % codigo
-		)
-		return del_joystick
+		var del_joystick := FamiliaDeJoystick.rotulo_de(familia, codigo)
+		return del_joystick if not del_joystick.is_empty() else "BOTÓN %d" % codigo
 	if tipo == AsignacionDeControles.TipoDeEntrada.BOTON_DEL_MOUSE:
 		var nombre: String = AsignacionDeControles.NOMBRES_DE_LOS_BOTONES.get(codigo, "")
 		return nombre.to_upper()
@@ -228,6 +230,14 @@ func poner_joystick_conectado(conectado: bool) -> void:
 		_cambiar_de_pestana(false)
 		return
 	elegir_pestana(_con_el_joystick and conectado)
+
+
+## Cambia la familia del joystick, de la que salen los rótulos y los glifos. Es lo que se llama
+## para ver la pantalla con una familia sin tener un joystick de esa marca.
+func poner_familia(familia: FamiliaDeJoystick.Familia) -> void:
+	_familia = familia
+	_rotular_las_pildoras()
+	_pintar()
 
 
 func aviso_del_joystick() -> String:
@@ -379,8 +389,12 @@ func _barra_de_pestanas() -> HBoxContainer:
 	var barra := HBoxContainer.new()
 	barra.add_theme_constant_override("separation", 16)
 	barra.alignment = BoxContainer.ALIGNMENT_CENTER
-	var izquierda := GlifoDeEntrada.de_un_boton(GlifoDeEntrada.Forma.PILDORA, "L1")
-	var derecha := GlifoDeEntrada.de_un_boton(GlifoDeEntrada.Forma.PILDORA, "R1")
+	var izquierda := GlifoDeEntrada.de_un_boton(
+		GlifoDeEntrada.Forma.PILDORA, _rotulo(JOY_BUTTON_LEFT_SHOULDER)
+	)
+	var derecha := GlifoDeEntrada.de_un_boton(
+		GlifoDeEntrada.Forma.PILDORA, _rotulo(JOY_BUTTON_RIGHT_SHOULDER)
+	)
 	_pildoras_de_las_pestanas = [izquierda, derecha]
 	barra.add_child(izquierda)
 	_pestana_del_teclado = _pestana(TEXTO_DEL_TECLADO, DibujoDeDispositivo.Dispositivo.TECLADO)
@@ -475,10 +489,13 @@ func _bloque_del_joystick() -> VBoxContainer:
 		if _primer_boton_del_joystick == null:
 			_primer_boton_del_joystick = boton_de(accion, AsignacionDeControles.RANURA_DEL_JOYSTICK)
 		bloque.add_child(fila)
+	_pildora_de_pausa = GlifoDeEntrada.de_un_boton(
+		GlifoDeEntrada.Forma.PILDORA, _rotulo(AsignacionDeControles.BOTON_DE_PAUSA)
+	)
 	bloque.add_child(
 		_fila_fija(
 			AsignacionDeControles.nombre_de_la_accion(AsignacionDeControles.PAUSA),
-			[GlifoDeEntrada.de_un_boton(GlifoDeEntrada.Forma.PILDORA, TEXTO_DE_START)]
+			[_pildora_de_pausa]
 		)
 	)
 	return bloque
@@ -598,7 +615,31 @@ func _cancelar_la_espera() -> void:
 
 
 func _al_cambiar_un_joystick(_dispositivo: int, _conectado: bool) -> void:
+	poner_familia(_familia_conectada())
 	poner_joystick_conectado(not Input.get_connected_joypads().is_empty())
+
+
+## La familia del primer joystick conectado, y Xbox si no hay ninguno.
+func _familia_conectada() -> FamiliaDeJoystick.Familia:
+	var nombres: Array[String] = []
+	for dispositivo: int in Input.get_connected_joypads():
+		nombres.append(Input.get_joy_name(dispositivo))
+	return FamiliaDeJoystick.de_los_nombres(nombres)
+
+
+func _rotulo(boton: int) -> String:
+	return FamiliaDeJoystick.rotulo_de(_familia, boton)
+
+
+## Los botones que no son de la asignación llevan el rótulo de la familia: los de hombro junto a las
+## pestañas y el botón de Pausa.
+func _rotular_las_pildoras() -> void:
+	_pildoras_de_las_pestanas[0].texto = _rotulo(JOY_BUTTON_LEFT_SHOULDER)
+	_pildoras_de_las_pestanas[1].texto = _rotulo(JOY_BUTTON_RIGHT_SHOULDER)
+	_pildora_de_pausa.texto = _rotulo(AsignacionDeControles.BOTON_DE_PAUSA)
+	for pildora: GlifoDeEntrada in _pildoras_de_las_pestanas + [_pildora_de_pausa]:
+		pildora.update_minimum_size()
+		pildora.queue_redraw()
 
 
 ## Cada celda dice su entrada con su glifo, un recuadro punteado si está vacía, o el recuadro de
@@ -622,7 +663,9 @@ func _pintar() -> void:
 		var glifo := (
 			GlifoDeEntrada.de_una_ranura_libre()
 			if entrada == AsignacionDeControles.VACIA
-			else GlifoDeEntrada.de_la_entrada(entrada, nombre_de_la_entrada(entrada.x, entrada.y))
+			else GlifoDeEntrada.de_la_entrada(
+				entrada, nombre_de_la_entrada(entrada.x, entrada.y, _familia), _familia
+			)
 		)
 		glifo.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 		boton.add_child(glifo)
