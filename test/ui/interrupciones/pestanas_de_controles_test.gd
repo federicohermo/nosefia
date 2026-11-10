@@ -186,8 +186,7 @@ func test_l1_esperando_un_boton_se_asigna_y_no_cambia_de_pestana() -> void:  # A
 
 func test_lo_fijo_lleva_su_marca_y_no_tiene_nada_que_elegir() -> void:  # AC-CFG-035
 	var pantalla := _pantalla()
-	var del_teclado := _nombres(pantalla.filas(false), true)
-	assert_array(del_teclado).contains_exactly_in_any_order([PantallaDeControles.TEXTO_DE_VISION])
+	assert_array(_nombres(pantalla.filas(false), true)).is_empty()
 	var pausa := AsignacionDeControles.nombre_de_la_accion(AsignacionDeControles.PAUSA)
 	var del_joystick := _nombres(pantalla.filas(true), true)
 	(
@@ -208,6 +207,18 @@ func test_lo_fijo_lleva_su_marca_y_no_tiene_nada_que_elegir() -> void:  # AC-CFG
 	assert_int(_nombres(pantalla.filas(true), false).size()).is_equal(
 		AsignacionDeControles.ACCIONES_CON_BOTON.size()
 	)
+
+
+func test_el_foco_empieza_en_la_primera_accion_y_baja_por_la_lista() -> void:  # AC-CFG-026
+	var pantalla := _pantalla(true)
+	await get_tree().process_frame
+	await get_tree().process_frame
+	var celdas: Array[Button] = []
+	for accion: StringName in AsignacionDeControles.ACCIONES_CON_BOTON:
+		celdas.append(pantalla.boton_de(accion, EN_EL_JOYSTICK))
+	assert_object(get_viewport().gui_get_focus_owner()).is_same(celdas[0])
+	for i: int in range(1, celdas.size()):
+		assert_object(celdas[i - 1].find_valid_focus_neighbor(SIDE_BOTTOM)).is_same(celdas[i])
 
 
 func test_cada_boton_del_joystick_es_un_glifo_y_no_un_texto() -> void:  # AC-CFG-036
@@ -234,6 +245,34 @@ func test_cada_boton_del_joystick_es_un_glifo_y_no_un_texto() -> void:  # AC-CFG
 	assert_int(GlifoDeEntrada.forma_de(DEL_JOYSTICK, JOY_BUTTON_START)).is_equal(
 		GlifoDeEntrada.Forma.PILDORA
 	)
+
+
+func test_cada_glifo_del_joystick_va_en_el_rectangulo_de_una_tecla() -> void:  # AC-CFG-036
+	var pantalla := _pantalla(true)
+	await get_tree().process_frame
+	await get_tree().process_frame
+	pantalla.elegir_pestana(false)
+	await get_tree().process_frame
+	var tecla := pantalla.glifo_de(AsignacionDeControles.ADELANTE, PRINCIPAL).marco_dibujado()
+	pantalla.elegir_pestana(true)
+	await get_tree().process_frame
+	await get_tree().process_frame
+	var del_joystick := 0
+	for fila: HBoxContainer in pantalla.filas(true):
+		for nodo: Node in fila.find_children("*", "GlifoDeEntrada", true, false):
+			var glifo := nodo as GlifoDeEntrada
+			del_joystick += 1
+			assert_bool(glifo.en_tecla).is_true()
+			assert_vector(glifo.marco_dibujado().size).is_equal(tecla.size)
+	assert_int(del_joystick).is_equal(
+		(
+			_nombres(pantalla.filas(true), true).size()
+			+ AsignacionDeControles.ACCIONES_CON_BOTON.size()
+		)
+	)
+	for accion: StringName in AsignacionDeControles.ACCIONES_CON_BOTON:
+		var celda := pantalla.boton_de(accion, EN_EL_JOYSTICK)
+		assert_float(celda.size.x).is_equal_approx(tecla.size.x, 1.5)
 
 
 func test_las_teclas_son_teclas_y_cada_clic_es_una_tecla_con_su_nombre() -> void:  # AC-CFG-036
