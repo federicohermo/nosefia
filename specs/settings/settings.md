@@ -259,7 +259,9 @@ Pausa en el joystick es START (`BR-SAV-024`). La cruceta, el joystick derecho y 
 
 La pestaña JOYSTICK DEBE mostrar un renglón por cada una de las cinco acciones de botón, con su
 botón, y tres renglones FIJO que NO DEBEN poder reasignarse: Movimiento, en el joystick izquierdo;
-Visión, en el derecho, y Pausa, en START. CUANDO el jugador elige el
+Visión, en el derecho, y Pausa, en START. CUANDO el jugador abre la pestaña, el foco DEBE ir al
+botón de la primera acción, y la cruceta DEBE bajar de un renglón de botón al siguiente. CUANDO el
+jugador elige el
 botón de un renglón y aprieta un botón de joystick, el sistema DEBE asignárselo a esa acción, con el
 intercambio de `BR-CFG-018` dentro del joystick: ninguna acción queda sin botón y ningún botón
 está en dos acciones. Una ranura de teclado o mouse NO DEBE aceptar un botón de joystick, y una de
@@ -324,9 +326,10 @@ pestaña DEBE habilitarse y L1 y R1 DEBEN aparecer; la pestaña elegida NO DEBE 
 desconecta, la pestaña DEBE apagarse, L1 y R1 DEBEN desaparecer, y SI JOYSTICK estaba elegida, la
 pantalla DEBE pasar a TECLADO Y MOUSE.
 
-Cada pestaña DEBE tener una sola lista, con las acciones y Visión, sin otro título que la cabecera
-de sus columnas. Visión DEBE ir en el mismo lugar en las dos pestañas: después de las direcciones de movimiento. Visión, y en
-JOYSTICK Movimiento y Pausa, DEBEN llevar la marca **FIJO**, verse más tenues y no poder elegirse.
+Cada pestaña DEBE tener una sola lista, con sus acciones, sin otro título que la cabecera
+de sus columnas. TECLADO Y MOUSE NO DEBE tener renglón de Visión. En JOYSTICK, Visión DEBE ir justo
+después de Movimiento, y Movimiento, Visión y Pausa DEBEN llevar la marca **FIJO**, verse más tenues
+y no poder elegirse.
 Lo que no depende de ninguna acción —ENTER y las flechas en las interfaces, X y CÍRCULO en el
 joystick— NO DEBE tener renglón, y la pantalla NO DEBE llevar una ayuda de teclas.
 
@@ -334,8 +337,9 @@ Cada tecla dibujada, de una letra, una flecha o un clic, DEBE medir lo mismo: el
 más ancha, que es un clic con su nombre en letras. Una tecla angosta se estira a ese ancho, con su
 nombre centrado. En cada columna de una pestaña, PRINCIPAL y SECUNDARIA, todas las teclas y glifos
 DEBEN arrancar en el mismo borde izquierdo, y la cabecera de la columna también. El recuadro del
-foco DEBE enmarcar la tecla elegida con ese mismo ancho. La lista DEBE
-repartirse en el alto entre la cabecera y la línea del pie, con el mismo margen arriba y abajo, y la grilla —nombres y
+foco DEBE enmarcar la tecla elegida con ese mismo ancho. Los
+renglones DEBEN ir pegados a la cabecera, con el mismo paso en las dos pestañas y sin repartir el
+alto que sobra, que queda debajo de la lista sin llegar a la línea del pie, y la grilla —nombres y
 columnas— DEBE quedar centrada respecto de las pestañas. La pantalla DEBE decir qué entrada espera la
 celda elegida, y el aviso de una entrada que no se pudo asignar, en una línea debajo de la línea del
 pie, sin mover la grilla.
@@ -343,9 +347,13 @@ pie, sin mover la grilla.
 ### BR-CFG-032 — Cada entrada se dibuja con su glifo
 
 La pantalla de controles DEBE dibujar los botones del joystick como glifos y no como texto: ✕ ○ □ △
-con sus colores de PlayStation; L1, R1 y START como píldoras; los joysticks, como un círculo con L o
-R; la cruceta, con su forma. DEBE dibujar las teclas como teclas con borde, y cada clic del mouse y
-Visión también como teclas, con su nombre en letras —CLICK IZQ, CLICK DER, MOUSE— y sin dibujo del
+con sus colores de PlayStation; L1, R1 y START como su texto; los joysticks, como un círculo con L o
+R; la cruceta, con su forma. Cada glifo de un botón de una celda o de un renglón FIJO DEBE ir
+centrado dentro del rectángulo de una tecla, del mismo ancho y alto que las teclas de TECLADO Y
+MOUSE. L1 y R1 junto a las pestañas se dibujan como píldoras. El texto de una píldora y la letra de un
+círculo DEBEN ir en el tamaño de letra de la pantalla, centrados en su contorno y separados de él, con un margen visible y parejo. DEBE dibujar las teclas como teclas
+con borde, y cada clic del mouse
+también como tecla, con su nombre en letras —CLICK IZQ, CLICK DER— y sin dibujo del
 mouse. Una secundaria vacía DEBE dibujarse como un recuadro punteado tenue, del ancho de las teclas, que arranca en el mismo borde izquierdo que las teclas de su columna.
 
 ### BR-CFG-033 — El nombre de cada acción dice las funciones de menú que hace
@@ -567,7 +575,9 @@ pueda reasignar.
 ### AC-CFG-026 — La pantalla de controles reasigna el joystick *(verifica BR-CFG-026)*
 
 DADO la pestaña JOYSTICK ENTONCES muestra cinco renglones de botón, cada uno con el suyo, y los
-renglones FIJO de Movimiento, Visión y Pausa, que no se pueden elegir para reasignar. DADO Examinar en CUADRADO CUANDO se
+renglones FIJO de Movimiento, Visión y Pausa, que no se pueden elegir para reasignar. DADO la pestaña
+abierta CUANDO se abre ENTONCES el foco está en el botón de la primera acción, y CUANDO se aprieta
+abajo en la cruceta ENTONCES pasa al renglón de botón siguiente. DADO Examinar en CUADRADO CUANDO se
 elige su botón y se aprieta L1 ENTONCES Examinar queda en L1, Agacharse en CUADRADO, y las teclas
 de las dos no cambian. DADO Examinar eligiendo su botón CUANDO se aprieta una tecla o un clic
 ENTONCES no cambia nada; DADO Examinar eligiendo su tecla CUANDO se aprieta un botón de joystick
@@ -615,10 +625,10 @@ en 30 %. DADO un archivo sin botones de joystick ENTONCES cada acción tiene su 
 DADO la pantalla de controles abierta ENTONCES tiene las pestañas TECLADO Y MOUSE y JOYSTICK, cada
 una con el dibujo de su dispositivo, y se ve el contenido de una sola. DADO TECLADO Y MOUSE
 CUANDO se elige JOYSTICK ENTONCES se ve el contenido de JOYSTICK y no el de TECLADO Y MOUSE, y al
-revés. DADO cada pestaña ENTONCES tiene una sola lista. DADO TECLADO Y MOUSE ENTONCES Visión va justo
-después de Derecha, y DADO JOYSTICK, justo después de Movimiento. DADO cada pestaña ENTONCES su lista se
-reparte en el alto entre la cabecera y la línea del pie, con el mismo margen arriba y abajo, y queda
-centrada respecto de las pestañas.
+revés. DADO cada pestaña ENTONCES tiene una sola lista. DADO TECLADO Y MOUSE ENTONCES no tiene renglón de
+Visión, y DADO JOYSTICK, Visión va justo después de Movimiento. DADO cada pestaña ENTONCES sus renglones
+van pegados a la cabecera con el mismo paso, el alto que sobra queda debajo sin pisar la línea del
+pie, y la lista queda centrada respecto de las pestañas.
 
 ### AC-CFG-032 — La pestaña con la que se abre *(verifica BR-CFG-031)*
 
@@ -649,15 +659,18 @@ MOUSE.
 
 ### AC-CFG-035 — Los renglones fijos *(verifica BR-CFG-031)*
 
-DADO la pestaña TECLADO Y MOUSE ENTONCES Visión lleva la marca FIJO y no se puede elegir. DADO la
-pestaña JOYSTICK ENTONCES además Movimiento y Pausa la llevan.
+DADO la pestaña TECLADO Y MOUSE ENTONCES ningún renglón lleva la marca FIJO. DADO la
+pestaña JOYSTICK ENTONCES Movimiento, Visión y Pausa la llevan y no se pueden elegir.
 
 ### AC-CFG-036 — Los glifos *(verifica BR-CFG-032)*
 
 DADO la pestaña JOYSTICK ENTONCES el botón de cada acción es un glifo y no un texto: X, CÍRCULO,
-CUADRADO y TRIÁNGULO con su color de PlayStation, L1 y R1 como píldoras, y START en Pausa. DADO la
+CUADRADO y TRIÁNGULO con su color de PlayStation, L1 y R1, y START en Pausa; cada uno, igual que los
+glifos de Movimiento y Visión, va centrado dentro de un rectángulo del mismo ancho y alto que una
+tecla de TECLADO Y MOUSE, y la letra de Movimiento y Visión, igual que L1 y R1 junto a las pestañas, va centrada en su
+contorno, sin tocarlo. DADO la
 pestaña TECLADO Y MOUSE ENTONCES una tecla es una tecla con borde y cada clic, una tecla con su nombre en letras, distinto
-del clic izquierdo al derecho; Visión también. DADO un botón de joystick sin glifo propio
+del clic izquierdo al derecho. DADO un botón de joystick sin glifo propio
 ENTONCES se lee por su nombre. DADO cada pestaña ENTONCES cada tecla y cada ranura vacía miden lo mismo, el ancho de
 la tecla más ancha, y en cada columna todas arrancan en el mismo borde
 izquierdo, como la cabecera de la columna. DADO una celda esperando una entrada ENTONCES no cambia el

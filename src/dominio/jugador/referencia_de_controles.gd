@@ -99,7 +99,7 @@ static func texto(linea: Linea, control: String) -> String:
 static func accion(linea: Linea) -> StringName:
 	if linea in [Linea.EXAMINAR_LA_MANO, Linea.EXAMINAR, Linea.VOLVER]:
 		return ReglasDeLosObjetos.ACCION_EXAMINAR
-	if linea in [Linea.SACAR_PRODUCTO, Linea.INTERACTUAR]:
+	if linea in [Linea.SACAR_PRODUCTO, Linea.INTERACTUAR, Linea.LIMPIAR]:
 		return ReglasDelJugador.ACCION_USAR
 	return ReglasDeLosObjetos.ACCION_AGARRAR
 
@@ -126,6 +126,7 @@ static func contexto_de_la_caja(caja: ContenidoDeLaCaja, sostenido: ObjetoDelAlm
 	return contexto
 
 
+## Limpiar es el secundario, y el primario sobre la mancha no suelta la mopa.
 static func contexto_del_uso(efecto: Uso.Efecto) -> Contexto:
 	var verbos := {
 		Uso.Efecto.LLENAR: Linea.LLENAR,
@@ -137,6 +138,11 @@ static func contexto_del_uso(efecto: Uso.Efecto) -> Contexto:
 	}
 	if not verbos.has(efecto):
 		return null
+	if efecto == Uso.Efecto.LIMPIAR:
+		var contexto := Contexto.new()
+		contexto.secundario = Linea.LIMPIAR
+		contexto.ruta_primaria = Ruta.IGNORAR
+		return contexto
 	return contexto_primario(verbos[efecto])
 
 
