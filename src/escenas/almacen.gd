@@ -485,7 +485,8 @@ func _cablear_las_preferencias(pausa: ControlDePausa) -> void:
 func _cablear_los_logros(pausa: ControlDePausa) -> void:
 	var menu: MenuDePausa = get_node("Interfaz/MenuDePausa")
 	var pantalla := menu.pantalla_de_logros()
-	pantalla.preparar(_logros, CasoDeInvestigacion.de_la_partida())
+	var caso := CasoDeInvestigacion.de_la_partida()
+	pantalla.preparar(ArranqueDePrueba.logros_a_mostrar(_prueba, _logros, caso), caso)
 	pausa.logros = pantalla
 	pausa.cierre_de_logros_pedido.connect(menu.cerrar_logros)
 
