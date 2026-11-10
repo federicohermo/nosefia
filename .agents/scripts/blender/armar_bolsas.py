@@ -19,9 +19,10 @@ La malla se rehace entera dentro de la misma caja que ocupaba la bolsa, y entra 
 - **El cuerpo** tiene sección de superelipse: el frente casi plano y los costados redondos, que
   dan la vuelta hasta el dorso. El grosor se cierra suave hacia arriba y hacia abajo, como una
   bolsa con aire, y no pasa del grosor de la bolsa anterior.
-- **Las costuras** son aletas planas arriba y abajo.
+- **Las costuras** son aletas planas arriba y abajo. Cada una sigue el borde del frente o del
+  dorso: el cierre no lleva letras.
 - **La UV** sale del desplegado de la textura: el frente, el dorso y los costados toman su
-  recorte, y las aletas el de la tapa y el de la base. Las dos texturas comparten el desplegado.
+  recorte. Las dos texturas comparten el desplegado.
   Los vértices se comparten entre recortes: la luz no marca la costura de la UV.
 
 ## Lo que cuesta
@@ -51,8 +52,6 @@ DESPLEGADO: dict[str, Rect] = {
     "dorso": (0.5423, 0.8668, 0.1499, 0.8206),
     "izquierda": (0.0199, 0.1005, 0.1499, 0.8206),
     "derecha": (0.9003, 0.9793, 0.1499, 0.8206),
-    "tapa": (0.1507, 0.8485, 0.8660, 0.9657),
-    "base": (0.1467, 0.8517, 0.0263, 0.1108),
 }
 
 ANILLOS = 11
@@ -63,7 +62,9 @@ COSTADO = 0.5
 #: Qué tan plano es el frente: con 2 la sección sería una elipse.
 PLANITUD = 5.0
 #: El alto de cada aleta, en fracción del alto de la bolsa.
-ALETA = 0.07
+ALETA = 0.05
+#: Qué franja del borde del frente o del dorso pinta la aleta, en fracción de la textura.
+BANDA_DE_LA_ALETA = 0.03
 #: Qué parte del grosor anterior conserva el centro de la bolsa.
 GROSOR = 0.85
 #: Cuánto se separa cada cara de la aleta del plano medio, para que no se pisen.
@@ -116,8 +117,11 @@ def armar(objeto, desplegado: dict[str, Rect]) -> tuple[int, int]:
     caras: list[tuple[list[int], list[tuple[float, float]]]] = []
     anillos: list[list[int]] = []
     for i in range(ANILLOS + 1):
-        t = i / ANILLOS
-        espesor = grosor * max(0.0, 1 - abs(2 * t - 1) ** 3) ** 0.5
+        # Los anillos se juntan cerca de las costuras, donde la bolsa se cierra.
+        t = 0.5 - 0.5 * math.cos(math.pi * i / ANILLOS)
+        # El cuerpo conserva el grosor casi hasta la costura: el arte queda plano y sólo se curva
+        # el último tramo.
+        espesor = grosor * max(0.0, 1 - abs(2 * t - 1) ** 6) ** 0.5
         z = lerp(abajo, arriba, t)
         anillo = []
         for angulo in angulos:
@@ -147,29 +151,25 @@ def armar(objeto, desplegado: dict[str, Rect]) -> tuple[int, int]:
             # El último gajo de un tramo cierra en el primer ángulo del siguiente.
             fin = angulos[m] if m else 2 * math.pi - COSTADO
             ids = [anillos[i][k], anillos[i][m], anillos[i + 1][m], anillos[i + 1][k]]
-            t0, t1 = i / ANILLOS, (i + 1) / ANILLOS
+            t0 = 0.5 - 0.5 * math.cos(math.pi * i / ANILLOS)
+            t1 = 0.5 - 0.5 * math.cos(math.pi * (i + 1) / ANILLOS)
             uvs = [uv(cara, angulos[k], t0), uv(cara, fin, t0), uv(cara, fin, t1), uv(cara, angulos[k], t1)]
             caras.append((ids, uvs))
 
-    # Las aletas: una cara por lado, con la tapa o la base del desplegado partida al medio.
-    for nombre, borde, punta in (("base", abajo, z0), ("tapa", arriba, z1)):
-        u0, u1, v0, v1 = desplegado[nombre]
-        medio = (u0 + u1) / 2
-        for lado in (1, -1):
+    # Las aletas: una cara por lado. Cada una repite, en espejo, la franja del borde del frente o
+    # del dorso que toca: sigue el paquete y no lleva letras.
+    for arriba_de_todo, borde, punta in ((False, abajo, z0), (True, arriba, z1)):
+        for lado, cara in ((1, "frente"), (-1, "dorso")):
+            u0, u1, v0, v1 = desplegado[cara]
             x = xc + lado * SEPARACION
             ids = []
             for y, z in ((y0, borde), (y1, borde), (y1, punta), (y0, punta)):
                 ids.append(len(vertices))
                 vertices.append((x, y, z))
-            if nombre == "tapa":
-                va, vb = v0, v1
-            else:
-                va, vb = v1, v0
-            if lado == 1:
-                uvs = [(u0, va), (medio, va), (medio, vb), (u0, vb)]
-            else:
-                uvs = [(u1, va), (medio, va), (medio, vb), (u1, vb)]
-            caras.append((ids, uvs))
+            va = v1 if arriba_de_todo else v0
+            vb = va - BANDA_DE_LA_ALETA if arriba_de_todo else va + BANDA_DE_LA_ALETA
+            ua, ub = (u0, u1) if lado == 1 else (u1, u0)
+            caras.append((ids, [(ua, va), (ub, va), (ub, vb), (ua, vb)]))
 
     # Toda cara mira hacia afuera del centro de la bolsa.
     centro = (xc, yc, (z0 + z1) / 2)
