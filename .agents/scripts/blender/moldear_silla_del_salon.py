@@ -1,4 +1,4 @@
-"""Rehace la silla del salón como una silla de cafetería de carcasa moldeada sobre patas torneadas.
+"""Rehace la silla del salón como una silla de carcasa de plástico moldeado sobre patas torneadas.
 
     blender assets/models/SEPT_JUEGOS_PROTOTIPO.blend --background --python-exit-code 1 \
         --python .claude/scripts/blender/moldear_silla_del_salon.py -- [--aplicar]
@@ -13,14 +13,15 @@ maqueta al lado de las mesas.
 
 ## Qué cambia
 
-- **La carcasa** es una sola pieza de terciado de 12 mm: el asiento tiene un hueco suave, el borde
-  de adelante cae redondeado, y el respaldo sube con una curva y envuelve la espalda. El contorno
-  tiene las esquinas redondeadas y el canto es redondo.
+- **La carcasa** es una sola pieza de plástico inyectado de 12 mm: el asiento tiene un hueco suave,
+  el borde de adelante cae redondeado, y el respaldo sube con una curva y envuelve la espalda. El
+  contorno tiene las esquinas redondeadas y el canto es redondo. Es de plástico porque una carcasa
+  con esa forma no es de madera: con la veta, la silla se leía rara.
 - **Las patas** son cónicas, torneadas y abiertas hacia afuera. Un bastidor las une bajo el
   asiento, y un travesaño en H las une cerca del piso.
 
-La huella, el alto, los dos materiales y la UV en metros son los de la silla anterior: las seis
-sillas siguen en su lugar y con su madera. Las normales van escritas a mano: el canto brilla como
+La silla mide `ESCALA` veces la anterior: el asiento queda a 62 cm de una mesa de 90, y entra
+debajo de la mesa. Las seis sillas siguen en su lugar, y las patas siguen siendo de madera. Las normales van escritas a mano: el canto brilla como
 un canto redondeado y la carcasa se ve lisa.
 
 ## Lo que cuesta
@@ -40,6 +41,11 @@ from lib.consola import configurar  # noqa: E402
 
 MALLA = "salon_silla"
 CARCASA, PATAS = 0, 1
+ESCALA = 1.12
+#: El material de la carcasa reemplaza a la madera blanca en la misma ranura.
+PLASTICO = "SILLA | Plástico blanco"
+COLOR_DEL_PLASTICO = (0.78, 0.78, 0.75, 1.0)
+RUGOSIDAD_DEL_PLASTICO = 0.5
 
 #: La línea media de la carcasa en (y, z), desde la caída del borde de adelante hasta la punta
 #: del respaldo. El respaldo queda del lado de -y, como en la silla anterior.
@@ -334,10 +340,26 @@ def patas(armado: Armado, arriba: list[list[Vector]]) -> None:
     cono(armado, medios[0], medios[1], RADIO_DEL_TRAVESANO, RADIO_DEL_TRAVESANO, 8)
 
 
+def plastico():
+    material = bpy.data.materials.get(PLASTICO) or bpy.data.materials.new(PLASTICO)
+    material.use_nodes = True
+    nodos = material.node_tree.nodes
+    for nodo in list(nodos):
+        if nodo.type == "TEX_IMAGE":
+            nodos.remove(nodo)
+    principal = next(n for n in nodos if n.type == "BSDF_PRINCIPLED")
+    principal.inputs["Base Color"].default_value = COLOR_DEL_PLASTICO
+    principal.inputs["Roughness"].default_value = RUGOSIDAD_DEL_PLASTICO
+    principal.inputs["Metallic"].default_value = 0.0
+    material.diffuse_color = COLOR_DEL_PLASTICO
+    return material
+
+
 def volcar(armado: Armado, malla) -> None:
+    malla.materials[CARCASA] = plastico()
     materiales = list(malla.materials)
     malla.clear_geometry()
-    malla.from_pydata([tuple(v) for v in armado.vertices], [], [c[0] for c in armado.caras])
+    malla.from_pydata([tuple(v * ESCALA) for v in armado.vertices], [], [c[0] for c in armado.caras])
     malla.update()
     capa = malla.uv_layers.new(name="UVMap")
     normales = []
