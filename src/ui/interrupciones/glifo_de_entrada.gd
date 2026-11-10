@@ -18,6 +18,11 @@ const TEMA := preload("res://assets/ui/manada/tema.tres")
 const TIPO_DEL_TEXTO := &"TextoDelMenu"
 const ALTO := 46.0
 const MARGEN_DEL_TEXTO := 22.0
+## El texto de una píldora y la letra de una palanca van más chicos que el de una tecla, para que
+## no toquen el contorno. En una palanca la letra no pasa de esta parte del círculo, y un nombre
+## largo, como L3, se achica hasta entrar.
+const ESCALA_DE_LA_LETRA_EN_EL_CONTORNO := 0.6
+const ANCHO_DEL_TEXTO_EN_LA_PALANCA := 0.6
 const FORMAS_QUE_LLENAN: Array[Forma] = [Forma.TECLA, Forma.PILDORA, Forma.RANURA_LIBRE]
 ## Cuánto del alto de la tecla ocupa un glifo que va dentro de ella.
 const ESCALA_EN_LA_TECLA := 0.76
@@ -122,10 +127,7 @@ func _draw() -> void:
 		if forma == Forma.PILDORA:
 			_escribir(marco, texto)
 			return
-		marco = Rect2(
-			marco.get_center() - Vector2.ONE * ALTO * ESCALA_EN_LA_TECLA / 2.0,
-			Vector2.ONE * ALTO * ESCALA_EN_LA_TECLA
-		)
+		marco = contorno_dibujado()
 	match forma:
 		Forma.TECLA:
 			_dibujar_tecla(marco)
@@ -146,16 +148,9 @@ func _tamano_natural() -> Vector2:
 		Forma.TECLA, Forma.PILDORA:
 			if flecha != Vector2.ZERO:
 				return Vector2(ALTO, ALTO)
-			return Vector2(maxf(ALTO, _ancho_del_texto() + MARGEN_DEL_TEXTO), ALTO)
+			var margen := ALTO if texto_va_en_un_contorno() else MARGEN_DEL_TEXTO
+			return Vector2(maxf(ALTO, medida_del_texto().x + margen), ALTO)
 	return Vector2(ALTO, ALTO)
-
-
-func _ancho_del_texto() -> float:
-	return (
-		get_theme_default_font()
-		. get_string_size(texto, HORIZONTAL_ALIGNMENT_LEFT, -1.0, _tamano_de_la_letra())
-		. x
-	)
 
 
 ## El tamaño de todo el texto de la pantalla de controles, el de las teclas también: el del texto
@@ -164,8 +159,42 @@ static func tamano_de_la_letra() -> int:
 	return TEMA.get_font_size(&"font_size", TIPO_DEL_TEXTO)
 
 
-func _tamano_de_la_letra() -> int:
+## Si el texto va adentro de un contorno que no es una tecla: una píldora suelta o una palanca.
+func texto_va_en_un_contorno() -> bool:
+	return forma == Forma.PALANCA or (forma == Forma.PILDORA and not en_tecla)
+
+
+## El tamaño de letra con que se dibuja `texto`.
+func tamano_de_la_letra_dibujada() -> int:
+	var en_el_contorno := int(ALTO * ESCALA_DE_LA_LETRA_EN_EL_CONTORNO)
+	if forma == Forma.PALANCA:
+		var cabe := contorno_dibujado().size.y * ANCHO_DEL_TEXTO_EN_LA_PALANCA
+		while en_el_contorno > 1 and _medida_con(en_el_contorno).x > cabe:
+			en_el_contorno -= 1
+		return en_el_contorno
+	if texto_va_en_un_contorno():
+		return en_el_contorno
 	return tamano_de_la_letra()
+
+
+## Lo que ocupa `texto` tal como se dibuja.
+func medida_del_texto() -> Vector2:
+	return _medida_con(tamano_de_la_letra_dibujada())
+
+
+func _medida_con(tamano: int) -> Vector2:
+	return get_theme_default_font().get_string_size(texto, HORIZONTAL_ALIGNMENT_LEFT, -1.0, tamano)
+
+
+## El rectángulo de la forma redonda o de la píldora: el que su borde recorre.
+func contorno_dibujado() -> Rect2:
+	var marco := marco_dibujado()
+	if not en_tecla or forma == Forma.PILDORA:
+		return marco
+	return Rect2(
+		marco.get_center() - Vector2.ONE * ALTO * ESCALA_EN_LA_TECLA / 2.0,
+		Vector2.ONE * ALTO * ESCALA_EN_LA_TECLA
+	)
 
 
 func _caja(radio: int) -> StyleBoxFlat:
@@ -179,7 +208,7 @@ func _caja(radio: int) -> StyleBoxFlat:
 
 func _escribir(marco: Rect2, lo_escrito: String) -> void:
 	var fuente := get_theme_default_font()
-	var tamano_de_la_letra := _tamano_de_la_letra()
+	var tamano_de_la_letra := tamano_de_la_letra_dibujada()
 	var medida := fuente.get_string_size(
 		lo_escrito, HORIZONTAL_ALIGNMENT_LEFT, -1.0, tamano_de_la_letra
 	)
