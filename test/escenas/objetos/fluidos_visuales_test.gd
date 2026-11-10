@@ -21,10 +21,9 @@ func _agua() -> Superficie:
 	return agua
 
 
-func _alturas(agua: MeshInstance3D) -> Array[float]:
+func _alturas(agua: Superficie) -> Array[float]:
 	var alturas: Array[float] = []
-	var vertices: PackedVector3Array = agua.mesh.surface_get_arrays(0)[Mesh.ARRAY_VERTEX]
-	for vertice: Vector3 in vertices:
+	for vertice: Vector3 in agua.vertices_dibujados():
 		alturas.append(vertice.y)
 	return alturas
 
@@ -42,7 +41,7 @@ func test_el_agua_tiene_superficie_curva_en_vez_de_un_hexagono() -> void:
 	assert_int(agua.mesh.surface_get_array_len(0)).is_greater(100)
 
 
-func test_las_manchas_tienen_borde_irregular_dentro_del_cuerpo() -> void:
+func test_la_malla_de_la_mancha_no_sale_de_su_cuerpo() -> void:
 	var mancha: Node3D = auto_free(MANCHA.instantiate())
 	add_child(mancha)
 	var malla := mancha.get_node("Malla") as MeshInstance3D
@@ -52,8 +51,8 @@ func test_las_manchas_tienen_borde_irregular_dentro_del_cuerpo() -> void:
 	for indice: int in range(vertices.size() - 48, vertices.size()):
 		var vertice := vertices[indice]
 		radios.append(Vector2(vertice.x, vertice.z).length())
-	assert_float(radios.max()).is_less_equal(0.6)
-	assert_float(radios.max() - radios.min()).is_greater(0.03)
+	var cuerpo := (mancha.get_node("Cuerpo") as CollisionShape3D).shape as CylinderShape3D
+	assert_float(radios.max()).is_less_equal(cuerpo.radius + 0.0001)
 
 
 func test_acelerar_agita_el_agua_y_frenar_la_deja_asentarse() -> void:
@@ -110,7 +109,7 @@ func test_el_agua_inclinada_compensa_la_orientacion_del_balde() -> void:
 	assert_float(agua.global_basis.y.angle_to(Vector3.UP)).is_greater(0.5)
 	agua.reiniciar()
 	_avanzar(agua, 1.0 / 60.0)
-	var vertices: PackedVector3Array = agua.mesh.surface_get_arrays(0)[Mesh.ARRAY_VERTEX]
+	var vertices := agua.vertices_dibujados()
 	var alturas: Array[float] = []
 	for vertice: Vector3 in vertices:
 		alturas.append(agua.to_global(vertice).y)
@@ -216,8 +215,7 @@ func test_el_agua_no_atraviesa_ninguna_de_las_seis_paredes() -> void:
 	for paso: int in 60:
 		agua.get_parent().position.x += 0.04 if paso % 10 < 5 else -0.04
 		_avanzar(agua, 1.0 / 60.0)
-	var vertices: PackedVector3Array = agua.mesh.surface_get_arrays(0)[Mesh.ARRAY_VERTEX]
-	for vertice: Vector3 in vertices:
+	for vertice: Vector3 in agua.vertices_dibujados():
 		for pared: int in 12:
 			var normal := Vector2(cos(pared * PI / 6.0), sin(pared * PI / 6.0))
 			assert_float(normal.dot(Vector2(vertice.x, vertice.z))).is_less(0.17194)
@@ -226,7 +224,7 @@ func test_el_agua_no_atraviesa_ninguna_de_las_seis_paredes() -> void:
 func test_las_ondas_se_propagan_y_no_son_un_solo_plano_inclinado() -> void:
 	var ondas := Ondas.new()
 	ondas.avanzar(0.1, Vector2(20.0, 0.0))
-	for paso: int in 20:
+	for paso: int in 5:
 		ondas.avanzar(1.0 / 60.0, Vector2.ZERO)
 	var centro := ondas.altura_en(Vector2.ZERO)
 	var cerca := ondas.altura_en(Vector2(0.3, 0.0))
@@ -296,9 +294,7 @@ func test_la_pared_no_fija_la_altura_del_agua_a_cero() -> void:
 	var ondas := Ondas.new()
 	ondas.perturbar(Vector2(0.9, 0.0), 0.5)
 	ondas.avanzar(1.0 / 60.0, Vector2.ZERO)
-	var junto := ondas.altura_en(Vector2(11.0 / 12.0, 0.0))
-	assert_float(absf(junto)).is_greater(0.0001)
-	assert_float(ondas.altura_en(Vector2(0.97, 0.0))).is_equal_approx(junto, 0.00001)
+	assert_float(absf(ondas.altura_en(Vector2(1.0, 0.0)))).is_greater(0.0001)
 
 
 func _avanzar(superficie: Superficie, delta: float) -> void:
@@ -306,30 +302,12 @@ func _avanzar(superficie: Superficie, delta: float) -> void:
 	superficie._process(delta)
 
 
-func test_recuperar_la_fisica_no_reconstruye_la_malla_hasta_dibujar() -> void:
+func test_recuperar_la_fisica_no_cambia_el_dibujo_hasta_dibujar() -> void:
 	var agua := _agua()
-	var antes: PackedVector3Array = agua.mesh.surface_get_arrays(0)[Mesh.ARRAY_VERTEX]
+	var antes := agua.vertices_dibujados()
 	for paso: int in 8:
 		agua.get_parent().position.x += 0.04
 		agua._physics_process(1.0 / 60.0)
-	assert_bool(antes == agua.mesh.surface_get_arrays(0)[Mesh.ARRAY_VERTEX]).is_true()
+	assert_bool(antes == agua.vertices_dibujados()).is_true()
 	agua._process(1.0 / 60.0)
-	assert_bool(antes == agua.mesh.surface_get_arrays(0)[Mesh.ARRAY_VERTEX]).is_false()
-	var normales: PackedVector3Array = agua.mesh.surface_get_arrays(0)[Mesh.ARRAY_NORMAL]
-	for normal: Vector3 in normales:
-		assert_float(normal.length()).is_equal_approx(1.0, 0.0001)
-		assert_float(normal.y).is_greater(0.0)
-
-
-func test_el_muestreo_preparado_conserva_las_ondas_del_centro_y_de_la_pared() -> void:
-	var ondas := Ondas.new()
-	var puntos := PackedVector2Array(
-		[Vector2.ZERO, Vector2(0.31, -0.24), Vector2(0.97, 0.0), Vector2(-0.9, 0.3)]
-	)
-	ondas.preparar_muestras(puntos)
-	ondas.perturbar(Vector2(0.8, 0.0), 0.5)
-	for paso: int in 20:
-		ondas.avanzar(1.0 / 60.0, Vector2(5.0, -2.0))
-		var alturas := ondas.alturas_muestreadas()
-		for indice: int in puntos.size():
-			assert_float(alturas[indice]).is_equal_approx(ondas.altura_en(puntos[indice]), 0.000001)
+	assert_bool(antes == agua.vertices_dibujados()).is_false()

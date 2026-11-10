@@ -1,97 +1,52 @@
-## Ecuación de onda 2D con bordes reflectantes y pasos acotados por estabilidad.
+## Las ondas del balde como ocho modos de un recipiente redondo, cada uno un oscilador amortiguado.
+## La CPU sólo avanza los ocho osciladores. El shader suma las formas en cada vértice y píxel.
 ## Las alturas son sólo dibujo; no representan agua disponible para limpiar.
 extends RefCounted
 
-const LADO := 25
-# Con este coeficiente, 1/60 s queda por debajo del límite 1/sqrt(2 * PROPAGACION).
+const MODOS := 8
 const PASO := 1.0 / 60.0
-const PROPAGACION := 900.0
+const AMORTIGUACION := 2.8
+# Con la velocidad de la onda en 2,5 radios por segundo, cada forma vibra a 2,5 por su número de
+# onda. El orden es el de `forma_en`.
+const FRECUENCIAS: Array[float] = [7.9, 11.8, 11.8, 7.6, 7.6, 10.5, 10.5, 15.7]
+# La integral de cada forma al cuadrado sobre el disco de radio uno.
+const NORMAS: Array[float] = [1.0548, 0.8208, 0.8208, 0.9074, 0.9074, 0.7915, 0.7915, 1.5708]
+# Lo que una gota de ancho 0,045 aporta a cada modo, por unidad de su forma en el centro.
+const AREA_DE_LA_GOTA := 0.045 * PI
+# La aceleración empuja el agua en plano: sólo la forma de un nodo radial la recibe.
+const EMPUJE := 0.035 * 0.4179
+# El modo axial se corre para que el agua no suba ni baje de nivel al oscilar.
+const MEDIA_DEL_MODO_AXIAL := 0.405
 
-var _alturas := PackedFloat32Array()
+var _amplitudes := PackedFloat32Array()
 var _velocidades := PackedFloat32Array()
-var _siguientes := PackedFloat32Array()
-var _interior := PackedByteArray()
 var _activa := false
-var _amplitud := 0.0
-var _celdas := PackedInt32Array()
-var _vecinos := PackedInt32Array()
-var _puntos := PackedVector2Array()
-var _extension := PackedInt32Array()
-var _muestras := PackedInt32Array()
-var _pesos := PackedVector2Array()
 
 
 func _init() -> void:
-	_alturas.resize(LADO * LADO)
-	_velocidades.resize(LADO * LADO)
-	_siguientes.resize(LADO * LADO)
-	_interior.resize(LADO * LADO)
-	for y: int in LADO:
-		for x: int in LADO:
-			var p := Vector2(x, y) / float(LADO - 1) * 2.0 - Vector2.ONE
-			var dentro := true
-			for pared: int in 12:
-				var normal := Vector2(cos(pared * PI / 6.0), sin(pared * PI / 6.0))
-				dentro = dentro and normal.dot(p) <= 0.97
-			_interior[y * LADO + x] = int(dentro)
-	# La pared y sus vecinos no cambian durante la simulación.
-	_puntos.resize(LADO * LADO)
-	_extension.resize(LADO * LADO)
-	_extension.fill(-1)
-	for y: int in LADO:
-		for x: int in LADO:
-			var indice := y * LADO + x
-			_puntos[indice] = Vector2(x, y) / float(LADO - 1) * 2.0 - Vector2.ONE
-			if _interior[indice] != 0:
-				_celdas.append(indice)
-				_extension[indice] = indice
-				for vecino: Vector2i in [
-					Vector2i(x - 1, y), Vector2i(x + 1, y), Vector2i(x, y - 1), Vector2i(x, y + 1)
-				]:
-					var otra := vecino.y * LADO + vecino.x
-					_vecinos.append(
-						(
-							otra
-							if otra >= 0 and otra < _interior.size() and _interior[otra] != 0
-							else indice
-						)
-					)
-			else:
-				var menor := INF
-				for fila: int in range(maxi(0, y - 2), mini(LADO, y + 3)):
-					for columna: int in range(maxi(0, x - 2), mini(LADO, x + 3)):
-						var otra := fila * LADO + columna
-						var distancia := float(
-							(fila - y) * (fila - y) + (columna - x) * (columna - x)
-						)
-						if _interior[otra] != 0 and distancia < menor:
-							menor = distancia
-							_extension[indice] = otra
+	_amplitudes.resize(MODOS)
+	_velocidades.resize(MODOS)
 
 
 func reiniciar() -> void:
-	_alturas.fill(0.0)
+	_amplitudes.fill(0.0)
 	_velocidades.fill(0.0)
-	_siguientes.fill(0.0)
 	_activa = false
-	_amplitud = 0.0
 
 
+## Un golpe en `centro`, en coordenadas del disco de radio uno.
 func perturbar(centro: Vector2, fuerza: float) -> void:
 	_activa = true
-	var suma := 0.0
-	for indice: int in _celdas:
-		var distancia := _puntos[indice].distance_squared_to(centro)
-		_velocidades[indice] += fuerza * exp(-distancia / 0.045)
-		suma += _velocidades[indice]
-	# El impulso levanta una cresta y baja su entorno; no eleva todo el nivel del agua.
-	var media := suma / _celdas.size()
-	for indice: int in _celdas:
-		_velocidades[indice] -= media
+	for modo: int in MODOS:
+		_velocidades[modo] += fuerza * forma_en(modo, centro) * AREA_DE_LA_GOTA / NORMAS[modo]
 
 
+## Una cota de la altura mayor: la suma de cada amplitud por el máximo de su forma.
 func amplitud() -> float:
-	return _amplitud
+	var suma := absf(_amplitudes[0]) * (1.0 + MEDIA_DEL_MODO_AXIAL)
+	for modo: int in range(1, MODOS):
+		suma += absf(_amplitudes[modo])
+	return suma
 
 
 func avanzar(delta: float, aceleracion: Vector2) -> void:
@@ -101,36 +56,17 @@ func avanzar(delta: float, aceleracion: Vector2) -> void:
 	var restante := minf(delta, 0.1)
 	while restante > 0.0:
 		var paso := minf(PASO, restante)
-		var amortiguacion := exp(-paso * 2.8)
-		for celda: int in _celdas.size():
-			var indice := _celdas[celda]
-			var altura := _alturas[indice]
-			var vecino := celda * 4
-			var laplaciano := (
-				_alturas[_vecinos[vecino]]
-				+ _alturas[_vecinos[vecino + 1]]
-				+ _alturas[_vecinos[vecino + 2]]
-				+ _alturas[_vecinos[vecino + 3]]
-				- altura * 4.0
-			)
-			var fuerza := -aceleracion.dot(_puntos[indice]) * 0.035
-			_velocidades[indice] += (laplaciano * PROPAGACION + fuerza) * paso
-			_velocidades[indice] *= amortiguacion
-			_siguientes[indice] = clampf(altura + _velocidades[indice] * paso, -0.028, 0.028)
-		# El subpaso escribió todo el interior: lo anterior queda de reserva, sin copiarlo.
-		var anteriores := _alturas
-		_alturas = _siguientes
-		_siguientes = anteriores
+		var amortiguacion := exp(-paso * AMORTIGUACION)
+		for modo: int in MODOS:
+			var omega: float = FRECUENCIAS[modo]
+			var fuerza := -omega * omega * _amplitudes[modo]
+			if modo == 1:
+				fuerza += aceleracion.x * EMPUJE
+			elif modo == 2:
+				fuerza += aceleracion.y * EMPUJE
+			_velocidades[modo] = (_velocidades[modo] + fuerza * paso) * amortiguacion
+			_amplitudes[modo] += _velocidades[modo] * paso
 		restante -= paso
-	var suma := 0.0
-	for indice: int in _celdas:
-		suma += _alturas[indice]
-	var media := suma / _celdas.size()
-	_amplitud = 0.0
-	for indice: int in _celdas:
-		_alturas[indice] -= media
-		# Se conserva el máximo del campo al recorrerlo; el dibujo lo consulta varias veces.
-		_amplitud = maxf(_amplitud, absf(_alturas[indice]))
 	if amplitud() < 0.000001 and aceleracion.length_squared() < 0.0001:
 		var rapidez := 0.0
 		for velocidad: float in _velocidades:
@@ -139,43 +75,38 @@ func avanzar(delta: float, aceleracion: Vector2) -> void:
 			reiniciar()
 
 
+## Las ocho amplitudes, en el orden de `forma_en`, para el shader.
+func amplitudes() -> PackedFloat32Array:
+	return _amplitudes.duplicate()
+
+
 func altura_en(punto: Vector2) -> float:
-	var p := (punto.clamp(-Vector2.ONE, Vector2.ONE) + Vector2.ONE) * 0.5 * (LADO - 1)
-	var x := mini(int(p.x), LADO - 2)
-	var y := mini(int(p.y), LADO - 2)
-	var a := lerpf(_altura_de_celda(x, y), _altura_de_celda(x + 1, y), p.x - x)
-	var b := lerpf(_altura_de_celda(x, y + 1), _altura_de_celda(x + 1, y + 1), p.x - x)
-	return lerpf(a, b, p.y - y)
+	var altura := 0.0
+	for modo: int in MODOS:
+		altura += _amplitudes[modo] * forma_en(modo, punto)
+	return altura
 
 
-## La malla del recipiente siempre consulta los mismos puntos del campo.
-func preparar_muestras(puntos: PackedVector2Array) -> void:
-	_muestras.clear()
-	_pesos.clear()
-	for punto: Vector2 in puntos:
-		var p := (punto.clamp(-Vector2.ONE, Vector2.ONE) + Vector2.ONE) * 0.5 * (LADO - 1)
-		var x := mini(int(p.x), LADO - 2)
-		var y := mini(int(p.y), LADO - 2)
-		_pesos.append(Vector2(p.x - x, p.y - y))
-		for celda: int in [
-			y * LADO + x, y * LADO + x + 1, (y + 1) * LADO + x, (y + 1) * LADO + x + 1
-		]:
-			_muestras.append(maxi(0, _extension[celda]))
-
-
-func alturas_muestreadas() -> PackedFloat32Array:
-	var alturas := PackedFloat32Array()
-	alturas.resize(_pesos.size())
-	for indice: int in alturas.size():
-		var celda := indice * 4
-		var peso := _pesos[indice]
-		var a := lerpf(_alturas[_muestras[celda]], _alturas[_muestras[celda + 1]], peso.x)
-		var b := lerpf(_alturas[_muestras[celda + 2]], _alturas[_muestras[celda + 3]], peso.x)
-		alturas[indice] = lerpf(a, b, peso.y)
-	return alturas
-
-
-## Extiende la altura de la pared: muestrear fuera no fija el borde del agua a cero.
-func _altura_de_celda(x: int, y: int) -> float:
-	var indice := _extension[y * LADO + x]
-	return _alturas[indice] if indice >= 0 else 0.0
+## Cada forma tiene pendiente radial cero en la pared, así la onda se refleja contra ella.
+## `agua_y_manchas.gdshader` repite estas formas; un cambio acá va también allá.
+static func forma_en(modo: int, punto: Vector2) -> float:
+	var radio := minf(punto.length(), 1.0)
+	var angulo := punto.angle()
+	var anillo := sin(radio * PI * 0.5)
+	match modo:
+		0:
+			return cos(radio * PI) + MEDIA_DEL_MODO_AXIAL
+		1:
+			return sin(radio * PI * 1.5) * cos(angulo)
+		2:
+			return sin(radio * PI * 1.5) * sin(angulo)
+		3:
+			return anillo * anillo * cos(angulo * 2.0)
+		4:
+			return anillo * anillo * sin(angulo * 2.0)
+		5:
+			return anillo * anillo * anillo * cos(angulo * 3.0)
+		6:
+			return anillo * anillo * anillo * sin(angulo * 3.0)
+		_:
+			return cos(radio * TAU)

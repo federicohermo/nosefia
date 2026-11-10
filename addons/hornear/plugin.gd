@@ -32,6 +32,9 @@ var _intentos := 0
 var _operacion_en_curso: bool = false
 ## Se arma antes de apagar el local: la noche sin luz cambia los vidrios, y el juego no.
 var _cascara: Sondas.Cascara
+## Los vidrios a la calle como estaban antes de emitir la luz de afuera, para devolverlos antes de
+## guardar la escena.
+var _vidrios: Dictionary[MeshInstance3D, Array] = {}
 
 
 func _process(delta: float) -> void:
@@ -79,6 +82,8 @@ func _seleccionar() -> void:
 	)
 	if _sin_luz():
 		_apagar_el_local(raiz, horno)
+	else:
+		_vidrios = CorteDeLuz.emitir_por_los_vidrios(raiz)
 	EditorInterface.get_selection().clear()
 	EditorInterface.get_selection().add_node(horno)
 	EditorInterface.edit_node(horno)
@@ -144,6 +149,7 @@ func _guardar() -> void:
 		_fallar("el horneado no dejó datos")
 		return
 	_avanzar(4)
+	CorteDeLuz.cerrar_los_vidrios(_vidrios)
 	var cuenta := Sondas.rellenar(datos, _cascara)
 	print("[hornear] sondas de afuera rellenadas: %d de %d" % [cuenta.rellenadas, cuenta.total])
 	# La noche del corte las luces están apagadas: no hay luz que devolverle a la mercadería.

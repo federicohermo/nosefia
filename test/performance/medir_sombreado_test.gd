@@ -4,7 +4,10 @@ const Medicion := preload("res://test/performance/medir_sombreado.gd")
 const ESCENA := preload("res://test/performance/medir_sombreado.tscn")
 const CARPETA := "res://src/escenas/objetos/"
 const FUENTES: Array[String] = [
-	"agua_y_manchas.gdshader", "aspecto_del_agua.gdshaderinc", "aspecto_de_la_mancha.gdshaderinc"
+	"agua_y_manchas.gdshader",
+	"aspecto_del_agua.gdshaderinc",
+	"aspecto_de_la_mancha.gdshaderinc",
+	"oleaje_del_balde.gdshaderinc",
 ]
 
 

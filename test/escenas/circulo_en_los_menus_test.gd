@@ -120,7 +120,7 @@ func test_circulo_en_el_menu_durante_la_captura_no_cierra() -> void:  # AC-SAV-0
 	var configuraciones: PantallaDeConfiguraciones = menu.get("_configuraciones")
 	_boton(menu, "CONFIGURACIONES").pressed.emit()
 	var controles := _controles_de(configuraciones)
-	controles.elegir(AsignacionDeControles.AGARRAR, AsignacionDeControles.RANURA_DE_WASD)
+	controles.elegir(AsignacionDeControles.AGARRAR, AsignacionDeControles.RANURA_PRINCIPAL)
 	get_viewport().push_input(_circulo())
 	assert_bool(controles.visible).is_true()
 	assert_bool(configuraciones.visible).is_true()

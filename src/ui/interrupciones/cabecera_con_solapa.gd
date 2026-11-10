@@ -17,6 +17,8 @@ const AIRE := 32.0
 ## Lo que mide `cabecera.svg`: los puntos de abajo están en sus unidades.
 const ANCHO := 1713.59
 const ALTO := 70.3058
+## La altura de la línea larga, en las unidades de `cabecera.svg`.
+const Y_DE_LA_LINEA := 48.5
 ## Cuánto tarda la solapa en crecer, en segundos.
 const DURACION := 0.25
 ## El paso más largo que se le cuenta a un cuadro. El cuadro que abre una pantalla tarda, y con
@@ -105,13 +107,13 @@ func _draw() -> void:
 	if volteada:
 		draw_set_transform(size, 0.0, -Vector2.ONE)
 	var antes := PackedVector2Array(
-		[Vector2(1, 70) * escala, Vector2(1, 48.5) * escala, Vector2(35.292, 1) * escala]
+		[Vector2(1, 70) * escala, Vector2(1, Y_DE_LA_LINEA) * escala, Vector2(35.292, 1) * escala]
 	)
 	var despues := PackedVector2Array(
 		[
 			Vector2(cierre, borde),
-			Vector2(cierre, 48.5 * escala.y),
-			Vector2(1684.42, 48.5) * escala,
+			Vector2(cierre, Y_DE_LA_LINEA * escala.y),
+			Vector2(1684.42, Y_DE_LA_LINEA) * escala,
 			Vector2(1713, 69.5) * escala,
 		]
 	)
