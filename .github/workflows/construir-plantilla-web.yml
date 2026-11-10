@@ -1,0 +1,54 @@
+# Compila la plantilla web a mano. El despliegue no la compila: la baja.
+#
+# Una persona corre este workflow cuando cambian el parche o la receta, publica el ZIP en una
+# release y abre un PR con la URL y las huellas. Cómo: docs/infra/despliegue.md.
+#
+# Sin caché de objetos: se corre pocas veces, y una caché vence a los 7 días sin uso.
+name: construir-plantilla-web
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  construir:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 180
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          persist-credentials: false
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+
+      # Dos trabajos limitan la memoria del compilador.
+      - name: Compilar la plantilla web
+        run: python .github/scripts/preparar_plantilla_web.py --jobs 2
+
+      # Las tres huellas son las que `plantilla_publicada` declara en la receta.
+      - name: Las huellas de la plantilla
+        run: |
+          set -euo pipefail
+          mkdir -p "$RUNNER_TEMP/plantilla"
+          cp build/templates/web_release.zip "$RUNNER_TEMP/plantilla/"
+          python - <<'PY'
+          import json, os
+          from pathlib import Path
+          manifiesto = json.loads(Path("build/templates/web_release.manifiesto.json").read_text())
+          huellas = {c: manifiesto[c] for c in ("receta_sha256", "zip_sha256", "wasm_sha256")}
+          salida = Path(os.environ["RUNNER_TEMP"]) / "plantilla/plantilla.json"
+          salida.write_text(json.dumps(huellas, indent=2) + "\n")
+          print(json.dumps(huellas, indent=2))
+          PY
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: plantilla-web
+          path: ${{ runner.temp }}/plantilla/
+          if-no-files-found: error
+          compression-level: 0
+          retention-days: 30

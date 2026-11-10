@@ -24,6 +24,7 @@ import zipfile
 from pathlib import Path, PurePosixPath
 
 RAIZ = Path(__file__).resolve().parents[2]
+WORKFLOW = "construir-plantilla-web.yml"
 METADATA = RAIZ / ".github/patches/godot-web-compilacion.json"
 DESTINO = RAIZ / "build/templates/web_release.zip"
 ARCHIVOS = {
@@ -174,6 +175,18 @@ def receta_sha256(identidad: dict) -> str:
     return sha256(json.dumps(receta, sort_keys=True, separators=(",", ":")).encode("utf-8"))
 
 
+def _publicada(datos: dict, identidad: dict) -> dict:
+    """La plantilla que la receta publica, o el motivo por el que no vale para esta receta."""
+    publicada = datos.get("plantilla_publicada")
+    if not isinstance(publicada, dict) or not {
+        "url", "receta_sha256", "zip_sha256", "wasm_sha256"
+    } <= publicada.keys():
+        raise ValueError("La receta no declara una plantilla_publicada completa")
+    if publicada["receta_sha256"] != receta_sha256(identidad):
+        raise ValueError("La receta de la plantilla_publicada no coincide con fuentes y parche")
+    return publicada
+
+
 def _cache(destino: Path, identidad: dict, medido: dict | None) -> dict:
     manifiesto = json.loads(destino.with_suffix(".manifiesto.json").read_text(encoding="utf-8"))
     if manifiesto.get("identidad") != identidad:
@@ -188,7 +201,7 @@ def _cache(destino: Path, identidad: dict, medido: dict | None) -> dict:
         or medido.get("wasm_sha256") != manifiesto["wasm_sha256"]
         or medido.get("receta_sha256") != receta_sha256(identidad)
     ):
-        raise ValueError("La caché importada no coincide con la plantilla local medida")
+        raise ValueError("La caché importada no coincide con la plantilla_publicada")
     return manifiesto
 
 
@@ -226,7 +239,7 @@ def preparar(
     (raiz / "build/.gdignore").write_text("", encoding="utf-8")
     if desde is None:
         try:
-            manifiesto = _cache(destino, identidad, datos.get("plantilla_local"))
+            manifiesto = _cache(destino, identidad, datos.get("plantilla_publicada"))
             print(f"Plantilla verificada: {destino}", flush=True)
             return manifiesto
         except (ValueError, OSError, KeyError, json.JSONDecodeError) as error:
@@ -235,17 +248,12 @@ def preparar(
             print(f"Preparando plantilla; caché no reutilizable: {error}", flush=True)
     if desde is not None:
         origen = desde
+        publicada = _publicada(datos, identidad)
+        if publicada["zip_sha256"] != sha256(origen.read_bytes()):
+            raise ValueError("SHA256 del ZIP no coincide con zip_sha256 de plantilla_publicada")
         huellas = validar_zip(origen)
-        medido = datos.get("plantilla_local")
-        if medido is None:
-            raise ValueError("Importar requiere SHA256 de plantilla_local medida en metadata")
-        if medido.get("receta_sha256") != receta_sha256(identidad):
-            raise ValueError("La receta de la plantilla local no coincide con fuentes y parche")
-        if (
-            medido["zip_sha256"] != sha256(origen.read_bytes())
-            or medido["wasm_sha256"] != huellas["wasm_sha256"]
-        ):
-            raise ValueError("SHA256 de la plantilla local no coincide con el artefacto medido")
+        if publicada["wasm_sha256"] != huellas["wasm_sha256"]:
+            raise ValueError("SHA256 del WASM no coincide con wasm_sha256 de plantilla_publicada")
     else:
         origen = construir(datos, parche, raiz / "build/godot-web", jobs)
         huellas = validar_zip(origen)
@@ -257,6 +265,38 @@ def preparar(
     _publicar(origen, destino, manifiesto)
     print(f"Plantilla preparada: {destino}", flush=True)
     return manifiesto
+
+
+def _abrir(url: str, timeout: int):
+    # Sin `Accept`, GitHub contestó 404 a urllib sobre un asset publicado y 302 a curl.
+    return urllib.request.urlopen(
+        urllib.request.Request(url, headers={"Accept": "*/*"}), timeout=timeout
+    )
+
+
+def descargar_plantilla(
+    metadata: Path, destino: Path, raiz: Path = RAIZ, abrir=_abrir,
+) -> dict:
+    """Baja la plantilla que la receta publica y la importa. Nunca compila.
+
+    Compilar el motor web es caro, y la caché de Actions vence a los 7 días sin uso: el
+    despliegue compilaría sin que la receta cambie. La plantilla la compila `construir-plantilla-web.yml` a mano, y la receta apunta a
+    ella. Cada falla nombra ese workflow, que es lo que hay que correr.
+    """
+    try:
+        datos, _, identidad = _identidad(metadata, raiz)
+        url = _publicada(datos, identidad)["url"]
+        with tempfile.TemporaryDirectory(prefix="plantilla-") as temporal:
+            bajado = Path(temporal) / "web_release.zip"
+            print(f"Descargando {url}", flush=True)
+            try:
+                with abrir(url, timeout=120) as respuesta, bajado.open("wb") as salida:
+                    shutil.copyfileobj(respuesta, salida)
+            except OSError as error:
+                raise ValueError(f"No se pudo bajar {url}: {error}") from error
+            return preparar(metadata, destino, desde=bajado, raiz=raiz)
+    except (ValueError, OSError, KeyError) as error:
+        raise ValueError(f"{error}. Se publica una nueva con {WORKFLOW}") from error
 
 
 def verificar_export(carpeta: Path, plantilla: Path) -> None:
@@ -424,11 +464,17 @@ def main() -> int:
     parser.add_argument("--desde", type=Path)
     parser.add_argument("--jobs", type=int, default=4)
     parser.add_argument("--comprobar", action="store_true")
+    parser.add_argument("--descargar", action="store_true")
     parser.add_argument("--verificar-export", type=Path)
     args = parser.parse_args()
+    if args.descargar and (args.desde is not None or args.comprobar):
+        parser.error("--descargar no se combina con --desde ni con --comprobar")
     try:
-        preparar(args.metadata.resolve(), args.destino.resolve(), args.desde,
-                 args.comprobar or args.verificar_export is not None, jobs=args.jobs)
+        if args.descargar:
+            descargar_plantilla(args.metadata.resolve(), args.destino.resolve())
+        else:
+            preparar(args.metadata.resolve(), args.destino.resolve(), args.desde,
+                     args.comprobar or args.verificar_export is not None, jobs=args.jobs)
         if args.verificar_export is not None:
             verificar_export(args.verificar_export, args.destino)
     except (ValueError, OSError, KeyError, configparser.Error,
