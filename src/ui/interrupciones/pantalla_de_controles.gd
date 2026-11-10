@@ -2,8 +2,8 @@
 ##
 ## En TECLADO Y MOUSE cada acción tiene una celda PRINCIPAL y otra SECUNDARIA. Se elige una celda,
 ## y apretar una tecla o un botón del mouse se la asigna; SUPR vacía una secundaria. En JOYSTICK
-## cada acción de botón tiene la celda de su botón, que se reasigna igual. Lo que no se puede
-## configurar no se muestra. Cada entrada se dibuja con su glifo.
+## cada acción de botón tiene la celda de su botón, que se reasigna igual. Lo demás se muestra
+## con la marca FIJO y no se elige. Cada entrada se dibuja con su glifo.
 ##
 ## Todo el texto va en el tamaño de Configuraciones, `GlifoDeEntrada.tamano_de_la_letra()`:
 ## nombres, cabeceras y teclas. Todas las teclas miden lo mismo, el ancho de la más ancha, un clic
@@ -43,7 +43,11 @@ const TEXTO_DEL_JOYSTICK_CONECTADO := "● JOYSTICK CONECTADO"
 const TEXTO_DE_PRINCIPAL := "PRINCIPAL"
 const TEXTO_DE_SECUNDARIA := "SECUNDARIA"
 const TEXTO_SIN_JOYSTICK := "CONECTÁ UN JOYSTICK PARA CONFIGURARLO"
+const TEXTO_FIJO := "FIJO"
 const TEXTO_DEL_AVISO := "YA ES LA PRINCIPAL DE"
+const TEXTO_DE_MOVIMIENTO := "MOVIMIENTO"
+const TEXTO_DE_VISION := "VISIÓN"
+const TEXTO_DE_START := "START"
 ## Cuánto sobresale de la tecla el recuadro de la elegida, para no taparle el borde.
 const SOBRESALE_EL_RECUADRO := 4.0
 const SEPARACION_DE_LAS_COLUMNAS := 64
@@ -58,7 +62,8 @@ const SEPARACION_DE_LA_CABECERA := 20
 ## En el lienzo de 1920x1080 del marco.
 const POSICION_DEL_MENSAJE := Vector2(140.0, 996.0)
 const COLOR_DE_LA_CELDA_ELEGIDA := Color("d8b468")
-const OPACIDAD_DEL_TEXTO_APAGADO := 0.55
+const OPACIDAD_DE_LA_MARCA := 0.7
+const OPACIDAD_DE_LO_FIJO := 0.55
 const OPACIDAD_DE_LA_PESTANA_APAGADA := 0.5
 const OPACIDAD_DE_LA_PESTANA_SIN_JOYSTICK := 0.3
 const NOMBRES_DE_LAS_TECLAS: Dictionary = {
@@ -234,7 +239,7 @@ func aviso() -> String:
 	return _texto_del_aviso
 
 
-## Los renglones de una pestaña, con los dos bloques juntos.
+## Los renglones de una pestaña, con los dos bloques juntos. Los de lo fijo llevan `fijo` como meta.
 func filas(del_joystick: bool = false) -> Array[HBoxContainer]:
 	var pagina := _pagina_del_joystick if del_joystick else _pagina_del_teclado
 	var todas: Array[HBoxContainer] = []
@@ -415,7 +420,7 @@ func _aviso_sin_el_joystick() -> Label:
 	_aviso_sin_joystick.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	_aviso_sin_joystick.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 	_aviso_sin_joystick.size_flags_vertical = Control.SIZE_EXPAND_FILL
-	_aviso_sin_joystick.modulate.a = OPACIDAD_DEL_TEXTO_APAGADO
+	_aviso_sin_joystick.modulate.a = OPACIDAD_DE_LO_FIJO
 	return _aviso_sin_joystick
 
 
@@ -455,6 +460,14 @@ func _bloque_del_joystick() -> VBoxContainer:
 	_aviso_del_joystick = _etiqueta("")
 	_aviso_del_joystick.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 	var bloque := _bloque(_aviso_del_joystick)
+	bloque.add_child(
+		_fila_fija(
+			TEXTO_DE_MOVIMIENTO, [GlifoDeEntrada.de_un_boton(GlifoDeEntrada.Forma.PALANCA, "L")]
+		)
+	)
+	bloque.add_child(
+		_fila_fija(TEXTO_DE_VISION, [GlifoDeEntrada.de_un_boton(GlifoDeEntrada.Forma.PALANCA, "R")])
+	)
 	for accion: StringName in AsignacionDeControles.ACCIONES_CON_BOTON:
 		var fila := _fila_con_nombre(AsignacionDeControles.nombre_de_la_accion(accion))
 		fila.add_child(_celda(accion, AsignacionDeControles.RANURA_DEL_JOYSTICK))
@@ -462,6 +475,12 @@ func _bloque_del_joystick() -> VBoxContainer:
 		if _primer_boton_del_joystick == null:
 			_primer_boton_del_joystick = boton_de(accion, AsignacionDeControles.RANURA_DEL_JOYSTICK)
 		bloque.add_child(fila)
+	bloque.add_child(
+		_fila_fija(
+			AsignacionDeControles.nombre_de_la_accion(AsignacionDeControles.PAUSA),
+			[GlifoDeEntrada.de_un_boton(GlifoDeEntrada.Forma.PILDORA, TEXTO_DE_START)]
+		)
+	)
 	return bloque
 
 
@@ -470,6 +489,29 @@ func _crear_el_mensaje() -> void:
 	_mensaje = _etiqueta("")
 	_mensaje.position = POSICION_DEL_MENSAJE
 	_marco.add_child(_mensaje)
+
+
+## El renglón con el nombre a la izquierda y, a la derecha, lo que se muestra y no se elige: el
+## glifo cae en la columna de las celdas, pegado a su borde izquierdo, y la marca en la de la
+## secundaria.
+func _fila_fija(nombre: String, glifos: Array[GlifoDeEntrada]) -> HBoxContainer:
+	var fila := _fila_con_nombre(nombre)
+	fila.set_meta(&"fijo", true)
+	var dibujos := HBoxContainer.new()
+	dibujos.add_theme_constant_override("separation", 12)
+	for glifo: GlifoDeEntrada in glifos:
+		glifo.en_tecla = true
+		glifo.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		glifo.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+		dibujos.add_child(glifo)
+	fila.add_child(dibujos)
+	var marca := _etiqueta(TEXTO_FIJO)
+	marca.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	marca.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	marca.modulate.a = OPACIDAD_DE_LA_MARCA
+	fila.add_child(marca)
+	fila.modulate.a = OPACIDAD_DE_LO_FIJO
+	return fila
 
 
 func _fila_con_nombre(nombre: String) -> HBoxContainer:
@@ -492,7 +534,7 @@ func _etiqueta(texto: String) -> Label:
 
 func _titulo_de_la_columna(texto: String) -> Label:
 	var etiqueta := _etiqueta(texto)
-	etiqueta.modulate.a = OPACIDAD_DEL_TEXTO_APAGADO
+	etiqueta.modulate.a = OPACIDAD_DE_LO_FIJO
 	return etiqueta
 
 
@@ -591,35 +633,43 @@ func _pintar() -> void:
 
 
 ## Cada columna de una pestaña mide lo mismo en todos sus renglones: la de los nombres, lo que mide
-## el más largo; las de las celdas, el glifo más ancho de la pestaña o su cabecera, y en TECLADO Y
-## MOUSE también un clic. Cada tecla arranca en el borde izquierdo de su columna y la llena. La
-## lista queda del ancho de lo que dice. En JOYSTICK la segunda columna queda vacía.
+## el más largo; las de las celdas, el glifo más ancho de la pestaña, o la tecla de TECLADO Y MOUSE.
+## Cada tecla arranca en el borde izquierdo de su columna y la llena. La
+## lista queda del ancho de lo que dice. En JOYSTICK la segunda columna sólo lleva la marca FIJO.
 func _ajustar_las_columnas(pagina: VBoxContainer) -> void:
 	var renglones: Array[HBoxContainer] = [pagina.get_child(0) as HBoxContainer]
 	for hijo: Node in pagina.get_children():
 		if hijo is HBoxContainer and hijo != renglones[0]:
 			renglones.append(hijo as HBoxContainer)
 	var nombre := 0.0
-	var columna := 0.0
+	var columna := _ancho_de_la_tecla()
 	var segunda := 0.0
 	for renglon: HBoxContainer in renglones:
 		nombre = maxf(nombre, (renglon.get_child(0) as Control).get_minimum_size().x)
 		for glifo: Node in renglon.find_children("*", "GlifoDeEntrada", true, false):
-			var ancho := (glifo as GlifoDeEntrada).get_minimum_size().x
-			columna = maxf(columna, ancho)
+			columna = maxf(columna, (glifo as GlifoDeEntrada).get_minimum_size().x)
 		if renglon.get_child_count() > 2:
 			segunda = maxf(segunda, (renglon.get_child(2) as Control).get_minimum_size().x)
-	if pagina == _pagina_del_teclado:
-		for referencia: GlifoDeEntrada in _teclas_de_referencia:
-			columna = maxf(columna, referencia.get_minimum_size().x)
-	for titulo: int in range(1, renglones[0].get_child_count()):
-		columna = maxf(columna, (renglones[0].get_child(titulo) as Control).get_minimum_size().x)
 	if pagina == _pagina_del_teclado:
 		segunda = columna
 	for renglon: HBoxContainer in renglones:
 		(renglon.get_child(0) as Control).custom_minimum_size.x = nombre
 		for i: int in range(1, renglon.get_child_count()):
 			(renglon.get_child(i) as Control).custom_minimum_size.x = columna if i == 1 else segunda
+
+
+## El ancho de una tecla de TECLADO Y MOUSE, que es también el de todo glifo en una tecla: el de la
+## más ancha, un clic o su glifo, o el de la cabecera de su columna.
+func _ancho_de_la_tecla() -> float:
+	var ancho := 0.0
+	for referencia: GlifoDeEntrada in _teclas_de_referencia:
+		ancho = maxf(ancho, referencia.get_minimum_size().x)
+	for glifo: Node in _pagina_del_teclado.find_children("*", "GlifoDeEntrada", true, false):
+		ancho = maxf(ancho, (glifo as GlifoDeEntrada).get_minimum_size().x)
+	var cabecera := _pagina_del_teclado.get_child(0)
+	for titulo: int in range(1, cabecera.get_child_count()):
+		ancho = maxf(ancho, (cabecera.get_child(titulo) as Control).get_minimum_size().x)
+	return ancho
 
 
 func _quitar_el_glifo(clave: String, boton: Button) -> void:
