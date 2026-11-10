@@ -427,6 +427,16 @@ class PlantillaWebTest(unittest.TestCase):
         self.assertEqual(self.destino.read_bytes(), original)
         self._preparar(comprobar=True)
 
+    def test_la_descarga_pide_con_accept_porque_github_contesta_404_sin_el(self):
+        # Medido el 2026-11-10: sin `Accept`, github.com/.../releases/download/... devolvió 404
+        # a urllib y 302 a curl, con el mismo asset publicado.
+        with patch.object(plantilla.urllib.request, "urlopen") as urlopen:
+            plantilla._abrir(URL, 5)
+        pedido = urlopen.call_args.args[0]
+        self.assertEqual(pedido.full_url, URL)
+        self.assertEqual(pedido.get_header("Accept"), "*/*")
+        self.assertEqual(urlopen.call_args.kwargs["timeout"], 5)
+
     def test_descargar_no_se_combina_con_desde_ni_con_comprobar(self):
         for otro in (["--desde", "x.zip"], ["--comprobar"]):
             with self.subTest(otro=otro):

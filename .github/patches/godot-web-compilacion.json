@@ -44,8 +44,8 @@
   "plantilla_publicada": {
     "url": "https://github.com/federicohermo/nosefia/releases/download/godot-web-1/web_release.zip",
     "receta_sha256": "1cf2f80a85d23feb6bfc1b62ba639d22c80167b67d91da7961dbda2a19f0d06b",
-    "zip_sha256": "7a7bb1746d2885b9f478fd3868689879c8201a572cc08ed287f531a19df0bdb7",
-    "wasm_sha256": "efa9ff1af0a2db4becb291f44a1b7ce0973eb6622afb543f56e94abd2c9bea17"
+    "zip_sha256": "e086f30c48bd3b871d718dce22ea64fd6753a45d4a790cf757b7fc6dfcbfcb03",
+    "wasm_sha256": "e3c87f3bc42eb3a24266c8ca5b0b46fab2817b0cef4870b395203f523041bab5"
   },
   "uso": "Aplicar con git apply --check antes de compilar la plantilla web; comprobar el commit y las huellas de cada archivo, antes y después. Todo el cambio queda bajo WEB_ENABLED: conserva el camino nativo.",
   "estado": "Plantilla release validada localmente e integrada al preset Web y al flujo de despliegue. El editor y la plantilla debug siguen usando el motor oficial."

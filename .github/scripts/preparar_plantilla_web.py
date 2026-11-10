@@ -267,8 +267,15 @@ def preparar(
     return manifiesto
 
 
+def _abrir(url: str, timeout: int):
+    # Sin `Accept`, GitHub contestó 404 a urllib sobre un asset publicado y 302 a curl.
+    return urllib.request.urlopen(
+        urllib.request.Request(url, headers={"Accept": "*/*"}), timeout=timeout
+    )
+
+
 def descargar_plantilla(
-    metadata: Path, destino: Path, raiz: Path = RAIZ, abrir=urllib.request.urlopen,
+    metadata: Path, destino: Path, raiz: Path = RAIZ, abrir=_abrir,
 ) -> dict:
     """Baja la plantilla que la receta publica y la importa. Nunca compila.
 
