@@ -118,6 +118,7 @@ func test_las_dos_noches_eligen_el_mensaje_1_de_la_tercera() -> void:  # AC-EMP-
 	var casos := [
 		[[limpio, limpio], "J3_Mensaje1_SinFallas"],
 		[[[5, []], limpio], "J3_Mensaje1_Redimido"],
+		[[[4, []], limpio], "J3_Mensaje1_ConAltibajos"],
 		[[tres_fallas, limpio], "J3_Mensaje1_ConAltibajos"],
 		[[[1, []], [0, [T.LIMPIAR]]], "J3_Mensaje1_ConAltibajos"],
 	]

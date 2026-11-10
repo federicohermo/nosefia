@@ -39,9 +39,10 @@ const MEDIOS_POR_LLAMADO: int = 1
 const APERCIBIMIENTOS_POR_BANDA_GRAVE := 2
 
 ## En las primeras jornadas, la prueba, cada falla suma un apercibimiento entero y no hay
-## bandas. Con cinco o más al cerrar la última noche de la prueba, y sin haberla cumplido
+## bandas. Con cuatro o más al cerrar la última noche de la prueba, y sin haberla cumplido
 ## entera, se pierde. Con cinco o más y la noche completa se sigue, y la primera jornada
-## completa arranca con un apercibimiento.
+## completa arranca con un apercibimiento. Son dos cortes distintos.
 const APERCIBIMIENTOS_POR_FALLA_DE_LA_PRUEBA := 1
-const APERCIBIMIENTOS_QUE_PIERDEN_LA_PRUEBA := 5
+const APERCIBIMIENTOS_QUE_PIERDEN_LA_PRUEBA := 4
+const APERCIBIMIENTOS_QUE_ARRASTRAN_A_LA_TERCERA := 5
 const APERCIBIMIENTOS_TRAS_UNA_PRUEBA_EXCEDIDA := 1

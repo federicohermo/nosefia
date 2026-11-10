@@ -499,9 +499,9 @@ DEBE seguir con la jornada siguiente.
 
 ### BR-EMP-037 — La prueba se pierde al cerrar la segunda
 
-CUANDO cierra la jornada 2, SI el legajo suma **5 apercibimientos o más** y alguna obligatoria de
+CUANDO cierra la jornada 2, SI el legajo suma **4 apercibimientos o más** y alguna obligatoria de
 esa jornada quedó sin cumplir, ENTONCES el sistema DEBE declarar despedido al cerrarla y no abrir
-la jornada 3. Con 4 o menos, o con todas cumplidas, DEBE seguir.
+la jornada 3. Con 3 o menos, o con todas cumplidas, DEBE seguir.
 
 ### BR-EMP-038 — Las jornadas completas arrancan de nuevo
 
@@ -935,9 +935,9 @@ atender y registrar 0, papel 1 llamado, hubo llamados y R = 0. CUANDO la noche 4
 impecable sin llamados ENTONCES R = 1 y las fallas no cambian; la noche 5 igual, R = 2; la noche
 6 con un llamado, R = 0. DADO una obligatoria cumplida y después descumplida antes del cierre
 ENTONCES suma una falla. DADO un segundo cierre de la misma noche ENTONCES nada cambia. DADO la
-noche 1 con un cliente mal atendido y registrar sin cumplir y la 2 con reponer y limpiar sin
+noche 1 con un cliente mal atendido y la 2 con reponer y limpiar sin
 cumplir, con los cuatro llamados anotados cada noche, CUANDO abre la
-jornada 3 ENTONCES la prueba acumuló 4 apercibimientos y las cuentas de la devolución siguen en
+jornada 3 ENTONCES la prueba acumuló 3 apercibimientos y las cuentas de la devolución siguen en
 cero fallas, cero llamados, R = 0 y ningún llamado en la partida. La primera falla de atender
 en la jornada 3 trae la fila n = 1 de Tarea 1. DADO los mismos llamados de la prueba CUANDO se
 repiten en la jornada 3 ENTONCES cada motivo cuenta una vez y trae la primera fila de su Reto.
@@ -1177,22 +1177,25 @@ jornada 2.
 
 ### AC-EMP-080 — El cierre de la segunda *(verifica BR-EMP-037)*
 
-DADO 5 apercibimientos al cerrar la jornada 2 con una obligatoria sin cumplir ENTONCES la partida
-termina despedida y no se abre la jornada 3. DADO 4 apercibimientos con la jornada 2 incompleta
-ENTONCES sigue y se abre la jornada 3. DADO 5 apercibimientos con la jornada 2 completa ENTONCES
-sigue y se abre la jornada 3.
+DADO 4 apercibimientos al cerrar la jornada 2 con una obligatoria sin cumplir ENTONCES la partida
+termina despedida y no se abre la jornada 3. DADO 3 apercibimientos con la jornada 2 incompleta
+ENTONCES sigue y se abre la jornada 3 con el legajo en 0. DADO 4 apercibimientos con la jornada 2
+completa ENTONCES sigue y la jornada 3 arranca en 0. DADO 5 apercibimientos con la jornada 2
+completa ENTONCES sigue y la jornada 3 arranca con 1 apercibimiento.
 
 ### AC-EMP-081 — La jornada 3 arranca de nuevo *(verifica BR-EMP-038)*
 
-DADO la jornada 2 que cierra con 4 apercibimientos ENTONCES al abrir la jornada 3 el legajo está en
-0 y la partida recuerda 4 y la jornada 2 incompleta. DADO la jornada 2 que cierra completa con 5
+DADO la jornada 2 que cierra con 3 apercibimientos ENTONCES al abrir la jornada 3 el legajo está en
+0 y la partida recuerda 3 y la jornada 2 incompleta. DADO la jornada 2 que cierra completa con 4
+apercibimientos ENTONCES al abrir la jornada 3 el legajo está en 0 y la partida recuerda 4 y la
+jornada 2 completa. DADO la jornada 2 que cierra completa con 5
 apercibimientos ENTONCES al abrir la jornada 3 el legajo está en 1 apercibimiento, 2 medios, y la
 partida recuerda 5 y la jornada 2 completa. DADO una partida despedida al cerrar la jornada 2
 ENTONCES recuerda su resultado y no reinicia el legajo.
 
 ### AC-EMP-082 — Desde la jornada 3 suman las bandas *(verifica BR-EMP-038, BR-EMP-002, BR-EMP-003, BR-EMP-012)*
 
-DADO la jornada 3 abierta tras una prueba con 4 apercibimientos CUANDO cierra `GRAVE` con un motivo
+DADO la jornada 3 abierta tras una prueba con 4 apercibimientos y la jornada 2 completa CUANDO cierra `GRAVE` con un motivo
 ENTONCES el legajo lleva 5 medios. CUANDO la jornada 4 cierra `GRAVE` ENTONCES lleva 9 medios y la
 partida termina despedida.
 
