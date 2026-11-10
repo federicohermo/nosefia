@@ -1599,7 +1599,7 @@ velocidad del último cuadro es igual a la del primero.
 DADO el control suspendido y correr apretada con una entrada hacia adelante ENTONCES la velocidad
 es cero. CUANDO se reanuda con correr apretada ENTONCES corre.
 
-### AC-PLY-197 — Correr tiene su acción, Shift y L3 *(verifica BR-PLY-061)*
+### AC-PLY-197 — Correr tiene su acción, Shift y el gatillo derecho *(verifica BR-PLY-061)*
 
 DADO el mapa de entradas del juego ENTONCES la acción de correr existe, su tecla es Shift, su
 entrada de joystick es el gatillo derecho y ninguna otra acción del juego tiene esa tecla ni ese
