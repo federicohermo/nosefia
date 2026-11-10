@@ -14,6 +14,11 @@ sombras ni degradados; centrado con margen del 12 %; legible a 72 px. Cada fila 
 
 | Recurso | Motivo del prompt | Uso |
 |---|---|---|
+| `logros/obelisco_de_carton.png` | Torre alta y angosta de siete cajas de cartón apiladas, terminada en punta | Obelisco de cartón |
+| `logros/elemental.png` | Lupa sobre un celular con un globo de chat | Elemental, mi querida Yasmín |
+| `logros/final_locura_paranoica.png` | Ojo muy abierto con líneas de tensión | Final: locura paranoica |
+| `logros/final_jefe_saboteador.png` | Llave inglesa cruzada sobre una caja rota | Final: jefe saboteador |
+| `logros/final_jefe_incompetente.png` | Corbata con un signo de pregunta angular | Final: jefe incompetente |
 | `logros/rebelde.png` | Ticket que cae en un inodoro de perfil | Rebelde |
 | `logros/y_se_marcho.png` | Caja que sale por una ventana abierta, con flecha | Y se marchó… |
 | `logros/a_la_basura.png` | Caja que cae en un contenedor abierto | A la basura |
@@ -25,7 +30,11 @@ sombras ni degradados; centrado con margen del 12 %; legible a 72 px. Cada fila 
 | `logros/final_contrato_cumplido.png` | Contrato con una tilde grande | Final: contrato cumplido |
 | `logros/bloqueado.png` | Signo de pregunta grueso con ángulos rectos | Entrada sin desbloquear. Su RGB va en blanco porque `pantalla_de_logros.gd` lo tiñe con el color del texto |
 
-Las nueve imágenes de arriba también llevan el RGB en blanco, sólo con la forma en el alfa: la pantalla las tiñe con el color del texto. Una imagen nueva se entrega igual.
+Los cinco motivos agregados para #934 se generaron con `imagegen` el 2026-11-10 con el mismo
+prompt común, pidiendo bordes limpios y recortes amplios para conservar la lectura a 72 px.
+Se redujeron con Lanczos a 256 × 256 y se centraron con margen del 12 %.
+Las quince imágenes llevan el RGB en blanco, sólo con la forma en el alfa: la pantalla las
+tiñe con el color del texto. Una imagen nueva se entrega igual.
 
 ## Recursos de la interfaz
 

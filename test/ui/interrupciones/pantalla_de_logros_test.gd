@@ -110,8 +110,7 @@ func test_el_signo_bloqueado_se_ve_del_color_del_texto_en_las_tres_columnas() ->
 func test_el_icono_de_un_final_o_logro_alcanzado_se_ve_del_color_del_texto() -> void:  # AC-ACH-013
 	var logros := Logros.new()
 	for logro: L in L.values():
-		if logro != L.OBELISCO_DE_CARTON and logro != L.ELEMENTAL:
-			logros.desbloquear(logro)
+		logros.desbloquear(logro)
 	for final: F in Logros.finales():
 		logros.alcanzar_final(final)
 	var pantalla := _pantalla(logros)
@@ -119,8 +118,8 @@ func test_el_icono_de_un_final_o_logro_alcanzado_se_ve_del_color_del_texto() -> 
 	for columna: StringName in [FINALES, LOGROS]:
 		for entrada: HBoxContainer in pantalla.entradas(columna):
 			var figura := entrada.get_child(0) as TextureRect
-			if figura.texture == null or figura.texture == PantallaDeLogros.IMAGEN_BLOQUEADA:
-				continue
+			assert_object(figura.texture).is_not_null()
+			assert_object(figura.texture).is_not_same(PantallaDeLogros.IMAGEN_BLOQUEADA)
 			vistos += 1
 			var icono := _pixel_opaco(figura.texture) * figura.self_modulate * figura.modulate
 			var letra := (entrada.get_child(1) as Label).get_theme_color(&"font_color")
@@ -128,7 +127,7 @@ func test_el_icono_de_un_final_o_logro_alcanzado_se_ve_del_color_del_texto() -> 
 			assert_float(icono.r).is_equal_approx(letra.r, 0.05)
 			assert_float(icono.g).is_equal_approx(letra.g, 0.05)
 			assert_float(icono.b).is_equal_approx(letra.b, 0.05)
-	assert_int(vistos).is_greater(0)
+	assert_int(vistos).is_equal(L.values().size() + Logros.finales().size())
 
 
 func test_la_foto_de_una_pista_descubierta_conserva_sus_colores() -> void:  # AC-ACH-013
@@ -153,10 +152,9 @@ func test_cada_entrada_alcanzada_muestra_una_imagen_propia() -> void:  # AC-ACH-
 	var logros := Logros.new()
 	var desbloqueables: Array[L] = []
 	for logro: L in L.values():
-		if logro != L.OBELISCO_DE_CARTON and logro != L.ELEMENTAL:
-			logros.desbloquear(logro)
-			desbloqueables.append(logro)
-	var con_imagen: Array[F] = [F.DESPEDIDO, F.CONTRATO_CUMPLIDO]
+		logros.desbloquear(logro)
+		desbloqueables.append(logro)
+	var con_imagen: Array[F] = Logros.finales()
 	for final: F in con_imagen:
 		logros.alcanzar_final(final)
 	var pantalla := _pantalla(logros)

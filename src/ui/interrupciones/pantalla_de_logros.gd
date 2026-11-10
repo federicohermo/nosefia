@@ -18,8 +18,10 @@ const TEXTO_BLOQUEADO := "?????"
 
 const IMAGEN_BLOQUEADA := preload("res://assets/ui/manada/logros/bloqueado.png")
 
-## Obelisco de cartón y Elemental no están: se ven bloqueados y no tienen imagen propia todavía.
 const _IMAGEN_DE_LOS_LOGROS: Dictionary[Logros.Logro, Texture2D] = {
+	Logros.Logro.OBELISCO_DE_CARTON:
+	preload("res://assets/ui/manada/logros/obelisco_de_carton.png"),
+	Logros.Logro.ELEMENTAL: preload("res://assets/ui/manada/logros/elemental.png"),
 	Logros.Logro.REBELDE: preload("res://assets/ui/manada/logros/rebelde.png"),
 	Logros.Logro.Y_SE_MARCHO: preload("res://assets/ui/manada/logros/y_se_marcho.png"),
 	Logros.Logro.A_LA_BASURA: preload("res://assets/ui/manada/logros/a_la_basura.png"),
@@ -31,6 +33,12 @@ const _IMAGEN_DE_LOS_LOGROS: Dictionary[Logros.Logro, Texture2D] = {
 	preload("res://assets/ui/manada/logros/mi_talon_de_aquiles.png"),
 }
 const _IMAGEN_DE_LOS_FINALES: Dictionary[Partida.Final, Texture2D] = {
+	Partida.Final.LOCURA_PARANOICA:
+	preload("res://assets/ui/manada/logros/final_locura_paranoica.png"),
+	Partida.Final.JEFE_SABOTEADOR:
+	preload("res://assets/ui/manada/logros/final_jefe_saboteador.png"),
+	Partida.Final.JEFE_INCOMPETENTE:
+	preload("res://assets/ui/manada/logros/final_jefe_incompetente.png"),
 	Partida.Final.DESPEDIDO: preload("res://assets/ui/manada/logros/final_despedido.png"),
 	Partida.Final.CONTRATO_CUMPLIDO:
 	preload("res://assets/ui/manada/logros/final_contrato_cumplido.png"),
