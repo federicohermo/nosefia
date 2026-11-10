@@ -5,8 +5,10 @@
 extends SceneTree
 
 const MALLA := "res://assets/models/caja_de_productos.res"
-## Tres píxeles del atlas importado evitan tomar el negro vecino con los mipmaps.
-const MARGEN := 3.0 / 512.0
+## Cuánto se mete cada cara adentro de su panel, en la celda de 512 del atlas. El desplegado de
+## varias cajas trae un borde negro de hasta 17 píxeles de 1254 adentro del panel (7 en la celda),
+## y los mipmaps toman 2 más.
+const MARGEN := 9.0 / 512.0
 
 
 func _initialize() -> void:
