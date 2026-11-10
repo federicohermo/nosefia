@@ -397,7 +397,7 @@ objeto utilizado. Una mezcla azul preparada con Poético DEBE distinguirse de un
 con el bidón azul. Pausa, examen y cierre DEBEN bloquear el uso; un rechazo NO DEBE publicar
 un teñido aceptado ni alterar agua, mopa, manchas, mano o inventario.
 
-### BR-CLN-036 — El primario ejecuta los pares de limpieza y el descarte de papel
+### BR-CLN-036 — El gesto del par ejecuta los pares de limpieza y el descarte de papel
 
 CUANDO el primario encuentra balde/lavatorio, jabón/balde, mopa/balde, mopa/inodoro o
 balde/inodoro, el sistema DEBE pedir respectivamente llenar, teñir, mojar, enjuagar o vaciar,

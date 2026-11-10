@@ -108,8 +108,8 @@ La salida por la entrada principal usa la secuencia de BR-PLY-041.
 ### BR-PLY-012 — Una herramienta sirve para algo o para nada
 
 CUANDO se acciona el primario —agarrar, clic izquierdo por defecto— con lo que se lleva
-sobre un objetivo que declara una interacción para ese par, el sistema DEBE pedir ese uso
-antes de considerar soltar. DEBE contestar el efecto declarado y ningún efecto de herramienta
+sobre un objetivo que declara una interacción primaria para ese par, el sistema DEBE pedir ese
+uso antes de considerar soltar. Qué gesto declara cada par lo asigna BR-PLY-036. DEBE contestar el efecto declarado y ningún efecto de herramienta
 para los demás pares o con las manos vacías. Un rechazo por estado DEBE consumir el gesto y
 conservar la mano, sin caer a soltado genérico ni ejecutar además el secundario.
 El ticket sobre el inodoro DEBE desecharse según `counter-service`; las herramientas DEBEN
@@ -1341,8 +1341,9 @@ control permanece suspendido por el cierre. Pausar y reanudar conserva entrada y
 
 ### AC-PLY-097 — Un primario produce un solo efecto contextual *(verifica BR-PLY-012, BR-PLY-026, BR-PLY-036)*
 
-DADO un par declarado y, por separado, su estado aceptable y rechazado CUANDO se hace un
-primario ENTONCES hay una sola solicitud de ese uso y cero solicitudes de soltado o secundario.
+DADO un par que declara el primario (BR-PLY-036) y, por separado, su estado aceptable y
+rechazado CUANDO se hace un primario ENTONCES hay una sola solicitud de ese uso y cero
+solicitudes de soltado o secundario.
 El rechazo conserva el objeto sostenido. DADO una unidad ante un objetivo sin interacción
 declarada CUANDO se hace primario ENTONCES se suelta por el recorrido vigente; con mano vacía
 y levantable enfocado, se agarra una sola vez.

@@ -17,8 +17,10 @@ const PUERTA_INTERIOR := "Estructura/puerta/CuerpoDeLaHoja"
 const LECTOR := "Estructura/Lector"
 
 
-func _abrir() -> Node3D:
+func _abrir(partida: Partida = null) -> Node3D:
 	var almacen: Node3D = auto_free(ALMACEN.instantiate())
+	if partida != null:
+		almacen.set("_partida", partida)
 	add_child(almacen)
 	for cuadro in 4:
 		await get_tree().physics_frame
@@ -257,6 +259,29 @@ func test_el_foco_y_la_mano_cambian_en_el_mismo_cuadro() -> void:  # AC-PLY-090
 	jugador.call("_publicar_la_referencia")
 	assert_int(publicadas.size()).is_equal(1)
 	assert_array(_pintado(almacen)).contains_exactly(["[E] Examinar (mano)", "[Click Izq] Dejar"])
+
+
+func test_la_mopa_sobre_la_mancha_ofrece_limpiar_con_el_derecho() -> void:  # AC-PLY-084
+	var almacen := await _abrir(
+		Partida.desde({"jornada": ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA})
+	)
+	var mancha: Node3D = null
+	for candidata: Node3D in almacen.get("_limpieza").call("manchas"):
+		mancha = candidata
+		break
+	assert_object(mancha).is_not_null()
+	_agarrar(almacen, almacen.get_node("Objetos/Mopa"))
+	var derecho: String = AsignacionDeControles.NOMBRES_DE_LOS_BOTONES[
+		AsignacionDeControles.BOTON_DERECHO
+	]
+	var lineas := _referencia(almacen, mancha)
+	assert_array(lineas).contains(
+		[ReferenciaDeControles.texto(ReferenciaDeControles.Linea.LIMPIAR, derecho)]
+	)
+	for linea in lineas:
+		assert_str(linea).does_not_contain(
+			ReferenciaDeControles.TEXTOS[ReferenciaDeControles.Linea.DEJAR]
+		)
 
 
 ## El artefacto del baño que recibe con ese destino.
