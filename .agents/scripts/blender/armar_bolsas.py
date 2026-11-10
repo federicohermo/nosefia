@@ -64,7 +64,8 @@ PLANITUD = 5.0
 #: El alto de cada aleta, en fracción del alto de la bolsa.
 ALETA = 0.05
 #: Qué franja del borde del frente o del dorso pinta la aleta, en fracción de la textura.
-BANDA_DE_LA_ALETA = 0.03
+#: Es angosta: los sellos de advertencia arrancan a 24 píxeles de 1254 del borde del frente.
+BANDA_DE_LA_ALETA = 0.014
 #: Qué parte del grosor anterior conserva el centro de la bolsa.
 GROSOR = 0.85
 #: Cuánto se separa cada cara de la aleta del plano medio, para que no se pisen.
@@ -119,9 +120,9 @@ def armar(objeto, desplegado: dict[str, Rect]) -> tuple[int, int]:
     for i in range(ANILLOS + 1):
         # Los anillos se juntan cerca de las costuras, donde la bolsa se cierra.
         t = 0.5 - 0.5 * math.cos(math.pi * i / ANILLOS)
-        # El cuerpo conserva el grosor casi hasta la costura: el arte queda plano y sólo se curva
-        # el último tramo.
-        espesor = grosor * max(0.0, 1 - abs(2 * t - 1) ** 6) ** 0.5
+        # El cuerpo conserva el grosor casi hasta la costura: el arte queda plano, los sellos de
+        # arriba no se aplastan, y sólo se curva el último tramo.
+        espesor = grosor * max(0.0, 1 - abs(2 * t - 1) ** 16) ** 0.5
         z = lerp(abajo, arriba, t)
         anillo = []
         for angulo in angulos:
