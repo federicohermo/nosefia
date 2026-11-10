@@ -4,7 +4,11 @@ extends SceneTree
 
 const ORIGINAL := "res://assets/models/producto_cindolor.res"
 const VARIANTE := "res://assets/models/producto_cindolor_vencido.res"
-const TEXTURA_BASE := "res://assets/models/SEPT_JUEGOS_PROTOTIPO_cindolor completo.png"
+## La etiqueta del Cindolor viaja en un atlas. El manifiesto dice en cuál y en qué celda.
+const MANIFIESTO := "res://assets/source/atlas/atlas.json"
+const ETIQUETA := "source/products-cam/cindolor/cindolor completo.png"
+const PREFIJO_DEL_ATLAS := "res://assets/models/SEPT_JUEGOS_PROTOTIPO_"
+const LADO_TOPE := "process/size_limit"
 const TEXTURA := "res://assets/models/cindolor_vencido.png"
 const MARCA := "res://assets/source/products-cam/cindolor/vencimiento.svg"
 ## Coordenadas normalizadas dentro de la isla UV del dorso. No alcanzan sus costuras.
@@ -26,10 +30,14 @@ func _initialize() -> void:
 
 
 func _textura() -> int:
-	var base := Image.load_from_file(ProjectSettings.globalize_path(TEXTURA_BASE))
-	var marca := Image.new()
-	if base == null or marca.load_svg_from_string(FileAccess.get_file_as_string(MARCA)) != OK:
+	var celda := _celda()
+	if celda.is_empty():
 		return 1
+	var atlas := Image.load_from_file(ProjectSettings.globalize_path(celda["archivo"]))
+	var marca := Image.new()
+	if atlas == null or marca.load_svg_from_string(FileAccess.get_file_as_string(MARCA)) != OK:
+		return 1
+	var base := atlas.get_region(celda["rect"])
 	var ancho := roundi(base.get_width() * ANCHO)
 	marca.resize(ancho, roundi(ancho * float(marca.get_height()) / marca.get_width()))
 	base.convert(Image.FORMAT_RGBA8)
@@ -45,7 +53,7 @@ func _textura() -> int:
 	# El mismo frente debe atravesar también la misma compresión y el mismo filtrado.
 	var origen := ConfigFile.new()
 	var destino := ConfigFile.new()
-	if origen.load(TEXTURA_BASE + ".import") != OK:
+	if origen.load(str(celda["archivo"]) + ".import") != OK:
 		return 1
 	if FileAccess.file_exists(TEXTURA + ".import"):
 		destino.load(TEXTURA + ".import")
@@ -53,13 +61,16 @@ func _textura() -> int:
 	destino.set_value("remap", "type", "CompressedTexture2D")
 	for clave in origen.get_section_keys("params"):
 		destino.set_value("params", clave, origen.get_value("params", clave))
+	# El tope de lado del atlas es el del atlas entero. La variante viaja con el lado de su celda.
+	destino.set_value("params", LADO_TOPE, maxi(base.get_width(), base.get_height()))
 	return destino.save(TEXTURA + ".import")
 
 
 func _malla() -> int:
 	var base := load(ORIGINAL) as ArrayMesh
 	var textura := load(TEXTURA) as Texture2D
-	if base == null or textura == null:
+	var celda := _celda()
+	if base == null or textura == null or celda.is_empty():
 		return 1
 	var variante := base.duplicate() as ArrayMesh
 	for indice in variante.get_surface_count():
@@ -69,6 +80,8 @@ func _malla() -> int:
 			return 1
 		var copia := material.duplicate() as StandardMaterial3D
 		copia.albedo_texture = textura
+		copia.uv1_scale = _escala(celda)
+		copia.uv1_offset = _desplazamiento(celda)
 		variante.surface_set_material(indice, copia)
 	return ResourceSaver.save(variante, VARIANTE)
 
@@ -94,6 +107,9 @@ static func diferencias(base: ArrayMesh, variante: ArrayMesh) -> PackedStringArr
 				continue
 			if nombre in ["albedo_texture", "resource_name", "resource_local_to_scene"]:
 				continue
+			# La variante lee su propia textura con la UV del atlas: lleva la celda en su material.
+			if nombre in ["uv1_scale", "uv1_offset"]:
+				continue
 			if material.get(nombre) != copia.get(nombre):
 				errores.append("material: " + nombre)
 	return errores
@@ -104,20 +120,29 @@ func _comprobar() -> int:
 	ResourceLoader.set_abort_on_missing_resources(false)
 	var base := load(ORIGINAL) as ArrayMesh
 	var variante := load(VARIANTE) as ArrayMesh
-	if base == null or variante == null:
+	var celda := _celda()
+	if base == null or variante == null or celda.is_empty():
 		return 1
 	var errores := diferencias(base, variante)
 	if ResourceLoader.get_dependencies(VARIANTE) != PackedStringArray([TEXTURA]):
 		errores.append("textura sin variante")
-	if _tamano(TEXTURA) != _tamano(TEXTURA_BASE):
+	if _tamano(TEXTURA) != (celda["rect"] as Rect2i).size:
 		errores.append("dimensiones de textura")
+	for indice in variante.get_surface_count():
+		var material := variante.surface_get_material(indice) as StandardMaterial3D
+		if material == null:
+			continue
+		if material.uv1_scale != _escala(celda) or material.uv1_offset != _desplazamiento(celda):
+			errores.append("celda del atlas")
 	var importacion_base := ConfigFile.new()
 	var importacion_variante := ConfigFile.new()
-	if importacion_base.load(TEXTURA_BASE + ".import") != OK:
+	if importacion_base.load(str(celda["archivo"]) + ".import") != OK:
 		return 1
 	if importacion_variante.load(TEXTURA + ".import") != OK:
 		return 1
 	for clave in importacion_base.get_section_keys("params"):
+		if clave == LADO_TOPE:
+			continue
 		if (
 			importacion_base.get_value("params", clave)
 			!= importacion_variante.get_value("params", clave)
@@ -148,3 +173,43 @@ static func _testigos(base: ArrayMesh, variante: ArrayMesh) -> bool:
 static func _tamano(textura: String) -> Vector2i:
 	var imagen := Image.load_from_file(ProjectSettings.globalize_path(textura))
 	return imagen.get_size() if imagen != null else Vector2i.ZERO
+
+
+## Dónde cae la etiqueta del Cindolor: el archivo del atlas, su tamaño y el rectángulo de la celda.
+static func _celda() -> Dictionary:
+	var manifiesto: Variant = JSON.parse_string(FileAccess.get_file_as_string(MANIFIESTO))
+	if not manifiesto is Dictionary:
+		push_error("no se pudo leer el manifiesto del atlas")
+		return {}
+	for atlas: Dictionary in manifiesto["atlas"]:
+		for entrada: Dictionary in atlas["entradas"]:
+			if entrada["ruta"] != ETIQUETA:
+				continue
+			return {
+				"archivo": PREFIJO_DEL_ATLAS + str(atlas["archivo"]),
+				"tamano": Vector2(atlas["ancho"], atlas["alto"]),
+				"rect":
+				Rect2i(
+					int(entrada["x"]),
+					int(entrada["y"]),
+					int(entrada["ancho"]),
+					int(entrada["alto"])
+				),
+			}
+	push_error("el atlas no trae la etiqueta del Cindolor")
+	return {}
+
+
+## La UV de la malla apunta a la celda del atlas. Con esta escala y este desplazamiento, la misma
+## UV recorre la textura de la variante entera.
+static func _escala(celda: Dictionary) -> Vector3:
+	var tamano: Vector2 = celda["tamano"]
+	var rect: Rect2i = celda["rect"]
+	return Vector3(tamano.x / rect.size.x, tamano.y / rect.size.y, 1.0)
+
+
+static func _desplazamiento(celda: Dictionary) -> Vector3:
+	var rect: Rect2i = celda["rect"]
+	return Vector3(
+		-float(rect.position.x) / rect.size.x, -float(rect.position.y) / rect.size.y, 0.0
+	)

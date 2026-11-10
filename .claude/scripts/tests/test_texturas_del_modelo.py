@@ -13,6 +13,7 @@ import struct
 import unittest
 from pathlib import PurePosixPath
 
+from lib import atlas
 from lib.blender import LADO_MAXIMO, LADO_TOPE, ORIGEN_DE_CADA_GRUPO, SUPERFICIE
 from lib.repo import RAIZ
 
@@ -66,6 +67,17 @@ def lado_de_la_imagen(datos: bytes) -> tuple[int, int]:
     raise ValueError("no es un PNG ni un JPEG con cabecera legible")
 
 
+def tope_de(nombre: str) -> int:
+    """El lado más grande que puede tener una imagen del modelo, por su nombre sin extensión.
+
+    Un atlas junta muchas etiquetas, cada una con el lado de su grupo, y su tope es el de
+    `lib.atlas`. Achicarlo a `LADO_TOPE` achicaría cada etiqueta que lleva adentro.
+    """
+    manifiesto = json.loads(atlas.MANIFIESTO.read_text(encoding="utf-8"))
+    los_atlas = {PurePosixPath(uno["archivo"]).stem for uno in manifiesto["atlas"]}
+    return atlas.TOPE if nombre in los_atlas else LADO_TOPE
+
+
 def imagenes_del_glb(glb: bytes) -> list[tuple[str, bytes]]:
     """Cada imagen embebida en un `.glb`, con su nombre."""
     largo = struct.unpack_from("<I", glb, 12)[0]
@@ -94,7 +106,8 @@ class LoQueGodotExtrae(unittest.TestCase):
                 limite = parametros.get("process/size_limit")
                 self.assertIsNotNone(limite, "sin `process/size_limit`")
                 self.assertGreaterEqual(int(limite), 1, "0 es «sin límite» para Godot")
-                self.assertLessEqual(int(limite), LADO_TOPE)
+                nombre = ruta.name.removeprefix(GLB.stem + "_").removesuffix(".png.import")
+                self.assertLessEqual(int(limite), tope_de(nombre))
 
 
 class LoQueViajaEnElGlb(unittest.TestCase):
@@ -151,7 +164,7 @@ class LoQueViajaEnElGlb(unittest.TestCase):
             with self.subTest(imagen=nombre):
                 ancho, alto = lado_de_la_imagen(datos)
                 self.assertGreater(min(ancho, alto), 0)
-                self.assertLessEqual(max(ancho, alto), LADO_TOPE, f"{ancho} x {alto}")
+                self.assertLessEqual(max(ancho, alto), tope_de(nombre), f"{ancho} x {alto}")
 
 
 class LaLecturaDeLasCabeceras(unittest.TestCase):

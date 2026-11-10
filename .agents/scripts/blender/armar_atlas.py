@@ -36,26 +36,40 @@ import numpy as np
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 from lib import atlas as lib_atlas  # noqa: E402
+from lib import biseles  # noqa: E402
 from lib.blender import achicada  # noqa: E402
 
 CAJAS = lib_atlas.CAJAS
 
 
-def _pixeles(ruta: Path, lado_maximo: int) -> tuple[np.ndarray, bool]:
-    """Los píxeles RGBA de un archivo, al tamaño con el que viaja, y si tiene algo de alfa."""
+def _leer(ruta: Path, medidas: tuple[int, int] | None, lado_maximo: int = 0) -> np.ndarray:
+    """Los píxeles RGBA de un archivo, de arriba a abajo. Los lleva a `medidas`, o al lado con el
+    que viaja si no se dan."""
     imagen = bpy.data.images.load(str(ruta), check_existing=False)
     try:
         ancho, alto = imagen.size
-        nuevo = achicada(ancho, alto, lado_maximo)
+        nuevo = medidas or achicada(ancho, alto, lado_maximo)
         if nuevo != (ancho, alto):
             imagen.scale(*nuevo)
         ancho, alto = imagen.size
         datos = np.empty(ancho * alto * 4, dtype=np.float32)
         imagen.pixels.foreach_get(datos)
-        matriz = datos.reshape(alto, ancho, 4)[::-1]
-        return np.ascontiguousarray(matriz), bool(matriz[..., 3].min() < 0.999)
+        return np.ascontiguousarray(datos.reshape(alto, ancho, 4)[::-1])
     finally:
         bpy.data.images.remove(imagen)
+
+
+def _pixeles(clave: str, lado_maximo: int) -> tuple[np.ndarray, bool]:
+    """Los píxeles RGBA de una textura, al tamaño con el que viaja, con su capa de biseles
+    encima si la tiene, y si tiene algo de alfa."""
+    matriz = _leer(lib_atlas.ASSETS / clave, None, lado_maximo)
+    capa = biseles.ruta_de_la_capa(clave)
+    if capa.is_file():
+        alto, ancho = matriz.shape[:2]
+        luz_y_brillo = _leer(capa, (ancho, alto))
+        luz, brillo = luz_y_brillo[..., 0:1], luz_y_brillo[..., 1:2]
+        matriz[..., :3] = biseles.componer(matriz[..., :3], luz, brillo)
+    return matriz, bool(matriz[..., 3].min() < 0.999)
 
 
 def _entradas() -> tuple[list[lib_atlas.Entrada], dict[str, tuple[np.ndarray, bool]]]:
@@ -65,12 +79,12 @@ def _entradas() -> tuple[list[lib_atlas.Entrada], dict[str, tuple[np.ndarray, bo
         ruta = lib_atlas.ASSETS / clave
         if not ruta.is_file():
             raise SystemExit(f"falta la fuente del atlas: {ruta}")
-        datos, con_alfa = _pixeles(ruta, lib_atlas.lado_de(clave))
+        datos, con_alfa = _pixeles(clave, lib_atlas.lado_de(clave))
         pixeles[clave] = (datos, con_alfa)
         alto, ancho = datos.shape[:2]
         formato = lib_atlas.BC3 if con_alfa else lib_atlas.BC1
         entradas.append(
-            lib_atlas.Entrada(clave, ancho, alto, formato, lib_atlas.huella_de(ruta))
+            lib_atlas.Entrada(clave, ancho, alto, formato, lib_atlas.huella_de_la_fuente(clave))
         )
     return entradas, pixeles
 
