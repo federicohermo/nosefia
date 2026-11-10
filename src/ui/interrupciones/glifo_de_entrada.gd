@@ -23,6 +23,9 @@ const MARGEN_DEL_TEXTO := 22.0
 ## achica, el contorno crece hasta dejar este aire.
 const AIRE_DEL_TEXTO := 5.0
 const GROSOR_DEL_BORDE := 2
+## El motor dibuja la tinta de la fuente a esta fracción de píxel más abajo que su contorno, medido
+## sobre la captura: se resta para que el texto no quede bajo.
+const BAJADA_DE_LA_TINTA := 0.4
 const FORMAS_QUE_LLENAN: Array[Forma] = [Forma.TECLA, Forma.PILDORA, Forma.RANURA_LIBRE]
 ## Cuánto del alto de la tecla ocupa un glifo que va dentro de ella.
 const ESCALA_EN_LA_TECLA := 0.76
@@ -186,7 +189,8 @@ func _esquina_del_texto() -> float:
 func rect_del_texto() -> Rect2:
 	var tinta := _tinta_del_texto()
 	var centro := _marco_del_texto().get_center()
-	return Rect2((centro - tinta.size / 2.0).round(), tinta.size)
+	var esquina := centro - tinta.size / 2.0 - Vector2(0.0, BAJADA_DE_LA_TINTA)
+	return Rect2(esquina.round(), tinta.size)
 
 
 ## El marco en que se centra el texto: el contorno, o el rectángulo de la tecla.

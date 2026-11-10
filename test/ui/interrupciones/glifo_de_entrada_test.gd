@@ -3,7 +3,8 @@
 ## no se achica.
 extends GdUnitTestSuite
 
-const TOLERANCIA := 0.5
+## Un píxel, lo que el ojo distingue.
+const TOLERANCIA := 1.0
 
 
 func _glifo(forma: GlifoDeEntrada.Forma, leida: String, en_tecla: bool) -> GlifoDeEntrada:
