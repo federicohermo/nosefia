@@ -17,6 +17,9 @@ maqueta al lado de las mesas.
   el borde de adelante cae redondeado, y el respaldo sube con una curva y envuelve la espalda. El
   contorno tiene las esquinas redondeadas y el canto es redondo. Es de plástico porque una carcasa
   con esa forma no es de madera: con la veta, la silla se leía rara.
+  Su textura (`TEXTURA`) lleva la cara de arriba en la mitad izquierda y la de abajo en la
+  derecha, con la u a lo ancho y la v a lo largo del perfil, del borde de adelante a la punta del
+  respaldo. El canto toma el borde de la cara de arriba.
 - **Las patas** son cónicas, torneadas y abiertas hacia afuera. Un bastidor las une bajo el
   asiento, y un travesaño en H las une cerca del piso.
 
@@ -45,6 +48,11 @@ ESCALA = 1.12
 #: El material de la carcasa reemplaza a la madera blanca en la misma ranura.
 PLASTICO = "SILLA | Plástico blanco"
 COLOR_DEL_PLASTICO = (0.78, 0.78, 0.75, 1.0)
+#: La textura de la carcasa: la cara de arriba ocupa la mitad izquierda y la de abajo la derecha.
+TEXTURA = "//../source/textures/store/silla_plastico_blanco.png"
+LADO_DE_LA_TEXTURA = 1024
+#: El medio ancho más grande de la carcasa, sin escalar: la u va de -ese ancho a +ese ancho.
+ANCHO_DE_UV = 0.23
 RUGOSIDAD_DEL_PLASTICO = 0.5
 
 #: La línea media de la carcasa en (y, z), desde la caída del borde de adelante hasta la punta
@@ -195,10 +203,10 @@ def carcasa(armado: Armado) -> list[list[Vector]]:
 
     sup, inf = [], []
     for i in range(FILAS):
-        sup.append([armado.vertice(arriba[i][j], (arriba[i][j].x, recorridos[i])) for j in range(COLUMNAS)])
+        sup.append([armado.vertice(arriba[i][j], uv_de_carcasa(arriba[i][j].x, recorridos[i] / largo, 0)) for j in range(COLUMNAS)])
         inf.append(
             [
-                armado.vertice(arriba[i][j] - normales[i][j] * GROSOR, (arriba[i][j].x, recorridos[i]))
+                armado.vertice(arriba[i][j] - normales[i][j] * GROSOR, uv_de_carcasa(arriba[i][j].x, recorridos[i] / largo, 1))
                 for j in range(COLUMNAS)
             ]
         )
@@ -231,7 +239,8 @@ def carcasa(armado: Armado) -> list[list[Vector]]:
     canto = {}
     for i, j in contorno:
         punto = arriba[i][j] - normales[i][j] * (GROSOR / 2) + afuera[(i, j)] * (GROSOR * 0.45)
-        canto[(i, j)] = armado.vertice(punto, (punto.x + punto.y, punto.z))
+        # El canto toma el borde de la cara de arriba: sigue su suciedad y su desgaste.
+        canto[(i, j)] = armado.vertice(punto, uv_de_carcasa(arriba[i][j].x, recorridos[i] / largo, 0))
     for k, actual in enumerate(contorno):
         siguiente = contorno[(k + 1) % len(contorno)]
         par = [actual, siguiente]
@@ -340,14 +349,31 @@ def patas(armado: Armado, arriba: list[list[Vector]]) -> None:
     cono(armado, medios[0], medios[1], RADIO_DEL_TRAVESANO, RADIO_DEL_TRAVESANO, 8)
 
 
+def uv_de_carcasa(x: float, recorrido: float, cara: int) -> tuple[float, float]:
+    """La cara 0 es la de arriba, en la mitad izquierda de la textura; la 1, la de abajo."""
+    u = 0.5 + 0.5 * x / ANCHO_DE_UV
+    return (0.5 * (min(max(u, 0.0), 1.0) + cara), recorrido)
+
+
 def plastico():
     material = bpy.data.materials.get(PLASTICO) or bpy.data.materials.new(PLASTICO)
     material.use_nodes = True
     nodos = material.node_tree.nodes
-    for nodo in list(nodos):
-        if nodo.type == "TEX_IMAGE":
-            nodos.remove(nodo)
     principal = next(n for n in nodos if n.type == "BSDF_PRINCIPLED")
+    imagen_nodo = next((n for n in nodos if n.type == "TEX_IMAGE"), None) or nodos.new("ShaderNodeTexImage")
+    ruta = Path(bpy.path.abspath(TEXTURA))
+    if not ruta.exists():
+        # La primera vez se crea lisa, del color del plástico: el arte la pinta encima.
+        lisa = bpy.data.images.new("silla_plastico_blanco", LADO_DE_LA_TEXTURA, LADO_DE_LA_TEXTURA)
+        lisa.generated_color = COLOR_DEL_PLASTICO
+        lisa.filepath_raw = str(ruta)
+        lisa.file_format = "PNG"
+        lisa.save()
+        bpy.data.images.remove(lisa)
+    imagen = bpy.data.images.load(str(ruta), check_existing=True)
+    imagen.filepath = TEXTURA
+    imagen_nodo.image = imagen
+    material.node_tree.links.new(imagen_nodo.outputs["Color"], principal.inputs["Base Color"])
     principal.inputs["Base Color"].default_value = COLOR_DEL_PLASTICO
     principal.inputs["Roughness"].default_value = RUGOSIDAD_DEL_PLASTICO
     principal.inputs["Metallic"].default_value = 0.0

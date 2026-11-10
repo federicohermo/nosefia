@@ -30,7 +30,7 @@ from lib.consola import configurar  # noqa: E402
 EDIFICIO = "almacen-col"
 ZOCALO = "local_zocalo_perimetral"
 PISO = "local_ceramica"
-BALDOSAS = (11, 15)
+BALDOSAS = (10, 14)
 BALDOSAS_POR_DIAGONAL = 3
 
 

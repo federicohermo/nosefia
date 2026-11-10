@@ -54,7 +54,9 @@ DESPLEGADO: dict[str, Rect] = {
     "derecha": (0.9003, 0.9793, 0.1499, 0.8206),
 }
 
-ANILLOS = 11
+ANILLOS = 15
+#: Qué parte del alto, en cada punta, ocupa el afinado del cuerpo hasta la costura.
+TRANSICION = 0.2
 GAJOS_DEL_FRENTE = 7
 GAJOS_DEL_COSTADO = 3
 #: Desde qué ángulo de la sección empieza el costado. El frente va de este ángulo a pi menos él.
@@ -117,12 +119,24 @@ def armar(objeto, desplegado: dict[str, Rect]) -> tuple[int, int]:
     vertices: list[tuple[float, float, float]] = []
     caras: list[tuple[list[int], list[tuple[float, float]]]] = []
     anillos: list[list[int]] = []
-    for i in range(ANILLOS + 1):
-        # Los anillos se juntan cerca de las costuras, donde la bolsa se cierra.
-        t = 0.5 - 0.5 * math.cos(math.pi * i / ANILLOS)
-        # El cuerpo conserva el grosor casi hasta la costura: el arte queda plano, los sellos de
-        # arriba no se aplastan, y sólo se curva el último tramo.
-        espesor = grosor * max(0.0, 1 - abs(2 * t - 1) ** 16) ** 0.5
+    # Los anillos se juntan cerca de las costuras, donde la bolsa se cierra.
+    alturas = [0.5 - 0.5 * math.cos(math.pi * i / ANILLOS) for i in range(ANILLOS + 1)]
+
+    def espesor_en(t: float) -> float:
+        # El cuerpo se afina de a poco hacia cada costura: sin quiebre donde empieza la curva, y en
+        # cero en la costura, donde sigue la aleta.
+        return grosor * math.sin(math.pi / 2 * min(1.0, min(t, 1 - t) / TRANSICION))
+
+    # La v de cada anillo sigue el largo de la superficie del frente, no la altura: el arte se
+    # reparte parejo sobre la curva y no se aplasta cerca de la costura.
+    largos = [0.0]
+    for t0, t1 in zip(alturas, alturas[1:]):
+        dz = (t1 - t0) * (arriba - abajo)
+        largos.append(largos[-1] + math.hypot(dz, espesor_en(t1) - espesor_en(t0)))
+    recorridos = [largo / largos[-1] for largo in largos]
+
+    for i, t in enumerate(alturas):
+        espesor = espesor_en(t)
         z = lerp(abajo, arriba, t)
         anillo = []
         for angulo in angulos:
@@ -152,8 +166,7 @@ def armar(objeto, desplegado: dict[str, Rect]) -> tuple[int, int]:
             # El último gajo de un tramo cierra en el primer ángulo del siguiente.
             fin = angulos[m] if m else 2 * math.pi - COSTADO
             ids = [anillos[i][k], anillos[i][m], anillos[i + 1][m], anillos[i + 1][k]]
-            t0 = 0.5 - 0.5 * math.cos(math.pi * i / ANILLOS)
-            t1 = 0.5 - 0.5 * math.cos(math.pi * (i + 1) / ANILLOS)
+            t0, t1 = recorridos[i], recorridos[i + 1]
             uvs = [uv(cara, angulos[k], t0), uv(cara, fin, t0), uv(cara, fin, t1), uv(cara, angulos[k], t1)]
             caras.append((ids, uvs))
 
