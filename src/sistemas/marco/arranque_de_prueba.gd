@@ -23,6 +23,16 @@ static func busqueda_de_la_pagina() -> String:
 	return str(JavaScriptBridge.eval("window.location.search"))
 
 
+## Los logros que muestra la pantalla: todos ganados si la búsqueda lo pide, y si no, los reales. Es
+## una instancia aparte: lo que el jugador tiene en disco no se toca.
+static func logros_a_mostrar(
+	prueba: PartidaDePrueba, reales: Logros, caso: CasoDeInvestigacion
+) -> Logros:
+	if prueba != null and prueba.logros_completos:
+		return Logros.completos(caso)
+	return reales
+
+
 ## Escribe el guardado de la partida de prueba, una sola vez por carga. Devuelve si escribió. Sin
 ## `jornada` no hay guardado que armar y el del jugador queda como está.
 static func escribir_el_guardado(prueba: PartidaDePrueba, guardado: Guardado) -> bool:

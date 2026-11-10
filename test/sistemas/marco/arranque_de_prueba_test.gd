@@ -199,3 +199,23 @@ func test_con_cierre_cero_el_turno_arranca_en_el_cierre() -> void:
 	_arranque().aplicar(_prueba("?jornada=%d&cierre=0" % JORNADA), reloj, JORNADA)
 	assert_bool(reloj.corriendo()).is_false()
 	assert_float(reloj.tiempo_restante()).is_equal(0.0)
+
+
+# --- Los logros que se muestran ---
+
+
+func test_con_logros_la_pantalla_muestra_todo_y_los_reales_no_cambian() -> void:
+	var caso := CasoDeInvestigacion.de_la_partida()
+	var reales := Logros.new()
+	var mostrados := ArranqueDePrueba.logros_a_mostrar(_prueba("?logros=1"), reales, caso)
+	assert_bool(mostrados.desbloqueado(Logros.Logro.values()[0])).is_true()
+	assert_bool(reales.desbloqueado(Logros.Logro.values()[0])).is_false()
+	assert_dict(reales.datos()).is_equal(Logros.new().datos())
+
+
+func test_sin_logros_la_pantalla_muestra_los_reales() -> void:
+	var caso := CasoDeInvestigacion.de_la_partida()
+	var reales := Logros.new()
+	assert_object(ArranqueDePrueba.logros_a_mostrar(null, reales, caso)).is_same(reales)
+	var sin_logros := _prueba("?jornada=%d" % JORNADA)
+	assert_object(ArranqueDePrueba.logros_a_mostrar(sin_logros, reales, caso)).is_same(reales)
