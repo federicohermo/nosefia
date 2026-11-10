@@ -80,12 +80,18 @@ func cerrar_la_prueba(completa: bool) -> void:
 ## Se pierde llegando al umbral sin haber cumplido entera la última noche. Vale desde que la
 ## prueba está cerrada.
 func perdio_la_prueba() -> bool:
-	return _excede_la_prueba() and not _ultima_de_la_prueba_completa
+	return (
+		_apercibimientos_de_la_prueba >= Reglas.APERCIBIMIENTOS_QUE_PIERDEN_LA_PRUEBA
+		and not _ultima_de_la_prueba_completa
+	)
 
 
 ## Lo que se debe se pone a cero, salvo el apercibimiento de quien terminó la prueba excedida.
 func empezar_las_jornadas_completas() -> void:
-	var arrastre := Reglas.APERCIBIMIENTOS_TRAS_UNA_PRUEBA_EXCEDIDA if _excede_la_prueba() else 0
+	var arrastra := (
+		_apercibimientos_de_la_prueba >= Reglas.APERCIBIMIENTOS_QUE_ARRASTRAN_A_LA_TERCERA
+	)
+	var arrastre := Reglas.APERCIBIMIENTOS_TRAS_UNA_PRUEBA_EXCEDIDA if arrastra else 0
 	_medios = arrastre * Reglas.MEDIOS_POR_APERCIBIMIENTO
 
 
@@ -101,7 +107,3 @@ func apercibimientos() -> int:
 ## nadie, y quien decide es la partida.
 func despedido() -> bool:
 	return _medios >= Reglas.APERCIBIMIENTOS_HASTA_EL_DESPIDO * Reglas.MEDIOS_POR_APERCIBIMIENTO
-
-
-func _excede_la_prueba() -> bool:
-	return _apercibimientos_de_la_prueba >= Reglas.APERCIBIMIENTOS_QUE_PIERDEN_LA_PRUEBA

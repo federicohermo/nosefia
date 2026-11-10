@@ -206,21 +206,30 @@ func test_la_prueba_se_pierde_en_el_umbral_sin_completar_la_ultima() -> void:  #
 	assert_bool(debajo.perdio_la_prueba()).is_false()
 
 
-func test_empezar_las_jornadas_completas_deja_cero_o_uno_segun_el_umbral() -> void:  # AC-EMP-081
+func test_empezar_las_jornadas_completas_deja_cero_o_uno_segun_el_arrastre() -> void:  # AC-EMP-081
 	var debajo := Legajo.con_medios(
 		(Reglas.APERCIBIMIENTOS_QUE_PIERDEN_LA_PRUEBA - 1) * Reglas.MEDIOS_POR_APERCIBIMIENTO
 	)
 	debajo.cerrar_la_prueba(false)
 	debajo.empezar_las_jornadas_completas()
 	assert_int(debajo.medios()).is_zero()
-	var en_el_umbral := Legajo.con_medios(
+	var pierde_y_no_arrastra := Legajo.con_medios(
 		Reglas.APERCIBIMIENTOS_QUE_PIERDEN_LA_PRUEBA * Reglas.MEDIOS_POR_APERCIBIMIENTO
 	)
-	en_el_umbral.cerrar_la_prueba(true)
-	en_el_umbral.empezar_las_jornadas_completas()
-	assert_int(en_el_umbral.medios()).is_equal(
+	pierde_y_no_arrastra.cerrar_la_prueba(true)
+	pierde_y_no_arrastra.empezar_las_jornadas_completas()
+	assert_int(pierde_y_no_arrastra.medios()).is_zero()
+	assert_int(pierde_y_no_arrastra.apercibimientos_de_la_prueba()).is_equal(
+		Reglas.APERCIBIMIENTOS_QUE_PIERDEN_LA_PRUEBA
+	)
+	var arrastra := Legajo.con_medios(
+		Reglas.APERCIBIMIENTOS_QUE_ARRASTRAN_A_LA_TERCERA * Reglas.MEDIOS_POR_APERCIBIMIENTO
+	)
+	arrastra.cerrar_la_prueba(true)
+	arrastra.empezar_las_jornadas_completas()
+	assert_int(arrastra.medios()).is_equal(
 		Reglas.APERCIBIMIENTOS_TRAS_UNA_PRUEBA_EXCEDIDA * Reglas.MEDIOS_POR_APERCIBIMIENTO
 	)
-	assert_int(en_el_umbral.apercibimientos_de_la_prueba()).is_equal(
-		Reglas.APERCIBIMIENTOS_QUE_PIERDEN_LA_PRUEBA
+	assert_int(arrastra.apercibimientos_de_la_prueba()).is_equal(
+		Reglas.APERCIBIMIENTOS_QUE_ARRASTRAN_A_LA_TERCERA
 	)

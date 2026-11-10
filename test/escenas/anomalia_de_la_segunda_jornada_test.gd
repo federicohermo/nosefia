@@ -37,11 +37,11 @@ func _abrir(
 	return _almacen
 
 
-func _clic(objetivo: Node3D) -> void:
+func _clic(objetivo: Node3D, boton: MouseButton = MOUSE_BUTTON_LEFT) -> void:
 	var jugador: Node3D = _almacen.get("_jugador")
 	jugador.set("_enfocado", objetivo)
 	var evento := InputEventMouseButton.new()
-	evento.button_index = MOUSE_BUTTON_LEFT
+	evento.button_index = boton
 	evento.pressed = true
 	jugador.call("_unhandled_input", evento)
 	evento.pressed = false
@@ -424,7 +424,7 @@ func test_la_mopa_azul_de_poetico_muestra_carga_y_borra_solo_moho() -> void:  # 
 		ReglasDeLaLimpieza.COLOR_DEL_AGUA[ReglasDeLaLimpieza.Agua.AZUL]
 	)
 	for mancha: Node3D in _almacen.get("_limpieza").manchas():
-		_clic(mancha)
+		_clic(mancha, MOUSE_BUTTON_RIGHT)
 		var estado := limpiador.piso().mancha_de(mancha.call("lugar_de_la_mancha"))
 		assert_bool(estado.esta_limpia()).is_equal(
 			estado.tipo() == ReglasDeLaLimpieza.TipoDeMancha.MOHO
