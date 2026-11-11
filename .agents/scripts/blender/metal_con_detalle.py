@@ -27,6 +27,12 @@ altura y su distancia al borde de su plano.
 - Corre dos veces y da lo mismo: la UV y las texturas salen sólo de la geometría y de las
   recetas.
 
+## El acero de las cabinas
+
+`bano_acero` es acero inoxidable cepillado: el cepillado corre a lo largo del perfil (`cepillado`),
+el tono es parejo, no lleva huellas y sólo alguna marca de agua chica cerca del piso. Las
+manchas redondas claras y oscuras repartidas por el perfil no se leían como acero.
+
 ## Lo que no cambia
 
 La grilla, el panel perforado y la ranura de los parantes de la góndola conservan su arte.
@@ -84,7 +90,8 @@ CONJUNTOS = (
         420.0,
         {
             "bano_acero": _receta((0.52, 0.57, 0.57), 0.30, 0.75, SUELO, semilla=3,
-                                  manchas=0.4, mugre=0.5, variacion=0.6),
+                                  manchas=0.06, huellas=0.0, rayones=0.3, mugre=0.5,
+                                  variacion=0.2, cepillado=2.2),
             "bano_griferia": _receta((0.52, 0.57, 0.57), 0.16, 0.75, SUELO, semilla=5,
                                      rayones=0.6, manchas=0.3, mugre=0.5, variacion=0.6),
             "bano_desague": _receta((0.52, 0.57, 0.57), 0.20, 0.75, SUELO, semilla=7,

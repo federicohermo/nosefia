@@ -33,7 +33,10 @@ pintura mate.
 La pintura sale de la geometría y de los objetos del local, nunca de un número escrito a mano
 por pared:
 
-- grano del revoque y marcas suaves del rodillo (una pasada cada 23 cm);
+- el revoque: la luz de una foto de revoque real (ambientCG «Plaster 002», CC0, en
+  `assets/source/textures/third-party/`), a su tamaño real. El grano que se inventaba texel por
+  texel y las pasadas del rodillo se leían como tela pixelada y se sacaron. De la foto sólo se
+  toma la luminancia: el tono lo sigue poniendo el color del material;
 - variación de tono a 2 o 3 metros, apenas más amarillenta o más gris;
 - mugre abajo, cerca del zócalo, y polvo cerca del techo y en las esquinas;
 - mugre alrededor de cada vano (puerta, ventanal), más fuerte a la altura de la mano;
@@ -44,7 +47,7 @@ por pared:
   ellas, y el pie de los inodoros.
 
 **Que sea sutil es parte del contrato.** La media de cada pared vuelve al tono liso de antes
-(así de lejos no cambia ni el tono ni el brillo) y el desvío de la pintura es de 3 o 4 %.
+(así de lejos no cambia ni el tono ni el brillo) y el desvío de la pintura es de 4 o 5 %.
 El 1 % más oscuro, al pie, pierde entre un 7 y un 14 %. A 2 m la pared se lee blanca y limpia.
 
 ## Lo que cuesta
@@ -52,8 +55,10 @@ El 1 % más oscuro, al pie, pierde entre un 7 y un 14 %. A 2 m la pared se lee b
 Una textura de 1024 px más por recinto, que hasta ahora no tenían ninguna. Sin materiales ni
 dibujos nuevos. El `.glb` pesa lo que pesan dos PNG de 1024.
 
-Es idempotente: la UV y los PNG salen sólo de la geometría y de las constantes, con una semilla
-fija por pared.
+La foto no viaja al juego: sólo su luz, ya pintada en los PNG de arriba.
+
+Es idempotente: la UV y los PNG salen sólo de la geometría, de la foto y de las constantes, con
+una semilla fija por pared.
 """
 
 import sys
@@ -78,6 +83,12 @@ configurar()
 FUENTE = RAIZ / "assets/models/SEPT_JUEGOS_PROTOTIPO.blend"
 CARPETA = RAIZ / "assets/source/textures/store"
 EDIFICIO = "almacen-col"
+#: La foto del revoque: ambientCG «Plaster 002», CC0. Su licencia viaja con ella.
+REVOQUE = (
+    RAIZ / "assets/source/textures/third-party/ambientcg-plaster-002/Plaster002_1K-JPG_Color.jpg"
+)
+#: Su pirámide de niveles, que arma `main`. Se declara acá para que `_revoque` la vea.
+_REVOQUE: list[np.ndarray] = []
 
 #: El lado de la textura. Es el tope con el que viaja el color de un edificio.
 LADO = 1024
@@ -98,10 +109,16 @@ MUGRE = np.array([0.60, 0.57, 0.50], dtype=np.float32)
 HUMEDAD = np.array([0.80, 0.86, 0.86], dtype=np.float32)
 
 #: Qué tanto cuenta cada desperfecto. Es la fracción de luz que le saca al color.
-GRANO = 0.022
+REVOQUE_DESVIO = 0.04
+#: Cuánto de la mancha grande de la foto se conserva: 1 menos esto, y a cuántos niveles de la
+#: pirámide (un nivel es el doble de ancho) empieza a contar como mancha grande.
+NUBE = 0.7
+NIVELES_DE_NUBE = 3
+#: Niveles de la pirámide de más sobre el texel de la pared. Con un filtro pixelado, el detalle
+#: que mide un texel o dos se ve como tablero de ajedrez; así el menor rasgo mide tres o cuatro.
+NIVELES_MAS_SUAVES = 1
 TONO_GRIS = 0.014
 TONO_CALIDO = 0.010
-RODILLO = 0.014
 PIE = 0.10
 TECHO_POLVO = 0.05
 ESQUINA = 0.035
@@ -426,31 +443,73 @@ class Lienzo:
         self.tinte *= 1.0 - cantidad * _reparto(color)
 
 
-def _revoque(lienzo: Lienzo, azar: np.random.Generator, capa: int, semilla: int) -> None:
-    s, t = lienzo.s, lienzo.t
-    blanco = _centrado(azar.random(s.shape).astype(np.float32))
-    fino = ruido(s, t, 0.03, 0.03, 2, semilla + 1, capa)
-    lienzo.aclarar_u_oscurecer(GRANO * (0.7 * blanco + 0.6 * fino))
-    # Las marcas del llana, apenas: manchas de 15 cm.
-    lienzo.aclarar_u_oscurecer(0.007 * ruido(s, t, 0.18, 0.18, 2, semilla + 2, capa))
-    # Algún poro del revoque: un texel apenas más oscuro, muy de vez en cuando.
-    poros = azar.random(s.shape) < 0.0025
-    lienzo.aclarar_u_oscurecer(-0.03 * poros)
+def _luminancia_del_revoque() -> np.ndarray:
+    """La luz relativa de la foto del revoque: media 1, desvío 1 menos uno. Lado `LADO_REVOQUE`.
+
+    Sólo se usa la luminancia: el tono de la pared lo sigue poniendo el color del material.
+    """
+    imagen = bpy.data.images.load(str(REVOQUE), check_existing=False)
+    imagen.colorspace_settings.name = "Non-Color"
+    ancho, alto = imagen.size
+    crudo = np.empty(ancho * alto * 4, dtype=np.float32)
+    imagen.pixels.foreach_get(crudo)
+    bpy.data.images.remove(imagen)
+    rgb = crudo.reshape(alto, ancho, 4)[..., :3]
+    lineal = np.where(rgb <= 0.04045, rgb / 12.92, ((rgb + 0.055) / 1.055) ** 2.4)
+    luz = lineal @ np.array([0.2126, 0.7152, 0.0722], dtype=np.float32)
+    return luz / luz.mean() - 1.0
 
 
-def _rodillo(lienzo: Lienzo, semilla: int, capa: int) -> None:
-    """Las pasadas verticales del rodillo: un paso de 23 cm y una costura donde se solapan."""
-    s, t = lienzo.s, lienzo.t
-    paso = 0.23
-    posicion = s / paso + 0.12 * ruido(s, t, 1.5, 3.0, 1, semilla + 3, capa)
-    banda = np.floor(posicion)
-    resto = posicion - banda
-    tono_de_banda = metal._azar(banda, banda * 0, banda * 0 + capa, semilla + 4) - 0.5
-    lienzo.aclarar_u_oscurecer(0.008 * 2.0 * tono_de_banda)
-    costura = np.exp(-((np.minimum(resto, 1.0 - resto) * paso / 0.012) ** 2))
-    # Cada pasada llega a una altura distinta: la costura se nota donde el rodillo se apoyó.
-    fuerza = _suave(-0.3, 0.8, ruido(s, t, 1.8, 0.9, 2, semilla + 5, capa))
-    lienzo.aclarar_u_oscurecer(-RODILLO * costura * fuerza)
+def _piramide(luz: np.ndarray) -> list[np.ndarray]:
+    """La foto y sus mitades, promediadas de a 2x2: cada nivel mide la mitad del anterior."""
+    niveles = [luz]
+    while niveles[-1].shape[0] > 16:
+        a = niveles[-1]
+        niveles.append(0.25 * (a[0::2, 0::2] + a[1::2, 0::2] + a[0::2, 1::2] + a[1::2, 1::2]))
+    return niveles
+
+
+def _leer_bilineal(imagen: np.ndarray, u: np.ndarray, v: np.ndarray) -> np.ndarray:
+    """La imagen en `(u, v)` con `u` y `v` en vueltas de la imagen. Se repite en los bordes."""
+    alto, ancho = imagen.shape
+    x, y = u * ancho - 0.5, v * alto - 0.5
+    x0, y0 = np.floor(x), np.floor(y)
+    fx, fy = x - x0, y - y0
+    x0, y0 = x0.astype(np.int64) % ancho, y0.astype(np.int64) % alto
+    x1, y1 = (x0 + 1) % ancho, (y0 + 1) % alto
+    arriba = imagen[y0, x0] * (1 - fx) + imagen[y0, x1] * fx
+    abajo = imagen[y1, x0] * (1 - fx) + imagen[y1, x1] * fx
+    return arriba * (1 - fy) + abajo * fy
+
+
+def _revoque(lienzo: Lienzo, densidad: int, semilla: int) -> None:
+    """La luz del revoque pintado: la foto de un revoque real, a su tamaño real.
+
+    Tres copias de la misma foto con tamaños que no se dividen entre sí (1,4, 2,0 y 2,9 m),
+    giradas o espejadas y corridas al azar. Con un período solo, la trama se repetiría cada
+    metro y medio. Con tres, la distancia hasta que dos copias vuelvan a coincidir pasa de
+    cualquier pared. Cada copia se toma del nivel de la pirámide cuyo texel no es menor que el
+    de la pared: así no hay grano más fino que el texel, que es lo que daba la tela.
+    """
+    azar = np.random.default_rng(semilla)
+    capas = (
+        (1.4, lambda u, v: (u, v)),
+        (2.0, lambda u, v: (v, 1.0 - u)),
+        (2.9, lambda u, v: (1.0 - u, v)),
+    )
+    suma = np.zeros(lienzo.s.shape, dtype=np.float32)
+    for lado, orientar in capas:
+        texeles = _REVOQUE[0].shape[0] / (lado * densidad)
+        nivel = int(np.floor(np.log2(texeles))) + NIVELES_MAS_SUAVES
+        nivel = min(max(nivel, 0), len(_REVOQUE) - 1)
+        corrimiento = azar.random(2)
+        u, v = orientar(lienzo.s / lado + corrimiento[0], lienzo.t / lado + corrimiento[1])
+        # Las manchas grandes de la foto se atenúan: una pared pintada se lee por las
+        # marcas de la llana, no por nubes de medio metro.
+        grueso = _REVOQUE[min(nivel + NIVELES_DE_NUBE, len(_REVOQUE) - 1)]
+        suma += _leer_bilineal(_REVOQUE[nivel], u, v) - NUBE * _leer_bilineal(grueso, u, v)
+    suma /= np.sqrt(3.0)
+    lienzo.aclarar_u_oscurecer(REVOQUE_DESVIO * suma / max(float(suma.std()), 1e-6))
 
 
 def _tono(lienzo: Lienzo, semilla: int, capa: int) -> None:
@@ -642,8 +701,7 @@ def pintar(recinto: Recinto, pared: Pared, indice: int, densidad: int, base: np.
     vano = np.pad(~cubierto, COLCHON, mode="edge")
     distancia = distancia_en_texeles(vano)
 
-    _revoque(lienzo, azar, indice, semilla)
-    _rodillo(lienzo, semilla, indice)
+    _revoque(lienzo, densidad, semilla)
     _tono(lienzo, semilla, indice)
     _suciedad_general(lienzo, pared, recinto, semilla, indice, densidad, distancia)
     _muebles(lienzo, pared, semilla, indice)
@@ -678,7 +736,6 @@ def pintar_recinto(recinto: Recinto) -> tuple[np.ndarray, dict]:
     notas = anotar_muebles(recinto, paredes)
 
     textura = np.ones((LADO, LADO, 3), dtype=np.float32) * base
-    dithering = np.random.default_rng(_semilla(recinto.nombre)).random((LADO, LADO, 1)) - 0.5
     resumen = []
     marcas = 0
     for indice, pared in enumerate(paredes):
@@ -695,7 +752,7 @@ def pintar_recinto(recinto: Recinto) -> tuple[np.ndarray, dict]:
     # El parche liso, al fondo: lo que no es pared del recinto cae acá, del color de siempre.
     parche = (LADO - PARCHE, LADO - PARCHE)
     textura[parche[0] :, parche[1] :] = base
-    pixeles = _a_srgb(textura) + dithering / 255.0
+    pixeles = _a_srgb(textura)
     info = {
         "paredes": paredes,
         "densidad": densidad,
@@ -766,6 +823,7 @@ def main() -> None:
     argumentos = sys.argv[sys.argv.index("--") + 1 :] if "--" in sys.argv else []
     guardar = "--aplicar" in argumentos
     destino = CARPETA if guardar else Path(tempfile.mkdtemp(prefix="paredes_pintadas_"))
+    _REVOQUE[:] = _piramide(_luminancia_del_revoque())
     for recinto in RECINTOS:
         print(aplicar(recinto, destino))
     if guardar:
