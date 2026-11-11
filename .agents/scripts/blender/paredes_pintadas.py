@@ -37,18 +37,19 @@ por pared:
   `assets/source/textures/third-party/`), a su tamaño real. El grano que se inventaba texel por
   texel y las pasadas del rodillo se leían como tela pixelada y se sacaron. De la foto sólo se
   toma la luminancia: el tono lo sigue poniendo el color del material;
-- variación de tono a 2 o 3 metros, apenas más amarillenta o más gris;
-- mugre abajo, cerca del zócalo, y polvo cerca del techo y en las esquinas;
-- mugre alrededor de cada vano (puerta, ventanal), más fuerte a la altura de la mano;
-- detrás del mostrador: la altura de la cadera y las patadas de abajo;
-- junto a las mesas: el roce de los respaldos de las sillas, a unos 85 cm;
-- raspones, golpecitos y marcas de zapato, de 1 a 4 cm, más seguidos cerca del piso;
+- variación de tono a 2 o 3 metros, casi imperceptible;
+- mugre apenas al pie, cerca del zócalo, y alrededor de cada vano (puerta, ventanal);
+- raspones, golpecitos y marcas de zapato, de 1 a 4 cm, ralos y más seguidos cerca del piso;
 - en el baño: humedad al pie (menos de 50 cm), churretes bajo las piletas y salpicaduras sobre
   ellas, y el pie de los inodoros.
 
-**Que sea sutil es parte del contrato.** La media de cada pared vuelve al tono liso de antes
-(así de lejos no cambia ni el tono ni el brillo) y el desvío de la pintura ronda el 12 %: con 4 % el usuario no vio ningún cambio.
-El 1 % más oscuro, al pie, pierde entre un 7 y un 14 %. A 2 m la pared se lee blanca y limpia.
+**La pared es limpia.** De la foto queda el grano del revoque y casi nada de sus manchas
+grandes: las nubes de medio metro, el polvo del techo, las esquinas y el roce de sillas y
+mostrador hacían ver la pared sucia. La media de cada pared vuelve al tono liso de antes y el
+desvío de la pintura ronda el 10 %: con 4 % el usuario no vio ningún cambio.
+
+**El juego la filtra lineal** (`assets/models/importar_modelo.gd`), como el concreto del
+depósito. Con el filtro pixelado, el texel de 1 cm se leía como cuadraditos.
 
 ## Lo que cuesta
 
@@ -109,25 +110,18 @@ MUGRE = np.array([0.60, 0.57, 0.50], dtype=np.float32)
 HUMEDAD = np.array([0.80, 0.86, 0.86], dtype=np.float32)
 
 #: Qué tanto cuenta cada desperfecto. Es la fracción de luz que le saca al color.
-REVOQUE_DESVIO = 0.14
+REVOQUE_DESVIO = 0.10
 #: Cuánto de la mancha grande de la foto se conserva: 1 menos esto, y a cuántos niveles de la
 #: pirámide (un nivel es el doble de ancho) empieza a contar como mancha grande.
-NUBE = 0.3
+NUBE = 0.9
 NIVELES_DE_NUBE = 3
-#: Niveles de la pirámide de más sobre el texel de la pared. Con un filtro pixelado, el detalle
-#: que mide un texel o dos se ve como tablero de ajedrez; así el menor rasgo mide tres o cuatro.
-NIVELES_MAS_SUAVES = 0
-TONO_GRIS = 0.03
-TONO_CALIDO = 0.02
-PIE = 0.10
-TECHO_POLVO = 0.05
-ESQUINA = 0.035
-VANO = 0.08
-CADERA = 0.05
-RESPALDO = 0.06
-HUMEDAD_DEL_BANO = 0.08
-CHURRETE = 0.07
-SALPICADURA = 0.10
+TONO_GRIS = 0.008
+TONO_CALIDO = 0.005
+PIE = 0.05
+VANO = 0.035
+HUMEDAD_DEL_BANO = 0.04
+CHURRETE = 0.04
+SALPICADURA = 0.06
 
 
 @dataclass(frozen=True)
@@ -144,7 +138,7 @@ class Mueble:
     """Un objeto del local que ensucia la pared que tiene cerca."""
 
     nombre: str  # el nombre del objeto o su prefijo
-    tipo: str  # mostrador, silla, pileta o inodoro
+    tipo: str  # pileta o inodoro
     alcance: float  # hasta dónde, en metros, deja su marca en la pared
 
 
@@ -166,10 +160,6 @@ SALON = Recinto(
     techo=3.5,
     archivo="pared_del_salon_color.png",
     humedad=False,
-    muebles=(
-        Mueble("EscritorioComputadora-col", "mostrador", 0.8),
-        Mueble("salon_silla", "silla", 1.8),
-    ),
 )
 BANO = Recinto(
     nombre="bano",
@@ -500,12 +490,11 @@ def _revoque(lienzo: Lienzo, densidad: int, semilla: int) -> None:
     suma = np.zeros(lienzo.s.shape, dtype=np.float32)
     for lado, orientar in capas:
         texeles = _REVOQUE[0].shape[0] / (lado * densidad)
-        nivel = int(np.floor(np.log2(texeles))) + NIVELES_MAS_SUAVES
-        nivel = min(max(nivel, 0), len(_REVOQUE) - 1)
+        nivel = min(max(int(np.floor(np.log2(texeles))), 0), len(_REVOQUE) - 1)
         corrimiento = azar.random(2)
         u, v = orientar(lienzo.s / lado + corrimiento[0], lienzo.t / lado + corrimiento[1])
-        # Las manchas grandes de la foto se atenúan: una pared pintada se lee por las
-        # marcas de la llana, no por nubes de medio metro.
+        # Las manchas grandes de la foto casi se borran: una pared pintada se lee por el
+        # grano del revoque, no por nubes de medio metro, que la hacen ver sucia.
         grueso = _REVOQUE[min(nivel + NIVELES_DE_NUBE, len(_REVOQUE) - 1)]
         suma += _leer_bilineal(_REVOQUE[nivel], u, v) - NUBE * _leer_bilineal(grueso, u, v)
     suma /= np.sqrt(3.0)
@@ -522,7 +511,7 @@ def _tono(lienzo: Lienzo, semilla: int, capa: int) -> None:
     lienzo.tinte[..., 2] *= 1.0 - 1.0 * calido
 
 
-def _suciedad_general(lienzo, pared, recinto, semilla, capa, densidad, distancia_a_vano):
+def _suciedad_general(lienzo, semilla, capa, densidad, distancia_a_vano):
     s, t = lienzo.s, lienzo.t
     altura = t - PISO
     # Abajo: lo que se junta al pie de la pared. Las patadas y la fregona dejan franjas bajas.
@@ -531,16 +520,6 @@ def _suciedad_general(lienzo, pared, recinto, semilla, capa, densidad, distancia
     manchas = ruido(s, t, 0.5, 0.5, 2, semilla + 9, capa)
     pie = PIE * borde**1.5 * (0.65 + 0.2 * franjas + 0.15 * manchas)
     lienzo.ensuciar(pie)
-    # Arriba: polvo y un tono más oscuro cerca del techo.
-    bajo_techo = recinto.techo - t
-    polvo = TECHO_POLVO * _suave(0.0, 1.0, 1.0 - bajo_techo / 0.40)
-    polvo *= 0.55 + 0.45 * ruido(s, t, 0.7, 0.3, 2, semilla + 10, capa)
-    lienzo.ensuciar(polvo)
-    # Las esquinas verticales también juntan polvo.
-    a_la_esquina = np.minimum(s - pared.s0, pared.s1 - s)
-    esquina = ESQUINA * np.exp(-np.clip(a_la_esquina, 0, None) / 0.10)
-    esquina *= 0.6 + 0.4 * ruido(s, t, 0.4, 0.5, 2, semilla + 11, capa)
-    lienzo.ensuciar(esquina)
     # Alrededor de cada vano: la mano busca el borde, sobre todo a la altura del pecho.
     metros = distancia_a_vano / densidad
     mano = 0.55 + 0.9 * np.exp(-(((t - 1.05) / 0.40) ** 2))
@@ -557,22 +536,10 @@ def _aureola(s, t, centro_s, centro_t, radio_s, radio_t):
 
 def _muebles(lienzo, pared, semilla, capa) -> None:
     s, t = lienzo.s, lienzo.t
-    altura = t - PISO
-    for n, (tipo, s0, s1, z0, z1, distancia) in enumerate(pared.fijos):
+    for n, (tipo, s0, s1, z0, z1, _distancia) in enumerate(pared.fijos):
         centro = 0.5 * (s0 + s1)
         irregular = 0.65 + 0.35 * ruido(s, t, 0.25, 0.25, 2, semilla + 20 + n, capa)
-        if tipo == "mostrador":
-            # Detrás del mostrador la gente se apoya y se mueve: cadera y patadas.
-            a_lo_largo = _suave(0.0, 1.0, 1.0 - np.maximum(0, np.maximum(s0 - s, s - s1)) / 0.35)
-            cadera = np.exp(-(((t - 1.0) / 0.22) ** 2))
-            patada = _suave(0.0, 1.0, 1.0 - altura / 0.7)
-            lienzo.ensuciar(a_lo_largo * (CADERA * cadera + 0.5 * PIE * patada) * irregular)
-        elif tipo == "silla":
-            # Un respaldo que se apoya o se arrastra contra la pared, a unos 85 cm.
-            fuerza = RESPALDO * (1.0 - 0.3 * min(distancia / 1.9, 1.0))
-            marca = _aureola(s, t, centro, 0.85, 0.30, 0.10)
-            lienzo.ensuciar(fuerza * marca * irregular)
-        elif tipo == "pileta":
+        if tipo == "pileta":
             _pileta(lienzo, pared, s0, s1, z0, z1, semilla + 40 + n, capa)
         elif tipo == "inodoro":
             marca = _aureola(s, t, centro, PISO, 0.36, 0.55)
@@ -649,7 +616,7 @@ def _marcas(lienzo, pared, recinto, azar) -> int:
     ancho_m = pared.s1 - pared.s0
     area = ancho_m * (recinto.techo - PISO)
     hechas = 0
-    clases = (("zapato", 1.3, 0.55), ("raspon", 2.2, 2.2), ("golpe", 0.9, 2.4))
+    clases = (("zapato", 0.6, 0.55), ("raspon", 1.0, 2.2), ("golpe", 0.4, 2.4))
     for tipo, por_metro2, z_max in clases:
         cantidad = int(round(por_metro2 * area * (z_max - PISO) / (recinto.techo - PISO)))
         for _ in range(cantidad):
@@ -703,7 +670,7 @@ def pintar(recinto: Recinto, pared: Pared, indice: int, densidad: int, base: np.
 
     _revoque(lienzo, densidad, semilla)
     _tono(lienzo, semilla, indice)
-    _suciedad_general(lienzo, pared, recinto, semilla, indice, densidad, distancia)
+    _suciedad_general(lienzo, semilla, indice, densidad, distancia)
     _muebles(lienzo, pared, semilla, indice)
     if recinto.humedad:
         _humedad(lienzo, semilla, indice)
@@ -798,7 +765,7 @@ def cablear(recinto: Recinto, ruta: Path) -> None:
     nodo = arbol.nodes.get("Pared pintada") or arbol.nodes.new("ShaderNodeTexImage")
     nodo.name = nodo.label = "Pared pintada"
     nodo.image = _imagen(ruta)
-    nodo.interpolation = "Closest"
+    nodo.interpolation = "Linear"
     nodo.location = (-700, 300)
     arbol.links.new(nodo.outputs["Color"], principal.inputs["Base Color"])
 

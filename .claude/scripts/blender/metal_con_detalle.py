@@ -29,9 +29,9 @@ altura y su distancia al borde de su plano.
 
 ## El acero de las cabinas
 
-`bano_acero` es acero inoxidable cepillado: el cepillado corre a lo largo del perfil (`cepillado`),
-el tono es parejo, no lleva huellas y sólo alguna marca de agua chica cerca del piso. Las
-manchas redondas claras y oscuras repartidas por el perfil no se leían como acero.
+`bano_acero` es acero inoxidable satinado: el tono es parejo, no lleva huellas y sólo alguna
+marca de agua chica cerca del piso. Las manchas redondas claras y oscuras repartidas por el perfil
+no se leían como acero. Un cepillado de líneas largas y contrastadas tampoco: se leía como madera.
 
 ## Lo que no cambia
 
@@ -91,11 +91,11 @@ CONJUNTOS = (
         {
             "bano_acero": _receta((0.52, 0.57, 0.57), 0.30, 0.75, SUELO, semilla=3,
                                   manchas=0.06, huellas=0.0, rayones=0.3, mugre=0.5,
-                                  variacion=0.2, cepillado=2.2),
+                                  variacion=0.2),
             "bano_griferia": _receta((0.52, 0.57, 0.57), 0.16, 0.75, SUELO, semilla=5,
-                                     rayones=0.6, manchas=0.3, mugre=0.5, variacion=0.6),
+                                     rayones=0.6, manchas=0.3, mugre=0.5, variacion=0.3),
             "bano_desague": _receta((0.52, 0.57, 0.57), 0.20, 0.75, SUELO, semilla=7,
-                                    rayones=0.6, manchas=0.3, mugre=0.5, variacion=0.6),
+                                    rayones=0.6, manchas=0.3, mugre=0.5, variacion=0.3),
         },
     ),
     Conjunto(
@@ -103,7 +103,7 @@ CONJUNTOS = (
         512,
         420.0,
         {"MESA | Base cromada": _receta((0.75, 0.76, 0.78), 0.25, 0.90, SUELO, semilla=11,
-                                        manchas=0.25, mugre=0.5, variacion=0.6)},
+                                        manchas=0.25, mugre=0.5, variacion=0.3)},
     ),
     Conjunto(
         "acero_del_mostrador",
@@ -111,7 +111,7 @@ CONJUNTOS = (
         380.0,
         {"MOSTRADOR | Acero satinado": _receta((0.34, 0.37, 0.40), 0.32, 0.84, SUELO,
                                                semilla=13, manchas=0.15, mugre=0.3,
-                                               rayones=0.5, huellas=0.0, variacion=0.4)},
+                                               rayones=0.5, huellas=0.0, variacion=0.25)},
     ),
 )
 
