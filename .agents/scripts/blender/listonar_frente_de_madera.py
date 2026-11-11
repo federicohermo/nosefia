@@ -18,15 +18,19 @@ al lado.
 
 ## Qué cambia
 
-- **La imagen** de 1024×1024 sale de la chapa CC0 `oak_veneer_01`, reentonada a `TONO`. Abajo
-  van los listones: ocho de 11 cm por vuelta, cada uno con su tramo de chapa y un tono apenas
-  distinto. Arriba de los listones va la banda lisa, con la veta acostada y una junta. La franja
-  de arriba de todo es madera lisa para los cantos y las caras horizontales.
-- **La UV** de las caras de `MOSTRADOR | Frente de madera` va en metros. En una cara vertical, `u`
-  corre a lo ancho y empieza con un listón entero en el borde izquierdo de su plano. `v` baja
-  desde la banda: el tope de la madera de cada mueble cae en la banda. La compuerta usa el tope
-  del mostrador, así sus bandas quedan a la misma altura. Una cara angosta (canto) y una cara
-  horizontal van a la franja lisa.
+- **La imagen** de 1024×1024 sale de la chapa CC0 `oak_veneer_01`, reentonada a `TONO`. Van
+  ocho listones por vuelta, cada uno con su tramo de chapa y un tono apenas distinto. Los tres
+  muebles se apilan de abajo hacia arriba, cada uno en una franja de su alto. Cada franja lleva
+  arriba y abajo la banda lisa, con la veta acostada y una junta: el usuario pidió la banda de
+  arriba también como zócalo. La franja de arriba de todo es madera lisa para los cantos y las
+  caras horizontales.
+- **La UV** de las caras de `MOSTRADOR | Frente de madera` va en metros. En una cara vertical,
+  `u` corre a lo ancho. Cada plano se corta en tramos en los bordes de sus caras, que son los
+  bordes de los huecos y las esquinas. Cada tramo lleva listones enteros de 9 a 13 cm, y una buña
+  cae en cada borde: el usuario no quiere una tira de listón cortada contra un hueco. `v` sube
+  desde el pie de la madera de cada mueble. La compuerta usa el tope del mostrador, así sus
+  bandas de arriba quedan a la misma altura. Una cara angosta (canto) y una cara horizontal van a
+  la franja lisa.
 - **El material** apunta a la imagen. La malla no cambia.
 
 ## Lo que cuesta
@@ -64,24 +68,30 @@ TONO = np.array([0.64, 0.44, 0.27], dtype=np.float32)
 CONTRASTE = 0.85
 LISTONES = 8
 PERIODO = LADO_PX // LISTONES
-#: Una vuelta de `u` en metros: ocho listones de 11 cm.
-VUELTA_U = 0.88
+#: El ancho de un listón. Un tramo que no es múltiplo lo estira o lo achica, entre 9 y 13 cm.
+ANCHO_LISTON = 0.11
+#: Una vuelta de `u` en metros, en las caras lisas.
+VUELTA_U = LISTONES * ANCHO_LISTON
 #: Cada período: la buña, el borde en sombra, el listón y el filo de luz antes de la buña que
 #: sigue. La buña se oscurece hacia el borde en sombra.
 BUNA = np.array([0.62, 0.48, 0.42, 0.40, 0.40, 0.42, 0.46, 0.52], dtype=np.float32)
+#: El borde de un tramo cae en el medio de una buña: media buña de cada lado de la esquina.
+MEDIA_BUNA = len(BUNA) / 2 / LADO_PX
 SOMBRA = 0.84
 FILO = np.array([1.12, 1.22], dtype=np.float32)
 VARIACION = 0.035
 
-#: Las filas de los listones, de abajo hacia arriba, y cuántos metros entran: el friso mide 3,4.
-FILAS_LISTONES = 896
-V_POR_METRO = 0.25
+#: Filas por metro en vertical: los tres muebles suman 5,1 m.
+FILAS_POR_M = 184
 BANDA_M = 0.065
-FILAS_BANDA = round(BANDA_M * V_POR_METRO * LADO_PX)
-#: La junta bajo la banda: la fila de abajo de la banda en sombra, dos filas de buña y un filo.
+FILAS_BANDA = round(BANDA_M * FILAS_POR_M)
+#: Filas de banda arriba y abajo de cada franja: los chaflanes del mostrador asoman.
+MARGEN = 3
+#: La junta entre la banda y los listones: la fila de la banda en sombra, dos filas de buña y
+#: un filo.
 JUNTA = (0.86, 0.45, 0.45, 1.14)
-#: La franja lisa de los cantos y las caras horizontales, en `v`, con margen a los lados.
-V_LISO = (FILAS_LISTONES / LADO_PX + 0.008, 0.992)
+#: Las filas mínimas de la franja lisa de los cantos y las caras horizontales.
+FILAS_LISAS = 32
 #: Una cara vertical más angosta que esto es un canto.
 CANTO_M = 0.10
 
@@ -110,56 +120,81 @@ def tramo(chapa: np.ndarray, x: int, y: int, ancho: int, alto: int) -> np.ndarra
     return chapa[filas][:, columnas]
 
 
-def pintar(chapa: np.ndarray) -> np.ndarray:
+def apilar(altos: list[float]) -> tuple[list[int], int]:
+    """La fila del pie de cada mueble en la imagen, y la primera fila de la franja lisa."""
+    pies, fila = [], 0
+    for alto in altos:
+        pies.append(fila + MARGEN)
+        fila += 2 * MARGEN + round(alto * FILAS_POR_M)
+    if fila + FILAS_LISAS > LADO_PX:
+        raise ValueError(f"los muebles piden {fila} filas y la imagen tiene {LADO_PX}")
+    return pies, fila
+
+
+def juntar(imagen: np.ndarray, borde: int, paso: int) -> None:
+    """La junta entre una banda y los listones. `borde` es la fila de la banda que toca los
+    listones, y `paso` va de la banda hacia los listones."""
+    for i, factor in enumerate(JUNTA):
+        fila = borde + i * paso
+        imagen[fila] = imagen[fila].mean(axis=0) * factor if 0 < i < 3 else imagen[fila] * factor
+
+
+def pintar(chapa: np.ndarray, altos: list[float]) -> np.ndarray:
     """La imagen entera, (LADO_PX, LADO_PX, 3) en sRGB 0..1, con la fila 0 abajo.
 
     `chapa` es la foto del enchapado, (alto, ancho, 3) en sRGB, con la veta en vertical y que
-    se repite en los dos ejes.
+    se repite en los dos ejes. `altos` es el alto en metros de la madera de cada mueble.
     """
     azar = np.random.default_rng(SEMILLA)
     media = chapa.reshape(-1, 3).mean(axis=0)
     chapa = (media + (chapa - media) * CONTRASTE) * (TONO / media)
     px_por_m = chapa.shape[1] / CHAPA_M
     imagen = np.zeros((LADO_PX, LADO_PX, 3), dtype=np.float32)
+    pies, filas = apilar(altos)
 
-    alto_m = FILAS_LISTONES / LADO_PX / V_POR_METRO
-    ancho_liston = round(VUELTA_U / LISTONES * px_por_m)
+    ancho_liston = round(ANCHO_LISTON * px_por_m)
     for k in range(LISTONES):
         x, y = azar.integers(0, chapa.shape[1]), azar.integers(0, chapa.shape[0])
         madera = remuestrear(
-            tramo(chapa, x, y, ancho_liston, round(alto_m * px_por_m)), FILAS_LISTONES, PERIODO
+            tramo(chapa, x, y, ancho_liston, round(filas / FILAS_POR_M * px_por_m)),
+            filas,
+            PERIODO,
         )
         madera *= (1.0 + azar.normal(0.0, VARIACION)) * (
             1.0 + azar.normal(0.0, VARIACION / 3, size=3)
         ).astype(np.float32)
         izquierda = k * PERIODO
-        imagen[:FILAS_LISTONES, izquierda:izquierda + PERIODO] = madera
+        imagen[:filas, izquierda:izquierda + PERIODO] = madera
         lisa = madera.mean(axis=1, keepdims=True)
         buna = slice(izquierda, izquierda + len(BUNA))
-        imagen[:FILAS_LISTONES, buna] = lisa * BUNA[None, :, None]
-        imagen[:FILAS_LISTONES, izquierda + len(BUNA)] *= SOMBRA
+        imagen[:filas, buna] = lisa * BUNA[None, :, None]
+        imagen[:filas, izquierda + len(BUNA)] *= SOMBRA
         fin = izquierda + PERIODO
-        imagen[:FILAS_LISTONES, fin - len(FILO):fin] *= FILO[None, :, None]
+        imagen[:filas, fin - len(FILO):fin] *= FILO[None, :, None]
 
-    # La banda lleva la veta acostada. Una vuelta de chapa entra entera: se repite en `u`.
+    # La banda lleva la veta acostada. Una vuelta de chapa entra entera: se repite en `u`. Cada
+    # banda sale de otro tramo de chapa.
     acostada = np.rot90(chapa)
-    banda = remuestrear(
-        tramo(acostada, 0, 0, acostada.shape[1], round(BANDA_M * px_por_m)),
-        FILAS_BANDA,
-        LADO_PX,
-    )
-    imagen[FILAS_LISTONES - FILAS_BANDA:FILAS_LISTONES] = banda
-    debajo = FILAS_LISTONES - FILAS_BANDA
-    for i, factor in enumerate(JUNTA):
-        fila = debajo - i
-        imagen[fila] = imagen[fila].mean(axis=0) * factor if 0 < i < 3 else imagen[fila] * factor
+    alto_banda = FILAS_BANDA + MARGEN
+
+    def banda() -> np.ndarray:
+        y = azar.integers(0, acostada.shape[0])
+        crudo = tramo(acostada, 0, y, acostada.shape[1], round(alto_banda / FILAS_POR_M * px_por_m))
+        return remuestrear(crudo, alto_banda, LADO_PX)
+
+    for pie, alto in zip(pies, altos):
+        tope = pie + round(alto * FILAS_POR_M)
+        imagen[pie - MARGEN:pie + FILAS_BANDA] = banda()
+        imagen[tope - FILAS_BANDA:tope + MARGEN] = banda()
+        juntar(imagen, pie + FILAS_BANDA - 1, 1)
+        juntar(imagen, tope - FILAS_BANDA, -1)
 
     liso = remuestrear(
         tramo(chapa, chapa.shape[1] // 3, 0, chapa.shape[1], chapa.shape[0] // 2),
-        LADO_PX - FILAS_LISTONES,
+        LADO_PX - filas,
         LADO_PX,
     )
-    imagen[FILAS_LISTONES:] = liso
+    imagen[filas:] = liso
     return np.clip(imagen, 0.0, 1.0)
 
 
@@ -182,8 +217,24 @@ def caras_de_madera(objeto) -> list:
     return caras
 
 
-def tope(objeto) -> float:
-    return max(q[2] for _, puntos, _ in caras_de_madera(objeto) for q in puntos)
+def alturas(objeto) -> list[float]:
+    return [q[2] for _, puntos, _ in caras_de_madera(objeto) for q in puntos]
+
+
+def tramos(caras: list[tuple[float, float]]) -> list[tuple[float, float, float, int]]:
+    """Corta un plano en tramos: (inicio, fin, ancho del listón, índice del primer listón).
+
+    `caras` es el alcance a lo ancho de cada cara del plano. Los bordes de los tramos son los de
+    las caras, salvo el que cae adentro de otra cara: un chaflán asoma unos milímetros.
+    """
+    bordes = sorted({round(x, 3) for cara in caras for x in cara})
+    bordes = [x for x in bordes if not any(a + 1e-3 < x < b - 1e-3 for a, b in caras)]
+    cortes, indice = [], 0
+    for a, b in zip(bordes, bordes[1:]):
+        n = max(1, round((b - a) / ANCHO_LISTON))
+        cortes.append((a, b, (b - a) / n, indice))
+        indice += n
+    return cortes
 
 
 def a_lo_ancho(normal: np.ndarray) -> np.ndarray:
@@ -198,12 +249,11 @@ def repartir(a: float, b: float, valores) -> list:
     return [a + (x - bajo) / max(alto - bajo, 1e-6) * (b - a) for x in valores]
 
 
-def uv_de(objeto, z_tope: float) -> int:
-    """Escribe la UV de las caras de madera. Devuelve cuántas caras son listones."""
+def uv_de(objeto, z_pie: float, fila_pie: int, v_liso: tuple[float, float]) -> list[str]:
+    """Escribe la UV de las caras de madera. Devuelve el ancho de los listones de cada plano."""
     capa = objeto.data.uv_layers.active.data
     caras = caras_de_madera(objeto)
-    inicio_del_plano: dict = defaultdict(lambda: np.inf)
-    verticales = []
+    planos: dict = defaultdict(list)
     for p, puntos, normal in caras:
         if abs(normal[2]) > 0.7:
             continue
@@ -211,28 +261,30 @@ def uv_de(objeto, z_tope: float) -> int:
         s = [float(q @ ancho) for q in puntos]
         clave = (tuple(np.round(ancho, 2)), round(float(puntos[0] @ np.array(
             [normal[0], normal[1], 0.0])) / np.linalg.norm(normal[:2]), 1))
-        verticales.append((p, puntos, s, clave))
-        if max(s) - min(s) >= CANTO_M:
-            inicio_del_plano[clave] = min(inicio_del_plano[clave], min(s))
-    listones = 0
-    for p, puntos, s, clave in verticales:
-        if max(s) - min(s) < CANTO_M:
-            us = [(x - min(s)) / VUELTA_U for x in s]
-            vs = repartir(*V_LISO, [q[2] for q in puntos])
-        else:
-            listones += 1
-            us = [(x - inicio_del_plano[clave]) / VUELTA_U + len(BUNA) / LADO_PX for x in s]
-            vs = [FILAS_LISTONES / LADO_PX - (z_tope - q[2]) * V_POR_METRO for q in puntos]
-        for bucle, u, v in zip(p.loop_indices, us, vs):
-            capa[bucle].uv = (u, v)
+        planos[clave].append((p, puntos, s))
+    anchos = []
+    for clave, del_plano in planos.items():
+        cortes = tramos([(min(s), max(s)) for _, _, s in del_plano if max(s) - min(s) >= CANTO_M])
+        if cortes:
+            anchos.append(" ".join(f"{(b - a) * 100:.0f}/{w * 100:.1f}" for a, b, w, _ in cortes))
+        for p, puntos, s in del_plano:
+            if max(s) - min(s) < CANTO_M:
+                us = [(x - min(s)) / VUELTA_U for x in s]
+                vs = repartir(*v_liso, [q[2] for q in puntos])
+            else:
+                a, _, w, indice = next(c for c in cortes if c[0] - 1e-3 <= min(s) < c[1])
+                us = [(indice + (x - a) / w) / LISTONES + MEDIA_BUNA for x in s]
+                vs = [(fila_pie + (q[2] - z_pie) * FILAS_POR_M) / LADO_PX for q in puntos]
+            for bucle, u, v in zip(p.loop_indices, us, vs):
+                capa[bucle].uv = (u, v)
     for p, puntos, normal in caras:
         if abs(normal[2]) <= 0.7:
             continue
         xs, ys = [q[0] for q in puntos], [q[1] for q in puntos]
         largo, corto = (xs, ys) if max(xs) - min(xs) >= max(ys) - min(ys) else (ys, xs)
-        for bucle, u, v in zip(p.loop_indices, largo, repartir(*V_LISO, corto)):
+        for bucle, u, v in zip(p.loop_indices, largo, repartir(*v_liso, corto)):
             capa[bucle].uv = ((u - min(largo)) / VUELTA_U, v)
-    return listones
+    return anchos
 
 
 def leer_chapa() -> np.ndarray:
@@ -272,12 +324,17 @@ def main() -> None:
     aplicar = "--aplicar" in sys.argv
     destino = DESTINO if aplicar else PRUEBA
     destino.parent.mkdir(parents=True, exist_ok=True)
-    escribir_png(pintar(leer_chapa()), destino)
+    pies_z = {nombre: min(alturas(bpy.data.objects[nombre])) for nombre in OBJETOS}
+    altos = [max(alturas(bpy.data.objects[de_quien])) - pies_z[nombre]
+             for nombre, de_quien in OBJETOS.items()]
+    escribir_png(pintar(leer_chapa(), altos), destino)
     enlazar_imagen(destino, relativa=aplicar)
-    for nombre, de_quien in OBJETOS.items():
+    filas_pie, filas = apilar(altos)
+    v_liso = (filas / LADO_PX + 0.008, 0.992)
+    for nombre, fila_pie in zip(OBJETOS, filas_pie):
         objeto = bpy.data.objects[nombre]
-        listones = uv_de(objeto, tope(bpy.data.objects[de_quien]))
-        print(f"{nombre}: {listones} caras con listones, {len(objeto.data.polygons)} caras")
+        anchos = uv_de(objeto, pies_z[nombre], fila_pie, v_liso)
+        print(f"{nombre}: tramos en cm, largo/listón: {' | '.join(anchos)}")
     print("imagen:", destino)
     if aplicar:
         bpy.ops.wm.save_mainfile()
