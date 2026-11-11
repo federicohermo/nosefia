@@ -17,10 +17,14 @@ const FILTRO_LINEAL: Array[String] = [
 ## claras que la pared horneada que tienen al lado: 1,6 veces en el portón y en el cuartito de
 ## limpieza. Con este tinte tienen el mismo brillo.
 const TINTE_DE_LAS_PIEZAS := 0.62
+## La compuerta del mostrador también es dinámica y suma las luces en tiempo real del salón a las
+## sondas: sin este tinte sale más clara y amarillenta que el frente horneado.
+const TINTE_DE_LA_COMPUERTA := Color(0.77, 0.78, 0.81, 1.0)
 
 
 func _post_import(escena: Node) -> Object:
 	var bloques_de_las_piezas: BaseMaterial3D = null
+	var madera_de_la_compuerta: BaseMaterial3D = null
 	for malla: MeshInstance3D in escena.find_children("*", "MeshInstance3D", true, false):
 		if str(malla.name).begins_with("puerta_heladera_"):
 			malla.gi_mode = GeometryInstance3D.GI_MODE_DYNAMIC
@@ -79,6 +83,14 @@ func _post_import(escena: Node) -> Object:
 					# El zócalo refleja el piso y el salón desde la sonda: la rugosidad del mapa
 					# ORM baja a la mitad.
 					material.roughness = 0.5
+				if (
+					malla.name == &"compuerta_mostrador"
+					and material.resource_name == "MOSTRADOR | Frente de madera"
+				):
+					if madera_de_la_compuerta == null:
+						madera_de_la_compuerta = material.duplicate()
+						madera_de_la_compuerta.albedo_color = TINTE_DE_LA_COMPUERTA
+					malla.set_surface_override_material(i, madera_de_la_compuerta)
 				if material.resource_name == "local_vidrio":
 					# Una sola cara por paño evita superponer transparencias y sombras opacas.
 					material.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA

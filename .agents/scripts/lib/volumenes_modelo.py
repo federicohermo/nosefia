@@ -130,10 +130,14 @@ def reconstruir(modelo: dict, piezas: dict, descompuestos: dict, fuentes: dict) 
                 'position': vec((caja[0] + caja[3], caja[1] + caja[4] / 2, caja[2])),
             })
         if path.rsplit('/', 1)[-1] == 'compuerta_mostrador':
-            # Las bisagras están del lado del mostrador, que es el extremo +X de la hoja.
+            # El perno cae en el centro del tambor (+X, +Z), de 19 × 18 mm, para no pisar el canto.
             caja = numeros(modelo[path]['aabb'])
             poner(lista, path + '/Bisagra', {
-                'position': vec((caja[0] + caja[3], caja[1] + caja[4] / 2, caja[2] + caja[5] / 2)),
+                'position': vec((
+                    caja[0] + caja[3] - 0.0095,
+                    caja[1] + caja[4] / 2,
+                    caja[2] + caja[5] - 0.009,
+                )),
             })
         padre = path + '/CuerpoDeLaHoja'
         poner(lista, padre, {'transform': modelo[path]['cuerpo_transform']})

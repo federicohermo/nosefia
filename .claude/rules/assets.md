@@ -56,18 +56,21 @@ paths:
    orden y rehacer esos ajustes.
 
 9. **Los metales llevan detalle pintado desde su malla.** `blender/metal_con_detalle.py` le da
-   manchas de agua, rayones, mugre y satinado gastado al acero del baño, la base de las mesas y
-   el acero del mostrador. Cambia la UV de esas caras y escribe un color y un mapa ORM por
-   conjunto en `source/textures/metal/`. No suma mallas ni dibujos. Es una edición de un solo
-   paso: va antes de `armar_atlas.py` y `exportar_modelo.py`, y cambia la UV de lightmap, así
-   que pide `hornear.py` y `hornear.py --sin-luz`. Un `.blend` nuevo del artista pide repetirla.
+   manchas de agua, rayones, mugre y satinado gastado al acero del baño y la base de las mesas.
+   El acero del mostrador lleva sólo el grano satinado, sin manchas ni rayones. Cambia la UV de
+   esas caras y escribe un color y un mapa ORM por conjunto en `source/textures/metal/`. No suma
+   mallas ni dibujos. Es una edición de un solo paso: va antes de `armar_atlas.py` y
+   `exportar_modelo.py`, y cambia la UV de lightmap, así que pide `hornear.py` y
+   `hornear.py --sin-luz`. Un `.blend` nuevo del artista pide repetirla.
 
 10. **El frente del mostrador, su compuerta y el friso son listones de roble pintados en la
     textura.** La malla es la del artista, con el zócalo de acero.
     `blender/restaurar_madera_del_artista.py` la devuelve si una corrida vieja la cambió.
+    `blender/ajustar_compuerta_mostrador.py` alinea el alto de la compuerta con el frente y quita
+    el listón saliente y las placas fijas.
     `blender/listonar_frente_de_madera.py` escribe `madera_lambrin.png` con la chapa CC0 de
-    `source/textures/third-party/oak_veneer_01/`: una sola grilla por cara, con listones enteros
-    de 9 a 13 cm y una buña en cada borde de hueco y cada esquina. Lleva banda lisa arriba, y al
+    `source/textures/third-party/oak_veneer_01/`. Arma una grilla por cara con listones enteros
+    de 9 a 13 cm y una buña en cada borde y cada esquina. Lleva banda lisa arriba, y al
     pie sólo en el mueble de las heladeras, y franja lisa para los cantos. También pone la UV en
     metros de cada cara. Va antes de `armar_atlas.py`, `exportar_modelo.py` y `hornear.py`. Un
     `.blend` nuevo del artista pide repetirla.

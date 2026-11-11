@@ -27,11 +27,13 @@ altura y su distancia al borde de su plano.
 - Corre dos veces y da lo mismo: la UV y las texturas salen sólo de la geometría y de las
   recetas.
 
-## El acero de las cabinas
+## El acero de las cabinas y del mostrador
 
 `bano_acero` es acero inoxidable satinado: el tono es parejo, no lleva huellas y sólo alguna
 marca de agua chica cerca del piso. Las manchas redondas claras y oscuras repartidas por el perfil
 no se leían como acero. Un cepillado de líneas largas y contrastadas tampoco: se leía como madera.
+`MOSTRADOR | Acero satinado` va limpio y parejo, sin manchas de agua, nubes ni rayones: sólo el
+grano fino del satinado y el reflejo de la sonda.
 
 ## Lo que no cambia
 
@@ -109,9 +111,9 @@ CONJUNTOS = (
         "acero_del_mostrador",
         1024,
         380.0,
-        {"MOSTRADOR | Acero satinado": _receta((0.34, 0.37, 0.40), 0.32, 0.84, SUELO,
-                                               semilla=13, manchas=0.15, mugre=0.3,
-                                               rayones=0.5, huellas=0.0, variacion=0.25)},
+        {"MOSTRADOR | Acero satinado": _receta((0.37, 0.37, 0.37), 0.32, 0.84, SUELO,
+                                               semilla=13, manchas=0.0, mugre=0.0,
+                                               rayones=0.0, huellas=0.0, variacion=0.0)},
     ),
 )
 
