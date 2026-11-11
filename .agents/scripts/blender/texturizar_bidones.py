@@ -87,7 +87,7 @@ SIN_RAYONES, CON_RAYONES = 4, 10
 QUIEBRES = (0.057, 0.13, 0.292)
 
 #: Cuánto sube o baja la luz de cada efecto.
-SUCIEDAD, MANCHAS, RAYON_CLARO, RAYON_OSCURO, ROCE = 0.20, 0.07, 0.20, 0.14, 0.13
+SUCIEDAD, MANCHAS, RAYON_CLARO, RAYON_OSCURO, ROCE = 0.20, 0.07, 0.12, 0.08, 0.13
 
 
 def plastico(objeto) -> set[int]:
@@ -149,8 +149,8 @@ def rayar(mascara: np.ndarray, semilla: int) -> np.ndarray:
     lado = mascara.shape[0]
     borde = distancia_al_borde(mascara, CON_RAYONES)
     adentro = suave(SIN_RAYONES, CON_RAYONES, borde)
-    claros = rayones(lado, lado, 220, 70, semilla, 3, 0.0, DISPERSION_DE_RAYONES)
-    oscuros = rayones(lado, lado, 140, 26, semilla + 1, 3, 0.0, DISPERSION_DE_RAYONES)
+    claros = rayones(lado, lado, 90, 70, semilla, 3, 0.0, DISPERSION_DE_RAYONES)
+    oscuros = rayones(lado, lado, 55, 26, semilla + 1, 3, 0.0, DISPERSION_DE_RAYONES)
     return (RAYON_CLARO * claros - RAYON_OSCURO * oscuros) * adentro
 
 

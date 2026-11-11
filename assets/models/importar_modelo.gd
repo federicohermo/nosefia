@@ -1,12 +1,21 @@
 ## Corre al importar el modelo del almacén.
 ##
-## El arte conserva su filtro pixelado. El concreto y el revestimiento del depósito usan
-## mipmaps con filtro lineal y anisotropía para conservar detalle en superficies oblicuas.
+## El arte conserva su filtro pixelado. El concreto y el revestimiento del depósito, las paredes
+## pintadas y los tachos usan mipmaps con filtro lineal y anisotropía: su detalle es fino.
 ## Esta excepción comparte un filtro y evita añadir variantes por cada material.
 @tool
 extends EditorScenePostImport
 
 const VIDRIO := preload("res://src/escenas/puestos/vidrio_del_local.tres")
+## El grano del revoque de las paredes pintadas y las marcas de los tachos miden pocos texeles:
+## pixelados se leen como cuadraditos.
+const FILTRO_LINEAL: Array[String] = [
+	"deposito_concreto",
+	"local_pared_pintada",
+	"bano_pared_clara",
+	"deposito_contenedor_plastico",
+	"deposito_contenedor_plastico_tapa",
+]
 ## Las piezas de las jambas toman la luz de las sondas y de las luces en tiempo real, y salen más
 ## claras que la pared horneada que tienen al lado: 1,6 veces en el portón y en el cuartito de
 ## limpieza. Con este tinte tienen el mismo brillo.
@@ -86,7 +95,7 @@ func _post_import(escena: Node) -> Object:
 					material.cull_mode = BaseMaterial3D.CULL_DISABLED
 					material.roughness_texture_channel = BaseMaterial3D.TEXTURE_CHANNEL_GREEN
 				if (
-					material.resource_name == "deposito_concreto"
+					material.resource_name in FILTRO_LINEAL
 					or material.resource_name.begins_with("deposito_revestimiento_")
 				):
 					material.texture_filter = (

@@ -23,7 +23,9 @@ vecino más cercano, así que el pictograma y el pixel siguen siendo los mismos.
 - **Roce**: los bordes de cada panel se aclaran y se pican.
 - **Rayones y marcas**, más en la tapa.
 
-El pictograma recibe un tercio del efecto, para que se siga leyendo.
+El pictograma recibe un tercio del efecto, para que se siga leyendo. Cada rasgo mide al menos
+cuatro texeles (2 cm en el cuerpo), y el juego filtra estas texturas lineal
+(`assets/models/importar_modelo.gd`): un rasgo de un texel se veía como un cuadradito.
 
 El original de 256 vive en `assets/source/textures/props/sin_detalle/`, y el script parte
 siempre de ahí: así corrido dos veces da lo mismo. La primera corrida lo copia.
@@ -75,8 +77,8 @@ LAVADO = np.array([0.30, 0.31, 0.33], dtype=np.float32)
 RAYON = np.array([0.52, 0.52, 0.52], dtype=np.float32)
 
 #: Qué tanto de cada efecto lleva cada imagen: `(polvo, rayas, roce, rayones, manchas)`.
-CUERPO_USO = (0.55, 0.50, 0.55, 0.50, 0.30)
-TAPA_USO = (0.15, 0.10, 0.55, 0.60, 0.55)
+CUERPO_USO = (0.55, 0.50, 0.80, 0.90, 0.30)
+TAPA_USO = (0.15, 0.10, 0.80, 0.90, 0.55)
 
 
 def partir(nombre: str) -> np.ndarray:
@@ -101,14 +103,15 @@ def pintar(base: np.ndarray, dentro: np.ndarray, altura: np.ndarray, uso: tuple,
     luz = base.mean(axis=2)
     # El plástico oscuro recibe todo el efecto; lo claro, el pictograma, recibe un tercio.
     protegido = (1.0 - suave(0.22, 0.50, luz) * 0.67) * (desenfocar(dentro, 3) > 0.05)
-    borde = np.where(dentro > 0.5, distancia_al_borde(dentro, 12), 0.0)
-    cerca = np.exp(-borde / 2.4) * np.minimum(dentro, 1.0)
+    borde = np.where(dentro > 0.5, distancia_al_borde(dentro, 16), 0.0)
+    cerca = np.exp(-borde / 4.0) * np.minimum(dentro, 1.0)
 
-    # El usuario pidió un tacho en uso, no roto: marcas chicas, a escala real, y poca mugre.
+    # Un tacho en uso, no roto: marcas a escala real que se ven a un metro. Con un rasgo de uno o
+    # dos texeles se veían cuadraditos, así que la menor celda de ruido y el menor rayón miden 4.
     nubes = ruido(LADO, LADO, 90, semilla)
-    vetas = ruido(LADO, LADO, 3, semilla + 1, octavas=3, estirado=10.0)
-    lavado = ruido(LADO, LADO, 6, semilla + 2, octavas=3, estirado=8.0)
-    grano = ruido(LADO, LADO, 2, semilla + 3, octavas=2)
+    vetas = ruido(LADO, LADO, 8, semilla + 1, octavas=2, estirado=6.0)
+    lavado = ruido(LADO, LADO, 10, semilla + 2, octavas=2, estirado=6.0)
+    grano = ruido(LADO, LADO, 4, semilla + 3, octavas=1)
 
     color = base.copy()
     # La variación de tono se suma, porque multiplicar por un casi negro no mueve nada.
@@ -116,23 +119,23 @@ def pintar(base: np.ndarray, dentro: np.ndarray, altura: np.ndarray, uso: tuple,
 
     suelo = (1.0 - altura) ** 2.2
     mugre = suelo * (0.35 + 0.65 * suave(0.30, 0.70, nubes)) * polvo_k
-    color = mezclar(color, POLVO, mugre * 0.25 * protegido)
+    color = mezclar(color, POLVO, mugre * 0.35 * protegido)
 
     seca = suave(0.55, 0.80, vetas) * rayas_k * (0.30 + 0.70 * altura)
-    color = mezclar(color, POLVO, seca * 0.15 * protegido)
+    color = mezclar(color, POLVO, seca * 0.25 * protegido)
     limpia = suave(0.62, 0.84, lavado) * rayas_k
-    color = mezclar(color, LAVADO, limpia * 0.12 * protegido)
+    color = mezclar(color, LAVADO, limpia * 0.20 * protegido)
 
-    manchas = suave(0.58, 0.74, ruido(LADO, LADO, 8, semilla + 4)) * manchas_k
-    color = mezclar(color, POLVO, manchas * 0.10 * protegido)
+    manchas = suave(0.58, 0.74, ruido(LADO, LADO, 12, semilla + 4, octavas=2)) * manchas_k
+    color = mezclar(color, POLVO, manchas * 0.18 * protegido)
 
     roce = cerca * (0.55 + 0.45 * suave(0.35, 0.75, grano)) * roce_k
-    color = mezclar(color, ROCE, roce * 0.25 * protegido)
+    color = mezclar(color, ROCE, roce * 0.50 * protegido)
 
-    largos = rayones(LADO, LADO, 70, 14, semilla + 5, grosor=1) * rayones_k
-    cortos = rayones(LADO, LADO, 60, 5, semilla + 6, grosor=1) * rayones_k
-    color = mezclar(color, RAYON, largos * 0.20 * protegido)
-    color = mezclar(color, RAYON, cortos * 0.18 * protegido)
+    largos = rayones(LADO, LADO, 30, 40, semilla + 5, grosor=4) * rayones_k
+    cortos = rayones(LADO, LADO, 40, 12, semilla + 6, grosor=4) * rayones_k
+    color = mezclar(color, RAYON, largos * 0.55 * protegido)
+    color = mezclar(color, RAYON, cortos * 0.50 * protegido)
     return color
 
 

@@ -29,7 +29,7 @@ texel sabe su posición en el mundo.
 - **Huellas** a la altura de la mano.
 - **Suciedad.** Oscura al pie, y en una línea al borde de cada isla, que es donde se juntan dos
   planos.
-- **Satinado.** El cepillado corre a lo largo de cada isla. Se gasta y brilla donde se toca.
+- **Satinado.** Un grano corto y suave a lo largo de cada isla. Se gasta y brilla donde se toca.
 - **Tono.** Una variación de escala grande: nunca un gris parejo.
 
 ## Lo que cuesta
@@ -64,9 +64,6 @@ class Receta:
     mugre: float = 1.0
     #: Cuánto varía el tono de un lugar a otro. Con 0 el acero sale parejo, sin nubes.
     variacion: float = 1.0
-    #: Cuánto se nota el cepillado. Con 1 es el grano corto de siempre; con más, suma líneas
-    #: largas a lo largo de la isla, como el acero inoxidable cepillado.
-    cepillado: float = 1.0
     semilla: int = 1
 
 
@@ -579,21 +576,15 @@ def pintar_isla(
     tono = (_fbm(x, y, z, 1.6, 3, semilla + 11) - 0.5) * receta.variacion
     manchon = (_fbm(x, y, z, 5.5, 3, semilla + 13) - 0.5) * receta.variacion
     a_lo_largo_de_t = vertical or isla.alto >= isla.ancho
+    # El satinado es un grano corto y de poco contraste. Con líneas largas o más contraste, el
+    # cepillado se leía como la veta de una madera.
     if a_lo_largo_de_t:
-        grano = _valor(s * densidad / 1.3, t * densidad / 26.0, np.zeros_like(s), semilla + 17)
+        grano = _valor(s * densidad / 1.3, t * densidad / 8.0, np.zeros_like(s), semilla + 17)
         angulo_base = np.pi / 2
     else:
-        grano = _valor(s * densidad / 26.0, t * densidad / 1.3, np.zeros_like(s), semilla + 17)
+        grano = _valor(s * densidad / 8.0, t * densidad / 1.3, np.zeros_like(s), semilla + 17)
         angulo_base = 0.0
     grano = grano - 0.5
-    if receta.cepillado > 1.0:
-        if a_lo_largo_de_t:
-            linea_larga = _valor(s * densidad / 1.1, t * densidad / 160.0, np.zeros_like(s),
-                                 semilla + 41)
-        else:
-            linea_larga = _valor(s * densidad / 160.0, t * densidad / 1.1, np.zeros_like(s),
-                                 semilla + 41)
-        grano = grano * receta.cepillado + (linea_larga - 0.5) * 0.9 * (receta.cepillado - 1.0)
 
     # Manchas de agua y chorreaduras.
     relleno, aro = _aureolas(s, t, z_de, densidad, receta, semilla)
@@ -648,10 +639,10 @@ def pintar_isla(
         1.0
         + 0.10 * tono
         + 0.07 * manchon
-        + 0.07 * grano
+        + 0.02 * grano
         + 0.09 * uso
-        + 0.22 * claros
-        - 0.18 * oscuros
+        + 0.14 * claros
+        - 0.10 * oscuros
     )
     sucio = (
         1.0
@@ -679,7 +670,7 @@ def pintar_isla(
         + 0.12 * huella
         + 0.10 * np.minimum(barro + linea, 1.0) * mugre
         + 0.06 * np.minimum(claros, 1.0)
-        + 0.05 * grano
+        + 0.02 * grano
         - 0.10 * uso
     )
     metal = receta.metal - 0.30 * relleno - 0.12 * aro - 0.10 * np.minimum(barro + linea, 1.0)
