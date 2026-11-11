@@ -8,7 +8,7 @@ relieve casi no se ve. El detalle tiene que viajar en el color.
 Qué cambia: genera tres PNG en `assets/source/textures/warehouse/final/`:
 `deposito_bloques_color.png`, `deposito_bloques_normal.png` y `deposito_bloques_rough.png`.
 Cada uno cubre 2,4 m de ancho (4 bloques) y 3,6 m de alto (12 hiladas): la altura entera del
-revestimiento, sin repetición vertical. Por eso la humedad que sube del piso vive en el tile.
+revestimiento, sin repetición vertical. Por eso la humedad que sube del piso vive en el tile, y no pasa de los 50 cm.
 Cada bloque toma su cara de una de las 27 del tile original (la misma piedra, con sus poros y
 sus chorreaduras), con otro tono, bordes redondeados con luz arriba y sombra abajo, desportillados
 en esquinas y cantos, y juntas de mortero oscuras que se leen hundidas. La traba es la del tile
@@ -216,13 +216,14 @@ def generar(origen):
     ]
     color = cara_color * (1 - junta[..., None]) + mortero * junta[..., None]
 
-    # La humedad sube del piso con un frente irregular, y el pie está siempre sucio.
-    frente = 0.20 + 0.16 * fractal(rng, 5, 1, 2) + 0.05 * fractal(rng, 40, 1, 2)
+    # La humedad sube del piso con un frente irregular, y el pie está siempre sucio. Se queda abajo
+    # de media pared: más arriba, vista desde adentro de un cuarto, se leía como una sombra.
+    frente = 0.07 + 0.05 * fractal(rng, 5, 1, 2) + 0.02 * fractal(rng, 40, 1, 2)
     altura = y / N
-    humedad = suave(frente - altura, 0.0, 0.12) ** 0.8 * (0.55 + 0.45 * fractal(rng, 60, 30, 3))
-    sal = suave(1 - np.abs(altura - frente) / 0.012, 0, 1) * 0.5 * (humedad > 0.0)
+    humedad = suave(frente - altura, 0.0, 0.08) ** 0.8 * (0.55 + 0.45 * fractal(rng, 60, 30, 3))
+    sal = suave(1 - np.abs(altura - frente) / 0.012, 0, 1) * 0.3 * (humedad > 0.0)
     verde = np.array([0.95, 1.0, 0.93])[None, None, :]
-    color = color * (1 - 0.40 * humedad[..., None]) * (1 - humedad[..., None] * (1 - verde))
+    color = color * (1 - 0.28 * humedad[..., None]) * (1 - humedad[..., None] * (1 - verde))
     color = color * (1 + 0.05 * sal[..., None])
     suciedad = suave(0.04 - altura, 0, 0.04)
     color = color * (1 - 0.22 * suciedad[..., None])

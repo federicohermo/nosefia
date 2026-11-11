@@ -16,15 +16,15 @@
   "files": {
     "color": {
       "file": "deposito_bloques_color.png",
-      "sha256": "6cf5c04b5a8fdd3dd40eed6b4ddf871a5d12e04821a46d88103272b27ad8eb18"
+      "sha256": "4aa849f58ab91a0e7ab4a04545f36e4ad65fddffd68b1e532d781ba7b17b3cb3"
     },
     "normal": {
       "file": "deposito_bloques_normal.png",
-      "sha256": "c3d96354dab6755e58c6be60ffe7a3139bd044c763657628b0452197d9a92fcd"
+      "sha256": "2d80de10b4612eba8690f227dd2000db574367d4c7bc55b44d2a36b9a9b29249"
     },
     "rough": {
       "file": "deposito_bloques_rough.png",
-      "sha256": "2bd77680bcd315837c45df0ebdd6007c528e1e20086c347893ac7aa07b91b177"
+      "sha256": "96a4b02c0ad2c7153212edf2c4d2ba8be515026b76fd17fe80167be01ce2a338"
     }
   }
 }
