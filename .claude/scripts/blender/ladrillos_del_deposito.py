@@ -296,8 +296,13 @@ def aplicar():
     cuartito = bpy.data.objects[CUARTITO]
     propias = [c.index for c in cuartito.data.polygons
                if cuartito.data.materials[c.material_index].name == material.name]
+    vertices_del_cuartito = [tuple(v.co) for v in cuartito.data.vertices]
     _reproyectar(cuartito, propias, limites)
+    assert vertices_del_cuartito == [tuple(v.co) for v in cuartito.data.vertices]
     despues = RECETA._huellas(set(caras_bloques))
+    # El cuartito cambia a propósito, sólo en su UV: se compara todo lo demás.
+    for huellas in (antes, despues):
+        huellas.pop(CUARTITO)
     assert antes == despues, "Se modificaron mallas o caras ajenas"
     _borrar_piezas()
     coleccion = objeto.users_collection[0]
