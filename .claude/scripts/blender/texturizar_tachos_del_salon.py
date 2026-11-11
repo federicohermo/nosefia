@@ -104,9 +104,10 @@ def pintar(base: np.ndarray, dentro: np.ndarray, altura: np.ndarray, uso: tuple,
     borde = np.where(dentro > 0.5, distancia_al_borde(dentro, 12), 0.0)
     cerca = np.exp(-borde / 2.4) * np.minimum(dentro, 1.0)
 
+    # El usuario pidió un tacho en uso, no roto: marcas chicas, a escala real, y poca mugre.
     nubes = ruido(LADO, LADO, 90, semilla)
-    vetas = ruido(LADO, LADO, 7, semilla + 1, octavas=3, estirado=14.0)
-    lavado = ruido(LADO, LADO, 16, semilla + 2, octavas=3, estirado=9.0)
+    vetas = ruido(LADO, LADO, 3, semilla + 1, octavas=3, estirado=10.0)
+    lavado = ruido(LADO, LADO, 6, semilla + 2, octavas=3, estirado=8.0)
     grano = ruido(LADO, LADO, 2, semilla + 3, octavas=2)
 
     color = base.copy()
@@ -115,23 +116,23 @@ def pintar(base: np.ndarray, dentro: np.ndarray, altura: np.ndarray, uso: tuple,
 
     suelo = (1.0 - altura) ** 2.2
     mugre = suelo * (0.35 + 0.65 * suave(0.30, 0.70, nubes)) * polvo_k
-    color = mezclar(color, POLVO, mugre * 0.8 * protegido)
+    color = mezclar(color, POLVO, mugre * 0.25 * protegido)
 
     seca = suave(0.55, 0.80, vetas) * rayas_k * (0.30 + 0.70 * altura)
-    color = mezclar(color, POLVO, seca * 0.55 * protegido)
+    color = mezclar(color, POLVO, seca * 0.15 * protegido)
     limpia = suave(0.62, 0.84, lavado) * rayas_k
-    color = mezclar(color, LAVADO, limpia * 0.45 * protegido)
+    color = mezclar(color, LAVADO, limpia * 0.12 * protegido)
 
-    manchas = suave(0.52, 0.72, ruido(LADO, LADO, 26, semilla + 4)) * manchas_k
-    color = mezclar(color, POLVO, manchas * 0.30 * protegido)
+    manchas = suave(0.58, 0.74, ruido(LADO, LADO, 8, semilla + 4)) * manchas_k
+    color = mezclar(color, POLVO, manchas * 0.10 * protegido)
 
     roce = cerca * (0.55 + 0.45 * suave(0.35, 0.75, grano)) * roce_k
-    color = mezclar(color, ROCE, roce * 0.55 * protegido)
+    color = mezclar(color, ROCE, roce * 0.25 * protegido)
 
-    largos = rayones(LADO, LADO, 130, 46, semilla + 5, grosor=1) * rayones_k
-    cortos = rayones(LADO, LADO, 110, 11, semilla + 6, grosor=2) * rayones_k
-    color = mezclar(color, RAYON, largos * 0.55 * protegido)
-    color = mezclar(color, RAYON, cortos * 0.50 * protegido)
+    largos = rayones(LADO, LADO, 70, 14, semilla + 5, grosor=1) * rayones_k
+    cortos = rayones(LADO, LADO, 60, 5, semilla + 6, grosor=1) * rayones_k
+    color = mezclar(color, RAYON, largos * 0.20 * protegido)
+    color = mezclar(color, RAYON, cortos * 0.18 * protegido)
     return color
 
 

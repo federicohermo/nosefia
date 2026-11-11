@@ -48,6 +48,7 @@ FINAL = RAIZ / "assets/source/textures/warehouse/final"
 MAPAS = {"color": "deposito_bloques_color.png", "normal": "deposito_bloques_normal.png",
          "rough": "deposito_bloques_rough.png"}
 PREFIJO_PIEZAS = "deposito_esquinas_"
+CUARTITO = "cuartito_revestimiento"
 COBERTURA = (2.4, 3.6)
 BLOQUE_METROS = (0.4, 0.2)
 N_PX = 1024
@@ -290,6 +291,12 @@ def aplicar():
     antes = RECETA._huellas(set(caras_bloques))
     material = _material(objeto)
     _reproyectar(objeto, caras_bloques, limites)
+    # El revestimiento del cuartito es otro objeto con el mismo material. Con la UV vieja repetía
+    # la textura cada 1,8 m, y la humedad del pie aparecía a media altura como una franja oscura.
+    cuartito = bpy.data.objects[CUARTITO]
+    propias = [c.index for c in cuartito.data.polygons
+               if cuartito.data.materials[c.material_index].name == material.name]
+    _reproyectar(cuartito, propias, limites)
     despues = RECETA._huellas(set(caras_bloques))
     assert antes == despues, "Se modificaron mallas o caras ajenas"
     _borrar_piezas()
