@@ -1,68 +1,48 @@
-"""Le da a las paredes pintadas del salón y del baño los desperfectos de una pared real.
+"""Pinta las paredes del salón y del baño con la foto de una pared pintada real.
 
     blender assets/models/SEPT_JUEGOS_PROTOTIPO.blend --background --python-exit-code 1 \
-        --python .claude/scripts/blender/paredes_pintadas.py -- [--aplicar]
+        --python .claude/scripts/blender/paredes_pintadas.py -- [--aplicar] \
+        [--foto RUTA --metros LADO]
 
 Sin `--aplicar` pinta en una carpeta temporal y no guarda nada. Con `--aplicar` escribe las
-texturas en `assets/source/textures/store/` y guarda la fuente canónica. Después van
-`armar_atlas.py`, `exportar_modelo.py` y `assets/models/extraer_mallas.gd`. Cambia la UV de las
-paredes: Godot rehace la UV del mapa de luz, así que también piden `hornear.py` y
+texturas en `assets/source/textures/store/` y guarda la fuente canónica. `--foto` prueba otra
+foto en los dos recintos; `--metros` es el lado que cubre la foto en la pared. Después van
+`armar_atlas.py`, `exportar_modelo.py` y `assets/models/extraer_mallas.gd`. La UV sale sólo de
+la geometría: si el `.blend` ya la tenía, el horneado no cambia. Si no, piden `hornear.py` y
 `hornear.py --sin-luz`.
 
 ## Por qué
 
 La pared del salón (`local_pared_pintada`) y la del baño (`bano_pared_clara`) eran un color liso.
-Una pared pintada de un local es casi lisa: la pintura tapa el revoque. Lo que se ve es una piel
-fina, las pasadas del rodillo apenas, lo que se arregló después y la mugre donde la gente roza y
-toca. La luz del
-local está horneada, así que el detalle va en el color y no en la rugosidad: la pared sigue siendo
-pintura mate.
+Después las pintó un ruido propio, y se veían como manchas de nube, sin el carácter de una pared
+real. Ahora la base es la foto de una pared pintada (`plastered_wall`, CC0, en
+`assets/source/textures/third-party/plastered_wall/`). La luz del local está horneada, así que el
+detalle va en el color y no en la rugosidad: la pared sigue siendo pintura mate.
 
 ## Qué cambia
 
 - **Cada pared del recinto tiene su rectángulo en una textura de color de 1024 px.** La UV es
   planar y mide lo mismo en los dos sentidos: los texeles del salón son de 1,4 cm, los del baño
-  de 1,1 cm. Un raspón de 3 cm ocupa dos o tres. Las caras que no son pared del recinto
-  (el frente de afuera, las jambas, el techo, los cantos) van a un parche liso del color de
-  siempre: **su aspecto no cambia**.
+  de 1,1 cm. Las caras que no son pared del recinto (el frente de afuera, las jambas, el techo,
+  los cantos) van a un parche liso del color de siempre: **su aspecto no cambia**.
+- **La foto entera es el color de la pared, a su escala real.** Se promedia por área a la
+  densidad de la textura y se divide por su media en cada canal: queda la pintura de la foto,
+  teñida al color de cada pared. La media de cada pared es el tono liso de antes.
+- **La repetición se rompe con un segundo mosaico,** espejado a lo ancho y desfasado, que
+  aparece en manchas de 1,6 m. Cada pared arranca en otro punto de la foto.
+- **Encima, sutil, la mugre de uso:** al pie, alrededor de cada vano, raspones y marcas de
+  zapato; en el baño, la humedad al pie y lo que dejan las piletas y los inodoros.
 - **Cada material gana una textura de color y nada más.** El brillo, la rugosidad y el resto del
-  material no se tocan. No hay materiales ni superficies nuevas.
-- **La geometría no se toca.** Ningún triángulo se suma.
-
-## Qué lleva la pintura
-
-La pintura sale de la geometría y de los objetos del local, nunca de un número escrito a mano
-por pared:
-
-- la mano de pintura: una piel de un texel, casi nada; un moteado de 3 a 10 cm que en unas
-  zonas se ve y en otras no; franjas verticales del ancho del rodillo (17 a 25 cm), cada una con
-  su carga y una línea fina donde pisa a la anterior; y nubes suaves estiradas a lo alto, como
-  en `painted_plaster_wall` de Poly Haven;
-- lo que se arregló después: retoques de otro blanco con borde de brocha, un cartel que se sacó
-  (un rectángulo más limpio con cinta en las esquinas), cinta suelta y masilla en agujeros de
-  tarugo. Es lo que se lee a dos o tres metros;
-- variación de tono a 2 o 3 metros, casi imperceptible;
-- mugre apenas al pie, cerca del zócalo, y alrededor de cada vano (puerta, ventanal);
-- raspones, golpecitos y marcas de zapato, de 1 a 4 cm, ralos y más seguidos cerca del piso;
-- en el baño: humedad al pie (menos de 50 cm), churretes bajo las piletas y salpicaduras sobre
-  ellas, y el pie de los inodoros.
-
-**No hay grano de revoque.** La foto de un revoque con un desvío de 10 % se leía como gotelé,
-un granulado parejo de punta a punta: 9 % en los rasgos de menos de 3 cm. La referencia de Poly
-Haven mide 2,5 % ahí y 2 % entre 3 y 10 cm. Esta pared queda en 1 % y 1 %, y en 1 a 1,5 % entre
-10 y 40 cm: lisa, pero a tres metros todavía se lee pintada. Con 0,4 % entre 3 y 10 cm era un
-plástico. La media de cada pared es el tono liso de antes.
+  material no se tocan. No hay materiales ni superficies nuevas. Ningún triángulo se suma.
 
 **El juego la filtra lineal** (`assets/models/importar_modelo.gd`), como el concreto del
-depósito. Con el filtro pixelado, la piel se leía como cuadraditos.
+depósito. Con el filtro pixelado, la foto se leía como cuadraditos.
 
 ## Lo que cuesta
 
-Una textura de 1024 px más por recinto, que hasta ahora no tenían ninguna. Sin materiales ni
-dibujos nuevos. El `.glb` pesa lo que pesan dos PNG de 1024.
-
-Es idempotente: la UV y los PNG salen sólo de la geometría y de las constantes, con
-una semilla fija por pared.
+Una textura de 1024 px por recinto. Sin materiales ni dibujos nuevos. Es idempotente: la UV y
+los PNG salen sólo de la geometría, de la foto y de las constantes, con una semilla fija por
+pared.
 """
 
 import sys
@@ -76,6 +56,7 @@ import numpy as np
 from mathutils import Vector  # type: ignore[import-not-found]
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
+import listonar_frente_de_madera as madera  # noqa: E402
 import metal_detalle as metal  # noqa: E402
 
 RAIZ = Path(__file__).resolve().parents[3]
@@ -86,6 +67,7 @@ configurar()
 
 FUENTE = RAIZ / "assets/models/SEPT_JUEGOS_PROTOTIPO.blend"
 CARPETA = RAIZ / "assets/source/textures/store"
+TERCEROS = RAIZ / "assets/source/textures/third-party"
 EDIFICIO = "almacen-col"
 
 #: El lado de la textura. Es el tope con el que viaja el color de un edificio.
@@ -107,26 +89,6 @@ MUGRE = np.array([0.60, 0.57, 0.50], dtype=np.float32)
 HUMEDAD = np.array([0.80, 0.86, 0.86], dtype=np.float32)
 
 #: Qué tanto cuenta cada desperfecto. Es la fracción de luz que le saca al color.
-#: La piel de naranja: un texel ya mide más que su grano, así que apenas rompe lo liso.
-PIEL = 0.006
-#: El moteado de 3 a 10 cm. `painted_plaster_wall` de Poly Haven mide 2 % en esa banda; esta
-#: pared es más lisa que un revoque, pero con 0,4 % no se veía nada a dos metros.
-MOTEADO = 0.026
-#: La carga de pintura de cada pasada del rodillo y la marca de su solape.
-PASADA = 0.010
-SOLAPE = 0.012
-#: Las nubes suaves de una mano de pintura, estiradas en el sentido del rodillo.
-NUBES = 0.016
-#: Un retoque es pintura más nueva: más blanca y más fría que la de alrededor.
-RETOQUE = 0.030
-#: Lo que tapó un cartel quedó más limpio que el resto.
-CARTEL = 0.018
-#: La cinta deja un rectángulo de adhesivo con mugre pegada.
-CINTA = 0.07
-#: La masilla de un agujero de tarugo, más blanca y sin pintar encima.
-MASILLA = 0.045
-TONO_GRIS = 0.008
-TONO_CALIDO = 0.005
 PIE = 0.05
 VANO = 0.035
 HUMEDAD_DEL_BANO = 0.04
@@ -153,6 +115,14 @@ class Mueble:
 
 
 @dataclass(frozen=True)
+class Foto:
+    """La foto de una pared y el lado que cubre, en metros, como lo dice su página."""
+
+    ruta: Path
+    metros: float
+
+
+@dataclass(frozen=True)
 class Recinto:
     nombre: str
     material: str
@@ -160,8 +130,12 @@ class Recinto:
     techo: float
     archivo: str
     humedad: bool
+    foto: Foto
     muebles: tuple[Mueble, ...] = field(default=())
 
+
+FOTO_DEL_SALON = Foto(TERCEROS / "plastered_wall/plastered_wall_diff_2k.jpg", 2.0)
+FOTO_DEL_BANO = FOTO_DEL_SALON
 
 SALON = Recinto(
     nombre="salon",
@@ -170,6 +144,7 @@ SALON = Recinto(
     techo=3.5,
     archivo="pared_del_salon_color.png",
     humedad=False,
+    foto=FOTO_DEL_SALON,
 )
 BANO = Recinto(
     nombre="bano",
@@ -178,6 +153,7 @@ BANO = Recinto(
     techo=3.47,
     archivo="pared_del_bano_color.png",
     humedad=True,
+    foto=FOTO_DEL_BANO,
     muebles=(
         Mueble("bano_lavatorio", "pileta", 0.5),
         Mueble("vanitory", "pileta", 0.5),
@@ -427,128 +403,20 @@ def _reparto(color: np.ndarray) -> np.ndarray:
 
 
 class Lienzo:
-    """La luz y el tinte que le toca a cada texel de una pared, antes de teñir el color base."""
+    """La luz y el tinte que le toca a cada texel de una pared, antes de teñir el color base.
 
-    def __init__(self, s: np.ndarray, t: np.ndarray):
+    El tinte arranca en la foto: cada texel es la pintura de la foto relativa a su media.
+    """
+
+    def __init__(self, s: np.ndarray, t: np.ndarray, foto: np.ndarray):
         self.s, self.t = s, t
         self.luz = np.ones(s.shape, dtype=np.float32)
-        self.tinte = np.ones(s.shape + (3,), dtype=np.float32)
-
-    def aclarar_u_oscurecer(self, cantidad: np.ndarray | float) -> None:
-        self.luz += cantidad
+        self.tinte = foto.astype(np.float32)
 
     def ensuciar(self, cantidad: np.ndarray, color: np.ndarray = MUGRE) -> None:
         """`cantidad` es la fracción de luz que pierde; `color` es el tono de lo que se acumula."""
         cantidad = np.clip(cantidad, 0.0, 0.5)[..., None]
         self.tinte *= 1.0 - cantidad * _reparto(color)
-
-
-def _mancha(s, t, centro_s, centro_t, medio_s, medio_t, borde, irregular, radio=0.0):
-    """Un rectángulo de esquinas redondas, de 1 adentro a 0 afuera, con el borde de una brocha.
-
-    `borde` es el ancho del pasaje, en metros; `irregular` corre el borde unos centímetros.
-    """
-    ds = np.abs(s - centro_s) - (medio_s - radio)
-    dt = np.abs(t - centro_t) - (medio_t - radio)
-    afuera = np.hypot(np.maximum(ds, 0.0), np.maximum(dt, 0.0)) + np.minimum(np.maximum(ds, dt), 0)
-    return 1.0 - _suave(-borde, borde, afuera - radio + irregular)
-
-
-def _pintura(lienzo: Lienzo, pared: Pared, semilla: int, capa: int) -> None:
-    """La mano de pintura: casi lisa, con lo que deja el rodillo y nada del revoque de abajo.
-
-    La pintura tapa el revoque. A un metro se ve una piel muy fina y las pasadas del rodillo,
-    apenas; a dos o tres metros, sólo nubes suaves en el sentido de las pasadas.
-    """
-    s, t = lienzo.s, lienzo.t
-    azar = np.random.default_rng(semilla + 1)
-    # La piel de naranja: un texel de ruido, apenas, para que la pared no sea un plástico.
-    lienzo.aclarar_u_oscurecer(PIEL * azar.standard_normal(s.shape).astype(np.float32))
-    # Las pasadas: franjas verticales del ancho del rodillo, cada una con su carga de pintura,
-    # y una línea donde una pisa a la anterior. El pintor no va derecho: el borde ondula.
-    borde = pared.s0 - 0.3
-    variacion = 0.6 + 0.4 * ruido(s, t, 0.3, 1.2, 2, semilla + 3, capa)
-    ondula = 0.025 * ruido(s, t, 1.0, 0.8, 2, semilla + 2, capa)
-    while borde < pared.s1 + 0.3:
-        ancho = azar.uniform(0.17, 0.25)
-        adentro = (s + ondula >= borde) & (s + ondula < borde + ancho)
-        carga = PASADA * azar.standard_normal() * variacion
-        lienzo.aclarar_u_oscurecer(np.where(adentro, carga, 0.0))
-        solape = np.exp(-(((s + ondula - borde) / 0.012) ** 2))
-        lienzo.ensuciar(SOLAPE * azar.uniform(0.4, 1.0) * solape, np.array([0.9, 0.9, 0.9]))
-        borde += ancho
-    # El moteado: manchitas de 3 a 10 cm donde la pintura cubrió distinto. No es parejo: en una
-    # zona casi no se ve y en otra sí, como en la referencia.
-    zonas = 0.35 + 0.65 * _suave(-0.8, 0.8, ruido(s, t, 0.8, 0.8, 2, semilla + 5, capa))
-    lienzo.aclarar_u_oscurecer(MOTEADO * zonas * ruido(s, t, 0.06, 0.08, 3, semilla + 14, capa))
-    # Las nubes de la mano de pintura, estiradas a lo alto como en la referencia.
-    lienzo.aclarar_u_oscurecer(NUBES * ruido(s, t, 0.35, 1.1, 3, semilla + 4, capa))
-
-
-def _retoques(lienzo: Lienzo, pared: Pared, azar, semilla: int, capa: int) -> int:
-    """Lo que se arregló después: retoques, carteles que se sacaron, cinta y agujeros tapados.
-
-    Se ven a dos o tres metros, como en un local de verdad: un parche de otro blanco, un
-    rectángulo más limpio con su cinta en las esquinas, un poco de masilla sin pintar.
-    """
-    s, t = lienzo.s, lienzo.t
-    largo = pared.s1 - pared.s0
-    hechos = 0
-    # Retoques: pintura más nueva, más blanca y más fría, con el borde de la brocha.
-    for _ in range(1 + azar.poisson(largo / 4.0)):
-        cs, ct = azar.uniform(pared.s0 + 0.3, pared.s1 - 0.3), azar.uniform(0.5, 2.1)
-        medio_s, medio_t = azar.uniform(0.10, 0.28), azar.uniform(0.08, 0.22)
-        irregular = 0.015 * ruido(s, t, 0.05, 0.05, 2, semilla + 50 + hechos, capa)
-        radio = 0.6 * min(medio_s, medio_t)
-        mascara = _mancha(s, t, cs, ct, medio_s, medio_t, 0.025, irregular, radio)
-        trazos = 0.85 + 0.15 * ruido(s, t, 0.04, 0.25, 2, semilla + 60 + hechos, capa)
-        nivel = RETOQUE * azar.uniform(0.7, 1.2) * mascara * trazos
-        lienzo.aclarar_u_oscurecer(nivel)
-        lienzo.tinte[..., 2] *= 1.0 + 0.2 * nivel
-        hechos += 1
-    # Un cartel que se sacó: un rectángulo más limpio y cinta vieja en sus esquinas.
-    if azar.random() < 0.6:
-        ancho, alto = azar.uniform(0.30, 0.45), azar.uniform(0.40, 0.60)
-        cs = azar.uniform(pared.s0 + ancho, pared.s1 - ancho)
-        ct = azar.uniform(1.35, 1.75)
-        limpio = _mancha(s, t, cs, ct, ancho / 2, alto / 2, 0.004, 0.0)
-        lienzo.aclarar_u_oscurecer(CARTEL * limpio)
-        for es in (-1, 1):
-            for et in (-1, 1):
-                if azar.random() < 0.8:
-                    _cinta(lienzo, cs + es * ancho / 2, ct + et * alto / 2, azar)
-        hechos += 1
-    # Cinta suelta que quedó de algún aviso.
-    for _ in range(azar.poisson(largo / 5.0)):
-        _cinta(lienzo, azar.uniform(pared.s0 + 0.2, pared.s1 - 0.2), azar.uniform(1.0, 1.9), azar)
-        hechos += 1
-    # Agujeros de tarugo tapados con masilla: un círculo más blanco, y a veces el agujero.
-    for _ in range(azar.poisson(largo / 3.0)):
-        cs, ct = azar.uniform(pared.s0 + 0.1, pared.s1 - 0.1), azar.uniform(0.9, 2.3)
-        radio = azar.uniform(0.012, 0.025)
-        _trazo(lienzo, (cs, ct), (cs + radio * 0.6, ct + radio * 0.3), radio, -MASILLA)
-        if azar.random() < 0.3:
-            _trazo(lienzo, (cs, ct), (cs, ct), 0.006, 0.25)
-        hechos += 1
-    return hechos
-
-
-def _cinta(lienzo: Lienzo, cs: float, ct: float, azar) -> None:
-    """Un pedazo de cinta de 5 por 2,5 cm: el adhesivo juntó mugre y el borde arrancó pintura."""
-    angulo = azar.uniform(-0.8, 0.8)
-    largo = azar.uniform(0.04, 0.06) / 2
-    ds, dt = largo * np.cos(angulo), largo * np.sin(angulo)
-    _trazo(lienzo, (cs - ds, ct - dt), (cs + ds, ct + dt), 0.025, CINTA * azar.uniform(0.6, 1.0))
-
-
-def _tono(lienzo: Lienzo, semilla: int, capa: int) -> None:
-    """Variación de tono a 2 o 3 m: zonas apenas más amarillentas o más grises."""
-    s, t = lienzo.s, lienzo.t
-    lienzo.aclarar_u_oscurecer(TONO_GRIS * ruido(s, t, 2.6, 2.0, 3, semilla + 6, capa))
-    calido = TONO_CALIDO * ruido(s, t, 3.2, 2.4, 2, semilla + 7, capa)
-    lienzo.tinte[..., 0] *= 1.0 + 0.6 * calido
-    lienzo.tinte[..., 1] *= 1.0 + 0.5 * calido
-    lienzo.tinte[..., 2] *= 1.0 - 1.0 * calido
 
 
 def _suciedad_general(lienzo, semilla, capa, densidad, distancia_a_vano):
@@ -687,7 +555,66 @@ def _marcas(lienzo, pared, recinto, azar) -> int:
     return hechas
 
 
-def pintar(recinto: Recinto, pared: Pared, indice: int, densidad: int, base: np.ndarray):
+def leer_foto(foto: Foto) -> np.ndarray:
+    """La foto en luz lineal, con la fila 0 abajo como la textura."""
+    imagen = bpy.data.images.load(str(foto.ruta), check_existing=False)
+    ancho, alto = imagen.size
+    pixeles = np.empty(ancho * alto * 4, dtype=np.float32)
+    imagen.pixels.foreach_get(pixeles)
+    bpy.data.images.remove(imagen)
+    srgb = pixeles.reshape(alto, ancho, 4)[..., :3]
+    return np.where(srgb <= 0.04045, srgb / 12.92, ((srgb + 0.055) / 1.055) ** 2.4)
+
+
+def mosaico(foto: Foto, lineal: np.ndarray, densidad: int) -> np.ndarray:
+    """La pintura de la foto a la densidad de la textura, relativa a su media por canal.
+
+    Promediada por área: de 2 K a unos 140 texeles, un muestreo directo dejaría ruido. Se divide
+    cada canal por su media (con piso de 0,35 del canal mayor por si se prueba una foto muy
+    saturada): queda la foto entera —luz y matiz— teñida al color de cada pared.
+    """
+    lado = max(int(round(foto.metros * densidad)), 2)
+    reducida = madera.remuestrear(lineal, lado, lado)
+    media = reducida.mean(axis=(0, 1))
+    divisor = np.maximum(media, 0.35 * float(media.max()))
+    return reducida / divisor
+
+
+def _muestrear(mosaico_: np.ndarray, x: np.ndarray, y: np.ndarray) -> np.ndarray:
+    """Bilineal y repetida: `x`, `y` en texeles del mosaico, la columna y la fila."""
+    alto, ancho = mosaico_.shape[:2]
+    fx, fy = x - 0.5, y - 0.5
+    x0, y0 = np.floor(fx), np.floor(fy)
+    wx, wy = (fx - x0)[..., None], (fy - y0)[..., None]
+    x0, y0 = x0.astype(int) % ancho, y0.astype(int) % alto
+    x1, y1 = (x0 + 1) % ancho, (y0 + 1) % alto
+    abajo = mosaico_[y0, x0] * (1 - wx) + mosaico_[y0, x1] * wx
+    arriba = mosaico_[y1, x0] * (1 - wx) + mosaico_[y1, x1] * wx
+    return abajo * (1 - wy) + arriba * wy
+
+
+def _foto_en_la_pared(mosaico_, s, t, densidad, azar, semilla, capa) -> np.ndarray:
+    """La foto a su escala, con un segundo mosaico espejado y desfasado en manchas de 1,6 m.
+
+    Cada pared arranca en otro punto de la foto. El espejo es a lo ancho: lo vertical de la
+    foto, como las pasadas del rodillo, sigue vertical. La mezcla conserva la varianza para no
+    alisar la pintura en la transición entre los dos mosaicos.
+    """
+    lado = mosaico_.shape[0]
+    x, y = s * densidad, t * densidad
+    dx_a, dy_a = azar.uniform(0, lado), azar.uniform(0, lado)
+    dx_b = azar.uniform(0, lado)
+    dy_b = (dy_a + azar.uniform(0.35, 0.65) * lado) % lado
+    a = _muestrear(mosaico_, x + dx_a, y + dy_a)
+    b = _muestrear(mosaico_, -x + dx_b, y + dy_b)
+    mezcla = _suave(-0.30, 0.30, ruido(s, t, 1.6, 1.6, 2, semilla + 70, capa))[..., None]
+    media = mosaico_.mean(axis=(0, 1))
+    escala = np.sqrt((1.0 - mezcla) ** 2 + mezcla**2)
+    combinado = media + ((a - media) * (1.0 - mezcla) + (b - media) * mezcla) / escala
+    return np.clip(combinado, 0.1, 2.5)
+
+
+def pintar(recinto: Recinto, pared: Pared, indice: int, densidad: int, mosaico_: np.ndarray):
     """La pintura de una pared: un arreglo (alto, ancho, 3) de luz lineal relativa a la base."""
     semilla = _semilla(f"{recinto.nombre}-{pared.plano.eje}-{pared.plano.coord}")
     azar = np.random.default_rng(semilla)
@@ -697,7 +624,8 @@ def pintar(recinto: Recinto, pared: Pared, indice: int, densidad: int, base: np.
     filas = (np.arange(alto, dtype=np.float64) + 0.5 - COLCHON) / densidad
     s = np.broadcast_to(pared.s0 + columnas[None, :], (alto, ancho)).astype(np.float32).copy()
     t = np.broadcast_to(PISO + filas[:, None], (alto, ancho)).astype(np.float32).copy()
-    lienzo = Lienzo(s, t)
+    foto = _foto_en_la_pared(mosaico_, s, t, densidad, azar, semilla, indice)
+    lienzo = Lienzo(s, t, foto)
 
     # Qué texeles son pared y cuáles vano, dentro del rectángulo; el colchón repite el borde.
     cubierto = np.zeros((pared.alto, pared.ancho), dtype=bool)
@@ -708,14 +636,11 @@ def pintar(recinto: Recinto, pared: Pared, indice: int, densidad: int, base: np.
     vano = np.pad(~cubierto, COLCHON, mode="edge")
     distancia = distancia_en_texeles(vano)
 
-    _pintura(lienzo, pared, semilla, indice)
-    _tono(lienzo, semilla, indice)
     _suciedad_general(lienzo, semilla, indice, densidad, distancia)
     _muebles(lienzo, pared, semilla, indice)
     if recinto.humedad:
         _humedad(lienzo, semilla, indice)
     hechas = _marcas(lienzo, pared, recinto, azar)
-    hechas += _retoques(lienzo, pared, azar, semilla, indice)
 
     color = lienzo.luz[..., None] * lienzo.tinte
     # Sobre el vano no hay pared: no cuenta para la media.
@@ -733,7 +658,7 @@ def _a_srgb(lineal: np.ndarray) -> np.ndarray:
     return np.where(lineal <= 0.0031308, lineal * 12.92, 1.055 * lineal ** (1 / 2.4) - 0.055)
 
 
-def pintar_recinto(recinto: Recinto) -> tuple[np.ndarray, dict]:
+def pintar_recinto(recinto: Recinto, foto: Foto) -> tuple[np.ndarray, dict]:
     """La textura del recinto y lo que hace falta para escribir su UV."""
     material = bpy.data.materials[recinto.material]
     entrada = material.node_tree.nodes["Principled BSDF"].inputs["Base Color"]
@@ -742,12 +667,13 @@ def pintar_recinto(recinto: Recinto) -> tuple[np.ndarray, dict]:
     densidad = acomodar(paredes, recinto.techo - PISO)
     de_pared, otras = recoger_caras(recinto, paredes)
     notas = anotar_muebles(recinto, paredes)
+    mosaico_ = mosaico(foto, leer_foto(foto), densidad)
 
     textura = np.ones((LADO, LADO, 3), dtype=np.float32) * base
-    resumen = []
+    resumen = [f"    foto {foto.ruta.name}: {foto.metros} m en {mosaico_.shape[0]} texeles"]
     marcas = 0
     for indice, pared in enumerate(paredes):
-        pintura, hechas, desvio, oscuro = pintar(recinto, pared, indice, densidad, base)
+        pintura, hechas, desvio, oscuro = pintar(recinto, pared, indice, densidad, mosaico_)
         marcas += hechas
         y0, x0 = pared.py - COLCHON, pared.px - COLCHON
         textura[y0 : y0 + pintura.shape[0], x0 : x0 + pintura.shape[1]] = base * pintura
@@ -811,8 +737,8 @@ def cablear(recinto: Recinto, ruta: Path) -> None:
     arbol.links.new(nodo.outputs["Color"], principal.inputs["Base Color"])
 
 
-def aplicar(recinto: Recinto, destino: Path) -> str:
-    pixeles, info = pintar_recinto(recinto)
+def aplicar(recinto: Recinto, foto: Foto, destino: Path) -> str:
+    pixeles, info = pintar_recinto(recinto, foto)
     destino.mkdir(parents=True, exist_ok=True)
     ruta = destino / recinto.archivo
     ruta.write_bytes(metal.png_de(pixeles))
@@ -830,9 +756,14 @@ def aplicar(recinto: Recinto, destino: Path) -> str:
 def main() -> None:
     argumentos = sys.argv[sys.argv.index("--") + 1 :] if "--" in sys.argv else []
     guardar = "--aplicar" in argumentos
+    otra = None
+    if "--foto" in argumentos:
+        # Para probar otra foto en los dos recintos: `--foto RUTA --metros LADO`.
+        ruta = Path(argumentos[argumentos.index("--foto") + 1]).resolve()
+        otra = Foto(ruta, float(argumentos[argumentos.index("--metros") + 1]))
     destino = CARPETA if guardar else Path(tempfile.mkdtemp(prefix="paredes_pintadas_"))
     for recinto in RECINTOS:
-        print(aplicar(recinto, destino))
+        print(aplicar(recinto, otra or recinto.foto, destino))
     if guardar:
         bpy.ops.wm.save_mainfile()
         print(f"guardado: {FUENTE}")
