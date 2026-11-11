@@ -47,7 +47,7 @@ por pared:
   ellas, y el pie de los inodoros.
 
 **Que sea sutil es parte del contrato.** La media de cada pared vuelve al tono liso de antes
-(así de lejos no cambia ni el tono ni el brillo) y el desvío de la pintura es de 4 o 5 %.
+(así de lejos no cambia ni el tono ni el brillo) y el desvío de la pintura ronda el 12 %: con 4 % el usuario no vio ningún cambio.
 El 1 % más oscuro, al pie, pierde entre un 7 y un 14 %. A 2 m la pared se lee blanca y limpia.
 
 ## Lo que cuesta
@@ -109,16 +109,16 @@ MUGRE = np.array([0.60, 0.57, 0.50], dtype=np.float32)
 HUMEDAD = np.array([0.80, 0.86, 0.86], dtype=np.float32)
 
 #: Qué tanto cuenta cada desperfecto. Es la fracción de luz que le saca al color.
-REVOQUE_DESVIO = 0.04
+REVOQUE_DESVIO = 0.14
 #: Cuánto de la mancha grande de la foto se conserva: 1 menos esto, y a cuántos niveles de la
 #: pirámide (un nivel es el doble de ancho) empieza a contar como mancha grande.
-NUBE = 0.7
+NUBE = 0.3
 NIVELES_DE_NUBE = 3
 #: Niveles de la pirámide de más sobre el texel de la pared. Con un filtro pixelado, el detalle
 #: que mide un texel o dos se ve como tablero de ajedrez; así el menor rasgo mide tres o cuatro.
-NIVELES_MAS_SUAVES = 1
-TONO_GRIS = 0.014
-TONO_CALIDO = 0.010
+NIVELES_MAS_SUAVES = 0
+TONO_GRIS = 0.03
+TONO_CALIDO = 0.02
 PIE = 0.10
 TECHO_POLVO = 0.05
 ESQUINA = 0.035
