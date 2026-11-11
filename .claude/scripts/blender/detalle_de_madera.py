@@ -1,6 +1,6 @@
 """Lo que comparten las maderas del almacén para pintar tablas con veta, nudos y uso.
 
-Lo usan `texturizar_madera_del_deposito.py`, `texturizar_frente_de_madera.py` y
+Lo usan `texturizar_madera_del_deposito.py`, `listonar_frente_de_madera.py` y
 `texturizar_patas_de_silla.py`. Es sólo numpy: no importa `bpy`, así que se prueba y se itera
 fuera de Blender.
 

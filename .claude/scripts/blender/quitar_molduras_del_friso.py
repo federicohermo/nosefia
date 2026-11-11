@@ -4,7 +4,7 @@
         --python .claude/scripts/blender/quitar_molduras_del_friso.py -- [--aplicar]
 
 Sin `--aplicar` sólo cambia la sesión de Blender. Con `--aplicar` guarda la fuente. Después va
-`texturizar_frente_de_madera.py`, que da las divisiones al friso, y después `exportar_modelo.py`
+`listonar_frente_de_madera.py`, que le da los listones al friso, y después `exportar_modelo.py`
 y `hornear.py`: la malla cambia de forma y su luz horneada ya no sirve.
 
 ## Por qué
@@ -12,14 +12,14 @@ y `hornear.py`: la malla cambia de forma y su luz horneada ya no sirve.
 El friso (`mueble_continuo`) llevaba un aro en relieve por cada cara frontal de 50 cm o más, con
 anchos distintos según el hueco: 38 cm en las jambas, 1,1 m sobre las heladeras, 72 cm sobre el
 exhibidor. Los marcos se cruzaban con los cortes de las tablas pintadas en la textura. El resultado
-era una pared con cuatro lógicas de división a la vez. Una pared moderna lleva una sola: paneles
-planos de un mismo ancho, con una junta fina.
+era una pared con cuatro lógicas de división a la vez. Una pared moderna lleva una sola: listones
+del mismo ancho, con una buña.
 
 ## Qué cambia
 
 Se borran las caras que salen del plano del frente (las del marco) y los vértices que quedan
 sueltos. El frente conserva sus caras originales. **Las divisiones ya no son geometría:** las
-pinta `texturizar_frente_de_madera.py` en el color, alineadas a los bordes de las heladeras.
+hace `listonar_frente_de_madera.py`, con listones y buñas.
 
 ## Lo que cuesta
 
