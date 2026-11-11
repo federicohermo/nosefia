@@ -83,11 +83,12 @@ CONJUNTOS = (
         1024,
         420.0,
         {
-            "bano_acero": _receta((0.52, 0.57, 0.57), 0.30, 0.75, SUELO, semilla=3),
+            "bano_acero": _receta((0.52, 0.57, 0.57), 0.30, 0.75, SUELO, semilla=3,
+                                  manchas=0.4, mugre=0.5, variacion=0.6),
             "bano_griferia": _receta((0.52, 0.57, 0.57), 0.16, 0.75, SUELO, semilla=5,
-                                     rayones=0.6, manchas=0.8),
+                                     rayones=0.6, manchas=0.3, mugre=0.5, variacion=0.6),
             "bano_desague": _receta((0.52, 0.57, 0.57), 0.20, 0.75, SUELO, semilla=7,
-                                    rayones=0.6, manchas=0.8),
+                                    rayones=0.6, manchas=0.3, mugre=0.5, variacion=0.6),
         },
     ),
     Conjunto(
@@ -95,14 +96,15 @@ CONJUNTOS = (
         512,
         420.0,
         {"MESA | Base cromada": _receta((0.75, 0.76, 0.78), 0.25, 0.90, SUELO, semilla=11,
-                                        manchas=0.8)},
+                                        manchas=0.25, mugre=0.5, variacion=0.6)},
     ),
     Conjunto(
         "acero_del_mostrador",
         1024,
         380.0,
         {"MOSTRADOR | Acero satinado": _receta((0.34, 0.37, 0.40), 0.32, 0.84, SUELO,
-                                               semilla=13)},
+                                               semilla=13, manchas=0.15, mugre=0.3,
+                                               rayones=0.5, huellas=0.0, variacion=0.4)},
     ),
 )
 

@@ -62,6 +62,8 @@ class Receta:
     rayones: float = 1.0
     huellas: float = 1.0
     mugre: float = 1.0
+    #: Cuánto varía el tono de un lugar a otro. Con 0 el acero sale parejo, sin nubes.
+    variacion: float = 1.0
     semilla: int = 1
 
 
@@ -571,8 +573,8 @@ def pintar_isla(
         return np.exp(-(((zs - ALTURA_DE_USO) / ANCHO_DE_USO) ** 2))
 
     # El tono de escala grande y el cepillado.
-    tono = _fbm(x, y, z, 1.6, 3, semilla + 11) - 0.5
-    manchon = _fbm(x, y, z, 5.5, 3, semilla + 13) - 0.5
+    tono = (_fbm(x, y, z, 1.6, 3, semilla + 11) - 0.5) * receta.variacion
+    manchon = (_fbm(x, y, z, 5.5, 3, semilla + 13) - 0.5) * receta.variacion
     a_lo_largo_de_t = vertical or isla.alto >= isla.ancho
     if a_lo_largo_de_t:
         grano = _valor(s * densidad / 1.3, t * densidad / 26.0, np.zeros_like(s), semilla + 17)
