@@ -18,6 +18,10 @@ Qué cambia, en el `.blend`:
    centímetros (`MINIMO_DE_LA_PIEZA`).
 3. Cada vano es **un objeto aparte**, y el nombre lo toma el importador de Godot para dibujarlo
    sólo de cerca (`visibility_range_end`).
+4. **El cuartito de limpieza usa la misma proyección que el depósito** en sus dos objetos con
+   bloques: el revestimiento de la pared de la puerta y el cuerpo, que lleva el fondo y los
+   costados. Con la UV vieja, el cuerpo repetía la textura cada 1,8 m y la humedad del pie se
+   veía a 1,8 m de altura como una franja oscura de dos hiladas.
 
 El tamaño del bloque (0,40 × 0,20 m) es de esta textura. `revestimiento_del_deposito.py` conserva
 el suyo (0,60 × 0,30 m) porque decide la altura del corte, y 12 × 0,30 m = 18 × 0,20 m = 3,6 m.
@@ -48,7 +52,7 @@ FINAL = RAIZ / "assets/source/textures/warehouse/final"
 MAPAS = {"color": "deposito_bloques_color.png", "normal": "deposito_bloques_normal.png",
          "rough": "deposito_bloques_rough.png"}
 PREFIJO_PIEZAS = "deposito_esquinas_"
-CUARTITO = "cuartito_revestimiento"
+CUARTITO = ("cuartito_revestimiento", "cuartito_cuerpo-col")
 COBERTURA = (2.4, 3.6)
 BLOQUE_METROS = (0.4, 0.2)
 N_PX = 1024
@@ -291,18 +295,19 @@ def aplicar():
     antes = RECETA._huellas(set(caras_bloques))
     material = _material(objeto)
     _reproyectar(objeto, caras_bloques, limites)
-    # El revestimiento del cuartito es otro objeto con el mismo material. Con la UV vieja repetía
-    # la textura cada 1,8 m, y la humedad del pie aparecía a media altura como una franja oscura.
-    cuartito = bpy.data.objects[CUARTITO]
-    propias = [c.index for c in cuartito.data.polygons
-               if cuartito.data.materials[c.material_index].name == material.name]
-    vertices_del_cuartito = [tuple(v.co) for v in cuartito.data.vertices]
-    _reproyectar(cuartito, propias, limites)
-    assert vertices_del_cuartito == [tuple(v.co) for v in cuartito.data.vertices]
+    for nombre in CUARTITO:
+        cuartito = bpy.data.objects[nombre]
+        propias = [c.index for c in cuartito.data.polygons
+                   if cuartito.data.materials[c.material_index].name == material.name]
+        assert propias, f"{nombre} no tiene caras de bloques"
+        vertices_del_cuartito = [tuple(v.co) for v in cuartito.data.vertices]
+        _reproyectar(cuartito, propias, limites)
+        assert vertices_del_cuartito == [tuple(v.co) for v in cuartito.data.vertices]
     despues = RECETA._huellas(set(caras_bloques))
     # El cuartito cambia a propósito, sólo en su UV: se compara todo lo demás.
     for huellas in (antes, despues):
-        huellas.pop(CUARTITO)
+        for nombre in CUARTITO:
+            huellas.pop(nombre)
     assert antes == despues, "Se modificaron mallas o caras ajenas"
     _borrar_piezas()
     coleccion = objeto.users_collection[0]
