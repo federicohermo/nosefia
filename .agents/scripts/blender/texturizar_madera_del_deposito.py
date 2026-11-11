@@ -1,4 +1,4 @@
-"""Texturizar la madera de los pallets del depósito: tablas con tono propio, veta, nudos y uso.
+"""Texturizar la madera de los pallets del depósito: tablas de tono parejo, veta, nudos y uso.
 
     blender assets/models/SEPT_JUEGOS_PROTOTIPO.blend --background --python-exit-code 1 \
         --python .claude/scripts/blender/texturizar_madera_del_deposito.py -- [--aplicar]
@@ -15,26 +15,42 @@ color parejo con ruido. Una tabla de pallet de verdad tiene su propio tono, su v
 nudos; el canto está gastado y claro; hay mugre en las puntas y donde se juntan las tablas; y
 cada travesaño lleva sus clavos.
 
+La primera versión de la imagen tenía ocho tiras, y los dieciocho pallets de estante compartían
+una malla: todos mostraban las mismas cinco tablas en el mismo orden. Y los tonos de las tiras
+iban de 0,70 a 1,38 de la madera base, así que entre una tabla y la de al lado había un salto
+de claro a oscuro que en un pallet de verdad no existe.
+
 ## Qué cambia
 
-- **Una imagen de 1024×1024 con ocho tiras**, una por tabla distinta. La veta corre a lo largo
-  de la tira. Cada tira lleva su tono, sus anillos, sus poros y sus nudos.
+- **Una imagen de 1024×1024 con dieciséis tiras de 64 px.** Doce son tablas del tablero y cuatro,
+  de patines, travesaños y tacos. La veta corre a lo largo de la tira. Cada tira lleva sus
+  anillos, sus poros y sus nudos.
+- **El tono es parejo.** Cada tira se corrige para que su luz media quede a menos de un 6 % de la
+  madera base, se le saca la variación ancha de tono, y ningún punto de la cara baja de un piso:
+  los nudos y las rajaduras se quedan, sin manchas negras anchas. Sólo quedan oscuros los clavos
+  y la junta fina entre tablas.
 - **Uso**, pintado en el color: canto aclarado por el roce y una junta oscura al pie, mugre más
-  densa hacia las puntas, rajaduras en las puntas, manchas anchas, rayones finos a lo largo y
-  clavos con su aureola de óxido sobre cada travesaño.
+  densa hacia las puntas, rajaduras en las puntas, rayones finos a lo largo y clavos con su
+  aureola de óxido sobre cada travesaño.
 - **El testero** de la tabla (el corte de la punta) tiene su propia banda en el extremo derecho
   de cada tira, con anillos de crecimiento y más oscura.
-- **Las UV** de las dos mallas de pallet (`Pallet estante` y `Pallet piso`) se rehacen. Cada
-  tabla del tablero toma una tira distinta. La u corre de punta a punta del pallet, sea cual sea
-  su largo: así los clavos caen sobre los travesaños en los dos. Estirar la veta a lo largo no
-  se nota. Los patines, los travesaños y los tacos toman tiras y tramos propios, sin clavos.
+- **Cada pallet tiene su malla y sus UV.** Los dieciocho pallets de estante compartían una malla
+  (`Pallet estante.001`); el script le da a cada uno una copia. Cada tabla de cada pallet toma
+  una tira de las doce, y puede ir espejada en u (la veta corre al revés: los clavos caen igual,
+  porque están simétricos) y en v. Ningún pallet repite en el mismo lugar la tira y el espejo de
+  otro. La elección sale del nombre del objeto: la misma entrada da las mismas UV. La u corre
+  de punta a punta del pallet, sea cual sea su largo, para que los clavos caigan sobre los
+  travesaños. Los patines, los travesaños y los tacos toman tiras y tramos propios, sin clavos.
+  Si el exportador une los pallets en una malla, la UV de cada uno viaja con sus vértices.
 - **El material** `deposito_madera_listones` apunta a la imagen nueva.
 
 ## Lo que cuesta
 
-Ningún triángulo, ningún material ni dibujo más. La textura pasa de 128×128 a 1024×1024: el PNG
-fuente pesa 735 KB y 1 MB comprimida en memoria de video. La malla es la misma: las UV no suman
-vértices salvo los que parte el exportador en los cantos.
+Ningún triángulo, ningún material ni dibujo más. La textura sigue en 1024×1024: el mismo peso en
+memoria de video. Las mallas de los dieciocho pallets de estante pasan de una compartida a
+dieciocho propias: 240 triángulos cada una, la misma geometría. Si los pallets quedan como
+objetos sueltos en el `.glb`, son diecisiete mallas más, de unos 16 KB de vértices cada una. Un
+dibujo por pallet, como antes.
 
 Es determinista y idempotente: la misma entrada da los mismos bytes.
 """
@@ -61,65 +77,98 @@ MATERIAL = "deposito_madera_listones"
 PREFIJO = "deposito_pallet_"
 
 N = 1024
-TIRAS = 8
+TIRAS = 16
 ALTO_TIRA = N // TIRAS
+#: Las primeras tiras son tablas del tablero; las últimas, patines, travesaños y tacos.
+TIRAS_DE_TABLA = 12
 #: Hasta dónde llega la cara de la tabla en u. De ahí al borde va el testero.
 LARGO_CARA = 960
 SEMILLA = 20261110
+SEMILLA_UV = 20261111
 #: El color de siempre de esta madera, en sRGB: el promedio del tile de 128 px.
 BASE = np.array([0.376, 0.223, 0.130], dtype=np.float32)
+#: La luz media de cada tira respecto de la madera base. Se queda a menos de un 10 %: entre una
+#: tabla y la de al lado sólo cambia la veta y un tono apenas distinto.
+FACTORES = (0.97, 1.03, 1.00, 1.05, 0.95, 1.02, 0.98, 1.04, 0.96, 1.01, 0.99, 1.06,
+            0.92, 0.96, 0.90, 0.94)
+#: Ningún punto de la cara baja de esta fracción de la luz media de su tira, clavos y juntas
+#: aparte: así los nudos y las rajaduras no dejan manchas negras anchas.
+PISO_DE_LUZ = 0.55
+#: Cuánto de la variación ancha de tono de cada tira se corrige.
+CORRECCION_ANCHA = 0.8
 #: La proporción del largo del pallet donde cae el centro de cada travesaño y su clavo.
 CLAVOS_U = (0.06 / 1.64, 0.5, 1 - 0.06 / 1.64)
 #: Los tramos de la tira que toman los travesaños, los tacos y los cantos, sin clavos.
 TRAMO_TRAVESANO = (0.08, 0.44)
 TRAMO_TACO = (0.56, 0.64)
-FILAS_DE_CANTO = (48, 63)
-MARGEN_V = 14
-ALTO_UTIL_V = 100
+FILAS_DE_CANTO = (24, 31)
+MARGEN_V = 7
+ALTO_UTIL_V = 50
 
 
 def _tono(azar: np.random.Generator, factor: float):
-    gris = azar.uniform(0.0, 0.34)
+    gris = azar.uniform(0.0, 0.22)
     base = BASE * factor
     luz = base.mean()
     base = base * (1 - gris) + luz * gris
-    return np.clip(base * 1.2, 0, 1), np.clip(base * 0.7, 0, 1)
+    return np.clip(base * 1.22, 0, 1), np.clip(base * 0.72, 0, 1)
+
+
+def _luz(color: np.ndarray) -> np.ndarray:
+    return color.mean(axis=2)
 
 
 def _tira(indice: int, azar: np.random.Generator, factor: float) -> np.ndarray:
     """Una tira de (ALTO_TIRA, N, 3): la cara de la tabla y su testero."""
     claro, oscuro = _tono(azar, factor)
-    cara = tabla(LARGO_CARA, ALTO_TIRA, azar, claro, oscuro, nudos=int(azar.choice([0, 1, 1, 2])))
+    cara = tabla(
+        LARGO_CARA, ALTO_TIRA, azar, claro, oscuro, nudos=int(azar.choice([0, 1, 1, 2])), contraste=1.1
+    )
     cara = np.transpose(cara, (1, 0, 2))
     alto, largo = cara.shape[:2]
     u = np.arange(largo, dtype=np.float32)[None, :]
     v = np.arange(alto, dtype=np.float32)[:, None]
+    objetivo = BASE.mean() * factor
+
+    # El tono parejo: se saca la variación ancha de claro a oscuro y quedan la veta y los nudos.
+    luz = _luz(cara)
+    ancha = desenfocar(luz, 28)
+    cara = cara * ((luz.mean() / np.maximum(ancha, 1e-3)) ** CORRECCION_ANCHA)[..., None]
 
     # Mugre y desgaste: más oscuro hacia las puntas y donde se acumula la suciedad.
     puntas = np.broadcast_to(suave(120, 0, u) + suave(largo - 120, largo, u), (alto, largo))
     manchas = ruido(alto, largo, 2, 6, azar, 3)
     sucio = np.clip(0.55 * puntas + 0.9 * suave(0.55, 0.9, manchas), 0, 1)
-    cara = cara * (1 - 0.34 * sucio)[..., None]
+    cara = cara * (1 - 0.2 * sucio)[..., None]
 
-    # El canto: se gasta y aclara, con una junta oscura al pie.
+    # El canto: se gasta y aclara.
     borde = np.minimum(v, alto - 1 - v)
     irregular = ruido(alto, largo, 1, 14, azar, 2)
-    gastado = suave(7.0, 1.5, borde) * (0.45 + 0.9 * irregular)
-    cara = cara + (np.array([0.95, 0.78, 0.55]) - cara) * (0.34 * gastado)[..., None]
-    junta = suave(3.0, 0.5, borde)
-    cara = cara * (1 - 0.62 * junta)[..., None]
+    gastado = suave(3.5, 0.8, borde) * (0.45 + 0.9 * irregular)
+    cara = cara + (np.array([0.95, 0.78, 0.55]) - cara) * (0.3 * gastado)[..., None]
 
     # Las rajaduras de las puntas, a lo largo de la veta.
     peso = np.clip(puntas, 0, 1)
-    rajaduras = rayones(alto, largo, 40, 46, azar, angulo=0.0, dispersion=0.05, peso=peso)
-    cara = cara * (1 - 0.7 * rajaduras)[..., None]
+    rajaduras = rayones(alto, largo, 20, 46, azar, angulo=0.0, dispersion=0.05, peso=peso)
+    cara = cara * (1 - 0.4 * rajaduras)[..., None]
 
     # Rayones finos a lo largo, claros y oscuros, y unos cruzados más cortos.
-    claros = rayones(alto, largo, 26, 170, azar, angulo=0.0, dispersion=0.06)
-    oscuros = rayones(alto, largo, 18, 120, azar, angulo=0.0, dispersion=0.08)
-    cruzados = rayones(alto, largo, 14, 40, azar)
+    claros = rayones(alto, largo, 13, 170, azar, angulo=0.0, dispersion=0.06)
+    oscuros = rayones(alto, largo, 9, 120, azar, angulo=0.0, dispersion=0.08)
+    cruzados = rayones(alto, largo, 7, 40, azar)
     cara = cara + (np.array([0.85, 0.66, 0.46]) - cara) * (0.20 * claros)[..., None]
-    cara = cara * (1 - 0.35 * np.maximum(oscuros, cruzados))[..., None]
+    cara = cara * (1 - 0.25 * np.maximum(oscuros, cruzados))[..., None]
+
+    # Ningún punto baja del piso de luz: los nudos se leen, sin manchas negras.
+    luz = _luz(cara)
+    cara = cara * np.maximum(1.0, PISO_DE_LUZ * luz.mean() / np.maximum(luz, 1e-3))[..., None]
+
+    # La luz media de la tira queda en su objetivo, antes de la junta y los clavos.
+    cara = cara * (objetivo / _luz(cara).mean())
+
+    # La junta oscura al pie del canto.
+    junta = suave(1.5, 0.3, borde)
+    cara = cara * (1 - 0.5 * junta)[..., None]
 
     # Los clavos: cabeza oscura con un punto de luz y la aureola de óxido.
     yc = np.array([alto * 0.3, alto * 0.7])
@@ -127,9 +176,9 @@ def _tira(indice: int, azar: np.random.Generator, factor: float) -> np.ndarray:
         xc = fraccion * LARGO_CARA
         for cy in yc:
             d = np.sqrt((u - xc) ** 2 + ((v - cy) * 1.15) ** 2)
-            cara = cara * (1 - 0.35 * suave(9.0, 3.5, d))[..., None]
-            cabeza = suave(3.4, 2.2, d)
-            hierro = np.array([0.20, 0.17, 0.15]) + 0.18 * suave(1.6, 0.0, d)[..., None]
+            cara = cara * (1 - 0.3 * suave(7.0, 2.5, d))[..., None]
+            cabeza = suave(2.6, 1.6, d)
+            hierro = np.array([0.20, 0.17, 0.15]) + 0.18 * suave(1.2, 0.0, d)[..., None]
             cara = cara * (1 - cabeza)[..., None] + hierro * cabeza[..., None]
 
     tira = np.zeros((alto, N, 3), dtype=np.float32)
@@ -141,8 +190,8 @@ def _tira(indice: int, azar: np.random.Generator, factor: float) -> np.ndarray:
     tv = np.arange(alto, dtype=np.float32)[:, None]
     ondas = ruido(alto, ancho_t, 3, 2, azar, 2)
     anillos = 0.5 + 0.5 * np.sin((tu / ancho_t * 3.0 + (tv / alto - 0.5) ** 2 * 5.0 + ondas * 2) * np.pi * 2)
-    testero = (oscuro * 0.82)[None, None, :] * (0.78 + 0.34 * anillos)[..., None]
-    testero = testero * (1 - 0.3 * suave(0.5, 1.0, ruido(alto, ancho_t, 6, 4, azar, 2)))[..., None]
+    testero = (oscuro * 0.9)[None, None, :] * (0.82 + 0.28 * anillos)[..., None]
+    testero = testero * (1 - 0.2 * suave(0.5, 1.0, ruido(alto, ancho_t, 6, 4, azar, 2)))[..., None]
     tira[:, LARGO_CARA:] = testero
     return tira
 
@@ -150,12 +199,11 @@ def _tira(indice: int, azar: np.random.Generator, factor: float) -> np.ndarray:
 def pintar() -> np.ndarray:
     """La imagen entera, (N, N, 3) en sRGB 0..1, con la fila 0 abajo."""
     azar = np.random.default_rng(SEMILLA)
-    factores = (0.78, 1.26, 0.94, 1.38, 0.86, 1.12, 0.70, 1.04)
-    tiras = [_tira(i, azar, f) for i, f in enumerate(factores)]
+    tiras = [_tira(i, azar, f) for i, f in enumerate(FACTORES)]
     imagen = np.concatenate(tiras, axis=0)
     # Un velo parejo de polvo da el aire de toda la madera.
     polvo = desenfocar(ruido(N, N, 8, 8, azar, 3), 3)
-    imagen = imagen * (0.94 + 0.12 * polvo)[..., None]
+    imagen = imagen * (0.97 + 0.06 * polvo)[..., None]
     # La imagen conserva la luz media de la madera que reemplaza: el detalle no la oscurece.
     imagen = imagen * (BASE.mean() / imagen.mean())
     return np.clip(imagen, 0.0, 1.0)
@@ -189,7 +237,23 @@ def _fraccion(valor, minimo, maximo):
     return 0.0 if maximo == minimo else (valor - minimo) / (maximo - minimo)
 
 
-def reasignar_uv(malla, semilla_de_tiras: int) -> dict:
+def variantes_de_las_tablas(indice: int, previas: list, cuantas: int) -> list:
+    """Qué tira y qué espejo toma cada tabla de un pallet: `[(tira, espejo)]`, con espejo 0..3.
+
+    Sale sólo del índice del pallet. Ninguna tabla repite, en su lugar, la tira y el espejo de un
+    pallet anterior, y las tiras de un mismo pallet son distintas.
+    """
+    azar = np.random.default_rng(SEMILLA_UV + indice)
+    for _ in range(10_000):
+        tiras = azar.permutation(TIRAS_DE_TABLA)[:cuantas]
+        espejos = azar.integers(0, 4, cuantas)
+        elegidas = [(int(t), int(e)) for t, e in zip(tiras, espejos)]
+        if all(a != b for previa in previas for a, b in zip(elegidas, previa)):
+            return elegidas
+    raise AssertionError("No hay variantes libres para este pallet.")
+
+
+def reasignar_uv(malla, indice: int, previas: list) -> dict:
     """Rehace las UV de un pallet. Cada caja son seis caras seguidas."""
     capa = malla.uv_layers.active.data
     assert len(malla.polygons) % 6 == 0, "El pallet no es una pila de cajas conocida."
@@ -202,16 +266,19 @@ def reasignar_uv(malla, semilla_de_tiras: int) -> dict:
     def ordenadas(tipo, clave):
         return sorted((c for c in cajas if c["tipo"] == tipo), key=clave)
 
-    # Cada tabla del tablero toma una tira distinta, y las vecinas no se parecen. Los demás
-    # miembros toman las tiras 5 a 7.
-    for i, c in enumerate(ordenadas("tabla", lambda c: c["min"][1])):
-        c["tira"] = (i * 3 + semilla_de_tiras) % 5
+    tablas = ordenadas("tabla", lambda c: c["min"][1])
+    elegidas = variantes_de_las_tablas(indice, previas, len(tablas))
+    previas.append(elegidas)
+    for c, (tira, espejo) in zip(tablas, elegidas):
+        c["tira"], c["espejo"] = tira, espejo
+    # Los demás miembros toman las cuatro últimas tiras, y cada pallet las reparte distinto.
+    estructura = TIRAS_DE_TABLA
     for i, c in enumerate(ordenadas("patin", lambda c: c["min"][1])):
-        c["tira"] = 5 + (i + semilla_de_tiras) % 3
+        c["tira"], c["espejo"] = estructura + (i + indice) % 4, 0
     for i, c in enumerate(ordenadas("travesano", lambda c: c["min"][0])):
-        c["tira"] = 5 + (i + 1 + semilla_de_tiras) % 3
+        c["tira"], c["espejo"] = estructura + (i + 1 + indice) % 4, 0
     for i, c in enumerate(ordenadas("taco", lambda c: (c["min"][1], c["min"][0]))):
-        c["tira"] = 5 + (i + 2 + semilla_de_tiras) % 3
+        c["tira"], c["espejo"] = estructura + (i + 2 + indice) % 4, 0
 
     def v_de(tira, fila):
         return (tira * ALTO_TIRA + fila) / N
@@ -219,6 +286,7 @@ def reasignar_uv(malla, semilla_de_tiras: int) -> dict:
     cuenta = {"tabla": 0, "travesano": 0, "taco": 0, "patin": 0}
     for c in cajas:
         grupo, minimo, maximo, tipo, tira = c["grupo"], c["min"], c["max"], c["tipo"], c["tira"]
+        espejo_u, espejo_v = bool(c["espejo"] & 1), bool(c["espejo"] & 2)
         cuenta[tipo] += 1
         ancho_u = LARGO_CARA / N
         for p in grupo:
@@ -228,15 +296,18 @@ def reasignar_uv(malla, semilla_de_tiras: int) -> dict:
                 fx, fy, fz = (_fraccion(x, minimo[0], maximo[0]), _fraccion(y, minimo[1], maximo[1]),
                               _fraccion(z, minimo[2], maximo[2]))
                 if tipo in ("tabla", "patin"):
+                    # Los clavos están simétricos: espejar en u los deja sobre los travesaños.
+                    gx = 1 - fx if espejo_u else fx
+                    gy = 1 - fy if espejo_v else fy
                     if abs(normal.z) > 0.9:
-                        u = fx * ancho_u
-                        v = v_de(tira, MARGEN_V + fy * ALTO_UTIL_V) if tipo == "patin" else v_de(tira, fy * ALTO_TIRA)
+                        u = gx * ancho_u
+                        v = v_de(tira, MARGEN_V + gy * ALTO_UTIL_V) if tipo == "patin" else v_de(tira, gy * ALTO_TIRA)
                     elif abs(normal.y) > 0.9:
-                        u = fx * ancho_u
+                        u = gx * ancho_u
                         v = v_de(tira, FILAS_DE_CANTO[0] + fz * (FILAS_DE_CANTO[1] - FILAS_DE_CANTO[0]))
                     else:
                         u = ancho_u + fz * (1 - ancho_u)
-                        v = v_de(tira, fy * ALTO_TIRA if tipo == "tabla" else MARGEN_V + fy * ALTO_UTIL_V)
+                        v = v_de(tira, gy * ALTO_TIRA if tipo == "tabla" else MARGEN_V + gy * ALTO_UTIL_V)
                 elif tipo == "travesano":
                     a, b = TRAMO_TRAVESANO
                     if abs(normal.z) > 0.9:
@@ -253,9 +324,9 @@ def reasignar_uv(malla, semilla_de_tiras: int) -> dict:
                     if abs(normal.z) > 0.9:
                         u, v = a + fx * (b - a), v_de(tira, MARGEN_V + fy * ALTO_UTIL_V)
                     elif abs(normal.y) > 0.9:
-                        u, v = a + fx * (b - a), v_de(tira, MARGEN_V + fz * 50)
+                        u, v = a + fx * (b - a), v_de(tira, MARGEN_V + fz * 25)
                     else:
-                        u, v = a + fy * (b - a), v_de(tira, MARGEN_V + fz * 50)
+                        u, v = a + fy * (b - a), v_de(tira, MARGEN_V + fz * 25)
                 capa[lazo].uv = (u, v)
     return cuenta
 
@@ -290,11 +361,16 @@ def main() -> None:
     destino.parent.mkdir(parents=True, exist_ok=True)
     escribir_png(pintar(), destino)
     enlazar_imagen(destino, relativa=aplicar)
-    mallas = {o.data.name: o.data for o in bpy.data.objects
-              if o.type == "MESH" and o.name.startswith(PREFIJO)}
-    for orden, nombre in enumerate(sorted(mallas)):
-        malla = mallas[nombre]
-        print(nombre, reasignar_uv(malla, 2 * orden), "usuarios:", malla.users)
+    objetos = sorted((o for o in bpy.data.objects if o.type == "MESH" and o.name.startswith(PREFIJO)),
+                     key=lambda o: o.name)
+    previas: list = []
+    for indice, objeto in enumerate(objetos):
+        # Un pallet con malla compartida recibe su copia: así su UV es suya.
+        if objeto.data.users > 1:
+            objeto.data = objeto.data.copy()
+            objeto.data.name = "Pallet " + objeto.name.removeprefix(PREFIJO)
+        malla = objeto.data
+        print(objeto.name, reasignar_uv(malla, indice, previas), "malla:", malla.name, "usuarios:", malla.users)
         malla.update()
     print("imagen:", destino)
     if aplicar:
