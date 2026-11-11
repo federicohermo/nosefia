@@ -7,9 +7,14 @@
 extends EditorScenePostImport
 
 const VIDRIO := preload("res://src/escenas/puestos/vidrio_del_local.tres")
+## Las piezas de las jambas toman la luz de las sondas y de las luces en tiempo real, y salen más
+## claras que la pared horneada que tienen al lado: 1,6 veces en el portón y en el cuartito de
+## limpieza. Con este tinte tienen el mismo brillo.
+const TINTE_DE_LAS_PIEZAS := 0.62
 
 
 func _post_import(escena: Node) -> Object:
+	var bloques_de_las_piezas: BaseMaterial3D = null
 	for malla: MeshInstance3D in escena.find_children("*", "MeshInstance3D", true, false):
 		if str(malla.name).begins_with("puerta_heladera_"):
 			malla.gi_mode = GeometryInstance3D.GI_MODE_DYNAMIC
@@ -25,6 +30,11 @@ func _post_import(escena: Node) -> Object:
 		if str(malla.name).begins_with("deposito_esquinas_"):
 			# Los bloques que salen de las jambas sólo se ven de cerca: de lejos los cubre la textura.
 			malla.visibility_range_end = 6.0
+			# Horneadas, le dejaban a la pared la sombra de cada jamba: los texeles de la pared que
+			# la pieza tapa se hornean negros y tiñen a los de al lado. De lejos la pieza no se
+			# dibuja y la sombra quedaba sola. Dinámicas no entran al horneado. Apagar su sombra
+			# no alcanza: el horneador la ignora.
+			malla.gi_mode = GeometryInstance3D.GI_MODE_DYNAMIC
 		if str(malla.name).begins_with("local_vidrio_ventanilla"):
 			# La ventanilla es un hueco abierto. La malla queda en el modelo porque los mapas de
 			# luz ya la nombran, y sólo se esconde.
@@ -83,4 +93,14 @@ func _post_import(escena: Node) -> Object:
 						material.normal_scale = 0.8
 					elif material.resource_name == "deposito_revestimiento_bloques":
 						material.normal_scale = 1.0
+						if str(malla.name).begins_with("deposito_esquinas_"):
+							if bloques_de_las_piezas == null:
+								bloques_de_las_piezas = material.duplicate()
+								bloques_de_las_piezas.albedo_color = Color(
+									TINTE_DE_LAS_PIEZAS,
+									TINTE_DE_LAS_PIEZAS,
+									TINTE_DE_LAS_PIEZAS,
+									1.0
+								)
+							malla.set_surface_override_material(i, bloques_de_las_piezas)
 	return escena

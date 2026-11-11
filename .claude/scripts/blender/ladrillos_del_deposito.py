@@ -5,16 +5,22 @@ Va después de `texturizar_bloques_del_deposito.py`, que genera los PNG.
 Qué cambia, en el `.blend`:
 
 1. **El material `deposito_revestimiento_bloques` usa los PNG nuevos** y sus caras cambian de UV:
-   el tile cubre 2,4 m × 3,6 m (4 bloques × 12 hiladas) y no repite hacia arriba. La traba de la
-   textura es la de antes, así que las juntas dibujadas siguen donde estaban.
+   el tile cubre 2,4 m × 3,6 m (6 bloques × 18 hiladas, de 0,40 × 0,20 m) y no repite hacia
+   arriba. La traba de la textura corre un tercio de bloque por hilada.
 2. **Los vanos con borde saliente ganan bloques de esquina** (`deposito_esquinas_*`): una pieza de
-   3 cm por hilada, en traba, que sale de la pared y de la jamba. Cada pieza empieza y termina en
-   una junta de la textura, y deja entre hiladas el hueco de la junta: el mortero que se ve ahí es
-   el de la pared. La cara de cada pieza usa la misma proyección que la pared, así que de lejos
+   3 cm por hilada, en traba, que sale de la pared y de la jamba. Es un bloque de esquina: su
+   frente y su costado son la misma pieza. El frente termina en una junta de la textura, y el
+   costado termina en otra: su UV se apoya en la jamba y no en el plano de la pared. En alto, la
+   pieza deja entre hiladas el hueco de la junta pintada. La cara del frente usa la misma
+   proyección que la pared, así que muestra el mismo bloque que la pared de al lado y de lejos
    no se distingue de ella. Son los dos vanos de puerta y las dos jambas del portón.
-   Los dinteles quedan sin pieza: caen a media hilada y dejarían una cuña de 8 cm.
+   Los dinteles quedan sin pieza: la última hilada que los cruza dejaría una cuña de pocos
+   centímetros (`MINIMO_DE_LA_PIEZA`).
 3. Cada vano es **un objeto aparte**, y el nombre lo toma el importador de Godot para dibujarlo
    sólo de cerca (`visibility_range_end`).
+
+El tamaño del bloque (0,40 × 0,20 m) es de esta textura. `revestimiento_del_deposito.py` conserva
+el suyo (0,60 × 0,30 m) porque decide la altura del corte, y 12 × 0,30 m = 18 × 0,20 m = 3,6 m.
 
 Lo que cuesta: los triángulos de las piezas (el informe de la corrida los cuenta) y, de cerca, un
 dibujo por vano con material compartido. Los PNG van al mismo color de 1024 px; no hay
@@ -43,9 +49,16 @@ MAPAS = {"color": "deposito_bloques_color.png", "normal": "deposito_bloques_norm
          "rough": "deposito_bloques_rough.png"}
 PREFIJO_PIEZAS = "deposito_esquinas_"
 COBERTURA = (2.4, 3.6)
+BLOQUE_METROS = (0.4, 0.2)
+N_PX = 1024
+JUNTA_PX = 4.4
+# La junta pintada mide los mismos píxeles en los dos sentidos, pero el tile no se estira igual.
+JUNTA_H = JUNTA_PX * COBERTURA[0] / N_PX
+JUNTA_V = JUNTA_PX * COBERTURA[1] / N_PX
 SALIENTE = 0.03
-JUNTA = 0.0103
-MINIMO_DEL_BRAZO = 0.15
+MINIMO_DEL_BRAZO = 0.1
+MINIMO_DE_LA_PIEZA = 0.06
+CANTO_ADENTRO = 0.05
 
 
 def _receta():
@@ -58,8 +71,8 @@ def _receta():
 
 RECETA = _receta()
 PISO = RECETA.PISO
-ALTO_HILADA = RECETA.BLOQUE_METROS[1]
-ANCHO_BLOQUE = RECETA.BLOQUE_METROS[0]
+ALTO_HILADA = BLOQUE_METROS[1]
+ANCHO_BLOQUE = BLOQUE_METROS[0]
 
 
 def _u(p, normal, origen):
@@ -126,13 +139,17 @@ def _reproyectar(objeto, caras, limites):
             capa.data[bucle].uv = _uv(p, normal, limites[0])
 
 
+def _desfase(hilada):
+    """La u de una junta vertical de la hilada. La textura corre un tercio de bloque por hilada."""
+    return (hilada % 3) * ANCHO_BLOQUE / 3
+
+
 def _distancia_a_la_junta(u0, sentido, hilada):
     """Cuánto falta, hacia `sentido` (±1 en u), para la próxima junta vertical de la hilada.
 
-    La textura corre un tercio de bloque por hilada, con período de tres.
+    Nunca queda menos que `MINIMO_DEL_BRAZO`: si falta menos, el brazo llega a la junta siguiente.
     """
-    desfase = (hilada % 3) * ANCHO_BLOQUE / 3
-    resto = ((desfase - u0) * sentido) % ANCHO_BLOQUE
+    resto = ((_desfase(hilada) - u0) * sentido) % ANCHO_BLOQUE
     return resto if resto >= MINIMO_DEL_BRAZO else resto + ANCHO_BLOQUE
 
 
@@ -153,14 +170,18 @@ def _pieza(nombre, borde, a_w, n_w, profundidad, z_tope, limites, material, cole
     sentido = 1 if _u(centro + Vector((a_w[0], a_w[1], 0)), normal_pared, origen) > u_borde else -1
     hilada = 0
     cuenta = {"piezas": 0, "caras": 0}
-    while PISO + hilada * ALTO_HILADA < z_tope - 0.02:
-        z0 = PISO + hilada * ALTO_HILADA + JUNTA / 2
-        z1 = min(PISO + (hilada + 1) * ALTO_HILADA - JUNTA / 2, z_tope)
-        brazo = _distancia_a_la_junta(u_borde, sentido, hilada)
-        brazo = min(brazo, ANCHO_BLOQUE)
+    # La u crece hacia la derecha mirando la cara de frente, y la jamba se mira desde el vano.
+    derecha = a_w[1] * n_w[0] - a_w[0] * n_w[1]
+    while PISO + hilada * ALTO_HILADA < z_tope - MINIMO_DE_LA_PIEZA:
+        z0 = PISO + hilada * ALTO_HILADA + JUNTA_V / 2
+        z1 = min(PISO + (hilada + 1) * ALTO_HILADA - JUNTA_V / 2, z_tope)
+        junta = _distancia_a_la_junta(u_borde, sentido, hilada)
+        # El frente termina en el borde del bloque, y no en el centro de la junta pintada.
+        brazo = junta - JUNTA_H / 2
         fondo = 0.0
         if profundidad > 0:
-            fondo = min(0.2 if brazo >= 0.4 else 0.4, profundidad)
+            tercio = ANCHO_BLOQUE / 3
+            fondo = min(tercio if junta >= 2 * tercio else 2 * tercio, profundidad)
         # Perfil en (s, t): s hacia afuera del vano a lo largo de la pared, t hacia el interior.
         if profundidad > 0:
             perfil = [(brazo, 0), (0, 0), (0, -fondo), (-SALIENTE, -fondo),
@@ -194,9 +215,35 @@ def _pieza(nombre, borde, a_w, n_w, profundidad, z_tope, limites, material, cole
         for cara in caras:
             if cara in ocultas:
                 continue
+            st = {v: ((v.co.x - borde[0]) * a_w[0] + (v.co.y - borde[1]) * a_w[1],
+                            (v.co.x - borde[0]) * n_w[0] + (v.co.y - borde[1]) * n_w[1])
+                  for v in cara.verts}
+            costado = next((s0 for s0 in {round(s, 6) for s, _ in st.values()}
+                            if all(abs(s - s0) < 1e-6 for s, _ in st.values())), None)
+            canto = costado is not None and abs(cara.normal.z) < 0.5
+            es_jamba = canto and fondo > 0 and abs(costado + SALIENTE) < 1e-6
             for bucle in cara.loops:
                 p = bucle.vert.co
-                bucle[capa_uv].uv = _uv(p, cara.normal, origen)
+                v_uv = (p.z - PISO) / COBERTURA[1]
+                if es_jamba:
+                    # La jamba: el bloque de esquina da la vuelta y su costado termina en una junta.
+                    t_v = st[bucle.vert][1]
+                    u_m = _desfase(hilada) + derecha * (JUNTA_H / 2 + t_v + fondo)
+                    bucle[capa_uv].uv = (u_m / COBERTURA[0], v_uv)
+                elif canto:
+                    # El canto de una pieza toma una columna de su cara, adentro del bloque.
+                    s_ref = costado - CANTO_ADENTRO if costado > 1e-6 else CANTO_ADENTRO
+                    en_el_canto = Vector((borde[0] + a_w[0] * s_ref,
+                                          borde[1] + a_w[1] * s_ref, PISO))
+                    u_canto = _u(en_el_canto, normal_pared, origen)
+                    bucle[capa_uv].uv = (u_canto / COBERTURA[0], v_uv)
+                elif abs(cara.normal.z) > 0.5:
+                    # La cara de arriba y la de abajo toman la fila del medio del bloque.
+                    v_medio = (hilada + 0.5) * ALTO_HILADA / COBERTURA[1]
+                    bucle[capa_uv].uv = (_u(p, normal_pared, origen) / COBERTURA[0], v_medio)
+                else:
+                    # El frente de la pieza: la misma proyección que la pared de al lado.
+                    bucle[capa_uv].uv = _uv(p, normal_pared, origen)
         forma.faces.ensure_lookup_table()
         bmesh.ops.delete(forma, geom=ocultas, context="FACES_ONLY")
         cuenta["piezas"] += 1
