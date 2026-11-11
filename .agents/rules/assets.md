@@ -66,7 +66,8 @@ paths:
     textura.** La malla es la del artista, con el zócalo de acero.
     `blender/restaurar_madera_del_artista.py` la devuelve si una corrida vieja la cambió.
     `blender/listonar_frente_de_madera.py` escribe `madera_lambrin.png` con la chapa CC0 de
-    `source/textures/third-party/oak_veneer_01/`: listones de 11 cm, buña pintada, banda lisa
-    arriba y franja lisa para los cantos. También pone la UV en metros de cada cara. Va antes de
+    `source/textures/third-party/oak_veneer_01/`: listones enteros de 9 a 13 cm por tramo, con
+    una buña en cada borde de hueco y cada esquina, banda lisa arriba y abajo, y franja lisa
+    para los cantos. También pone la UV en metros de cada cara. Va antes de
     `armar_atlas.py`, `exportar_modelo.py` y `hornear.py`. Un `.blend` nuevo del artista pide
     repetirla.
