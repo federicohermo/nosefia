@@ -12,8 +12,9 @@ paredes: Godot rehace la UV del mapa de luz, así que también piden `hornear.py
 ## Por qué
 
 La pared del salón (`local_pared_pintada`) y la del baño (`bano_pared_clara`) eran un color liso.
-Una pared pintada de blanco nunca es lisa: el revoque se asoma bajo la pintura, el rodillo deja
-sus pasadas, la mugre se junta donde la gente roza y toca, y cada tanto hay un raspón. La luz del
+Una pared pintada de un local es casi lisa: la pintura tapa el revoque. Lo que se ve es una piel
+fina, las pasadas del rodillo apenas, lo que se arregló después y la mugre donde la gente roza y
+toca. La luz del
 local está horneada, así que el detalle va en el color y no en la rugosidad: la pared sigue siendo
 pintura mate.
 
@@ -33,32 +34,34 @@ pintura mate.
 La pintura sale de la geometría y de los objetos del local, nunca de un número escrito a mano
 por pared:
 
-- el revoque: la luz de una foto de revoque real (ambientCG «Plaster 002», CC0, en
-  `assets/source/textures/third-party/`), a su tamaño real. El grano que se inventaba texel por
-  texel y las pasadas del rodillo se leían como tela pixelada y se sacaron. De la foto sólo se
-  toma la luminancia: el tono lo sigue poniendo el color del material;
+- la mano de pintura: una piel de un texel, casi nada; un moteado de 3 a 10 cm que en unas
+  zonas se ve y en otras no; franjas verticales del ancho del rodillo (17 a 25 cm), cada una con
+  su carga y una línea fina donde pisa a la anterior; y nubes suaves estiradas a lo alto, como
+  en `painted_plaster_wall` de Poly Haven;
+- lo que se arregló después: retoques de otro blanco con borde de brocha, un cartel que se sacó
+  (un rectángulo más limpio con cinta en las esquinas), cinta suelta y masilla en agujeros de
+  tarugo. Es lo que se lee a dos o tres metros;
 - variación de tono a 2 o 3 metros, casi imperceptible;
 - mugre apenas al pie, cerca del zócalo, y alrededor de cada vano (puerta, ventanal);
 - raspones, golpecitos y marcas de zapato, de 1 a 4 cm, ralos y más seguidos cerca del piso;
 - en el baño: humedad al pie (menos de 50 cm), churretes bajo las piletas y salpicaduras sobre
   ellas, y el pie de los inodoros.
 
-**La pared es limpia.** De la foto queda el grano del revoque y casi nada de sus manchas
-grandes: las nubes de medio metro, el polvo del techo, las esquinas y el roce de sillas y
-mostrador hacían ver la pared sucia. La media de cada pared vuelve al tono liso de antes y el
-desvío de la pintura ronda el 10 %: con 4 % el usuario no vio ningún cambio.
+**No hay grano de revoque.** La foto de un revoque con un desvío de 10 % se leía como gotelé,
+un granulado parejo de punta a punta: 9 % en los rasgos de menos de 3 cm. La referencia de Poly
+Haven mide 2,5 % ahí y 2 % entre 3 y 10 cm. Esta pared queda en 1 % y 1 %, y en 1 a 1,5 % entre
+10 y 40 cm: lisa, pero a tres metros todavía se lee pintada. Con 0,4 % entre 3 y 10 cm era un
+plástico. La media de cada pared es el tono liso de antes.
 
 **El juego la filtra lineal** (`assets/models/importar_modelo.gd`), como el concreto del
-depósito. Con el filtro pixelado, el texel de 1 cm se leía como cuadraditos.
+depósito. Con el filtro pixelado, la piel se leía como cuadraditos.
 
 ## Lo que cuesta
 
 Una textura de 1024 px más por recinto, que hasta ahora no tenían ninguna. Sin materiales ni
 dibujos nuevos. El `.glb` pesa lo que pesan dos PNG de 1024.
 
-La foto no viaja al juego: sólo su luz, ya pintada en los PNG de arriba.
-
-Es idempotente: la UV y los PNG salen sólo de la geometría, de la foto y de las constantes, con
+Es idempotente: la UV y los PNG salen sólo de la geometría y de las constantes, con
 una semilla fija por pared.
 """
 
@@ -84,12 +87,6 @@ configurar()
 FUENTE = RAIZ / "assets/models/SEPT_JUEGOS_PROTOTIPO.blend"
 CARPETA = RAIZ / "assets/source/textures/store"
 EDIFICIO = "almacen-col"
-#: La foto del revoque: ambientCG «Plaster 002», CC0. Su licencia viaja con ella.
-REVOQUE = (
-    RAIZ / "assets/source/textures/third-party/ambientcg-plaster-002/Plaster002_1K-JPG_Color.jpg"
-)
-#: Su pirámide de niveles, que arma `main`. Se declara acá para que `_revoque` la vea.
-_REVOQUE: list[np.ndarray] = []
 
 #: El lado de la textura. Es el tope con el que viaja el color de un edificio.
 LADO = 1024
@@ -110,11 +107,24 @@ MUGRE = np.array([0.60, 0.57, 0.50], dtype=np.float32)
 HUMEDAD = np.array([0.80, 0.86, 0.86], dtype=np.float32)
 
 #: Qué tanto cuenta cada desperfecto. Es la fracción de luz que le saca al color.
-REVOQUE_DESVIO = 0.10
-#: Cuánto de la mancha grande de la foto se conserva: 1 menos esto, y a cuántos niveles de la
-#: pirámide (un nivel es el doble de ancho) empieza a contar como mancha grande.
-NUBE = 0.9
-NIVELES_DE_NUBE = 3
+#: La piel de naranja: un texel ya mide más que su grano, así que apenas rompe lo liso.
+PIEL = 0.006
+#: El moteado de 3 a 10 cm. `painted_plaster_wall` de Poly Haven mide 2 % en esa banda; esta
+#: pared es más lisa que un revoque, pero con 0,4 % no se veía nada a dos metros.
+MOTEADO = 0.026
+#: La carga de pintura de cada pasada del rodillo y la marca de su solape.
+PASADA = 0.010
+SOLAPE = 0.012
+#: Las nubes suaves de una mano de pintura, estiradas en el sentido del rodillo.
+NUBES = 0.016
+#: Un retoque es pintura más nueva: más blanca y más fría que la de alrededor.
+RETOQUE = 0.030
+#: Lo que tapó un cartel quedó más limpio que el resto.
+CARTEL = 0.018
+#: La cinta deja un rectángulo de adhesivo con mugre pegada.
+CINTA = 0.07
+#: La masilla de un agujero de tarugo, más blanca y sin pintar encima.
+MASILLA = 0.045
 TONO_GRIS = 0.008
 TONO_CALIDO = 0.005
 PIE = 0.05
@@ -433,72 +443,102 @@ class Lienzo:
         self.tinte *= 1.0 - cantidad * _reparto(color)
 
 
-def _luminancia_del_revoque() -> np.ndarray:
-    """La luz relativa de la foto del revoque: media 1, desvío 1 menos uno. Lado `LADO_REVOQUE`.
+def _mancha(s, t, centro_s, centro_t, medio_s, medio_t, borde, irregular, radio=0.0):
+    """Un rectángulo de esquinas redondas, de 1 adentro a 0 afuera, con el borde de una brocha.
 
-    Sólo se usa la luminancia: el tono de la pared lo sigue poniendo el color del material.
+    `borde` es el ancho del pasaje, en metros; `irregular` corre el borde unos centímetros.
     """
-    imagen = bpy.data.images.load(str(REVOQUE), check_existing=False)
-    imagen.colorspace_settings.name = "Non-Color"
-    ancho, alto = imagen.size
-    crudo = np.empty(ancho * alto * 4, dtype=np.float32)
-    imagen.pixels.foreach_get(crudo)
-    bpy.data.images.remove(imagen)
-    rgb = crudo.reshape(alto, ancho, 4)[..., :3]
-    lineal = np.where(rgb <= 0.04045, rgb / 12.92, ((rgb + 0.055) / 1.055) ** 2.4)
-    luz = lineal @ np.array([0.2126, 0.7152, 0.0722], dtype=np.float32)
-    return luz / luz.mean() - 1.0
+    ds = np.abs(s - centro_s) - (medio_s - radio)
+    dt = np.abs(t - centro_t) - (medio_t - radio)
+    afuera = np.hypot(np.maximum(ds, 0.0), np.maximum(dt, 0.0)) + np.minimum(np.maximum(ds, dt), 0)
+    return 1.0 - _suave(-borde, borde, afuera - radio + irregular)
 
 
-def _piramide(luz: np.ndarray) -> list[np.ndarray]:
-    """La foto y sus mitades, promediadas de a 2x2: cada nivel mide la mitad del anterior."""
-    niveles = [luz]
-    while niveles[-1].shape[0] > 16:
-        a = niveles[-1]
-        niveles.append(0.25 * (a[0::2, 0::2] + a[1::2, 0::2] + a[0::2, 1::2] + a[1::2, 1::2]))
-    return niveles
+def _pintura(lienzo: Lienzo, pared: Pared, semilla: int, capa: int) -> None:
+    """La mano de pintura: casi lisa, con lo que deja el rodillo y nada del revoque de abajo.
 
-
-def _leer_bilineal(imagen: np.ndarray, u: np.ndarray, v: np.ndarray) -> np.ndarray:
-    """La imagen en `(u, v)` con `u` y `v` en vueltas de la imagen. Se repite en los bordes."""
-    alto, ancho = imagen.shape
-    x, y = u * ancho - 0.5, v * alto - 0.5
-    x0, y0 = np.floor(x), np.floor(y)
-    fx, fy = x - x0, y - y0
-    x0, y0 = x0.astype(np.int64) % ancho, y0.astype(np.int64) % alto
-    x1, y1 = (x0 + 1) % ancho, (y0 + 1) % alto
-    arriba = imagen[y0, x0] * (1 - fx) + imagen[y0, x1] * fx
-    abajo = imagen[y1, x0] * (1 - fx) + imagen[y1, x1] * fx
-    return arriba * (1 - fy) + abajo * fy
-
-
-def _revoque(lienzo: Lienzo, densidad: int, semilla: int) -> None:
-    """La luz del revoque pintado: la foto de un revoque real, a su tamaño real.
-
-    Tres copias de la misma foto con tamaños que no se dividen entre sí (1,4, 2,0 y 2,9 m),
-    giradas o espejadas y corridas al azar. Con un período solo, la trama se repetiría cada
-    metro y medio. Con tres, la distancia hasta que dos copias vuelvan a coincidir pasa de
-    cualquier pared. Cada copia se toma del nivel de la pirámide cuyo texel no es menor que el
-    de la pared: así no hay grano más fino que el texel, que es lo que daba la tela.
+    La pintura tapa el revoque. A un metro se ve una piel muy fina y las pasadas del rodillo,
+    apenas; a dos o tres metros, sólo nubes suaves en el sentido de las pasadas.
     """
-    azar = np.random.default_rng(semilla)
-    capas = (
-        (1.4, lambda u, v: (u, v)),
-        (2.0, lambda u, v: (v, 1.0 - u)),
-        (2.9, lambda u, v: (1.0 - u, v)),
-    )
-    suma = np.zeros(lienzo.s.shape, dtype=np.float32)
-    for lado, orientar in capas:
-        texeles = _REVOQUE[0].shape[0] / (lado * densidad)
-        nivel = min(max(int(np.floor(np.log2(texeles))), 0), len(_REVOQUE) - 1)
-        corrimiento = azar.random(2)
-        u, v = orientar(lienzo.s / lado + corrimiento[0], lienzo.t / lado + corrimiento[1])
-        # Las manchas grandes de la foto casi se borran: una pared pintada se lee por el
-        # grano del revoque, no por nubes de medio metro, que la hacen ver sucia.
-        grueso = _REVOQUE[min(nivel + NIVELES_DE_NUBE, len(_REVOQUE) - 1)]
-        suma += _leer_bilineal(_REVOQUE[nivel], u, v) - NUBE * _leer_bilineal(grueso, u, v)
-    suma /= np.sqrt(3.0)
-    lienzo.aclarar_u_oscurecer(REVOQUE_DESVIO * suma / max(float(suma.std()), 1e-6))
+    s, t = lienzo.s, lienzo.t
+    azar = np.random.default_rng(semilla + 1)
+    # La piel de naranja: un texel de ruido, apenas, para que la pared no sea un plástico.
+    lienzo.aclarar_u_oscurecer(PIEL * azar.standard_normal(s.shape).astype(np.float32))
+    # Las pasadas: franjas verticales del ancho del rodillo, cada una con su carga de pintura,
+    # y una línea donde una pisa a la anterior. El pintor no va derecho: el borde ondula.
+    borde = pared.s0 - 0.3
+    variacion = 0.6 + 0.4 * ruido(s, t, 0.3, 1.2, 2, semilla + 3, capa)
+    ondula = 0.025 * ruido(s, t, 1.0, 0.8, 2, semilla + 2, capa)
+    while borde < pared.s1 + 0.3:
+        ancho = azar.uniform(0.17, 0.25)
+        adentro = (s + ondula >= borde) & (s + ondula < borde + ancho)
+        carga = PASADA * azar.standard_normal() * variacion
+        lienzo.aclarar_u_oscurecer(np.where(adentro, carga, 0.0))
+        solape = np.exp(-(((s + ondula - borde) / 0.012) ** 2))
+        lienzo.ensuciar(SOLAPE * azar.uniform(0.4, 1.0) * solape, np.array([0.9, 0.9, 0.9]))
+        borde += ancho
+    # El moteado: manchitas de 3 a 10 cm donde la pintura cubrió distinto. No es parejo: en una
+    # zona casi no se ve y en otra sí, como en la referencia.
+    zonas = 0.35 + 0.65 * _suave(-0.8, 0.8, ruido(s, t, 0.8, 0.8, 2, semilla + 5, capa))
+    lienzo.aclarar_u_oscurecer(MOTEADO * zonas * ruido(s, t, 0.06, 0.08, 3, semilla + 14, capa))
+    # Las nubes de la mano de pintura, estiradas a lo alto como en la referencia.
+    lienzo.aclarar_u_oscurecer(NUBES * ruido(s, t, 0.35, 1.1, 3, semilla + 4, capa))
+
+
+def _retoques(lienzo: Lienzo, pared: Pared, azar, semilla: int, capa: int) -> int:
+    """Lo que se arregló después: retoques, carteles que se sacaron, cinta y agujeros tapados.
+
+    Se ven a dos o tres metros, como en un local de verdad: un parche de otro blanco, un
+    rectángulo más limpio con su cinta en las esquinas, un poco de masilla sin pintar.
+    """
+    s, t = lienzo.s, lienzo.t
+    largo = pared.s1 - pared.s0
+    hechos = 0
+    # Retoques: pintura más nueva, más blanca y más fría, con el borde de la brocha.
+    for _ in range(1 + azar.poisson(largo / 4.0)):
+        cs, ct = azar.uniform(pared.s0 + 0.3, pared.s1 - 0.3), azar.uniform(0.5, 2.1)
+        medio_s, medio_t = azar.uniform(0.10, 0.28), azar.uniform(0.08, 0.22)
+        irregular = 0.015 * ruido(s, t, 0.05, 0.05, 2, semilla + 50 + hechos, capa)
+        radio = 0.6 * min(medio_s, medio_t)
+        mascara = _mancha(s, t, cs, ct, medio_s, medio_t, 0.025, irregular, radio)
+        trazos = 0.85 + 0.15 * ruido(s, t, 0.04, 0.25, 2, semilla + 60 + hechos, capa)
+        nivel = RETOQUE * azar.uniform(0.7, 1.2) * mascara * trazos
+        lienzo.aclarar_u_oscurecer(nivel)
+        lienzo.tinte[..., 2] *= 1.0 + 0.2 * nivel
+        hechos += 1
+    # Un cartel que se sacó: un rectángulo más limpio y cinta vieja en sus esquinas.
+    if azar.random() < 0.6:
+        ancho, alto = azar.uniform(0.30, 0.45), azar.uniform(0.40, 0.60)
+        cs = azar.uniform(pared.s0 + ancho, pared.s1 - ancho)
+        ct = azar.uniform(1.35, 1.75)
+        limpio = _mancha(s, t, cs, ct, ancho / 2, alto / 2, 0.004, 0.0)
+        lienzo.aclarar_u_oscurecer(CARTEL * limpio)
+        for es in (-1, 1):
+            for et in (-1, 1):
+                if azar.random() < 0.8:
+                    _cinta(lienzo, cs + es * ancho / 2, ct + et * alto / 2, azar)
+        hechos += 1
+    # Cinta suelta que quedó de algún aviso.
+    for _ in range(azar.poisson(largo / 5.0)):
+        _cinta(lienzo, azar.uniform(pared.s0 + 0.2, pared.s1 - 0.2), azar.uniform(1.0, 1.9), azar)
+        hechos += 1
+    # Agujeros de tarugo tapados con masilla: un círculo más blanco, y a veces el agujero.
+    for _ in range(azar.poisson(largo / 3.0)):
+        cs, ct = azar.uniform(pared.s0 + 0.1, pared.s1 - 0.1), azar.uniform(0.9, 2.3)
+        radio = azar.uniform(0.012, 0.025)
+        _trazo(lienzo, (cs, ct), (cs + radio * 0.6, ct + radio * 0.3), radio, -MASILLA)
+        if azar.random() < 0.3:
+            _trazo(lienzo, (cs, ct), (cs, ct), 0.006, 0.25)
+        hechos += 1
+    return hechos
+
+
+def _cinta(lienzo: Lienzo, cs: float, ct: float, azar) -> None:
+    """Un pedazo de cinta de 5 por 2,5 cm: el adhesivo juntó mugre y el borde arrancó pintura."""
+    angulo = azar.uniform(-0.8, 0.8)
+    largo = azar.uniform(0.04, 0.06) / 2
+    ds, dt = largo * np.cos(angulo), largo * np.sin(angulo)
+    _trazo(lienzo, (cs - ds, ct - dt), (cs + ds, ct + dt), 0.025, CINTA * azar.uniform(0.6, 1.0))
 
 
 def _tono(lienzo: Lienzo, semilla: int, capa: int) -> None:
@@ -668,13 +708,14 @@ def pintar(recinto: Recinto, pared: Pared, indice: int, densidad: int, base: np.
     vano = np.pad(~cubierto, COLCHON, mode="edge")
     distancia = distancia_en_texeles(vano)
 
-    _revoque(lienzo, densidad, semilla)
+    _pintura(lienzo, pared, semilla, indice)
     _tono(lienzo, semilla, indice)
     _suciedad_general(lienzo, semilla, indice, densidad, distancia)
     _muebles(lienzo, pared, semilla, indice)
     if recinto.humedad:
         _humedad(lienzo, semilla, indice)
     hechas = _marcas(lienzo, pared, recinto, azar)
+    hechas += _retoques(lienzo, pared, azar, semilla, indice)
 
     color = lienzo.luz[..., None] * lienzo.tinte
     # Sobre el vano no hay pared: no cuenta para la media.
@@ -790,7 +831,6 @@ def main() -> None:
     argumentos = sys.argv[sys.argv.index("--") + 1 :] if "--" in sys.argv else []
     guardar = "--aplicar" in argumentos
     destino = CARPETA if guardar else Path(tempfile.mkdtemp(prefix="paredes_pintadas_"))
-    _REVOQUE[:] = _piramide(_luminancia_del_revoque())
     for recinto in RECINTOS:
         print(aplicar(recinto, destino))
     if guardar:
