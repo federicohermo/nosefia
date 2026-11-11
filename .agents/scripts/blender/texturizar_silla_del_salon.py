@@ -95,6 +95,8 @@ def mezclar(color: np.ndarray, tono: np.ndarray, cuanto: np.ndarray) -> np.ndarr
     return color + (tono[None, None, :] - color) * np.clip(cuanto, 0.0, 1.0)[..., None]
 
 
+#: El usuario pidió el uso sutil: con los valores anteriores la mugre del pliegue y los rayones
+#: se leían enormes. Los rayones miden de 1 a 3 cm y el pliegue es una línea fina.
 def pintar(dentro: np.ndarray) -> np.ndarray:
     pliegue = fraccion_del_pliegue()
     filas = np.arange(LADO, dtype=np.float32)[:, None] / (LADO - 1)
@@ -118,33 +120,33 @@ def pintar(dentro: np.ndarray) -> np.ndarray:
     color *= (1.0 + (nubes - 0.5) * 0.12)[..., None]
 
     # Polvo en parches anchos, más en lo que se usa.
-    polvo = suave(0.45, 0.68, manchas) * (0.10 + 0.32 * uso) + abajo * 0.10
+    polvo = suave(0.45, 0.68, manchas) * (0.06 + 0.14 * uso) + abajo * 0.06
     color = mezclar(color, POLVO, polvo)
 
     # El pliegue entre asiento y respaldo junta mugre, con vetas hacia los lados.
-    banda = np.exp(-(((v - pliegue) / 0.045) ** 2))
+    banda = np.exp(-(((v - pliegue) / 0.022) ** 2))
     pegado = banda * (0.55 + 0.9 * (vetas - 0.5)) * (0.55 + 0.45 * suave(0.25, 0.75, vetas))
-    color = mezclar(color, MUGRE, pegado * 0.95)
+    color = mezclar(color, MUGRE, pegado * 0.30)
 
     # El borde de abajo guarda mugre; el de arriba se pule.
-    color = mezclar(color, MUGRE, abajo * cerca * 0.30 * (0.6 + 0.8 * vetas))
+    color = mezclar(color, MUGRE, abajo * cerca * 0.12 * (0.6 + 0.8 * vetas))
     roce = (1 - abajo) * np.clip(cerca * 1.5 - 0.15, 0.0, 1.0) * dentro
-    color = mezclar(color, LIMPIO, roce * 0.65)
+    color = mezclar(color, LIMPIO, roce * 0.35)
 
     # Rayones largos y roces cortos, donde se usa.
     mapa = 0.18 + 0.82 * np.maximum(uso, banda)
-    largos = rayones(LADO, LADO, 300, 80, 21, grosor=2, peso=mapa)
-    cortos = rayones(LADO, LADO, 240, 20, 22, grosor=3, peso=mapa)
-    color = mezclar(color, GRIS_DEL_ROCE, largos * 0.62)
-    color = mezclar(color, GRIS_DEL_ROCE, cortos * 0.45)
-    claros = rayones(LADO, LADO, 130, 50, 23, grosor=2, peso=1 - abajo * 0.5)
-    color = mezclar(color, LIMPIO, claros * 0.55)
+    largos = rayones(LADO, LADO, 160, 28, 21, grosor=1, peso=mapa)
+    cortos = rayones(LADO, LADO, 140, 8, 22, grosor=1, peso=mapa)
+    color = mezclar(color, GRIS_DEL_ROCE, largos * 0.22)
+    color = mezclar(color, GRIS_DEL_ROCE, cortos * 0.18)
+    claros = rayones(LADO, LADO, 80, 20, 23, grosor=1, peso=1 - abajo * 0.5)
+    color = mezclar(color, LIMPIO, claros * 0.20)
 
     # Puntos de suciedad finos y picado del borde.
     puntos = suave(0.74, 0.86, polvo_fino) * (0.25 + 0.75 * np.maximum(uso, cerca))
-    color = mezclar(color, MUGRE, puntos * 0.40)
+    color = mezclar(color, MUGRE, puntos * 0.18)
     picado = cerca**2 * suave(0.62, 0.74, polvo_fino)
-    color = mezclar(color, MUGRE, picado * 0.35)
+    color = mezclar(color, MUGRE, picado * 0.08)
     return color
 
 
