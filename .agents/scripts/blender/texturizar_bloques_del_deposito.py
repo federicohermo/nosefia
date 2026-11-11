@@ -7,7 +7,7 @@ relieve casi no se ve. El detalle tiene que viajar en el color.
 
 Qué cambia: genera tres PNG en `assets/source/textures/warehouse/final/`:
 `deposito_bloques_color.png`, `deposito_bloques_normal.png` y `deposito_bloques_rough.png`.
-Cada uno cubre 2,4 m de ancho (4 bloques) y 3,6 m de alto (12 hiladas): la altura entera del
+Cada uno cubre 2,4 m de ancho (6 bloques) y 3,6 m de alto (18 hiladas): la altura entera del
 revestimiento, sin repetición vertical. Por eso la humedad que sube del piso vive en el tile, y no pasa de los 50 cm.
 Cada bloque toma su cara de una de las 27 del tile original (la misma piedra, con sus poros y
 sus chorreaduras), con otro tono, bordes redondeados con luz arriba y sombra abajo, desportillados
@@ -43,9 +43,9 @@ NOMBRES = {
 }
 
 N = 1024
-COLUMNAS, HILADAS = 4, 12
+COLUMNAS, HILADAS = 6, 18
 ANCHO, ALTO = N / COLUMNAS, N / HILADAS
-BLOQUE_METROS = (0.6, 0.3)
+BLOQUE_METROS = (0.4, 0.2)
 PX_POR_METRO = ANCHO / BLOQUE_METROS[0]
 JUNTA = 4.4
 REDONDEO = 3.4
@@ -145,7 +145,8 @@ def generar(origen):
     junta = suave(JUNTA / 2 - borde, -0.7, 0.7)
 
     # Cada bloque toma una cara, un tono y un desgaste propios.
-    orden = rng.permutation(len(caras) * 2) % len(caras)
+    vueltas = -(-HILADAS * COLUMNAS // len(caras))
+    orden = np.concatenate([rng.permutation(len(caras)) for _ in range(vueltas)])
     cara_color = np.zeros((N, N, 3))
     tono = np.ones((N, N))
     matiz = np.zeros((N, N))
@@ -159,7 +160,10 @@ def generar(origen):
             u = u_total[m]
             if rng.random() < 0.5:
                 u = 1 - u
-            cara_color[m] = muestrear(caras[k], u, v_total[m])
+            # El bloque del origen mide 0,60 x 0,30: el de 0,40 x 0,20 toma una ventana de 2/3, así
+            # los poros y los desportillados conservan su tamaño real.
+            du, dv = rng.uniform(0, 1 / 3), rng.uniform(0, 1 / 3)
+            cara_color[m] = muestrear(caras[k], du + u * 2 / 3, dv + v_total[m] * 2 / 3)
             t = np.exp(rng.normal(0, 0.085))
             if rng.random() < 0.12:
                 t *= 1 + rng.choice([-1, 1]) * rng.uniform(0.12, 0.2)

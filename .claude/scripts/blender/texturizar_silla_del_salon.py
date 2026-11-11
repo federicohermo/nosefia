@@ -95,8 +95,8 @@ def mezclar(color: np.ndarray, tono: np.ndarray, cuanto: np.ndarray) -> np.ndarr
     return color + (tono[None, None, :] - color) * np.clip(cuanto, 0.0, 1.0)[..., None]
 
 
-#: El usuario pidió el uso sutil: con los valores anteriores la mugre del pliegue y los rayones
-#: se leían enormes. Los rayones miden de 1 a 3 cm y el pliegue es una línea fina.
+#: El usuario pidió detalle, no suciedad: la silla se lee limpia. Lo que queda son rayones finos de
+#: 1 a 3 cm, el canto pulido por el roce y apenas una línea en el pliegue.
 def pintar(dentro: np.ndarray) -> np.ndarray:
     pliegue = fraccion_del_pliegue()
     filas = np.arange(LADO, dtype=np.float32)[:, None] / (LADO - 1)
@@ -117,19 +117,19 @@ def pintar(dentro: np.ndarray) -> np.ndarray:
     polvo_fino = ruido(LADO, LADO, 3, 14, octavas=2)
 
     color = np.broadcast_to(BASE, (LADO, LADO, 3)).copy()
-    color *= (1.0 + (nubes - 0.5) * 0.12)[..., None]
+    color *= (1.0 + (nubes - 0.5) * 0.06)[..., None]
 
     # Polvo en parches anchos, más en lo que se usa.
-    polvo = suave(0.45, 0.68, manchas) * (0.06 + 0.14 * uso) + abajo * 0.06
+    polvo = suave(0.45, 0.68, manchas) * (0.02 + 0.04 * uso) + abajo * 0.03
     color = mezclar(color, POLVO, polvo)
 
     # El pliegue entre asiento y respaldo junta mugre, con vetas hacia los lados.
     banda = np.exp(-(((v - pliegue) / 0.022) ** 2))
     pegado = banda * (0.55 + 0.9 * (vetas - 0.5)) * (0.55 + 0.45 * suave(0.25, 0.75, vetas))
-    color = mezclar(color, MUGRE, pegado * 0.30)
+    color = mezclar(color, MUGRE, pegado * 0.10)
 
     # El borde de abajo guarda mugre; el de arriba se pule.
-    color = mezclar(color, MUGRE, abajo * cerca * 0.12 * (0.6 + 0.8 * vetas))
+    color = mezclar(color, MUGRE, abajo * cerca * 0.05 * (0.6 + 0.8 * vetas))
     roce = (1 - abajo) * np.clip(cerca * 1.5 - 0.15, 0.0, 1.0) * dentro
     color = mezclar(color, LIMPIO, roce * 0.35)
 
@@ -144,9 +144,9 @@ def pintar(dentro: np.ndarray) -> np.ndarray:
 
     # Puntos de suciedad finos y picado del borde.
     puntos = suave(0.74, 0.86, polvo_fino) * (0.25 + 0.75 * np.maximum(uso, cerca))
-    color = mezclar(color, MUGRE, puntos * 0.18)
+    color = mezclar(color, MUGRE, puntos * 0.05)
     picado = cerca**2 * suave(0.62, 0.74, polvo_fino)
-    color = mezclar(color, MUGRE, picado * 0.08)
+    color = mezclar(color, MUGRE, picado * 0.03)
     return color
 
 

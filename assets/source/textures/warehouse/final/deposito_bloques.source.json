@@ -6,8 +6,8 @@
   "generator": ".claude/scripts/blender/texturizar_bloques_del_deposito.py",
   "operation": "27 caras del original, un tono y un desgaste por bloque, juntas hundidas, humedad al pie; normal y rugosidad del mismo mapa de alturas",
   "cobertura_metros": [
-    2.4,
-    3.5999999999999996
+    2.4000000000000004,
+    3.6
   ],
   "size": [
     1024,
@@ -16,15 +16,15 @@
   "files": {
     "color": {
       "file": "deposito_bloques_color.png",
-      "sha256": "4aa849f58ab91a0e7ab4a04545f36e4ad65fddffd68b1e532d781ba7b17b3cb3"
+      "sha256": "23ecdf603762ad2eef7bf9b6633193862a82b71785d3f4da3451552a7e28d6ff"
     },
     "normal": {
       "file": "deposito_bloques_normal.png",
-      "sha256": "2d80de10b4612eba8690f227dd2000db574367d4c7bc55b44d2a36b9a9b29249"
+      "sha256": "81fdd447ded512e7694c44f10cd48acd3014afe3d0ac1350e4125d24695fe304"
     },
     "rough": {
       "file": "deposito_bloques_rough.png",
-      "sha256": "96a4b02c0ad2c7153212edf2c4d2ba8be515026b76fd17fe80167be01ce2a338"
+      "sha256": "78e82c7afd41eb1cf483add76d23afcf0e48acd8199539373aa2817f57ac832c"
     }
   }
 }
