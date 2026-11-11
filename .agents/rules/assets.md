@@ -54,3 +54,10 @@ paths:
    `texturizar_rejilla_bano.py`. Después hubo ajustes a mano del riel y las cabinas que ningún
    script reproduce. Un `.blend` del artista que entre como base nueva pide repetirlos en ese
    orden y rehacer esos ajustes.
+
+9. **Los metales llevan detalle pintado desde su malla.** `blender/metal_con_detalle.py` le da
+   manchas de agua, rayones, mugre y satinado gastado al acero del baño, la base de las mesas y
+   el acero del mostrador. Cambia la UV de esas caras y escribe un color y un mapa ORM por
+   conjunto en `source/textures/metal/`. No suma mallas ni dibujos. Es una edición de un solo
+   paso: va antes de `armar_atlas.py` y `exportar_modelo.py`, y cambia la UV de lightmap, así
+   que pide `hornear.py` y `hornear.py --sin-luz`. Un `.blend` nuevo del artista pide repetirla.
