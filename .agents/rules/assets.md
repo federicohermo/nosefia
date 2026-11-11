@@ -62,10 +62,10 @@ paths:
    paso: va antes de `armar_atlas.py` y `exportar_modelo.py`, y cambia la UV de lightmap, así
    que pide `hornear.py` y `hornear.py --sin-luz`. Un `.blend` nuevo del artista pide repetirla.
 
-10. **El frente de madera del mostrador, de su compuerta y del friso es de listones con buñas.**
-    `blender/quitar_molduras_del_friso.py` borra los marcos en relieve del friso, y después
-    `blender/listonar_frente_de_madera.py` rehace el frente en geometría: zócalo retirado, riel de
-    aluminio, listones con buñas en V y una banda de sombra bajo la losa. También escribe
-    `madera_lambrin.png`, con cinco columnas de la chapa CC0 de
-    `source/textures/third-party/oak_veneer_01/`. Son ediciones de un solo paso, en ese orden,
-    antes de `exportar_modelo.py` y `hornear.py`. Un `.blend` nuevo del artista pide repetirlas.
+10. **El frente de madera del mostrador y de su compuerta es de listones finos, y el friso es
+    enchapado liso.** `blender/listonar_frente_de_madera.py` rehace el frente en geometría:
+    zócalo claro retirado, listones de 3,5 cm con una ranura de 1 cm, banda lisa bajo la losa y
+    cantos lisos. El friso sólo cambia la UV: veta horizontal en las caras anchas. También escribe
+    `madera_lambrin.png` con la chapa CC0 de
+    `source/textures/third-party/european_walnut_veneer_04/`. Es una edición de un solo paso,
+    antes de `exportar_modelo.py` y `hornear.py`. Un `.blend` nuevo del artista pide repetirla.

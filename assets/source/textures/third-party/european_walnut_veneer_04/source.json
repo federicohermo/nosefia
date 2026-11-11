@@ -1,0 +1,22 @@
+{
+  "title": "European Walnut Veneer 04",
+  "author": "Jenelle van Heerden (Poly Haven)",
+  "source_url": "https://polyhaven.com/a/european_walnut_veneer_04",
+  "download_url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/european_walnut_veneer_04/european_walnut_veneer_04_diff_1k.jpg",
+  "license": "CC0-1.0",
+  "license_url": "https://polyhaven.com/license",
+  "license_legalcode_url": "https://creativecommons.org/publicdomain/zero/1.0/legalcode",
+  "downloaded_on": "2026-11-11",
+  "creation_method": "Textura PBR de Poly Haven",
+  "uso": "Veta del frente de listones del mostrador, de su compuerta y del enchapado del friso (listonar_frente_de_madera.py). Se rota para llevar la veta en vertical y se reentona al color de la referencia.",
+  "files": [
+    {
+      "file": "european_walnut_veneer_04_diff_1k.jpg",
+      "size": [
+        1024,
+        1024
+      ],
+      "sha256": "7550a170633834ca97776504b997031bcc4b0ac32f4729293fcc43c9b8c53fff"
+    }
+  ]
+}
