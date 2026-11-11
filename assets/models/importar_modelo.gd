@@ -69,6 +69,10 @@ func _post_import(escena: Node) -> Object:
 					# que refleja los paneles del techo.
 					material.roughness = 0.1
 					material.metallic_specular = 0.8
+				if material.resource_name == "MOSTRADOR | Acero satinado":
+					# El zócalo refleja el piso y el salón desde la sonda: la rugosidad del mapa
+					# ORM baja a la mitad.
+					material.roughness = 0.5
 				if material.resource_name == "local_vidrio":
 					# Una sola cara por paño evita superponer transparencias y sombras opacas.
 					material.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
