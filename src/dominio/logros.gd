@@ -99,6 +99,18 @@ static func y_se_marcho(
 	return habitacion == ReglasDelCierre.Habitacion.AFUERA and not sostenido and not eximido
 
 
+## Todo ganado: cada logro, cada final y cada pista del caso. Es una instancia aparte, para mostrar.
+static func completos(caso: CasoDeInvestigacion) -> Logros:
+	var todos := Logros.new()
+	for logro: Logro in Logro.values():
+		todos.desbloquear(logro)
+	for final: Partida.Final in finales():
+		todos.alcanzar_final(final)
+	for pista: Pista in caso.pistas:
+		todos.descubrir_pista(pista.identidad)
+	return todos
+
+
 ## Devuelve si lo ganó ahora: `false` si ya lo tenía.
 func desbloquear(logro: Logro) -> bool:
 	if _logros.has(logro):

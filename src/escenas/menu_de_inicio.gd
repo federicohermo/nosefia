@@ -85,13 +85,15 @@ func _ready() -> void:
 		func(_nuevas: Preferencias) -> void: _copia_con_las_preferencias = false
 	)
 	_configuraciones.cerrada.connect(_al_cerrar_las_configuraciones)
-	_logros_pantalla.preparar(ArchivoDeLogros.new().cargar(), CasoDeInvestigacion.de_la_partida())
+	var caso := CasoDeInvestigacion.de_la_partida()
+	var prueba := PartidaDePrueba.desde_busqueda(ArranqueDePrueba.busqueda_de_la_pagina())
+	_logros_pantalla.preparar(
+		ArranqueDePrueba.logros_a_mostrar(prueba, ArchivoDeLogros.new().cargar(), caso), caso
+	)
 	_logros_pantalla.cerrada.connect(_al_cerrar_los_logros)
 	_sonar_el_tema()
 	# Antes de preguntar si hay guardado: la partida de prueba de la URL lo reemplaza.
-	ArranqueDePrueba.escribir_el_guardado(
-		PartidaDePrueba.desde_busqueda(ArranqueDePrueba.busqueda_de_la_pagina()), _guardado
-	)
+	ArranqueDePrueba.escribir_el_guardado(prueba, _guardado)
 	var menu := MenuDeInicio.new(OS.has_feature("web"), _guardado.hay_guardado())
 	_pedidos.preparar(menu, _guardado)
 	for opcion: MenuDeInicio.Opcion in menu.opciones():
@@ -159,15 +161,19 @@ func _process(delta: float) -> void:
 		_pantalla.pintar(_parte_de_la_lectura * clampf(leido, 0.0, 1.0))
 		_pantalla.contar_lectura(_carga.progreso())
 	_espera.avanzar(delta)
-	if _calentamiento_en_el_menu == null and _copia != null and _sirve_la_copia():
+	var camino := _camino_de_la_entrada()
+	if _calentamiento_en_el_menu == null and camino != EntradaAlAlmacen.Camino.CALENTAR_UN_ALMACEN:
 		_pantalla.pintar(_espera.avance() * (1.0 - _parte_de_la_lectura) + _parte_de_la_lectura)
 	if _espera.puede_entrar() and _calentamiento_en_el_menu == null:
 		_espera = null
-		if _copia != null and _sirve_la_copia():
-			_entrar_con_la_copia()
-		else:
-			_descartar_la_copia()
-			_calentar_el_almacen()
+		match camino:
+			EntradaAlAlmacen.Camino.LA_COPIA:
+				_entrar_con_la_copia()
+			EntradaAlAlmacen.Camino.UN_ALMACEN_NUEVO:
+				_entrar_con_un_almacen_nuevo()
+			_:
+				_descartar_la_copia()
+				_calentar_el_almacen()
 
 
 ## Esc la cierra sola; el foco vuelve al botón que la abrió.
@@ -319,8 +325,10 @@ func _al_calentar_debajo_del_menu() -> void:
 	print("[carga] almacén calentado debajo del menú")
 
 
-func _sirve_la_copia() -> bool:
-	return _copia_con_las_preferencias and not (_nuevo_juego and _copia_leyo_un_guardado)
+func _camino_de_la_entrada() -> EntradaAlAlmacen.Camino:
+	return EntradaAlAlmacen.de(
+		_copia != null, _copia_con_las_preferencias, _nuevo_juego, _copia_leyo_un_guardado
+	)
 
 
 func _entrar_con_la_copia() -> void:
@@ -335,6 +343,21 @@ func _entrar_con_la_copia() -> void:
 		await get_tree().process_frame
 	await get_tree().process_frame
 	_llenar_y_entrar(_copia)
+
+
+## La copia leyó el guardado que «Nuevo juego» borró. Un almacén nuevo lee la partida nueva, y sus
+## shaders ya están compilados: se lo arma detenido y se llena la barra, sin calentarlo.
+func _entrar_con_un_almacen_nuevo() -> void:
+	set_process(false)
+	_llenar_y_entrar(_instanciar_un_almacen_nuevo())
+
+
+func _instanciar_un_almacen_nuevo() -> Node:
+	_descartar_la_copia()
+	var almacen := _almacen.instantiate()
+	get_tree().root.add_child(almacen)
+	almacen.process_mode = Node.PROCESS_MODE_DISABLED
+	return almacen
 
 
 func _descartar_la_copia() -> void:

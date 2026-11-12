@@ -188,3 +188,14 @@ func test_un_final_desconocido_en_el_archivo_se_ignora() -> void:  # AC-ACH-011
 	var leidos := Logros.desde(datos)
 	assert_bool(leidos.final_alcanzado(F.DESPEDIDO)).is_true()
 	assert_bool(leidos.final_alcanzado(F.EN_CURSO)).is_false()
+
+
+func test_completos_tiene_todo_ganado() -> void:
+	var caso := CasoDeInvestigacion.de_la_partida()
+	var logros := Logros.completos(caso)
+	for logro: Logros.Logro in Logros.Logro.values():
+		assert_bool(logros.desbloqueado(logro)).is_true()
+	for final: Partida.Final in Logros.finales():
+		assert_bool(logros.final_alcanzado(final)).is_true()
+	for pista: Pista in caso.pistas:
+		assert_bool(logros.pista_descubierta(pista.identidad)).is_true()

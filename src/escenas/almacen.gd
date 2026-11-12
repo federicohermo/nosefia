@@ -185,6 +185,9 @@ func _ready() -> void:
 	azar_de_la_apertura.randomize()
 	_arranque_de_prueba = ArranqueDePrueba.new()
 	add_child(_arranque_de_prueba)
+	var aviso_al_salir := AvisoAlSalir.new()
+	aviso_al_salir.vigilar(_reloj)
+	add_child(aviso_al_salir)
 	# La lista de la escena no la nombra: `almacen.tscn` no se mergea y no se toca a mano.
 	_puertas.append($Estructura/puerta_limpieza/CuerpoDeLaHoja)
 	_puertas.append($Estructura/compuerta_mostrador/CuerpoDeLaHoja)
@@ -482,7 +485,8 @@ func _cablear_las_preferencias(pausa: ControlDePausa) -> void:
 func _cablear_los_logros(pausa: ControlDePausa) -> void:
 	var menu: MenuDePausa = get_node("Interfaz/MenuDePausa")
 	var pantalla := menu.pantalla_de_logros()
-	pantalla.preparar(_logros, CasoDeInvestigacion.de_la_partida())
+	var caso := CasoDeInvestigacion.de_la_partida()
+	pantalla.preparar(ArranqueDePrueba.logros_a_mostrar(_prueba, _logros, caso), caso)
 	pausa.logros = pantalla
 	pausa.cierre_de_logros_pedido.connect(menu.cerrar_logros)
 

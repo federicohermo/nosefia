@@ -33,6 +33,9 @@ const Gotas := preload("res://src/escenas/objetos/gotas_del_balde.gd")
 ## Cómo suena ahora. El balde suena distinto con agua y vacío, y los datos son un recurso que
 ## comparten todos los baldes: lo que cambia con el estado vive en cada instancia.
 var sonoridad_vigente: EntradaSonora.Sonoridad = EntradaSonora.Sonoridad.NINGUNA
+
+## Si el balde tiene agua. Lo escribe el puesto de limpieza con lo que contesta el dominio.
+var con_agua := false
 var contacto_del_movimiento: PhysicsBody3D
 var _bajada: Tween
 var _tamanos_originales: Dictionary[Node3D, Transform3D] = {}

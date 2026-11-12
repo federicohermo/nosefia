@@ -53,8 +53,10 @@ const SEPARACION_DE_LAS_COLUMNAS := 64
 const ANCHO_DE_LA_PESTANA := 520.0
 const ALTO_DE_LA_PESTANA := 60.0
 const ALTO_DE_LA_FILA := 58.0
+## La cabecera de las columnas es sólo texto: no necesita el alto de una tecla.
+const ALTO_DEL_ENCABEZADO := 40.0
 ## Entre un renglón y el siguiente.
-const SEPARACION_DE_LAS_FILAS := 9
+const SEPARACION_DE_LAS_FILAS := 5
 ## Entre las pestañas y la cabecera de las columnas. La tinta del texto no llena su renglón: con
 ## esta separación el margen se ve igual a los otros tres.
 const SEPARACION_DE_LA_CABECERA := 20
@@ -125,6 +127,7 @@ func _ready() -> void:
 	_filas.add_child(_aviso_sin_el_joystick())
 	_crear_el_mensaje()
 	poner_joystick_conectado(not Input.get_connected_joypads().is_empty())
+	aplicar_la_prueba(PartidaDePrueba.desde_busqueda(ArranqueDePrueba.busqueda_de_la_pagina()))
 	Input.joy_connection_changed.connect(_al_cambiar_un_joystick)
 	_pintar()
 	elegir_pestana(false)
@@ -137,6 +140,8 @@ func _ready() -> void:
 static func nombre_de_la_entrada(
 	tipo: int, codigo: int, familia: FamiliaDeJoystick.Familia = FamiliaDeJoystick.Familia.XBOX
 ) -> String:
+	if tipo == AsignacionDeControles.TipoDeEntrada.GATILLO_DEL_JOYSTICK:
+		return FamiliaDeJoystick.rotulo_del_gatillo(familia)
 	if tipo == AsignacionDeControles.TipoDeEntrada.BOTON_DEL_JOYSTICK:
 		var del_joystick := FamiliaDeJoystick.rotulo_de(familia, codigo)
 		return del_joystick if not del_joystick.is_empty() else "BOTÓN %d" % codigo
@@ -238,6 +243,16 @@ func poner_familia(familia: FamiliaDeJoystick.Familia) -> void:
 	_familia = familia
 	_rotular_las_pildoras()
 	_pintar()
+
+
+## Lo que pide la URL de la build web: verla como con un joystick conectado, y con la familia de
+## glifos que fije. Sólo cambia lo que se muestra: las asignaciones no se tocan.
+func aplicar_la_prueba(prueba: PartidaDePrueba) -> void:
+	if prueba == null or not prueba.joystick:
+		return
+	poner_joystick_conectado(true)
+	if prueba.familia_del_joystick != PartidaDePrueba.SIN_FAMILIA:
+		poner_familia(prueba.familia_del_joystick as FamiliaDeJoystick.Familia)
 
 
 func aviso_del_joystick() -> String:
@@ -447,7 +462,7 @@ func _bloque(a_la_izquierda: Control, a_la_derecha: Array[Control] = []) -> VBox
 	bloque.add_theme_constant_override("separation", SEPARACION_DE_LAS_FILAS)
 	var encabezado := HBoxContainer.new()
 	encabezado.add_theme_constant_override("separation", SEPARACION_DE_LAS_COLUMNAS)
-	encabezado.custom_minimum_size.y = ALTO_DE_LA_FILA
+	encabezado.custom_minimum_size.y = ALTO_DEL_ENCABEZADO
 	encabezado.add_child(a_la_izquierda)
 	for control: Control in a_la_derecha:
 		encabezado.add_child(control)
