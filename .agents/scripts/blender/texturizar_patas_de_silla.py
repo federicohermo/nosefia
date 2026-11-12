@@ -75,8 +75,8 @@ SEMILLA = 20261112
 CHAPA_M = 1.0
 ESCALA_HUELLAS_M = 0.30
 
-#: Miel cálido en sRGB, compensado para la luz fría de las sondas dinámicas del salón.
-TONO_MIEL = np.array([0.835, 0.440, 0.208], dtype=np.float32)
+#: Miel en sRGB. El usuario lo pidió un poco más desaturado que el primero, (0.835, 0.440, 0.208).
+TONO_MIEL = np.array([0.753, 0.457, 0.283], dtype=np.float32)
 CONTRASTE_VETA = 0.74
 TABLAS_RESPALDO = 3
 

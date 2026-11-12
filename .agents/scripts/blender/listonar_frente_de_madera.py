@@ -73,7 +73,7 @@ CHAPA_M = 1.0
 #: que el usuario prefirió.
 ROBLE = (np.array([0.64, 0.44, 0.27], dtype=np.float32), 0.85)
 #: La madera de las sillas: `TONO_MIEL` y `CONTRASTE_VETA` de `texturizar_patas_de_silla.py`.
-MIEL = (np.array([0.835, 0.440, 0.208], dtype=np.float32), 0.74)
+MIEL = (np.array([0.753, 0.457, 0.283], dtype=np.float32), 0.74)
 #: El usuario la pidió igual a la de las sillas, a prueba: `ROBLE` queda para volver.
 TONO, CONTRASTE = MIEL
 LISTONES = 8
