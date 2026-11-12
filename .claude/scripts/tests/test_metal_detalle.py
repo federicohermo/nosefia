@@ -91,6 +91,8 @@ class PinturaDeLosMetales(unittest.TestCase):
         receta = _receta()
         color, orm = metal.armar_atlas(islas, [receta], LADO, densidad)
         otra, _ = metal.armar_atlas(islas, [receta], LADO, densidad)
+        self.assertFalse(bool(np.isnan(color).any()))
+        self.assertFalse(bool(np.isnan(orm).any()))
         self.assertEqual(metal.png_de(color), metal.png_de(otra))
         self.assertGreaterEqual(float(orm[..., 1].min()), 0.05)
         self.assertLessEqual(float(orm[..., 2].max()), 1.0)
@@ -112,6 +114,103 @@ class PinturaDeLosMetales(unittest.TestCase):
         ancho, alto = metal._medidas(isla, densidad)
         trozo = color[isla.y : isla.y + alto, isla.x : isla.x + ancho]
         self.assertGreater(float(trozo.std()), 0.01)
+
+    def test_suelo_oculto_manda_la_cara_inferior_al_parche_liso(self) -> None:
+        vertices, caras = _caja(0.0, 0.4, 0.6)
+        islas, sin_area = metal.armar_islas(
+            vertices, caras, suelo_oculto=0.1, planos_ocultos=(((0.0, 0.0, 1.0), 0.69),)
+        )
+        self.assertEqual(len(islas), 4)
+        self.assertEqual(sin_area, [0, 1])
+
+    def test_las_huellas_y_los_rayones_cambian_la_rugosidad(self) -> None:
+        vertices, caras = _caja(0.0, 0.22, 1.2)
+        islas, _ = metal.armar_islas(vertices, caras, suelo_oculto=0.1)
+        densidad = metal.elegir_densidad(islas, 512, 320.0, reservado=16)
+        usada = metal.Receta(
+            color=(0.74, 0.78, 0.78),
+            rugosidad=0.26,
+            metal=0.8,
+            suelo=0.1,
+            huellas=1.0,
+            rayones=1.0,
+            semilla=3,
+        )
+        for isla in islas:
+            isla.receta = usada
+        _, orm = metal.armar_atlas(islas, [usada], 512, densidad)
+        vertical = next(i for i in islas if abs(float(i.normal[2])) < 0.5)
+        ancho, alto = metal._medidas(vertical, densidad)
+        if vertical.girada:
+            ancho, alto = alto, ancho
+        rugosidad = orm[vertical.y : vertical.y + alto, vertical.x : vertical.x + ancho, 1]
+        self.assertGreater(float(rugosidad.std()), 0.02)
+        self.assertGreater(float(rugosidad.max() - rugosidad.min()), 0.12)
+
+    def test_las_manchas_de_agua_solo_aparecen_abajo_y_con_manchas_activas(self) -> None:
+        columnas = np.linspace(0.0, 0.35, 140, dtype=np.float32)
+        filas = np.linspace(0.0, 1.20, 480, dtype=np.float32)
+        s, t = np.meshgrid(columnas, filas)
+        seca = _receta()
+        relleno_0, aro_0 = metal._manchas_de_agua_bajas(
+            s, t, t, (0.1, 0.0, 1.0), 400.0, seca, semilla=5
+        )
+        self.assertEqual(float(relleno_0.max()), 0.0)
+        self.assertEqual(float(aro_0.max()), 0.0)
+
+        bano = metal.Receta(
+            color=(0.74, 0.78, 0.78),
+            rugosidad=0.26,
+            metal=0.8,
+            suelo=0.1,
+            manchas=0.75,
+            altura_agua=0.25,
+            semilla=5,
+        )
+        relleno, aro = metal._manchas_de_agua_bajas(
+            s, t, t, (0.1, 0.0, 1.0), 400.0, bano, semilla=5
+        )
+        self.assertGreater(float(relleno[t < 0.20].max()), 0.05)
+        self.assertGreater(float(aro[t < 0.20].max()), 0.05)
+        self.assertEqual(float(relleno[t > 0.26].max()), 0.0)
+        self.assertEqual(float(aro[t > 0.26].max()), 0.0)
+
+    def test_las_huellas_no_bajan_al_zocalo_ni_suben_al_techo(self) -> None:
+        zs = np.array([0.12, 0.25, 1.05, 2.20], dtype=np.float32)
+        pesos = metal._peso_de_huellas(
+            zs, 0.02, suelo=0.1, z_min_isla=0.1, z_max_isla=2.4, vertical=True
+        )
+        self.assertEqual(float(pesos[0]), 0.0)
+        self.assertEqual(float(pesos[1]), 0.0)
+        self.assertGreater(float(pesos[2]), 0.7)
+        self.assertLess(float(pesos[3]), 1e-4)
+
+    def test_un_marco_hueco_aloja_islas_adentro_de_su_vano(self) -> None:
+        # Un marco en U cerrada de 2 m × 2 m (dos mitades con puente, 8 cm de espesor) y una tira
+        # suelta de 1,2 m × 0,4 m que sólo entra a 220 texeles/m si usa el hueco interior.
+        pos = np.array(
+            [
+                [0.0, 0.0, 0.1],
+                [2.0, 0.0, 0.1],
+                [2.0, 0.0, 2.1],
+                [1.92, 0.0, 2.02],
+                [1.92, 0.0, 0.18],
+                [0.08, 0.0, 0.18],
+                [0.0, 0.0, 2.1],
+                [0.08, 0.0, 2.02],
+                [3.0, 0.0, 0.5],
+                [4.2, 0.0, 0.5],
+                [4.2, 0.0, 0.9],
+                [3.0, 0.0, 0.9],
+            ],
+            dtype=np.float64,
+        )
+        pols = [[0, 1, 2, 3, 4, 5], [0, 5, 7, 3, 2, 6], [8, 9, 10, 11]]
+        islas, _ = metal.armar_islas(pos, pols)
+        self.assertEqual(len(islas), 2)
+        marco = max(islas, key=lambda i: i.ancho * i.alto)
+        self.assertTrue(marco.huecos)
+        self.assertTrue(metal.acomodar(islas, 512, 220.0))
 
     def test_islas_que_no_entran_se_avisan(self) -> None:
         islas, _ = self._islas()

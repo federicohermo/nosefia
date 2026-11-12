@@ -1,43 +1,35 @@
-"""Le da detalle a los metales del almacén: manchas de agua, rayones, mugre y satinado gastado.
+"""Le da detalle de metal satinado usado al baño, las mesas, el mostrador y los ventanales.
 
     blender assets/models/SEPT_JUEGOS_PROTOTIPO.blend --background --python-exit-code 1 \
-        --python .claude/scripts/blender/metal_con_detalle.py -- [--aplicar]
+        --python .claude/scripts/blender/metal_con_detalle.py -- [--aplicar] \
+        [--combinacion {sutil,usado}]
 
 Sin `--aplicar` pinta en una carpeta temporal y no guarda nada. Con `--aplicar` escribe las
 texturas en `assets/source/textures/metal/` y guarda la fuente canónica. Después van
-`armar_atlas.py`, `exportar_modelo.py` y `assets/models/extraer_mallas.gd`. Si cambia una malla
-del salón o del baño, también `hornear.py` y `hornear.py --sin-luz`: Godot rehace la UV del mapa
-de luz.
+`armar_atlas.py`, `exportar_modelo.py` y `assets/models/extraer_mallas.gd`.
 
 ## Por qué
 
-El acero del baño, la base de las mesas y el mostrador eran un color liso con un solo brillo. Un
-acero de verdad lleva manchas de agua, rayones, mugre en los encuentros y un satinado que se
-gasta donde se toca. La pintura sale de la geometría (`metal_detalle.py`): cada texel sabe su
-altura y su distancia al borde de su plano.
+El metal liso se lee como plástico gris. En el salón, las mesas y el baño hay sondas de reflejos
+(`ReflectionProbe`). Lo que más lee el ojo en el metal es el cambio de rugosidad en el canal G del
+mapa ORM. Las huellas, los rayones finos y la suciedad de los encuentros cambian tanto el color
+como la rugosidad. Las gotas chicas de agua sólo aparecen cerca del piso del baño.
 
 ## Qué cambia
 
-- Cada material de `CONJUNTOS` gana un color y un mapa ORM. Los materiales de un mismo conjunto
-  comparten el par: no suma ni un dibujo ni una superficie.
-- Las caras de esos materiales cambian de UV. **La geometría no se toca.** Ninguna cara se suma:
-  sólo se parten vértices en las costuras de las islas.
-- Las caras de un objeto con modificador `Bevel` van a un parche liso del atlas. El bisel
-  interpola la UV entre dos islas lejanas y dibujaría una raya de basura.
-- Corre dos veces y da lo mismo: la UV y las texturas salen sólo de la geometría y de las
-  recetas.
+- Cada conjunto gana una textura de color y un mapa ORM de igual resolución en
+  `assets/source/textures/metal/`.
+- Las caras tapadas contra el piso, el techo o la calle van al parche liso para ganar densidad en
+  las caras visibles.
+- Los marcos huecos de `local_aluminio` alojan las islas menores adentro de sus vanos vacíos sin
+  tocar la geometría ni desarmar el mapa de luz horneado.
+- **No suma materiales, llamadas de dibujo ni triángulos (`0` triángulos sumados).**
+- Es idempotente: dos corridas sobre la misma geometría escriben los mismos bytes.
 
-## El acero de las cabinas y del mostrador
+## Lo que cuesta
 
-`bano_acero` es acero inoxidable satinado: el tono es parejo, no lleva huellas y sólo alguna
-marca de agua chica cerca del piso. Las manchas redondas claras y oscuras repartidas por el perfil
-no se leían como acero. Un cepillado de líneas largas y contrastadas tampoco: se leía como madera.
-`MOSTRADOR | Acero satinado` va limpio y parejo, sin manchas de agua, nubes ni rayones: sólo el
-grano fino del satinado y el reflejo de la sonda.
-
-## Lo que no cambia
-
-La grilla, el panel perforado y la ranura de los parantes de la góndola conservan su arte.
+Cuatro pares de texturas (`1024×1024` en baño, mostrador y aluminio; `512×512` en las mesas) y
+`0` triángulos.
 """
 
 import hashlib
@@ -61,6 +53,13 @@ configurar()
 FUENTE = RAIZ / "assets/models/SEPT_JUEGOS_PROTOTIPO.blend"
 CARPETA = RAIZ / "assets/source/textures/metal"
 
+#: Caras exteriores o embutidas en el cielorraso del frente y el ventanal lateral del salón.
+PLANOS_EXTERIORES_LOCAL: tuple[tuple[tuple[float, float, float], float], ...] = (
+    ((0.0, 0.0, 1.0), 3.44),
+    ((0.0, -1.0, 0.0), 6.34),
+    ((-1.0, 0.0, 0.0), 2.54),
+)
+
 
 @dataclass(frozen=True)
 class Conjunto:
@@ -70,6 +69,7 @@ class Conjunto:
     lado: int
     densidad: float
     recetas: dict[str, "metal.Receta"]
+    planos_ocultos: tuple[tuple[tuple[float, float, float], float], ...] = ()
 
 
 def _srgb(lineal: float) -> float:
@@ -84,38 +84,138 @@ def _receta(lineal, rugosidad, metal_, suelo, **resto) -> "metal.Receta":
 #: El piso del local queda a esta altura en el modelo.
 SUELO = 0.1
 
-#: El tono liso que tenía cada material, en lineal. Es el tono medio que se conserva.
-CONJUNTOS = (
-    Conjunto(
-        "acero_del_bano",
-        1024,
-        420.0,
-        {
-            "bano_acero": _receta((0.52, 0.57, 0.57), 0.30, 0.75, SUELO, semilla=3,
-                                  manchas=0.06, huellas=0.0, rayones=0.3, mugre=0.5,
-                                  variacion=0.2),
-            "bano_griferia": _receta((0.52, 0.57, 0.57), 0.16, 0.75, SUELO, semilla=5,
-                                     rayones=0.6, manchas=0.3, mugre=0.5, variacion=0.3),
-            "bano_desague": _receta((0.52, 0.57, 0.57), 0.20, 0.75, SUELO, semilla=7,
-                                    rayones=0.6, manchas=0.3, mugre=0.5, variacion=0.3),
-        },
+#: Dos combinaciones calibradas a escala real para comparar en el juego:
+#: - `sutil`: grano satinado fino, huellas discretas y rayones moderados.
+#: - `usado`: contraste franco de rugosidad en huellas, rayones y encuentros sobre reflejos limpios.
+COMBINACIONES: dict[str, tuple[Conjunto, ...]] = {
+    "sutil": (
+        Conjunto(
+            "acero_del_bano",
+            1024,
+            420.0,
+            {
+                "bano_acero": _receta(
+                    (0.52, 0.57, 0.57), 0.28, 0.78, SUELO, semilla=3,
+                    manchas=0.45, altura_agua=0.25, huellas=0.60, rayones=0.60,
+                    mugre=0.20, variacion=0.10, satinado=0.95, escala_rugosidad=1.0,
+                ),
+                "bano_griferia": _receta(
+                    (0.52, 0.57, 0.57), 0.16, 0.80, SUELO, semilla=5,
+                    manchas=0.35, altura_agua=1.10, huellas=0.45, rayones=0.55,
+                    mugre=0.22, variacion=0.10, satinado=0.70, escala_rugosidad=1.0,
+                ),
+                "bano_desague": _receta(
+                    (0.52, 0.57, 0.57), 0.20, 0.78, SUELO, semilla=7,
+                    manchas=0.45, altura_agua=0.45, huellas=0.0, rayones=0.60,
+                    mugre=0.28, variacion=0.12, satinado=0.75, escala_rugosidad=1.0,
+                ),
+            },
+        ),
+        Conjunto(
+            "cromo_de_las_mesas",
+            512,
+            450.0,
+            {
+                "MESA | Base cromada": _receta(
+                    (0.75, 0.76, 0.78), 0.22, 0.90, SUELO, semilla=11,
+                    manchas=0.0, huellas=0.55, rayones=0.65,
+                    mugre=0.20, variacion=0.09, satinado=0.90, escala_rugosidad=1.0,
+                ),
+            },
+        ),
+        Conjunto(
+            "acero_del_mostrador",
+            1024,
+            420.0,
+            {
+                # `importar_modelo.gd` multiplica `roughness` por 0,5 en el mostrador: 0,48 en el
+                # ORM deja 0,24 efectivo en Godot, y `escala_rugosidad` compensa esa mitad.
+                "MOSTRADOR | Acero satinado": _receta(
+                    (0.37, 0.37, 0.37), 0.48, 0.85, SUELO, semilla=13,
+                    manchas=0.0, huellas=0.55, rayones=0.62,
+                    mugre=0.18, variacion=0.08, satinado=1.0, escala_rugosidad=1.60,
+                ),
+            },
+        ),
+        Conjunto(
+            "aluminio_del_local",
+            1024,
+            320.0,
+            {
+                "local_aluminio": _receta(
+                    (0.33, 0.36, 0.34), 0.30, 0.85, SUELO, semilla=17,
+                    manchas=0.0, huellas=0.65, rayones=0.68,
+                    mugre=0.50, variacion=0.10, satinado=0.95, escala_rugosidad=1.05,
+                ),
+            },
+            planos_ocultos=PLANOS_EXTERIORES_LOCAL,
+        ),
     ),
-    Conjunto(
-        "cromo_de_las_mesas",
-        512,
-        420.0,
-        {"MESA | Base cromada": _receta((0.75, 0.76, 0.78), 0.25, 0.90, SUELO, semilla=11,
-                                        manchas=0.25, mugre=0.5, variacion=0.3)},
+    "usado": (
+        Conjunto(
+            "acero_del_bano",
+            1024,
+            420.0,
+            {
+                "bano_acero": _receta(
+                    (0.52, 0.57, 0.57), 0.26, 0.78, SUELO, semilla=3,
+                    manchas=0.68, altura_agua=0.27, huellas=0.95, rayones=0.92,
+                    mugre=0.22, variacion=0.12, satinado=1.15, escala_rugosidad=1.28,
+                ),
+                "bano_griferia": _receta(
+                    (0.52, 0.57, 0.57), 0.15, 0.80, SUELO, semilla=5,
+                    manchas=0.45, altura_agua=1.10, huellas=0.65, rayones=0.75,
+                    mugre=0.24, variacion=0.12, satinado=0.85, escala_rugosidad=1.20,
+                ),
+                "bano_desague": _receta(
+                    (0.52, 0.57, 0.57), 0.19, 0.78, SUELO, semilla=7,
+                    manchas=0.55, altura_agua=0.45, huellas=0.0, rayones=0.75,
+                    mugre=0.30, variacion=0.12, satinado=0.85, escala_rugosidad=1.20,
+                ),
+            },
+        ),
+        Conjunto(
+            "cromo_de_las_mesas",
+            512,
+            450.0,
+            {
+                "MESA | Base cromada": _receta(
+                    (0.75, 0.76, 0.78), 0.20, 0.90, SUELO, semilla=11,
+                    manchas=0.0, huellas=0.85, rayones=0.95,
+                    mugre=0.22, variacion=0.10, satinado=1.05, escala_rugosidad=1.28,
+                ),
+            },
+        ),
+        Conjunto(
+            "acero_del_mostrador",
+            1024,
+            420.0,
+            {
+                "MOSTRADOR | Acero satinado": _receta(
+                    (0.37, 0.37, 0.37), 0.45, 0.85, SUELO, semilla=13,
+                    manchas=0.0, huellas=0.88, rayones=0.90,
+                    mugre=0.20, variacion=0.10, satinado=1.15, escala_rugosidad=1.85,
+                ),
+            },
+        ),
+        Conjunto(
+            "aluminio_del_local",
+            1024,
+            320.0,
+            {
+                "local_aluminio": _receta(
+                    (0.33, 0.36, 0.34), 0.28, 0.85, SUELO, semilla=17,
+                    manchas=0.0, huellas=0.95, rayones=0.95,
+                    mugre=0.78, variacion=0.11, satinado=1.12, escala_rugosidad=1.30,
+                ),
+            },
+            planos_ocultos=PLANOS_EXTERIORES_LOCAL,
+        ),
     ),
-    Conjunto(
-        "acero_del_mostrador",
-        1024,
-        380.0,
-        {"MOSTRADOR | Acero satinado": _receta((0.37, 0.37, 0.37), 0.32, 0.84, SUELO,
-                                               semilla=13, manchas=0.0, mugre=0.0,
-                                               rayones=0.0, huellas=0.0, variacion=0.0)},
-    ),
-)
+}
+
+COMBINACION_POR_DEFECTO = "usado"
+CONJUNTOS = COMBINACIONES[COMBINACION_POR_DEFECTO]
 
 
 class Registro:
@@ -148,26 +248,32 @@ class Registro:
         self.maestro: "Registro | None" = None
 
 
-def _registros(material: str) -> list[Registro]:
+def _objetos_por_malla(material: str) -> list[list]:
     por_malla: dict[str, list] = {}
     for objeto in sorted(bpy.data.objects, key=lambda o: o.name):
         if objeto.type == "MESH":
             por_malla.setdefault(objeto.data.name_full, []).append(objeto)
-    registros = []
+    salida = []
     for objetos in por_malla.values():
-        if not any(m is not None and m.name == material for m in objetos[0].data.materials):
-            continue
+        if any(m is not None and m.name == material for m in objetos[0].data.materials):
+            salida.append(objetos)
+    return salida
+
+
+def _registros(material: str) -> list[Registro]:
+    registros = []
+    for objetos in _objetos_por_malla(material):
+        lisa = any(m.type == "BEVEL" for o in objetos for m in o.modifiers)
         registro = Registro(objetos[0], material)
         if not registro.poligonos:
             continue
-        # Una malla compartida con un objeto de Bevel también queda lisa.
-        registro.lisa = any(m.type == "BEVEL" for o in objetos for m in o.modifiers)
+        registro.lisa = lisa
         registros.append(registro)
     return registros
 
 
 def _preparar(conjunto: Conjunto) -> tuple[list, list, dict]:
-    """Los registros, todas las islas del conjunto y la receta de cada material."""
+    """Los registros, todas las islas del conjunto y el índice de cada receta."""
     recetas = list(conjunto.recetas.values())
     registros, islas = [], []
     numero = 0
@@ -183,7 +289,12 @@ def _preparar(conjunto: Conjunto) -> tuple[list, list, dict]:
                 continue
             maestros[clave] = registro
             poligonos = [list(p.vertices) for p in registro.poligonos]
-            registro.islas, registro.sin_area = metal.armar_islas(registro.posiciones, poligonos)
+            registro.islas, registro.sin_area = metal.armar_islas(
+                registro.posiciones,
+                poligonos,
+                suelo_oculto=receta.suelo,
+                planos_ocultos=conjunto.planos_ocultos,
+            )
             for isla in registro.islas:
                 isla.receta = receta
                 isla.numero = numero
@@ -209,7 +320,9 @@ def _escribir_uv(registro: Registro, conjunto: Conjunto, densidad: float, indice
             destino = registro.poligonos[cara]
             origen = fuente.poligonos[cara]
             for lazo, vertice in zip(destino.loop_indices, origen.vertices):
-                capa.data[lazo].uv = metal.uv_de(isla, posiciones[vertice], densidad, conjunto.lado)
+                capa.data[lazo].uv = metal.uv_de(
+                    isla, posiciones[vertice], densidad, conjunto.lado
+                )
     for cara in fuente.sin_area:
         for lazo in registro.poligonos[cara].loop_indices:
             capa.data[lazo].uv = parche
@@ -260,19 +373,19 @@ def aplicar(conjunto: Conjunto, destino: Path) -> str:
     ruta_color = destino / f"{conjunto.nombre}_color.png"
     ruta_orm = destino / f"{conjunto.nombre}_orm.png"
     ruta_color.write_bytes(metal.png_de(color))
-    ruta_orm.write_bytes(metal.png_de(metal.reducir_a_la_mitad(orm)))
+    ruta_orm.write_bytes(metal.png_de(orm))
     for registro in registros:
         _escribir_uv(registro, conjunto, densidad, indices)
     for nombre in conjunto.recetas:
         _cablear(bpy.data.materials[nombre], ruta_color, ruta_orm)
     lisas = sum(1 for r in registros if r.lisa)
-    for registro in sorted(registros, key=lambda r: -sum(i.ancho * i.alto for i in r.islas))[:5]:
-        area = sum(i.ancho * i.alto for i in registro.islas)
+    for registro in sorted(registros, key=lambda r: -sum(i.area_real for i in r.islas))[:5]:
+        area = sum(i.area_real for i in registro.islas)
         print(f"  {registro.objeto.name}: {len(registro.islas)} islas, {area:.2f} m2")
     return (
         f"{conjunto.nombre}: {len(registros)} mallas ({lisas} lisas), {len(islas)} islas, "
-        f"{sum(i.ancho * i.alto for i in islas):.1f} m2, {densidad:.0f} texeles/m, "
-        f"color {ruta_color.stat().st_size:,} B, "
+        f"{sum(i.area_real for i in islas):.1f} m2, {densidad:.0f} texeles/m, "
+        f"+0 tris, color {ruta_color.stat().st_size:,} B, "
         f"orm {ruta_orm.stat().st_size:,} B"
     )
 
@@ -280,8 +393,16 @@ def aplicar(conjunto: Conjunto, destino: Path) -> str:
 def main() -> None:
     argumentos = sys.argv[sys.argv.index("--") + 1 :] if "--" in sys.argv else []
     guardar = "--aplicar" in argumentos
-    destino = CARPETA if guardar else Path(tempfile.mkdtemp(prefix="metal_con_detalle_"))
-    for conjunto in CONJUNTOS:
+    nombre_comb = COMBINACION_POR_DEFECTO
+    if "--combinacion" in argumentos:
+        nombre_comb = argumentos[argumentos.index("--combinacion") + 1]
+    if nombre_comb not in COMBINACIONES:
+        opciones = ", ".join(sorted(COMBINACIONES))
+        raise SystemExit(f"combinación desconocida: {nombre_comb!r} (opciones: {opciones})")
+    conjuntos = COMBINACIONES[nombre_comb]
+    destino = CARPETA if guardar else Path(tempfile.mkdtemp(prefix=f"metal_{nombre_comb}_"))
+    print(f"combinación: {nombre_comb}")
+    for conjunto in conjuntos:
         print(aplicar(conjunto, destino))
     if guardar:
         bpy.ops.wm.save_mainfile()

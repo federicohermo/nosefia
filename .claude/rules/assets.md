@@ -55,13 +55,13 @@ paths:
    script reproduce. Un `.blend` del artista que entre como base nueva pide repetirlos en ese
    orden y rehacer esos ajustes.
 
-9. **Los metales llevan detalle pintado desde su malla.** `blender/metal_con_detalle.py` le da
-   manchas de agua, rayones, mugre y satinado gastado al acero del baño y la base de las mesas.
-   El acero del mostrador lleva sólo el grano satinado, sin manchas ni rayones. Cambia la UV de
-   esas caras y escribe un color y un mapa ORM por conjunto en `source/textures/metal/`. No suma
-   mallas ni dibujos. Es una edición de un solo paso: va antes de `armar_atlas.py` y
-   `exportar_modelo.py`, y cambia la UV de lightmap, así que pide `hornear.py` y
-   `hornear.py --sin-luz`. Un `.blend` nuevo del artista pide repetirla.
+9. **Los metales llevan detalle pintado desde su malla.** `blender/metal_con_detalle.py` pinta
+   satinado corto, huellas, rayones finos y suciedad de encuentros en el baño, las mesas, el
+   mostrador y `local_aluminio`. Esos trazos cambian tanto el color como la rugosidad. Sólo el
+   acero del baño suma marcas chicas de agua cerca del piso. Escribe cuatro pares color + ORM en
+   `source/textures/metal/`, sin materiales ni triángulos nuevos. Va antes de `armar_atlas.py`,
+   `exportar_modelo.py` y `assets/models/extraer_mallas.gd`. Un `.blend` nuevo del artista pide
+   repetirla.
 
 10. **El frente del mostrador, su compuerta y el friso son listones de roble pintados en la
     textura.** La malla es la del artista, con el zócalo de acero.
