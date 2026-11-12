@@ -7,11 +7,18 @@
 extends EditorScenePostImport
 
 const VIDRIO := preload("res://src/escenas/puestos/vidrio_del_local.tres")
-## La pintura de las paredes es casi lisa: pixelada, su piel se lee como cuadraditos.
+## Los materiales con detalle fino: pixelados, su piel se lee como cuadraditos.
 const FILTRO_LINEAL: Array[String] = [
 	"deposito_concreto",
 	"local_pared_pintada",
 	"bano_pared_clara",
+	# Las huellas y los rayones del metal son trazos finos: pixelados se leen como escalones.
+	"bano_acero",
+	"bano_griferia",
+	"bano_desague",
+	"MESA | Base cromada",
+	"MOSTRADOR | Acero satinado",
+	"local_aluminio",
 ]
 ## Las piezas de las jambas toman la luz de las sondas y de las luces en tiempo real, y salen más
 ## claras que la pared horneada que tienen al lado: 1,6 veces en el portón y en el cuartito de
