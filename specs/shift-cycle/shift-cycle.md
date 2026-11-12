@@ -240,6 +240,19 @@ almacén, el reloj de la noche NO DEBE avanzar y la tecla de pausa NO DEBE abrir
 Accionar «SIGUIENTE» durante un fundido, o dos veces seguidas, NO DEBE saltear ni repetir una
 placa, ni mostrar la pantalla de final antes de tiempo.
 
+### BR-SHF-075 — Mientras corre una noche, la página pide confirmación antes de cerrarse
+
+En la versión web, MIENTRAS corre una noche —con el turno sin agotar y el reloj no retenido por las
+instrucciones, el anuncio de la noche o un epílogo—, el sistema DEBE pedir confirmación al
+navegador antes de cerrar o recargar la página, con el aviso propio del navegador. CUANDO la noche
+deja de correr —el turno se agota, empiezan las instrucciones o el anuncio de la siguiente, un
+epílogo o el menú—, el sistema DEBE retirar el pedido, y cerrar o recargar NO DEBE preguntar nada.
+El pedido DEBE hacerse una vez por noche, no en cada cuadro. Fuera de la web NO DEBE hacer nada.
+El navegador puede no mostrar el aviso si el jugador no interactuó antes con la página.
+
+Es el resguardo de Ctrl+W: agacharse es Ctrl y avanzar es W, y el navegador cierra la pestaña con
+ese atajo sin que la página pueda impedirlo.
+
 ### BR-SHF-030 — Responder a las quejas cuenta cuando las cinco tienen respuesta correcta
 
 MIENTRAS queda turno y la jornada declara responder a las quejas, el sistema DEBE contar esa
@@ -887,6 +900,18 @@ DADO una placa con su fundido de entrada terminado CUANDO se acciona «SIGUIENTE
 el teclado o con el joystick ENTONCES pasa a la placa siguiente, en las tres. CUANDO se acciona dos
 veces seguidas, o una vez en mitad de un fundido, ENTONCES se pasa de a una placa y ninguna se
 saltea ni se repite; tampoco se muestra la pantalla de final antes de accionarlo en la última placa.
+
+### AC-SHF-143 — Al correr la noche se pide la confirmación, una sola vez *(verifica BR-SHF-075)*
+
+DADO una noche cuyo turno arranca y el reloj sin retener CUANDO pasan varios cuadros ENTONCES se
+pide la confirmación una sola vez. DADO una noche nueva después de una anterior ENTONCES se vuelve
+a pedir. DADO el reloj sin turno, retenido o con el turno agotado ENTONCES no está en curso.
+
+### AC-SHF-144 — Cuando la noche deja de correr se retira *(verifica BR-SHF-075)*
+
+DADO la confirmación pedida CUANDO se retiene el reloj, se agota el turno o el almacén sale del
+árbol ENTONCES se retira, una sola vez. DADO ninguna noche corriendo ENTONCES no se pide ni se
+retira nada.
 
 ### AC-SHF-080 — La jornada 7 declara responder a las quejas *(verifica BR-SHF-005, BR-SHF-030)*
 

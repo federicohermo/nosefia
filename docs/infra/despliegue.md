@@ -218,9 +218,15 @@ de prueba. **Sin parámetros se juega igual que siempre.** Fuera de la web no ha
 | `camino` | la hipótesis en que termina el camino | Elige las hipótesis de las jornadas anteriores a `jornada` y deja en el expediente las pistas que exigen. Sin `jornada` o con una identidad que el caso no tiene, se ignora. |
 | `cierre` | segundos reales | Al arrancar el turno de esa jornada, el reloj avanza hasta que faltan esos segundos para el cierre. Una sola vez por carga de la página. |
 | `completas` | `1` o `0` | Con `1`, las obligatorias de esa jornada arrancan cumplidas y siguen cumplidas hasta el cierre. |
+| `logros` | `1` | La pantalla de logros, la del menú y la de la pausa, muestra todos los logros, finales y pistas como ganados. Otro valor se ignora. |
+| `joystick` | `1`, `xbox`, `ps` o `nintendo` | La pestaña JOYSTICK de Controles se ve como con un joystick conectado. Con un nombre, además fija la familia de los glifos. Otro valor se ignora. |
 
 El guardado se escribe una sola vez por carga de la página: «Volver al menú» no lo repite. `cierre`
 y `completas` valen sólo en la jornada configurada.
+
+`logros` y `joystick` cambian sólo lo que se ve en esa sesión. **No escriben el archivo de logros ni
+las asignaciones guardadas**: al recargar sin el parámetro, el jugador ve sus logros y sus controles
+reales. No necesitan `jornada`.
 
 El camino se nombra por su última hipótesis. Las anteriores salen de los datos del caso. La
 anterior es la de la jornada previa cuyo camino contiene las pistas que la siguiente exige. Una

@@ -75,10 +75,12 @@ var color_del_texto: Color = COLOR_DEL_BORDE
 
 
 ## Qué forma lleva una entrada. Los cuatro botones de cara son un símbolo en PlayStation y, en las
-## otras familias, un círculo con su letra. L3 y R3 son píldoras, como L1 y R1.
+## otras familias, un círculo con su letra. L3, R3 y el gatillo derecho son píldoras, como L1 y R1.
 static func forma_de(
 	tipo: int, codigo: int, familia: FamiliaDeJoystick.Familia = FamiliaDeJoystick.Familia.XBOX
 ) -> Forma:
+	if tipo == AsignacionDeControles.TipoDeEntrada.GATILLO_DEL_JOYSTICK:
+		return Forma.PILDORA
 	if tipo != AsignacionDeControles.TipoDeEntrada.BOTON_DEL_JOYSTICK:
 		return Forma.TECLA
 	if codigo in SIMBOLOS_DE_PLAYSTATION:

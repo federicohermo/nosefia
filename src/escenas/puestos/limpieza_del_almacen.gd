@@ -151,6 +151,7 @@ func repintar() -> void:
 		mancha.mostrar(not estado.esta_limpia(), estado.color(), estado.tipo())
 	balde.mostrar_la_carga(piso.balde().tiene_agua(), piso.balde().color())
 	balde.sonoridad_vigente = EntradaSonora.sonoridad_del_balde(piso.balde().tiene_agua())
+	balde.con_agua = piso.balde().tiene_agua()
 	mopa.mostrar_la_carga(
 		piso.mopa().esta_mojada(), piso.mopa().color(), piso.mopa().carga_restante()
 	)

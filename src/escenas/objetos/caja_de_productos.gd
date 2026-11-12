@@ -140,6 +140,10 @@ static func _reparto() -> Dictionary:
 	return (load(RUTA_DEL_REPARTO) as JSON).data
 
 
+func es_grande() -> bool:
+	return Catalogo.caja_de(producto) == Catalogo.TamanoDeCaja.GRANDE
+
+
 func media() -> float:
 	return MEDIA_CAJA[Catalogo.caja_de(producto)]
 

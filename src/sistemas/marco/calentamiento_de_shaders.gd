@@ -91,6 +91,8 @@ var _oscuridad := Callable()
 var _a_oscuras := false
 var _pasadas := 1
 var _pasadas_hechas := 0
+## Cuántos objetos tuvieron las pasadas hechas: la cuenta sigue en la siguiente y no vuelve a cero.
+var _de_las_pasadas_hechas := 0
 
 
 func _init() -> void:
@@ -240,11 +242,17 @@ func _dibujar_materiales_2d(escena: Node3D) -> void:
 		_capa_2d.add_child(muestra)
 
 
+## De todas las pasadas. Antes de la segunda, se cuenta con que tiene los mismos objetos que la
+## primera.
 func objetos_a_preparar() -> int:
-	return _total
+	return _de_las_pasadas_hechas + _total * (_pasadas - _pasadas_hechas)
 
 
 func objetos_por_preparar() -> int:
+	return _por_preparar_en_la_pasada() + _total * (_pasadas - _pasadas_hechas - 1)
+
+
+func _por_preparar_en_la_pasada() -> int:
 	return _pendientes.size() + _por_muestrear.size() + _vistas.size()
 
 
@@ -253,7 +261,7 @@ func progreso() -> float:
 
 
 func _progreso_de_la_pasada() -> float:
-	var faltan := objetos_por_preparar()
+	var faltan := _por_preparar_en_la_pasada()
 	var destapado := 1.0 - float(faltan) / maxi(_total, 1)
 	if not _con_cola or (faltan == 0 and _cola <= 0):
 		return destapado
@@ -987,6 +995,7 @@ func _terminar() -> void:
 
 func _pasar_a_oscuras(escena: Node3D) -> void:
 	_pasadas_hechas = 1
+	_de_las_pasadas_hechas = _total
 	_a_oscuras = true
 	_objetos.clear()
 	_ocultos.clear()

@@ -62,6 +62,11 @@ const METODO_USAR := ReglasDelJugador.ACCION_USAR
 ## puede nombrar la caja sin cruzar la dirección de las capas.
 const METODO_EMPUJAR := "empujar"
 
+## Lo que el cuerpo en la mano contesta sobre su peso al correr: si es una caja grande, y si es un
+## balde con agua. El dominio decide si frena; el cuerpo sólo dice qué es.
+const METODO_ES_GRANDE := "es_grande"
+const PROPIEDAD_CON_AGUA := &"con_agua"
+
 ## Dónde arrancó la noche lo que se agarra, en coordenadas del mundo. Es un método por el mismo
 ## motivo: la red de seguridad, en `sistemas/`, no puede nombrar el tipo que lo contesta.
 const METODO_LUGAR_DE_ORIGEN := "lugar_de_origen"

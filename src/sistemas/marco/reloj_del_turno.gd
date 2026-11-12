@@ -148,6 +148,12 @@ func corriendo() -> bool:
 	return _turno != null and not _turno.cerrado()
 
 
+## Si la noche está en curso: hay un turno sin agotar y el reloj no está retenido. Las
+## instrucciones y el anuncio de la noche, y el epílogo de un final, retienen el reloj.
+func en_curso() -> bool:
+	return corriendo() and not _retenido
+
+
 ## Hace una tarea, y devuelve lo mismo que contestó el dominio.
 ##
 ## Emite **sólo** cuando el dominio dijo que sí. Los dos motivos de fallo —ya estaba hecha, o el

@@ -1,9 +1,10 @@
 ## Qué tecla, qué botón del mouse o qué botón del joystick hace cada acción reasignable.
 ##
 ## Cada acción tiene dos **ranuras** estables de teclado o mouse, la principal y la secundaria, y
-## las cinco acciones de botón suman la del joystick. Una entrada es un par de números, el tipo y el
-## código físico de la tecla o el índice del botón: acá no se nombra `InputEvent`. Una ranura del
-## joystick sólo acepta un botón del joystick, y las demás no lo aceptan.
+## las acciones de botón suman la del joystick. Una entrada es un par de números, el tipo y el
+## código físico de la tecla, el índice del botón o el eje del gatillo: acá no se nombra
+## `InputEvent`. Una ranura del joystick sólo acepta un botón del joystick, y las demás no lo
+## aceptan. La única excepción es el gatillo derecho, que acepta la de Correr.
 ##
 ## **Una entrada nunca está en dos ranuras.** Asignar una que ya tiene otra ranura las intercambia.
 ## La principal nunca queda vacía; la secundaria puede estarlo, y `VACIA` no cuenta como repetida.
@@ -13,7 +14,7 @@
 class_name AsignacionDeControles
 extends RefCounted
 
-enum TipoDeEntrada { TECLA, BOTON_DEL_MOUSE, BOTON_DEL_JOYSTICK }
+enum TipoDeEntrada { TECLA, BOTON_DEL_MOUSE, BOTON_DEL_JOYSTICK, GATILLO_DEL_JOYSTICK }
 
 ## Lo que una acción hace además en una interfaz abierta. Cambiar su entrada cambia también eso.
 enum FuncionDeMenu { CERRAR, VOLVER, PULSAR }
@@ -25,6 +26,7 @@ const DERECHA := &"mover_derecha"
 const CELULAR := &"celular"
 const EXAMINAR := &"examinar"
 const AGACHARSE := &"agacharse"
+const CORRER := ReglasDelJugador.ACCION_CORRER
 const AGARRAR := &"agarrar"
 const INTERACTUAR := ReglasDelJugador.ACCION_USAR
 ## Pausa es la acción con la que el motor cierra: Configuraciones y las listas desplegables.
@@ -32,14 +34,26 @@ const PAUSA := &"ui_cancel"
 
 ## El orden en que se muestran.
 const ACCIONES: Array[StringName] = [
-	ADELANTE, ATRAS, IZQUIERDA, DERECHA, CELULAR, EXAMINAR, AGACHARSE, AGARRAR, INTERACTUAR, PAUSA
+	ADELANTE,
+	ATRAS,
+	IZQUIERDA,
+	DERECHA,
+	CELULAR,
+	EXAMINAR,
+	AGACHARSE,
+	CORRER,
+	AGARRAR,
+	INTERACTUAR,
+	PAUSA
 ]
 const DIRECCIONES: Array[StringName] = [ADELANTE, ATRAS, IZQUIERDA, DERECHA]
 
 const RANURA_PRINCIPAL := 0
 const RANURA_SECUNDARIA := 1
-## Las acciones de botón: las cinco que además tienen un botón de joystick, en esta ranura.
-const ACCIONES_CON_BOTON: Array[StringName] = [CELULAR, EXAMINAR, AGACHARSE, AGARRAR, INTERACTUAR]
+## Las acciones de botón: las que además tienen un botón de joystick, en esta ranura.
+const ACCIONES_CON_BOTON: Array[StringName] = [
+	CELULAR, EXAMINAR, AGACHARSE, CORRER, AGARRAR, INTERACTUAR
+]
 const RANURA_DEL_JOYSTICK := 2
 ## Una secundaria sin entrada.
 const VACIA := Vector2i(-1, -1)
@@ -79,6 +93,7 @@ const NOMBRES: Dictionary = {
 	CELULAR: "CELULAR",
 	EXAMINAR: "EXAMINAR",
 	AGACHARSE: "AGACHARSE",
+	CORRER: "CORRER",
 	AGARRAR: "AGARRAR / SOLTAR",
 	INTERACTUAR: "INTERACTUAR",
 	PAUSA: "PAUSA",
@@ -118,9 +133,15 @@ const DE_FABRICA: Dictionary = {
 	],
 	AGACHARSE:
 	[
-		Vector2i(TipoDeEntrada.TECLA, KEY_SPACE),
+		Vector2i(TipoDeEntrada.TECLA, KEY_CTRL),
 		VACIA,
 		Vector2i(TipoDeEntrada.BOTON_DEL_JOYSTICK, JOY_BUTTON_LEFT_SHOULDER)
+	],
+	CORRER:
+	[
+		Vector2i(TipoDeEntrada.TECLA, KEY_SHIFT),
+		VACIA,
+		Vector2i(TipoDeEntrada.GATILLO_DEL_JOYSTICK, JOY_AXIS_TRIGGER_RIGHT)
 	],
 	AGARRAR:
 	[
@@ -179,20 +200,21 @@ static func texto_de_la_funcion(funcion: FuncionDeMenu) -> String:
 ## Si la ranura de esa acción acepta la entrada. En la web, Esc sólo lo acepta Pausa: con el
 ## cursor tomado el navegador se come Esc, y cualquier otra acción no se podría hacer. La ranura
 ## del joystick sólo acepta un botón, y START no: es la pausa. Un eje o un gatillo analógico no es
-## un botón.
+## un botón: Correr acepta, además, el gatillo derecho.
 static func acepta(
 	accion: StringName, tipo: int, codigo: int, en_la_web: bool = false, ranura: int = 0
 ) -> bool:
 	if accion not in ACCIONES:
 		return false
-	if es_del_joystick(accion, ranura) or tipo == TipoDeEntrada.BOTON_DEL_JOYSTICK:
-		return (
-			es_del_joystick(accion, ranura)
-			and tipo == TipoDeEntrada.BOTON_DEL_JOYSTICK
-			and codigo >= JOY_BUTTON_A
-			and codigo < JOY_BUTTON_SDL_MAX
-			and codigo != BOTON_DE_PAUSA
-		)
+	var del_joystick := (
+		tipo == TipoDeEntrada.BOTON_DEL_JOYSTICK or tipo == TipoDeEntrada.GATILLO_DEL_JOYSTICK
+	)
+	if es_del_joystick(accion, ranura) or del_joystick:
+		if not (es_del_joystick(accion, ranura) and del_joystick):
+			return false
+		if tipo == TipoDeEntrada.GATILLO_DEL_JOYSTICK:
+			return accion == CORRER and codigo == JOY_AXIS_TRIGGER_RIGHT
+		return codigo >= JOY_BUTTON_A and codigo < JOY_BUTTON_SDL_MAX and codigo != BOTON_DE_PAUSA
 	if tipo == TipoDeEntrada.BOTON_DEL_MOUSE:
 		return codigo in BOTONES_ACEPTADOS
 	if tipo != TipoDeEntrada.TECLA or codigo <= KEY_NONE or codigo > KEY_CODE_MASK:
@@ -296,6 +318,9 @@ func datos() -> Dictionary:
 ##
 ## Un archivo de antes de las secundarias guarda dos entradas en una acción de botón, la de teclado
 ## y la del joystick: la segunda se lee en la ranura del joystick.
+##
+## Uno de antes de Correr guarda Espacio en Agacharse, que entonces era la de fábrica: pasa a la de
+## fábrica de ahora. Uno que ya tiene Correr se lee como está.
 static func desde(crudo: Dictionary) -> AsignacionDeControles:
 	var leida := AsignacionDeControles.new()
 	for accion: StringName in ACCIONES:
@@ -309,9 +334,20 @@ static func desde(crudo: Dictionary) -> AsignacionDeControles:
 			var candidata: Variant = _leer(accion, ranura, guardadas[lugar])
 			if candidata != null:
 				leida._entradas[accion][ranura] = candidata
+	if not crudo.has(String(CORRER)):
+		leida._migrar_el_agache_de_antes_de_correr()
 	if leida._hay_repetidas():
 		return AsignacionDeControles.new()
 	return leida
+
+
+## Espacio era la principal de fábrica de Agacharse. Si Ctrl ya lo usa otra ranura, el jugador lo
+## eligió para otra cosa y Agacharse conserva Espacio.
+func _migrar_el_agache_de_antes_de_correr() -> void:
+	var de_antes := Vector2i(TipoDeEntrada.TECLA, KEY_SPACE)
+	var de_ahora: Vector2i = DE_FABRICA[AGACHARSE][RANURA_PRINCIPAL]
+	if _entradas[AGACHARSE][RANURA_PRINCIPAL] == de_antes and _ranura_con(de_ahora).is_empty():
+		_entradas[AGACHARSE][RANURA_PRINCIPAL] = de_ahora
 
 
 ## La entrada guardada, o `null` si no se puede leer. Sólo una secundaria puede estar vacía.

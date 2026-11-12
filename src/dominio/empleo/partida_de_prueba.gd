@@ -13,12 +13,31 @@ const _JORNADA := "jornada"
 const _CIERRE := "cierre"
 const _CAMINO := "camino"
 const _COMPLETAS := "completas"
+const _LOGROS := "logros"
+const _JOYSTICK := "joystick"
+
+## `familia_del_joystick` cuando la búsqueda no fija ninguna.
+const SIN_FAMILIA := -1
+
+## Lo que `?joystick=` dice por nombre: qué familia fijan los glifos.
+const _FAMILIAS_DEL_JOYSTICK: Dictionary[String, FamiliaDeJoystick.Familia] = {
+	"xbox": FamiliaDeJoystick.Familia.XBOX,
+	"ps": FamiliaDeJoystick.Familia.PLAYSTATION,
+	"nintendo": FamiliaDeJoystick.Familia.NINTENDO,
+}
 
 ## `-1` si no vino.
 var jornada: int = -1
 ## `-1.0` si no vino.
 var segundos_al_cierre: float = -1.0
 var completas := false
+## Que la pantalla de logros muestre todo como ganado. Sólo cambia lo que se ve: no se escribe el
+## archivo de logros.
+var logros_completos := false
+## Que la pantalla de controles se vea como con un joystick conectado.
+var joystick := false
+## `SIN_FAMILIA` si no vino: queda la del joystick conectado.
+var familia_del_joystick: int = SIN_FAMILIA
 ## Vacío si no vino.
 var camino: String = ""
 
@@ -42,6 +61,14 @@ static func desde_busqueda(busqueda: String) -> PartidaDePrueba:
 	var todas: String = parametros.get(_COMPLETAS, "")
 	if todas == "1" or todas == "0":
 		prueba.completas = todas == "1"
+		reconocido = true
+	if parametros.get(_LOGROS, "") == "1":
+		prueba.logros_completos = true
+		reconocido = true
+	var del_joystick: String = parametros.get(_JOYSTICK, "")
+	if del_joystick == "1" or _FAMILIAS_DEL_JOYSTICK.has(del_joystick):
+		prueba.joystick = true
+		prueba.familia_del_joystick = _FAMILIAS_DEL_JOYSTICK.get(del_joystick, SIN_FAMILIA)
 		reconocido = true
 	if prueba.jornada >= 0 and parametros.get(_CAMINO, "") != "":
 		prueba.camino = parametros[_CAMINO]

@@ -271,7 +271,7 @@ func test_una_secundaria_ilegible_o_una_principal_vacia_vuelven_a_fabrica() -> v
 func test_una_secundaria_igual_a_otra_principal_descarta_el_bloque() -> void:  # AC-CFG-041
 	var datos := AsignacionDeControles.new().datos()
 	var examinar: Array = datos[String(AsignacionDeControles.EXAMINAR)]
-	examinar[SECUNDARIA] = {"tipo": TECLA, "codigo": KEY_SPACE}
+	examinar[SECUNDARIA] = {"tipo": TECLA, "codigo": KEY_CTRL}
 	assert_array(AsignacionDeControles.desde(datos).entradas()).is_equal(
 		AsignacionDeControles.new().entradas()
 	)
