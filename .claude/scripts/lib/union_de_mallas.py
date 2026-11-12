@@ -34,7 +34,6 @@ SUFIJOS_DEL_IMPORTADOR = ("-col", "-convcol", "-colonly", "-convcolonly", "-noim
 PREFIJOS_DE_LUZ_DINAMICA = (
     "puerta_heladera_",
     "exhibido_",
-    "salon_silla",
     "estanteria_precios",
     "board",
 )

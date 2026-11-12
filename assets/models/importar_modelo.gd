@@ -27,6 +27,12 @@ const TINTE_DE_LAS_PIEZAS := 0.62
 ## La compuerta del mostrador también es dinámica y suma las luces en tiempo real del salón a las
 ## sondas: sin este tinte sale más clara y amarillenta que el frente horneado.
 const TINTE_DE_LA_COMPUERTA := Color(0.77, 0.78, 0.81, 1.0)
+## Las hojas de las cabinas del baño también: sin este tinte salían casi el doble de claras que
+## las mamparas horneadas de al lado, y parecían emitir luz.
+const TINTE_DE_LAS_CABINAS := Color(0.66, 0.66, 0.66, 1.0)
+## Cuántas veces más fino que el resto del modelo se hornea el mapa de luz de las sillas: a 20 cm
+## por texel, el asiento entero eran dos texeles y dejaba manchas claras donde lo tocan las patas.
+const DETALLE_DE_LUZ_DE_LAS_SILLAS := 8.0
 ## La variación grande de las paredes pintadas, horneada por `hornear_paredes.py`: los retoques y
 ## manchas de la pintura, sin repetirse. Su color lleva sólo el grano fino, que se repite cada
 ## pocos metros sin que se note.
@@ -40,18 +46,20 @@ const PAREDES_PINTADAS: Array[String] = ["local_pared_pintada"]
 func _post_import(escena: Node) -> Object:
 	var bloques_de_las_piezas: BaseMaterial3D = null
 	var madera_de_la_compuerta: BaseMaterial3D = null
+	var panel_de_las_cabinas: BaseMaterial3D = null
 	for malla: MeshInstance3D in escena.find_children("*", "MeshInstance3D", true, false):
 		if str(malla.name).begins_with("puerta_heladera_"):
 			malla.gi_mode = GeometryInstance3D.GI_MODE_DYNAMIC
 		if (
 			str(malla.name).begins_with("exhibido_")
-			or str(malla.name).begins_with("salon_silla")
 			or str(malla.name).begins_with("estanteria_precios")
 		):
-			# Los productos de exhibición, el respaldo de las sillas y los portaprecios de la
-			# estantería son más finos que un texel del mapa de luz y se horneaban negros: toman
-			# la luz de las sondas, como la góndola.
+			# Los productos de exhibición y los portaprecios de la estantería son más finos que un
+			# texel del mapa de luz y se horneaban negros: toman la luz de las sondas, como la
+			# góndola.
 			malla.gi_mode = GeometryInstance3D.GI_MODE_DYNAMIC
+		if str(malla.name).begins_with("salon_silla"):
+			malla.gi_lightmap_texel_scale = DETALLE_DE_LUZ_DE_LAS_SILLAS
 		if str(malla.name).begins_with("deposito_esquinas_"):
 			# Se dibujan a toda distancia: con un alcance, la pared cambiaba de tono al acercarse
 			# y el usuario lo veía como una sombra que aparecía y se iba.
@@ -106,6 +114,14 @@ func _post_import(escena: Node) -> Object:
 						madera_de_la_compuerta = material.duplicate()
 						madera_de_la_compuerta.albedo_color = TINTE_DE_LA_COMPUERTA
 					malla.set_surface_override_material(i, madera_de_la_compuerta)
+				if (
+					str(malla.name).begins_with("bano_puerta")
+					and material.resource_name == "bano_panel_verde_gris"
+				):
+					if panel_de_las_cabinas == null:
+						panel_de_las_cabinas = material.duplicate()
+						panel_de_las_cabinas.albedo_color = TINTE_DE_LAS_CABINAS
+					malla.set_surface_override_material(i, panel_de_las_cabinas)
 				if material.resource_name == "local_vidrio":
 					# Una sola cara por paño evita superponer transparencias y sombras opacas.
 					material.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA

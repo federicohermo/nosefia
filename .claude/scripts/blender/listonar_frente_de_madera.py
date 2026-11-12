@@ -11,7 +11,7 @@ Antes va `restaurar_madera_del_artista.py`. Después van `armar_atlas.py`, `expo
 ## Por qué
 
 La referencia del usuario es el mostrador de una tienda de estación de servicio: listones
-verticales de roble medio y cálido, una buña fina entre cada uno, una banda lisa arriba y los
+verticales de madera, una buña fina entre cada uno, una banda lisa arriba y los
 cantos lisos. El usuario pidió la banda lisa también al pie, sólo en el mueble de las heladeras:
 en el mostrador y la compuerta los listones bajan hasta el acero. El usuario no quiere los
 listones en geometría: los quiere en la textura. Con la luz horneada, la buña se lee por el
@@ -19,7 +19,8 @@ color: una línea oscura, que no es negra, con un filo de luz al lado.
 
 ## Qué cambia
 
-- **La imagen** de 1024×1024 sale de la chapa CC0 `oak_veneer_01`, reentonada a `TONO`. Van
+- **La imagen** de 1024×1024 sale de la chapa CC0 `oak_veneer_01`, reentonada a `TONO`, el tono
+  miel de las sillas. Van
   ocho listones por vuelta, cada uno con su tramo de chapa y un tono apenas distinto. Los tres
   muebles se apilan de abajo hacia arriba, cada uno en una franja de su alto. Cada franja lleva
   arriba la banda lisa, con la veta acostada y una junta. La del mueble de las heladeras la
@@ -68,9 +69,13 @@ OBJETOS = {MOSTRADOR: (MOSTRADOR, False), "compuerta_mostrador": (MOSTRADOR, Fal
 LADO_PX = 1024
 #: La chapa mide un metro por lado.
 CHAPA_M = 1.0
-#: Roble medio y cálido, en sRGB: entre la referencia y la versión que el usuario prefirió.
-TONO = np.array([0.64, 0.44, 0.27], dtype=np.float32)
-CONTRASTE = 0.85
+#: Tono y contraste de la veta, en sRGB. Roble medio y cálido: entre la referencia y la versión
+#: que el usuario prefirió.
+ROBLE = (np.array([0.64, 0.44, 0.27], dtype=np.float32), 0.85)
+#: La madera de las sillas: `TONO_MIEL` y `CONTRASTE_VETA` de `texturizar_patas_de_silla.py`.
+MIEL = (np.array([0.835, 0.440, 0.208], dtype=np.float32), 0.74)
+#: El usuario la pidió igual a la de las sillas, a prueba: `ROBLE` queda para volver.
+TONO, CONTRASTE = MIEL
 LISTONES = 8
 PERIODO = LADO_PX // LISTONES
 #: El ancho de un listón. Un tramo que no es múltiplo lo estira o lo achica, entre el mínimo y el
