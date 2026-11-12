@@ -5,9 +5,8 @@
 extends SceneTree
 
 const MALLA := "res://assets/models/caja_de_productos.res"
-## Cuánto se mete cada cara adentro de su panel, en la celda de 512 del atlas. El desplegado de
-## varias cajas trae un borde negro de hasta 17 píxeles de 1254 adentro del panel (7 en la celda),
-## y los mipmaps toman 2 más.
+## Cuánto se mete cada cara adentro de su panel, en la celda de 512 del atlas: saltea el marco
+## oscuro pintado en el perímetro de cada cara (7 píxeles en la celda) y deja 2 para los mipmaps.
 const MARGEN := 9.0 / 512.0
 
 
@@ -51,9 +50,7 @@ static func corregida(fuente: Mesh) -> ArrayMesh:
 					0.75 + (1.0 - p.x) * 0.25 if n.z < 0 else p.x * 0.25, 0.25 + (1.0 - p.y) * 0.5
 				)
 			else:
-				uv = Vector2(
-					0.25 + (1.0 - p.z) * 0.5, (1.0 - p.x) * 0.25 if n.y > 0 else 0.75 + p.x * 0.25
-				)
+				uv = Vector2(0.25 + (1.0 - p.z) * 0.5, p.x * 0.25 if n.y > 0 else 1.0 - p.x * 0.25)
 			var origen := Vector2(0.25, 0.25)
 			var tamano := Vector2(0.5, 0.5)
 			if absf(n.z) > 0.9:
