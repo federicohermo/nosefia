@@ -1,168 +1,147 @@
-"""Pinta el uso de la carcasa de la silla del salón: suciedad en el pliegue, roce en los cantos.
+"""Pinta el tapizado crema del asiento de las sillas del salón con micrograno y marcas suaves.
 
     blender assets/models/SEPT_JUEGOS_PROTOTIPO.blend --background --python-exit-code 1 \
         --python .claude/scripts/blender/texturizar_silla_del_salon.py -- [--aplicar]
 
-Sin `--aplicar` escribe la imagen en `build/plastico/`, para mirarla. Con `--aplicar` escribe
-`assets/source/textures/store/silla_plastico_blanco.png`. El `.blend` no cambia. Después van
-`armar_atlas.py` y `exportar_modelo.py`.
+Sin `--aplicar` escribe la imagen en `build/plastico/`, para revisarla sin tocar la fuente. Con
+`--aplicar` escribe `assets/source/textures/store/silla_plastico_blanco.png`. El `.blend` no
+cambia. Después van `texturizar_patas_de_silla.py` y `exportar_modelo.py`.
 
 ## Por qué
 
-La carcasa era un blanco liso de punta a punta. Una silla de plástico blanco no es lisa: se
-ensucia en los huecos y en el pliegue entre asiento y respaldo, se gasta donde se sienta y se
-apoya la espalda, y el roce deja los cantos más limpios que el resto.
+El asiento de la referencia (`build/referencias/sillas_referencia.png`) es un almohadón redondo de
+cuero sintético crema, limpio y moderno. Bajo las sondas dinámicas del salón la luz tiene dominante
+fría; una base crema cálida evita que el asiento vire al verde menta frente a la tapa blanca de las
+mesas. Un color plano se lee sintético de cerca, y ensuciarlo contradice la referencia.
 
 ## Qué cambia
 
-Sólo la imagen. Parte del blanco hueso de siempre, que se reescribe en cada corrida, y suma:
+Reescribe `silla_plastico_blanco.png` a 512×512 (suficiente para un almohadón de 42 cm reales, con
+un cuarto de la memoria de textura anterior) combinando:
 
-- **Pliegue**: mugre gris parda en el encuentro de asiento y respaldo, donde se junta el polvo.
-- **Cantos**: el borde se aclara por el roce y se le pican unos puntos de suciedad. La cara de
-  abajo guarda más mugre en el borde.
-- **Uso**: manchas anchas, rayones finos y roces cortos, más marcados donde se sienta y donde se
-  apoya la espalda, más una pinta de suciedad fina.
-- **Tono**: una variación suave de blanco a hueso.
-
-La malla sólo aporta dónde pinta la UV (`cobertura`) y el largo del asiento (`PERFIL`). La
-carcasa es una superficie suave y abierta: su oclusión horneada sale casi plana, y no sirve para
-marcar el pliegue.
-
-La cara de arriba va en la mitad izquierda de la imagen y la de abajo en la derecha.
+- **Tono crema cálido** con una caída muy leve de brillo hacia el centro de apoyo y un realce suave
+  en el giro superior del canto redondeado.
+- **Sombra de encastre** en el labio inferior del canto (`rho > 0,39`), donde el tapizado entra en
+  el aro de madera.
+- **Micrograno de cuero sintético** a escala milimétrica, apenas perceptible de cerca.
+- **Marcas de uso CC0 a escala real** (`Fingerprints005`, 0,30 m × 0,30 m): pasadas suaves de trapo
+  y apoyo de manos con amplitud menor al 2,5 %, visibles a un metro sin ensuciar la silla.
 
 ## Lo que cuesta
 
-Ningún triángulo, ningún material ni textura de más. La imagen mide lo mismo.
+Ningún triángulo, material ni dibujo más. Reduce la imagen de 1024×1024 a 512×512. Es determinista
+e idempotente.
 """
 
 import sys
 from pathlib import Path
 
-import bpy  # type: ignore[import-not-found]
 import numpy as np
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
-from detalle_de_plastico import (  # noqa: E402
-    cobertura,
-    distancia_al_borde,
-    escribir_png,
-    preparar_cycles,
-    rayones,
-    restaurar,
-    ruido,
-    salida,
-    suave,
-)
+from detalle_de_madera import ruido, suave  # noqa: E402
+from detalle_de_plastico import escribir_png, leer_png, salida  # noqa: E402
 from lib.consola import configurar  # noqa: E402
-from moldear_silla_del_salon import PERFIL  # noqa: E402
 
 RAIZ = Path(__file__).resolve().parents[3]
 TEXTURA = RAIZ / "assets/source/textures/store/silla_plastico_blanco.png"
-OBJETO = "salon_silla_1a-col"
-CARCASA = 0
-LADO = 1024
-#: El punto del perfil donde el asiento termina y el respaldo empieza a subir.
-PUNTO_DEL_PLIEGUE = 6.5
+IMPERFECCIONES = (
+    RAIZ
+    / "assets/source/textures/third-party/fingerprints_005"
+    / "Fingerprints005_2K-JPG_Roughness.jpg"
+)
 
-#: El blanco hueso de partida, y los tonos que se le mezclan encima.
-BASE = np.array([0.82, 0.81, 0.76], dtype=np.float32)
-POLVO = np.array([0.66, 0.63, 0.55], dtype=np.float32)
-MUGRE = np.array([0.40, 0.37, 0.30], dtype=np.float32)
-GRIS_DEL_ROCE = np.array([0.58, 0.58, 0.54], dtype=np.float32)
-LIMPIO = np.array([0.93, 0.93, 0.89], dtype=np.float32)
+LADO = 512
+SEMILLA = 20261112
+#: Diámetro físico desplegado que cubre el ancho [0, 1] de la UV del almohadón, en metros reales.
+ANCHO_FISICO_UV_M = 0.567
+ESCALA_HUELLAS_M = 0.30
 
-
-def fraccion_del_pliegue() -> float:
-    """Dónde cae el pliegue sobre la v de la UV: el largo del perfil hasta ese punto."""
-    largos = [0.0]
-    for (y0, z0), (y1, z1) in zip(PERFIL, PERFIL[1:]):
-        largos.append(largos[-1] + ((y1 - y0) ** 2 + (z1 - z0) ** 2) ** 0.5)
-    k = int(PUNTO_DEL_PLIEGUE)
-    punto = largos[k] + (largos[k + 1] - largos[k]) * (PUNTO_DEL_PLIEGUE - k)
-    return punto / largos[-1]
+#: Crema cálido calibrado para conservar calidez bajo la luz fría de las sondas del salón.
+BASE_CREMA = np.array([0.985, 0.870, 0.788], dtype=np.float32)
+BRILLO_CANTO = np.array([0.996, 0.912, 0.842], dtype=np.float32)
+SOMBRA_ENCASTRE = np.array([0.835, 0.705, 0.602], dtype=np.float32)
 
 
-def zona_de_uso(u: np.ndarray, v: np.ndarray, pliegue: float) -> np.ndarray:
-    """Dónde se sienta y dónde se apoya la espalda, 0..1."""
-    centro = np.exp(-(((u - 0.5) / 0.30) ** 2))
-    asiento = np.exp(-(((v - pliegue * 0.5) / (pliegue * 0.35)) ** 2))
-    espalda = np.exp(-(((v - (pliegue + 1.0) / 2 + 0.05) / 0.14) ** 2))
-    return centro * np.maximum(asiento, espalda * 0.85)
+def remuestrear_caja(mapa: np.ndarray, alto: int, ancho: int) -> np.ndarray:
+    """Promedia por área un canal 2D para cambiar de escala sin aliasing."""
+    salida_2d = mapa.astype(np.float32)
+    for eje, n in ((0, alto), (1, ancho)):
+        largo = salida_2d.shape[eje]
+        ceros = np.zeros_like(np.take(salida_2d, [0], axis=eje))
+        acumulado = np.concatenate([ceros, np.cumsum(salida_2d, axis=eje)], axis=eje)
+        bordes = np.linspace(0.0, largo, n + 1)
+        indices = np.arange(largo + 1)
+        sumas = np.apply_along_axis(lambda c: np.interp(bordes, indices, c), eje, acumulado)
+        salida_2d = np.diff(sumas, axis=eje) / (largo / n)
+    return salida_2d.astype(np.float32)
 
 
-def mezclar(color: np.ndarray, tono: np.ndarray, cuanto: np.ndarray) -> np.ndarray:
-    return color + (tono[None, None, :] - color) * np.clip(cuanto, 0.0, 1.0)[..., None]
+def mosaico_a_escala(
+    mapa_cc0: np.ndarray,
+    alto: int,
+    ancho: int,
+    metros_ancho: float,
+    metros_alto: float,
+    dx: int,
+    dy: int,
+) -> np.ndarray:
+    """Repite el mapa CC0 de 0,30 m respetando su escala física en ambos ejes."""
+    px_tile_x = max(16, round(ancho * ESCALA_HUELLAS_M / metros_ancho))
+    px_tile_y = max(16, round(alto * ESCALA_HUELLAS_M / metros_alto))
+    tile = remuestrear_caja(mapa_cc0, px_tile_y, px_tile_x)
+    ys = (np.arange(alto) + dy) % px_tile_y
+    xs = (np.arange(ancho) + dx) % px_tile_x
+    muestra = tile[np.ix_(ys, xs)]
+    centrado = (muestra - float(muestra.mean())) / max(float(muestra.std()), 1e-4)
+    return np.clip(centrado, -1.5, 2.5).astype(np.float32)
 
 
-#: El usuario pidió detalle, no suciedad: la silla se lee limpia. Lo que queda son rayones finos de
-#: 1 a 3 cm, el canto pulido por el roce y apenas una línea en el pliegue.
-def pintar(dentro: np.ndarray) -> np.ndarray:
-    pliegue = fraccion_del_pliegue()
-    filas = np.arange(LADO, dtype=np.float32)[:, None] / (LADO - 1)
-    columnas = np.arange(LADO, dtype=np.float32)[None, :] / (LADO - 1)
-    de_abajo = np.broadcast_to(columnas >= 0.5, (LADO, LADO))
-    u = np.broadcast_to(np.where(columnas >= 0.5, columnas - 0.5, columnas) * 2.0, (LADO, LADO))
-    v = np.broadcast_to(filas, (LADO, LADO))
-    uso = zona_de_uso(u, v, pliegue)
-    abajo = de_abajo.astype(np.float32)
+def mezclar(color: np.ndarray, destino: np.ndarray, peso: np.ndarray) -> np.ndarray:
+    return color + (destino[None, None, :] - color) * np.clip(peso, 0.0, 1.0)[..., None]
 
-    borde = distancia_al_borde(dentro, 40)
-    borde = np.where(dentro > 0.5, borde, 0.0)
-    cerca = np.exp(-borde / 14.0) * 0.999
 
-    nubes = ruido(LADO, LADO, 190, 11)
-    manchas = ruido(LADO, LADO, 70, 12)
-    vetas = ruido(LADO, LADO, 22, 13, octavas=3)
-    polvo_fino = ruido(LADO, LADO, 3, 14, octavas=2)
+def pintar(imperfecciones: np.ndarray) -> np.ndarray:
+    azar = np.random.default_rng(SEMILLA)
+    coords = (np.arange(LADO, dtype=np.float32) + 0.5) / LADO - 0.5
+    dy, dx = coords[:, None], coords[None, :]
+    rho = np.hypot(dx, dy)
 
-    color = np.broadcast_to(BASE, (LADO, LADO, 3)).copy()
-    color *= (1.0 + (nubes - 0.5) * 0.06)[..., None]
+    color = np.broadcast_to(BASE_CREMA, (LADO, LADO, 3)).copy()
 
-    # Polvo en parches anchos, más en lo que se usa.
-    polvo = suave(0.45, 0.68, manchas) * (0.02 + 0.04 * uso) + abajo * 0.03
-    color = mezclar(color, POLVO, polvo)
+    # Variación amplia apenas perceptible y micrograno parejo de cuero sintético liso.
+    nube = ruido(LADO, LADO, 3, 3, azar, octavas=2)
+    poro_fino = ruido(LADO, LADO, 96, 96, azar, octavas=2)
+    color *= (1.0 + (nube - 0.5) * 0.018 + (poro_fino - 0.5) * 0.014)[..., None]
 
-    # El pliegue entre asiento y respaldo junta mugre, con vetas hacia los lados.
-    banda = np.exp(-(((v - pliegue) / 0.022) ** 2))
-    pegado = banda * (0.55 + 0.9 * (vetas - 0.5)) * (0.55 + 0.45 * suave(0.25, 0.75, vetas))
-    color = mezclar(color, MUGRE, pegado * 0.10)
+    # El giro superior del canto (`rho ~ 0,34`) recoge un poco más de luz; el labio inferior se
+    # oscurece suavemente al meterse en el aro de madera (`rho > 0,39`).
+    realce = np.exp(-(((rho - 0.335) / 0.042) ** 2))
+    color = mezclar(color, BRILLO_CANTO, realce * 0.30)
+    encastre = suave(0.388, 0.455, rho)
+    color = mezclar(color, SOMBRA_ENCASTRE, encastre * 0.42)
 
-    # El borde de abajo guarda mugre; el de arriba se pule.
-    color = mezclar(color, MUGRE, abajo * cerca * 0.05 * (0.6 + 0.8 * vetas))
-    roce = (1 - abajo) * np.clip(cerca * 1.5 - 0.15, 0.0, 1.0) * dentro
-    color = mezclar(color, LIMPIO, roce * 0.35)
+    # Detalle CC0 (`Fingerprints005`) a escala física real (0,30 m): marcas muy suaves de trapo y
+    # manos sobre el borde y la zona de asiento, sin ensuciar el tapizado.
+    huellas = mosaico_a_escala(
+        imperfecciones, LADO, LADO, ANCHO_FISICO_UV_M, ANCHO_FISICO_UV_M, dx=37, dy=83
+    )
+    zona_contacto = 0.45 + 0.55 * np.exp(-(((rho - 0.28) / 0.14) ** 2))
+    roce_suave = np.clip(huellas, 0.0, 2.2) * zona_contacto * (1.0 - 0.5 * encastre)
+    brillo_trapo = np.clip(-huellas, 0.0, 1.2) * zona_contacto
+    color *= (1.0 - 0.013 * roce_suave + 0.007 * brillo_trapo)[..., None]
 
-    # Rayones largos y roces cortos, donde se usa.
-    mapa = 0.18 + 0.82 * np.maximum(uso, banda)
-    largos = rayones(LADO, LADO, 160, 28, 21, grosor=1, peso=mapa)
-    cortos = rayones(LADO, LADO, 140, 8, 22, grosor=1, peso=mapa)
-    color = mezclar(color, GRIS_DEL_ROCE, largos * 0.22)
-    color = mezclar(color, GRIS_DEL_ROCE, cortos * 0.18)
-    claros = rayones(LADO, LADO, 80, 20, 23, grosor=1, peso=1 - abajo * 0.5)
-    color = mezclar(color, LIMPIO, claros * 0.20)
-
-    # Puntos de suciedad finos y picado del borde.
-    puntos = suave(0.74, 0.86, polvo_fino) * (0.25 + 0.75 * np.maximum(uso, cerca))
-    color = mezclar(color, MUGRE, puntos * 0.05)
-    picado = cerca**2 * suave(0.62, 0.74, polvo_fino)
-    color = mezclar(color, MUGRE, picado * 0.03)
-    return color
+    return np.clip(color, 0.0, 1.0)
 
 
 def main() -> None:
     configurar()
-    objeto = bpy.data.objects[OBJETO]
-    carcasa = {c.index for c in objeto.data.polygons if c.material_index == CARCASA}
-    antes = preparar_cycles()
-    try:
-        dentro = cobertura(objeto, carcasa, LADO)
-    finally:
-        restaurar(antes)
-    color = pintar(dentro)
+    imperfecciones = leer_png(IMPERFECCIONES)[..., 0]
+    color = pintar(imperfecciones)
     destino = salida(TEXTURA)
     escribir_png(color, destino)
-    print(f"silla: {destino}  media {np.round(color.reshape(-1, 3).mean(0), 3)}")
+    print(f"tapizado silla: {destino}  media {np.round(color.reshape(-1, 3).mean(0), 3)}")
 
 
 if __name__ == "__main__":
