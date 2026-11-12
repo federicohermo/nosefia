@@ -305,6 +305,10 @@ def huella(ruta):
 
 
 def main():
+    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+    from lib.consola import configurar
+
+    configurar()
     argumentos = sys.argv[sys.argv.index("--") + 1 :] if "--" in sys.argv else []
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--aplicar", action="store_true")

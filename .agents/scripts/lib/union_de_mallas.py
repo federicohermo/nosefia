@@ -39,7 +39,7 @@ PREFIJOS_DE_LUZ_DINAMICA = (
     "board",
 )
 
-#: Los prefijos a los que `importar_modelo.gd` les pone un alcance de dibujo: unidos lo perderían.
+#: Los prefijos que `importar_modelo.gd` trata aparte, con su propio material: unidos lo perderían.
 PREFIJOS_CON_ALCANCE = ("deposito_esquinas_",)
 
 #: Lo que se mueve o se ve a través: un nombre de material o de objeto que lo contiene.

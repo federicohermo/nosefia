@@ -15,8 +15,8 @@ la geometría: si el `.blend` ya la tenía, el horneado no cambia. Si no, piden 
 
 La pared del salón (`local_pared_pintada`) y la del baño (`bano_pared_clara`) eran un color liso.
 Después las pintó un ruido propio, y se veían como manchas de nube, sin el carácter de una pared
-real. Ahora la base es la foto de una pared pintada (`plastered_wall`, CC0, en
-`assets/source/textures/third-party/plastered_wall/`). La luz del local está horneada, así que el
+real. Ahora la base es la foto de una pared de revoque pintado (`painted_plaster_wall`, CC0, en
+`assets/source/textures/third-party/painted_plaster_wall/`). La luz del local está horneada, así que el
 detalle va en el color y no en la rugosidad: la pared sigue siendo pintura mate.
 
 ## Qué cambia
@@ -134,7 +134,7 @@ class Recinto:
     muebles: tuple[Mueble, ...] = field(default=())
 
 
-FOTO_DEL_SALON = Foto(TERCEROS / "plastered_wall/plastered_wall_diff_2k.jpg", 2.0)
+FOTO_DEL_SALON = Foto(TERCEROS / "painted_plaster_wall/painted_plaster_wall_diff_2k.jpg", 2.0)
 FOTO_DEL_BANO = FOTO_DEL_SALON
 
 SALON = Recinto(

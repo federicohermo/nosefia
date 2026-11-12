@@ -20,6 +20,14 @@ const TINTE_DE_LAS_PIEZAS := 0.62
 ## La compuerta del mostrador también es dinámica y suma las luces en tiempo real del salón a las
 ## sondas: sin este tinte sale más clara y amarillenta que el frente horneado.
 const TINTE_DE_LA_COMPUERTA := Color(0.77, 0.78, 0.81, 1.0)
+## La variación grande de las paredes pintadas, horneada por `hornear_paredes.py`: los retoques y
+## manchas de la pintura, sin repetirse. Su color lleva sólo el grano fino, que se repite cada
+## pocos metros sin que se note.
+const VARIACION_DE_LAS_PAREDES := preload("res://assets/models/pared_variacion.png")
+## Cada cuántos metros se repite la variación: `METROS_DEL_MOSAICO` de `hornear_paredes.py`.
+const METROS_DE_LA_VARIACION := 14.0
+## El baño va más liso: sin variación (`paredes_con_foto.py`).
+const PAREDES_PINTADAS: Array[String] = ["local_pared_pintada"]
 
 
 func _post_import(escena: Node) -> Object:
@@ -38,8 +46,8 @@ func _post_import(escena: Node) -> Object:
 			# la luz de las sondas, como la góndola.
 			malla.gi_mode = GeometryInstance3D.GI_MODE_DYNAMIC
 		if str(malla.name).begins_with("deposito_esquinas_"):
-			# Los bloques que salen de las jambas sólo se ven de cerca: de lejos los cubre la textura.
-			malla.visibility_range_end = 6.0
+			# Se dibujan a toda distancia: con un alcance, la pared cambiaba de tono al acercarse
+			# y el usuario lo veía como una sombra que aparecía y se iba.
 			# Horneadas, le dejaban a la pared la sombra de cada jamba: los texeles de la pared que
 			# la pieza tapa se hornean negros y tiñen a los de al lado. De lejos la pieza no se
 			# dibuja y la sombra quedaba sola. Dinámicas no entran al horneado. Apagar su sombra
@@ -103,6 +111,16 @@ func _post_import(escena: Node) -> Object:
 				if material.normal_enabled and material.resource_name.begins_with("deposito_"):
 					material.cull_mode = BaseMaterial3D.CULL_DISABLED
 					material.roughness_texture_channel = BaseMaterial3D.TEXTURE_CHANNEL_GREEN
+				if material.resource_name in PAREDES_PINTADAS:
+					# La variación se lee en coordenadas del mundo, por la segunda capa de UV: la
+					# primera ya lleva el grano. La capa del mapa de luz no cambia.
+					material.detail_enabled = true
+					material.detail_blend_mode = BaseMaterial3D.BLEND_MODE_MUL
+					material.detail_uv_layer = BaseMaterial3D.DETAIL_UV_2
+					material.detail_albedo = VARIACION_DE_LAS_PAREDES
+					material.uv2_triplanar = true
+					material.uv2_world_triplanar = true
+					material.uv2_scale = Vector3.ONE / METROS_DE_LA_VARIACION
 				if (
 					material.resource_name in FILTRO_LINEAL
 					or material.resource_name.begins_with("deposito_revestimiento_")

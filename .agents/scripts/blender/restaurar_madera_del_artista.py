@@ -45,9 +45,7 @@ def sacar_fuente() -> None:
     if FUENTE.exists():
         return
     FUENTE.parent.mkdir(parents=True, exist_ok=True)
-    datos = subprocess.run(
-        ["git", "show", f"{COMMIT}:{MODELO}"], cwd=RAIZ, check=True, capture_output=True
-    ).stdout
+    datos = subprocess.check_output(["git", "show", f"{COMMIT}:{MODELO}"], cwd=RAIZ)
     FUENTE.write_bytes(datos)
 
 

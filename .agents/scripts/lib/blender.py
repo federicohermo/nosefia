@@ -145,8 +145,6 @@ ORIGEN_DE_CADA_GRUPO = {
     "textures/warehouse/final/concrete_floor_worn_001_rough_1k.png": SUPERFICIE,
     "textures/warehouse/final/deposito_bloques_normal.png": SUPERFICIE,
     "textures/warehouse/final/deposito_bloques_rough.png": SUPERFICIE,
-    "textures/warehouse/ambientcg/bricks-066/Bricks066_1K-JPG_NormalGL.jpg": SUPERFICIE,
-    "textures/warehouse/ambientcg/bricks-066/Bricks066_1K-JPG_Roughness.jpg": SUPERFICIE,
     "textures/warehouse/polyhaven/concrete-floor-worn-001/1K/"
     "concrete_floor_worn_001_rough_1k.jpg": SUPERFICIE,
     "textures/warehouse/polyhaven/corrugated-iron-02/1K/"
