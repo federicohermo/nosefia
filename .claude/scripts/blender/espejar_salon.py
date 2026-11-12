@@ -29,11 +29,15 @@ reflejados. Las mesas y sillas pasan al ventanal oeste conservando los anchos de
   derecho.
 - **Unidades exhibidas** (`tanda` de `A` y `B`): reflejan el centro real de su malla respecto de
   `2,96` con determinante positivo y actualizan su rótulo `tanda`.
+- **Corrimiento de `A`** (`gondolanueva-col` y todo lo que cuelga de ella): después del reflejo, la
+  góndola se corre hacia el centro hasta que su pasillo con la pared este mida
+  `PASILLO_A_PARED_ESTE`. Ver esa constante.
 
 ## Lo que cuesta
 
 0 triángulos, 0 materiales y 0 texturas adicionales. Es idempotente: si las góndolas ya están al
-este del plano y las mesas al oeste, no vuelve a reflejar.
+este del plano y las mesas al oeste, no vuelve a reflejar, y el corrimiento de `A` sale de su
+posición de ahora.
 """
 
 from __future__ import annotations
@@ -51,6 +55,15 @@ from lib.consola import configurar  # noqa: E402
 
 X_ESPEJO = 2.96
 DOS_X_ESPEJO = 2.0 * X_ESPEJO
+#: La cara interior de la pared este del salón, medida con un rayo contra `almacen-col`.
+PARED_ESTE_X = 7.87
+
+#: El pasillo, de malla a malla, entre `A` y la pared este. Antes del espejo medía 1,858 entre `A`
+#: y el vidrio del ventanal, y 1,914 entre `A` y `B`. El plano del espejo queda 0,575 más cerca de
+#: la pared este que del ventanal, así que el reflejo dejaba 1,283 contra la pared. Para volver
+#: a 1,858 hacía falta 0,575 más, y el pasillo entre góndolas habría pasado de 1,914 a 1,339. Se
+#: reparte esa diferencia en partes iguales: cada pasillo pierde 0,2875 y queda en 1,5705 y 1,6265.
+PASILLO_A_PARED_ESTE = 1.5705
 JUNTA_BANDEJA = 0.001
 ENTRE_ESTANTES = 0.15
 
@@ -220,6 +233,34 @@ def _plan_de_tandas() -> list[tuple]:
     return plan
 
 
+def _limites_x(objeto) -> tuple[float, float]:
+    xs = [(objeto.matrix_world @ v.co).x for v in objeto.data.vertices]
+    return min(xs), max(xs)
+
+
+def correr_a() -> bool:
+    """Corre `A` hasta que su pasillo con la pared este mida `PASILLO_A_PARED_ESTE`.
+
+    Se calcula desde la posición de ahora y no desde un corrimiento fijo: repetirlo no mueve nada.
+    """
+    bpy.context.view_layer.update()
+    gondola = _objeto("gondolanueva-col")
+    _, este = _limites_x(gondola)
+    corrimiento = PARED_ESTE_X - PASILLO_A_PARED_ESTE - este
+    if abs(corrimiento) < 1e-4:
+        print("A ya está a su distancia de la pared este; no cambia nada")
+        return False
+    gondola.location.x += corrimiento
+    bpy.context.view_layer.update()
+    oeste, este = _limites_x(gondola)
+    _, borde_b = _limites_x(_objeto("gondolanueva2-col"))
+    print(
+        f"A corrida {corrimiento:+.4f}: pasillo con la pared este {PARED_ESTE_X - este:.4f}, "
+        f"pasillo entre góndolas {oeste - borde_b:.4f}"
+    )
+    return True
+
+
 def ya_espejado() -> bool:
     gondola_a = _objeto("gondolanueva-col")
     mesa_1 = _objeto("salon_mesa_1-col")
@@ -309,6 +350,7 @@ def espejar() -> bool:
 def main() -> None:
     configurar()
     espejar()
+    correr_a()
     if "--aplicar" in sys.argv:
         bpy.ops.wm.save_mainfile()
         print("fuente guardada")
