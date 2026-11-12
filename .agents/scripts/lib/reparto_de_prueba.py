@@ -20,14 +20,14 @@ class Frente(NamedTuple):
 #: igual en todos los estantes de una cara y no depende de qué tanda ocupa ese lugar en el mapa
 #: completo.
 FRENTES = {
-    "A.oeste": {"ARVECOR": Frente(9, 0.165, -3.216), "MAROLINI": Frente(5, 0.303, -1.706)},
-    "A.este": {"TERMINATOR": Frente(9, 0.165, 1.7135), "ZUCARACHAS": Frente(5, 0.303, 3.214)},
-    "A.norte": {"POETICO": Frente(4, 0.2117, 0.1666)},
-    "A.sur": {"FERNET_GOD": Frente(6, 0.1407, -0.1667)},
-    "B.este": {"PEPITO": Frente(5, 0.31, 1.757), "PETISAS": Frente(5, 0.265, 3.202)},
-    "B.oeste": {"PROGRES": Frente(11, 0.1424, -3.0878), "DON_SATURADOS": Frente(5, 0.265, -1.6411)},
-    "B.norte": {"MALBARDO": Frente(6, 0.142, -2.7491)},
-    "B.sur": {"JORGILLO": Frente(3, 0.3011, 2.7491)},
+    "A.este": {"MAROLINI": Frente(5, 0.303, 1.706), "ARVECOR": Frente(9, 0.165, 3.216)},
+    "A.oeste": {"ZUCARACHAS": Frente(5, 0.303, -3.214), "TERMINATOR": Frente(9, 0.165, -1.7135)},
+    "A.norte": {"POETICO": Frente(4, 0.2117, -6.0866)},
+    "A.sur": {"FERNET_GOD": Frente(6, 0.1407, 6.0867)},
+    "B.oeste": {"PETISAS": Frente(5, 0.265, -3.202), "PEPITO": Frente(5, 0.31, -1.757)},
+    "B.este": {"DON_SATURADOS": Frente(5, 0.265, 1.6411), "PROGRES": Frente(11, 0.1424, 3.0878)},
+    "B.norte": {"MALBARDO": Frente(6, 0.142, -3.1709)},
+    "B.sur": {"JORGILLO": Frente(3, 0.3011, 3.1709)},
     "N.sur": {"ACTRONCITO": Frente(4, 0.2535, 3.1947), "DURONGA": Frente(4, 0.2535, 2.1148)},
     "H1.sur": {"PURA_COLA": Frente(5, 0.1641, -1.496)},
     "H2.sur": {"MAYONCHIS": Frente(3, 0.2918, -0.446)},
