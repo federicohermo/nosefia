@@ -30,7 +30,7 @@ reflejados. Las mesas y sillas pasan al ventanal oeste conservando los anchos de
 - **Unidades exhibidas** (`tanda` de `A` y `B`): reflejan el centro real de su malla respecto de
   `2,96` con determinante positivo y actualizan su rótulo `tanda`.
 - **Corrimiento de `A`** (`gondolanueva-col` y todo lo que cuelga de ella): después del reflejo, la
-  góndola se corre hacia el centro hasta que su pasillo con la pared este mida
+  góndola se corre hacia el centro hasta que su pasillo con el zócalo de la pared este mida
   `PASILLO_A_PARED_ESTE`. Ver esa constante.
 
 ## Lo que cuesta
@@ -55,15 +55,17 @@ from lib.consola import configurar  # noqa: E402
 
 X_ESPEJO = 2.96
 DOS_X_ESPEJO = 2.0 * X_ESPEJO
-#: La cara interior de la pared este del salón, medida con un rayo contra `almacen-col`.
-PARED_ESTE_X = 7.87
+#: El borde que el jugador ve en la pared este: la cara interior del zócalo, medida con un rayo
+#: contra `local_zocalo_perimetral`. La pared (`almacen-col`) queda 0,016 más atrás.
+PARED_ESTE_X = 7.854
 
-#: El pasillo, de malla a malla, entre `A` y la pared este. Antes del espejo medía 1,858 entre `A`
-#: y el vidrio del ventanal, y 1,914 entre `A` y `B`. El plano del espejo queda 0,575 más cerca de
-#: la pared este que del ventanal, así que el reflejo dejaba 1,283 contra la pared. Para volver
-#: a 1,858 hacía falta 0,575 más, y el pasillo entre góndolas habría pasado de 1,914 a 1,339. Se
-#: reparte esa diferencia en partes iguales: cada pasillo pierde 0,2875 y queda en 1,5705 y 1,6265.
-PASILLO_A_PARED_ESTE = 1.5705
+#: El pasillo, de malla a malla, entre `A` y la pared este. Antes del espejo medía 1,793 entre `A`
+#: y el marco del ventanal (cara interior en -2,460), y 1,914 entre `A` y `B`. El plano del espejo
+#: queda 0,526 más cerca de la pared este que del ventanal, así que el reflejo dejaba 1,267
+#: contra el zócalo. Para volver a 1,793 hacía falta 0,526 más, y el pasillo entre góndolas habría
+#: pasado de 1,914 a 1,388. Se reparte esa diferencia en partes iguales: cada pasillo pierde 0,263
+#: y queda en 1,530 y 1,651.
+PASILLO_A_PARED_ESTE = 1.53
 JUNTA_BANDEJA = 0.001
 ENTRE_ESTANTES = 0.15
 

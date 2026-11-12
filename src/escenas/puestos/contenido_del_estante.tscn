@@ -60,7 +60,7 @@ metadata/frente_del_modelo = Vector3(1, 0, 0)
 metadata/producto_id = 2
 
 [node name="Zucarachas" type="MeshInstance3D" parent="."]
-transform = Transform3D(0.048208, 0, 0, 0, 0.1835, 0, 0, 0, 0.121427, 5.411274, 0.942314, -1.549755)
+transform = Transform3D(0.048208, 0, 0, 0, 0.1835, 0, 0, 0, 0.121427, 5.435774, 0.942314, -1.549755)
 visible = false
 mesh = ExtResource("malla3")
 gi_mode = 2
@@ -76,7 +76,7 @@ metadata/frente_del_modelo = Vector3(1, 0, 0)
 metadata/producto_id = 4
 
 [node name="Malbardo" type="MeshInstance3D" parent="."]
-transform = Transform3D(0.946315, 0, 0, 0, 1.194696, 0, 0, 0, 0.826142, 6.140502, 1.393385, -0.603051)
+transform = Transform3D(0.946315, 0, 0, 0, 1.194696, 0, 0, 0, 0.826142, 6.165002, 1.393385, -0.603051)
 visible = false
 mesh = ExtResource("malla5")
 gi_mode = 2
@@ -100,7 +100,7 @@ metadata/frente_del_modelo = Vector3(0, 1, 0)
 metadata/producto_id = 7
 
 [node name="Arvecor" type="MeshInstance3D" parent="."]
-transform = Transform3D(-0.022185, 0, 1.258026, 0, 1.275549, 0, -1.253105, 0, -0.022272, 6.1645, 1.316535, -2.385919)
+transform = Transform3D(-0.022185, 0, 1.258026, 0, 1.275549, 0, -1.253105, 0, -0.022272, 6.189, 1.316535, -2.385919)
 visible = false
 mesh = ExtResource("malla8")
 gi_mode = 2
@@ -124,7 +124,7 @@ metadata/frente_del_modelo = Vector3(1, 0, 0)
 metadata/producto_id = 10
 
 [node name="Pepito" type="MeshInstance3D" parent="."]
-transform = Transform3D(-0.152113, 0, 0, 0, 0.067319, 0, 0, 0, -0.135, 5.511612, 1.332932, -2.507053)
+transform = Transform3D(-0.152113, 0, 0, 0, 0.067319, 0, 0, 0, -0.135, 5.536112, 1.332932, -2.507053)
 visible = false
 mesh = ExtResource("malla11")
 gi_mode = 2
@@ -140,7 +140,7 @@ metadata/frente_del_modelo = Vector3(-1, 0, 0)
 metadata/producto_id = 12
 
 [node name="Uakalas" type="MeshInstance3D" parent="."]
-transform = Transform3D(-0.048208, 0, 0, 0, 0.1835, 0, 0, 0, -0.121427, 6.187726, 0.976117, -3.680756)
+transform = Transform3D(-0.048208, 0, 0, 0, 0.1835, 0, 0, 0, -0.121427, 6.212226, 0.976117, -3.680756)
 visible = false
 mesh = ExtResource("malla13")
 gi_mode = 2
@@ -156,7 +156,7 @@ metadata/frente_del_modelo = Vector3(-0.97, 0, 0.2432)
 metadata/producto_id = 14
 
 [node name="Frot Lups" type="MeshInstance3D" parent="."]
-transform = Transform3D(0.048208, 0, 0, 0, 0.1835, 0, 0, 0, 0.121427, 5.411273, 0.942314, -2.771756)
+transform = Transform3D(0.048208, 0, 0, 0, 0.1835, 0, 0, 0, 0.121427, 5.435773, 0.942314, -2.771756)
 visible = false
 mesh = ExtResource("malla15")
 gi_mode = 2
@@ -164,7 +164,7 @@ metadata/frente_del_modelo = Vector3(-1, 0, 0)
 metadata/producto_id = 15
 
 [node name="Marolini" type="MeshInstance3D" parent="."]
-transform = Transform3D(-0.048208, 0, 0, 0, 0.1835, 0, 0, 0, -0.121427, 6.187726, 0.976117, -1.246755)
+transform = Transform3D(-0.048208, 0, 0, 0, 0.1835, 0, 0, 0, -0.121427, 6.212226, 0.976117, -1.246755)
 visible = false
 mesh = ExtResource("malla16")
 gi_mode = 2
@@ -172,7 +172,7 @@ metadata/frente_del_modelo = Vector3(-1, 0, 0)
 metadata/producto_id = 16
 
 [node name="Amargadito" type="MeshInstance3D" parent="."]
-transform = Transform3D(0, 0, 0.88, 0, 0.757092, 0, -0.896034, 0, 0, 6.118173, 0.958636, -0.633996)
+transform = Transform3D(0, 0, 0.88, 0, 0.757092, 0, -0.896034, 0, 0, 6.142673, 0.958636, -0.633996)
 visible = false
 mesh = ExtResource("malla17")
 gi_mode = 2
@@ -212,7 +212,7 @@ metadata/frente_del_modelo = Vector3(-1, 0, 0)
 metadata/producto_id = 21
 
 [node name="Macumbas" type="MeshInstance3D" parent="."]
-transform = Transform3D(0.654545, 0, 0, 0, 0.787932, 0, 0, 0, 0.872727, 5.382, 1.385613, -1.082053)
+transform = Transform3D(0.654545, 0, 0, 0, 0.787932, 0, 0, 0, 0.872727, 5.4065, 1.385613, -1.082053)
 visible = false
 mesh = ExtResource("malla22")
 gi_mode = 2
@@ -236,7 +236,7 @@ metadata/frente_del_modelo = Vector3(0, 0, 1)
 metadata/producto_id = 24
 
 [node name="Fernet God" type="MeshInstance3D" parent="."]
-transform = Transform3D(0.02274, 0, -0.071916, 0, 0.098373, 0, 0.071916, 0, 0.02274, 5.445168, 0.822058, -4.291203)
+transform = Transform3D(0.02274, 0, -0.071916, 0, 0.098373, 0, 0.071916, 0, 0.02274, 5.469668, 0.822058, -4.291203)
 visible = false
 mesh = ExtResource("malla25")
 gi_mode = 2
@@ -260,7 +260,7 @@ metadata/frente_del_modelo = Vector3(-1, 0, 0)
 metadata/producto_id = 27
 
 [node name="Terminator" type="MeshInstance3D" parent="."]
-transform = Transform3D(0, 0, -0.547368, 0, 0.803323, 0, 0.692329, 0, 0, 5.436123, 1.311012, -4.306203)
+transform = Transform3D(0, 0, -0.547368, 0, 0.803323, 0, 0.692329, 0, 0, 5.460623, 1.311012, -4.306203)
 visible = false
 mesh = ExtResource("malla28")
 gi_mode = 2
@@ -268,7 +268,7 @@ metadata/frente_del_modelo = Vector3(-1, 0, 0)
 metadata/producto_id = 28
 
 [node name="Marranos" type="MeshInstance3D" parent="."]
-transform = Transform3D(0.105724, 0, 0.092266, 0, 0.22739, 0, -0.092266, 0, 0.105724, 6.112814, 1.315236, -2.612605)
+transform = Transform3D(0.105724, 0, 0.092266, 0, 0.22739, 0, -0.092266, 0, 0.105724, 6.137314, 1.315236, -2.612605)
 visible = false
 mesh = ExtResource("malla29")
 gi_mode = 2
