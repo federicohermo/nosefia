@@ -3,6 +3,11 @@ extends GdUnitTestSuite
 const ALMACEN := preload("res://src/escenas/almacen.tscn")
 const BolsaEnLaMano := preload("res://test/escenas/bolsa_en_la_mano.gd")
 const AperturaConLugar := preload("res://test/escenas/apertura_con_lugar.gd")
+const LadosDelMueble := preload("res://test/escenas/lados_del_mueble.gd")
+## A cuánto de la fachada de madera del fondo queda el piso donde se sueltan las unidades.
+const DISTANCIA_A_LA_FACHADA := 1.1
+## A cuánto del estante se para quien lo mira de frente, de más lejos a más cerca.
+const DISTANCIAS_AL_ESTANTE: Array[float] = [1.2, 1.0]
 
 
 func test_vender_no_cambia_lo_que_la_gondola_dibuja() -> void:  # AC-CTR-015
@@ -70,7 +75,7 @@ func test_recoger_del_grupo_del_piso_conserva_foco_identidad_y_reposicion() -> v
 	for indice in 3:
 		presentacion.call("retirar", producto.id)
 		var cuerpo: RigidBody3D = agarre.soltar(true)
-		cuerpo.global_position = Vector3(indice * 0.5, 2, -6)
+		cuerpo.global_position = _piso_del_fondo(almacen, indice * 0.5, 2.0)
 		cuerpos.append(cuerpo)
 	for cuadro in 120:
 		await get_tree().physics_frame
@@ -121,7 +126,7 @@ func test_laysntt_no_atraviesa_el_suelo_al_caer_plana_y_recibir_otras_cajas() ->
 			var id := Producto.Id.LAYSNNT if turno < 3 else Producto.Id.BURBALOO
 			almacen.get("_reposicion_manual").retirar(id)
 			var cuerpo: RigidBody3D = agarre.soltar(true)
-			cuerpo.global_position = Vector3(0.6, 1.7, -5.7)
+			cuerpo.global_position = _piso_del_fondo(almacen, 0.0, 1.7)
 			cuerpo.rotation = Vector3(PI / 2, giro, 0)
 			if turno < 3:
 				bolsas.append(cuerpo)
@@ -150,15 +155,16 @@ func test_el_burbaloo_del_piso_no_bloquea_al_jugador() -> void:
 	AperturaConLugar.abrir_con_todo_el_lugar(almacen)
 	var jugador: CharacterBody3D = almacen.get("_jugador")
 	jugador.set_physics_process(false)
-	jugador.global_position = Vector3(0, 0.5, -5.8)
+	var pasillo := _eje_del_fondo(almacen)
+	jugador.global_position = _piso_del_fondo(almacen, 0.0, 0.5)
 	var agarre: Agarre = almacen.get("_agarre")
 	almacen.get("_reposicion_manual").retirar(Producto.Id.BURBALOO)
 	var cuerpo: RigidBody3D = agarre.soltar(true)
-	cuerpo.global_position = jugador.global_position + Vector3(1, 0.2, 0)
+	cuerpo.global_position = jugador.global_position + pasillo + Vector3.UP * 0.2
 	await get_tree().physics_frame
-	assert_bool(jugador.test_move(jugador.global_transform, Vector3(1.5, 0, 0))).is_false()
+	assert_bool(jugador.test_move(jugador.global_transform, pasillo * 1.5)).is_false()
 	cuerpo.remove_collision_exception_with(jugador)
-	assert_bool(jugador.test_move(jugador.global_transform, Vector3(1.5, 0, 0))).is_true()
+	assert_bool(jugador.test_move(jugador.global_transform, pasillo * 1.5)).is_true()
 	cuerpo.add_collision_exception_with(jugador)
 	assert_int(cuerpo.collision_mask).is_equal(ReglasDeLosObjetos.MASCARA_DEL_PRODUCTO)
 	assert_bool(agarre.pedir_agarrar(cuerpo.datos, cuerpo)).is_true()
@@ -182,7 +188,9 @@ func test_laysntt_y_jorgillo_quedan_sobre_el_suelo_al_mover_la_camara() -> void:
 		for indice in estante.cupo(producto) - estante.unidades_en_gondola(producto):
 			almacen.get("_reposicion_manual").retirar(id)
 			var cuerpo: RigidBody3D = agarre.soltar(true)
-			cuerpo.global_position = Vector3(-1.2 + indice * 0.6, 1.5, -5.8 + (id % 2) * 0.5)
+			cuerpo.global_position = _piso_del_fondo(
+				almacen, -1.2 + indice * 0.6, 1.5, (id % 2) * 0.5
+			)
 			sueltas.append(cuerpo)
 	for cuadro in 300:
 		camara.rotation = Vector3(sin(cuadro * 0.1), cuadro * 0.03, 0)
@@ -278,7 +286,7 @@ func test_las_unidades_sueltas_caen_y_se_recuperan_sin_perder_su_reserva() -> vo
 	for indice in estante.disponibles_para_retirar(producto):
 		presentacion.call("retirar", producto.id)
 		var cuerpo: RigidBody3D = agarre.soltar(true)
-		cuerpo.global_position = Vector3(indice, 2, -6)
+		cuerpo.global_position = _piso_del_fondo(almacen, indice, 2.0)
 		sueltas.append(cuerpo)
 		assert_bool(cuerpo.freeze).is_false()
 		assert_int(cuerpo.collision_layer).is_equal(1)
@@ -729,6 +737,64 @@ func _radio(caja: Node3D) -> float:
 	return radio
 
 
+## Dónde se para el jugador para mirar un punto del estante desde su frente: el primer piso con
+## lugar para el cuerpo y la vista libre hasta el punto. Se prueba de frente y con un costado a
+## cada lado y más cerca, porque una pared puede ocupar el piso que queda justo en frente.
+## `Vector3.INF` si ninguno sirve.
+func _pie_frente_al_estante(
+	almacen: Node3D, jugador: Node3D, unidad: Node3D, estante: Vector3, frente: Vector3
+) -> Vector3:
+	var espacio := jugador.get_world_3d().direct_space_state
+	var excluidos: Array[RID] = [
+		(jugador as CollisionObject3D).get_rid(), (unidad as CollisionObject3D).get_rid()
+	]
+	var candidatos: Array[Vector3] = []
+	for distancia: float in DISTANCIAS_AL_ESTANTE:
+		for costado: float in [0.5, -0.5, 0.0]:
+			candidatos.append(estante + frente * distancia + frente.cross(Vector3.UP) * costado)
+	for candidato in candidatos:
+		var suelo := PhysicsRayQueryParameters3D.create(
+			Vector3(candidato.x, 3.0, candidato.z), Vector3(candidato.x, -1.0, candidato.z), 1
+		)
+		suelo.exclude = excluidos
+		var piso := espacio.intersect_ray(suelo)
+		if piso.is_empty() or piso["collider"] != almacen.get_node("Estructura/SueloSolido"):
+			continue
+		var pie: Vector3 = piso["position"] + Vector3.UP * 0.005
+		if not LadosDelMueble.cabe_parado(almacen, pie):
+			continue
+		var vista := PhysicsRayQueryParameters3D.create(
+			pie + Vector3.UP * ReglasDelJugador.ALTURA_DE_LA_CAMARA, estante, 1
+		)
+		vista.exclude = excluidos
+		var golpe := espacio.intersect_ray(vista)
+		if golpe.is_empty() or (golpe["position"] as Vector3).distance_to(estante) < 0.2:
+			return pie
+	return Vector3.INF
+
+
+## Un punto del piso del pasillo del fondo, delante de la fachada de madera, a `alto` del piso. Ese
+## pasillo es piso libre en todo su largo: las góndolas lo dejan atrás. `a_lo_largo` lo corre a
+## lo largo de la fachada desde su centro, y `hacia_el_local` lo aleja de ella.
+func _piso_del_fondo(
+	almacen: Node3D, a_lo_largo: float, alto: float, hacia_el_local := 0.0
+) -> Vector3:
+	var fachada := almacen.get_node("Estructura/mueble_continuo") as MeshInstance3D
+	var frente := fachada.global_basis.z.normalized()
+	var punto := (
+		LadosDelMueble.caja(fachada).get_center()
+		+ _eje_del_fondo(almacen) * a_lo_largo
+		+ frente * (DISTANCIA_A_LA_FACHADA + hacia_el_local)
+	)
+	punto.y = alto
+	return punto
+
+
+## El largo de la fachada de madera, que es el largo del pasillo del fondo.
+func _eje_del_fondo(almacen: Node3D) -> Vector3:
+	return (almacen.get_node("Estructura/mueble_continuo") as Node3D).global_basis.x.normalized()
+
+
 func _accion(
 	jugador: Node3D, objetivo: Node3D, accion: StringName = ReglasDeLosObjetos.ACCION_AGARRAR
 ) -> void:
@@ -895,14 +961,13 @@ func test_sin_superficie_que_valga_se_suelta_como_siempre() -> void:  # AC-PLY-0
 	# Uakalas cambió de mueble: se mira desde su frente real, con el jugador en piso libre.
 	# La postura anterior atravesaba el lateral y dejaba la mano dentro de la reserva.
 	var estante := apoyo - frente * 0.12
-	var candidato := estante + frente * 1.2 + frente.cross(Vector3.UP) * 0.5
-	var suelo := PhysicsRayQueryParameters3D.create(
-		Vector3(candidato.x, 3.0, candidato.z), Vector3(candidato.x, -1.0, candidato.z), 1
+	var pie := _pie_frente_al_estante(almacen, jugador, unidad, estante, frente)
+	(
+		assert_vector(pie)
+		. override_failure_message("Premisa: piso libre frente a Uakalas")
+		. is_not_equal(Vector3.INF)
 	)
-	suelo.exclude = [jugador.get_rid(), unidad.get_rid()]
-	var piso_libre := jugador.get_world_3d().direct_space_state.intersect_ray(suelo)
-	assert_object(piso_libre["collider"]).is_same(almacen.get_node("Estructura/SueloSolido"))
-	jugador.call("ubicar", Transform3D(Basis.IDENTITY, piso_libre["position"] + Vector3.UP * 0.005))
+	jugador.call("ubicar", Transform3D(Basis.IDENTITY, pie))
 	camara.position = Vector3.UP * ReglasDelJugador.ALTURA_DE_LA_CAMARA
 	camara.rotation = Vector3.ZERO
 	var vista := Transform3D(Basis.IDENTITY, camara.global_position).looking_at(estante)

@@ -1,6 +1,12 @@
 ## El espacio comercial se conserva sin crear un soporte invisible bajo las cajas.
 extends GdUnitTestSuite
 
+const LadosDelMueble := preload("res://test/escenas/lados_del_mueble.gd")
+## A cuánto de la cara se para quien suelta algo hacia la góndola.
+const DISTANCIA_PARA_SOLTAR := 0.8
+## Hacia qué alto mira quien apunta al piso, junto a la góndola.
+const ALTURA_BAJA := 0.5
+
 
 func test_las_unidades_soltadas_hacia_las_tres_gondolas_quedan_afuera() -> void:  # AC-PLY-018
 	var almacen := await _abrir()
@@ -9,14 +15,29 @@ func test_las_unidades_soltadas_hacia_las_tres_gondolas_quedan_afuera() -> void:
 	var agarre: Agarre = almacen.get("_agarre")
 	var reservados: Array[PhysicsBody3D] = almacen.get("_muebles_con_contorno")
 	assert_int(reservados.size()).is_equal(3)
+	var casos: Array[Array] = []
 	for cuerpo: PhysicsBody3D in reservados:
 		var malla := cuerpo.get_parent() as MeshInstance3D
-		var mueble := malla.global_transform * malla.get_aabb()
-		var centro := mueble.get_center()
-		var hacia := (
-			Vector3.FORWARD if str(malla.name).begins_with("gondolanueva_001") else Vector3.RIGHT
+		var costados := LadosDelMueble.libres(almacen, malla, DISTANCIA_PARA_SOLTAR, false)
+		(
+			assert_array(costados)
+			. override_failure_message("%s no tiene un costado con lugar" % malla.name)
+			. is_not_empty()
 		)
-		var pies := centro - hacia * (mueble.size.dot(hacia.abs()) / 2.0 + 0.8)
+		for costado in costados:
+			# La angosta del fondo se aborda a la altura de su centro: apuntar al piso acorta la
+			# proyección horizontal de la mano y no entra en su reserva.
+			var alturas: Array[bool] = [false]
+			if not str(malla.name).begins_with("gondolanueva_001"):
+				alturas.append(true)
+			for baja in alturas:
+				casos.append([malla, costado, baja])
+	for caso: Array in casos:
+		var malla: MeshInstance3D = caso[0]
+		var costado: LadosDelMueble.Lado = caso[1]
+		var mueble := LadosDelMueble.caja(malla)
+		var centro := mueble.get_center()
+		var pies := LadosDelMueble.pie_junto_a(malla, costado, DISTANCIA_PARA_SOLTAR)
 		var suelo := PhysicsRayQueryParameters3D.create(
 			Vector3(pies.x, 0.8, pies.z), Vector3(pies.x, -1, pies.z), jugador.collision_mask
 		)
@@ -27,9 +48,7 @@ func test_las_unidades_soltadas_hacia_las_tres_gondolas_quedan_afuera() -> void:
 			return
 		pies.y = (piso.position as Vector3).y + ReglasDeLosObjetos.ROCE
 		jugador.global_position = pies
-		# La góndola norte se aborda por la cabecera; apuntar al piso acorta
-		# la proyección horizontal de la mano y no entra en su reserva.
-		var alto := centro.y if hacia == Vector3.FORWARD else 0.5
+		var alto := ALTURA_BAJA if caso[2] else centro.y
 		await _mirar(jugador, Vector3(centro.x, alto, centro.z))
 		var capsula: CollisionShape3D = jugador.get_node("Cuerpo")
 		var consulta := PhysicsShapeQueryParameters3D.new()
