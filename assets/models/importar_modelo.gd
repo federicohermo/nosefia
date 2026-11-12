@@ -19,6 +19,9 @@ const FILTRO_LINEAL: Array[String] = [
 	"MESA | Base cromada",
 	"MOSTRADOR | Acero satinado",
 	"local_aluminio",
+	# Cada cara del lavatorio toma uno o dos texeles de su atlas, apenas distintos: pixelado, el
+	# frente se veía en franjas.
+	"bano_porcelana",
 ]
 ## Las piezas de las jambas toman la luz de las sondas y de las luces en tiempo real, y salen más
 ## claras que la pared horneada que tienen al lado: 1,6 veces en el portón y en el cuartito de
@@ -30,9 +33,11 @@ const TINTE_DE_LA_COMPUERTA := Color(0.77, 0.78, 0.81, 1.0)
 ## Las hojas de las cabinas del baño también: sin este tinte salían casi el doble de claras que
 ## las mamparas horneadas de al lado, y parecían emitir luz.
 const TINTE_DE_LAS_CABINAS := Color(0.66, 0.66, 0.66, 1.0)
-## Cuántas veces más fino que el resto del modelo se hornea el mapa de luz de las sillas: a 20 cm
-## por texel, el asiento entero eran dos texeles y dejaba manchas claras donde lo tocan las patas.
-const DETALLE_DE_LUZ_DE_LAS_SILLAS := 8.0
+## Cuántas veces más fino que el resto del modelo se hornea el mapa de luz de los muebles chicos y
+## curvos: a 20 cm por texel, el asiento de una silla eran dos texeles y dejaba manchas claras donde
+## lo tocan las patas, y el frente del lavatorio se veía en franjas.
+const DETALLE_DE_LUZ := 8.0
+const CON_DETALLE_DE_LUZ: Array[String] = ["salon_silla", "vanitory", "bano_lavatorio"]
 ## La variación grande de las paredes pintadas, horneada por `hornear_paredes.py`: los retoques y
 ## manchas de la pintura, sin repetirse. Su color lleva sólo el grano fino, que se repite cada
 ## pocos metros sin que se note.
@@ -58,8 +63,9 @@ func _post_import(escena: Node) -> Object:
 			# texel del mapa de luz y se horneaban negros: toman la luz de las sondas, como la
 			# góndola.
 			malla.gi_mode = GeometryInstance3D.GI_MODE_DYNAMIC
-		if str(malla.name).begins_with("salon_silla"):
-			malla.gi_lightmap_texel_scale = DETALLE_DE_LUZ_DE_LAS_SILLAS
+		for prefijo: String in CON_DETALLE_DE_LUZ:
+			if str(malla.name).begins_with(prefijo):
+				malla.gi_lightmap_texel_scale = DETALLE_DE_LUZ
 		if str(malla.name).begins_with("deposito_esquinas_"):
 			# Se dibujan a toda distancia: con un alcance, la pared cambiaba de tono al acercarse
 			# y el usuario lo veía como una sombra que aparecía y se iba.
