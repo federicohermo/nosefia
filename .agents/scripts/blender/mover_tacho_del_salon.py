@@ -1,4 +1,4 @@
-"""Acerca a la puerta blanca el tacho del salón, a lo largo de la pared este.
+"""Centra el tacho del salón en una baldosa junto a la pared este, a lo largo de la pared.
 
     blender assets/models/SEPT_JUEGOS_PROTOTIPO.blend --background --python-exit-code 1 \
         --python .claude/scripts/blender/mover_tacho_del_salon.py -- [--aplicar]
@@ -9,9 +9,9 @@ repo. Con `--aplicar`, guarda la fuente canónica en su lugar. Después corren `
 
 ## Qué cambia
 
-El tacho del salón (`tachitobasura-col`, con su bisagra y su tapa) se corre sólo en `y`, hacia la
-puerta blanca de la pared este. No cambia su distancia a la pared ni su giro. Es idempotente: el
-destino es una posición absoluta del centro, no un corrimiento.
+El tacho del salón (`tachitobasura-col`, con su bisagra y su tapa) se corre sólo en `y` y queda
+centrado en una baldosa pegada al zócalo de la pared este. No cambia su distancia a la pared ni su
+giro. Es idempotente: el destino es una posición absoluta del centro, no un corrimiento.
 
 ## Lo que cuesta
 
@@ -31,9 +31,10 @@ sys.path.insert(0, str(RAIZ / ".claude/scripts"))
 from lib.consola import configurar  # noqa: E402
 
 TACHO = "tachitobasura-col"
-#: Donde queda el centro del cuerpo en `y`. Antes estaba en -4,840: el corrimiento es de 1,0 m,
-#: casi una baldosa del salón (1,011 m en este sentido).
-CENTRO_Y = -3.84
+#: El centro de la baldosa, medido en el juego con una cámara cenital ortogonal sobre el piso: las
+#: juntas de la franja pegada a la pared caen en `y` = -3,424, -4,140 y -4,853 (baldosa de 0,7135 m
+#: en este sentido). El centro de la baldosa que está entre las dos últimas es -4,4965.
+CENTRO_Y = -4.4965
 
 
 def _centro_del_cuerpo(objeto) -> Vector:
