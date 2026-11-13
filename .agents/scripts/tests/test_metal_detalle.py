@@ -4,6 +4,8 @@
 **diciendo qué no miraron**. Un salteo no es un verde. Corren en la máquina que tiene numpy.
 """
 
+from __future__ import annotations
+
 import sys
 import unittest
 from pathlib import Path
