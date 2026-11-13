@@ -194,16 +194,19 @@ func _posturas_de_la_gondola(almacen: Node3D) -> Array[Array]:
 			if frente.dot(lado.hacia) > 0.99 and cerca_del_mueble.has_point(aqui):
 				envase = aqui
 				break
-		(
-			assert_vector(envase)
-			. override_failure_message("Premisa: un envase puesto de cara a %v" % lado.hacia)
-			. is_not_equal(Vector3.INF)
-		)
+		# Un lado sin envases de cara, como el que da a la pared, no tiene qué probar.
+		if envase == Vector3.INF:
+			continue
 		var a_lo_largo := lado.hacia.cross(Vector3.UP)
 		var donde := LadosDelMueble.pie_junto_a(gondola, lado, DISTANCIA_A_LA_GONDOLA)
 		donde += a_lo_largo * (envase - mueble.get_center()).dot(a_lo_largo)
 		for altura: float in ALTURAS_DE_LA_MIRA:
 			posturas.append([donde, Vector3(envase.x, altura, envase.z)])
+	(
+		assert_array(posturas)
+		. override_failure_message("Premisa: la góndola tiene un lado con envases de cara")
+		. is_not_empty()
+	)
 	return posturas
 
 
