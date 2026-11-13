@@ -42,15 +42,20 @@ CABECERAS = ("A.norte", "A.sur", "B.norte", "B.sur")
 
 CARAS = {cara: tuple(frentes) for cara, frentes in FRENTES.items()}
 
+#: Cuántos niveles tiene cada cara. Todas tienen cuatro salvo la estantería empotrada de no
+#: comestibles, que tiene cinco: los cuatro de las bandejas de las heladeras y uno más abajo.
+NIVELES_POR_CARA = {"N.sur": 5}
+NIVELES_POR_DEFECTO = 4
+
 ESTANTES_DE_PRUEBA = {
     f"{cara}.{nivel}": tuple(Tanda(p, fija=nivel != 1) for p in productos)
     for cara, productos in CARAS.items()
-    for nivel in range(4)
+    for nivel in range(NIVELES_POR_CARA.get(cara, NIVELES_POR_DEFECTO))
 }
 
 def validar_reparto_de_prueba(estantes: dict[str, tuple[Tanda, ...]]) -> None:
     if estantes.keys() != ESTANTES_DE_PRUEBA.keys():
-        raise ValueError("La prueba requiere los cuatro niveles de cada cara")
+        raise ValueError("La prueba requiere todos los niveles de cada cara")
     principales = Counter()
     for clave, tandas in estantes.items():
         cara, _ = clave.rsplit(".", 1)
