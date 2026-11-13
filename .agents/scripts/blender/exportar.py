@@ -52,7 +52,6 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 from lib.blender import (  # noqa: E402
     COLECCION_DE_GUIA,
-    FUENTES,
     LADO_MAXIMO,
     MODIFICADOR,
     achicada,
@@ -60,6 +59,11 @@ from lib.blender import (  # noqa: E402
     grupo_de,
 )
 from blender.separar_hojas_de_entrada import editar as separar_hojas_de_entrada  # noqa: E402
+from blender.aplicar_atlas import aplicar as aplicar_atlas  # noqa: E402
+from blender.aplicar_atlas import restaurar as restaurar_atlas  # noqa: E402
+from blender.aplicar_atlas import ruta_en_fuentes  # noqa: E402
+from blender.unir_mallas_para_exportar import restaurar as restaurar_uniones  # noqa: E402
+from blender.unir_mallas_para_exportar import unir as unir_mallas  # noqa: E402
 
 
 def apagar_los_array() -> list[tuple[str, str]]:
@@ -107,19 +111,6 @@ def apagar_los_noimp() -> list[str]:
     return ocultos
 
 
-def ruta_en_fuentes(imagen: "bpy.types.Image") -> str | None:
-    """La ruta del archivo de una imagen adentro de `assets/source/`, o `None` si no sale de ahí.
-
-    Las empaquetadas con la ruta de la máquina donde se armaron no salen de ahí: la ruta no
-    existe en esta, y la resolución la deja afuera.
-    """
-    ruta = Path(bpy.path.abspath(imagen.filepath))
-    try:
-        return ruta.resolve().relative_to(FUENTES.resolve()).as_posix()
-    except (OSError, ValueError):
-        return None
-
-
 def achicar_las_imagenes() -> list[tuple["bpy.types.Image", "bpy.types.Image"]]:
     """Reemplaza cada imagen que pasa el lado de su grupo por una copia achicada, y devuelve los
     pares para deshacerlo.
@@ -135,7 +126,10 @@ def achicar_las_imagenes() -> list[tuple["bpy.types.Image", "bpy.types.Image"]]:
         ancho, alto = imagen.size
         if ancho == 0 or alto == 0:
             continue
-        lado = LADO_MAXIMO[grupo_de(ruta_en_fuentes(imagen))]
+        relativa = ruta_en_fuentes(imagen)
+        if relativa is not None and relativa.startswith("atlas/"):
+            continue
+        lado = LADO_MAXIMO[grupo_de(relativa)]
         nuevo = achicada(ancho, alto, lado)
         if nuevo == (ancho, alto):
             continue
@@ -213,11 +207,18 @@ def main() -> None:
     print(f"objetos `-noimp` ocultos: {len(noimp)}")
     print(f"colección `{COLECCION_DE_GUIA}` excluida: {guia_apagada}")
     achicadas: list[tuple[bpy.types.Image, bpy.types.Image]] = []
+    originales_unidas: list[str] = []
+    uniones: list[str] = []
+    estado_del_atlas: tuple[list, dict, list] = ([], {}, [])
     try:
+        estado_del_atlas = aplicar_atlas()
+        originales_unidas, uniones = unir_mallas()
         achicadas = achicar_las_imagenes()
         print(f"texturas achicadas: {len(achicadas)}")
         exportar(destino)
     finally:
+        restaurar_uniones(originales_unidas, uniones)
+        restaurar_atlas(estado_del_atlas)
         restaurar_las_imagenes(achicadas)
         restaurar(apagados)
         for nombre in noimp:

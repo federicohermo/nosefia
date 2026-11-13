@@ -14,9 +14,12 @@ func test_ningun_estante_inferior_sobresale_de_los_superiores() -> void:  # AC-S
 	for nombre: String in GONDOLAS:
 		var mueble := estructura.get_node(nombre) as MeshInstance3D
 		var caras := mueble.mesh.get_faces()
-		var lados: Array[Vector3] = [Vector3.BACK]
-		if nombre in ["gondolanueva", "gondolanueva2"]:
-			lados.assign([Vector3.RIGHT, Vector3.LEFT])
+		# Las caras de lado son las perpendiculares al largo del mueble, leído de su malla.
+		var local := mueble.get_aabb()
+		var costado := (
+			mueble.basis * (Vector3.RIGHT if local.size.x < local.size.z else Vector3.BACK)
+		)
+		var lados: Array[Vector3] = [costado.normalized(), -costado.normalized()]
 		for lado in lados:
 			var planas: Array[PackedVector3Array] = []
 			for inicio in range(0, caras.size(), 3):

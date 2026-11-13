@@ -1,0 +1,298 @@
+{
+ "atlas": {
+  "atlas_cajas_bc1.png": [
+   2720,
+   3808
+  ]
+ },
+ "cajas": {
+  "actroncito": {
+   "atlas": "atlas_cajas_bc1.png",
+   "rect": [
+    16,
+    16,
+    512,
+    512
+   ]
+  },
+  "amargadito": {
+   "atlas": "atlas_cajas_bc1.png",
+   "rect": [
+    560,
+    16,
+    512,
+    512
+   ]
+  },
+  "arvejas": {
+   "atlas": "atlas_cajas_bc1.png",
+   "rect": [
+    1104,
+    16,
+    512,
+    512
+   ]
+  },
+  "burbaloo": {
+   "atlas": "atlas_cajas_bc1.png",
+   "rect": [
+    1648,
+    16,
+    512,
+    512
+   ]
+  },
+  "chisitos": {
+   "atlas": "atlas_cajas_bc1.png",
+   "rect": [
+    2192,
+    16,
+    512,
+    512
+   ]
+  },
+  "cindolor": {
+   "atlas": "atlas_cajas_bc1.png",
+   "rect": [
+    16,
+    560,
+    512,
+    512
+   ]
+  },
+  "coracola": {
+   "atlas": "atlas_cajas_bc1.png",
+   "rect": [
+    560,
+    560,
+    512,
+    512
+   ]
+  },
+  "cosa_de_mani": {
+   "atlas": "atlas_cajas_bc1.png",
+   "rect": [
+    1104,
+    560,
+    512,
+    512
+   ]
+  },
+  "donsaturados": {
+   "atlas": "atlas_cajas_bc1.png",
+   "rect": [
+    1648,
+    560,
+    512,
+    512
+   ]
+  },
+  "durextra": {
+   "atlas": "atlas_cajas_bc1.png",
+   "rect": [
+    2192,
+    560,
+    512,
+    512
+   ]
+  },
+  "duronga": {
+   "atlas": "atlas_cajas_bc1.png",
+   "rect": [
+    16,
+    1104,
+    512,
+    512
+   ]
+  },
+  "feel_ricky_fort": {
+   "atlas": "atlas_cajas_bc1.png",
+   "rect": [
+    560,
+    1104,
+    512,
+    512
+   ]
+  },
+  "fernet_god": {
+   "atlas": "atlas_cajas_bc1.png",
+   "rect": [
+    1104,
+    1104,
+    512,
+    512
+   ]
+  },
+  "flinpuf": {
+   "atlas": "atlas_cajas_bc1.png",
+   "rect": [
+    1648,
+    1104,
+    512,
+    512
+   ]
+  },
+  "frotlups": {
+   "atlas": "atlas_cajas_bc1.png",
+   "rect": [
+    2192,
+    1104,
+    512,
+    512
+   ]
+  },
+  "jorgillo": {
+   "atlas": "atlas_cajas_bc1.png",
+   "rect": [
+    16,
+    1648,
+    512,
+    512
+   ]
+  },
+  "laysntt": {
+   "atlas": "atlas_cajas_bc1.png",
+   "rect": [
+    560,
+    1648,
+    512,
+    512
+   ]
+  },
+  "macumbas": {
+   "atlas": "atlas_cajas_bc1.png",
+   "rect": [
+    1104,
+    1648,
+    512,
+    512
+   ]
+  },
+  "malbardo": {
+   "atlas": "atlas_cajas_bc1.png",
+   "rect": [
+    1648,
+    1648,
+    512,
+    512
+   ]
+  },
+  "marolini": {
+   "atlas": "atlas_cajas_bc1.png",
+   "rect": [
+    2192,
+    1648,
+    512,
+    512
+   ]
+  },
+  "marranos": {
+   "atlas": "atlas_cajas_bc1.png",
+   "rect": [
+    16,
+    2192,
+    512,
+    512
+   ]
+  },
+  "mayonchis": {
+   "atlas": "atlas_cajas_bc1.png",
+   "rect": [
+    560,
+    2192,
+    512,
+    512
+   ]
+  },
+  "oaaaa": {
+   "atlas": "atlas_cajas_bc1.png",
+   "rect": [
+    1104,
+    2192,
+    512,
+    512
+   ]
+  },
+  "oremos": {
+   "atlas": "atlas_cajas_bc1.png",
+   "rect": [
+    1648,
+    2192,
+    512,
+    512
+   ]
+  },
+  "pepitos": {
+   "atlas": "atlas_cajas_bc1.png",
+   "rect": [
+    2192,
+    2192,
+    512,
+    512
+   ]
+  },
+  "petisas": {
+   "atlas": "atlas_cajas_bc1.png",
+   "rect": [
+    16,
+    2736,
+    512,
+    512
+   ]
+  },
+  "poetico": {
+   "atlas": "atlas_cajas_bc1.png",
+   "rect": [
+    560,
+    2736,
+    512,
+    512
+   ]
+  },
+  "prongles": {
+   "atlas": "atlas_cajas_bc1.png",
+   "rect": [
+    1104,
+    2736,
+    512,
+    512
+   ]
+  },
+  "saladik": {
+   "atlas": "atlas_cajas_bc1.png",
+   "rect": [
+    1648,
+    2736,
+    512,
+    512
+   ]
+  },
+  "terminator": {
+   "atlas": "atlas_cajas_bc1.png",
+   "rect": [
+    2192,
+    2736,
+    512,
+    512
+   ]
+  },
+  "uakas": {
+   "atlas": "atlas_cajas_bc1.png",
+   "rect": [
+    16,
+    3280,
+    512,
+    512
+   ]
+  },
+  "zucarachas": {
+   "atlas": "atlas_cajas_bc1.png",
+   "rect": [
+    560,
+    3280,
+    512,
+    512
+   ]
+  }
+ }
+}

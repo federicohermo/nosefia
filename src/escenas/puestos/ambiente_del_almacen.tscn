@@ -42,7 +42,7 @@ ambient_mode = 0
 blend_distance = 0.1
 
 [node name="ReflejosDeLasMesas" type="ReflectionProbe" parent="."]
-position = Vector3(5.8, 1.4, -2.45)
+position = Vector3(0.12, 1.4, -2.45)
 size = Vector3(2.8, 2.8, 5.4)
 intensity = 1.0
 max_distance = 80.0
@@ -158,8 +158,8 @@ light_bake_mode = 1
 area_size = Vector2(1.2, 0.6)
 
 [node name="ReboteFrontalDeLaGondola" type="AreaLight3D" parent="."]
-position = Vector3(-1.6, 1.7, -2.0)
-rotation = Vector3(-0.463648, -1.5707963, 0)
+position = Vector3(7.087, 1.7, -2.0)
+rotation = Vector3(-0.463648, 1.5707963, 0)
 light_color = Color(0.76, 0.91, 0.86, 1)
 light_energy = 1.4
 light_indirect_energy = 1.0

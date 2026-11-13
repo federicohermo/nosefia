@@ -14,11 +14,11 @@ from lib.reparto_de_prueba import (
 class RepartoDePrueba(unittest.TestCase):
     def test_cada_uno_de_los_cuatro_niveles_repite_el_mapa(self):  # AC-STK-096
         caras = {
-            "A.oeste": ("ARVECOR", "MAROLINI"),
-            "A.este": ("TERMINATOR", "ZUCARACHAS"),
+            "A.este": ("MAROLINI", "ARVECOR"),
+            "A.oeste": ("ZUCARACHAS", "TERMINATOR"),
             "A.norte": ("POETICO",), "A.sur": ("FERNET_GOD",),
-            "B.este": ("PEPITO", "PETISAS"),
-            "B.oeste": ("PROGRES", "DON_SATURADOS"),
+            "B.oeste": ("PETISAS", "PEPITO"),
+            "B.este": ("DON_SATURADOS", "PROGRES"),
             "B.norte": ("MALBARDO",), "B.sur": ("JORGILLO",),
             "N.sur": ("ACTRONCITO", "DURONGA"),
             "H1.sur": ("PURA_COLA",), "H2.sur": ("MAYONCHIS",),

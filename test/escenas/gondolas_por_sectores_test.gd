@@ -1,7 +1,12 @@
 extends GdUnitTestSuite
 
+## La clase de cara de un mueble donde va un destino. `UNICA` es un mueble con un solo frente.
+enum Cara { LADO, CABECERA, UNICA }
+
 const ALMACEN := "res://src/escenas/almacen.tscn"
 const AperturaConLugar := preload("res://test/escenas/apertura_con_lugar.gd")
+const LadosDelMueble := preload("res://test/escenas/lados_del_mueble.gd")
+const TOLERANCIA_DEL_FRENTE := Vector3.ONE * 0.002
 
 
 func _almacen() -> Node3D:
@@ -25,56 +30,82 @@ func _inventario(almacen: Node3D) -> Inventario:
 	return repositor.estante().get("_inventario")
 
 
+## Qué productos van juntos en una cara de cada mueble, y de qué clase es esa cara. Dónde cae la
+## cara en el local no se declara: sale del mueble.
 func _destinos() -> Dictionary:
 	return {
 		"gondolanueva":
-		{
-			Vector3.LEFT:
-			[Producto.Id.MAROLINI, Producto.Id.ARVECOR, Producto.Id.UAKALAS, Producto.Id.MARRANOS],
-			Vector3.RIGHT:
+		[
 			[
-				Producto.Id.MACUMBAS,
-				Producto.Id.PEPITO,
-				Producto.Id.ZUCARACHAS,
-				Producto.Id.FROT_LUPS
+				Cara.LADO,
+				[
+					Producto.Id.MAROLINI,
+					Producto.Id.ARVECOR,
+					Producto.Id.UAKALAS,
+					Producto.Id.MARRANOS
+				]
 			],
-			Vector3.BACK: [Producto.Id.MALBARDO, Producto.Id.AMARGADITO],
-			Vector3.FORWARD: [Producto.Id.FERNET_GOD, Producto.Id.TERMINATOR],
-		},
+			[
+				Cara.LADO,
+				[
+					Producto.Id.MACUMBAS,
+					Producto.Id.PEPITO,
+					Producto.Id.ZUCARACHAS,
+					Producto.Id.FROT_LUPS
+				]
+			],
+			[Cara.CABECERA, [Producto.Id.MALBARDO, Producto.Id.AMARGADITO]],
+			[Cara.CABECERA, [Producto.Id.FERNET_GOD, Producto.Id.TERMINATOR]],
+		],
 		"gondolanueva2":
-		{
-			Vector3.RIGHT:
+		[
 			[
-				Producto.Id.OREMOS,
-				Producto.Id.PETISAS,
-				Producto.Id.DON_SATURADOS,
-				Producto.Id.FEEL_RICKY_FORT
+				Cara.LADO,
+				[
+					Producto.Id.OREMOS,
+					Producto.Id.PETISAS,
+					Producto.Id.DON_SATURADOS,
+					Producto.Id.FEEL_RICKY_FORT
+				]
 			],
-			Vector3.LEFT:
-			[Producto.Id.SALADICK, Producto.Id.PROGRES, Producto.Id.CHISITOS, Producto.Id.LAYSNNT],
-			Vector3.BACK: [Producto.Id.JORGILLO, Producto.Id.BURBALOO],
-			Vector3.FORWARD: [Producto.Id.COSA_DE_MANI, Producto.Id.FLIM_POF],
-		},
+			[
+				Cara.LADO,
+				[
+					Producto.Id.SALADICK,
+					Producto.Id.PROGRES,
+					Producto.Id.CHISITOS,
+					Producto.Id.LAYSNNT
+				]
+			],
+			[Cara.CABECERA, [Producto.Id.JORGILLO, Producto.Id.BURBALOO]],
+			[Cara.CABECERA, [Producto.Id.COSA_DE_MANI, Producto.Id.FLIM_POF]],
+		],
 		"gondolanueva_001":
-		{
-			Vector3.BACK:
-			[Producto.Id.ACTRONCITO, Producto.Id.DUREXTRA, Producto.Id.POETICO, Producto.Id.DURONGA]
-		},
-		"heladeranueva": {Vector3.BACK: [Producto.Id.PURA_COLA, Producto.Id.OAAAA]},
-		"heladeranueva_001": {Vector3.BACK: [Producto.Id.CINDOLOR, Producto.Id.MAYONCHIS]},
+		[
+			[
+				Cara.UNICA,
+				[
+					Producto.Id.ACTRONCITO,
+					Producto.Id.DUREXTRA,
+					Producto.Id.POETICO,
+					Producto.Id.DURONGA
+				]
+			]
+		],
+		"heladeranueva": [[Cara.UNICA, [Producto.Id.PURA_COLA, Producto.Id.OAAAA]]],
+		"heladeranueva_001": [[Cara.UNICA, [Producto.Id.CINDOLOR, Producto.Id.MAYONCHIS]]],
 	}
 
 
+## Comprueba que la tanda se apoya en el mueble y devuelve hacia dónde mira su frente.
 func _comprobar_tanda(
-	almacen: Node3D,
-	mueble: Node3D,
-	id: Producto.Id,
-	bloque: PackedFloat32Array,
-	fila: int,
-	frente: Vector3
-) -> void:
-	assert_vector(DisposicionDeLaGondola.frente(bloque, fila)).is_equal_approx(
-		frente, Vector3.ONE * 0.002
+	almacen: Node3D, mueble: Node3D, id: Producto.Id, bloque: PackedFloat32Array, fila: int
+) -> Vector3:
+	var frente := DisposicionDeLaGondola.frente(bloque, fila)
+	(
+		assert_float(frente.length())
+		. override_failure_message("%s no tiene frente" % Catalogo.de(id).nombre)
+		. is_equal_approx(1.0, 0.002)
 	)
 	var malla: Mesh = _puesto(almacen).get("_modelos")[id]
 	for indice in DisposicionDeLaGondola.copias(bloque):
@@ -91,39 +122,80 @@ func _comprobar_tanda(
 				)
 				. is_true()
 			)
+	return frente
+
+
+## Hacia dónde miran la principal y las referencias de un producto.
+func _frentes_de(almacen: Node3D, mueble: Node3D, id: Producto.Id) -> Array[Vector3]:
+	var disposicion: DisposicionDeLaGondola = _puesto(almacen).get("disposicion")
+	var frentes: Array[Vector3] = [
+		_comprobar_tanda(
+			almacen, mueble, id, disposicion.principales[id], disposicion.filas_de_adelante[id]
+		)
+	]
+	for indice in disposicion.guias.size():
+		if disposicion.productos_de_las_guias[indice] == id:
+			frentes.append(
+				_comprobar_tanda(
+					almacen,
+					mueble,
+					id,
+					disposicion.guias[indice],
+					disposicion.filas_de_adelante_de_las_guias[indice]
+				)
+			)
+	return frentes
+
+
+## La cara del mueble hacia la que mira un frente, o `null` si no da a ninguna.
+func _cara_hacia(mueble: MeshInstance3D, frente: Vector3) -> LadosDelMueble.Lado:
+	for lado in LadosDelMueble.lados(mueble):
+		if lado.hacia.dot(frente) > 0.99:
+			return lado
+	return null
 
 
 func test_las_principales_y_referencias_ocupan_los_sectores_de_jornada_dos() -> void:  # AC-STK-086
 	var almacen := _almacen()
 	await get_tree().physics_frame
 	await get_tree().physics_frame
-	var disposicion: DisposicionDeLaGondola = _puesto(almacen).get("disposicion")
 	var encontrados: Array[int] = []
 	for nombre: String in _destinos():
-		var mueble: Node3D = almacen.get_node("Estructura/" + nombre)
-		var caras: Dictionary = _destinos()[nombre]
-		for frente: Vector3 in caras:
-			for id: Producto.Id in caras[frente]:
+		var mueble := almacen.get_node("Estructura/" + nombre) as MeshInstance3D
+		var frentes_del_mueble: Array[Vector3] = []
+		for destino: Array in _destinos()[nombre]:
+			var del_destino: Array[Vector3] = []
+			for id: Producto.Id in destino[1]:
 				assert_array(encontrados).not_contains(id)
 				encontrados.append(id)
-				_comprobar_tanda(
-					almacen,
-					mueble,
-					id,
-					disposicion.principales[id],
-					disposicion.filas_de_adelante[id],
-					frente
+				del_destino.append_array(_frentes_de(almacen, mueble, id))
+			# Un destino ocupa una sola cara, y ninguna otra de ese mueble.
+			var frente := del_destino[0]
+			for otro in del_destino:
+				(
+					assert_vector(otro)
+					. override_failure_message("%s: el destino se reparte en dos caras" % nombre)
+					. is_equal_approx(frente, TOLERANCIA_DEL_FRENTE)
 				)
-				for indice in disposicion.guias.size():
-					if disposicion.productos_de_las_guias[indice] == id:
-						_comprobar_tanda(
-							almacen,
-							mueble,
-							id,
-							disposicion.guias[indice],
-							disposicion.filas_de_adelante_de_las_guias[indice],
-							frente
-						)
+			for visto in frentes_del_mueble:
+				(
+					assert_float(visto.dot(frente))
+					. override_failure_message("%s: dos destinos comparten cara" % nombre)
+					. is_less(0.99)
+				)
+			frentes_del_mueble.append(frente)
+			var cara := _cara_hacia(mueble, frente)
+			(
+				assert_object(cara)
+				. override_failure_message("%s: el frente no da a un lado" % nombre)
+				. is_not_null()
+			)
+			if cara != null and destino[0] != Cara.UNICA:
+				(
+					assert_bool(cara.de_cabecera)
+					. override_failure_message("%s: la clase de cara no coincide" % nombre)
+					. is_equal(destino[0] == Cara.CABECERA)
+				)
 	assert_int(encontrados.size()).is_equal(Catalogo.todos().size())
 	assert_array(encontrados).contains(Producto.Id.DURONGA)
 

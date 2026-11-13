@@ -9,7 +9,11 @@ from lib.reparto import PRODUCTOS, Tanda
 
 class Frente(NamedTuple):
     """Cómo se ve un producto en cada estante de su cara: cuántas unidades, cada cuántos metros, y
-    en qué punto del largo del estante cae el medio de la tanda."""
+    en qué punto del largo del estante cae el medio de la tanda.
+
+    En un lateral (este, oeste) el punto es una coordenada del mundo a lo largo de la cara. En una
+    cabecera (norte, sur) se mide desde el centro de su góndola: así una góndola que se corre
+    lleva sus cabeceras con ella y esta tabla no se toca."""
 
     cuantas: int
     paso: float
@@ -20,18 +24,21 @@ class Frente(NamedTuple):
 #: igual en todos los estantes de una cara y no depende de qué tanda ocupa ese lugar en el mapa
 #: completo.
 FRENTES = {
-    "A.oeste": {"ARVECOR": Frente(9, 0.165, -3.216), "MAROLINI": Frente(5, 0.303, -1.706)},
-    "A.este": {"TERMINATOR": Frente(9, 0.165, 1.7135), "ZUCARACHAS": Frente(5, 0.303, 3.214)},
-    "A.norte": {"POETICO": Frente(4, 0.2117, 0.1666)},
-    "A.sur": {"FERNET_GOD": Frente(6, 0.1407, -0.1667)},
-    "B.este": {"PEPITO": Frente(5, 0.31, 1.757), "PETISAS": Frente(5, 0.265, 3.202)},
-    "B.oeste": {"PROGRES": Frente(11, 0.1424, -3.0878), "DON_SATURADOS": Frente(5, 0.265, -1.6411)},
-    "B.norte": {"MALBARDO": Frente(6, 0.142, -2.7491)},
-    "B.sur": {"JORGILLO": Frente(3, 0.3011, 2.7491)},
+    "A.este": {"MAROLINI": Frente(5, 0.303, 1.706), "ARVECOR": Frente(9, 0.165, 3.216)},
+    "A.oeste": {"ZUCARACHAS": Frente(5, 0.303, -3.214), "TERMINATOR": Frente(9, 0.165, -1.7135)},
+    "A.norte": {"POETICO": Frente(4, 0.2117, 0.0)},
+    "A.sur": {"FERNET_GOD": Frente(6, 0.1407, 0.0)},
+    "B.oeste": {"PETISAS": Frente(5, 0.265, -3.202), "PEPITO": Frente(5, 0.31, -1.757)},
+    "B.este": {"DON_SATURADOS": Frente(5, 0.265, 1.6411), "PROGRES": Frente(11, 0.1424, 3.0878)},
+    "B.norte": {"MALBARDO": Frente(6, 0.142, 0.0)},
+    "B.sur": {"JORGILLO": Frente(3, 0.3011, 0.0)},
     "N.sur": {"ACTRONCITO": Frente(4, 0.2535, 3.1947), "DURONGA": Frente(4, 0.2535, 2.1148)},
     "H1.sur": {"PURA_COLA": Frente(5, 0.1641, -1.496)},
     "H2.sur": {"MAYONCHIS": Frente(3, 0.2918, -0.446)},
 }
+
+#: Las caras cuyo punto se mide desde el centro de su góndola. Ver `Frente`.
+CABECERAS = ("A.norte", "A.sur", "B.norte", "B.sur")
 
 CARAS = {cara: tuple(frentes) for cara, frentes in FRENTES.items()}
 

@@ -5,6 +5,10 @@ extends GdUnitTestSuite
 ## productos y además ningún lugar libre para la caja entera.
 enum Sector { CON_PRODUCTOS, SIN_PRODUCTOS, SIN_LUGAR }
 
+const LadosDelMueble := preload("res://test/escenas/lados_del_mueble.gd")
+## A cuánto del metal apuntado se para quien suelta la caja, mirando al mueble.
+const DISTANCIA_AL_PASILLO := 1.2
+
 
 func test_la_caja_grande_soltada_mirando_el_gris_descansa_sobre_el_riel() -> void:  # AC-PLY-099
 	var medicion := await _sobre_el_riel(Producto.Id.LAYSNNT)
@@ -222,10 +226,15 @@ func _en_el_estante(producto: Producto.Id, sector := Sector.CON_PRODUCTOS) -> Di
 	# La segunda isla tiene estantes bajos: una caja no entra entre dos, con o sin productos.
 	var isla := "gondolanueva" if sector == Sector.SIN_PRODUCTOS else "gondolanueva2"
 	var gondola: MeshInstance3D = almacen.get_node("Estructura/" + isla)
-	var frente := Vector3.LEFT
+	# El costado de la góndola que se mira sale del mueble: el último con lugar para pararse.
+	var costados := LadosDelMueble.libres(almacen, gondola, DISTANCIA_AL_PASILLO, false)
+	assert_array(costados).override_failure_message("Premisa: un costado libre").is_not_empty()
+	if costados.is_empty():
+		return {"final": Vector3.INF, "inicial": Vector3.ZERO, "base": -INF, "apoyo": INF}
+	var frente: Vector3 = costados.back().hacia
 	var objetivo := _metal_visible_del_estante(gondola, frente)
 	assert_vector(objetivo).is_not_equal(Vector3.INF)
-	await _mirar_desde_el_piso(almacen, caja, objetivo, frente * 1.2)
+	await _mirar_desde_el_piso(almacen, caja, objetivo, frente * DISTANCIA_AL_PASILLO)
 	var mira: Transform3D = almacen.get("_jugador").call("mira")
 	var visible := _impacto_visible(
 		gondola, mira.origin, ReglasDelJugador.fin_de_la_mira(mira.origin, -mira.basis.z)
@@ -314,7 +323,9 @@ func _en_el_estante(producto: Producto.Id, sector := Sector.CON_PRODUCTOS) -> Di
 	assert_bool(almacen.get("_reposicion_manual").call("_entra_entera", caja)).is_true()
 	assert_dict(_estado_del_local(almacen)).is_equal(antes)
 	# La caja se acomoda hacia el metal: recogerla no mete el cuerpo debajo del mueble.
-	await _mirar_desde_el_piso(almacen, caja, final, objetivo + frente * 1.2 - final)
+	await _mirar_desde_el_piso(
+		almacen, caja, final, objetivo + frente * DISTANCIA_AL_PASILLO - final
+	)
 	var jugador: CharacterBody3D = almacen.get("_jugador")
 	jugador.call("_leer_la_mira")
 	assert_object(jugador.get("_enfocado")).is_same(caja)

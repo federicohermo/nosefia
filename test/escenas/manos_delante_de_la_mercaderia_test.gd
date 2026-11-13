@@ -10,11 +10,15 @@ extends GdUnitTestSuite
 const ALMACEN := preload("res://src/escenas/almacen.tscn")
 const AperturaConLugar := preload("res://test/escenas/apertura_con_lugar.gd")
 const JugadorDelLocal := preload("res://src/escenas/jugador.gd")
+const LadosDelMueble := preload("res://test/escenas/lados_del_mueble.gd")
 const CUADERNO := preload("res://src/dominio/almacen/cuaderno_del_deposito.tres")
 
 ## A cuánto del contorno de la góndola se para el jugador, en metros: lo que la mano alcanza a
 ## meterse entre los envases.
 const DISTANCIA_A_LA_GONDOLA := 0.5
+
+## Cuánto se agranda la caja de la góndola para decidir si un envase es suyo, en metros.
+const MARGEN_DEL_MUEBLE := 0.1
 
 ## Hacia qué altura mira el jugador en cada lado, en metros.
 const ALTURAS_DE_LA_MIRA: Array[float] = [0.3, 0.6, 0.9, 1.2, 1.5, 1.8]
@@ -24,6 +28,9 @@ const ALCANCE_DE_LA_PRUEBA := 1.5
 
 ## Cuadros de la mano para llegar a su largo libre, aunque tenga que estirarse.
 const CUADROS_PARA_ASENTAR_LA_MANO := 60
+
+## Las posturas de la góndola tal como abrió el caso: no cambian aunque después se vacíe.
+var _las_posturas: Array[Array] = []
 
 
 func test_un_producto_en_la_mano_queda_delante_de_los_envases() -> void:
@@ -122,6 +129,7 @@ func _abrir() -> Node3D:
 	await get_tree().physics_frame
 	var jugador: CharacterBody3D = almacen.get("_jugador")
 	jugador.set_physics_process(false)
+	_las_posturas = _posturas_de_la_gondola(almacen)
 	return almacen
 
 
@@ -162,19 +170,40 @@ func _posturas_donde_entra_mas_sin_stock(almacen: Node3D, cuerpo: Node3D) -> int
 	return entra_mas
 
 
-## Cada lado de la góndola a `DISTANCIA_A_LA_GONDOLA`, mirando a su centro a cada altura. Una
-## postura es el lugar donde se para el jugador y el punto que mira.
-func _posturas(almacen: Node3D) -> Array[Array]:
+## Cada lado de la góndola a `DISTANCIA_A_LA_GONDOLA`, frente a un envase que ese lado tenga,
+## mirando a su centro a cada altura. Una postura es el lugar donde se para el jugador y el punto
+## que mira. Los envases salen de lo que la góndola tiene puesto, y no del centro del mueble: ahí
+## puede haber un casillero vacío, o el metal de un divisor.
+func _posturas_de_la_gondola(almacen: Node3D) -> Array[Array]:
 	var gondola := almacen.get_node("Estructura/gondolanueva") as MeshInstance3D
-	var mueble := gondola.global_transform * gondola.get_aabb()
-	var centro := mueble.get_center()
+	var mueble := LadosDelMueble.caja(gondola)
+	var cerca_del_mueble := mueble.grow(MARGEN_DEL_MUEBLE)
+	var disposicion: DisposicionDeLaGondola = almacen.get("_reposicion_manual").get("disposicion")
+	var estante: Estante = almacen.get("_repositor").estante()
 	var posturas: Array[Array] = []
-	for hacia: Vector3 in [Vector3.RIGHT, Vector3.LEFT, Vector3.BACK, Vector3.FORWARD]:
-		var mitad := mueble.size.dot(hacia.abs()) / 2.0
-		var donde := centro + hacia * (mitad + DISTANCIA_A_LA_GONDOLA)
-		donde.y = 0.11
+	for lado in LadosDelMueble.lados(gondola):
+		var envase := Vector3.INF
+		for producto in Catalogo.todos():
+			var ocupados := estante.casilleros_ocupados(producto)
+			if ocupados.is_empty():
+				continue
+			var frente := DisposicionDeLaGondola.frente(
+				disposicion.principales[producto.id], disposicion.filas_de_adelante[producto.id]
+			)
+			var aqui := _centro_de_un_envase(almacen, producto.id, ocupados[0])
+			if frente.dot(lado.hacia) > 0.99 and cerca_del_mueble.has_point(aqui):
+				envase = aqui
+				break
+		(
+			assert_vector(envase)
+			. override_failure_message("Premisa: un envase puesto de cara a %v" % lado.hacia)
+			. is_not_equal(Vector3.INF)
+		)
+		var a_lo_largo := lado.hacia.cross(Vector3.UP)
+		var donde := LadosDelMueble.pie_junto_a(gondola, lado, DISTANCIA_A_LA_GONDOLA)
+		donde += a_lo_largo * (envase - mueble.get_center()).dot(a_lo_largo)
 		for altura: float in ALTURAS_DE_LA_MIRA:
-			posturas.append([donde, Vector3(centro.x, altura, centro.z)])
+			posturas.append([donde, Vector3(envase.x, altura, envase.z)])
 	return posturas
 
 
@@ -195,7 +224,7 @@ func _recorrer(almacen: Node3D, formas: Array[CollisionShape3D]) -> Dictionary:
 	var con_mercaderia := 0
 	var tocadas: Array[String] = []
 	var jugador: CharacterBody3D = almacen.get("_jugador")
-	for postura in _posturas(almacen):
+	for postura in _las_posturas:
 		await _ir_a(almacen, postura)
 		if not _hay_mercaderia_delante(almacen, jugador):
 			continue
@@ -212,7 +241,7 @@ func _distancias_de_la_mano(almacen: Node3D, cuerpo: Node3D) -> Array[float]:
 	var jugador: CharacterBody3D = almacen.get("_jugador")
 	var camara: Camera3D = jugador.get_node("Giro/Camara")
 	var distancias: Array[float] = []
-	for postura in _posturas(almacen):
+	for postura in _las_posturas:
 		await _ir_a(almacen, postura)
 		distancias.append(cuerpo.global_position.distance_to(camara.global_position))
 	return distancias
