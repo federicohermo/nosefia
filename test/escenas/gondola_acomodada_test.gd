@@ -31,9 +31,12 @@ func test_ningun_estante_inferior_sobresale_de_los_superiores() -> void:  # AC-S
 			if nombre == "gondolanueva":
 				var baja := estructura.get_node("gondolanueva2") as MeshInstance3D
 				var hacia_la_baja := (
-					baja.transform * baja.get_aabb().get_center() - mueble.transform * pieza.get_center()
+					baja.transform * baja.get_aabb().get_center()
+					- mueble.transform * pieza.get_center()
 				)
-				lados.assign(lados.filter(func(l: Vector3) -> bool: return hacia_la_baja.dot(l) > 0.0))
+				lados.assign(
+					lados.filter(func(l: Vector3) -> bool: return hacia_la_baja.dot(l) > 0.0)
+				)
 			for lado in lados:
 				var planas: Array[PackedVector3Array] = []
 				for inicio in range(0, caras.size(), 3):
