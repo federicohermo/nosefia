@@ -24,8 +24,8 @@ class Frente(NamedTuple):
 #: igual en todos los estantes de una cara y no depende de qué tanda ocupa ese lugar en el mapa
 #: completo.
 FRENTES = {
-    "A.este": {"MAROLINI": Frente(4, 0.2837, -2.425), "ARVECOR": Frente(7, 0.1621, -1.295)},
-    "A.oeste": {"ZUCARACHAS": Frente(4, 0.2837, -5.025), "TERMINATOR": Frente(7, 0.1621, -3.895)},
+    "A.este": {"MAROLINI": Frente(4, 0.2837, -2.118), "ARVECOR": Frente(7, 0.1621, -0.988)},
+    "A.oeste": {"ZUCARACHAS": Frente(4, 0.2837, -4.418), "TERMINATOR": Frente(7, 0.1621, -3.288)},
     "A.norte": {"FERNET_GOD": Frente(6, 0.1407, 0.0)},
     "A.sur": {"POETICO": Frente(4, 0.2117, 0.0)},
     "B.oeste": {"PETISAS": Frente(5, 0.265, -3.202), "PEPITO": Frente(5, 0.31, -1.757)},
