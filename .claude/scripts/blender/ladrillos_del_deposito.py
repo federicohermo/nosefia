@@ -30,10 +30,10 @@ Qué cambia, en el `.blend`:
    la textura, una clara y otra oscura, y cada uno es el más distinto del bloque de pared que
    le sigue.
    Un vano muy cerca de un rincón (`CERCA_DEL_RINCON`) se queda con ese lado: su pieza va de la
-   jamba al rincón, o al frente de la pieza ajena, y ahí sale apenas, como la pieza de rincón
-   que pasa por detrás. Lleva bloques enteros, y una hilada lleva
-   uno más que la siguiente: con la misma cuenta, todas las hiladas se veían del mismo ancho.
-   Donde lleva dos, la junta entre ellos cambia de lugar de una hilada a otra (`REPARTOS`).
+   jamba al rincón, o al frente de la pieza ajena. Lleva bloques enteros. En la hilada que
+   pasa por detrás de la otra pared son dos: el que toca la puerta sale como en toda jamba, y
+   el del lado del rincón sale apenas. La junta entre los dos cambia de lugar de una hilada a
+   otra (`REPARTOS`): siempre al medio, todas las hiladas se veían del mismo ancho.
    El bloque da la vuelta a la jamba: el costado sigue el dibujo del frente. Arriba del dintel,
    ese lado vuelve a llevar la pieza del rincón.
    Todas las piezas son **un solo objeto**. El prefijo del nombre lo toma el importador de Godot
@@ -318,6 +318,8 @@ def _pieza(nombre, borde, a_w, n_w, profundidad, z_tope, limites, material, cole
         # La `s` de la junta entre dos bloques de un mismo frente: el dibujo se quiebra ahí, y una
         # cara sola no puede.
         quiebre = None
+        # Cuánto sale el bloque del lado del rincón, si sale menos que el de la puerta.
+        del_fondo = None
         if de_rincon:
             if not le_toca:
                 inicio, saliente = SALIENTE, RELIEVE_DE_ATRAS
@@ -329,12 +331,11 @@ def _pieza(nombre, borde, a_w, n_w, profundidad, z_tope, limites, material, cole
             u_de = _frente_desde_el_rincon(columna, hilada, sentido, inicio, brazo, le_toca)
         elif rincon is not None:
             brazo = rincon if le_toca else rincon - SALIENTE
-            # Igual que en el rincón: la hilada que pasa por detrás de la otra pared sale apenas.
-            if not le_toca:
-                saliente = RELIEVE_DE_ATRAS
             bloques = max(1, round(rincon / ANCHO_BLOQUE))
+            # La hilada que pasa por detrás de la otra pared lleva dos bloques. El que toca la
+            # puerta sale como en toda jamba. El otro sale apenas, como en el rincón.
             if not le_toca:
-                bloques += 1 if bloques == 1 else -1
+                bloques, del_fondo = 2, RELIEVE_DE_ATRAS
             # El frente de una jamba con fondo sigue hasta su canto, pasado el borde.
             desde, hasta = rincon - brazo, rincon + (saliente if profundidad > 0 else 0)
             reparto = REPARTOS[hilada // 2 % len(REPARTOS)]
@@ -358,7 +359,9 @@ def _pieza(nombre, borde, a_w, n_w, profundidad, z_tope, limites, material, cole
             perfil = [(brazo, 0), (inicio, 0), (inicio, saliente), (brazo, saliente)]
         if quiebre is not None:
             perfil.insert(1, (quiebre, 0))
-            perfil.insert(-1, (quiebre, perfil[-1][1]))
+            perfil.insert(-1, (quiebre, saliente))
+            if del_fondo is not None:
+                perfil[-1:] = [(quiebre, del_fondo), (brazo, del_fondo)]
         puntos = [Vector((borde[0] + a_w[0] * s + n_w[0] * t,
                           borde[1] + a_w[1] * s + n_w[1] * t)) for s, t in perfil]
         abajo = [forma.verts.new((p.x, p.y, z0)) for p in puntos]
