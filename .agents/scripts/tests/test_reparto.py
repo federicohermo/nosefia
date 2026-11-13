@@ -298,11 +298,17 @@ class DecisionDeFilas(unittest.TestCase):
 
 
 class HaciaDondeMiraUnaCara(unittest.TestCase):
-    def test_las_cuatro_piezas_de_a_miran_al_oeste(self):
+    def test_las_piezas_de_a_contra_la_pared_este_miran_al_oeste(self):
         for estante in ESTANTES:
-            if partes(estante)[0] == "A":
+            mueble, cara, _ = partes(estante)
+            if mueble == "A" and cara != "sur":
                 with self.subTest(estante=estante):
                     self.assertEqual(mira(estante), (-1.0, 0.0, 0.0))
+
+    def test_la_cabecera_sur_de_a_contra_la_pared_norte_mira_al_sur(self):
+        for nivel in range(4):
+            with self.subTest(nivel=nivel):
+                self.assertEqual(mira(f"A.sur.{nivel}"), (0.0, -1.0, 0.0))
 
     def test_las_demas_caras_miran_al_punto_cardinal_de_su_nombre(self):
         cardinales = {

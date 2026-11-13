@@ -27,7 +27,7 @@ Las verifica `tests/test_reparto.py` sobre este mismo dato, antes de que llegue 
 `<mueble>.<cara>.<nivel>`: el mueble por su letra en `MUEBLES`, la cara por el punto cardinal
 hacia el que mira —las cabeceras son `norte` y `sur`—, y el nivel contando desde abajo, con el
 zócalo como 0. En Blender el norte es +Y y el este +X. Hacia dónde mira cada cara lo dice
-`mira()`: las piezas de `A` conservan su nombre y miran todas al oeste.
+`mira()`: las piezas de `A` conservan su nombre aunque ya no miren hacia donde dice.
 """
 
 from __future__ import annotations
@@ -120,9 +120,10 @@ _MIRA_POR_NOMBRE = {
     "norte": (0.0, 1.0, 0.0),
 }
 
-#: Las caras que no miran hacia donde dice su nombre. Las cuatro piezas de `A` están contra la
-#: pared este y miran al salón; su nombre sólo dice de qué parte del mueble salieron.
-MIRAN_AL_OESTE = ("A.este", "A.oeste", "A.norte", "A.sur")
+#: Las caras que no miran hacia donde dice su nombre. Tres piezas de `A` están contra la pared este
+#: y miran al salón; su nombre sólo dice de qué parte del mueble salieron. La cabecera sur está
+#: contra la pared norte y mira al sur, como antes.
+MIRAN_AL_OESTE = ("A.este", "A.oeste", "A.norte")
 
 
 def mira(cara: str) -> tuple[float, float, float]:
