@@ -19,6 +19,8 @@ const FILTRO_LINEAL: Array[String] = [
 	"MESA | Base cromada",
 	"MOSTRADOR | Acero satinado",
 	"local_aluminio",
+	# El mapa de suciedad es una máscara suave: pixelado, se leería en cuadrados.
+	"local_cielorraso",
 	# Cada cara del lavatorio toma uno o dos texeles de su atlas, apenas distintos: pixelado, el
 	# frente se veía en franjas.
 	"bano_porcelana",
@@ -46,6 +48,14 @@ const VARIACION_DE_LAS_PAREDES := preload("res://assets/models/pared_variacion.p
 const METROS_DE_LA_VARIACION := 14.0
 ## El baño va más liso: sin variación (`paredes_con_foto.py`).
 const PAREDES_PINTADAS: Array[String] = ["local_pared_pintada"]
+## La suciedad del cielorraso, horneada por `ensuciar_cielorraso.py`: un plano del techo que no se
+## repite. Cubre el rectángulo del salón; el eje Z del mundo es el Y de Blender cambiado de signo.
+const SUCIEDAD_DEL_TECHO := preload("res://assets/models/techo_suciedad.png")
+const TECHO := "local_cielorraso"
+const TECHO_ANCHO := 10.35
+const TECHO_LARGO := 14.15
+const TECHO_OESTE := -2.48
+const TECHO_NORTE := 7.87
 
 
 func _post_import(escena: Node) -> Object:
@@ -150,6 +160,17 @@ func _post_import(escena: Node) -> Object:
 					material.uv2_triplanar = true
 					material.uv2_world_triplanar = true
 					material.uv2_scale = Vector3.ONE / METROS_DE_LA_VARIACION
+				if material.resource_name == TECHO:
+					material.detail_enabled = true
+					material.detail_blend_mode = BaseMaterial3D.BLEND_MODE_MUL
+					material.detail_uv_layer = BaseMaterial3D.DETAIL_UV_2
+					material.detail_albedo = SUCIEDAD_DEL_TECHO
+					material.uv2_triplanar = true
+					material.uv2_world_triplanar = true
+					material.uv2_scale = Vector3(1.0 / TECHO_ANCHO, 1.0, 1.0 / TECHO_LARGO)
+					material.uv2_offset = Vector3(
+						-TECHO_OESTE / TECHO_ANCHO, 0.0, TECHO_NORTE / TECHO_LARGO
+					)
 				if (
 					material.resource_name in FILTRO_LINEAL
 					or material.resource_name.begins_with("deposito_revestimiento_")
