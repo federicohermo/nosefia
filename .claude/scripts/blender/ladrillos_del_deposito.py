@@ -13,11 +13,22 @@ Qué cambia, en el `.blend`:
    costado termina en otra: su UV se apoya en la jamba y no en el plano de la pared. En alto, la
    pieza deja entre hiladas el hueco de la junta pintada. La cara del frente usa la misma
    proyección que la pared, así que muestra el mismo bloque que la pared de al lado y de lejos
-   no se distingue de ella. Son los dos vanos de puerta y las dos jambas del portón.
+   no se distingue de ella. Son los dos vanos de puerta, las dos jambas del portón y los dos
+   costados del marco de la puerta del jefe, que no corta la pared.
    Los dinteles quedan sin pieza: la última hilada que los cruza dejaría una cuña de pocos
    centímetros (`MINIMO_DE_LA_PIEZA`).
-3. Cada vano es **un objeto aparte**, y el nombre lo toma el importador de Godot para dibujarlo
-   sólo de cerca (`visibility_range_end`).
+3. **Los cuatro rincones del depósito ganan las mismas piezas, una hilada de cada pared.** En un
+   rincón de obra, el bloque de una pared entra en la otra, y en la hilada siguiente es al revés.
+   Con la pared lisa, los dos bloques de una hilada se encontraban sin junta y se leían como uno
+   solo doblado. La pieza es el bloque que termina contra la otra pared: su frente no usa la
+   proyección de la pared, sino un bloque de la textura que arranca en el rincón con su junta.
+   El bloque de la otra pared pasa por detrás. Las dos paredes no llevan pieza en la misma
+   hilada: se cruzarían en el rincón (`_le_toca`).
+   Un vano a menos de dos piezas de un rincón se queda con ese lado del rincón: su pieza llega
+   hasta la otra pared en las hiladas que le tocan, y en las demás frena antes de la pieza ajena.
+   Arriba del dintel, ese lado vuelve a llevar la pieza del rincón.
+   Cada vano es **un objeto aparte**, y los rincones son uno solo. El prefijo del nombre lo toma
+   el importador de Godot para sacarlos del horneado.
 4. **El cuartito de limpieza usa la misma proyección que el depósito** en sus dos objetos con
    bloques: el revestimiento de la pared de la puerta y el cuerpo, que lleva el fondo y los
    costados. Con la UV vieja, el cuerpo repetía la textura cada 1,8 m y la humedad del pie se
@@ -64,6 +75,10 @@ SALIENTE = 0.03
 MINIMO_DEL_BRAZO = 0.1
 MINIMO_DE_LA_PIEZA = 0.06
 CANTO_ADENTRO = 0.05
+#: El rectángulo del depósito, de pared a pared: (x mínima, y mínima) y (x máxima, y máxima).
+SALA = ((-4.594, 8.253), (7.926, 15.398))
+#: Lo más largo que mide una pieza. A menos de dos, la de un vano y la de un rincón se pisan.
+BRAZO_MAXIMO = BLOQUE_METROS[0] + MINIMO_DEL_BRAZO
 
 
 def _receta():
@@ -158,8 +173,39 @@ def _distancia_a_la_junta(u0, sentido, hilada):
     return resto if resto >= MINIMO_DEL_BRAZO else resto + ANCHO_BLOQUE
 
 
-def _pieza(nombre, borde, a_w, n_w, profundidad, z_tope, limites, material, coleccion):
-    """Las piezas de una jamba. `borde` es el punto del borde en el plano de la pared (x, y)."""
+def _le_toca(n_w, hilada):
+    """Si la pared de normal `n_w` es la que pone la pieza de un rincón en esta hilada."""
+    return (abs(n_w[0]) > 0.5) == (hilada % 2 == 0)
+
+
+def _rincon_de(borde, a_w):
+    """El rincón al que lleva `a_w` desde `borde`, sobre su pared, y cuánto falta para llegar."""
+    (x0, y0), (x1, y1) = SALA
+    if a_w[0]:
+        x = x1 if a_w[0] > 0 else x0
+        return (x, borde[1]), abs(x - borde[0])
+    y = y1 if a_w[1] > 0 else y0
+    return (borde[0], y), abs(y - borde[1])
+
+
+def _rincones():
+    """Las dos paredes de cada rincón: el punto, hacia dónde corre la pared y su normal."""
+    (x0, y0), (x1, y1) = SALA
+    for x, hacia_x in ((x0, 1), (x1, -1)):
+        for y, hacia_y in ((y0, 1), (y1, -1)):
+            yield (x, y), (0, hacia_y), (hacia_x, 0)
+            yield (x, y), (hacia_x, 0), (0, hacia_y)
+
+
+def _pieza(nombre, borde, a_w, n_w, profundidad, z_tope, limites, material, coleccion,
+           rincon=None, solo_si_le_toca=False, borde_tapado=False, desde_hilada=0):
+    """Las piezas de una jamba. `borde` es el punto del borde en el plano de la pared (x, y).
+
+    `rincon` es la distancia a un rincón que la pieza comparte con la otra pared.
+    `solo_si_le_toca` deja sin pieza las hiladas de la otra pared: es la pieza del rincón mismo.
+    `borde_tapado` descarta la cara del borde, que queda contra otra pared o contra un marco.
+    `desde_hilada` saltea las hiladas de abajo, que ya cubre la pieza de un vano.
+    """
     malla = bpy.data.meshes.new(nombre)
     objeto = bpy.data.objects.new(nombre, malla)
     coleccion.objects.link(objeto)
@@ -173,16 +219,36 @@ def _pieza(nombre, borde, a_w, n_w, profundidad, z_tope, limites, material, cole
     centro = Vector((borde[0], borde[1], PISO))
     u_borde = _u(centro, normal_pared, origen)
     sentido = 1 if _u(centro + Vector((a_w[0], a_w[1], 0)), normal_pared, origen) > u_borde else -1
-    hilada = 0
+    hilada = -1
     cuenta = {"piezas": 0, "caras": 0}
     # La u crece hacia la derecha mirando la cara de frente, y la jamba se mira desde el vano.
     derecha = a_w[1] * n_w[0] - a_w[0] * n_w[1]
-    while PISO + hilada * ALTO_HILADA < z_tope - MINIMO_DE_LA_PIEZA:
+    # Cada rincón toma sus bloques de otra columna de la textura.
+    columna = round(borde[0] + 2 * borde[1]) % round(COBERTURA[0] / ANCHO_BLOQUE)
+    while PISO + (hilada + 1) * ALTO_HILADA < z_tope - MINIMO_DE_LA_PIEZA:
+        hilada += 1
+        if hilada < desde_hilada or (solo_si_le_toca and not _le_toca(n_w, hilada)):
+            continue
         z0 = PISO + hilada * ALTO_HILADA + JUNTA_V / 2
         z1 = min(PISO + (hilada + 1) * ALTO_HILADA - JUNTA_V / 2, z_tope)
         junta = _distancia_a_la_junta(u_borde, sentido, hilada)
         # El frente termina en el borde del bloque, y no en el centro de la junta pintada.
         brazo = junta - JUNTA_H / 2
+        # Cuánto falta para el rincón desde `s`, si la pieza termina contra la otra pared. Su
+        # frente es entonces un bloque que arranca en el rincón, con su junta, y corre hacia `hacia`.
+        al_rincon = hacia = None
+        estirado = 1.0
+        if solo_si_le_toca:
+            al_rincon, hacia = (lambda s: s), sentido
+            # Un brazo más largo que un bloque mostraría otra junta: el bloque se estira hasta él.
+            estirado = min(1.0, ANCHO_BLOQUE / junta)
+        elif rincon is not None and _le_toca(n_w, hilada):
+            brazo = rincon
+            al_rincon, hacia = (lambda s: rincon - s), -sentido
+        elif rincon is not None:
+            brazo = min(brazo, rincon - SALIENTE)
+        # El extremo del brazo queda contra la otra pared o contra su pieza.
+        extremo_tapado = rincon is not None and brazo > rincon - SALIENTE - 1e-6
         fondo = 0.0
         if profundidad > 0:
             tercio = ANCHO_BLOQUE / 3
@@ -215,7 +281,9 @@ def _pieza(nombre, borde, a_w, n_w, profundidad, z_tope, limites, material, cole
             en_la_pared = all(abs(t) < 1e-6 for _, t in st)
             en_la_jamba = profundidad > 0 and all(abs(s) < 1e-6 and t < 1e-6 for s, t in st)
             fondo_del_brazo = profundidad > 0 and all(abs(t + fondo) < 1e-6 for _, t in st)
-            if en_la_pared or en_la_jamba or fondo_del_brazo:
+            en_el_borde = borde_tapado and all(abs(s) < 1e-6 for s, _ in st)
+            en_el_extremo = extremo_tapado and all(abs(s - brazo) < 1e-6 for s, _ in st)
+            if en_la_pared or en_la_jamba or fondo_del_brazo or en_el_borde or en_el_extremo:
                 ocultas.append(cara)
         for cara in caras:
             if cara in ocultas:
@@ -246,13 +314,16 @@ def _pieza(nombre, borde, a_w, n_w, profundidad, z_tope, limites, material, cole
                     # La cara de arriba y la de abajo toman la fila del medio del bloque.
                     v_medio = (hilada + 0.5) * ALTO_HILADA / COBERTURA[1]
                     bucle[capa_uv].uv = (_u(p, normal_pared, origen) / COBERTURA[0], v_medio)
+                elif al_rincon is not None:
+                    u_m = (columna * ANCHO_BLOQUE + _desfase(hilada)
+                           + hacia * (al_rincon(st[bucle.vert][0]) * estirado - JUNTA_H / 2))
+                    bucle[capa_uv].uv = (u_m / COBERTURA[0], v_uv)
                 else:
                     # El frente de la pieza: la misma proyección que la pared de al lado.
                     bucle[capa_uv].uv = _uv(p, normal_pared, origen)
         forma.faces.ensure_lookup_table()
         bmesh.ops.delete(forma, geom=ocultas, context="FACES_ONLY")
         cuenta["piezas"] += 1
-        hilada += 1
     forma.verts.ensure_lookup_table()
     bmesh.ops.delete(forma, geom=[v for v in forma.verts if not v.link_faces], context="VERTS")
     for cara in forma.faces:
@@ -260,6 +331,7 @@ def _pieza(nombre, borde, a_w, n_w, profundidad, z_tope, limites, material, cole
     forma.to_mesh(malla)
     forma.free()
     malla.update()
+    cuenta["hiladas"] = hilada + 1
     cuenta["triangulos"] = sum(len(p.vertices) - 2 for p in malla.polygons)
     cuenta["caras"] = len(malla.polygons)
     return objeto, cuenta
@@ -279,14 +351,32 @@ def _vanos():
     esquinas = [porton.matrix_world @ Vector(c) for c in porton.bound_box]
     y_min, y_max = min(e.y for e in esquinas), max(e.y for e in esquinas)
     z_porton = max(e.z for e in esquinas)
+    marco = bpy.data.objects["marco puerta-col"]
+    del_marco = [marco.matrix_world @ Vector(c) for c in marco.bound_box]
+    y_jefe = min(e.y for e in del_marco), max(e.y for e in del_marco)
     return {
-        "puerta_sur": {"bordes": [((5.933, 8.253), (-1, 0)), ((7.555, 8.253), (1, 0))],
-                       "normal": (0, 1), "profundidad": 8.253 - 7.87, "z": 2.723},
-        "puerta_este": {"bordes": [((7.926, 13.14), (0, -1)), ((7.926, 14.78), (0, 1))],
-                        "normal": (-1, 0), "profundidad": 8.08 - 7.926, "z": 2.722},
-        "porton": {"bordes": [((-4.594, y_min), (0, -1)), ((-4.594, y_max), (0, 1))],
+        "puerta_sur": {"bordes": [((5.933, SALA[0][1]), (-1, 0)), ((7.555, SALA[0][1]), (1, 0))],
+                       "normal": (0, 1), "profundidad": SALA[0][1] - 7.87, "z": 2.723},
+        "puerta_este": {"bordes": [((SALA[1][0], 13.14), (0, -1)), ((SALA[1][0], 14.78), (0, 1))],
+                        "normal": (-1, 0), "profundidad": 8.08 - SALA[1][0], "z": 2.722},
+        "porton": {"bordes": [((SALA[0][0], y_min), (0, -1)), ((SALA[0][0], y_max), (0, 1))],
                    "normal": (1, 0), "profundidad": 0, "z": z_porton},
+        # El marco sale de la pared más que la pieza: la cara del borde queda contra él.
+        "puerta_jefe": {"bordes": [((SALA[1][0], y_jefe[0]), (0, -1)),
+                                   ((SALA[1][0], y_jefe[1]), (0, 1))],
+                        "normal": (-1, 0), "profundidad": 0, "borde_tapado": True,
+                        "z": max(e.z for e in del_marco)},
     }
+
+
+def _unir(formas, nombre):
+    bpy.ops.object.select_all(action="DESELECT")
+    for pieza in formas:
+        pieza.select_set(True)
+    bpy.context.view_layer.objects.active = formas[0]
+    bpy.ops.object.join()
+    unida = bpy.context.view_layer.objects.active
+    unida.name = unida.data.name = PREFIJO_PIEZAS + nombre
 
 
 def aplicar():
@@ -313,26 +403,42 @@ def aplicar():
     coleccion = objeto.users_collection[0]
     informe = {"cobertura_metros": list(COBERTURA), "saliente_m": SALIENTE, "vanos": {}}
     total = 0
+    # Los lados de rincón que cubre la pieza de un vano, y hasta qué hilada: (punto, normal).
+    cubiertos = {}
     for nombre, vano in _vanos().items():
         suma = {"piezas": 0, "triangulos": 0}
         formas = []
         for indice, (borde, a_w) in enumerate(vano["bordes"]):
+            punto, rincon = _rincon_de(borde, a_w)
+            cubre = rincon < 2 * BRAZO_MAXIMO
             pieza, cuenta = _pieza(f"__tmp_{nombre}_{indice}", borde, a_w, vano["normal"],
-                                   vano["profundidad"], vano["z"], limites, material, coleccion)
+                                   vano["profundidad"], vano["z"], limites, material, coleccion,
+                                   rincon=rincon if cubre else None,
+                                   borde_tapado=vano.get("borde_tapado", False))
+            if cubre:
+                cubiertos[punto, vano["normal"]] = cuenta["hiladas"]
             formas.append(pieza)
             suma["piezas"] += cuenta["piezas"]
             suma["triangulos"] += cuenta["triangulos"]
-        bpy.ops.object.select_all(action="DESELECT")
-        for pieza in formas:
-            pieza.select_set(True)
-        bpy.context.view_layer.objects.active = formas[0]
-        bpy.ops.object.join()
-        unida = bpy.context.view_layer.objects.active
-        unida.name = unida.data.name = PREFIJO_PIEZAS + nombre
+        _unir(formas, nombre)
         total += suma["triangulos"]
         informe["vanos"][nombre] = {**suma, "bordes": [list(b) for b, _ in vano["bordes"]]}
+    suma = {"piezas": 0, "triangulos": 0}
+    formas = []
+    for indice, (punto, a_w, n_w) in enumerate(_rincones()):
+        pieza, cuenta = _pieza(f"__tmp_rincon_{indice}", punto, a_w, n_w, 0,
+                               PISO + COBERTURA[1], limites, material, coleccion,
+                               solo_si_le_toca=True, borde_tapado=True,
+                               desde_hilada=cubiertos.pop((punto, n_w), 0))
+        formas.append(pieza)
+        suma["piezas"] += cuenta["piezas"]
+        suma["triangulos"] += cuenta["triangulos"]
+    assert not cubiertos, f"Un vano cubre un rincón que no existe: {cubiertos}"
+    _unir(formas, "rincones")
+    total += suma["triangulos"]
+    informe["rincones"] = suma
     informe["triangulos_agregados"] = total
-    informe["objetos_agregados"] = len(informe["vanos"])
+    informe["objetos_agregados"] = len(informe["vanos"]) + 1
     return informe
 
 
