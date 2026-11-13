@@ -3,7 +3,8 @@
 ## Un test que dice «a la izquierda de la góndola» con `Vector3.LEFT` fija la planta: si el mueble
 ## se mueve o se espeja, falla sin que nada esté roto. Acá un lado es un eje local del mueble
 ## llevado al mundo con su `global_basis`, y el punto junto a él sale de su caja global. Un lado
-## sin lugar para pararse —contra una pared, o tapado por otro mueble— no entra en `libres`.
+## sin lugar para pararse —contra una pared, tapado por otro mueble o sobre el vacío de afuera del
+## local— no entra en `libres`.
 extends RefCounted
 
 ## Los pies del jugador sobre el piso, en metros de alto.
@@ -27,11 +28,36 @@ static func caja(mueble: MeshInstance3D) -> AABB:
 	return mueble.global_transform * mueble.get_aabb()
 
 
-## Los cuatro lados horizontales, con el largo del mueble leído de su malla.
-static func lados(mueble: MeshInstance3D) -> Array[Lado]:
-	var local := mueble.get_aabb()
+## La caja local de la pieza más larga del mueble. Un mueble de varias piezas, como la góndola alta
+## contra dos paredes, no tiene lados en la caja que las envuelve a todas: los tiene cada pieza.
+static func pieza_local(mueble: MeshInstance3D) -> AABB:
+	var mayor := AABB()
+	for pieza: AABB in PiezasDeUnMueble.de_la_malla(mueble.mesh):
+		if maxf(pieza.size.x, pieza.size.z) > maxf(mayor.size.x, mayor.size.z):
+			mayor = pieza
+	return mayor
+
+
+## La caja global de esa pieza.
+static func pieza(mueble: MeshInstance3D) -> AABB:
+	return mueble.global_transform * pieza_local(mueble)
+
+
+## Las cajas globales de todas las piezas del mueble.
+static func piezas(mueble: MeshInstance3D) -> Array[AABB]:
+	var salida: Array[AABB] = []
+	for caja: AABB in PiezasDeUnMueble.de_la_malla(mueble.mesh):
+		salida.append(mueble.global_transform * caja)
+	return salida
+
+
+## Los cuatro lados horizontales de una pieza del mueble, con el largo leído de su caja. Sin
+## pieza, la más larga.
+static func lados(mueble: MeshInstance3D, de_la_pieza := AABB()) -> Array[Lado]:
+	var limites := de_la_pieza if de_la_pieza.has_volume() else pieza(mueble)
+	# El largo se lee en los ejes del mueble, que pueden estar girados respecto del mundo.
+	var local := mueble.global_transform.affine_inverse() * limites
 	var largo_en_x := local.size.x >= local.size.z
-	var limites := caja(mueble)
 	var salida: Array[Lado] = []
 	for eje: Vector3 in [Vector3.RIGHT, Vector3.BACK]:
 		for signo: float in [1.0, -1.0]:
@@ -44,8 +70,11 @@ static func lados(mueble: MeshInstance3D) -> Array[Lado]:
 
 
 ## Dónde se paran los pies junto a un lado, a `distancia` de su cara.
-static func pie_junto_a(mueble: MeshInstance3D, lado: Lado, distancia: float) -> Vector3:
-	var pie := caja(mueble).get_center() + lado.hacia * (lado.mitad + distancia)
+static func pie_junto_a(
+	mueble: MeshInstance3D, lado: Lado, distancia: float, de_la_pieza := AABB()
+) -> Vector3:
+	var limites := de_la_pieza if de_la_pieza.has_volume() else pieza(mueble)
+	var pie := limites.get_center() + lado.hacia * (lado.mitad + distancia)
 	pie.y = PIES_SOBRE_EL_PISO
 	return pie
 
@@ -66,6 +95,15 @@ static func libres(
 
 static func cabe_parado(almacen: Node3D, pie: Vector3) -> bool:
 	var jugador: CharacterBody3D = almacen.get("_jugador")
+	var estado := almacen.get_world_3d().direct_space_state
+	# Sin piso debajo, el lugar es el vacío de afuera del local y no un lugar para pararse.
+	var suelo := PhysicsRayQueryParameters3D.create(
+		pie + Vector3.UP * HOLGURA_DEL_PISO, pie + Vector3.DOWN * HOLGURA_DEL_PISO
+	)
+	suelo.collision_mask = jugador.collision_mask
+	suelo.exclude = [jugador.get_rid()]
+	if estado.intersect_ray(suelo).is_empty():
+		return false
 	var cuerpo: CollisionShape3D = jugador.get_node("Cuerpo")
 	var consulta := PhysicsShapeQueryParameters3D.new()
 	consulta.shape = cuerpo.shape
@@ -74,4 +112,4 @@ static func cabe_parado(almacen: Node3D, pie: Vector3) -> bool:
 	)
 	consulta.collision_mask = jugador.collision_mask
 	consulta.exclude = [jugador.get_rid()]
-	return almacen.get_world_3d().direct_space_state.intersect_shape(consulta, 1).is_empty()
+	return estado.intersect_shape(consulta, 1).is_empty()

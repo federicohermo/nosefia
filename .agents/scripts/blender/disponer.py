@@ -48,7 +48,7 @@ from lib.gondola import (  # noqa: E402
     separar_reserva,
 )
 from lib.reparto import (  # noqa: E402
-    MUEBLES, PRODUCTOS, SECTORES, SOLO_DEPOSITO, sector_de, validar_tandas,
+    MUEBLES, PRODUCTOS, SECTORES, SOLO_DEPOSITO, mira, sector_de, validar_tandas,
 )
 
 RAIZ = Path(__file__).resolve().parents[3]
@@ -57,13 +57,6 @@ DISPOSICION = PUESTOS / "disposicion_de_la_gondola.tres"
 CONTENIDO = PUESTOS / "contenido_del_estante.tscn"
 GUIA = PUESTOS / "guia_del_estante.tscn"
 ESTRUCTURA = PUESTOS / "estructura_del_almacen.tscn"
-
-FRENTES = {
-    "oeste": (-1.0, 0.0, 0.0),
-    "este": (1.0, 0.0, 0.0),
-    "sur": (0.0, 0.0, 1.0),
-    "norte": (0.0, 0.0, -1.0),
-}
 
 
 def en_godot(objeto):
@@ -118,8 +111,7 @@ def bloque(copias, base_del_modelo, clave):
     for copia in copias:
         base, origen = en_godot(copia)
         flotantes += flotantes_de_la_copia(copia_relativa(base, base_del_modelo), origen)
-    cara = clave.split("/")[0].split(".")[1]
-    return ordenar_copias_por_frente(flotantes, FRENTES[cara])
+    return ordenar_copias_por_frente(flotantes, punto_en_godot(mira(clave.split("/")[0])))
 
 
 def mallas_declaradas():

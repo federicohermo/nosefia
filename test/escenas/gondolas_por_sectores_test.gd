@@ -1,11 +1,7 @@
 extends GdUnitTestSuite
 
-## La clase de cara de un mueble donde va un destino. `UNICA` es un mueble con un solo frente.
-enum Cara { LADO, CABECERA, UNICA }
-
 const ALMACEN := "res://src/escenas/almacen.tscn"
 const AperturaConLugar := preload("res://test/escenas/apertura_con_lugar.gd")
-const LadosDelMueble := preload("res://test/escenas/lados_del_mueble.gd")
 const TOLERANCIA_DEL_FRENTE := Vector3.ONE * 0.002
 
 
@@ -30,70 +26,38 @@ func _inventario(almacen: Node3D) -> Inventario:
 	return repositor.estante().get("_inventario")
 
 
-## Qué productos van juntos en una cara de cada mueble, y de qué clase es esa cara. Dónde cae la
-## cara en el local no se declara: sale del mueble.
+## Qué productos van juntos en cada destino de cada mueble. Dónde cae el destino en el local no se
+## declara: sale del mueble.
 func _destinos() -> Dictionary:
 	return {
 		"gondolanueva":
 		[
+			[Producto.Id.MAROLINI, Producto.Id.ARVECOR, Producto.Id.UAKALAS, Producto.Id.MARRANOS],
 			[
-				Cara.LADO,
-				[
-					Producto.Id.MAROLINI,
-					Producto.Id.ARVECOR,
-					Producto.Id.UAKALAS,
-					Producto.Id.MARRANOS
-				]
+				Producto.Id.MACUMBAS,
+				Producto.Id.PEPITO,
+				Producto.Id.ZUCARACHAS,
+				Producto.Id.FROT_LUPS
 			],
-			[
-				Cara.LADO,
-				[
-					Producto.Id.MACUMBAS,
-					Producto.Id.PEPITO,
-					Producto.Id.ZUCARACHAS,
-					Producto.Id.FROT_LUPS
-				]
-			],
-			[Cara.CABECERA, [Producto.Id.MALBARDO, Producto.Id.AMARGADITO]],
-			[Cara.CABECERA, [Producto.Id.FERNET_GOD, Producto.Id.TERMINATOR]],
+			[Producto.Id.MALBARDO, Producto.Id.AMARGADITO],
+			[Producto.Id.FERNET_GOD, Producto.Id.TERMINATOR],
 		],
 		"gondolanueva2":
 		[
 			[
-				Cara.LADO,
-				[
-					Producto.Id.OREMOS,
-					Producto.Id.PETISAS,
-					Producto.Id.DON_SATURADOS,
-					Producto.Id.FEEL_RICKY_FORT
-				]
+				Producto.Id.OREMOS,
+				Producto.Id.PETISAS,
+				Producto.Id.DON_SATURADOS,
+				Producto.Id.FEEL_RICKY_FORT
 			],
-			[
-				Cara.LADO,
-				[
-					Producto.Id.SALADICK,
-					Producto.Id.PROGRES,
-					Producto.Id.CHISITOS,
-					Producto.Id.LAYSNNT
-				]
-			],
-			[Cara.CABECERA, [Producto.Id.JORGILLO, Producto.Id.BURBALOO]],
-			[Cara.CABECERA, [Producto.Id.COSA_DE_MANI, Producto.Id.FLIM_POF]],
+			[Producto.Id.SALADICK, Producto.Id.PROGRES, Producto.Id.CHISITOS, Producto.Id.LAYSNNT],
+			[Producto.Id.JORGILLO, Producto.Id.BURBALOO],
+			[Producto.Id.COSA_DE_MANI, Producto.Id.FLIM_POF],
 		],
 		"gondolanueva_001":
-		[
-			[
-				Cara.UNICA,
-				[
-					Producto.Id.ACTRONCITO,
-					Producto.Id.DUREXTRA,
-					Producto.Id.POETICO,
-					Producto.Id.DURONGA
-				]
-			]
-		],
-		"heladeranueva": [[Cara.UNICA, [Producto.Id.PURA_COLA, Producto.Id.OAAAA]]],
-		"heladeranueva_001": [[Cara.UNICA, [Producto.Id.CINDOLOR, Producto.Id.MAYONCHIS]]],
+		[[Producto.Id.ACTRONCITO, Producto.Id.DUREXTRA, Producto.Id.POETICO, Producto.Id.DURONGA]],
+		"heladeranueva": [[Producto.Id.PURA_COLA, Producto.Id.OAAAA]],
+		"heladeranueva_001": [[Producto.Id.CINDOLOR, Producto.Id.MAYONCHIS]],
 	}
 
 
@@ -147,12 +111,18 @@ func _frentes_de(almacen: Node3D, mueble: Node3D, id: Producto.Id) -> Array[Vect
 	return frentes
 
 
-## La cara del mueble hacia la que mira un frente, o `null` si no da a ninguna.
-func _cara_hacia(mueble: MeshInstance3D, frente: Vector3) -> LadosDelMueble.Lado:
-	for lado in LadosDelMueble.lados(mueble):
-		if lado.hacia.dot(frente) > 0.99:
-			return lado
-	return null
+## Dónde está cada unidad de un producto: la de su principal y las de sus referencias.
+func _origenes_de(almacen: Node3D, id: Producto.Id) -> Array[Vector3]:
+	var disposicion: DisposicionDeLaGondola = _puesto(almacen).get("disposicion")
+	var bloques: Array[PackedFloat32Array] = [disposicion.principales[id]]
+	for indice in disposicion.guias.size():
+		if disposicion.productos_de_las_guias[indice] == id:
+			bloques.append(disposicion.guias[indice])
+	var origenes: Array[Vector3] = []
+	for bloque in bloques:
+		for indice in DisposicionDeLaGondola.copias(bloque):
+			origenes.append(DisposicionDeLaGondola.copia(bloque, indice).origin)
+	return origenes
 
 
 func test_las_principales_y_referencias_ocupan_los_sectores_de_jornada_dos() -> void:  # AC-STK-086
@@ -162,40 +132,40 @@ func test_las_principales_y_referencias_ocupan_los_sectores_de_jornada_dos() -> 
 	var encontrados: Array[int] = []
 	for nombre: String in _destinos():
 		var mueble := almacen.get_node("Estructura/" + nombre) as MeshInstance3D
-		var frentes_del_mueble: Array[Vector3] = []
+		var lugares: Array[AABB] = []
+		var origenes_por_destino: Array[Array] = []
 		for destino: Array in _destinos()[nombre]:
 			var del_destino: Array[Vector3] = []
-			for id: Producto.Id in destino[1]:
+			var origenes: Array[Vector3] = []
+			for id: Producto.Id in destino:
 				assert_array(encontrados).not_contains(id)
 				encontrados.append(id)
 				del_destino.append_array(_frentes_de(almacen, mueble, id))
-			# Un destino ocupa una sola cara, y ninguna otra de ese mueble.
+				origenes.append_array(_origenes_de(almacen, id))
+			# Un destino mira siempre hacia el mismo lado.
 			var frente := del_destino[0]
 			for otro in del_destino:
 				(
 					assert_vector(otro)
-					. override_failure_message("%s: el destino se reparte en dos caras" % nombre)
+					. override_failure_message("%s: el destino mira hacia dos lados" % nombre)
 					. is_equal_approx(frente, TOLERANCIA_DEL_FRENTE)
 				)
-			for visto in frentes_del_mueble:
-				(
-					assert_float(visto.dot(frente))
-					. override_failure_message("%s: dos destinos comparten cara" % nombre)
-					. is_less(0.99)
-				)
-			frentes_del_mueble.append(frente)
-			var cara := _cara_hacia(mueble, frente)
-			(
-				assert_object(cara)
-				. override_failure_message("%s: el frente no da a un lado" % nombre)
-				. is_not_null()
-			)
-			if cara != null and destino[0] != Cara.UNICA:
-				(
-					assert_bool(cara.de_cabecera)
-					. override_failure_message("%s: la clase de cara no coincide" % nombre)
-					. is_equal(destino[0] == Cara.CABECERA)
-				)
+			var lugar := AABB(origenes[0], Vector3.ZERO)
+			for origen in origenes:
+				lugar = lugar.expand(origen)
+			lugares.append(lugar)
+			origenes_por_destino.append(origenes)
+		# Y ocupa un lugar propio: ninguna unidad de otro destino cae adentro.
+		for propio in lugares.size():
+			for ajeno in lugares.size():
+				if propio == ajeno:
+					continue
+				for origen: Vector3 in origenes_por_destino[ajeno]:
+					(
+						assert_bool(lugares[propio].has_point(origen))
+						. override_failure_message("%s: dos destinos comparten lugar" % nombre)
+						. is_false()
+					)
 	assert_int(encontrados.size()).is_equal(Catalogo.todos().size())
 	assert_array(encontrados).contains(Producto.Id.DURONGA)
 

@@ -5,7 +5,7 @@ from collections import Counter
 from lib.repo import RAIZ
 from lib.reparto import ESTANTES, PRODUCTOS, Tanda
 from lib.reparto_de_prueba import (
-    ESTANTES_DE_PRUEBA, bases_del_contenido,
+    ESTANTES_DE_PRUEBA, NIVELES_POR_CARA, NIVELES_POR_DEFECTO, bases_del_contenido,
     validar_identidades_de_prueba,
     validar_reparto_de_prueba,
 )
@@ -16,16 +16,16 @@ class RepartoDePrueba(unittest.TestCase):
         caras = {
             "A.este": ("MAROLINI", "ARVECOR"),
             "A.oeste": ("ZUCARACHAS", "TERMINATOR"),
-            "A.norte": ("POETICO",), "A.sur": ("FERNET_GOD",),
+            "A.norte": ("FERNET_GOD",), "A.sur": ("POETICO",),
             "B.oeste": ("PETISAS", "PEPITO"),
             "B.este": ("DON_SATURADOS", "PROGRES"),
             "B.norte": ("MALBARDO",), "B.sur": ("JORGILLO",),
             "N.sur": ("ACTRONCITO", "DURONGA"),
             "H1.sur": ("PURA_COLA",), "H2.sur": ("MAYONCHIS",),
         }
-        self.assertEqual(len(ESTANTES_DE_PRUEBA), 44)
+        self.assertEqual(len(ESTANTES_DE_PRUEBA), 45)
         for cara, productos in caras.items():
-            for nivel in range(4):
+            for nivel in range(NIVELES_POR_CARA.get(cara, NIVELES_POR_DEFECTO)):
                 with self.subTest(cara=cara, nivel=nivel):
                     reales = tuple(t.producto for t in ESTANTES_DE_PRUEBA[f"{cara}.{nivel}"])
                     self.assertEqual(reales, productos)
@@ -37,7 +37,12 @@ class RepartoDePrueba(unittest.TestCase):
                         for t in ts if t.fija)
         self.assertEqual(len(principales), 16)
         self.assertEqual(set(principales.values()), {1})
-        self.assertEqual(fijas, Counter({p: 3 for p in principales}))
+        # Cada nivel que no es el principal repite el mapa: tres por producto, y cuatro en la
+        # estantería empotrada, que tiene un nivel más.
+        de_la_estanteria = {t.producto for t in ESTANTES_DE_PRUEBA["N.sur.0"]}
+        self.assertEqual(
+            fijas, Counter({p: 4 if p in de_la_estanteria else 3 for p in principales})
+        )
 
     def test_el_mapa_no_modifica_el_perfil_completo(self):
         self.assertIsNot(ESTANTES_DE_PRUEBA, ESTANTES)

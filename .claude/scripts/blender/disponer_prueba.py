@@ -46,6 +46,7 @@ class Tramo:
         self.v = -(giro @ Vector(modelo.frente)).normalized()
         self.u = self.v.cross(self.normal).normalized()
         puntos = [c.matrix_world @ v.co for c in adelante for v in c.data.vertices]
+        self.centro = (min(p.dot(self.u) for p in puntos) + max(p.dot(self.u) for p in puntos)) / 2
         self.origen = (self.u * min(p.dot(self.u) for p in puntos)
                        + self.v * min(p.dot(self.v) for p in puntos)
                        + self.normal * min(p.dot(self.normal) for p in puntos))
@@ -80,7 +81,8 @@ def molde_de(producto, cara, columna, completo):
 def llenar(copias, molde, frente, cabecera):
     """Las unidades del producto en el estante de una tanda, con el giro de `molde`.
 
-    El punto de una cabecera se mide desde el centro de su góndola, la que lleva la tanda."""
+    El punto de una cabecera se mide desde el medio de la tanda que reemplaza, que en el mapa
+    completo está centrada en su estante."""
     destino, origen = Tramo(copias), Tramo(molde)
     primera = next(c for c in molde if c["fila"] == "adelante")
     relativa = origen.marco().inverted() @ primera.matrix_world
@@ -88,7 +90,7 @@ def llenar(copias, molde, frente, cabecera):
     estante.translation -= destino.u * destino.origen.dot(destino.u)
     unidad = bpy.data.objects[producto(str(molde[0]["producto"])).objeto]
     salida = []
-    centro = destino.u.dot(copias[0].parent.matrix_world.translation) if cabecera else 0.0
+    centro = destino.centro if cabecera else 0.0
     for i in range(frente.cuantas):
         lugar = centro + frente.medio + frente.paso * (i - (frente.cuantas - 1) / 2)
         corrimiento = Matrix.Translation((lugar - relativa.translation.x, 0.0, 0.0))

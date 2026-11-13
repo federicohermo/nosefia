@@ -27,6 +27,7 @@ from lib.reparto import (
     cara_de_isla,
     es_cabecera,
     es_heladera,
+    mira,
     partes,
     sector_de,
     validar_reparto,
@@ -38,6 +39,9 @@ CATALOGO = RAIZ / "src/dominio/almacen/catalogo.gd"
 
 #: Las cuatro chapas originales: zócalo y superior fijos, los dos niveles centrales reponibles.
 NIVELES_DE_LADO = 4
+#: La estantería empotrada de no comestibles tiene cinco estantes por columna: los cuatro de las
+#: bandejas de las heladeras y uno más abajo.
+NIVELES_DE_LA_ESTANTERIA = 5
 NIVELES_DE_CABECERA = 4
 
 #: Cuántas bandejas tiene cada heladera. Medido sobre el mismo `.blend`.
@@ -47,9 +51,16 @@ BANDEJAS_DE_HELADERA = 4
 CARAS_DE_LADO = ("A.oeste", "A.este", "B.oeste", "B.este", "N.sur")
 
 
+#: Los niveles principales de la estantería empotrada: el de arriba de los tres de abajo, y el de
+#: abajo de los dos de arriba. Los demás son fijos.
+NIVELES_PRINCIPALES_DE_LA_ESTANTERIA = (2, 3)
+
+
 def _es_de_reposicion(estante: str) -> bool:
     """Los niveles centrales son principales; zócalo y superior son fijos, también en cabeceras."""
-    _, _, nivel = partes(estante)
+    mueble, _, nivel = partes(estante)
+    if mueble == "N":
+        return nivel in NIVELES_PRINCIPALES_DE_LA_ESTANTERIA
     if es_cabecera(estante):
         return 0 < nivel < NIVELES_DE_CABECERA - 1
     return 0 < nivel < NIVELES_DE_LADO - 1
@@ -93,8 +104,8 @@ class ElReparto(unittest.TestCase):
             "B.este.1": ("LAYSNNT", "CHISITOS"),
             "B.norte.2": ("COSA_DE_MANI",), "B.norte.1": ("FLIM_POF",),
             "B.sur.2": ("JORGILLO",), "B.sur.1": ("BURBALOO",),
-            "N.sur.2": ("DURONGA", "DUREXTRA"),
-            "N.sur.1": ("POETICO", "ACTRONCITO"),
+            "N.sur.3": ("DURONGA", "DUREXTRA"),
+            "N.sur.2": ("POETICO", "ACTRONCITO"),
         }
         for estante, productos in esperados.items():
             self.assertEqual(tuple(t.producto for t in ESTANTES[estante]), productos, estante)
@@ -103,6 +114,14 @@ class ElReparto(unittest.TestCase):
         for clave in ESTANTES:
             mueble, cara, nivel = partes(clave)
             pareja = f"{mueble}.{cara}.{nivel ^ 1}"
+            if mueble == "N":
+                # En la estantería de cinco, un producto ocupa tres estantes seguidos y el otro
+                # dos: cada estante comparte sus productos con alguno de los de al lado.
+                vecinos = [f"N.sur.{nivel - 1}", f"N.sur.{nivel + 1}"]
+                pareja = next(
+                    v for v in vecinos if v in ESTANTES
+                    and [t.producto for t in ESTANTES[v]] == [t.producto for t in ESTANTES[clave]]
+                )
             with self.subTest(estante=clave):
                 self.assertEqual(
                     [t.producto for t in ESTANTES[clave]], [t.producto for t in ESTANTES[pareja]]
@@ -117,11 +136,12 @@ class ElReparto(unittest.TestCase):
             for tanda in tandas
             if tanda.producto == "DURONGA"
         ]
+        # La principal y la referencia fija de los dos estantes de arriba.
         self.assertEqual(len(tandas_de_duronga), 2)
         for estante, tanda in tandas_de_duronga:
             mueble, cara, nivel = partes(estante)
             self.assertEqual((mueble, cara), ("N", "sur"))
-            self.assertIn(nivel, range(NIVELES_DE_LADO))
+            self.assertIn(nivel, range(NIVELES_DE_LA_ESTANTERIA))
             self.assertEqual(tanda.cantidad_de_filas, 2)
         self.assertFalse(any(e.startswith("S.") for e in ESTANTES))
         self.assertNotIn("S", MUEBLES)
@@ -264,7 +284,11 @@ class ElReparto(unittest.TestCase):
             caras = ["sur"] if letra == "N" else ["oeste", "este", *CABECERAS]
             for cara in caras:
                 niveles = (
-                    NIVELES_DE_CABECERA if es_cabecera(f"{letra}.{cara}.0") else NIVELES_DE_LADO
+                    NIVELES_DE_LA_ESTANTERIA
+                    if letra == "N"
+                    else NIVELES_DE_CABECERA
+                    if es_cabecera(f"{letra}.{cara}.0")
+                    else NIVELES_DE_LADO
                 )
                 for nivel in range(niveles):
                     self.assertIn(f"{letra}.{cara}.{nivel}", ESTANTES)
@@ -294,6 +318,35 @@ class DecisionDeFilas(unittest.TestCase):
         for producto in ("COSA_DE_MANI", "FLIM_POF", "BURBALOO", "MARRANOS", "POETICO"):
             with self.subTest(producto=producto), self.assertRaises(ValueError):
                 Tanda(producto, fija=True, filas=2)
+
+
+class HaciaDondeMiraUnaCara(unittest.TestCase):
+    def test_las_piezas_de_a_contra_la_pared_este_miran_al_oeste(self):
+        for estante in ESTANTES:
+            mueble, cara, _ = partes(estante)
+            if mueble == "A" and cara != "norte":
+                with self.subTest(estante=estante):
+                    self.assertEqual(mira(estante), (-1.0, 0.0, 0.0))
+
+    def test_la_cabecera_norte_de_a_contra_la_pared_norte_mira_al_sur(self):
+        for nivel in range(4):
+            with self.subTest(nivel=nivel):
+                self.assertEqual(mira(f"A.norte.{nivel}"), (0.0, -1.0, 0.0))
+
+    def test_las_demas_caras_miran_al_punto_cardinal_de_su_nombre(self):
+        cardinales = {
+            "oeste": (-1.0, 0.0, 0.0), "este": (1.0, 0.0, 0.0),
+            "sur": (0.0, -1.0, 0.0), "norte": (0.0, 1.0, 0.0),
+        }
+        for estante in ESTANTES:
+            mueble, cara, _ = partes(estante)
+            if mueble != "A":
+                with self.subTest(estante=estante):
+                    self.assertEqual(mira(estante), cardinales[cara])
+
+    def test_una_cara_y_sus_estantes_miran_igual(self):
+        self.assertEqual(mira("A.este"), mira("A.este.2"))
+        self.assertEqual(mira("B.este"), mira("B.este.0"))
 
 
 if __name__ == "__main__":

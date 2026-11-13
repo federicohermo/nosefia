@@ -492,7 +492,7 @@ func _envases_junto_al_metal(almacen: Node3D, punto: Vector3) -> Array[Collision
 
 ## El apoyo sigue el metal accesible del mueble actual, aunque desaparezcan sus cabeceras.
 func _metal_visible_del_estante(malla: MeshInstance3D, frente: Vector3) -> Vector3:
-	var limites := malla.global_transform * malla.get_aabb()
+	var limites := LadosDelMueble.pieza(malla)
 	var centro := limites.get_center()
 	var fondo := absf(frente.dot(limites.size))
 	var area_mayor := 0.0
@@ -512,6 +512,7 @@ func _metal_visible_del_estante(malla: MeshInstance3D, frente: Vector3) -> Vecto
 			absf(normal.y) < 0.999
 			or punto.y < 0.4
 			or punto.y > ReglasDelJugador.ALTURA_DE_LA_CAMARA
+			or not limites.grow(0.05).has_point(punto)
 		):
 			continue
 		if (punto - centro).dot(frente) <= fondo * 0.1:

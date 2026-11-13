@@ -12,8 +12,8 @@ class Frente(NamedTuple):
     en qué punto del largo del estante cae el medio de la tanda.
 
     En un lateral (este, oeste) el punto es una coordenada del mundo a lo largo de la cara. En una
-    cabecera (norte, sur) se mide desde el centro de su góndola: así una góndola que se corre
-    lleva sus cabeceras con ella y esta tabla no se toca."""
+    cabecera (norte, sur) se mide desde el medio de su estante: así una cabecera que se corre
+    lleva su tanda con ella y esta tabla no se toca."""
 
     cuantas: int
     paso: float
@@ -24,12 +24,12 @@ class Frente(NamedTuple):
 #: igual en todos los estantes de una cara y no depende de qué tanda ocupa ese lugar en el mapa
 #: completo.
 FRENTES = {
-    "A.este": {"MAROLINI": Frente(5, 0.303, 1.706), "ARVECOR": Frente(9, 0.165, 3.216)},
-    "A.oeste": {"ZUCARACHAS": Frente(5, 0.303, -3.214), "TERMINATOR": Frente(9, 0.165, -1.7135)},
-    "A.norte": {"POETICO": Frente(4, 0.2117, 0.0)},
-    "A.sur": {"FERNET_GOD": Frente(6, 0.1407, 0.0)},
-    "B.oeste": {"PETISAS": Frente(5, 0.265, -3.202), "PEPITO": Frente(5, 0.31, -1.757)},
-    "B.este": {"DON_SATURADOS": Frente(5, 0.265, 1.6411), "PROGRES": Frente(11, 0.1424, 3.0878)},
+    "A.este": {"MAROLINI": Frente(4, 0.2837, -2.118), "ARVECOR": Frente(7, 0.1621, -0.988)},
+    "A.oeste": {"ZUCARACHAS": Frente(4, 0.2837, -4.418), "TERMINATOR": Frente(7, 0.1621, -3.288)},
+    "A.norte": {"FERNET_GOD": Frente(6, 0.1407, 0.0)},
+    "A.sur": {"POETICO": Frente(4, 0.2117, 0.0)},
+    "B.oeste": {"PETISAS": Frente(3, 0.265, -2.381), "PEPITO": Frente(3, 0.31, -1.525)},
+    "B.este": {"DON_SATURADOS": Frente(3, 0.265, 1.423), "PROGRES": Frente(7, 0.1424, 2.321)},
     "B.norte": {"MALBARDO": Frente(6, 0.142, 0.0)},
     "B.sur": {"JORGILLO": Frente(3, 0.3011, 0.0)},
     "N.sur": {"ACTRONCITO": Frente(4, 0.2535, 3.1947), "DURONGA": Frente(4, 0.2535, 2.1148)},
@@ -37,20 +37,31 @@ FRENTES = {
     "H2.sur": {"MAYONCHIS": Frente(3, 0.2918, -0.446)},
 }
 
-#: Las caras cuyo punto se mide desde el centro de su góndola. Ver `Frente`.
+#: Las caras cuyo punto se mide desde el medio de su estante. Ver `Frente`.
 CABECERAS = ("A.norte", "A.sur", "B.norte", "B.sur")
 
 CARAS = {cara: tuple(frentes) for cara, frentes in FRENTES.items()}
 
+#: Cuántos niveles tiene cada cara. Todas tienen cuatro salvo la estantería empotrada de no
+#: comestibles, que tiene cinco, con la principal de abajo en el tercero.
+NIVELES_POR_CARA = {"N.sur": 5}
+NIVELES_POR_DEFECTO = 4
+#: En qué nivel va la principal de cada cara: el segundo, salvo en esa estantería.
+NIVEL_PRINCIPAL_POR_CARA = {"N.sur": 2}
+NIVEL_PRINCIPAL_POR_DEFECTO = 1
+
 ESTANTES_DE_PRUEBA = {
-    f"{cara}.{nivel}": tuple(Tanda(p, fija=nivel != 1) for p in productos)
+    f"{cara}.{nivel}": tuple(
+        Tanda(p, fija=nivel != NIVEL_PRINCIPAL_POR_CARA.get(cara, NIVEL_PRINCIPAL_POR_DEFECTO))
+        for p in productos
+    )
     for cara, productos in CARAS.items()
-    for nivel in range(4)
+    for nivel in range(NIVELES_POR_CARA.get(cara, NIVELES_POR_DEFECTO))
 }
 
 def validar_reparto_de_prueba(estantes: dict[str, tuple[Tanda, ...]]) -> None:
     if estantes.keys() != ESTANTES_DE_PRUEBA.keys():
-        raise ValueError("La prueba requiere los cuatro niveles de cada cara")
+        raise ValueError("La prueba requiere todos los niveles de cada cara")
     principales = Counter()
     for clave, tandas in estantes.items():
         cara, _ = clave.rsplit(".", 1)
