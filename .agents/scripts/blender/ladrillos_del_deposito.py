@@ -32,6 +32,7 @@ Qué cambia, en el `.blend`:
    Un vano muy cerca de un rincón (`CERCA_DEL_RINCON`) se queda con ese lado: su pieza va de la
    jamba al rincón, o al frente de la pieza ajena. Lleva bloques enteros, y una hilada lleva
    uno más que la siguiente: con la misma cuenta, todas las hiladas se veían del mismo ancho.
+   Donde lleva dos, la junta entre ellos cambia de lugar de una hilada a otra (`REPARTOS`).
    El bloque da la vuelta a la jamba: el costado sigue el dibujo del frente. Arriba del dintel,
    ese lado vuelve a llevar la pieza del rincón.
    Cada vano es **un objeto aparte**, y los rincones son uno solo. El prefijo del nombre lo toma
@@ -89,6 +90,8 @@ COLUMNAS = round(COBERTURA[0] / BLOQUE_METROS[0])
 HILADAS = round(COBERTURA[1] / BLOQUE_METROS[1])
 #: La pieza de un rincón lleva un bloque entero estirado: más corta, se vería aplastado.
 MINIMO_DEL_RINCON = 0.2
+#: Qué parte del frente toma el primero de dos bloques. Una junta siempre al medio se veía pareja.
+REPARTOS = (0.36, 0.56, 0.44, 0.64)
 #: Lo que sale, en un rincón, el bloque que pasa por detrás del de la otra pared.
 RELIEVE_DE_ATRAS = 0.01
 #: Más lejos que esto, entre la pieza de un vano y la de un rincón siempre cae una junta de la
@@ -214,17 +217,30 @@ def _tonos():
     return tonos
 
 
-def _frente_desde_el_rincon(columna, hilada, hacia, desde, hasta, con_junta, bloques=1):
+def _frente_desde_el_rincon(columna, hilada, hacia, desde, hasta, con_junta, bloques=1,
+                            reparto=0.5):
     """La u del frente de una pieza de rincón, según lo que falta para el rincón.
 
     Son `bloques` enteros de la textura, desde `columna` y hacia `hacia` (±1 en u), estirados
     para llenar el frente, que va de `desde` a `hasta`. El último bloque termina con la pieza.
     `con_junta` pone la junta en el rincón: es el bloque que termina contra la otra pared.
+    Con dos bloques, `reparto` es la parte del frente que toma el primero.
     """
     arranque = -JUNTA_H / 2 if con_junta else JUNTA_H / 2
-    estirado = (bloques * ANCHO_BLOQUE - JUNTA_H / 2 - arranque) / (hasta - desde)
+    final = bloques * ANCHO_BLOQUE - JUNTA_H / 2
     base = (columna + (hacia < 0)) * ANCHO_BLOQUE + _desfase(hilada)
-    return lambda al_rincon: base + hacia * (arranque + (al_rincon - desde) * estirado)
+
+    def u(al_rincon):
+        parte = (al_rincon - desde) / (hasta - desde)
+        if bloques != 2:
+            en_la_textura = arranque + parte * (final - arranque)
+        elif parte <= reparto:
+            en_la_textura = arranque + parte / reparto * (ANCHO_BLOQUE - arranque)
+        else:
+            en_la_textura = ANCHO_BLOQUE + (parte - reparto) / (1 - reparto) * (final - ANCHO_BLOQUE)
+        return base + hacia * en_la_textura
+
+    return u
 
 
 def _le_toca(n_w, hilada):
@@ -296,6 +312,9 @@ def _pieza(nombre, borde, a_w, n_w, profundidad, z_tope, limites, material, cole
                       normal_pared, origen)
         # Dónde arranca la pieza y cuánto sale. La que pasa por detrás arranca en el frente de la otra.
         inicio, saliente = 0.0, SALIENTE
+        # La `s` de la junta entre dos bloques de un mismo frente: el dibujo se quiebra ahí, y una
+        # cara sola no puede.
+        quiebre = None
         if de_rincon:
             if not le_toca:
                 inicio, saliente = SALIENTE, RELIEVE_DE_ATRAS
@@ -311,9 +330,12 @@ def _pieza(nombre, borde, a_w, n_w, profundidad, z_tope, limites, material, cole
             if not le_toca:
                 bloques += 1 if bloques == 1 else -1
             # El frente de una jamba con fondo sigue hasta su canto, pasado el borde.
-            frente = _frente_desde_el_rincon(hilada, hilada, -sentido, rincon - brazo,
-                                             rincon + (SALIENTE if profundidad > 0 else 0),
-                                             le_toca, bloques)
+            desde, hasta = rincon - brazo, rincon + (SALIENTE if profundidad > 0 else 0)
+            reparto = REPARTOS[hilada // 2 % len(REPARTOS)]
+            frente = _frente_desde_el_rincon(hilada, hilada, -sentido, desde, hasta,
+                                             le_toca, bloques, reparto)
+            if bloques == 2:
+                quiebre = rincon - (desde + reparto * (hasta - desde))
             def u_de(s, frente=frente):
                 return frente(rincon - s)
         # El extremo del brazo queda contra la otra pared o contra su pieza.
@@ -328,6 +350,9 @@ def _pieza(nombre, borde, a_w, n_w, profundidad, z_tope, limites, material, cole
                       (-SALIENTE, SALIENTE), (brazo, SALIENTE)]
         else:
             perfil = [(brazo, 0), (inicio, 0), (inicio, saliente), (brazo, saliente)]
+        if quiebre is not None:
+            perfil.insert(1, (quiebre, 0))
+            perfil.insert(-1, (quiebre, perfil[-1][1]))
         puntos = [Vector((borde[0] + a_w[0] * s + n_w[0] * t,
                           borde[1] + a_w[1] * s + n_w[1] * t)) for s, t in perfil]
         abajo = [forma.verts.new((p.x, p.y, z0)) for p in puntos]
