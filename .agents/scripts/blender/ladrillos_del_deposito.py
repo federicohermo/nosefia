@@ -35,8 +35,10 @@ Qué cambia, en el `.blend`:
    Donde lleva dos, la junta entre ellos cambia de lugar de una hilada a otra (`REPARTOS`).
    El bloque da la vuelta a la jamba: el costado sigue el dibujo del frente. Arriba del dintel,
    ese lado vuelve a llevar la pieza del rincón.
-   Cada vano es **un objeto aparte**, y los rincones son uno solo. El prefijo del nombre lo toma
-   el importador de Godot para sacarlos del horneado.
+   Todas las piezas son **un solo objeto**. El prefijo del nombre lo toma el importador de Godot
+   para sacarlas del horneado, y fuera del horneado un objeto toma una sola luz, la de su
+   centro. Con un objeto por vano, las piezas de la puerta tomaban la luz del hueco de la
+   puerta y quedaban verdosas al lado de las del rincón.
 4. **El cuartito de limpieza usa la misma proyección que el depósito** en sus dos objetos con
    bloques: el revestimiento de la pared de la puerta y el cuerpo, que lleva el fondo y los
    costados. Con la UV vieja, el cuerpo repetía la textura cada 1,8 m y la humedad del pie se
@@ -495,6 +497,7 @@ def aplicar():
     total = 0
     # Los lados de rincón que cubre la pieza de un vano, y hasta qué hilada: (punto, normal).
     cubiertos = {}
+    todas = []
     for nombre, vano in _vanos().items():
         suma = {"piezas": 0, "triangulos": 0}
         formas = []
@@ -510,7 +513,7 @@ def aplicar():
             formas.append(pieza)
             suma["piezas"] += cuenta["piezas"]
             suma["triangulos"] += cuenta["triangulos"]
-        _unir(formas, nombre)
+        todas += formas
         total += suma["triangulos"]
         informe["vanos"][nombre] = {**suma, "bordes": [list(b) for b, _ in vano["bordes"]]}
     suma = {"piezas": 0, "triangulos": 0}
@@ -525,11 +528,11 @@ def aplicar():
         suma["piezas"] += cuenta["piezas"]
         suma["triangulos"] += cuenta["triangulos"]
     assert not cubiertos, f"Un vano cubre un rincón que no existe: {cubiertos}"
-    _unir(formas, "rincones")
+    _unir(todas + formas, "piezas")
     total += suma["triangulos"]
     informe["rincones"] = suma
     informe["triangulos_agregados"] = total
-    informe["objetos_agregados"] = len(informe["vanos"]) + 1
+    informe["objetos_agregados"] = 1
     return informe
 
 
