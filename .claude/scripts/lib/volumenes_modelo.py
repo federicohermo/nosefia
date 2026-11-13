@@ -194,7 +194,8 @@ def reconstruir(modelo: dict, piezas: dict, descompuestos: dict, fuentes: dict) 
     lista = bloques(fuentes['limpieza_del_almacen.tscn'])
     primera = numeros(modelo['gondolanueva']['global_aabb'])
     segunda = numeros(modelo['gondolanueva2']['global_aabb'])
-    centro = (primera[0] + primera[3] + segunda[0]) / 2
+    izquierda, derecha = sorted((primera, segunda), key=lambda caja: caja[0])
+    centro = (izquierda[0] + izquierda[3] + derecha[0]) / 2
     mancha = next(b for b in lista if ruta(b) == 'ManchaEntreLasGondolas')
     pose = numeros(re.search(r'^transform = (.*)', mancha, re.M)[1])
     pose[-3] = centro

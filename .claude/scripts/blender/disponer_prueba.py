@@ -28,7 +28,7 @@ from lib.consola import configurar  # noqa: E402
 from lib.gondola import escribir_disposicion, separar_filas  # noqa: E402
 from lib.reparto import PRODUCTOS, partes, producto  # noqa: E402
 from lib.reparto_de_prueba import (  # noqa: E402
-    CARAS, FRENTES, bases_del_contenido, validar_identidades_de_prueba,
+    CABECERAS, CARAS, FRENTES, bases_del_contenido, validar_identidades_de_prueba,
 )
 
 RAIZ = Path(__file__).resolve().parents[3]
@@ -77,8 +77,10 @@ def molde_de(producto, cara, columna, completo):
     return completo[min(claves, key=preferencia)]
 
 
-def llenar(copias, molde, frente):
-    """Las unidades del producto en el estante de una tanda, con el giro de `molde`."""
+def llenar(copias, molde, frente, cabecera):
+    """Las unidades del producto en el estante de una tanda, con el giro de `molde`.
+
+    El punto de una cabecera se mide desde el centro de su góndola, la que lleva la tanda."""
     destino, origen = Tramo(copias), Tramo(molde)
     primera = next(c for c in molde if c["fila"] == "adelante")
     relativa = origen.marco().inverted() @ primera.matrix_world
@@ -86,8 +88,9 @@ def llenar(copias, molde, frente):
     estante.translation -= destino.u * destino.origen.dot(destino.u)
     unidad = bpy.data.objects[producto(str(molde[0]["producto"])).objeto]
     salida = []
+    centro = destino.u.dot(copias[0].parent.matrix_world.translation) if cabecera else 0.0
     for i in range(frente.cuantas):
-        lugar = frente.medio + frente.paso * (i - (frente.cuantas - 1) / 2)
+        lugar = centro + frente.medio + frente.paso * (i - (frente.cuantas - 1) / 2)
         corrimiento = Matrix.Translation((lugar - relativa.translation.x, 0.0, 0.0))
         copia = unidad.copy()
         copia.parent = None
@@ -105,7 +108,8 @@ def disponer_cara(cara, de_la_cara, completo):
         columna = int(clave.split("/")[1])
         nuevo = productos[columna]
         molde = molde_de(nuevo, cara, columna, completo)
-        salida[clave] = (nuevo, llenar(copias, molde, FRENTES[cara][nuevo]))
+        cabecera = cara in CABECERAS
+        salida[clave] = (nuevo, llenar(copias, molde, FRENTES[cara][nuevo], cabecera))
     return salida
 
 
