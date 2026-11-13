@@ -162,7 +162,7 @@ acuosa = true
 transform = Transform3D(1, 0, 0, 0, -1, 0, 0, 0, -1, 3.9, 3.498, 0.2)
 editor_description = "Jornada 7. Polvo, en el cielorraso en el medio del local. El disco mira hacia abajo."
 lugar = 24
-escala_visual = 1.4
+escala_visual = 0.9
 acuosa = true
 
 [node name="ManchaEnElTechoDeLaEntrada" parent="." instance=ExtResource("2_mancha")]

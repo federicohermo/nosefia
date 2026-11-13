@@ -52,3 +52,14 @@ func test_las_piezas_de_una_malla_salen_de_sus_caras() -> void:
 	arrays[Mesh.ARRAY_VERTEX] = _caja(0.0, 1.0) + _caja(1.0 + HUECO * 3.0, 2.0)
 	malla.add_surface_from_arrays(Mesh.PRIMITIVE_TRIANGLES, arrays)
 	assert_int(PiezasDeUnMueble.de_la_malla(malla).size()).is_equal(2)
+
+
+func test_un_mueble_largo_en_x_se_parte_a_lo_largo_de_x_y_no_por_su_fondo() -> void:
+	# Un fondo y un estante a distintas profundidades, con hueco entre ellos, no son dos piezas.
+	var fondo := PackedVector3Array([Vector3(0, 0, 0.0), Vector3(4, 0, 0.0), Vector3(4, 1, 0.0)])
+	var estante := PackedVector3Array([Vector3(0, 0, 0.3), Vector3(4, 0, 0.3), Vector3(4, 1, 0.3)])
+	assert_int(PiezasDeUnMueble.de_triangulos(fondo + estante).size()).is_equal(1)
+	var segunda_pieza := PackedVector3Array(
+		[Vector3(4.1, 0, 0.0), Vector3(8, 0, 0.0), Vector3(8, 1, 0.0)]
+	)
+	assert_int(PiezasDeUnMueble.de_triangulos(fondo + estante + segunda_pieza).size()).is_equal(2)
