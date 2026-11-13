@@ -26,8 +26,8 @@ class Frente(NamedTuple):
 FRENTES = {
     "A.este": {"MAROLINI": Frente(4, 0.2837, -2.425), "ARVECOR": Frente(7, 0.1621, -1.295)},
     "A.oeste": {"ZUCARACHAS": Frente(4, 0.2837, -5.025), "TERMINATOR": Frente(7, 0.1621, -3.895)},
-    "A.norte": {"POETICO": Frente(4, 0.2117, 0.0)},
-    "A.sur": {"FERNET_GOD": Frente(6, 0.1407, 0.0)},
+    "A.norte": {"FERNET_GOD": Frente(6, 0.1407, 0.0)},
+    "A.sur": {"POETICO": Frente(4, 0.2117, 0.0)},
     "B.oeste": {"PETISAS": Frente(5, 0.265, -3.202), "PEPITO": Frente(5, 0.31, -1.757)},
     "B.este": {"DON_SATURADOS": Frente(5, 0.265, 1.6411), "PROGRES": Frente(11, 0.1424, 3.0878)},
     "B.norte": {"MALBARDO": Frente(6, 0.142, 0.0)},

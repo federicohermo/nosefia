@@ -16,7 +16,7 @@ class RepartoDePrueba(unittest.TestCase):
         caras = {
             "A.este": ("MAROLINI", "ARVECOR"),
             "A.oeste": ("ZUCARACHAS", "TERMINATOR"),
-            "A.norte": ("POETICO",), "A.sur": ("FERNET_GOD",),
+            "A.norte": ("FERNET_GOD",), "A.sur": ("POETICO",),
             "B.oeste": ("PETISAS", "PEPITO"),
             "B.este": ("DON_SATURADOS", "PROGRES"),
             "B.norte": ("MALBARDO",), "B.sur": ("JORGILLO",),
