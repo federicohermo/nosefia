@@ -12,8 +12,8 @@ class Frente(NamedTuple):
     en qué punto del largo del estante cae el medio de la tanda.
 
     En un lateral (este, oeste) el punto es una coordenada del mundo a lo largo de la cara. En una
-    cabecera (norte, sur) se mide desde el centro de su góndola: así una góndola que se corre
-    lleva sus cabeceras con ella y esta tabla no se toca."""
+    cabecera (norte, sur) se mide desde el medio de su estante: así una cabecera que se corre
+    lleva su tanda con ella y esta tabla no se toca."""
 
     cuantas: int
     paso: float
@@ -24,8 +24,8 @@ class Frente(NamedTuple):
 #: igual en todos los estantes de una cara y no depende de qué tanda ocupa ese lugar en el mapa
 #: completo.
 FRENTES = {
-    "A.este": {"MAROLINI": Frente(5, 0.303, 1.706), "ARVECOR": Frente(9, 0.165, 3.216)},
-    "A.oeste": {"ZUCARACHAS": Frente(5, 0.303, -3.214), "TERMINATOR": Frente(9, 0.165, -1.7135)},
+    "A.este": {"MAROLINI": Frente(4, 0.2837, -2.425), "ARVECOR": Frente(7, 0.1621, -1.295)},
+    "A.oeste": {"ZUCARACHAS": Frente(4, 0.2837, -5.025), "TERMINATOR": Frente(7, 0.1621, -3.895)},
     "A.norte": {"POETICO": Frente(4, 0.2117, 0.0)},
     "A.sur": {"FERNET_GOD": Frente(6, 0.1407, 0.0)},
     "B.oeste": {"PETISAS": Frente(5, 0.265, -3.202), "PEPITO": Frente(5, 0.31, -1.757)},
@@ -37,7 +37,7 @@ FRENTES = {
     "H2.sur": {"MAYONCHIS": Frente(3, 0.2918, -0.446)},
 }
 
-#: Las caras cuyo punto se mide desde el centro de su góndola. Ver `Frente`.
+#: Las caras cuyo punto se mide desde el medio de su estante. Ver `Frente`.
 CABECERAS = ("A.norte", "A.sur", "B.norte", "B.sur")
 
 CARAS = {cara: tuple(frentes) for cara, frentes in FRENTES.items()}
