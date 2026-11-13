@@ -192,8 +192,8 @@ def reconstruir(modelo: dict, piezas: dict, descompuestos: dict, fuentes: dict) 
         poner(lista, path, {'transform': 'Transform3D(' + ','.join(map(str, pose)) + ')'})
     resultado['objetos_del_almacen.tscn'] = ''.join(lista)
     lista = bloques(fuentes['limpieza_del_almacen.tscn'])
-    primera = numeros(modelo['gondolanueva']['global_aabb'])
-    segunda = numeros(modelo['gondolanueva2']['global_aabb'])
+    primera = pieza_mayor(modelo['gondolanueva'])
+    segunda = pieza_mayor(modelo['gondolanueva2'])
     izquierda, derecha = sorted((primera, segunda), key=lambda caja: caja[0])
     centro = (izquierda[0] + izquierda[3] + derecha[0]) / 2
     mancha = next(b for b in lista if ruta(b) == 'ManchaEntreLasGondolas')
@@ -204,6 +204,15 @@ def reconstruir(modelo: dict, piezas: dict, descompuestos: dict, fuentes: dict) 
     })
     resultado['limpieza_del_almacen.tscn'] = ''.join(lista)
     return resultado
+
+
+def pieza_mayor(fila):
+    """La caja de la pieza más larga de un mueble, como `[x, y, z, ancho, alto, largo]`.
+
+    La góndola alta tiene piezas en dos paredes: su caja entera incluye el piso que queda entre
+    ellas, y el pasillo se mide contra el frente de sus caras largas."""
+    piezas = [fila['global_piezas'][i:i + 6] for i in range(0, len(fila['global_piezas']), 6)]
+    return max(piezas, key=lambda caja: caja[5])
 
 
 def esquinas(posicion, tamano):
