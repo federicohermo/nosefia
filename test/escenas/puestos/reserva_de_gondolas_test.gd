@@ -6,6 +6,8 @@ const LadosDelMueble := preload("res://test/escenas/lados_del_mueble.gd")
 const DISTANCIA_PARA_SOLTAR := 0.8
 ## Hacia qué alto mira quien apunta al piso, junto a la góndola.
 const ALTURA_BAJA := 0.5
+## Cuánto fondo tiene que tener un mueble para apuntarle al piso: más angosto, la mano cae antes.
+const FONDO_PARA_APUNTAR_AL_PISO := 0.9
 
 
 func test_las_unidades_soltadas_hacia_las_tres_gondolas_quedan_afuera() -> void:  # AC-PLY-018
@@ -25,10 +27,10 @@ func test_las_unidades_soltadas_hacia_las_tres_gondolas_quedan_afuera() -> void:
 			. is_not_empty()
 		)
 		for costado in costados:
-			# La angosta del fondo se aborda a la altura de su centro: apuntar al piso acorta la
+			# Una góndola angosta se aborda a la altura de su centro: apuntar al piso acorta la
 			# proyección horizontal de la mano y no entra en su reserva.
 			var alturas: Array[bool] = [false]
-			if not str(malla.name).begins_with("gondolanueva_001"):
+			if costado.mitad * 2.0 >= FONDO_PARA_APUNTAR_AL_PISO:
 				alturas.append(true)
 			for baja in alturas:
 				casos.append([malla, costado, baja])
@@ -116,7 +118,9 @@ func test_una_unidad_exterior_oblicua_no_se_retrocede_por_su_aabb() -> void:  # 
 	var giro := Basis(Vector3.UP, PI / 4.0)
 	var envuelta := Transform3D(giro, Vector3.ZERO) * volumen
 	var afuera := minf(envuelta.size.x, envuelta.size.z) * 0.4
-	var centro := Vector3(limites.end.x + afuera, limites.get_center().y, limites.end.z + afuera)
+	var centro := Vector3(
+		limites.position.x - afuera, limites.get_center().y, limites.end.z + afuera
+	)
 	unidad.global_transform = mueble.global_transform * Transform3D(giro, centro)
 	var local := mueble.global_transform.affine_inverse() * forma.global_transform * volumen
 	assert_bool(local.intersects(limites)).is_true()

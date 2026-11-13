@@ -3,7 +3,8 @@
 ## Un test que dice «a la izquierda de la góndola» con `Vector3.LEFT` fija la planta: si el mueble
 ## se mueve o se espeja, falla sin que nada esté roto. Acá un lado es un eje local del mueble
 ## llevado al mundo con su `global_basis`, y el punto junto a él sale de su caja global. Un lado
-## sin lugar para pararse —contra una pared, o tapado por otro mueble— no entra en `libres`.
+## sin lugar para pararse —contra una pared, tapado por otro mueble o sobre el vacío de afuera del
+## local— no entra en `libres`.
 extends RefCounted
 
 ## Los pies del jugador sobre el piso, en metros de alto.
@@ -66,6 +67,15 @@ static func libres(
 
 static func cabe_parado(almacen: Node3D, pie: Vector3) -> bool:
 	var jugador: CharacterBody3D = almacen.get("_jugador")
+	var estado := almacen.get_world_3d().direct_space_state
+	# Sin piso debajo, el lugar es el vacío de afuera del local y no un lugar para pararse.
+	var suelo := PhysicsRayQueryParameters3D.create(
+		pie + Vector3.UP * HOLGURA_DEL_PISO, pie + Vector3.DOWN * HOLGURA_DEL_PISO
+	)
+	suelo.collision_mask = jugador.collision_mask
+	suelo.exclude = [jugador.get_rid()]
+	if estado.intersect_ray(suelo).is_empty():
+		return false
 	var cuerpo: CollisionShape3D = jugador.get_node("Cuerpo")
 	var consulta := PhysicsShapeQueryParameters3D.new()
 	consulta.shape = cuerpo.shape
@@ -74,4 +84,4 @@ static func cabe_parado(almacen: Node3D, pie: Vector3) -> bool:
 	)
 	consulta.collision_mask = jugador.collision_mask
 	consulta.exclude = [jugador.get_rid()]
-	return almacen.get_world_3d().direct_space_state.intersect_shape(consulta, 1).is_empty()
+	return estado.intersect_shape(consulta, 1).is_empty()

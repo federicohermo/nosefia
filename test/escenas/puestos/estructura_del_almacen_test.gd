@@ -33,16 +33,14 @@ func _estructura() -> Node3D:
 	return auto_free(load(ESCENA_DE_LA_ESTRUCTURA).instantiate())
 
 
-func test_las_dos_gondolas_del_medio_tienen_el_mismo_ancho_de_contorno() -> void:  # AC-STK-051
+func test_el_contorno_de_cada_gondola_del_medio_abarca_todo_su_ancho() -> void:  # AC-STK-051
 	var estructura := _estructura()
-	var anchos: Array[float] = []
 	for nombre: String in ["gondolanueva", "gondolanueva2"]:
 		var mueble := estructura.get_node(nombre) as MeshInstance3D
 		var cuerpo := mueble.get_node("Contorno") as StaticBody3D
 		var ancho := _limites_del_contorno(cuerpo).size.x * absf(mueble.scale.x)
 		assert_float(ancho).is_greater(0.0)
-		anchos.append(ancho)
-	assert_float(anchos[0]).is_equal_approx(anchos[1], 0.01)
+		assert_float(ancho).is_equal_approx(mueble.get_aabb().size.x * absf(mueble.scale.x), 0.02)
 
 
 ## Las mallas del modelo, a cualquier profundidad: las del board de tareas cuelgan de otra malla
@@ -174,17 +172,20 @@ func test_el_colisionador_de_un_anclaje_cuelga_del_nodo_que_lo_nombra() -> void:
 	var anclaje: MeshInstance3D = estructura.get_node(NodePath(ANCLAJE_DE_LA_ESTANTERIA))
 	var limites := anclaje.global_transform * anclaje.get_aabb()
 	var centro := limites.get_center()
-	# El centro de un mueble de dos caras puede ser el hueco entre ellas: se baja también a un
-	# cuarto de cada lado, hasta poco antes del piso.
+	# El centro de un mueble puede ser un hueco entre dos caras o entre dos piezas: se baja también
+	# a un cuarto de cada lado, a lo ancho y a lo largo, hasta poco antes del piso.
 	var golpe := {}
-	for desvio: float in [0.0, -0.25, 0.25]:
-		var x := centro.x + desvio * limites.size.x
-		golpe = estructura.get_world_3d().direct_space_state.intersect_ray(
-			PhysicsRayQueryParameters3D.create(
-				Vector3(x, limites.end.y + 1, centro.z),
-				Vector3(x, limites.position.y + 0.05, centro.z)
+	for desvio_en_z: float in [0.0, -0.25, 0.25]:
+		for desvio: float in [0.0, -0.25, 0.25]:
+			var x := centro.x + desvio * limites.size.x
+			var z := centro.z + desvio_en_z * limites.size.z
+			golpe = estructura.get_world_3d().direct_space_state.intersect_ray(
+				PhysicsRayQueryParameters3D.create(
+					Vector3(x, limites.end.y + 1, z), Vector3(x, limites.position.y + 0.05, z)
+				)
 			)
-		)
+			if not golpe.is_empty():
+				break
 		if not golpe.is_empty():
 			break
 	(
