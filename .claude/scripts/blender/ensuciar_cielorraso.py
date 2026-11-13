@@ -223,9 +223,6 @@ def suciedad():
 
     agua(7.87, 7.87, .62, mul(a, interior, placa_es(15, 11)), (.88,.76,.54), (.72,.54,.30), .64)
     agua(7.87, Y0+15*PASO_Y, .30, mul(a, interior, placa_es(14, 11)), (.93,.86,.70), (.78,.62,.38), .32)
-    for fila, columna, radio in ((8,5,.30), (8,6,.38), (9,5,.22), (9,6,.34)):
-        agua(X0+6*PASO_X, Y0+9*PASO_Y, radio, mul(a, interior, placa_es(fila, columna)),
-             (.93,.85,.68), (.78,.62,.38), radio)
 
     dx, dy = div(a, sub(a, x, 4.9), 1.6), div(a, sum_(a, y, 5.1), .9)
     r = op(a, 'SQRT', sum_(a, mul(a, dx, dx), mul(a, dy, dy)))
