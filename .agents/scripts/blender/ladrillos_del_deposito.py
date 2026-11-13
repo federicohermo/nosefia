@@ -30,7 +30,8 @@ Qué cambia, en el `.blend`:
    la textura, una clara y otra oscura, y cada uno es el más distinto del bloque de pared que
    le sigue.
    Un vano muy cerca de un rincón (`CERCA_DEL_RINCON`) se queda con ese lado: su pieza va de la
-   jamba al rincón, o al frente de la pieza ajena. Lleva bloques enteros, y una hilada lleva
+   jamba al rincón, o al frente de la pieza ajena, y ahí sale apenas, como la pieza de rincón
+   que pasa por detrás. Lleva bloques enteros, y una hilada lleva
    uno más que la siguiente: con la misma cuenta, todas las hiladas se veían del mismo ancho.
    Donde lleva dos, la junta entre ellos cambia de lugar de una hilada a otra (`REPARTOS`).
    El bloque da la vuelta a la jamba: el costado sigue el dibujo del frente. Arriba del dintel,
@@ -328,11 +329,14 @@ def _pieza(nombre, borde, a_w, n_w, profundidad, z_tope, limites, material, cole
             u_de = _frente_desde_el_rincon(columna, hilada, sentido, inicio, brazo, le_toca)
         elif rincon is not None:
             brazo = rincon if le_toca else rincon - SALIENTE
+            # Igual que en el rincón: la hilada que pasa por detrás de la otra pared sale apenas.
+            if not le_toca:
+                saliente = RELIEVE_DE_ATRAS
             bloques = max(1, round(rincon / ANCHO_BLOQUE))
             if not le_toca:
                 bloques += 1 if bloques == 1 else -1
             # El frente de una jamba con fondo sigue hasta su canto, pasado el borde.
-            desde, hasta = rincon - brazo, rincon + (SALIENTE if profundidad > 0 else 0)
+            desde, hasta = rincon - brazo, rincon + (saliente if profundidad > 0 else 0)
             reparto = REPARTOS[hilada // 2 % len(REPARTOS)]
             frente = _frente_desde_el_rincon(hilada, hilada, -sentido, desde, hasta,
                                              le_toca, bloques, reparto)
@@ -348,8 +352,8 @@ def _pieza(nombre, borde, a_w, n_w, profundidad, z_tope, limites, material, cole
             fondo = min(tercio if junta >= 2 * tercio else 2 * tercio, profundidad)
         # Perfil en (s, t): s hacia afuera del vano a lo largo de la pared, t hacia el interior.
         if profundidad > 0:
-            perfil = [(brazo, 0), (0, 0), (0, -fondo), (-SALIENTE, -fondo),
-                      (-SALIENTE, SALIENTE), (brazo, SALIENTE)]
+            perfil = [(brazo, 0), (0, 0), (0, -fondo), (-saliente, -fondo),
+                      (-saliente, saliente), (brazo, saliente)]
         else:
             perfil = [(brazo, 0), (inicio, 0), (inicio, saliente), (brazo, saliente)]
         if quiebre is not None:
@@ -390,7 +394,7 @@ def _pieza(nombre, borde, a_w, n_w, profundidad, z_tope, limites, material, cole
             costado = next((s0 for s0 in {round(s, 6) for s, _ in st.values()}
                             if all(abs(s - s0) < 1e-6 for s, _ in st.values())), None)
             canto = costado is not None and abs(cara.normal.z) < 0.5
-            es_jamba = canto and fondo > 0 and abs(costado + SALIENTE) < 1e-6
+            es_jamba = canto and fondo > 0 and abs(costado + saliente) < 1e-6
             for bucle in cara.loops:
                 p = bucle.vert.co
                 v_uv = (p.z - PISO) / COBERTURA[1]
