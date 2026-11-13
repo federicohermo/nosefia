@@ -121,15 +121,20 @@ _MIRA_POR_NOMBRE = {
 }
 
 #: Las caras que no miran hacia donde dice su nombre. Tres piezas de `A` están contra la pared este
-#: y miran al salón; su nombre sólo dice de qué parte del mueble salieron. La cabecera sur está
-#: contra la pared norte y mira al sur, como antes.
-MIRAN_AL_OESTE = ("A.este", "A.oeste", "A.norte")
+#: y miran al salón; su nombre sólo dice de qué parte del mueble salieron. La cabecera norte está
+#: contra la pared norte, a la izquierda de la puerta del depósito, y mira al sur.
+MIRAN_A_OTRO_LADO = {
+    "A.este": "oeste",
+    "A.oeste": "oeste",
+    "A.sur": "oeste",
+    "A.norte": "sur",
+}
 
 
 def mira(cara: str) -> tuple[float, float, float]:
     """Hacia dónde mira una cara, en el mundo de Blender. Acepta `A.este` o `A.este.2`."""
     mueble, nombre = cara.split(".")[:2]
-    return _MIRA_POR_NOMBRE["oeste" if f"{mueble}.{nombre}" in MIRAN_AL_OESTE else nombre]
+    return _MIRA_POR_NOMBRE[MIRAN_A_OTRO_LADO.get(f"{mueble}.{nombre}", nombre)]
 
 
 #: Lo que se vende frío, y por eso va en la heladera y en ningún otro lado.
@@ -259,6 +264,7 @@ ESTANTES: dict[str, tuple[Tanda, ...]] = {
     "B.sur.1": (_p("BURBALOO"),),
     "B.sur.0": (_f("BURBALOO"),),
     # La estantería existente de no comestibles.
+    "N.sur.4": (_f("DURONGA"), _f("DUREXTRA")),
     "N.sur.3": (_f("DURONGA"), _f("DUREXTRA")),
     "N.sur.2": (_p("DURONGA"), _p("DUREXTRA")),
     "N.sur.1": (_p("POETICO"), _p("ACTRONCITO")),

@@ -15,8 +15,9 @@ Con `--aplicar`, guarda la fuente canónica en su lugar. Después corren
   frente**, de espaldas a una pared. Cada una conserva su nombre —`este`, `oeste`, `sur`,
   `norte`—, que ya no dice hacia dónde mira. Primero las cuatro van contra la pared este, de sur
   a norte: cabecera sur, las dos caras largas y cabecera norte, con el mismo hueco entre piezas.
-- **La cabecera sur se muda a la pared norte**, mirando al sur, a `SEPARACION_DE_LA_PUERTA` del
-  marco de la puerta del depósito. Las otras tres quedan una junto a la otra, con `ENTRE_PIEZAS`
+- **La cabecera norte (la de grilla) se muda a la pared norte**, mirando al sur, a
+  `SEPARACION_DE_LA_PUERTA` del marco de la puerta del depósito. Las otras tres —las dos caras
+  largas y la cabecera sur (la de panel perforado)— quedan una junto a la otra, con `ENTRE_PIEZAS`
   entre ellas, y su extremo sur alineado con el de `B`: se leen los dos extremos del `.blend`.
 - **Cada cara larga pasa a medir `LARGO_DE_LA_CARA`.** Cada grupo de vértices viaja entero hacia
   el medio de la pieza y lo que hay entre dos grupos se encoge. En una cara encogida las UV de
@@ -70,8 +71,8 @@ PASILLO_CON_B = 2.30
 #: del depósito, sin contar lo que ocupan sus jambas.
 PARED_DESDE_Y = -0.6
 PARED_HASTA_Y = 6.9
-#: De sur a norte. La cabecera de almacén queda junto a la cara de almacén.
-ORDEN = ("sur", "este", "oeste", "norte")
+#: De sur a norte, contra la pared este, antes de mudar la cabecera norte.
+ORDEN = ("este", "oeste", "sur", "norte")
 LATERALES = ("este", "oeste")
 #: Cómo gira cada pieza sobre su centro para quedar mirando al oeste, como una matriz de 2x2 sobre
 #: `(x, y)`. Exactas, porque un giro calculado con senos deja ruido en cada vértice.
@@ -85,14 +86,19 @@ GIROS = {
 GIRO_A_SUR = ((0.0, -1.0), (1.0, 0.0))
 #: La cara interior del zócalo de la pared norte, medida con un rayo como la de la pared este.
 PARED_NORTE_Y = 7.854
-#: Lo que queda libre entre la cabecera sur y el marco de la puerta del depósito.
-SEPARACION_DE_LA_PUERTA = 0.30
+#: Lo que queda libre entre la pieza de la pared norte y el marco de la puerta del depósito.
+SEPARACION_DE_LA_PUERTA = 0.45
+#: Lo menos que le queda a esa pieza hasta la madera que cubre la pared norte, al oeste.
+LIBRE_JUNTO_A_LA_MADERA = 0.2
+MADERA = "mueble_continuo"
+#: La pieza que va contra la pared norte.
+PIEZA_DE_LA_PARED_NORTE = "norte"
 #: Lo menos que puede quedar entre las tres piezas de la pared este y la puerta del baño.
 LIBRE_JUNTO_A_LA_PUERTA_DEL_BANO = 0.3
 #: Lo que queda entre dos piezas vecinas de la pared este.
 ENTRE_PIEZAS = 0.02
 #: De sur a norte, las piezas que quedan contra la pared este.
-GRUPO_DE_LA_PARED_ESTE = ("este", "oeste", "norte")
+GRUPO_DE_LA_PARED_ESTE = ("este", "oeste", "sur")
 MARCO_DE_LA_PUERTA = "marco_puerta_deposito-col"
 MARCO_DEL_BANO = "bano_marco_entrada"
 A = "gondolanueva-col"
@@ -371,33 +377,74 @@ def poner_a() -> bool:
     return True
 
 
-def mudar_la_cabecera_sur() -> bool:
-    """Pasa la cabecera sur a la pared norte: de espaldas a ella, mirando al sur, a
+def _en_la_pared_este(pieza: Pieza) -> bool:
+    return _caja(_puntos(pieza.cuerpo))[1].x > PARED_ESTE_X - 0.5
+
+
+def devolver_a_la_pared_este() -> bool:
+    """Lleva a la pared este, mirando al oeste, las piezas del grupo que están en otra pared.
+
+    Quedan al final del grupo: `compactar_las_piezas_de_la_pared_este` las acomoda después."""
+    gondola = _objeto(A)
+    piezas = _piezas()
+    movido = False
+    for nombre in GRUPO_DE_LA_PARED_ESTE:
+        pieza = piezas[nombre]
+        if _en_la_pared_este(pieza):
+            continue
+        puntos = _puntos(pieza.cuerpo)
+        minimo, maximo = _caja(puntos)
+        giro = _rotar(GIROS["sur"], (minimo + maximo) / 2)
+        _, girada = _caja([giro @ p for p in puntos])
+        final = max(
+            _caja(_puntos(piezas[n].cuerpo))[1].y
+            for n in GRUPO_DE_LA_PARED_ESTE
+            if _en_la_pared_este(piezas[n])
+        )
+        girado_min, _ = _caja([giro @ p for p in puntos])
+        matriz = Matrix.Translation(
+            Vector((PARED_ESTE_X - girada.x, final + ENTRE_PIEZAS - girado_min.y, 0.0))
+        ) @ giro
+        _mover_pieza(pieza, matriz, gondola)
+        _mover_unidades((f"A.{nombre}.",), matriz)
+        print(f"{nombre} vuelve a la pared este")
+        movido = True
+    return movido
+
+
+def mudar_a_la_pared_norte() -> bool:
+    """Pone la pieza de la pared norte de espaldas a ella, mirando al sur, a
     `SEPARACION_DE_LA_PUERTA` del marco de la puerta del depósito."""
     gondola = _objeto(A)
-    sur = _piezas()["sur"]
-    puntos = _puntos(sur.cuerpo)
+    pieza = _piezas()[PIEZA_DE_LA_PARED_NORTE]
+    puntos = _puntos(pieza.cuerpo)
     minimo, maximo = _caja(puntos)
-    if maximo.y > PARED_NORTE_Y - 1.0:
-        print("la cabecera sur ya está contra la pared norte; no cambia nada")
-        return False
     marco, _ = _caja(_puntos(_objeto(MARCO_DE_LA_PUERTA)))
-    giro = _rotar(GIRO_A_SUR, (minimo + maximo) / 2)
+    madera = _caja(_puntos(_objeto(MADERA)))[1].x
+    giro = Matrix.Identity(4)
+    if _en_la_pared_este(pieza):
+        giro = _rotar(GIRO_A_SUR, (minimo + maximo) / 2)
     _, girada = _caja([giro @ p for p in puntos])
     traslado = Vector((marco.x - SEPARACION_DE_LA_PUERTA - girada.x, PARED_NORTE_Y - girada.y, 0.0))
+    if giro == Matrix.Identity(4) and traslado.length < 1e-4:
+        print("la cabecera de la pared norte ya está donde va; no cambia nada")
+        return False
     matriz = Matrix.Translation(traslado) @ giro
-    _mover_pieza(sur, matriz, gondola)
-    unidades = _mover_unidades(("A.sur.",), matriz)
-    minimo, maximo = _caja(_puntos(sur.cuerpo))
+    _mover_pieza(pieza, matriz, gondola)
+    unidades = _mover_unidades((f"A.{PIEZA_DE_LA_PARED_NORTE}.",), matriz)
+    minimo, maximo = _caja(_puntos(pieza.cuerpo))
+    if minimo.x - madera < LIBRE_JUNTO_A_LA_MADERA:
+        raise SystemExit(f"la pieza de la pared norte queda a {minimo.x - madera:.3f} de la madera")
     print(
-        f"sur: x[{minimo.x:.3f}, {maximo.x:.3f}] y[{minimo.y:.3f}, {maximo.y:.3f}], "
-        f"{marco.x - maximo.x:.3f} del marco; {unidades} unidades"
+        f"{PIEZA_DE_LA_PARED_NORTE}: x[{minimo.x:.3f}, {maximo.x:.3f}] y[{minimo.y:.3f}, "
+        f"{maximo.y:.3f}], {marco.x - maximo.x:.3f} del marco y {minimo.x - madera:.3f} de la "
+        f"madera; {unidades} unidades"
     )
     return True
 
 
 def compactar_las_piezas_de_la_pared_este() -> bool:
-    """Pone la cara este, la cara oeste y la cabecera norte una junto a la otra, con
+    """Pone la cara este, la cara oeste y la cabecera sur una junto a la otra, con
     `ENTRE_PIEZAS` entre ellas, y el extremo sur del grupo alineado con el de `B`."""
     gondola = _objeto(A)
     piezas = _piezas()
@@ -492,7 +539,8 @@ def correr_b() -> bool:
 def main() -> None:
     configurar()
     poner_a()
-    mudar_la_cabecera_sur()
+    devolver_a_la_pared_este()
+    mudar_a_la_pared_norte()
     compactar_las_piezas_de_la_pared_este()
     correr_b()
     bpy.context.view_layer.update()
