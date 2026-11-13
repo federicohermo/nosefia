@@ -176,32 +176,32 @@ func _posturas_donde_entra_mas_sin_stock(almacen: Node3D, cuerpo: Node3D) -> int
 ## puede haber un casillero vacío, o el metal de un divisor.
 func _posturas_de_la_gondola(almacen: Node3D) -> Array[Array]:
 	var gondola := almacen.get_node("Estructura/gondolanueva") as MeshInstance3D
-	var mueble := LadosDelMueble.pieza(gondola)
-	var cerca_del_mueble := mueble.grow(MARGEN_DEL_MUEBLE)
 	var disposicion: DisposicionDeLaGondola = almacen.get("_reposicion_manual").get("disposicion")
 	var estante: Estante = almacen.get("_repositor").estante()
 	var posturas: Array[Array] = []
-	for lado in LadosDelMueble.lados(gondola):
-		var envase := Vector3.INF
-		for producto in Catalogo.todos():
-			var ocupados := estante.casilleros_ocupados(producto)
-			if ocupados.is_empty():
+	for pieza in LadosDelMueble.piezas(gondola):
+		var cerca_del_mueble := pieza.grow(MARGEN_DEL_MUEBLE)
+		for lado in LadosDelMueble.lados(gondola, pieza):
+			var envase := Vector3.INF
+			for producto in Catalogo.todos():
+				var ocupados := estante.casilleros_ocupados(producto)
+				if ocupados.is_empty():
+					continue
+				var frente := DisposicionDeLaGondola.frente(
+					disposicion.principales[producto.id], disposicion.filas_de_adelante[producto.id]
+				)
+				var aqui := _centro_de_un_envase(almacen, producto.id, ocupados[0])
+				if frente.dot(lado.hacia) > 0.99 and cerca_del_mueble.has_point(aqui):
+					envase = aqui
+					break
+			# Un lado sin envases de cara, como el que da a la pared, no tiene qué probar.
+			if envase == Vector3.INF:
 				continue
-			var frente := DisposicionDeLaGondola.frente(
-				disposicion.principales[producto.id], disposicion.filas_de_adelante[producto.id]
-			)
-			var aqui := _centro_de_un_envase(almacen, producto.id, ocupados[0])
-			if frente.dot(lado.hacia) > 0.99 and cerca_del_mueble.has_point(aqui):
-				envase = aqui
-				break
-		# Un lado sin envases de cara, como el que da a la pared, no tiene qué probar.
-		if envase == Vector3.INF:
-			continue
-		var a_lo_largo := lado.hacia.cross(Vector3.UP)
-		var donde := LadosDelMueble.pie_junto_a(gondola, lado, DISTANCIA_A_LA_GONDOLA)
-		donde += a_lo_largo * (envase - mueble.get_center()).dot(a_lo_largo)
-		for altura: float in ALTURAS_DE_LA_MIRA:
-			posturas.append([donde, Vector3(envase.x, altura, envase.z)])
+			var a_lo_largo := lado.hacia.cross(Vector3.UP)
+			var donde := LadosDelMueble.pie_junto_a(gondola, lado, DISTANCIA_A_LA_GONDOLA, pieza)
+			donde += a_lo_largo * (envase - pieza.get_center()).dot(a_lo_largo)
+			for altura: float in ALTURAS_DE_LA_MIRA:
+				posturas.append([donde, Vector3(envase.x, altura, envase.z)])
 	(
 		assert_array(posturas)
 		. override_failure_message("Premisa: la góndola tiene un lado con envases de cara")

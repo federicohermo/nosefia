@@ -33,7 +33,7 @@ static func caja(mueble: MeshInstance3D) -> AABB:
 static func pieza_local(mueble: MeshInstance3D) -> AABB:
 	var mayor := AABB()
 	for pieza: AABB in PiezasDeUnMueble.de_la_malla(mueble.mesh):
-		if pieza.size.z > mayor.size.z:
+		if maxf(pieza.size.x, pieza.size.z) > maxf(mayor.size.x, mayor.size.z):
 			mayor = pieza
 	return mayor
 
@@ -43,11 +43,21 @@ static func pieza(mueble: MeshInstance3D) -> AABB:
 	return mueble.global_transform * pieza_local(mueble)
 
 
-## Los cuatro lados horizontales de su pieza más larga, con el largo leído de su malla.
-static func lados(mueble: MeshInstance3D) -> Array[Lado]:
-	var local := pieza_local(mueble)
+## Las cajas globales de todas las piezas del mueble.
+static func piezas(mueble: MeshInstance3D) -> Array[AABB]:
+	var salida: Array[AABB] = []
+	for caja: AABB in PiezasDeUnMueble.de_la_malla(mueble.mesh):
+		salida.append(mueble.global_transform * caja)
+	return salida
+
+
+## Los cuatro lados horizontales de una pieza del mueble, con el largo leído de su caja. Sin
+## pieza, la más larga.
+static func lados(mueble: MeshInstance3D, de_la_pieza := AABB()) -> Array[Lado]:
+	var limites := de_la_pieza if de_la_pieza.has_volume() else pieza(mueble)
+	# El largo se lee en los ejes del mueble, que pueden estar girados respecto del mundo.
+	var local := mueble.global_transform.affine_inverse() * limites
 	var largo_en_x := local.size.x >= local.size.z
-	var limites := pieza(mueble)
 	var salida: Array[Lado] = []
 	for eje: Vector3 in [Vector3.RIGHT, Vector3.BACK]:
 		for signo: float in [1.0, -1.0]:
@@ -60,8 +70,11 @@ static func lados(mueble: MeshInstance3D) -> Array[Lado]:
 
 
 ## Dónde se paran los pies junto a un lado, a `distancia` de su cara.
-static func pie_junto_a(mueble: MeshInstance3D, lado: Lado, distancia: float) -> Vector3:
-	var pie := pieza(mueble).get_center() + lado.hacia * (lado.mitad + distancia)
+static func pie_junto_a(
+	mueble: MeshInstance3D, lado: Lado, distancia: float, de_la_pieza := AABB()
+) -> Vector3:
+	var limites := de_la_pieza if de_la_pieza.has_volume() else pieza(mueble)
+	var pie := limites.get_center() + lado.hacia * (lado.mitad + distancia)
 	pie.y = PIES_SOBRE_EL_PISO
 	return pie
 
