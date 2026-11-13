@@ -27,6 +27,7 @@ from lib.reparto import (
     cara_de_isla,
     es_cabecera,
     es_heladera,
+    mira,
     partes,
     sector_de,
     validar_reparto,
@@ -294,6 +295,29 @@ class DecisionDeFilas(unittest.TestCase):
         for producto in ("COSA_DE_MANI", "FLIM_POF", "BURBALOO", "MARRANOS", "POETICO"):
             with self.subTest(producto=producto), self.assertRaises(ValueError):
                 Tanda(producto, fija=True, filas=2)
+
+
+class HaciaDondeMiraUnaCara(unittest.TestCase):
+    def test_las_cuatro_piezas_de_a_miran_al_oeste(self):
+        for estante in ESTANTES:
+            if partes(estante)[0] == "A":
+                with self.subTest(estante=estante):
+                    self.assertEqual(mira(estante), (-1.0, 0.0, 0.0))
+
+    def test_las_demas_caras_miran_al_punto_cardinal_de_su_nombre(self):
+        cardinales = {
+            "oeste": (-1.0, 0.0, 0.0), "este": (1.0, 0.0, 0.0),
+            "sur": (0.0, -1.0, 0.0), "norte": (0.0, 1.0, 0.0),
+        }
+        for estante in ESTANTES:
+            mueble, cara, _ = partes(estante)
+            if mueble != "A":
+                with self.subTest(estante=estante):
+                    self.assertEqual(mira(estante), cardinales[cara])
+
+    def test_una_cara_y_sus_estantes_miran_igual(self):
+        self.assertEqual(mira("A.este"), mira("A.este.2"))
+        self.assertEqual(mira("B.este"), mira("B.este.0"))
 
 
 if __name__ == "__main__":
