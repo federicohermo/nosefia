@@ -13,8 +13,8 @@ lugar = 0
 escala_visual = 1.6
 acuosa = true
 
-[node name="ManchaEntreLasGondolas" parent="." instance=ExtResource("2_mancha")]
-editor_description = "Polvo, en el piso del pasillo entre las dos góndolas del medio."
+[node name="ManchaEntreLaIslaYLasMesas" parent="." instance=ExtResource("2_mancha")]
+editor_description = "Polvo, en el piso libre entre la góndola isla y las mesas."
 lugar = 1
 escala_visual = 1.4
 acuosa = true

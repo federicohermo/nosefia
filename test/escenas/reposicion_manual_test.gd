@@ -205,7 +205,7 @@ func test_laysntt_y_jorgillo_quedan_sobre_el_suelo_al_mover_la_camara() -> void:
 		var vista: MeshInstance3D = cuerpo.get_node("Malla")
 		var limites := vista.global_transform * vista.mesh.get_aabb()
 		var mancha: MeshInstance3D = almacen.get_node(
-			"LimpiezaDelAlmacen/ManchaEntreLasGondolas/Malla"
+			"LimpiezaDelAlmacen/ManchaEntreLaIslaYLasMesas/Malla"
 		)
 		var limites_mancha := mancha.global_transform * mancha.mesh.get_aabb()
 		assert_float(limites.end.y).is_greater(limites_mancha.end.y)

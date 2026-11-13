@@ -192,18 +192,33 @@ def reconstruir(modelo: dict, piezas: dict, descompuestos: dict, fuentes: dict) 
         poner(lista, path, {'transform': 'Transform3D(' + ','.join(map(str, pose)) + ')'})
     resultado['objetos_del_almacen.tscn'] = ''.join(lista)
     lista = bloques(fuentes['limpieza_del_almacen.tscn'])
-    primera = pieza_mayor(modelo['gondolanueva'])
-    segunda = pieza_mayor(modelo['gondolanueva2'])
-    izquierda, derecha = sorted((primera, segunda), key=lambda caja: caja[0])
-    centro = (izquierda[0] + izquierda[3] + derecha[0]) / 2
-    mancha = next(b for b in lista if ruta(b) == 'ManchaEntreLasGondolas')
+    centro = centro_entre_la_isla_y_las_mesas(modelo)
+    mancha = next(b for b in lista if ruta(b) == 'ManchaEntreLaIslaYLasMesas')
     pose = numeros(re.search(r'^transform = (.*)', mancha, re.M)[1])
     pose[-3] = centro
-    poner(lista, 'ManchaEntreLasGondolas', {
+    poner(lista, 'ManchaEntreLaIslaYLasMesas', {
         'transform': 'Transform3D(' + ','.join(map(str, pose)) + ')',
     })
     resultado['limpieza_del_almacen.tscn'] = ''.join(lista)
     return resultado
+
+
+#: Las mesas y las sillas del salón, por su nombre en el modelo.
+MESAS_Y_SILLAS = tuple(f'salon_mesa_{n}' for n in (1, 2, 3)) + tuple(
+    f'salon_silla_{n}{lado}' for n in (1, 2, 3) for lado in 'ab'
+)
+
+
+def centro_entre_la_isla_y_las_mesas(modelo):
+    """El medio, a lo ancho del salón, del piso libre entre la góndola isla y las mesas.
+
+    Va entre el borde oeste de la isla y el borde este de lo más al este que tienen las mesas y
+    las sillas: así no queda debajo de ninguna y hay lugar para pararse a limpiarla."""
+    isla = pieza_mayor(modelo['gondolanueva2'])
+    este_de_las_mesas = max(
+        caja[0] + caja[3] for caja in (numeros(modelo[n]['global_aabb']) for n in MESAS_Y_SILLAS)
+    )
+    return (este_de_las_mesas + isla[0]) / 2
 
 
 def pieza_mayor(fila):
