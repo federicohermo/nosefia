@@ -321,17 +321,19 @@ func _desatascar_lo_soltado(nodo: Node3D) -> void:
 		unidad.global_position += atras * paso
 
 
-## Conserva orientación y escala de la unidad, sin añadir formas a la simulación.
+## Conserva orientación y escala de la unidad, sin añadir formas a la simulación. La reserva es la
+## de cada pieza del mueble, no la caja que las envuelve a todas.
 func _ocupa_una_reserva(forma: CollisionShape3D) -> bool:
 	var volumen := LimitesDeForma.de(forma.shape)
 	for cuerpo: PhysicsBody3D in muebles_con_reserva:
 		var malla := cuerpo.get_parent() as MeshInstance3D
 		if malla == null or malla.mesh == null:
 			continue
-		if ReservaDeLaGondola.se_superponen(
-			volumen, forma.global_transform, malla.get_aabb(), malla.global_transform
-		):
-			return true
+		for pieza: AABB in PiezasDeUnMueble.de_la_malla(malla.mesh):
+			if ReservaDeLaGondola.se_superponen(
+				volumen, forma.global_transform, pieza, malla.global_transform
+			):
+				return true
 	return false
 
 
