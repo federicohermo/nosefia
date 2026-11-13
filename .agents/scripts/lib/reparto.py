@@ -263,11 +263,12 @@ ESTANTES: dict[str, tuple[Tanda, ...]] = {
     "B.sur.2": (_p("JORGILLO"),),
     "B.sur.1": (_p("BURBALOO"),),
     "B.sur.0": (_f("BURBALOO"),),
-    # La estantería existente de no comestibles.
+    # La estantería existente de no comestibles, con cinco estantes por columna: Poético y
+    # Actroncito ocupan los tres de abajo, y Duronga y Durextra los dos de arriba.
     "N.sur.4": (_f("DURONGA"), _f("DUREXTRA")),
-    "N.sur.3": (_f("DURONGA"), _f("DUREXTRA")),
-    "N.sur.2": (_p("DURONGA"), _p("DUREXTRA")),
-    "N.sur.1": (_p("POETICO"), _p("ACTRONCITO")),
+    "N.sur.3": (_p("DURONGA"), _p("DUREXTRA")),
+    "N.sur.2": (_p("POETICO"), _p("ACTRONCITO")),
+    "N.sur.1": (_f("POETICO"), _f("ACTRONCITO")),
     "N.sur.0": (_f("POETICO"), _f("ACTRONCITO")),
     # Las heladeras. Lo frío es menos que las bandejas: cada uno va una vez con casilleros, y las
     # bandejas que sobran llevan repetidos fijos de lo frío. Decidido por el usuario el

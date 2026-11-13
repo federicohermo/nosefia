@@ -1,7 +1,6 @@
-"""Deja la estantería empotrada de no comestibles con cinco estantes parejos en cada columna.
+"""Deja la estantería empotrada de no comestibles con cinco huecos iguales en cada columna.
 
-    blender assets/models/SEPT_JUEGOS_PROTOTIPO.blend --background --python-exit-code 1 \
-        --python .claude/scripts/blender/parejar_estanteria_n.py -- [--aplicar]
+    blender assets/models/SEPT_JUEGOS_PROTOTIPO.blend --background --python-exit-code 1         --python .claude/scripts/blender/parejar_estanteria_n.py -- [--aplicar]
 
 Sin `--aplicar`, escribe en `reports/parejar-estanteria-n.blend` y no modifica el `.blend` del
 repo. Con `--aplicar`, guarda la fuente canónica en su lugar. Después va la cadena: `disponer.py`
@@ -11,27 +10,28 @@ y `disponer_prueba.py`, `exportar_modelo.py`, `integrar_modelo.py`, `actualizar_
 ## Por qué
 
 Las dos columnas de `gondolanueva-col.001` no coincidían: la izquierda tenía cinco estantes a
-alturas desparejas y la derecha seis, y las líneas no seguían las de las heladeras vecinas.
+alturas desparejas y la derecha seis. Y con los estantes parejos entre sí, los huecos no se veían
+iguales: el de arriba tenía aire de más contra el techo del mueble.
 
 ## Qué cambia
 
-- **Las dos columnas quedan con `NIVELES` estantes cada una, a las mismas alturas y con la
-  misma separación.** El de abajo es el piso del nicho, a la altura de la rejilla de las
-  heladeras, y no se mueve. El de arriba queda a la altura de la bandeja más alta de las
-  heladeras que funcionan, que se mide en `heladeranueva-col`; los otros tres se reparten parejo
-  entre los dos. Los demás estantes se borran.
+- **Las dos columnas quedan con `NIVELES` estantes cada una y `NIVELES` huecos iguales.** El de
+  abajo es el piso del nicho y no se mueve; el alto interior, del piso a la cara de abajo de la
+  tapa, se reparte en cinco huecos del mismo alto descontando el grosor de las cuatro chapas.
+  Los estantes que sobran se borran.
 - **Cada estante lleva su portaprecios** (`estanteria_precios`), y los de los estantes que se
   borran se borran.
-- **Cada producto conserva su columna.** El de abajo de cada columna (Poético, Actroncito) queda
-  con dos estantes: el piso, con su referencia fija, y el siguiente, con su principal. El de arriba
-  (Duronga, Durextra) queda con los tres de arriba: su principal en el de en medio y dos
-  referencias fijas. Las unidades viajan rígidas con su estante y se renombran `N.sur.<nivel>/<columna>`.
+- **Cada producto conserva su columna.** El de abajo de cada columna (Poético, Actroncito)
+  ocupa los tres estantes de abajo: dos referencias fijas y, arriba de ellas, su principal. El de
+  arriba (Duronga, Durextra) ocupa los dos de arriba: su principal y una referencia fija. Las
+  unidades viajan rígidas con su estante, se renombran `N.sur.<nivel>/<columna>` y las
+  referencias que faltan se copian de otra del mismo producto.
 - El marco, el hueco en la madera, el panel y las tapas no cambian.
 
 ## Lo que cuesta
 
-0 triángulos nuevos, 0 materiales y 0 texturas. Es idempotente: si los estantes ya están a las
-alturas pedidas, no cambia nada.
+0 triángulos nuevos, 0 materiales y 0 texturas. Es idempotente: si los estantes y las tandas ya
+están donde van, no cambia nada.
 """
 
 from __future__ import annotations
@@ -47,17 +47,18 @@ from mathutils.bvhtree import BVHTree  # type: ignore[import-not-found]
 RAIZ = Path(__file__).resolve().parents[3]
 sys.path.insert(0, str(RAIZ / ".claude/scripts"))
 from lib.consola import configurar  # noqa: E402
-from lib.estanteria_pareja import alturas_parejas  # noqa: E402
+from lib.estanteria_pareja import alturas_con_huecos_iguales  # noqa: E402
 from lib.reparto import PRODUCTOS  # noqa: E402
 
 ESTANTERIA = "gondolanueva-col.001"
 PRECIOS = "estanteria_precios"
-HELADERA = "heladeranueva-col"
 #: Cuántos estantes lleva cada columna, con el piso del nicho.
 NIVELES = 5
-#: Cuántos de ellos son del producto de arriba de cada columna, que lleva su principal en el
-#: primero. El de abajo lleva los dos primeros: el piso con su fija y el siguiente con su principal.
-DE_ARRIBA = 3
+#: Qué lleva cada nivel, como `(nivel, es fija)`: el producto de abajo ocupa los tres primeros, con
+#: su principal en el de arriba de los tres, y el de arriba los dos últimos, con su principal en el
+#: de abajo de los dos.
+NIVELES_DE_ABAJO = ((0, True), (1, True), (2, False))
+NIVELES_DE_ARRIBA = ((3, False), (4, True))
 #: Un estante es una caja de este grosor, y su ancho es el de una columna.
 GROSOR_MAXIMO = 0.05
 ANCHO_DE_UNA_COLUMNA = (0.9, 1.2)
@@ -107,21 +108,16 @@ def _columna(minimo: Vector, maximo: Vector, medio_x: float) -> int:
     return 0 if (minimo.x + maximo.x) / 2 < medio_x else 1
 
 
-def _bandejas_de_las_heladeras() -> list[float]:
-    """La cara de arriba de cada bandeja de la heladera 1, de abajo hacia arriba."""
-    heladera = _objeto(HELADERA)
-    bm = bmesh.new()
-    bm.from_mesh(heladera.data)
-    alturas: list[float] = []
-    for cara in bm.faces:
-        normal = heladera.matrix_world.to_3x3() @ cara.normal
-        if normal.z < 0.99 or cara.calc_area() < 0.2:
-            continue
-        z = (heladera.matrix_world @ cara.calc_center_median()).z
-        if 0.4 < z < 2.3 and not any(abs(z - a) < IGUAL for a in alturas):
-            alturas.append(z)
-    bm.free()
-    return sorted(alturas)
+def _techo(bm, mundo: Matrix) -> float:
+    """La cara de abajo de la tapa: la chapa fina y ancha que cierra el nicho por arriba."""
+    bajos = []
+    for isla in _islas(bm):
+        minimo, maximo = _caja(isla, mundo)
+        if maximo.z - minimo.z < GROSOR_MAXIMO and maximo.x - minimo.x > ANCHO_DE_UNA_COLUMNA[1]:
+            bajos.append(minimo.z)
+    if not bajos:
+        raise SystemExit("la estantería no tiene tapa")
+    return max(bajos)
 
 
 def _estantes(bm, mundo: Matrix, medio_x: float) -> dict[int, list[tuple[float, list]]]:
@@ -149,25 +145,72 @@ def _unidades_de_la_estanteria() -> list:
     return [o for o in bpy.data.objects if str(o.get("tanda", "")).startswith("N.sur.")]
 
 
-def _plan_de_las_unidades(columna: int, tandas: dict[int, list]) -> dict[int, int]:
-    """Qué nivel viejo pasa a qué nivel nuevo, en una columna. Lo que no aparece se borra.
+def _plan_de_las_unidades(
+    columna: int, tandas: dict[int, list]
+) -> tuple[dict[int, int], list[tuple[int, int]], list[int]]:
+    """Qué nivel viejo pasa a qué nivel nuevo en una columna, qué referencias se copian y qué
+    niveles se borran.
 
-    El producto de abajo conserva su piso y su principal; el de arriba, sus tres primeros niveles.
+    El producto de abajo conserva su principal y llena los otros dos niveles de abajo con
+    referencias fijas; el de arriba conserva su principal y una fija. Una fija que falta se copia
+    de la primera que se conserva, y las que sobran se borran.
     """
     por_producto: dict[str, list[int]] = {}
     for nivel in sorted(tandas):
-        producto = str(tandas[nivel][0]["producto"])
-        por_producto.setdefault(producto, []).append(nivel)
+        por_producto.setdefault(str(tandas[nivel][0]["producto"]), []).append(nivel)
     if len(por_producto) != 2:
         raise SystemExit(f"la columna {columna} no lleva dos productos: {sorted(por_producto)}")
     de_abajo, de_arriba = sorted(por_producto.values(), key=lambda niveles: niveles[0])
-    principal = next(n for n in de_abajo if not bool(tandas[n][0]["fija"]))
-    plan = {de_abajo[0]: 0, principal: 1}
-    for nuevo, viejo in enumerate(de_arriba[:DE_ARRIBA], start=NIVELES - DE_ARRIBA):
-        plan[viejo] = nuevo
-    if bool(tandas[de_arriba[0]][0]["fija"]):
-        raise SystemExit(f"la columna {columna} no tiene su principal en el primer nivel de arriba")
-    return plan
+    mover: dict[int, int] = {}
+    copiar: list[tuple[int, int]] = []
+    borrar: list[int] = []
+    for niveles, destinos in ((de_abajo, NIVELES_DE_ABAJO), (de_arriba, NIVELES_DE_ARRIBA)):
+        principales = [n for n in niveles if not bool(tandas[n][0]["fija"])]
+        fijas = [n for n in niveles if bool(tandas[n][0]["fija"])]
+        if len(principales) != 1 or not fijas:
+            raise SystemExit(f"la columna {columna} no tiene una principal y una fija por producto")
+        mover[principales[0]] = next(nivel for nivel, fija in destinos if not fija)
+        molde = fijas[0]
+        for destino in (nivel for nivel, fija in destinos if fija):
+            if fijas:
+                mover[fijas.pop(0)] = destino
+            else:
+                copiar.append((molde, destino))
+        borrar += fijas
+    return mover, copiar, borrar
+
+
+def _copiar(unidad, nuevo: int, columna: int, corrimiento: float):
+    copia = unidad.copy()
+    for coleccion in unidad.users_collection:
+        coleccion.objects.link(copia)
+    escala = unidad.scale.copy()
+    copia.matrix_world = Matrix.Translation((0.0, 0.0, corrimiento)) @ unidad.matrix_world
+    copia.scale = escala
+    copia["tanda"] = f"N.sur.{nuevo}/{columna}"
+    return copia
+
+
+def _tandas_por_columna() -> dict[int, dict[int, list]]:
+    por_columna: dict[int, dict[int, list]] = {0: {}, 1: {}}
+    for unidad in _unidades_de_la_estanteria():
+        nivel, columna = str(unidad["tanda"]).removeprefix("N.sur.").split("/")
+        por_columna[int(columna)].setdefault(int(nivel), []).append(unidad)
+    return por_columna
+
+
+def _ya_estan_las_tandas(por_columna: dict[int, dict[int, list]]) -> bool:
+    for columna in (0, 1):
+        tandas = por_columna[columna]
+        if sorted(tandas) != list(range(NIVELES)):
+            return False
+        for destinos in (NIVELES_DE_ABAJO, NIVELES_DE_ARRIBA):
+            productos = {str(tandas[nivel][0]["producto"]) for nivel, _ in destinos}
+            if len(productos) != 1:
+                return False
+            if any(bool(tandas[nivel][0]["fija"]) != fija for nivel, fija in destinos):
+                return False
+    return True
 
 
 def parejar() -> bool:
@@ -181,24 +224,24 @@ def parejar() -> bool:
     piso = estantes[0][0][0]
     if abs(estantes[1][0][0] - piso) > IGUAL:
         raise SystemExit("las dos columnas no tienen el piso a la misma altura")
-    bandejas = _bandejas_de_las_heladeras()
-    if len(bandejas) != 4:
-        raise SystemExit(f"{HELADERA} no tiene cuatro bandejas: {bandejas}")
-    nuevas = alturas_parejas(piso, bandejas[-1], NIVELES)
-    ya = all(
+    techo = _techo(bm, mundo)
+    minimo, maximo = _caja(estantes[0][1][1], mundo)
+    grosor = maximo.z - minimo.z
+    nuevas = alturas_con_huecos_iguales(piso, techo, grosor, NIVELES)
+    por_columna = _tandas_por_columna()
+    ya = _ya_estan_las_tandas(por_columna) and all(
         len(estantes[c]) == NIVELES
         and all(abs(e[0] - z) < IGUAL for e, z in zip(estantes[c], nuevas))
         for c in (0, 1)
     )
     if ya:
-        print("la estantería ya tiene sus cinco estantes parejos; no cambia nada")
+        print("la estantería ya tiene sus cinco huecos iguales y sus tandas; no cambia nada")
         bm.free()
         return False
     viejas = {c: [e[0] for e in estantes[c]] for c in (0, 1)}
     print(
-        "bandejas de la heladera: "
-        + ", ".join(f"{z:.3f}" for z in bandejas)
-        + f"; estantes nuevos: {', '.join(f'{z:.3f}' for z in nuevas)}"
+        f"piso {piso:.3f}, tapa {techo:.3f}, chapa {grosor:.3f}; estantes nuevos: "
+        + ", ".join(f"{z:.3f}" for z in nuevas)
     )
 
     # Los estantes: los de arriba del piso suben o bajan a su altura y los que sobran se borran.
@@ -218,7 +261,7 @@ def parejar() -> bool:
     bp = bmesh.new()
     bp.from_mesh(precios.data)
     mundo_p = precios.matrix_world
-    borrar = []
+    borrar_precios = []
     for isla in _islas(bp):
         minimo, maximo = _caja(isla, mundo_p)
         c = _columna(minimo, maximo, medio_x)
@@ -229,33 +272,29 @@ def parejar() -> bool:
         if abs(minimo.z - (viejas[c][nivel] + SOBRE_EL_ESTANTE)) > 0.01:
             raise SystemExit(f"un portaprecios no está sobre ningún estante: z={minimo.z:.3f}")
         if nivel >= NIVELES:
-            borrar.append(isla)
+            borrar_precios.append(isla)
         else:
             _mover_z(bp, isla, nuevas[nivel] - viejas[c][nivel])
-    _borrar(bp, borrar)
+    _borrar(bp, borrar_precios)
     bp.to_mesh(precios.data)
     bp.free()
     precios.data.update()
 
     # Las unidades.
     fuentes = {p.objeto for p in PRODUCTOS}
-    todas = _unidades_de_la_estanteria()
-    por_columna: dict[int, dict[int, list]] = {0: {}, 1: {}}
-    for unidad in todas:
-        nivel, columna = str(unidad["tanda"]).removeprefix("N.sur.").split("/")
-        por_columna[int(columna)].setdefault(int(nivel), []).append(unidad)
-    movidas = borradas = 0
+    movidas = borradas = copiadas = 0
     for c in (0, 1):
-        plan = _plan_de_las_unidades(c, por_columna[c])
+        mover, copiar, borrar = _plan_de_las_unidades(c, por_columna[c])
         for viejo, unidades in sorted(por_columna[c].items()):
-            nuevo = plan.get(viejo)
-            for unidad in unidades:
-                if nuevo is None:
+            if viejo in borrar:
+                for unidad in unidades:
                     if unidad.name in fuentes:
                         raise SystemExit(f"se iba a borrar la unidad fuente {unidad.name}")
                     bpy.data.objects.remove(unidad, do_unlink=True)
                     borradas += 1
-                    continue
+                continue
+            nuevo = mover[viejo]
+            for unidad in unidades:
                 escala = unidad.scale.copy()
                 unidad.matrix_world = (
                     Matrix.Translation((0.0, 0.0, nuevas[nuevo] - viejas[c][viejo]))
@@ -264,31 +303,43 @@ def parejar() -> bool:
                 unidad.scale = escala
                 unidad["tanda"] = f"N.sur.{nuevo}/{c}"
                 movidas += 1
-    print(f"{movidas} unidades movidas y {borradas} borradas")
+        for molde, nuevo in copiar:
+            for unidad in por_columna[c][molde]:
+                _copiar(unidad, nuevo, c, nuevas[nuevo] - viejas[c][molde])
+                copiadas += 1
+    print(f"{movidas} unidades movidas, {copiadas} copiadas y {borradas} borradas")
     bpy.context.view_layer.update()
     return True
 
 
 def verificar() -> None:
-    """Cada columna tiene cinco estantes parejos, cada unidad apoya en su estante sin tocar el
-    mueble, y no queda ningún portaprecios sin estante."""
+    """Cada columna tiene cinco huecos iguales, las tandas están donde van, cada unidad apoya en su
+    estante y entra en alto, y no queda ningún portaprecios sin estante."""
     estanteria = _objeto(ESTANTERIA)
     precios = _objeto(PRECIOS)
     mundo = estanteria.matrix_world
     bm = bmesh.new()
     bm.from_mesh(estanteria.data)
     estantes = _estantes(bm, mundo, mundo.translation.x)
+    techo = _techo(bm, mundo)
+    por_debajo = [[_caja(e[1], mundo)[0].z for e in estantes[c][1:]] for c in (0, 1)]
     bm.free()
+    huecos_de_las_columnas = []
     for c in (0, 1):
         alturas = [e[0] for e in estantes[c]]
         if len(alturas) != NIVELES:
             raise SystemExit(f"la columna {c} tiene {len(alturas)} estantes")
-        separaciones = [b - a for a, b in zip(alturas, alturas[1:])]
-        if max(separaciones) - min(separaciones) > IGUAL:
-            raise SystemExit(f"la columna {c} no tiene la misma separación: {separaciones}")
+        debajo_de_cada_chapa = por_debajo[c] + [techo]
+        huecos = [b - a for a, b in zip(alturas, debajo_de_cada_chapa)]
+        if max(huecos) - min(huecos) > IGUAL:
+            raise SystemExit(f"la columna {c} no tiene huecos iguales: {huecos}")
+        huecos_de_las_columnas.append(huecos)
+    if any(abs(a - b) > IGUAL for a, b in zip(*huecos_de_las_columnas)):
+        raise SystemExit("las dos columnas no tienen los mismos huecos")
     if any(abs(a[0] - b[0]) > IGUAL for a, b in zip(estantes[0], estantes[1])):
         raise SystemExit("las dos columnas no están a las mismas alturas")
     alturas = [e[0] for e in estantes[0]]
+    huecos = huecos_de_las_columnas[0]
     bp = bmesh.new()
     bp.from_mesh(precios.data)
     cuentas = {0: 0, 1: 0}
@@ -301,21 +352,24 @@ def verificar() -> None:
     bp.free()
     if cuentas != {0: NIVELES, 1: NIVELES}:
         raise SystemExit(f"los portaprecios no son uno por estante: {cuentas}")
+    if not _ya_estan_las_tandas(_tandas_por_columna()):
+        raise SystemExit("las tandas no están en los niveles que van")
     caras = [(mundo @ v.co) for v in estanteria.data.vertices]
-    arbol = BVHTree.FromPolygons(
-        caras, [list(p.vertices) for p in estanteria.data.polygons]
-    )
+    arbol = BVHTree.FromPolygons(caras, [list(p.vertices) for p in estanteria.data.polygons])
     for unidad in _unidades_de_la_estanteria():
         puntos = [unidad.matrix_world @ v.co for v in unidad.data.vertices]
         base = min(p.z for p in puntos)
+        nivel = int(str(unidad["tanda"]).removeprefix("N.sur.").split("/")[0])
+        if max(p.z for p in puntos) > base + huecos[nivel] - 0.005:
+            raise SystemExit(f"{unidad.name} no entra en el alto de su hueco")
         propio = BVHTree.FromPolygons(puntos, [list(p.vertices) for p in unidad.data.polygons])
         for cara, _ in arbol.overlap(propio):
-            techo = max(caras[i].z for i in estanteria.data.polygons[cara].vertices)
-            if techo > base + 0.002:
+            techo_de_la_cara = max(caras[i].z for i in estanteria.data.polygons[cara].vertices)
+            if techo_de_la_cara > base + 0.002:
                 raise SystemExit(f"{unidad.name} toca el mueble por encima de su estante")
-        if not any(abs(base - z) < 0.002 for z in alturas):
-            raise SystemExit(f"{unidad.name} no apoya en ningún estante: z={base:.4f}")
-    print("la estantería queda con cinco estantes parejos y sus unidades apoyadas")
+        if abs(base - alturas[nivel]) > 0.002:
+            raise SystemExit(f"{unidad.name} no apoya en su estante: z={base:.4f}")
+    print(f"la estantería queda con cinco huecos de {huecos[0]:.3f} m y sus unidades apoyadas")
 
 
 def main() -> None:

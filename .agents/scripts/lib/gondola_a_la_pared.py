@@ -28,17 +28,20 @@ class Recorrido:
     """Una función de la posición vieja a la nueva a lo largo de una pieza que se acorta.
 
     Cada grupo viaja entero, sin deformarse, y lo que hay entre dos grupos se encoge en la misma
-    proporción. La pieza queda centrada donde estaba: pierde lo mismo en las dos puntas.
+    proporción. La pieza queda centrada donde estaba y pierde lo mismo en las dos puntas, salvo
+    con `centrada=False`: entonces conserva su primera punta y pierde todo en la última.
     """
 
-    def __init__(self, grupos: Sequence[tuple[float, float]], acortar: float) -> None:
+    def __init__(
+        self, grupos: Sequence[tuple[float, float]], acortar: float, centrada: bool = True
+    ) -> None:
         huecos = [b[0] - a[1] for a, b in zip(grupos, grupos[1:])]
         if not huecos or sum(huecos) <= acortar:
             raise ValueError("lo que hay entre los grupos no alcanza para acortar tanto")
         factor = (sum(huecos) - acortar) / sum(huecos)
         self._viejos = list(grupos)
         self._nuevos: list[tuple[float, float]] = []
-        desde = grupos[0][0] + acortar / 2
+        desde = grupos[0][0] + (acortar / 2 if centrada else 0.0)
         for i, (a, b) in enumerate(grupos):
             self._nuevos.append((desde, desde + (b - a)))
             if i < len(huecos):

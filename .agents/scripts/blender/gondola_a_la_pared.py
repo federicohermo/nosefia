@@ -137,23 +137,31 @@ def _clave(puntos: list[Vector]) -> tuple:
 class Pieza:
     """Una de las cuatro partes de `A`: su malla suelta, su baranda y sus vértices en la malla de A."""
 
-    def __init__(self, nombre: str) -> None:
+    def __init__(self, nombre: str, prefijo: str = "gondolanueva") -> None:
         self.nombre = nombre
-        self.cuerpo = _objeto(f"gondolanueva-{nombre}-noimp")
-        self.baranda = bpy.data.objects.get(f"gondolanueva-{nombre}-frente")
+        self.cuerpo = _objeto(f"{prefijo}-{nombre}-noimp")
+        self.baranda = bpy.data.objects.get(f"{prefijo}-{nombre}-frente")
         self.vertices: set[int] = set()
         self.matriz = Matrix.Identity(4)
 
 
-def _piezas() -> dict[str, Pieza]:
-    """Las piezas de `A`, con las caras de su malla repartidas por coincidencia exacta.
+def _piezas(
+    base: str = A,
+    prefijo: str = "gondolanueva",
+    orden: tuple[str, ...] = ORDEN,
+    con_malla_propia: bool = True,
+) -> dict[str, Pieza]:
+    """Las piezas de un mueble (`A` por defecto), con las caras de su malla repartidas por
+    coincidencia exacta.
 
     La malla de `A` y los `-noimp` son la misma geometría, y cada cara es una isla: la cara de una
     cae en la otra con los mismos cuatro puntos. Un corte por posición mezcla las caras de las
     puntas de una cara larga con las de una cabecera.
     """
-    gondola = _objeto(A)
-    piezas = {nombre: Pieza(nombre) for nombre in ORDEN}
+    piezas = {nombre: Pieza(nombre, prefijo) for nombre in orden}
+    if not con_malla_propia:
+        return piezas
+    gondola = _objeto(base)
     dueña: dict[tuple, str] = {}
     for nombre, pieza in piezas.items():
         malla, mundo = pieza.cuerpo.data, pieza.cuerpo.matrix_world
@@ -164,15 +172,15 @@ def _piezas() -> dict[str, Pieza]:
     for cara in malla.polygons:
         clave = _clave([mundo @ malla.vertices[i].co for i in cara.vertices])
         if clave not in dueña:
-            raise SystemExit("una cara de A no está en ninguno de sus -noimp; no se guardó nada")
+            raise SystemExit(f"una cara de {base} no está en ninguno de sus -noimp; no se guardó nada")
         for i in cara.vertices:
             usos.setdefault(i, set()).add(dueña[clave])
     if any(len(piezas_del_vertice) != 1 for piezas_del_vertice in usos.values()):
-        raise SystemExit("un vértice de A es de dos piezas; no se guardó nada")
+        raise SystemExit(f"un vértice de {base} es de dos piezas; no se guardó nada")
     for indice, (nombre,) in ((i, tuple(s)) for i, s in usos.items()):
         piezas[nombre].vertices.add(indice)
     if sum(len(p.vertices) for p in piezas.values()) != len(malla.vertices):
-        raise SystemExit("A tiene vértices sueltos; no se guardó nada")
+        raise SystemExit(f"{base} tiene vértices sueltos; no se guardó nada")
     return piezas
 
 
@@ -202,17 +210,21 @@ def _mover_vertices(objeto, indices, funcion, uv_conservadas: bool) -> None:
     objeto.data.update()
 
 
-def _acortar(pieza: Pieza, gondola) -> None:
-    """Acorta una cara larga y su baranda a `LARGO_DE_LA_CARA`."""
+def _acortar(
+    pieza: Pieza, gondola, largo: float = LARGO_DE_LA_CARA, centrada: bool = True,
+    con_baranda: bool = True,
+) -> None:
+    """Acorta una cara larga y su baranda a `largo`. Sin `centrada`, el extremo sur no se mueve."""
     ys = [p.y for p in _puntos(pieza.cuerpo)]
-    recorrido = Recorrido(agrupar(ys), (max(ys) - min(ys)) - LARGO_DE_LA_CARA)
+    recorrido = Recorrido(agrupar(ys), (max(ys) - min(ys)) - largo, centrada)
 
     def acortada(punto: Vector) -> Vector:
         return Vector((punto.x, recorrido(punto.y), punto.z))
 
     _mover_vertices(pieza.cuerpo, None, acortada, True)
-    _mover_vertices(gondola, pieza.vertices, acortada, True)
-    if pieza.baranda is not None:
+    if pieza.vertices:
+        _mover_vertices(gondola, pieza.vertices, acortada, True)
+    if pieza.baranda is not None and con_baranda:
         desde, hasta = (f(p.y for p in _puntos(pieza.baranda)) for f in (min, max))
         escala = (recorrido(hasta) - recorrido(desde)) / (hasta - desde)
 
@@ -256,7 +268,8 @@ def _mover_pieza(pieza: Pieza, matriz: Matrix, gondola) -> None:
         return matriz @ punto
 
     _mover_vertices(pieza.cuerpo, None, movida, False)
-    _mover_vertices(gondola, pieza.vertices, movida, False)
+    if pieza.vertices:
+        _mover_vertices(gondola, pieza.vertices, movida, False)
     if pieza.baranda is not None:
         _mover_vertices(pieza.baranda, None, movida, False)
 
@@ -291,18 +304,24 @@ def _coleccion_del_nivel(letra: str, nivel: int):
     raise SystemExit(f"falta la colección «{prefijo}»")
 
 
-def _repartir_las_caras_largas(piezas: dict[str, Pieza]) -> int:
+def _repartir_las_caras_largas(
+    piezas: dict[str, Pieza],
+    letra: str = "A",
+    caras: tuple[str, ...] = LATERALES,
+    medidor=acomodar.medir,
+) -> int:
     """Pone las unidades de las caras largas sobre su chapa nueva, con menos columnas.
 
     El acomodador sólo dice cuántas columnas entran y dónde. Cada unidad conserva su profundidad,
     su altura y su giro de antes, llevados a la pieza nueva: el acomodador entero las pondría
     pegadas al labio y cambiaría cantidades de tandas que otros scripts ajustaron después.
     """
-    estantes = {c: t for c, t in ESTANTES.items() if c.startswith(("A.este.", "A.oeste."))}
+    prefijos = tuple(f"{letra}.{cara}." for cara in caras)
+    estantes = {c: t for c, t in ESTANTES.items() if c.startswith(prefijos)}
     fuentes = {p.objeto for p in PRODUCTOS}
     antes = {(str(o["tanda"]), str(o["fila"])): o.matrix_world.copy()
-             for o in _unidades_de(("A.este.", "A.oeste."))}
-    for objeto in _unidades_de(("A.este.", "A.oeste.")):
+             for o in _unidades_de(prefijos)}
+    for objeto in _unidades_de(prefijos):
         if objeto.name in fuentes:
             for clave in ("tanda", "fila", "orden", "producto", "fija"):
                 if clave in objeto:
@@ -311,10 +330,12 @@ def _repartir_las_caras_largas(piezas: dict[str, Pieza]) -> int:
             bpy.data.objects.remove(objeto, do_unlink=True)
     envases = {p.clave: acomodar.envase_de(p, bpy.data.objects[p.objeto]) for p in PRODUCTOS}
     resumen = {"tandas": 0, "unidades": 0, "choques": [], "cortas": [], "entradas": {}}
-    acomodar.acomodar_mueble("A", envases, resumen, estantes_declarados=estantes)
+    acomodar.acomodar_mueble(
+        letra, envases, resumen, estantes_declarados=estantes, medidor=medidor
+    )
     if resumen["choques"]:
         raise SystemExit("choques en las caras largas: " + "; ".join(resumen["choques"]))
-    for objeto in _unidades_de(("A.este.", "A.oeste.")):
+    for objeto in _unidades_de(prefijos):
         tanda = str(objeto["tanda"])
         vieja = antes[(tanda, str(objeto["fila"]))]
         destino = piezas[partes(tanda.split("/")[0])[1]].matriz @ vieja
@@ -327,18 +348,23 @@ def _repartir_las_caras_largas(piezas: dict[str, Pieza]) -> int:
         if objeto.name not in fuentes:
             for coleccion in list(objeto.users_collection):
                 coleccion.objects.unlink(objeto)
-            _coleccion_del_nivel("A", _nivel_de(tanda)).objects.link(objeto)
+            _coleccion_del_nivel(letra, _nivel_de(tanda)).objects.link(objeto)
     bpy.context.view_layer.update()
-    _verificar_apoyos(estantes)
+    _verificar_apoyos(estantes, letra, prefijos, medidor)
     return resumen["unidades"]
 
 
-def _verificar_apoyos(estantes: dict) -> None:
+def _verificar_apoyos(
+    estantes: dict,
+    letra: str = "A",
+    prefijos: tuple[str, ...] = ("A.este.", "A.oeste."),
+    medidor=acomodar.medir,
+) -> None:
     """Cada estante tiene que aceptar sus unidades donde están: apoyadas y sin tocar el mueble."""
-    objeto, bm, medidos = acomodar.medir("A")
+    objeto, bm, medidos = medidor(letra)
     arbol = BVHTree.FromBMesh(bm)
     por_estante: dict[str, list] = {}
-    for unidad in _unidades_de(("A.este.", "A.oeste.")):
+    for unidad in _unidades_de(prefijos):
         por_estante.setdefault(str(unidad["tanda"]).split("/")[0], []).append(unidad)
     for clave, unidades in sorted(por_estante.items()):
         posiciones = [(u, u.matrix_world.copy()) for u in unidades]
@@ -489,9 +515,9 @@ def _verificar_la_pared_este() -> None:
     print(f"grupo de la pared este: {libre:.3f} de la puerta del baño")
 
 
-def _verificar_mallas() -> None:
-    """La malla de `A` y la que arman sus `-noimp` tienen que seguir siendo la misma."""
-    gondola = _objeto(A)
+def _verificar_mallas(base: str = A) -> None:
+    """La malla de un mueble y la que arman sus `-noimp` tienen que seguir siendo la misma."""
+    gondola = _objeto(base)
     evaluada = gondola.evaluated_get(bpy.context.evaluated_depsgraph_get())
     malla = evaluada.to_mesh()
     try:

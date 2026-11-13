@@ -54,6 +54,13 @@ class AcortarUnaPieza(unittest.TestCase):
         with self.assertRaises(ValueError):
             Recorrido(GRUPOS, 3.0)
 
+    def test_sin_centrar_conserva_la_primera_punta_y_pierde_todo_en_la_ultima(self):
+        recorrido = Recorrido(GRUPOS, 1.0, centrada=False)
+        self.assertAlmostEqual(recorrido(0.95), 0.95)
+        self.assertAlmostEqual(recorrido(3.98), 3.98 - 1.0)
+        for desde, hasta in GRUPOS:
+            self.assertAlmostEqual(recorrido(hasta) - recorrido(desde), hasta - desde)
+
     def test_acortar_cero_no_mueve_nada(self):
         recorrido = Recorrido(GRUPOS, 0.0)
         for punto in (0.95, 1.3, 2.5, 3.98):

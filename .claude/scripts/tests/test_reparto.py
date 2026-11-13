@@ -51,9 +51,16 @@ BANDEJAS_DE_HELADERA = 4
 CARAS_DE_LADO = ("A.oeste", "A.este", "B.oeste", "B.este", "N.sur")
 
 
+#: Los niveles principales de la estantería empotrada: el de arriba de los tres de abajo, y el de
+#: abajo de los dos de arriba. Los demás son fijos.
+NIVELES_PRINCIPALES_DE_LA_ESTANTERIA = (2, 3)
+
+
 def _es_de_reposicion(estante: str) -> bool:
     """Los niveles centrales son principales; zócalo y superior son fijos, también en cabeceras."""
-    _, _, nivel = partes(estante)
+    mueble, _, nivel = partes(estante)
+    if mueble == "N":
+        return nivel in NIVELES_PRINCIPALES_DE_LA_ESTANTERIA
     if es_cabecera(estante):
         return 0 < nivel < NIVELES_DE_CABECERA - 1
     return 0 < nivel < NIVELES_DE_LADO - 1
@@ -97,8 +104,8 @@ class ElReparto(unittest.TestCase):
             "B.este.1": ("LAYSNNT", "CHISITOS"),
             "B.norte.2": ("COSA_DE_MANI",), "B.norte.1": ("FLIM_POF",),
             "B.sur.2": ("JORGILLO",), "B.sur.1": ("BURBALOO",),
-            "N.sur.2": ("DURONGA", "DUREXTRA"),
-            "N.sur.1": ("POETICO", "ACTRONCITO"),
+            "N.sur.3": ("DURONGA", "DUREXTRA"),
+            "N.sur.2": ("POETICO", "ACTRONCITO"),
         }
         for estante, productos in esperados.items():
             self.assertEqual(tuple(t.producto for t in ESTANTES[estante]), productos, estante)
@@ -107,9 +114,14 @@ class ElReparto(unittest.TestCase):
         for clave in ESTANTES:
             mueble, cara, nivel = partes(clave)
             pareja = f"{mueble}.{cara}.{nivel ^ 1}"
-            if pareja not in ESTANTES:
-                # El estante que sobra de una cara de cinco repite lo del anterior.
-                pareja = f"{mueble}.{cara}.{nivel - 1}"
+            if mueble == "N":
+                # En la estantería de cinco, un producto ocupa tres estantes seguidos y el otro
+                # dos: cada estante comparte sus productos con alguno de los de al lado.
+                vecinos = [f"N.sur.{nivel - 1}", f"N.sur.{nivel + 1}"]
+                pareja = next(
+                    v for v in vecinos if v in ESTANTES
+                    and [t.producto for t in ESTANTES[v]] == [t.producto for t in ESTANTES[clave]]
+                )
             with self.subTest(estante=clave):
                 self.assertEqual(
                     [t.producto for t in ESTANTES[clave]], [t.producto for t in ESTANTES[pareja]]
@@ -124,8 +136,8 @@ class ElReparto(unittest.TestCase):
             for tanda in tandas
             if tanda.producto == "DURONGA"
         ]
-        # La principal y las dos referencias fijas de la estantería de cinco estantes.
-        self.assertEqual(len(tandas_de_duronga), 3)
+        # La principal y la referencia fija de los dos estantes de arriba.
+        self.assertEqual(len(tandas_de_duronga), 2)
         for estante, tanda in tandas_de_duronga:
             mueble, cara, nivel = partes(estante)
             self.assertEqual((mueble, cara), ("N", "sur"))
