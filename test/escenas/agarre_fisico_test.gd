@@ -32,7 +32,7 @@ func test_soltar_hacia_la_gondola_deja_el_producto_visible_y_recuperable() -> vo
 		if lado.de_cabecera and probados[clase] > 0:
 			continue
 		probados[clase] += 1
-		var centro := LadosDelMueble.caja(malla).get_center()
+		var centro := LadosDelMueble.pieza(malla).get_center()
 		var destino := Vector3(centro.x, 1.7, centro.z)
 		AperturaConLugar.abrir_con_todo_el_lugar(almacen)
 		var jugador: CharacterBody3D = almacen.get_node("Jugador")

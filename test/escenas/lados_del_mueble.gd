@@ -28,11 +28,26 @@ static func caja(mueble: MeshInstance3D) -> AABB:
 	return mueble.global_transform * mueble.get_aabb()
 
 
-## Los cuatro lados horizontales, con el largo del mueble leído de su malla.
+## La caja local de la pieza más larga del mueble. Un mueble de varias piezas, como la góndola alta
+## contra dos paredes, no tiene lados en la caja que las envuelve a todas: los tiene cada pieza.
+static func pieza_local(mueble: MeshInstance3D) -> AABB:
+	var mayor := AABB()
+	for pieza: AABB in PiezasDeUnMueble.de_la_malla(mueble.mesh):
+		if pieza.size.z > mayor.size.z:
+			mayor = pieza
+	return mayor
+
+
+## La caja global de esa pieza.
+static func pieza(mueble: MeshInstance3D) -> AABB:
+	return mueble.global_transform * pieza_local(mueble)
+
+
+## Los cuatro lados horizontales de su pieza más larga, con el largo leído de su malla.
 static func lados(mueble: MeshInstance3D) -> Array[Lado]:
-	var local := mueble.get_aabb()
+	var local := pieza_local(mueble)
 	var largo_en_x := local.size.x >= local.size.z
-	var limites := caja(mueble)
+	var limites := pieza(mueble)
 	var salida: Array[Lado] = []
 	for eje: Vector3 in [Vector3.RIGHT, Vector3.BACK]:
 		for signo: float in [1.0, -1.0]:
@@ -46,7 +61,7 @@ static func lados(mueble: MeshInstance3D) -> Array[Lado]:
 
 ## Dónde se paran los pies junto a un lado, a `distancia` de su cara.
 static func pie_junto_a(mueble: MeshInstance3D, lado: Lado, distancia: float) -> Vector3:
-	var pie := caja(mueble).get_center() + lado.hacia * (lado.mitad + distancia)
+	var pie := pieza(mueble).get_center() + lado.hacia * (lado.mitad + distancia)
 	pie.y = PIES_SOBRE_EL_PISO
 	return pie
 

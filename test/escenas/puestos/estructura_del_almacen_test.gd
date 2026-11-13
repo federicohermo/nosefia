@@ -5,6 +5,7 @@
 ## Sólo el caso que lanza un rayo entra al árbol; los demás leen la escena instanciada.
 extends GdUnitTestSuite
 
+const LadosDelMueble := preload("res://test/escenas/lados_del_mueble.gd")
 const ESCENA_DE_LA_ESTRUCTURA := "res://src/escenas/puestos/estructura_del_almacen.tscn"
 const ESCENA_DEL_ALMACEN := "res://src/escenas/almacen.tscn"
 
@@ -170,7 +171,7 @@ func test_el_colisionador_de_un_anclaje_cuelga_del_nodo_que_lo_nombra() -> void:
 	await get_tree().physics_frame
 	await get_tree().physics_frame
 	var anclaje: MeshInstance3D = estructura.get_node(NodePath(ANCLAJE_DE_LA_ESTANTERIA))
-	var limites := anclaje.global_transform * anclaje.get_aabb()
+	var limites := LadosDelMueble.pieza(anclaje)
 	var centro := limites.get_center()
 	# El centro de un mueble puede ser un hueco entre dos caras o entre dos piezas: se baja también
 	# a un cuarto de cada lado, a lo ancho y a lo largo, hasta poco antes del piso.

@@ -176,7 +176,7 @@ func _posturas_donde_entra_mas_sin_stock(almacen: Node3D, cuerpo: Node3D) -> int
 ## puede haber un casillero vacío, o el metal de un divisor.
 func _posturas_de_la_gondola(almacen: Node3D) -> Array[Array]:
 	var gondola := almacen.get_node("Estructura/gondolanueva") as MeshInstance3D
-	var mueble := LadosDelMueble.caja(gondola)
+	var mueble := LadosDelMueble.pieza(gondola)
 	var cerca_del_mueble := mueble.grow(MARGEN_DEL_MUEBLE)
 	var disposicion: DisposicionDeLaGondola = almacen.get("_reposicion_manual").get("disposicion")
 	var estante: Estante = almacen.get("_repositor").estante()

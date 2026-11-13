@@ -37,7 +37,7 @@ func test_las_unidades_soltadas_hacia_las_tres_gondolas_quedan_afuera() -> void:
 	for caso: Array in casos:
 		var malla: MeshInstance3D = caso[0]
 		var costado: LadosDelMueble.Lado = caso[1]
-		var mueble := LadosDelMueble.caja(malla)
+		var mueble := LadosDelMueble.pieza(malla)
 		var centro := mueble.get_center()
 		var pies := LadosDelMueble.pie_junto_a(malla, costado, DISTANCIA_PARA_SOLTAR)
 		var suelo := PhysicsRayQueryParameters3D.create(
@@ -112,7 +112,12 @@ func test_una_unidad_exterior_oblicua_no_se_retrocede_por_su_aabb() -> void:  # 
 		return
 	unidad.freeze = true
 	var mueble: MeshInstance3D = almacen.get_node("Estructura/gondolanueva")
-	var limites := mueble.get_aabb()
+	# La pieza del extremo sur: no tiene otra pieza pegada de ese lado.
+	var piezas := PiezasDeUnMueble.de_la_malla(mueble.mesh)
+	var limites: AABB = piezas[0]
+	for pieza: AABB in piezas:
+		if pieza.end.z > limites.end.z:
+			limites = pieza
 	var forma: CollisionShape3D = unidad.get_node("Forma")
 	var volumen := LimitesDeForma.de(forma.shape)
 	var giro := Basis(Vector3.UP, PI / 4.0)

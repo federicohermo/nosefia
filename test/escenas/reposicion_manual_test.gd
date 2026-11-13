@@ -1035,10 +1035,12 @@ func _ocupaciones_en_pose(
 		fisicos.append_array(jugador.get_world_3d().direct_space_state.intersect_shape(consulta))
 		for mueble in muebles:
 			var malla := mueble.get_parent() as MeshInstance3D
-			if ReservaDeLaGondola.se_superponen(
-				LimitesDeForma.de(forma.shape), global, malla.get_aabb(), malla.global_transform
-			):
-				reservas.append(malla)
+			for pieza: AABB in PiezasDeUnMueble.de_la_malla(malla.mesh):
+				if ReservaDeLaGondola.se_superponen(
+					LimitesDeForma.de(forma.shape), global, pieza, malla.global_transform
+				):
+					reservas.append(malla)
+					break
 	return {"fisicos": fisicos, "reservas": reservas}
 
 

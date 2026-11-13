@@ -140,7 +140,7 @@ func test_un_producto_soltado_hacia_la_gondola_no_queda_adentro_de_ella() -> voi
 	jugador.set_physics_process(false)
 	var agarre: Agarre = almacen.get("_agarre")
 	var gondola := almacen.get_node("Estructura/gondolanueva") as MeshInstance3D
-	var mueble := LadosDelMueble.caja(gondola)
+	var mueble := LadosDelMueble.pieza(gondola)
 	var centro := mueble.get_center()
 	var casos := []
 	var costados := LadosDelMueble.libres(almacen, gondola, DISTANCIA_PARA_SOLTAR, false)
@@ -209,7 +209,7 @@ func test_una_caja_chica_soltada_hacia_la_gondola_no_atraviesa_sus_solidos() -> 
 	await get_tree().physics_frame
 	var jugador: CharacterBody3D = almacen.get("_jugador")
 	var gondola := almacen.get_node("Estructura/gondolanueva") as MeshInstance3D
-	var mueble := LadosDelMueble.caja(gondola)
+	var mueble := LadosDelMueble.pieza(gondola)
 	var caja: RigidBody3D = almacen.get("_cajas_de_productos")[Producto.Id.MALBARDO]
 	var mano: Node3D = jugador.get_node("Giro/PuntoDeCaja")
 	jugador.set_physics_process(false)
