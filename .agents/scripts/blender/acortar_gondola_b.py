@@ -112,15 +112,15 @@ def _largo(pieza) -> float:
     return max(ys) - min(ys)
 
 
-def _bandejas_de_ahora(frentes: dict) -> tuple:
-    """Las bandejas de las caras largas con lo que hace falta para rehacerlas: el molde de cada
+def _bandejas_de_ahora(frentes: dict, caras: tuple[str, ...] = LARGAS) -> tuple:
+    """Las bandejas de unas caras con lo que hace falta para rehacerlas: el molde de cada
     producto y, por tanda, la bandeja que tiene debajo. Se leen antes de mover nada."""
     bandejas = [b for objeto in frentes.values() for b in separadores.bandejas_de(objeto)]
     tandas = disponer.tandas_del_blend()
     moldes = separadores.moldes(bandejas, tandas)
     debajo = {}
     for clave, copias in tandas.items():
-        if not clave.startswith(tuple(f"B.{cara}." for cara in LARGAS)):
+        if not clave.startswith(tuple(f"B.{cara}." for cara in caras)):
             continue
         propias = [
             b for b in bandejas
