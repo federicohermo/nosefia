@@ -15,15 +15,15 @@ aleta llega sólo a `1 - diente`.
 
 El prensado se hace de dos maneras:
 
-- **En la malla**, la cresta de cada diente sale un poco del plano (`relieve`), alternando con el
-  valle: la luz marca las arrugas que el cierre tiene en la realidad.
+- **En la malla**, la banda tiene surcos paralelos a la costura: filas de vértices que salen del
+  plano `relieve`, una sí y una no. La luz marca los surcos que el cierre tiene en la realidad.
 - **En la textura**, que cada envase pinta: cada vértice lleva su `(s, t)` y quien llama lo lleva a
   su UV. La aleta no tiene letras: repite la franja del borde del frente o del dorso.
 
 ## Lo que cuesta
 
-Por diente y por lado, cuatro caras: unos seis triángulos. Un cierre de ocho dientes tiene unos
-cien triángulos entre sus dos lados.
+Con ocho dientes y dos surcos, unos treinta triángulos por lado: ciento veinte entre los dos lados
+de un cierre.
 """
 
 from __future__ import annotations
@@ -39,7 +39,10 @@ DIENTES = 8
 #: Cuánto del largo de la aleta, hacia afuera, es el diente. El resto es la banda lisa.
 DIENTE = 0.35
 
-#: Cuánto sale la cresta de cada diente del plano de la aleta, en metros.
+#: Cuántos surcos paralelos a la costura lleva la banda lisa de la aleta.
+SURCOS = 2
+
+#: Cuánto sale cada surco del plano de la aleta, en metros.
 RELIEVE = 0.0015
 
 #: Cuánto se separa cada lado del plano medio, en metros.
@@ -103,6 +106,7 @@ def cierre(
     normal: Vector,
     dientes: int = DIENTES,
     diente: float = DIENTE,
+    surcos: int = SURCOS,
     relieve: float = RELIEVE,
     separacion: float = SEPARACION,
 ) -> Cierre:
@@ -111,56 +115,54 @@ def cierre(
     `eje`, `afuera` y `normal` son unitarios y perpendiculares entre sí. `salida` es lo que sale
     la aleta de la costura, hasta la punta de sus dientes. `normal` es hacia donde mira el lado
     del frente. La costura queda en el plano medio: las dos caras se separan de él `separacion`,
-    y la cresta de cada diente sale `relieve` más.
+    y los surcos salen `relieve` más.
     """
-    if dientes < 1:
-        raise ValueError("un cierre lleva al menos un diente")
+    if dientes < 1 or surcos < 1:
+        raise ValueError("un cierre lleva al menos un diente y un surco")
     if not 0.0 < diente < 1.0:
         raise ValueError("el diente es una fracción del largo de la aleta, entre 0 y 1")
     if min(largo, salida) <= 0:
         raise ValueError("el largo y la salida del cierre son positivos")
 
     t_valle = 1.0 - diente
-    # Con la base a la derecha de `afuera` mirando a `normal`, el orden antihorario en (s, t) mira
-    # hacia `normal`: si la terna no es directa, se invierte el orden.
+    filas = 2 * surcos
+    alturas = [t_valle * i / filas for i in range(filas + 1)]
+    # Con la terna directa, el orden antihorario en (s, t) mira hacia `normal`.
     directa = _punto(_cruz(eje, afuera), normal) > 0
 
     vertices: list[Vector] = []
     caras: list[CaraDeCierre] = []
 
-    def punto(s: float, t: float, lado: int, cresta: bool) -> Vector:
-        salto = lado * (separacion + (relieve if cresta else 0.0))
-        return _suma(origen, _por(eje, s * largo), _por(afuera, t * salida), _por(normal, salto))
-
     for lado in (1, -1):
-        base: dict[tuple[float, float, bool], int] = {}
+        ids: dict[tuple[float, float], int] = {}
 
-        def vertice(s: float, t: float, cresta: bool, lado: int = lado, base=base) -> int:
-            clave = (s, t, cresta)
-            if clave not in base:
-                base[clave] = len(vertices)
-                vertices.append(punto(s, t, lado, cresta))
-            return base[clave]
+        def vertice(s: float, t: float, lado: int = lado, ids=ids) -> int:
+            if (s, t) not in ids:
+                ids[(s, t)] = len(vertices)
+                # Los surcos son las filas impares de la banda.
+                fila = alturas.index(t) if t in alturas else 0
+                salto = lado * (separacion + (relieve if fila % 2 else 0.0))
+                vertices.append(
+                    _suma(origen, _por(eje, s * largo), _por(afuera, t * salida), _por(normal, salto))
+                )
+            return ids[(s, t)]
 
-        def cara(puntos: list[tuple[float, float, bool]], lado: int = lado) -> None:
-            ids = [vertice(s, t, c) for s, t, c in puntos]
-            st = [(s, t) for s, t, _ in puntos]
-            # Los puntos vienen antihorarios en (s, t). Mirando hacia `normal` eso es el orden
-            # directo; el lado del dorso mira al revés.
-            invertir = (lado == 1) != directa
-            if invertir:
-                ids, st = ids[::-1], st[::-1]
-            caras.append(CaraDeCierre(tuple(ids), tuple(st), lado))
+        def cara(puntos: list[tuple[float, float]], lado: int = lado) -> None:
+            indices = [vertice(s, t) for s, t in puntos]
+            st = list(puntos)
+            if (lado == 1) != directa:
+                indices, st = indices[::-1], st[::-1]
+            caras.append(CaraDeCierre(tuple(indices), tuple(st), lado))
 
+        # La banda lisa: una fila de surcos tras otra, enteras a lo largo de la costura. La última
+        # se parte por dientes, para que cada punta tenga sus vértices.
+        for t0, t1 in zip(alturas[:-2], alturas[1:-1]):
+            cara([(0.0, t0), (1.0, t0), (1.0, t1), (0.0, t1)])
+        t0, t1 = alturas[-2], alturas[-1]
         for k in range(dientes):
             s0, s1 = k / dientes, (k + 1) / dientes
-            medio = (s0 + s1) / 2
-            # Dos cuadriláteros de banda: del valle a la cresta y de la cresta al valle.
-            cara([(s0, 0.0, False), (medio, 0.0, True), (medio, t_valle, True), (s0, t_valle, False)])
-            cara([(medio, 0.0, True), (s1, 0.0, False), (s1, t_valle, False), (medio, t_valle, True)])
-            # La punta del diente son dos triángulos que se juntan en su cresta.
-            cara([(s0, t_valle, False), (medio, t_valle, True), (medio, 1.0, True)])
-            cara([(medio, t_valle, True), (s1, t_valle, False), (medio, 1.0, True)])
+            cara([(s0, t0), (s1, t0), (s1, t1), (s0, t1)])
+            cara([(s0, t1), (s1, t1), ((s0 + s1) / 2, 1.0)])
     return Cierre(tuple(vertices), tuple(caras))
 
 

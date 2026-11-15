@@ -49,10 +49,16 @@ class CierreDeEnvases(unittest.TestCase):
         self.assertTrue(all(abs(x) > 0.0019 for x in xs))
         self.assertTrue(any(x > 0 for x in xs) and any(x < 0 for x in xs))
 
-    def test_cada_diente_son_cuatro_caras_por_lado(self):
-        c = self._armar(dientes=5)
-        self.assertEqual(len(c.caras), 5 * 4 * 2)
-        self.assertEqual(c.triangulos(), 5 * 6 * 2)
+    def test_la_banda_tiene_filas_enteras_y_cada_diente_su_cuadrilatero_y_su_punta(self):
+        c = self._armar(dientes=5, surcos=2)
+        por_lado = (2 * 2 - 1) + 5 * 2
+        self.assertEqual(len(c.caras), por_lado * 2)
+        self.assertEqual(c.triangulos(), ((2 * 2 - 1) * 2 + 5 * 2 + 5) * 2)
+
+    def test_los_surcos_salen_del_plano_una_fila_si_y_una_no(self):
+        c = self._armar(surcos=2, relieve=0.0015)
+        salidas = {round(abs(v[0]) - 0.002, 6) for v in c.vertices}
+        self.assertEqual(salidas, {0.0, 0.0015})
 
     def test_los_st_recorren_el_cuadrado_unidad(self):
         c = self._armar(dientes=4)
