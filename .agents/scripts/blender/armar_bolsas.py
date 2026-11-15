@@ -32,6 +32,8 @@ cara. Pasan por la misma construcción, con tres diferencias:
 
 - **El cierre** es el de `lib/cierre_de_envases.py`, el mismo de los paquetes de Oremos y Pepito:
   una aleta con dientes de sierra y relieve, y no una aleta lisa.
+- **El agujero para colgar** de Macumbas es una ventana en el cierre de arriba, de
+  `lib/agujero_de_colgar.py`: se aplica sobre ese mismo cierre, no lo reemplaza.
 - **El desplegado** es el de `lib/desplegado_de_bolsas.py`: una sola textura de 512 x 320 con
   frente, dorso y los dos costados acostados, en lugar del par `completo` y `costado`.
 - **El frente** mira a `-x`, como mira hoy cada una de las tres, y la malla conserva la caja que
@@ -39,8 +41,8 @@ cara. Pasan por la misma construcción, con tres diferencias:
 
 ## Lo que cuesta
 
-Unos 400 triángulos por bolsa de papas, unos 700 por bolsa de galletitas con sus 8 dientes por
-lado y por cierre, y ningún dibujo. La caja de la bolsa se guarda en la malla la primera vez:
+608 triángulos por bolsa de papas, 600 por bolsa de galletitas con 8 dientes y 2 surcos en
+cada cierre (616 la de Macumbas, con su agujero), y ningún dibujo. La caja de la bolsa se guarda en la malla la primera vez:
 correrlo de nuevo rehace la misma bolsa.
 """
 
@@ -53,7 +55,7 @@ import bpy  # type: ignore[import-not-found]
 
 RAIZ = Path(__file__).resolve().parents[3]
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
-from lib import cierre_de_envases, desplegado_de_bolsas  # noqa: E402
+from lib import agujero_de_colgar, cierre_de_envases, desplegado_de_bolsas  # noqa: E402
 from lib.consola import configurar  # noqa: E402
 
 Rect = tuple[float, float, float, float]
@@ -116,6 +118,7 @@ class Bolsa:
     llevar el material, y reemplaza a la de la malla anterior. `llena_el_fondo` estira el grosor
     hasta que el punto más hondo del cuerpo toque el fondo de la caja que ocupaba la bolsa: sin
     eso, los gajos del frente se quedan a un milímetro y el estante la mide más angosta.
+    `agujero` abre en el cierre de arriba el agujero para colgar.
     """
 
     objeto: str
@@ -127,6 +130,7 @@ class Bolsa:
     aleta: float = ALETA
     textura: Path | None = None
     llena_el_fondo: bool = False
+    agujero: bool = False
 
 
 #: Las bolsas que se arman. Las papas conservan su aleta lisa; las galletitas llevan el cierre
@@ -145,6 +149,7 @@ BOLSAS = (
             aleta=ALETA_DE_LAS_GALLETITAS,
             textura=TEXTURAS / f"{producto}.png",
             llena_el_fondo=True,
+            agujero=objeto == "macumbas-convcol",
         )
         for objeto, producto in (
             ("petisas-convcol", "petisas"),
@@ -265,7 +270,10 @@ def armar(objeto, bolsa: Bolsa) -> tuple[int, int]:
     cuerpo = len(caras)
 
     if bolsa.cierre:
-        _cierres(vertices, caras, desplegado, (xc, y0, y1), (abajo, arriba, aleta), objeto.scale.x)
+        _cierres(
+            vertices, caras, desplegado, (xc, y0, y1), (abajo, arriba, aleta), objeto.scale.x,
+            bolsa.agujero,
+        )
     else:
         # Las aletas: una cara por lado. Cada una repite, en espejo, la franja del borde del frente
         # o del dorso que toca: sigue el paquete y no lleva letras.
@@ -325,6 +333,7 @@ def _cierres(
     ancho_y: tuple[float, float, float],
     alturas_z: tuple[float, float, float],
     escala_x: float,
+    agujero: bool,
 ) -> None:
     """Agrega el cierre de arriba y el de abajo, armados por `lib/cierre_de_envases.py`.
 
@@ -348,6 +357,10 @@ def _cierres(
             relieve=cierre_de_envases.RELIEVE / escala_x,
             separacion=cierre_de_envases.SEPARACION / escala_x,
         )
+        if agujero and arriba_de_todo:
+            c = agujero_de_colgar.abrir_agujero(c, alturas_de_la_banda(), _punto_del_cierre(
+                (xc, y0, borde), largo=y1 - y0, afuera_z=1.0, salida=aleta, escala_x=escala_x
+            ))
         base = len(vertices)
         vertices.extend(c.vertices)
         for cara in c.caras:
@@ -358,6 +371,28 @@ def _cierres(
                 v = v1 - banda * t if arriba_de_todo else v0 + banda * t
                 uvs.append((u, v))
             caras.append(([base + i for i in cara.vertices], uvs, True))
+
+
+def alturas_de_la_banda() -> list[float]:
+    """Los `t` de las filas de la banda lisa, como los arma `cierre_de_envases.cierre`."""
+    filas = 2 * cierre_de_envases.SURCOS
+    t_valle = 1.0 - cierre_de_envases.DIENTE
+    return [t_valle * i / filas for i in range(filas + 1)]
+
+
+def _punto_del_cierre(origen, largo: float, afuera_z: float, salida: float, escala_x: float):
+    """La posición de un `(s, t)` de un lado del cierre de arriba, con la misma regla con que
+    `cierre_de_envases.cierre` pone sus vértices: los surcos son las filas impares."""
+    alturas = alturas_de_la_banda()
+
+    def punto(s: float, t: float, lado: int) -> tuple[float, float, float]:
+        fila = next((i for i, a in enumerate(alturas) if abs(a - t) < 1e-9), 0)
+        salto = lado * (
+            cierre_de_envases.SEPARACION + (cierre_de_envases.RELIEVE if fila % 2 else 0.0)
+        ) / escala_x
+        return (origen[0] + salto, origen[1] + s * largo, origen[2] + afuera_z * t * salida)
+
+    return punto
 
 
 def usar_textura(malla, textura: Path) -> None:
