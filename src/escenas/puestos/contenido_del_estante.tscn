@@ -52,7 +52,7 @@ metadata/frente_del_modelo = Vector3(0, 0, 1)
 metadata/producto_id = 1
 
 [node name="Burbaloo" type="MeshInstance3D" parent="."]
-transform = Transform3D(0, 0, -0.11, -0.0002, 0.08, 0, 0.11, 0.000145, 0, 4.907431, 0.739216, -0.651418)
+transform = Transform3D(0, 0, -0.11, -0.0002, 0.08, 0, 0.11, 0.000145, 0, 4.8876, 0.739216, -0.651418)
 visible = false
 mesh = ExtResource("malla2")
 gi_mode = 2
@@ -92,7 +92,7 @@ metadata/frente_del_modelo = Vector3(-1, 0, 0)
 metadata/producto_id = 6
 
 [node name="Jorgillata" type="MeshInstance3D" parent="."]
-transform = Transform3D(0, -0.000005, 0.15, 0.1065, -0.000144, 0, 0.000293, 0.0525, 0.000014, 4.566985, 1.218181, -0.600481)
+transform = Transform3D(0, -0.000005, 0.15, 0.1065, -0.000144, 0, 0.000293, 0.0525, 0.000013, 4.4688, 1.218181, -0.600481)
 visible = false
 mesh = ExtResource("malla7")
 gi_mode = 2
@@ -116,7 +116,7 @@ metadata/frente_del_modelo = Vector3(1, 0, 0)
 metadata/producto_id = 9
 
 [node name="Oremos" type="MeshInstance3D" parent="."]
-transform = Transform3D(-0.152113, 0, 0, 0, 0.067319, 0, 0, 0, -0.135, 4.408912, 0.700949, -1.713074)
+transform = Transform3D(-0.152113, 0, 0, 0, 0.067319, 0, 0, 0, -0.135, 4.212912, 0.700949, -1.713074)
 visible = false
 mesh = ExtResource("malla10")
 gi_mode = 2
@@ -188,7 +188,7 @@ metadata/frente_del_modelo = Vector3(-1, 0, 0)
 metadata/producto_id = 18
 
 [node name="Flim Pof" type="MeshInstance3D" parent="."]
-transform = Transform3D(0, 0, -0.704, -0.001285, 0.525539, 0, 0.706845, 0.000955, 0, 4.221218, 0.762165, -3.209123)
+transform = Transform3D(0, 0, -0.704, -0.001285, 0.525539, 0, 0.706845, 0.000955, 0, 4.049999, 0.762165, -3.209123)
 visible = false
 mesh = ExtResource("malla19")
 gi_mode = 2
@@ -196,7 +196,7 @@ metadata/frente_del_modelo = Vector3(-1, 0, 0)
 metadata/producto_id = 19
 
 [node name="Don Saturados" type="MeshInstance3D" parent="."]
-transform = Transform3D(0.654545, 0, 0, 0, 0.787932, 0, 0, 0, 0.872727, 4.290685, 1.240888, -1.796702)
+transform = Transform3D(0.654545, 0, 0, 0, 0.787932, 0, 0, 0, 0.872727, 4.094685, 1.240888, -1.796702)
 visible = false
 mesh = ExtResource("malla20")
 gi_mode = 2
@@ -204,7 +204,7 @@ metadata/frente_del_modelo = Vector3(-1, 0, 0)
 metadata/producto_id = 20
 
 [node name="Petisas" type="MeshInstance3D" parent="."]
-transform = Transform3D(1.090907, 0, 0, 0, 0.787932, 0, 0, 0, 0.872727, 4.289299, 1.240888, -2.809274)
+transform = Transform3D(1.090907, 0, 0, 0, 0.787932, 0, 0, 0, 0.872727, 4.093299, 1.240888, -2.809274)
 visible = false
 mesh = ExtResource("malla21")
 gi_mode = 2
@@ -220,7 +220,7 @@ metadata/frente_del_modelo = Vector3(-1, 0, 0)
 metadata/producto_id = 22
 
 [node name="Cosa de Maní" type="MeshInstance3D" parent="."]
-transform = Transform3D(0, 0, -0.896, -0.001677, 0.525539, 0, 0.610062, 0.001445, 0.000001, 4.320876, 1.057871, -3.232787)
+transform = Transform3D(0, 0, -0.896, -0.001677, 0.525539, 0, 0.610062, 0.001445, 0.000001, 4.119657, 1.057871, -3.232787)
 visible = false
 mesh = ExtResource("malla23")
 gi_mode = 2
@@ -276,7 +276,7 @@ metadata/frente_del_modelo = Vector3(0.7534, 0, 0.6575)
 metadata/producto_id = 29
 
 [node name="Feel Ricky Fort" type="MeshInstance3D" parent="."]
-transform = Transform3D(-0.261722, 0, 0, 0, 0.075503, 0, 0, 0, -0.206469, 4.519698, 0.754979, -2.779274)
+transform = Transform3D(-0.261722, 0, 0, 0, 0.075503, 0, 0, 0, -0.206469, 4.323698, 0.754979, -2.779274)
 visible = false
 mesh = ExtResource("malla30")
 gi_mode = 2
