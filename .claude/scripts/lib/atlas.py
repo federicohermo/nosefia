@@ -81,7 +81,7 @@ ETIQUETAS = (
     "source/textures/props/jorgillata.png",
     "source/products-textured/Arvejas/arvecor.png",
     "source/products-textured/chizitos/chisito.png",
-    "source/products-textured/galletitas/pepito.png",
+    "source/products-textured/galletitas/pepito_paquete.png",
     "source/products-textured/galletitas/saladick.png",
     "source/products-textured/Wakas/wakasfideos.png",
     "source/products-textured/Cora cola/cora cola.png",

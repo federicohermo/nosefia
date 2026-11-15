@@ -142,9 +142,8 @@ def cierre(
                 # Los surcos son las filas impares de la banda.
                 fila = alturas.index(t) if t in alturas else 0
                 salto = lado * (separacion + (relieve if fila % 2 else 0.0))
-                vertices.append(
-                    _suma(origen, _por(eje, s * largo), _por(afuera, t * salida), _por(normal, salto))
-                )
+                a_lo_largo, hacia_afuera = _por(eje, s * largo), _por(afuera, t * salida)
+                vertices.append(_suma(origen, a_lo_largo, hacia_afuera, _por(normal, salto)))
             return ids[(s, t)]
 
         def cara(puntos: list[tuple[float, float]], lado: int = lado) -> None:
