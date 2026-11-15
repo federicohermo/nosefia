@@ -5,48 +5,64 @@ from collections import Counter
 from lib.repo import RAIZ
 from lib.reparto import ESTANTES, PRODUCTOS, Tanda
 from lib.reparto_de_prueba import (
-    ESTANTES_DE_PRUEBA, NIVELES_POR_CARA, NIVELES_POR_DEFECTO, bases_del_contenido,
-    validar_identidades_de_prueba,
-    validar_reparto_de_prueba,
+    ESTANTES_DE_PRUEBA, REEMPLAZOS, bases_del_contenido, cara_de, cuantas_entran, derivar,
+    paso_parejo, presentes, repartir_columnas, validar_identidades_de_prueba,
+    validar_reemplazos, validar_reparto_de_prueba,
 )
 
 
 class RepartoDePrueba(unittest.TestCase):
-    def test_cada_uno_de_los_cuatro_niveles_repite_el_mapa(self):  # AC-STK-096
-        caras = {
-            "A.este": ("MAROLINI", "ARVECOR"),
-            "A.oeste": ("ZUCARACHAS", "TERMINATOR"),
-            "A.norte": ("FERNET_GOD",), "A.sur": ("POETICO",),
-            "B.oeste": ("PETISAS", "PEPITO"),
-            "B.este": ("DON_SATURADOS", "PROGRES"),
-            "B.norte": ("MALBARDO",), "B.sur": ("JORGILLO",),
-            "N.sur": ("ACTRONCITO", "DURONGA"),
-            "H1.sur": ("PURA_COLA",), "H2.sur": ("MAYONCHIS",),
-        }
-        self.assertEqual(len(ESTANTES_DE_PRUEBA), 45)
-        for cara, productos in caras.items():
-            for nivel in range(NIVELES_POR_CARA.get(cara, NIVELES_POR_DEFECTO)):
-                with self.subTest(cara=cara, nivel=nivel):
-                    reales = tuple(t.producto for t in ESTANTES_DE_PRUEBA[f"{cara}.{nivel}"])
-                    self.assertEqual(reales, productos)
+    def test_cada_producto_presente_conserva_sus_tandas_del_mapa_completo(self):  # AC-STK-096
+        for estante, tandas in ESTANTES.items():
+            for columna, completa in enumerate(tandas):
+                de_prueba = ESTANTES_DE_PRUEBA[estante][columna]
+                with self.subTest(estante=estante, columna=columna):
+                    if completa.producto in REEMPLAZOS:
+                        self.assertEqual(de_prueba.producto, REEMPLAZOS[completa.producto])
+                        self.assertTrue(de_prueba.fija)
+                    else:
+                        self.assertEqual(de_prueba, completa)
 
-    def test_una_principal_y_tres_repeticiones_por_producto(self):  # AC-STK-096
-        principales = Counter(t.producto for ts in ESTANTES_DE_PRUEBA.values()
-                              for t in ts if not t.fija)
-        fijas = Counter(t.producto for ts in ESTANTES_DE_PRUEBA.values()
-                        for t in ts if t.fija)
-        self.assertEqual(len(principales), 16)
-        self.assertEqual(set(principales.values()), {1})
-        # Cada nivel que no es el principal repite el mapa: tres por producto, y cuatro en la
-        # estantería empotrada, que tiene un nivel más.
-        de_la_estanteria = {t.producto for t in ESTANTES_DE_PRUEBA["N.sur.0"]}
-        self.assertEqual(
-            fijas, Counter({p: 4 if p in de_la_estanteria else 3 for p in principales})
+    def test_ningun_estante_queda_vacio_ni_lleva_un_ausente(self):  # AC-STK-096
+        self.assertEqual(ESTANTES_DE_PRUEBA.keys(), ESTANTES.keys())
+        for estante, tandas in ESTANTES_DE_PRUEBA.items():
+            with self.subTest(estante=estante):
+                self.assertEqual(len(tandas), len(ESTANTES[estante]))
+                self.assertFalse({t.producto for t in tandas} & REEMPLAZOS.keys())
+
+    def test_una_sola_principal_por_producto_presente(self):  # AC-STK-096
+        principales = Counter(
+            t.producto for tandas in ESTANTES_DE_PRUEBA.values() for t in tandas if not t.fija
         )
+        self.assertEqual(principales, Counter({p: 1 for p in presentes()}))
+
+    def test_cada_ausente_lo_reemplaza_un_presente_de_su_cara(self):  # AC-STK-096
+        validar_reemplazos(ESTANTES)
+        self.assertEqual(
+            REEMPLAZOS.keys() | set(presentes()), {p.clave for p in PRODUCTOS}
+        )
+        caras = {}
+        for estante, tandas in ESTANTES.items():
+            for t in tandas:
+                caras.setdefault(t.producto, set()).add(cara_de(estante))
+        ausente, reemplazo = next(iter(REEMPLAZOS.items()))
+        de_otra_cara = next(p for p in presentes() if not caras[p] & caras[ausente])
+        mudado = {
+            estante: tuple(
+                Tanda(de_otra_cara if t.producto == reemplazo else t.producto, fija=t.fija)
+                for t in tandas
+            )
+            for estante, tandas in ESTANTES.items()
+        }
+        with self.assertRaises(ValueError):
+            validar_reemplazos(mudado)
 
     def test_el_mapa_no_modifica_el_perfil_completo(self):
         self.assertIsNot(ESTANTES_DE_PRUEBA, ESTANTES)
-        self.assertEqual(tuple(t.producto for t in ESTANTES["B.norte.1"]), ("FLIM_POF",))
+        self.assertEqual(derivar(ESTANTES), ESTANTES_DE_PRUEBA)
+        self.assertTrue(
+            any(t.producto in REEMPLAZOS for tandas in ESTANTES.values() for t in tandas)
+        )
 
     def test_catalogo_y_mapa_tienen_las_mismas_identidades_en_orden(self):  # AC-STK-095
         texto = (RAIZ / "src/dominio/almacen/catalogo.gd").read_text(encoding="utf-8")
@@ -57,17 +73,21 @@ class RepartoDePrueba(unittest.TestCase):
         with self.assertRaises(ValueError):
             validar_identidades_de_prueba(ids[:-1])
 
-    def test_rechaza_un_ausente_un_nivel_perdido_y_dos_principales(self):  # AC-STK-096
+    def test_rechaza_un_ausente_una_principal_perdida_y_dos_principales(self):  # AC-STK-096
         validar_reparto_de_prueba(ESTANTES_DE_PRUEBA)
-        perdido = dict(ESTANTES_DE_PRUEBA)
-        del perdido["B.norte.0"]
-        ajeno = dict(ESTANTES_DE_PRUEBA, **{"B.norte.0": (Tanda("BURBALOO", fija=True),)})
-        duplicado = dict(ESTANTES_DE_PRUEBA, **{"B.norte.2": (Tanda("MALBARDO"),)})
-        fuera_de_alcance = dict(ESTANTES_DE_PRUEBA, **{
-            "B.norte.1": (Tanda("MALBARDO", fija=True),), "B.norte.0": (Tanda("MALBARDO"),)
-        })
-        for variante in (perdido, ajeno, duplicado, fuera_de_alcance):
-            with self.subTest(variante=variante.keys()), self.assertRaises(ValueError):
+        estante, tandas = next(
+            (e, ts) for e, ts in ESTANTES_DE_PRUEBA.items() if any(not t.fija for t in ts)
+        )
+        principal = next(t for t in tandas if not t.fija)
+        ausente = next(iter(REEMPLAZOS))
+        con_ausente = dict(ESTANTES_DE_PRUEBA, **{estante: (Tanda(ausente, fija=True),)})
+        sin_principal = dict(
+            ESTANTES_DE_PRUEBA,
+            **{estante: tuple(Tanda(t.producto, fija=True) for t in tandas)},
+        )
+        duplicada = dict(ESTANTES_DE_PRUEBA, **{"otro": (Tanda(principal.producto),)})
+        for variante in (con_ausente, sin_principal, duplicada):
+            with self.subTest(variante=variante[estante]), self.assertRaises(ValueError):
                 validar_reparto_de_prueba(variante)
 
     def test_las_bases_horneadas_se_indexan_por_identidad_y_conservan_sus_filas(self):
@@ -90,3 +110,23 @@ class RepartoDePrueba(unittest.TestCase):
             with self.assertRaises(ValueError):
                 bases_del_contenido(variante)
 
+
+class RepartoDePuntaAPunta(unittest.TestCase):
+    def test_entran_las_que_caben_con_su_paso_y_nunca_menos_de_una(self):
+        self.assertEqual(cuantas_entran(1.0, 0.25, 0.25), 4)
+        self.assertEqual(cuantas_entran(0.99, 0.25, 0.25), 3)
+        self.assertEqual(cuantas_entran(0.1, 0.25, 0.25), 1)
+
+    def test_el_paso_parejo_deja_la_primera_y_la_ultima_en_los_bordes(self):
+        largo, ancho, cuantas = 2.0, 0.2, 7
+        paso = paso_parejo(largo, ancho, cuantas, 0.25)
+        self.assertAlmostEqual(ancho + paso * (cuantas - 1), largo)
+        self.assertEqual(paso_parejo(largo, ancho, 1, 0.25), 0.25)
+
+    def test_las_columnas_se_reparten_en_proporcion_y_no_se_pierde_ninguna(self):
+        self.assertEqual(repartir_columnas(8, [4, 4]), [4, 4])
+        self.assertEqual(repartir_columnas(7, [4, 3]), [4, 3])
+        for columnas in range(1, 30):
+            for frentes in ([3, 5], [7, 7], [1, 4, 2]):
+                with self.subTest(columnas=columnas, frentes=frentes):
+                    self.assertEqual(sum(repartir_columnas(columnas, frentes)), columnas)
