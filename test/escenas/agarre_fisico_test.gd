@@ -46,7 +46,12 @@ func test_soltar_hacia_la_gondola_deja_el_producto_visible_y_recuperable() -> vo
 			almacen.get("_reposicion_manual").retirar(producto.id)
 			var cuerpo: RigidBody3D = agarre.punto_de_producto.get_child(0)
 			var orientacion := cuerpo.global_basis
+			var traza := producto.nombre == "Arvecor"
+			if traza:
+				_diag_nacimiento(cuerpo, "antes de soltar")
 			agarre.soltar(true)
+			if traza:
+				_diag_nacimiento(cuerpo, "al soltar")
 			# Soltar no lo endereza. Salvo lo que queda metido en el cuerpo, que cae derecho al piso
 			# al lado del jugador, como la caja: pegado a la góndola, el barrido lo deja en la cara.
 			if not cuerpo.global_basis.is_equal_approx(orientacion):
@@ -68,6 +73,20 @@ func test_soltar_hacia_la_gondola_deja_el_producto_visible_y_recuperable() -> vo
 				)
 			for cuadro in 90:
 				await get_tree().physics_frame
+				if traza and (cuadro < 12 or cuadro % 10 == 0):
+					print(
+						(
+							"DIAG cuadro %d pos=%v vel=%v choca=%s"
+							% [
+								cuadro,
+								cuerpo.global_position,
+								cuerpo.linear_velocity,
+								cuerpo.get_colliding_bodies().map(
+									func(c: Node) -> String: return str(c.get_path())
+								)
+							]
+						)
+					)
 			camara.look_at(cuerpo.global_position)
 			var candidato: CampoDeInteraccion.Candidato = jugador.call("_medir_candidato", cuerpo)
 			(
@@ -149,3 +168,41 @@ func test_el_izquierdo_en_el_contenedor_entrega_la_bolsa_al_recolector() -> void
 	assert_bool(recolector.tarea().esta_depositada(bolsa.datos.id)).is_true()
 	assert_int(recolector.tarea().depositadas()).is_equal(1)
 	assert_object(agarre.manos().sostenido()).is_null()
+
+
+func _diag_nacimiento(cuerpo: RigidBody3D, cuando: String) -> void:
+	var espacio := cuerpo.get_world_3d().direct_space_state
+	print(
+		(
+			"DIAG %s pos=%v basis=%v cd=%s capa=%d mascara=%d masa=%.3f"
+			% [
+				cuando,
+				cuerpo.global_position,
+				cuerpo.global_basis.get_euler(),
+				cuerpo.continuous_cd,
+				cuerpo.collision_layer,
+				cuerpo.collision_mask,
+				cuerpo.mass
+			]
+		)
+	)
+	for forma: CollisionShape3D in cuerpo.find_children("*", "CollisionShape3D", true, false):
+		var consulta := PhysicsShapeQueryParameters3D.new()
+		consulta.shape = forma.shape
+		consulta.transform = forma.global_transform
+		consulta.exclude = [cuerpo.get_rid()]
+		consulta.collision_mask = cuerpo.collision_mask
+		var solapa: Array[String] = []
+		for choque: Dictionary in espacio.intersect_shape(consulta, 16):
+			solapa.append(str((choque["collider"] as Node).get_path()))
+		print(
+			(
+				"DIAG forma %s %s aabb=%v solapa=%s"
+				% [
+					forma.name,
+					forma.shape.get_class(),
+					forma.shape.get_debug_mesh().get_aabb().size,
+					solapa
+				]
+			)
+		)
