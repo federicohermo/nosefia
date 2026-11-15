@@ -34,8 +34,8 @@ func _destinos() -> Dictionary:
 		[
 			[Producto.Id.MAROLINI, Producto.Id.ARVECOR, Producto.Id.UAKALAS, Producto.Id.MARRANOS],
 			[
-				Producto.Id.MACUMBAS,
-				Producto.Id.PEPITO,
+				Producto.Id.FEEL_RICKY_FORT,
+				Producto.Id.DON_SATURADOS,
 				Producto.Id.ZUCARACHAS,
 				Producto.Id.FROT_LUPS
 			],
@@ -45,14 +45,14 @@ func _destinos() -> Dictionary:
 		"gondolanueva2":
 		[
 			[
-				Producto.Id.OREMOS,
 				Producto.Id.PETISAS,
-				Producto.Id.DON_SATURADOS,
-				Producto.Id.FEEL_RICKY_FORT
+				Producto.Id.MACUMBAS,
+				Producto.Id.FLIM_POF,
+				Producto.Id.COSA_DE_MANI
 			],
 			[Producto.Id.SALADICK, Producto.Id.PROGRES, Producto.Id.CHISITOS, Producto.Id.LAYSNNT],
 			[Producto.Id.JORGILLO, Producto.Id.BURBALOO],
-			[Producto.Id.COSA_DE_MANI, Producto.Id.FLIM_POF],
+			[Producto.Id.OREMOS, Producto.Id.PEPITO],
 		],
 		"gondolanueva_001":
 		[[Producto.Id.ACTRONCITO, Producto.Id.DUREXTRA, Producto.Id.POETICO, Producto.Id.DURONGA]],
