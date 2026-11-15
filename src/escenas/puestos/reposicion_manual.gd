@@ -1457,6 +1457,8 @@ func _material_de_la_gondola(original: BaseMaterial3D) -> ShaderMaterial:
 	material.shader = PRODUCTO
 	material.set_shader_parameter("color", original.albedo_color)
 	material.set_shader_parameter("textura", original.albedo_texture)
+	material.set_shader_parameter("escala_uv", original.uv1_scale)
+	material.set_shader_parameter("desplazamiento_uv", original.uv1_offset)
 	material.set_shader_parameter("rugosidad", original.roughness)
 	material.set_shader_parameter("metalico", original.metallic)
 	material.set_shader_parameter("especular", original.metallic_specular)
