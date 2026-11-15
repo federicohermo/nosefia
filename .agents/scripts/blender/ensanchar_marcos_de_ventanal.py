@@ -11,35 +11,42 @@ van `armar_atlas.py`, `exportar_modelo.py` y `assets/models/extraer_mallas.gd`.
 ## Por qué
 
 Los parantes y los travesaños medían 5 cm de frente contra paños de 1,85 por 3,35 m, y el marco
-se leía como un hilo. Cada perfil crece desde su eje, parejo a los dos lados, hasta 8 cm. El fondo
-de 11 cm no cambia.
+se leía como un hilo. Cada perfil muestra 8 cm de frente. El fondo de 11 cm no cambia.
 
 ## Qué cambia
 
-- `local_marco_ventanal-col`: sus cinco parantes y los travesaños de abajo y de la mitad.
-- `local_marco_frente-col`: sus cinco parantes y el travesaño de la mitad.
+- `local_marco_ventanal-col` y `local_marco_frente-col`: sus cinco parantes, el travesaño de la
+  mitad, el de abajo y el de arriba.
+- **Parantes y travesaño de la mitad** crecen desde su eje, parejo a los dos lados.
+- **Abajo** el perfil crece hacia arriba desde el piso terminado (`z = 0,1022`) hasta 8 cm
+  visibles. En el ventanal queda de `0,1022` a `0,1822`. En el frente es la base de 2,5 cm que ya
+  existía, hundida en el piso: sube de `0,127` a `0,1822`. El zócalo perimetral se corta en los
+  ejes de los parantes de punta y por delante del marco no pasa: el perfil queda a la vista, y el
+  zócalo termina contra el parante, como en una carpintería.
+- **Arriba** el perfil crece hacia abajo desde su canto de arriba (`3,4685`), que ya está 3 cm
+  debajo del cielorraso (`3,50`): queda de `3,3885` a `3,4685`.
 - **El paso de las puertas no se achica.** Las jambas (`3,3934..3,4434` y `6,364..6,414`) crecen
-  sólo hacia su paño fijo: la cara que mira a las hojas queda donde estaba. El travesaño que cruza
-  las puertas conserva su canto de abajo en `2,568` y crece sólo hacia arriba: la hoja mide
-  `2,593` de alto, y bajar ese canto le comería 1,5 cm más a su travesaño de arriba.
-- El travesaño de abajo del ventanal apoya en el piso: crece parejo, y la mitad de abajo queda
-  enterrada 1,5 cm en el piso, donde nadie la ve.
-- El cierre de arriba (`3,4475..3,4685`) no cambia: mide 2 cm contra el dintel, y el cielorraso
-  queda en `3,50`.
+  sólo hacia su paño fijo: la cara que mira a las hojas queda donde estaba. Entre ellas, el umbral
+  (`0,077..0,127`) y el canto de abajo del travesaño (`2,568`) no se mueven, y el travesaño crece
+  sólo hacia arriba: la hoja mide `2,593` de alto.
 - **Los vidrios no se tocan.** Cada borde de un paño cae sobre el eje de un parante, adentro de
-  los 8 cm, y el vidrio atraviesa los travesaños por la mitad del fondo.
+  los 8 cm. Abajo entran en el perfil de 8 cm desde el piso y arriba terminan en `3,4496`, a 6 cm
+  adentro del perfil de arriba.
 - Las UV de `local_aluminio` se rehacen enteras con `metal_con_detalle.py`: el atlas se vuelve a
-  empaquetar con la geometría nueva y repinta el mismo conjunto, con la misma densidad.
+  empaquetar con la geometría nueva y repinta el mismo conjunto.
 
 ## Cómo
 
 Las dos mallas son sólidos cerrados de una sola pieza, con vértices sólo en los bordes de cada
-perfil. Cada borde de parante pasa a su valor nuevo y cada canto de travesaño a su valor nuevo,
-con una interpolación lineal entre ellos. Una deformación monótona por eje no cambia la topología,
-las caras siguen planas y el material y el suavizado de cada cara quedan como estaban.
+perfil. Cada borde de parante y cada canto de travesaño pasa a su valor nuevo, con una
+interpolación lineal entre ellos. Una deformación monótona por eje no cambia la topología, las
+caras siguen planas y el material y el suavizado de cada cara quedan como estaban.
 
-Es idempotente: si los parantes ya miden 8 cm, no mueve ningún vértice. Las UV salen siempre de la
-geometría que hay, y repetirlas escribe los mismos bytes.
+Cada travesaño lista los cantos en que puede estar: el original, el que dejó una corrida anterior
+y el destino. La corrida mide cuál es y lo lleva al destino. Es idempotente: sobre el `.blend`
+original, sobre el de la primera corrida o sobre el de ahora, termina en la misma geometría, y si
+ya está no mueve un vértice. Las UV salen siempre de la geometría que hay, y repetirlas escribe los
+mismos bytes.
 
 ## Lo que cuesta
 
@@ -90,29 +97,21 @@ class Parante:
 
 
 @dataclass(frozen=True)
-class Travesano:
-    """Un travesaño horizontal: su canto de abajo y de arriba de hoy, y los que va a tener.
+class Tramo:
+    """Un travesaño sobre un tramo del largo, con los cantos que puede tener y el que va a tener.
 
-    `zonas` acota a qué parte del largo aplica: `(desde, hasta, abajo, arriba)` con el largo
-    medido en la malla de hoy. Lo que no cae en ninguna zona usa `abajo`/`arriba` por defecto.
+    `conocidos` son los pares `(abajo, arriba)` en que puede estar hoy: el original, el que dejó
+    una corrida anterior y el destino. Así la corrida sirve sobre cualquiera de esos `.blend`.
+    Los límites `desde`/`hasta` van en los ejes de los parantes, que no se mueven.
     """
 
-    abajo: float
-    arriba: float
-    nuevo_abajo: float
-    nuevo_arriba: float
-    zonas: tuple[tuple[float, float, float, float], ...] = ()
+    conocidos: tuple[tuple[float, float], ...]
+    destino: tuple[float, float]
+    desde: float = -1e3
+    hasta: float = 1e3
 
-    def nuevos(self, u: float) -> tuple[float, float]:
-        for desde, hasta, abajo, arriba in self.zonas:
-            if desde - TOLERANCIA <= u <= hasta + TOLERANCIA:
-                return abajo, arriba
-        return self.nuevo_abajo, self.nuevo_arriba
-
-
-def _simetrico(abajo: float, arriba: float) -> tuple[float, float]:
-    eje = (abajo + arriba) / 2
-    return eje - MITAD, eje + MITAD
+    def contiene(self, u: float) -> bool:
+        return self.desde <= u < self.hasta
 
 
 @dataclass(frozen=True)
@@ -120,46 +119,71 @@ class Marco:
     objeto: str
     eje_largo: int
     parantes: tuple[Parante, ...]
-    travesanos: tuple[Travesano, ...]
+    tramos: tuple[Tramo, ...]
 
 
-def _travesano_simetrico(abajo: float, arriba: float) -> Travesano:
-    nuevo = _simetrico(abajo, arriba)
-    return Travesano(abajo, arriba, *nuevo)
+# El piso terminado queda en z = 0,102237 y el cielorraso en 3,50. Los perfiles de abajo y de arriba
+# muestran 8 cm: el de abajo crece hacia arriba desde el piso y el de arriba, hacia abajo desde
+# su canto de arriba, que ya está 3 cm debajo del cielorraso.
+PISO = 0.102237
+BASE_DEL_VENTANAL = (PISO, PISO + ANCHO)
+CANTO_DE_ARRIBA = 3.468511
+ARRIBA_ORIGINAL = 3.447519
+ARRIBA_DEL_VENTANAL = (CANTO_DE_ARRIBA - ANCHO, CANTO_DE_ARRIBA)
 
-
-# `local_marco_ventanal-col`: los paños van entre los ejes de los parantes, de y = -1,5 a 6,1.
+# `local_marco_ventanal-col`: los paños van entre los ejes de los parantes, de y = -1,5 a 6,1. El
+# zócalo (`local_zocalo_perimetral`) se corta justo en esos dos ejes y por delante del marco no
+# pasa: el travesaño de abajo queda a la vista, de 0,1022 a 0,1822.
 VENTANAL = Marco(
     "local_marco_ventanal-col",
     1,
     tuple(Parante(eje) for eje in (-1.5, 0.4, 2.3, 4.2, 6.1)),
-    (_travesano_simetrico(0.1022, 0.1522), _travesano_simetrico(2.568, 2.618)),
+    (
+        Tramo(
+            ((PISO, PISO + 0.05), (PISO - 0.015, PISO + 0.065), BASE_DEL_VENTANAL),
+            BASE_DEL_VENTANAL,
+        ),
+        Tramo(((2.568, 2.618), (2.553, 2.633)), (2.553, 2.633)),
+        Tramo(((ARRIBA_ORIGINAL, CANTO_DE_ARRIBA), ARRIBA_DEL_VENTANAL), ARRIBA_DEL_VENTANAL),
+    ),
 )
 
 # `local_marco_frente-col`: las jambas de las puertas están en 3,4184 y 6,389. La hoja izquierda
 # arranca en 3,4184 y la derecha termina en 6,389, y el paso queda entre las caras interiores de
-# las jambas (3,4434 y 6,364). Cada jamba crece sólo hacia su paño fijo.
+# las jambas (3,4434 y 6,364). Cada jamba crece sólo hacia su paño fijo. El umbral de las puertas
+# (la base de 2,5 cm, de 0,077 a 0,127) y el canto de abajo de su travesaño no cambian.
 JAMBA_IZQUIERDA = Parante(3.4184, hacia_menos=ANCHO - 2 * MITAD_ACTUAL, hacia_mas=0.0)
 JAMBA_DERECHA = Parante(6.389, hacia_menos=0.0, hacia_mas=ANCHO - 2 * MITAD_ACTUAL)
-PASO_DE_LAS_PUERTAS = (JAMBA_IZQUIERDA.eje + MITAD_ACTUAL, JAMBA_DERECHA.eje - MITAD_ACTUAL)
+FIJOS_DEL_FRENTE = ((-1e3, JAMBA_IZQUIERDA.eje), (JAMBA_DERECHA.eje, 1e3))
+PUERTAS = (JAMBA_IZQUIERDA.eje, JAMBA_DERECHA.eje)
+HUNDIDA = 0.077
+BASE_DEL_FRENTE = (HUNDIDA, PISO + ANCHO)
+CANTO_DE_ARRIBA_FRENTE = 3.468727
+ARRIBA_DEL_FRENTE = (CANTO_DE_ARRIBA_FRENTE - ANCHO, CANTO_DE_ARRIBA_FRENTE)
+
+
+def _tramos_del_frente() -> tuple[Tramo, ...]:
+    tramos = [
+        Tramo(((HUNDIDA, 0.127), BASE_DEL_FRENTE), BASE_DEL_FRENTE, desde, hasta)
+        for desde, hasta in FIJOS_DEL_FRENTE
+    ]
+    tramos += [
+        Tramo(((2.568, 2.618), (2.553, 2.633)), (2.553, 2.633), desde, hasta)
+        for desde, hasta in FIJOS_DEL_FRENTE
+    ]
+    puertas = (2.568, 2.568 + ANCHO)
+    tramos.append(Tramo(((2.568, 2.618), puertas), puertas, *PUERTAS))
+    tramos.append(
+        Tramo(((ARRIBA_ORIGINAL, CANTO_DE_ARRIBA_FRENTE), ARRIBA_DEL_FRENTE), ARRIBA_DEL_FRENTE)
+    )
+    return tuple(tramos)
+
+
 FRENTE = Marco(
     "local_marco_frente-col",
     0,
-    (
-        Parante(1.65),
-        JAMBA_IZQUIERDA,
-        Parante(4.85),
-        JAMBA_DERECHA,
-        Parante(7.87),
-    ),
-    (
-        Travesano(
-            2.568,
-            2.618,
-            *_simetrico(2.568, 2.618),
-            zonas=((*PASO_DE_LAS_PUERTAS, 2.568, 2.568 + ANCHO),),
-        ),
-    ),
+    (Parante(1.65), JAMBA_IZQUIERDA, Parante(4.85), JAMBA_DERECHA, Parante(7.87)),
+    _tramos_del_frente(),
 )
 
 MARCOS = (VENTANAL, FRENTE)
@@ -184,12 +208,40 @@ def _mapa_del_largo(marco: Marco) -> list[tuple[float, float]]:
     return conocidos
 
 
-def _nueva_altura(marco: Marco, u: float, z: float) -> float:
-    for travesano in marco.travesanos:
-        if travesano.abajo - TOLERANCIA <= z <= travesano.arriba + TOLERANCIA:
-            abajo, arriba = travesano.nuevos(u)
-            fraccion = (z - travesano.abajo) / (travesano.arriba - travesano.abajo)
-            return abajo + fraccion * (arriba - abajo)
+def _alturas_en(objeto, tramo: Tramo, eje_largo: int) -> list[float]:
+    mundo = objeto.matrix_world
+    puntos = [mundo @ v.co for v in objeto.data.vertices]
+    return [p.z for p in puntos if tramo.contiene(p[eje_largo])]
+
+
+def _estan(alturas: list[float], cantos: tuple[float, float]) -> bool:
+    return all(any(abs(z - c) < TOLERANCIA for z in alturas) for c in cantos)
+
+
+def _resolver(objeto, marco: Marco) -> list[tuple[Tramo, tuple[float, float]]]:
+    """El par `(abajo, arriba)` en que está hoy cada tramo, o falla si no es ninguno conocido."""
+    resueltos = []
+    for tramo in marco.tramos:
+        alturas = _alturas_en(objeto, tramo, marco.eje_largo)
+        hoy = next((c for c in tramo.conocidos if _estan(alturas, c)), None)
+        assert hoy is not None, f"{marco.objeto}: un travesaño no está en ningún estado conocido"
+        resueltos.append((tramo, hoy))
+    return resueltos
+
+
+def _nueva_altura(resueltos, u: float, z: float) -> float:
+    for tramo, (abajo, arriba) in resueltos:
+        nuevo_abajo, nuevo_arriba = tramo.destino
+        if not tramo.contiene(u) or not abajo - TOLERANCIA <= z <= arriba + TOLERANCIA:
+            continue
+        if (abajo, arriba) == tramo.destino:
+            return z
+        if abs(z - arriba) < TOLERANCIA and arriba == nuevo_arriba:
+            return z
+        if abs(z - abajo) < TOLERANCIA and abajo == nuevo_abajo:
+            return z
+        fraccion = (z - abajo) / (arriba - abajo)
+        return nuevo_abajo + fraccion * (nuevo_arriba - nuevo_abajo)
     return z
 
 
@@ -247,11 +299,12 @@ def _estado(objeto, marco: Marco) -> str:
     raise AssertionError(f"{marco.objeto} a medias: {anchos}")
 
 
-def _ensanchar(objeto, marco: Marco) -> dict:
+def _ensanchar(objeto, marco: Marco, mover_parantes: bool) -> dict:
     assert objeto.data.users == 1, f"{objeto.name} comparte su malla"
     assert not objeto.data.has_custom_normals, f"{objeto.name} tiene normales propias"
     antes = _geometria(objeto)
     mapa = _mapa_del_largo(marco)
+    resueltos = _resolver(objeto, marco)
     malla = objeto.data
     mundo = objeto.matrix_world
     inversa = mundo.inverted()
@@ -260,9 +313,13 @@ def _ensanchar(objeto, marco: Marco) -> dict:
         p = mundo @ vertice.co
         u, z = p[marco.eje_largo], p[2]
         nuevo = p.copy()
-        nuevo[marco.eje_largo] = _interpolar(u, mapa)
-        nuevo[2] = _nueva_altura(marco, u, z)
-        asignaciones.append((vertice.index, inversa @ nuevo))
+        if mover_parantes:
+            nuevo[marco.eje_largo] = _interpolar(u, mapa)
+        nuevo[2] = _nueva_altura(resueltos, u, z)
+        if (nuevo - p).length > 1e-7:
+            asignaciones.append((vertice.index, inversa @ nuevo))
+    if not asignaciones:
+        return {"movidos": 0}
     for indice, local in asignaciones:
         malla.vertices[indice].co = local
     malla.update()
@@ -278,9 +335,11 @@ def _ensanchar(objeto, marco: Marco) -> dict:
         if sum(x * y for x, y in zip(a, b)) < 0.999
     )
     assert cambiadas == 0, f"{objeto.name}: {cambiadas} caras giraron"
-    assert despues["volumen"] > antes["volumen"], objeto.name
+    assert despues["volumen"] > antes["volumen"] - 1e-9, objeto.name
     assert _estado(objeto, marco) == "nuevo", objeto.name
-    return {"antes": _resumen(antes), "despues": _resumen(despues)}
+    for tramo, hoy in _resolver(objeto, marco):
+        assert hoy == tramo.destino, f"{objeto.name}: un travesaño no llegó a {tramo.destino}"
+    return {"movidos": len(asignaciones), "antes": _resumen(antes), "despues": _resumen(despues)}
 
 
 def _resumen(datos: dict) -> dict:
@@ -353,11 +412,12 @@ def main() -> None:
     resultado["luz_antes"] = {
         m.objeto: _huecos_de_luz(o, vecinos)[:12] for o, m in marcos
     }
-    if resultado["estado_inicial"] == "viejo":
-        resultado["geometria"] = {m.objeto: _ensanchar(o, m) for o, m in marcos}
-        bpy.context.view_layer.update()
-    else:
-        print("los parantes ya miden 8 cm; sólo se rehacen las UV")
+    resultado["geometria"] = {
+        m.objeto: _ensanchar(o, m, resultado["estado_inicial"] == "viejo") for o, m in marcos
+    }
+    bpy.context.view_layer.update()
+    if not any(g["movidos"] for g in resultado["geometria"].values()):
+        print("los perfiles ya están como van; sólo se rehacen las UV")
     resultado["luz_despues"] = {
         m.objeto: _huecos_de_luz(o, vecinos)[:12] for o, m in marcos
     }
