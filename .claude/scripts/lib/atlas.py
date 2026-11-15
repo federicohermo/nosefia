@@ -90,9 +90,9 @@ ETIQUETAS = (
     "source/products-cam/amargadito/amargadito completo.png",
     "source/products-cam/cindolor/cindolor completo.png",
     "source/products-cam/flim pof/flim pof completo.png",
-    "source/products-cam/don saturados/Don Saturados completo.png",
-    "source/products-cam/petisas/petisas completo.png",
-    "source/products-cam/macumbas/macumbas completo.png",
+    "source/products-textured/bolsas/donsaturados.png",
+    "source/products-textured/bolsas/petisas.png",
+    "source/products-textured/bolsas/macumbas.png",
     "source/products-cam/NUEVOS 22-9/Cosa de maní/cosa de mani interno.png",
     "source/products-cam/NUEVOS 22-9/fernet-god/fernetgod textura.png",
     "source/products-cam/NUEVOS 22-9/Mayonchis/mayonchis@300x.png",
@@ -107,9 +107,6 @@ ETIQUETAS = (
     "source/textures/props/soap-labels/jabon_amarillo_sin_margenes.png",
     "source/textures/props/soap-labels/jabon_azul_sin_margenes.png",
     "source/textures/props/soap-labels/jabon_rosa_sin_margenes.png",
-    "source/products-cam/don saturados/Don Saturados costado.png",
-    "source/products-cam/petisas/petisas costado.png",
-    "source/products-cam/macumbas/macumbas costado.png",
 )
 
 #: Qué grupos arma hoy el atlas. Un grupo entra cuando todo lo que lo consume está listo: las
