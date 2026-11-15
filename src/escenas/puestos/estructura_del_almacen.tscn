@@ -122,25 +122,25 @@ size = Vector3(2.174, 0.209805, 0.944824)
 size = Vector3(2.174, 2.281, 0.469)
 
 [sub_resource type="BoxShape3D" id="suelo_local"]
-size = Vector3(10.574003, 0.206508, 14.65329)
+size = Vector3(10.574003, 1.206508, 14.65329)
 
 [sub_resource type="BoxShape3D" id="suelo_deposito"]
-size = Vector3(5.1428, 0.206508, 6.608355)
+size = Vector3(5.1428, 1.206508, 6.608355)
 
 [sub_resource type="BoxShape3D" id="suelo_fondo"]
-size = Vector3(12.519912314, 0.206508000, 7.144681644)
+size = Vector3(12.519912314, 1.206508, 7.144681644)
 
 [sub_resource type="BoxShape3D" id="suelo_paso_deposito"]
-size = Vector3(0.420795, 0.206508, 1.527)
+size = Vector3(0.420795, 1.206508, 1.527)
 
 [sub_resource type="BoxShape3D" id="suelo_paso_fondo"]
-size = Vector3(1.703925, 0.206508, 0.382225)
+size = Vector3(1.703925, 1.206508, 0.382225)
 
 [sub_resource type="BoxShape3D" id="suelo_cuartito"]
-size = Vector3(2.72, 0.206508, 3.0)
+size = Vector3(2.72, 1.206508, 3.0)
 
 [sub_resource type="BoxShape3D" id="suelo_paso_cuartito"]
-size = Vector3(0.15447, 0.206508, 1.742248)
+size = Vector3(0.15447, 1.206508, 1.742248)
 
 [sub_resource type="BoxShape3D" id="volumen_1"]
 size = Vector3(8.567709163, 6.973860000, 0.200380564)
@@ -2854,6 +2854,30 @@ points = PackedVector3Array(1.030420000,-0.514340000,-0.292790000,1.030420000,-0
 margin = 0.002
 points = PackedVector3Array(-0.170020536,1.000762582,-0.451968670,-0.170020536,1.000762582,0.451968431,-0.170020536,1.041762590,-0.451968670,-0.170020536,1.041762590,0.451968431,-0.165020421,0.150000036,-0.446968555,-0.165020421,0.150000036,0.446968317,-0.165020421,1.046762586,-0.446968555,-0.165020421,1.046762586,0.446968317,-0.162020639,0.007000022,-0.443968773,-0.162020639,0.007000022,0.443968534,-0.154020503,0.000000000,-0.435968637,-0.154020503,0.000000000,0.435968399,0.154020563,0.000000000,-0.435968637,0.154020563,0.000000000,0.435968399,0.162020698,0.007000022,-0.443968773,0.162020698,0.007000022,0.443968534,0.165020481,0.150000036,-0.446968555,0.165020481,0.150000036,0.446968317,0.165020481,1.046762586,-0.446968555,0.165020481,1.046762586,0.446968317,0.170020595,1.000762582,-0.451968670,0.170020595,1.000762582,0.451968431,0.170020595,1.041762590,-0.451968670,0.170020595,1.041762590,0.451968431)
 
+[sub_resource type="ConcavePolygonShape3D" id="vidrio_solido_local_vidrio_frente_0"]
+backface_collision = true
+data = PackedVector3Array(1.64999997615814,2.59299993515015,6.32499980926514,3.41839981079102,3.44959998130798,6.32499980926514,3.41839981079102,2.59299993515015,6.32499980926514,1.64999997615814,2.59299993515015,6.32499980926514,1.64999997615814,3.44959998130798,6.32499980926514,3.41839981079102,3.44959998130798,6.32499980926514,1.64999997615814,0.102199994027615,6.32499980926514,1.64999997615814,2.59299993515015,6.32499980926514,3.41839981079102,2.59299993515015,6.32499980926514,1.64999997615814,0.102199994027615,6.32499980926514,3.41839981079102,2.59299993515015,6.32499980926514,3.41839981079102,0.102199994027615,6.32499980926514)
+
+[sub_resource type="ConcavePolygonShape3D" id="vidrio_solido_local_vidrio_frente_1"]
+backface_collision = true
+data = PackedVector3Array(6.38899993896484,2.59299993515015,6.32499980926514,7.86999988555908,3.44959998130798,6.32499980926514,7.86999988555908,2.59299993515015,6.32499980926514,6.38899993896484,2.59299993515015,6.32499980926514,6.38899993896484,3.44959998130798,6.32499980926514,7.86999988555908,3.44959998130798,6.32499980926514,6.38899993896484,0.101999998092651,6.32499980926514,6.38899993896484,2.59299993515015,6.32499980926514,7.86999988555908,2.59299993515015,6.32499980926514,6.38899993896484,0.101999998092651,6.32499980926514,7.86999988555908,2.59299993515015,6.32499980926514,7.86999988555908,0.101999998092651,6.32499980926514)
+
+[sub_resource type="ConcavePolygonShape3D" id="vidrio_solido_local_vidrio_ventanal_0"]
+backface_collision = true
+data = PackedVector3Array(-2.52499985694885,2.59299993515015,1.5,-2.52499985694885,3.44959998130798,-0.399999976158142,-2.52499985694885,2.59299993515015,-0.399999976158142,-2.52499985694885,2.59299993515015,1.5,-2.52499985694885,3.44959998130798,1.5,-2.52499985694885,3.44959998130798,-0.399999976158142,-2.52499985694885,0.102199994027615,1.5,-2.52499985694885,2.59299993515015,1.5,-2.52499985694885,2.59299993515015,-0.399999976158142,-2.52499985694885,0.102199994027615,1.5,-2.52499985694885,2.59299993515015,-0.399999976158142,-2.52499985694885,0.102199994027615,-0.399999976158142)
+
+[sub_resource type="ConcavePolygonShape3D" id="vidrio_solido_local_vidrio_ventanal_1"]
+backface_collision = true
+data = PackedVector3Array(-2.52499985694885,2.59299993515015,-0.399999976158142,-2.52499985694885,3.44959998130798,-2.29999995231628,-2.52499985694885,2.59299993515015,-2.29999995231628,-2.52499985694885,2.59299993515015,-0.399999976158142,-2.52499985694885,3.44959998130798,-0.399999976158142,-2.52499985694885,3.44959998130798,-2.29999995231628,-2.52499985694885,0.102199994027615,-0.399999976158142,-2.52499985694885,2.59299993515015,-0.399999976158142,-2.52499985694885,2.59299993515015,-2.29999995231628,-2.52499985694885,0.102199994027615,-0.399999976158142,-2.52499985694885,2.59299993515015,-2.29999995231628,-2.52499985694885,0.102199994027615,-2.29999995231628)
+
+[sub_resource type="ConcavePolygonShape3D" id="vidrio_solido_local_vidrio_ventanal_2"]
+backface_collision = true
+data = PackedVector3Array(-2.52499985694885,2.59299993515015,-2.29999995231628,-2.52499985694885,3.44959998130798,-4.19999980926514,-2.52499985694885,2.59299993515015,-4.19999980926514,-2.52499985694885,2.59299993515015,-2.29999995231628,-2.52499985694885,3.44959998130798,-2.29999995231628,-2.52499985694885,3.44959998130798,-4.19999980926514,-2.52499985694885,0.102199994027615,-2.29999995231628,-2.52499985694885,2.59299993515015,-2.29999995231628,-2.52499985694885,2.59299993515015,-4.19999980926514,-2.52499985694885,0.102199994027615,-2.29999995231628,-2.52499985694885,2.59299993515015,-4.19999980926514,-2.52499985694885,0.102199994027615,-4.19999980926514)
+
+[sub_resource type="ConcavePolygonShape3D" id="vidrio_solido_local_vidrio_ventanal_3"]
+backface_collision = true
+data = PackedVector3Array(-2.52499985694885,2.59299993515015,-4.19999980926514,-2.52499985694885,3.44959998130798,-6.09999990463257,-2.52499985694885,2.59299993515015,-6.09999990463257,-2.52499985694885,2.59299993515015,-4.19999980926514,-2.52499985694885,3.44959998130798,-4.19999980926514,-2.52499985694885,3.44959998130798,-6.09999990463257,-2.52499985694885,0.102199994027615,-4.19999980926514,-2.52499985694885,2.59299993515015,-4.19999980926514,-2.52499985694885,2.59299993515015,-6.09999990463257,-2.52499985694885,0.102199994027615,-4.19999980926514,-2.52499985694885,2.59299993515015,-6.09999990463257,-2.52499985694885,0.102199994027615,-6.09999990463257)
+
 [sub_resource type="ConvexPolygonShape3D" id="apoyo_bano_riel_frontal_apoyodelriel_000"]
 margin = 0.002
 points = PackedVector3Array(-1.642650604, -0.029999971, -0.036000013, -1.642650604, -0.029999971, 0.030999899, -1.642650604, 0.029999971, -0.036000013, -1.642650604, 0.029999971, 0.030999899, -1.580000877, -0.029999971, -0.036000013, -1.580000877, 0.029999971, -0.036000013)
@@ -3990,30 +4014,6 @@ points = PackedVector3Array(0.490000248, -0.356467366, -1.159887075, 0.490000248
 margin = 0.002
 points = PackedVector3Array(0.490000248, 0.043536782, -1.159887075, 0.490000248, 0.127364278, -1.500906706, 0.490000248, 0.127364278, -1.157796621, 0.500000000, 0.043536782, -1.159887075, 0.500000000, 0.127364278, -1.500906706, 0.500000000, 0.127364278, -1.157796621)
 
-[sub_resource type="ConcavePolygonShape3D" id="vidrio_solido_local_vidrio_frente_0"]
-backface_collision = true
-data = PackedVector3Array(1.64999997615814,2.59299993515015,6.32499980926514,3.41839981079102,3.44959998130798,6.32499980926514,3.41839981079102,2.59299993515015,6.32499980926514,1.64999997615814,2.59299993515015,6.32499980926514,1.64999997615814,3.44959998130798,6.32499980926514,3.41839981079102,3.44959998130798,6.32499980926514,1.64999997615814,0.102199994027615,6.32499980926514,1.64999997615814,2.59299993515015,6.32499980926514,3.41839981079102,2.59299993515015,6.32499980926514,1.64999997615814,0.102199994027615,6.32499980926514,3.41839981079102,2.59299993515015,6.32499980926514,3.41839981079102,0.102199994027615,6.32499980926514)
-
-[sub_resource type="ConcavePolygonShape3D" id="vidrio_solido_local_vidrio_frente_1"]
-backface_collision = true
-data = PackedVector3Array(6.38899993896484,2.59299993515015,6.32499980926514,7.86999988555908,3.44959998130798,6.32499980926514,7.86999988555908,2.59299993515015,6.32499980926514,6.38899993896484,2.59299993515015,6.32499980926514,6.38899993896484,3.44959998130798,6.32499980926514,7.86999988555908,3.44959998130798,6.32499980926514,6.38899993896484,0.101999998092651,6.32499980926514,6.38899993896484,2.59299993515015,6.32499980926514,7.86999988555908,2.59299993515015,6.32499980926514,6.38899993896484,0.101999998092651,6.32499980926514,7.86999988555908,2.59299993515015,6.32499980926514,7.86999988555908,0.101999998092651,6.32499980926514)
-
-[sub_resource type="ConcavePolygonShape3D" id="vidrio_solido_local_vidrio_ventanal_0"]
-backface_collision = true
-data = PackedVector3Array(-2.52499985694885,2.59299993515015,1.5,-2.52499985694885,3.44959998130798,-0.399999976158142,-2.52499985694885,2.59299993515015,-0.399999976158142,-2.52499985694885,2.59299993515015,1.5,-2.52499985694885,3.44959998130798,1.5,-2.52499985694885,3.44959998130798,-0.399999976158142,-2.52499985694885,0.102199994027615,1.5,-2.52499985694885,2.59299993515015,1.5,-2.52499985694885,2.59299993515015,-0.399999976158142,-2.52499985694885,0.102199994027615,1.5,-2.52499985694885,2.59299993515015,-0.399999976158142,-2.52499985694885,0.102199994027615,-0.399999976158142)
-
-[sub_resource type="ConcavePolygonShape3D" id="vidrio_solido_local_vidrio_ventanal_1"]
-backface_collision = true
-data = PackedVector3Array(-2.52499985694885,2.59299993515015,-0.399999976158142,-2.52499985694885,3.44959998130798,-2.29999995231628,-2.52499985694885,2.59299993515015,-2.29999995231628,-2.52499985694885,2.59299993515015,-0.399999976158142,-2.52499985694885,3.44959998130798,-0.399999976158142,-2.52499985694885,3.44959998130798,-2.29999995231628,-2.52499985694885,0.102199994027615,-0.399999976158142,-2.52499985694885,2.59299993515015,-0.399999976158142,-2.52499985694885,2.59299993515015,-2.29999995231628,-2.52499985694885,0.102199994027615,-0.399999976158142,-2.52499985694885,2.59299993515015,-2.29999995231628,-2.52499985694885,0.102199994027615,-2.29999995231628)
-
-[sub_resource type="ConcavePolygonShape3D" id="vidrio_solido_local_vidrio_ventanal_2"]
-backface_collision = true
-data = PackedVector3Array(-2.52499985694885,2.59299993515015,-2.29999995231628,-2.52499985694885,3.44959998130798,-4.19999980926514,-2.52499985694885,2.59299993515015,-4.19999980926514,-2.52499985694885,2.59299993515015,-2.29999995231628,-2.52499985694885,3.44959998130798,-2.29999995231628,-2.52499985694885,3.44959998130798,-4.19999980926514,-2.52499985694885,0.102199994027615,-2.29999995231628,-2.52499985694885,2.59299993515015,-2.29999995231628,-2.52499985694885,2.59299993515015,-4.19999980926514,-2.52499985694885,0.102199994027615,-2.29999995231628,-2.52499985694885,2.59299993515015,-4.19999980926514,-2.52499985694885,0.102199994027615,-4.19999980926514)
-
-[sub_resource type="ConcavePolygonShape3D" id="vidrio_solido_local_vidrio_ventanal_3"]
-backface_collision = true
-data = PackedVector3Array(-2.52499985694885,2.59299993515015,-4.19999980926514,-2.52499985694885,3.44959998130798,-6.09999990463257,-2.52499985694885,2.59299993515015,-6.09999990463257,-2.52499985694885,2.59299993515015,-4.19999980926514,-2.52499985694885,3.44959998130798,-4.19999980926514,-2.52499985694885,3.44959998130798,-6.09999990463257,-2.52499985694885,0.102199994027615,-4.19999980926514,-2.52499985694885,2.59299993515015,-4.19999980926514,-2.52499985694885,2.59299993515015,-6.09999990463257,-2.52499985694885,0.102199994027615,-4.19999980926514,-2.52499985694885,2.59299993515015,-6.09999990463257,-2.52499985694885,0.102199994027615,-6.09999990463257)
-
 [node name="Estructura" instance=ExtResource("modelo")]
 
 [node name="cuartito_cuerpo" parent="."]
@@ -4038,31 +4038,31 @@ position = Vector3(0, -0.001017, 0)
 editor_description = "Volumen del piso modelado. Evita que los productos delgados atraviesen sus triangulos al apilarse."
 
 [node name="Local" type="CollisionShape3D" parent="SueloSolido"]
-position = Vector3(2.6870015, 0, -0.926645)
+position = Vector3(2.6870015, -0.500000000, -0.926645)
 shape = SubResource("suelo_local")
 
 [node name="Deposito" type="CollisionShape3D" parent="SueloSolido"]
-position = Vector3(10.86326, 0, 2.9741415)
+position = Vector3(10.86326, -0.500000000, 2.9741415)
 shape = SubResource("suelo_deposito")
 
 [node name="Fondo" type="CollisionShape3D" parent="SueloSolido"]
-position = Vector3(1.665579522, 0.000500000, -11.825630999)
+position = Vector3(1.665579522, -0.499500000, -11.825630999)
 shape = SubResource("suelo_fondo")
 
 [node name="PasoAlDeposito" type="CollisionShape3D" parent="SueloSolido"]
-position = Vector3(8.0814625, 0, 1.646)
+position = Vector3(8.0814625, -0.500000000, 1.646)
 shape = SubResource("suelo_paso_deposito")
 
 [node name="PasoAlFondo" type="CollisionShape3D" parent="SueloSolido"]
-position = Vector3(6.7493685, 0, -8.0621775)
+position = Vector3(6.7493685, -0.500000000, -8.0621775)
 shape = SubResource("suelo_paso_fondo")
 
 [node name="Cuartito" type="CollisionShape3D" parent="SueloSolido"]
-position = Vector3(9.440008, 0, -13.960002)
+position = Vector3(9.440008, -0.500000000, -13.960002)
 shape = SubResource("suelo_cuartito")
 
 [node name="PasoAlCuartito" type="CollisionShape3D" parent="SueloSolido"]
-position = Vector3(8.002773, 0, -13.960002)
+position = Vector3(8.002773, -0.500000000, -13.960002)
 shape = SubResource("suelo_paso_cuartito")
 
 [node name="HuecoDeLaVentanilla" type="Marker3D" parent="."]
@@ -5156,858 +5156,6 @@ shape = SubResource("colilla_volumen_3_0")
 
 [node name="VolumenColilla0" type="CollisionShape3D" parent="tachitobasura_002/tachitobasura-col_002_bisagra_001/tachitobasura-col_002_tapa_001/StaticBody3D"]
 shape = SubResource("colilla_volumen_4_0")
-[node name="Apoyo000" type="CollisionShape3D" parent="bano_riel_frontal/ApoyoDelRiel"]
-shape = SubResource("apoyo_bano_riel_frontal_apoyodelriel_000")
-
-[node name="Apoyo001" type="CollisionShape3D" parent="bano_riel_frontal/ApoyoDelRiel"]
-shape = SubResource("apoyo_bano_riel_frontal_apoyodelriel_001")
-
-[node name="Apoyo002" type="CollisionShape3D" parent="bano_riel_frontal/ApoyoDelRiel"]
-shape = SubResource("apoyo_bano_riel_frontal_apoyodelriel_002")
-
-[node name="Apoyo003" type="CollisionShape3D" parent="bano_riel_frontal/ApoyoDelRiel"]
-shape = SubResource("apoyo_bano_riel_frontal_apoyodelriel_003")
-
-[node name="Apoyo004" type="CollisionShape3D" parent="bano_riel_frontal/ApoyoDelRiel"]
-shape = SubResource("apoyo_bano_riel_frontal_apoyodelriel_004")
-
-[node name="Apoyo005" type="CollisionShape3D" parent="bano_riel_frontal/ApoyoDelRiel"]
-shape = SubResource("apoyo_bano_riel_frontal_apoyodelriel_005")
-
-[node name="Apoyo006" type="CollisionShape3D" parent="bano_riel_frontal/ApoyoDelRiel"]
-shape = SubResource("apoyo_bano_riel_frontal_apoyodelriel_006")
-
-[node name="Apoyo007" type="CollisionShape3D" parent="bano_riel_frontal/ApoyoDelRiel"]
-shape = SubResource("apoyo_bano_riel_frontal_apoyodelriel_007")
-
-[node name="Apoyo008" type="CollisionShape3D" parent="bano_riel_frontal/ApoyoDelRiel"]
-shape = SubResource("apoyo_bano_riel_frontal_apoyodelriel_008")
-
-[node name="Apoyo009" type="CollisionShape3D" parent="bano_riel_frontal/ApoyoDelRiel"]
-shape = SubResource("apoyo_bano_riel_frontal_apoyodelriel_009")
-
-[node name="Apoyo010" type="CollisionShape3D" parent="bano_riel_frontal/ApoyoDelRiel"]
-shape = SubResource("apoyo_bano_riel_frontal_apoyodelriel_010")
-
-[node name="Apoyo011" type="CollisionShape3D" parent="bano_riel_frontal/ApoyoDelRiel"]
-shape = SubResource("apoyo_bano_riel_frontal_apoyodelriel_011")
-
-[node name="Apoyo012" type="CollisionShape3D" parent="bano_riel_frontal/ApoyoDelRiel"]
-shape = SubResource("apoyo_bano_riel_frontal_apoyodelriel_012")
-
-[node name="Apoyo013" type="CollisionShape3D" parent="bano_riel_frontal/ApoyoDelRiel"]
-shape = SubResource("apoyo_bano_riel_frontal_apoyodelriel_013")
-
-[node name="Apoyo014" type="CollisionShape3D" parent="bano_riel_frontal/ApoyoDelRiel"]
-shape = SubResource("apoyo_bano_riel_frontal_apoyodelriel_014")
-
-[node name="Apoyo015" type="CollisionShape3D" parent="bano_riel_frontal/ApoyoDelRiel"]
-shape = SubResource("apoyo_bano_riel_frontal_apoyodelriel_015")
-
-[node name="Apoyo000" type="CollisionShape3D" parent="gondolanueva/Contorno"]
-shape = SubResource("apoyo_gondolanueva_contorno_000")
-
-[node name="Apoyo001" type="CollisionShape3D" parent="gondolanueva/Contorno"]
-shape = SubResource("apoyo_gondolanueva_contorno_001")
-
-[node name="Apoyo002" type="CollisionShape3D" parent="gondolanueva/Contorno"]
-shape = SubResource("apoyo_gondolanueva_contorno_002")
-
-[node name="Apoyo003" type="CollisionShape3D" parent="gondolanueva/Contorno"]
-shape = SubResource("apoyo_gondolanueva_contorno_003")
-
-[node name="Apoyo004" type="CollisionShape3D" parent="gondolanueva/Contorno"]
-shape = SubResource("apoyo_gondolanueva_contorno_004")
-
-[node name="Apoyo005" type="CollisionShape3D" parent="gondolanueva/Contorno"]
-shape = SubResource("apoyo_gondolanueva_contorno_005")
-
-[node name="Apoyo006" type="CollisionShape3D" parent="gondolanueva/Contorno"]
-shape = SubResource("apoyo_gondolanueva_contorno_006")
-
-[node name="Apoyo007" type="CollisionShape3D" parent="gondolanueva/Contorno"]
-shape = SubResource("apoyo_gondolanueva_contorno_007")
-
-[node name="Apoyo008" type="CollisionShape3D" parent="gondolanueva/Contorno"]
-shape = SubResource("apoyo_gondolanueva_contorno_008")
-
-[node name="Apoyo009" type="CollisionShape3D" parent="gondolanueva/Contorno"]
-shape = SubResource("apoyo_gondolanueva_contorno_009")
-
-[node name="Apoyo010" type="CollisionShape3D" parent="gondolanueva/Contorno"]
-shape = SubResource("apoyo_gondolanueva_contorno_010")
-
-[node name="Apoyo011" type="CollisionShape3D" parent="gondolanueva/Contorno"]
-shape = SubResource("apoyo_gondolanueva_contorno_011")
-
-[node name="Apoyo012" type="CollisionShape3D" parent="gondolanueva/Contorno"]
-shape = SubResource("apoyo_gondolanueva_contorno_012")
-
-[node name="Apoyo013" type="CollisionShape3D" parent="gondolanueva/Contorno"]
-shape = SubResource("apoyo_gondolanueva_contorno_013")
-
-[node name="Apoyo014" type="CollisionShape3D" parent="gondolanueva/Contorno"]
-shape = SubResource("apoyo_gondolanueva_contorno_014")
-
-[node name="Apoyo015" type="CollisionShape3D" parent="gondolanueva/Contorno"]
-shape = SubResource("apoyo_gondolanueva_contorno_015")
-
-[node name="Apoyo016" type="CollisionShape3D" parent="gondolanueva/Contorno"]
-shape = SubResource("apoyo_gondolanueva_contorno_016")
-
-[node name="Apoyo017" type="CollisionShape3D" parent="gondolanueva/Contorno"]
-shape = SubResource("apoyo_gondolanueva_contorno_017")
-
-[node name="Apoyo018" type="CollisionShape3D" parent="gondolanueva/Contorno"]
-shape = SubResource("apoyo_gondolanueva_contorno_018")
-
-[node name="Apoyo019" type="CollisionShape3D" parent="gondolanueva/Contorno"]
-shape = SubResource("apoyo_gondolanueva_contorno_019")
-
-[node name="Apoyo020" type="CollisionShape3D" parent="gondolanueva/Contorno"]
-shape = SubResource("apoyo_gondolanueva_contorno_020")
-
-[node name="Apoyo021" type="CollisionShape3D" parent="gondolanueva/Contorno"]
-shape = SubResource("apoyo_gondolanueva_contorno_021")
-
-[node name="Apoyo022" type="CollisionShape3D" parent="gondolanueva/Contorno"]
-shape = SubResource("apoyo_gondolanueva_contorno_022")
-
-[node name="Apoyo023" type="CollisionShape3D" parent="gondolanueva/Contorno"]
-shape = SubResource("apoyo_gondolanueva_contorno_023")
-
-[node name="Apoyo024" type="CollisionShape3D" parent="gondolanueva/Contorno"]
-shape = SubResource("apoyo_gondolanueva_contorno_024")
-
-[node name="Apoyo025" type="CollisionShape3D" parent="gondolanueva/Contorno"]
-shape = SubResource("apoyo_gondolanueva_contorno_025")
-
-[node name="Apoyo026" type="CollisionShape3D" parent="gondolanueva/Contorno"]
-shape = SubResource("apoyo_gondolanueva_contorno_026")
-
-[node name="Apoyo027" type="CollisionShape3D" parent="gondolanueva/Contorno"]
-shape = SubResource("apoyo_gondolanueva_contorno_027")
-
-[node name="Apoyo028" type="CollisionShape3D" parent="gondolanueva/Contorno"]
-shape = SubResource("apoyo_gondolanueva_contorno_028")
-
-[node name="Apoyo029" type="CollisionShape3D" parent="gondolanueva/Contorno"]
-shape = SubResource("apoyo_gondolanueva_contorno_029")
-
-[node name="Apoyo030" type="CollisionShape3D" parent="gondolanueva/Contorno"]
-shape = SubResource("apoyo_gondolanueva_contorno_030")
-
-[node name="Apoyo031" type="CollisionShape3D" parent="gondolanueva/Contorno"]
-shape = SubResource("apoyo_gondolanueva_contorno_031")
-
-[node name="Apoyo032" type="CollisionShape3D" parent="gondolanueva/Contorno"]
-shape = SubResource("apoyo_gondolanueva_contorno_032")
-
-[node name="Apoyo033" type="CollisionShape3D" parent="gondolanueva/Contorno"]
-shape = SubResource("apoyo_gondolanueva_contorno_033")
-
-[node name="Apoyo034" type="CollisionShape3D" parent="gondolanueva/Contorno"]
-shape = SubResource("apoyo_gondolanueva_contorno_034")
-
-[node name="Apoyo035" type="CollisionShape3D" parent="gondolanueva/Contorno"]
-shape = SubResource("apoyo_gondolanueva_contorno_035")
-
-[node name="Apoyo036" type="CollisionShape3D" parent="gondolanueva/Contorno"]
-shape = SubResource("apoyo_gondolanueva_contorno_036")
-
-[node name="Apoyo037" type="CollisionShape3D" parent="gondolanueva/Contorno"]
-shape = SubResource("apoyo_gondolanueva_contorno_037")
-
-[node name="Apoyo038" type="CollisionShape3D" parent="gondolanueva/Contorno"]
-shape = SubResource("apoyo_gondolanueva_contorno_038")
-
-[node name="Apoyo039" type="CollisionShape3D" parent="gondolanueva/Contorno"]
-shape = SubResource("apoyo_gondolanueva_contorno_039")
-
-[node name="Apoyo040" type="CollisionShape3D" parent="gondolanueva/Contorno"]
-shape = SubResource("apoyo_gondolanueva_contorno_040")
-
-[node name="Apoyo041" type="CollisionShape3D" parent="gondolanueva/Contorno"]
-shape = SubResource("apoyo_gondolanueva_contorno_041")
-
-[node name="Apoyo042" type="CollisionShape3D" parent="gondolanueva/Contorno"]
-shape = SubResource("apoyo_gondolanueva_contorno_042")
-
-[node name="Apoyo043" type="CollisionShape3D" parent="gondolanueva/Contorno"]
-shape = SubResource("apoyo_gondolanueva_contorno_043")
-
-[node name="Apoyo044" type="CollisionShape3D" parent="gondolanueva/Contorno"]
-shape = SubResource("apoyo_gondolanueva_contorno_044")
-
-[node name="Apoyo045" type="CollisionShape3D" parent="gondolanueva/Contorno"]
-shape = SubResource("apoyo_gondolanueva_contorno_045")
-
-[node name="Apoyo046" type="CollisionShape3D" parent="gondolanueva/Contorno"]
-shape = SubResource("apoyo_gondolanueva_contorno_046")
-
-[node name="Apoyo047" type="CollisionShape3D" parent="gondolanueva/Contorno"]
-shape = SubResource("apoyo_gondolanueva_contorno_047")
-
-[node name="Apoyo048" type="CollisionShape3D" parent="gondolanueva/Contorno"]
-shape = SubResource("apoyo_gondolanueva_contorno_048")
-
-[node name="Apoyo049" type="CollisionShape3D" parent="gondolanueva/Contorno"]
-shape = SubResource("apoyo_gondolanueva_contorno_049")
-
-[node name="Apoyo050" type="CollisionShape3D" parent="gondolanueva/Contorno"]
-shape = SubResource("apoyo_gondolanueva_contorno_050")
-
-[node name="Apoyo051" type="CollisionShape3D" parent="gondolanueva/Contorno"]
-shape = SubResource("apoyo_gondolanueva_contorno_051")
-
-[node name="Apoyo052" type="CollisionShape3D" parent="gondolanueva/Contorno"]
-shape = SubResource("apoyo_gondolanueva_contorno_052")
-
-[node name="Apoyo053" type="CollisionShape3D" parent="gondolanueva/Contorno"]
-shape = SubResource("apoyo_gondolanueva_contorno_053")
-
-[node name="Apoyo054" type="CollisionShape3D" parent="gondolanueva/Contorno"]
-shape = SubResource("apoyo_gondolanueva_contorno_054")
-
-[node name="Apoyo055" type="CollisionShape3D" parent="gondolanueva/Contorno"]
-shape = SubResource("apoyo_gondolanueva_contorno_055")
-
-[node name="Apoyo056" type="CollisionShape3D" parent="gondolanueva/Contorno"]
-shape = SubResource("apoyo_gondolanueva_contorno_056")
-
-[node name="Apoyo057" type="CollisionShape3D" parent="gondolanueva/Contorno"]
-shape = SubResource("apoyo_gondolanueva_contorno_057")
-
-[node name="Apoyo058" type="CollisionShape3D" parent="gondolanueva/Contorno"]
-shape = SubResource("apoyo_gondolanueva_contorno_058")
-
-[node name="Apoyo059" type="CollisionShape3D" parent="gondolanueva/Contorno"]
-shape = SubResource("apoyo_gondolanueva_contorno_059")
-
-[node name="Apoyo060" type="CollisionShape3D" parent="gondolanueva/Contorno"]
-shape = SubResource("apoyo_gondolanueva_contorno_060")
-
-[node name="Apoyo061" type="CollisionShape3D" parent="gondolanueva/Contorno"]
-shape = SubResource("apoyo_gondolanueva_contorno_061")
-
-[node name="Apoyo062" type="CollisionShape3D" parent="gondolanueva/Contorno"]
-shape = SubResource("apoyo_gondolanueva_contorno_062")
-
-[node name="Apoyo063" type="CollisionShape3D" parent="gondolanueva/Contorno"]
-shape = SubResource("apoyo_gondolanueva_contorno_063")
-
-[node name="Apoyo064" type="CollisionShape3D" parent="gondolanueva/Contorno"]
-shape = SubResource("apoyo_gondolanueva_contorno_064")
-
-[node name="Apoyo065" type="CollisionShape3D" parent="gondolanueva/Contorno"]
-shape = SubResource("apoyo_gondolanueva_contorno_065")
-
-[node name="Apoyo066" type="CollisionShape3D" parent="gondolanueva/Contorno"]
-shape = SubResource("apoyo_gondolanueva_contorno_066")
-
-[node name="Apoyo067" type="CollisionShape3D" parent="gondolanueva/Contorno"]
-shape = SubResource("apoyo_gondolanueva_contorno_067")
-
-[node name="Apoyo068" type="CollisionShape3D" parent="gondolanueva/Contorno"]
-shape = SubResource("apoyo_gondolanueva_contorno_068")
-
-[node name="Apoyo069" type="CollisionShape3D" parent="gondolanueva/Contorno"]
-shape = SubResource("apoyo_gondolanueva_contorno_069")
-
-[node name="Apoyo070" type="CollisionShape3D" parent="gondolanueva/Contorno"]
-shape = SubResource("apoyo_gondolanueva_contorno_070")
-
-[node name="Apoyo071" type="CollisionShape3D" parent="gondolanueva/Contorno"]
-shape = SubResource("apoyo_gondolanueva_contorno_071")
-
-[node name="Apoyo072" type="CollisionShape3D" parent="gondolanueva/Contorno"]
-shape = SubResource("apoyo_gondolanueva_contorno_072")
-
-[node name="Apoyo073" type="CollisionShape3D" parent="gondolanueva/Contorno"]
-shape = SubResource("apoyo_gondolanueva_contorno_073")
-
-[node name="Apoyo074" type="CollisionShape3D" parent="gondolanueva/Contorno"]
-shape = SubResource("apoyo_gondolanueva_contorno_074")
-
-[node name="Apoyo075" type="CollisionShape3D" parent="gondolanueva/Contorno"]
-shape = SubResource("apoyo_gondolanueva_contorno_075")
-
-[node name="Apoyo076" type="CollisionShape3D" parent="gondolanueva/Contorno"]
-shape = SubResource("apoyo_gondolanueva_contorno_076")
-
-[node name="Apoyo077" type="CollisionShape3D" parent="gondolanueva/Contorno"]
-shape = SubResource("apoyo_gondolanueva_contorno_077")
-
-[node name="Apoyo078" type="CollisionShape3D" parent="gondolanueva/Contorno"]
-shape = SubResource("apoyo_gondolanueva_contorno_078")
-
-[node name="Apoyo079" type="CollisionShape3D" parent="gondolanueva/Contorno"]
-shape = SubResource("apoyo_gondolanueva_contorno_079")
-
-[node name="Apoyo080" type="CollisionShape3D" parent="gondolanueva/Contorno"]
-shape = SubResource("apoyo_gondolanueva_contorno_080")
-
-[node name="Apoyo081" type="CollisionShape3D" parent="gondolanueva/Contorno"]
-shape = SubResource("apoyo_gondolanueva_contorno_081")
-
-[node name="Apoyo082" type="CollisionShape3D" parent="gondolanueva/Contorno"]
-shape = SubResource("apoyo_gondolanueva_contorno_082")
-
-[node name="Apoyo083" type="CollisionShape3D" parent="gondolanueva/Contorno"]
-shape = SubResource("apoyo_gondolanueva_contorno_083")
-
-[node name="Apoyo084" type="CollisionShape3D" parent="gondolanueva/Contorno"]
-shape = SubResource("apoyo_gondolanueva_contorno_084")
-
-[node name="Apoyo085" type="CollisionShape3D" parent="gondolanueva/Contorno"]
-shape = SubResource("apoyo_gondolanueva_contorno_085")
-
-[node name="Apoyo086" type="CollisionShape3D" parent="gondolanueva/Contorno"]
-shape = SubResource("apoyo_gondolanueva_contorno_086")
-
-[node name="Apoyo087" type="CollisionShape3D" parent="gondolanueva/Contorno"]
-shape = SubResource("apoyo_gondolanueva_contorno_087")
-
-[node name="Apoyo088" type="CollisionShape3D" parent="gondolanueva/Contorno"]
-shape = SubResource("apoyo_gondolanueva_contorno_088")
-
-[node name="Apoyo089" type="CollisionShape3D" parent="gondolanueva/Contorno"]
-shape = SubResource("apoyo_gondolanueva_contorno_089")
-
-[node name="Apoyo090" type="CollisionShape3D" parent="gondolanueva/Contorno"]
-shape = SubResource("apoyo_gondolanueva_contorno_090")
-
-[node name="Apoyo091" type="CollisionShape3D" parent="gondolanueva/Contorno"]
-shape = SubResource("apoyo_gondolanueva_contorno_091")
-
-[node name="Apoyo092" type="CollisionShape3D" parent="gondolanueva/Contorno"]
-shape = SubResource("apoyo_gondolanueva_contorno_092")
-
-[node name="Apoyo093" type="CollisionShape3D" parent="gondolanueva/Contorno"]
-shape = SubResource("apoyo_gondolanueva_contorno_093")
-
-[node name="Apoyo094" type="CollisionShape3D" parent="gondolanueva/Contorno"]
-shape = SubResource("apoyo_gondolanueva_contorno_094")
-
-[node name="Apoyo095" type="CollisionShape3D" parent="gondolanueva/Contorno"]
-shape = SubResource("apoyo_gondolanueva_contorno_095")
-
-[node name="Apoyo096" type="CollisionShape3D" parent="gondolanueva/Contorno"]
-shape = SubResource("apoyo_gondolanueva_contorno_096")
-
-[node name="Apoyo097" type="CollisionShape3D" parent="gondolanueva/Contorno"]
-shape = SubResource("apoyo_gondolanueva_contorno_097")
-
-[node name="Apoyo098" type="CollisionShape3D" parent="gondolanueva/Contorno"]
-shape = SubResource("apoyo_gondolanueva_contorno_098")
-
-[node name="Apoyo099" type="CollisionShape3D" parent="gondolanueva/Contorno"]
-shape = SubResource("apoyo_gondolanueva_contorno_099")
-
-[node name="Apoyo100" type="CollisionShape3D" parent="gondolanueva/Contorno"]
-shape = SubResource("apoyo_gondolanueva_contorno_100")
-
-[node name="Apoyo101" type="CollisionShape3D" parent="gondolanueva/Contorno"]
-shape = SubResource("apoyo_gondolanueva_contorno_101")
-
-[node name="Apoyo102" type="CollisionShape3D" parent="gondolanueva/Contorno"]
-shape = SubResource("apoyo_gondolanueva_contorno_102")
-
-[node name="Apoyo103" type="CollisionShape3D" parent="gondolanueva/Contorno"]
-shape = SubResource("apoyo_gondolanueva_contorno_103")
-
-[node name="Apoyo104" type="CollisionShape3D" parent="gondolanueva/Contorno"]
-shape = SubResource("apoyo_gondolanueva_contorno_104")
-
-[node name="Apoyo105" type="CollisionShape3D" parent="gondolanueva/Contorno"]
-shape = SubResource("apoyo_gondolanueva_contorno_105")
-
-[node name="Apoyo106" type="CollisionShape3D" parent="gondolanueva/Contorno"]
-shape = SubResource("apoyo_gondolanueva_contorno_106")
-
-[node name="Apoyo107" type="CollisionShape3D" parent="gondolanueva/Contorno"]
-shape = SubResource("apoyo_gondolanueva_contorno_107")
-
-[node name="Apoyo108" type="CollisionShape3D" parent="gondolanueva/Contorno"]
-shape = SubResource("apoyo_gondolanueva_contorno_108")
-
-[node name="Apoyo109" type="CollisionShape3D" parent="gondolanueva/Contorno"]
-shape = SubResource("apoyo_gondolanueva_contorno_109")
-
-[node name="Apoyo110" type="CollisionShape3D" parent="gondolanueva/Contorno"]
-shape = SubResource("apoyo_gondolanueva_contorno_110")
-
-[node name="Apoyo111" type="CollisionShape3D" parent="gondolanueva/Contorno"]
-shape = SubResource("apoyo_gondolanueva_contorno_111")
-
-[node name="Apoyo112" type="CollisionShape3D" parent="gondolanueva/Contorno"]
-shape = SubResource("apoyo_gondolanueva_contorno_112")
-
-[node name="Apoyo113" type="CollisionShape3D" parent="gondolanueva/Contorno"]
-shape = SubResource("apoyo_gondolanueva_contorno_113")
-
-[node name="Apoyo114" type="CollisionShape3D" parent="gondolanueva/Contorno"]
-shape = SubResource("apoyo_gondolanueva_contorno_114")
-
-[node name="Apoyo115" type="CollisionShape3D" parent="gondolanueva/Contorno"]
-shape = SubResource("apoyo_gondolanueva_contorno_115")
-
-[node name="Apoyo116" type="CollisionShape3D" parent="gondolanueva/Contorno"]
-shape = SubResource("apoyo_gondolanueva_contorno_116")
-
-[node name="Apoyo117" type="CollisionShape3D" parent="gondolanueva/Contorno"]
-shape = SubResource("apoyo_gondolanueva_contorno_117")
-
-[node name="Apoyo118" type="CollisionShape3D" parent="gondolanueva/Contorno"]
-shape = SubResource("apoyo_gondolanueva_contorno_118")
-
-[node name="Apoyo119" type="CollisionShape3D" parent="gondolanueva/Contorno"]
-shape = SubResource("apoyo_gondolanueva_contorno_119")
-
-[node name="Apoyo120" type="CollisionShape3D" parent="gondolanueva/Contorno"]
-shape = SubResource("apoyo_gondolanueva_contorno_120")
-
-[node name="Apoyo121" type="CollisionShape3D" parent="gondolanueva/Contorno"]
-shape = SubResource("apoyo_gondolanueva_contorno_121")
-
-[node name="Apoyo122" type="CollisionShape3D" parent="gondolanueva/Contorno"]
-shape = SubResource("apoyo_gondolanueva_contorno_122")
-
-[node name="Apoyo123" type="CollisionShape3D" parent="gondolanueva/Contorno"]
-shape = SubResource("apoyo_gondolanueva_contorno_123")
-
-[node name="Apoyo124" type="CollisionShape3D" parent="gondolanueva/Contorno"]
-shape = SubResource("apoyo_gondolanueva_contorno_124")
-
-[node name="Apoyo125" type="CollisionShape3D" parent="gondolanueva/Contorno"]
-shape = SubResource("apoyo_gondolanueva_contorno_125")
-
-[node name="Apoyo126" type="CollisionShape3D" parent="gondolanueva/Contorno"]
-shape = SubResource("apoyo_gondolanueva_contorno_126")
-
-[node name="Apoyo127" type="CollisionShape3D" parent="gondolanueva/Contorno"]
-shape = SubResource("apoyo_gondolanueva_contorno_127")
-
-[node name="Apoyo128" type="CollisionShape3D" parent="gondolanueva/Contorno"]
-shape = SubResource("apoyo_gondolanueva_contorno_128")
-
-[node name="Apoyo129" type="CollisionShape3D" parent="gondolanueva/Contorno"]
-shape = SubResource("apoyo_gondolanueva_contorno_129")
-
-[node name="Apoyo130" type="CollisionShape3D" parent="gondolanueva/Contorno"]
-shape = SubResource("apoyo_gondolanueva_contorno_130")
-
-[node name="Apoyo131" type="CollisionShape3D" parent="gondolanueva/Contorno"]
-shape = SubResource("apoyo_gondolanueva_contorno_131")
-
-[node name="Apoyo132" type="CollisionShape3D" parent="gondolanueva/Contorno"]
-shape = SubResource("apoyo_gondolanueva_contorno_132")
-
-[node name="Apoyo133" type="CollisionShape3D" parent="gondolanueva/Contorno"]
-shape = SubResource("apoyo_gondolanueva_contorno_133")
-
-[node name="Apoyo134" type="CollisionShape3D" parent="gondolanueva/Contorno"]
-shape = SubResource("apoyo_gondolanueva_contorno_134")
-
-[node name="Apoyo135" type="CollisionShape3D" parent="gondolanueva/Contorno"]
-shape = SubResource("apoyo_gondolanueva_contorno_135")
-
-[node name="Apoyo136" type="CollisionShape3D" parent="gondolanueva/Contorno"]
-shape = SubResource("apoyo_gondolanueva_contorno_136")
-
-[node name="Apoyo137" type="CollisionShape3D" parent="gondolanueva/Contorno"]
-shape = SubResource("apoyo_gondolanueva_contorno_137")
-
-[node name="Apoyo138" type="CollisionShape3D" parent="gondolanueva/Contorno"]
-shape = SubResource("apoyo_gondolanueva_contorno_138")
-
-[node name="Apoyo139" type="CollisionShape3D" parent="gondolanueva/Contorno"]
-shape = SubResource("apoyo_gondolanueva_contorno_139")
-
-[node name="Apoyo140" type="CollisionShape3D" parent="gondolanueva/Contorno"]
-shape = SubResource("apoyo_gondolanueva_contorno_140")
-
-[node name="Apoyo141" type="CollisionShape3D" parent="gondolanueva/Contorno"]
-shape = SubResource("apoyo_gondolanueva_contorno_141")
-
-[node name="Apoyo142" type="CollisionShape3D" parent="gondolanueva/Contorno"]
-shape = SubResource("apoyo_gondolanueva_contorno_142")
-
-[node name="Apoyo143" type="CollisionShape3D" parent="gondolanueva/Contorno"]
-shape = SubResource("apoyo_gondolanueva_contorno_143")
-
-[node name="Apoyo144" type="CollisionShape3D" parent="gondolanueva/Contorno"]
-shape = SubResource("apoyo_gondolanueva_contorno_144")
-
-[node name="Apoyo145" type="CollisionShape3D" parent="gondolanueva/Contorno"]
-shape = SubResource("apoyo_gondolanueva_contorno_145")
-
-[node name="Apoyo146" type="CollisionShape3D" parent="gondolanueva/Contorno"]
-shape = SubResource("apoyo_gondolanueva_contorno_146")
-
-[node name="Apoyo147" type="CollisionShape3D" parent="gondolanueva/Contorno"]
-shape = SubResource("apoyo_gondolanueva_contorno_147")
-
-[node name="Apoyo148" type="CollisionShape3D" parent="gondolanueva/Contorno"]
-shape = SubResource("apoyo_gondolanueva_contorno_148")
-
-[node name="Apoyo149" type="CollisionShape3D" parent="gondolanueva/Contorno"]
-shape = SubResource("apoyo_gondolanueva_contorno_149")
-
-[node name="Apoyo150" type="CollisionShape3D" parent="gondolanueva/Contorno"]
-shape = SubResource("apoyo_gondolanueva_contorno_150")
-
-[node name="Apoyo151" type="CollisionShape3D" parent="gondolanueva/Contorno"]
-shape = SubResource("apoyo_gondolanueva_contorno_151")
-
-[node name="Apoyo152" type="CollisionShape3D" parent="gondolanueva/Contorno"]
-shape = SubResource("apoyo_gondolanueva_contorno_152")
-
-[node name="Apoyo153" type="CollisionShape3D" parent="gondolanueva/Contorno"]
-shape = SubResource("apoyo_gondolanueva_contorno_153")
-
-[node name="Apoyo154" type="CollisionShape3D" parent="gondolanueva/Contorno"]
-shape = SubResource("apoyo_gondolanueva_contorno_154")
-
-[node name="Apoyo155" type="CollisionShape3D" parent="gondolanueva/Contorno"]
-shape = SubResource("apoyo_gondolanueva_contorno_155")
-
-[node name="Apoyo156" type="CollisionShape3D" parent="gondolanueva/Contorno"]
-shape = SubResource("apoyo_gondolanueva_contorno_156")
-
-[node name="Apoyo157" type="CollisionShape3D" parent="gondolanueva/Contorno"]
-shape = SubResource("apoyo_gondolanueva_contorno_157")
-
-[node name="Apoyo158" type="CollisionShape3D" parent="gondolanueva/Contorno"]
-shape = SubResource("apoyo_gondolanueva_contorno_158")
-
-[node name="Apoyo000" type="CollisionShape3D" parent="gondolanueva2/Contorno"]
-shape = SubResource("apoyo_gondolanueva2_contorno_000")
-
-[node name="Apoyo001" type="CollisionShape3D" parent="gondolanueva2/Contorno"]
-shape = SubResource("apoyo_gondolanueva2_contorno_001")
-
-[node name="Apoyo002" type="CollisionShape3D" parent="gondolanueva2/Contorno"]
-shape = SubResource("apoyo_gondolanueva2_contorno_002")
-
-[node name="Apoyo003" type="CollisionShape3D" parent="gondolanueva2/Contorno"]
-shape = SubResource("apoyo_gondolanueva2_contorno_003")
-
-[node name="Apoyo004" type="CollisionShape3D" parent="gondolanueva2/Contorno"]
-shape = SubResource("apoyo_gondolanueva2_contorno_004")
-
-[node name="Apoyo005" type="CollisionShape3D" parent="gondolanueva2/Contorno"]
-shape = SubResource("apoyo_gondolanueva2_contorno_005")
-
-[node name="Apoyo006" type="CollisionShape3D" parent="gondolanueva2/Contorno"]
-shape = SubResource("apoyo_gondolanueva2_contorno_006")
-
-[node name="Apoyo007" type="CollisionShape3D" parent="gondolanueva2/Contorno"]
-shape = SubResource("apoyo_gondolanueva2_contorno_007")
-
-[node name="Apoyo008" type="CollisionShape3D" parent="gondolanueva2/Contorno"]
-shape = SubResource("apoyo_gondolanueva2_contorno_008")
-
-[node name="Apoyo009" type="CollisionShape3D" parent="gondolanueva2/Contorno"]
-shape = SubResource("apoyo_gondolanueva2_contorno_009")
-
-[node name="Apoyo010" type="CollisionShape3D" parent="gondolanueva2/Contorno"]
-shape = SubResource("apoyo_gondolanueva2_contorno_010")
-
-[node name="Apoyo011" type="CollisionShape3D" parent="gondolanueva2/Contorno"]
-shape = SubResource("apoyo_gondolanueva2_contorno_011")
-
-[node name="Apoyo012" type="CollisionShape3D" parent="gondolanueva2/Contorno"]
-shape = SubResource("apoyo_gondolanueva2_contorno_012")
-
-[node name="Apoyo013" type="CollisionShape3D" parent="gondolanueva2/Contorno"]
-shape = SubResource("apoyo_gondolanueva2_contorno_013")
-
-[node name="Apoyo014" type="CollisionShape3D" parent="gondolanueva2/Contorno"]
-shape = SubResource("apoyo_gondolanueva2_contorno_014")
-
-[node name="Apoyo015" type="CollisionShape3D" parent="gondolanueva2/Contorno"]
-shape = SubResource("apoyo_gondolanueva2_contorno_015")
-
-[node name="Apoyo016" type="CollisionShape3D" parent="gondolanueva2/Contorno"]
-shape = SubResource("apoyo_gondolanueva2_contorno_016")
-
-[node name="Apoyo017" type="CollisionShape3D" parent="gondolanueva2/Contorno"]
-shape = SubResource("apoyo_gondolanueva2_contorno_017")
-
-[node name="Apoyo018" type="CollisionShape3D" parent="gondolanueva2/Contorno"]
-shape = SubResource("apoyo_gondolanueva2_contorno_018")
-
-[node name="Apoyo019" type="CollisionShape3D" parent="gondolanueva2/Contorno"]
-shape = SubResource("apoyo_gondolanueva2_contorno_019")
-
-[node name="Apoyo020" type="CollisionShape3D" parent="gondolanueva2/Contorno"]
-shape = SubResource("apoyo_gondolanueva2_contorno_020")
-
-[node name="Apoyo021" type="CollisionShape3D" parent="gondolanueva2/Contorno"]
-shape = SubResource("apoyo_gondolanueva2_contorno_021")
-
-[node name="Apoyo022" type="CollisionShape3D" parent="gondolanueva2/Contorno"]
-shape = SubResource("apoyo_gondolanueva2_contorno_022")
-
-[node name="Apoyo023" type="CollisionShape3D" parent="gondolanueva2/Contorno"]
-shape = SubResource("apoyo_gondolanueva2_contorno_023")
-
-[node name="Apoyo024" type="CollisionShape3D" parent="gondolanueva2/Contorno"]
-shape = SubResource("apoyo_gondolanueva2_contorno_024")
-
-[node name="Apoyo025" type="CollisionShape3D" parent="gondolanueva2/Contorno"]
-shape = SubResource("apoyo_gondolanueva2_contorno_025")
-
-[node name="Apoyo026" type="CollisionShape3D" parent="gondolanueva2/Contorno"]
-shape = SubResource("apoyo_gondolanueva2_contorno_026")
-
-[node name="Apoyo027" type="CollisionShape3D" parent="gondolanueva2/Contorno"]
-shape = SubResource("apoyo_gondolanueva2_contorno_027")
-
-[node name="Apoyo028" type="CollisionShape3D" parent="gondolanueva2/Contorno"]
-shape = SubResource("apoyo_gondolanueva2_contorno_028")
-
-[node name="Apoyo029" type="CollisionShape3D" parent="gondolanueva2/Contorno"]
-shape = SubResource("apoyo_gondolanueva2_contorno_029")
-
-[node name="Apoyo030" type="CollisionShape3D" parent="gondolanueva2/Contorno"]
-shape = SubResource("apoyo_gondolanueva2_contorno_030")
-
-[node name="Apoyo031" type="CollisionShape3D" parent="gondolanueva2/Contorno"]
-shape = SubResource("apoyo_gondolanueva2_contorno_031")
-
-[node name="Apoyo032" type="CollisionShape3D" parent="gondolanueva2/Contorno"]
-shape = SubResource("apoyo_gondolanueva2_contorno_032")
-
-[node name="Apoyo033" type="CollisionShape3D" parent="gondolanueva2/Contorno"]
-shape = SubResource("apoyo_gondolanueva2_contorno_033")
-
-[node name="Apoyo034" type="CollisionShape3D" parent="gondolanueva2/Contorno"]
-shape = SubResource("apoyo_gondolanueva2_contorno_034")
-
-[node name="Apoyo035" type="CollisionShape3D" parent="gondolanueva2/Contorno"]
-shape = SubResource("apoyo_gondolanueva2_contorno_035")
-
-[node name="Apoyo036" type="CollisionShape3D" parent="gondolanueva2/Contorno"]
-shape = SubResource("apoyo_gondolanueva2_contorno_036")
-
-[node name="Apoyo037" type="CollisionShape3D" parent="gondolanueva2/Contorno"]
-shape = SubResource("apoyo_gondolanueva2_contorno_037")
-
-[node name="Apoyo038" type="CollisionShape3D" parent="gondolanueva2/Contorno"]
-shape = SubResource("apoyo_gondolanueva2_contorno_038")
-
-[node name="Apoyo039" type="CollisionShape3D" parent="gondolanueva2/Contorno"]
-shape = SubResource("apoyo_gondolanueva2_contorno_039")
-
-[node name="Apoyo040" type="CollisionShape3D" parent="gondolanueva2/Contorno"]
-shape = SubResource("apoyo_gondolanueva2_contorno_040")
-
-[node name="Apoyo041" type="CollisionShape3D" parent="gondolanueva2/Contorno"]
-shape = SubResource("apoyo_gondolanueva2_contorno_041")
-
-[node name="Apoyo042" type="CollisionShape3D" parent="gondolanueva2/Contorno"]
-shape = SubResource("apoyo_gondolanueva2_contorno_042")
-
-[node name="Apoyo043" type="CollisionShape3D" parent="gondolanueva2/Contorno"]
-shape = SubResource("apoyo_gondolanueva2_contorno_043")
-
-[node name="Apoyo044" type="CollisionShape3D" parent="gondolanueva2/Contorno"]
-shape = SubResource("apoyo_gondolanueva2_contorno_044")
-
-[node name="Apoyo045" type="CollisionShape3D" parent="gondolanueva2/Contorno"]
-shape = SubResource("apoyo_gondolanueva2_contorno_045")
-
-[node name="Apoyo046" type="CollisionShape3D" parent="gondolanueva2/Contorno"]
-shape = SubResource("apoyo_gondolanueva2_contorno_046")
-
-[node name="Apoyo047" type="CollisionShape3D" parent="gondolanueva2/Contorno"]
-shape = SubResource("apoyo_gondolanueva2_contorno_047")
-
-[node name="Apoyo048" type="CollisionShape3D" parent="gondolanueva2/Contorno"]
-shape = SubResource("apoyo_gondolanueva2_contorno_048")
-
-[node name="Apoyo049" type="CollisionShape3D" parent="gondolanueva2/Contorno"]
-shape = SubResource("apoyo_gondolanueva2_contorno_049")
-
-[node name="Apoyo050" type="CollisionShape3D" parent="gondolanueva2/Contorno"]
-shape = SubResource("apoyo_gondolanueva2_contorno_050")
-
-[node name="Apoyo051" type="CollisionShape3D" parent="gondolanueva2/Contorno"]
-shape = SubResource("apoyo_gondolanueva2_contorno_051")
-
-[node name="Apoyo052" type="CollisionShape3D" parent="gondolanueva2/Contorno"]
-shape = SubResource("apoyo_gondolanueva2_contorno_052")
-
-[node name="Apoyo053" type="CollisionShape3D" parent="gondolanueva2/Contorno"]
-shape = SubResource("apoyo_gondolanueva2_contorno_053")
-
-[node name="Apoyo054" type="CollisionShape3D" parent="gondolanueva2/Contorno"]
-shape = SubResource("apoyo_gondolanueva2_contorno_054")
-
-[node name="Apoyo055" type="CollisionShape3D" parent="gondolanueva2/Contorno"]
-shape = SubResource("apoyo_gondolanueva2_contorno_055")
-
-[node name="Apoyo056" type="CollisionShape3D" parent="gondolanueva2/Contorno"]
-shape = SubResource("apoyo_gondolanueva2_contorno_056")
-
-[node name="Apoyo057" type="CollisionShape3D" parent="gondolanueva2/Contorno"]
-shape = SubResource("apoyo_gondolanueva2_contorno_057")
-
-[node name="Apoyo058" type="CollisionShape3D" parent="gondolanueva2/Contorno"]
-shape = SubResource("apoyo_gondolanueva2_contorno_058")
-
-[node name="Apoyo059" type="CollisionShape3D" parent="gondolanueva2/Contorno"]
-shape = SubResource("apoyo_gondolanueva2_contorno_059")
-
-[node name="Apoyo060" type="CollisionShape3D" parent="gondolanueva2/Contorno"]
-shape = SubResource("apoyo_gondolanueva2_contorno_060")
-
-[node name="Apoyo061" type="CollisionShape3D" parent="gondolanueva2/Contorno"]
-shape = SubResource("apoyo_gondolanueva2_contorno_061")
-
-[node name="Apoyo062" type="CollisionShape3D" parent="gondolanueva2/Contorno"]
-shape = SubResource("apoyo_gondolanueva2_contorno_062")
-
-[node name="Apoyo063" type="CollisionShape3D" parent="gondolanueva2/Contorno"]
-shape = SubResource("apoyo_gondolanueva2_contorno_063")
-
-[node name="Apoyo064" type="CollisionShape3D" parent="gondolanueva2/Contorno"]
-shape = SubResource("apoyo_gondolanueva2_contorno_064")
-
-[node name="Apoyo065" type="CollisionShape3D" parent="gondolanueva2/Contorno"]
-shape = SubResource("apoyo_gondolanueva2_contorno_065")
-
-[node name="Apoyo066" type="CollisionShape3D" parent="gondolanueva2/Contorno"]
-shape = SubResource("apoyo_gondolanueva2_contorno_066")
-
-[node name="Apoyo067" type="CollisionShape3D" parent="gondolanueva2/Contorno"]
-shape = SubResource("apoyo_gondolanueva2_contorno_067")
-
-[node name="Apoyo068" type="CollisionShape3D" parent="gondolanueva2/Contorno"]
-shape = SubResource("apoyo_gondolanueva2_contorno_068")
-
-[node name="Apoyo069" type="CollisionShape3D" parent="gondolanueva2/Contorno"]
-shape = SubResource("apoyo_gondolanueva2_contorno_069")
-
-[node name="Apoyo070" type="CollisionShape3D" parent="gondolanueva2/Contorno"]
-shape = SubResource("apoyo_gondolanueva2_contorno_070")
-
-[node name="Apoyo071" type="CollisionShape3D" parent="gondolanueva2/Contorno"]
-shape = SubResource("apoyo_gondolanueva2_contorno_071")
-
-[node name="Apoyo072" type="CollisionShape3D" parent="gondolanueva2/Contorno"]
-shape = SubResource("apoyo_gondolanueva2_contorno_072")
-
-[node name="Apoyo073" type="CollisionShape3D" parent="gondolanueva2/Contorno"]
-shape = SubResource("apoyo_gondolanueva2_contorno_073")
-
-[node name="Apoyo074" type="CollisionShape3D" parent="gondolanueva2/Contorno"]
-shape = SubResource("apoyo_gondolanueva2_contorno_074")
-
-[node name="Apoyo075" type="CollisionShape3D" parent="gondolanueva2/Contorno"]
-shape = SubResource("apoyo_gondolanueva2_contorno_075")
-
-[node name="Apoyo076" type="CollisionShape3D" parent="gondolanueva2/Contorno"]
-shape = SubResource("apoyo_gondolanueva2_contorno_076")
-
-[node name="Apoyo077" type="CollisionShape3D" parent="gondolanueva2/Contorno"]
-shape = SubResource("apoyo_gondolanueva2_contorno_077")
-
-[node name="Apoyo078" type="CollisionShape3D" parent="gondolanueva2/Contorno"]
-shape = SubResource("apoyo_gondolanueva2_contorno_078")
-
-[node name="Apoyo079" type="CollisionShape3D" parent="gondolanueva2/Contorno"]
-shape = SubResource("apoyo_gondolanueva2_contorno_079")
-
-[node name="Apoyo080" type="CollisionShape3D" parent="gondolanueva2/Contorno"]
-shape = SubResource("apoyo_gondolanueva2_contorno_080")
-
-[node name="Apoyo081" type="CollisionShape3D" parent="gondolanueva2/Contorno"]
-shape = SubResource("apoyo_gondolanueva2_contorno_081")
-
-[node name="Apoyo082" type="CollisionShape3D" parent="gondolanueva2/Contorno"]
-shape = SubResource("apoyo_gondolanueva2_contorno_082")
-
-[node name="Apoyo083" type="CollisionShape3D" parent="gondolanueva2/Contorno"]
-shape = SubResource("apoyo_gondolanueva2_contorno_083")
-
-[node name="Apoyo084" type="CollisionShape3D" parent="gondolanueva2/Contorno"]
-shape = SubResource("apoyo_gondolanueva2_contorno_084")
-
-[node name="Apoyo085" type="CollisionShape3D" parent="gondolanueva2/Contorno"]
-shape = SubResource("apoyo_gondolanueva2_contorno_085")
-
-[node name="Apoyo086" type="CollisionShape3D" parent="gondolanueva2/Contorno"]
-shape = SubResource("apoyo_gondolanueva2_contorno_086")
-
-[node name="Apoyo087" type="CollisionShape3D" parent="gondolanueva2/Contorno"]
-shape = SubResource("apoyo_gondolanueva2_contorno_087")
-
-[node name="Apoyo088" type="CollisionShape3D" parent="gondolanueva2/Contorno"]
-shape = SubResource("apoyo_gondolanueva2_contorno_088")
-
-[node name="Apoyo089" type="CollisionShape3D" parent="gondolanueva2/Contorno"]
-shape = SubResource("apoyo_gondolanueva2_contorno_089")
-
-[node name="Apoyo090" type="CollisionShape3D" parent="gondolanueva2/Contorno"]
-shape = SubResource("apoyo_gondolanueva2_contorno_090")
-
-[node name="Apoyo091" type="CollisionShape3D" parent="gondolanueva2/Contorno"]
-shape = SubResource("apoyo_gondolanueva2_contorno_091")
-
-[node name="Apoyo092" type="CollisionShape3D" parent="gondolanueva2/Contorno"]
-shape = SubResource("apoyo_gondolanueva2_contorno_092")
-
-[node name="Apoyo093" type="CollisionShape3D" parent="gondolanueva2/Contorno"]
-shape = SubResource("apoyo_gondolanueva2_contorno_093")
-
-[node name="Apoyo094" type="CollisionShape3D" parent="gondolanueva2/Contorno"]
-shape = SubResource("apoyo_gondolanueva2_contorno_094")
-
-[node name="Apoyo095" type="CollisionShape3D" parent="gondolanueva2/Contorno"]
-shape = SubResource("apoyo_gondolanueva2_contorno_095")
-
-[node name="Apoyo096" type="CollisionShape3D" parent="gondolanueva2/Contorno"]
-shape = SubResource("apoyo_gondolanueva2_contorno_096")
-
-[node name="Apoyo097" type="CollisionShape3D" parent="gondolanueva2/Contorno"]
-shape = SubResource("apoyo_gondolanueva2_contorno_097")
-
-[node name="Apoyo098" type="CollisionShape3D" parent="gondolanueva2/Contorno"]
-shape = SubResource("apoyo_gondolanueva2_contorno_098")
-
-[node name="Apoyo099" type="CollisionShape3D" parent="gondolanueva2/Contorno"]
-shape = SubResource("apoyo_gondolanueva2_contorno_099")
-
-[node name="Apoyo100" type="CollisionShape3D" parent="gondolanueva2/Contorno"]
-shape = SubResource("apoyo_gondolanueva2_contorno_100")
-
-[node name="Apoyo101" type="CollisionShape3D" parent="gondolanueva2/Contorno"]
-shape = SubResource("apoyo_gondolanueva2_contorno_101")
-
-[node name="Apoyo102" type="CollisionShape3D" parent="gondolanueva2/Contorno"]
-shape = SubResource("apoyo_gondolanueva2_contorno_102")
-
-[node name="Apoyo103" type="CollisionShape3D" parent="gondolanueva2/Contorno"]
-shape = SubResource("apoyo_gondolanueva2_contorno_103")
-
-[node name="Apoyo104" type="CollisionShape3D" parent="gondolanueva2/Contorno"]
-shape = SubResource("apoyo_gondolanueva2_contorno_104")
-
-[node name="Apoyo105" type="CollisionShape3D" parent="gondolanueva2/Contorno"]
-shape = SubResource("apoyo_gondolanueva2_contorno_105")
-
-[node name="Apoyo106" type="CollisionShape3D" parent="gondolanueva2/Contorno"]
-shape = SubResource("apoyo_gondolanueva2_contorno_106")
-
-[node name="Apoyo107" type="CollisionShape3D" parent="gondolanueva2/Contorno"]
-shape = SubResource("apoyo_gondolanueva2_contorno_107")
-
-[node name="Apoyo108" type="CollisionShape3D" parent="gondolanueva2/Contorno"]
-shape = SubResource("apoyo_gondolanueva2_contorno_108")
-
 [node name="VolumenComputadora0" type="CollisionShape3D" parent="base compu/StaticBody3D"]
 shape = SubResource("modelo_computadora_0")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
@@ -7270,3 +6418,855 @@ shape = SubResource("actual_salon_silla_3b_18")
 
 [node name="Volumen20" type="CollisionShape3D" parent="salon_silla_3b/StaticBody3D"]
 shape = SubResource("actual_salon_silla_3b_19")
+[node name="Apoyo000" type="CollisionShape3D" parent="bano_riel_frontal/ApoyoDelRiel"]
+shape = SubResource("apoyo_bano_riel_frontal_apoyodelriel_000")
+
+[node name="Apoyo001" type="CollisionShape3D" parent="bano_riel_frontal/ApoyoDelRiel"]
+shape = SubResource("apoyo_bano_riel_frontal_apoyodelriel_001")
+
+[node name="Apoyo002" type="CollisionShape3D" parent="bano_riel_frontal/ApoyoDelRiel"]
+shape = SubResource("apoyo_bano_riel_frontal_apoyodelriel_002")
+
+[node name="Apoyo003" type="CollisionShape3D" parent="bano_riel_frontal/ApoyoDelRiel"]
+shape = SubResource("apoyo_bano_riel_frontal_apoyodelriel_003")
+
+[node name="Apoyo004" type="CollisionShape3D" parent="bano_riel_frontal/ApoyoDelRiel"]
+shape = SubResource("apoyo_bano_riel_frontal_apoyodelriel_004")
+
+[node name="Apoyo005" type="CollisionShape3D" parent="bano_riel_frontal/ApoyoDelRiel"]
+shape = SubResource("apoyo_bano_riel_frontal_apoyodelriel_005")
+
+[node name="Apoyo006" type="CollisionShape3D" parent="bano_riel_frontal/ApoyoDelRiel"]
+shape = SubResource("apoyo_bano_riel_frontal_apoyodelriel_006")
+
+[node name="Apoyo007" type="CollisionShape3D" parent="bano_riel_frontal/ApoyoDelRiel"]
+shape = SubResource("apoyo_bano_riel_frontal_apoyodelriel_007")
+
+[node name="Apoyo008" type="CollisionShape3D" parent="bano_riel_frontal/ApoyoDelRiel"]
+shape = SubResource("apoyo_bano_riel_frontal_apoyodelriel_008")
+
+[node name="Apoyo009" type="CollisionShape3D" parent="bano_riel_frontal/ApoyoDelRiel"]
+shape = SubResource("apoyo_bano_riel_frontal_apoyodelriel_009")
+
+[node name="Apoyo010" type="CollisionShape3D" parent="bano_riel_frontal/ApoyoDelRiel"]
+shape = SubResource("apoyo_bano_riel_frontal_apoyodelriel_010")
+
+[node name="Apoyo011" type="CollisionShape3D" parent="bano_riel_frontal/ApoyoDelRiel"]
+shape = SubResource("apoyo_bano_riel_frontal_apoyodelriel_011")
+
+[node name="Apoyo012" type="CollisionShape3D" parent="bano_riel_frontal/ApoyoDelRiel"]
+shape = SubResource("apoyo_bano_riel_frontal_apoyodelriel_012")
+
+[node name="Apoyo013" type="CollisionShape3D" parent="bano_riel_frontal/ApoyoDelRiel"]
+shape = SubResource("apoyo_bano_riel_frontal_apoyodelriel_013")
+
+[node name="Apoyo014" type="CollisionShape3D" parent="bano_riel_frontal/ApoyoDelRiel"]
+shape = SubResource("apoyo_bano_riel_frontal_apoyodelriel_014")
+
+[node name="Apoyo015" type="CollisionShape3D" parent="bano_riel_frontal/ApoyoDelRiel"]
+shape = SubResource("apoyo_bano_riel_frontal_apoyodelriel_015")
+
+[node name="Apoyo000" type="CollisionShape3D" parent="gondolanueva/Contorno"]
+shape = SubResource("apoyo_gondolanueva_contorno_000")
+
+[node name="Apoyo001" type="CollisionShape3D" parent="gondolanueva/Contorno"]
+shape = SubResource("apoyo_gondolanueva_contorno_001")
+
+[node name="Apoyo002" type="CollisionShape3D" parent="gondolanueva/Contorno"]
+shape = SubResource("apoyo_gondolanueva_contorno_002")
+
+[node name="Apoyo003" type="CollisionShape3D" parent="gondolanueva/Contorno"]
+shape = SubResource("apoyo_gondolanueva_contorno_003")
+
+[node name="Apoyo004" type="CollisionShape3D" parent="gondolanueva/Contorno"]
+shape = SubResource("apoyo_gondolanueva_contorno_004")
+
+[node name="Apoyo005" type="CollisionShape3D" parent="gondolanueva/Contorno"]
+shape = SubResource("apoyo_gondolanueva_contorno_005")
+
+[node name="Apoyo006" type="CollisionShape3D" parent="gondolanueva/Contorno"]
+shape = SubResource("apoyo_gondolanueva_contorno_006")
+
+[node name="Apoyo007" type="CollisionShape3D" parent="gondolanueva/Contorno"]
+shape = SubResource("apoyo_gondolanueva_contorno_007")
+
+[node name="Apoyo008" type="CollisionShape3D" parent="gondolanueva/Contorno"]
+shape = SubResource("apoyo_gondolanueva_contorno_008")
+
+[node name="Apoyo009" type="CollisionShape3D" parent="gondolanueva/Contorno"]
+shape = SubResource("apoyo_gondolanueva_contorno_009")
+
+[node name="Apoyo010" type="CollisionShape3D" parent="gondolanueva/Contorno"]
+shape = SubResource("apoyo_gondolanueva_contorno_010")
+
+[node name="Apoyo011" type="CollisionShape3D" parent="gondolanueva/Contorno"]
+shape = SubResource("apoyo_gondolanueva_contorno_011")
+
+[node name="Apoyo012" type="CollisionShape3D" parent="gondolanueva/Contorno"]
+shape = SubResource("apoyo_gondolanueva_contorno_012")
+
+[node name="Apoyo013" type="CollisionShape3D" parent="gondolanueva/Contorno"]
+shape = SubResource("apoyo_gondolanueva_contorno_013")
+
+[node name="Apoyo014" type="CollisionShape3D" parent="gondolanueva/Contorno"]
+shape = SubResource("apoyo_gondolanueva_contorno_014")
+
+[node name="Apoyo015" type="CollisionShape3D" parent="gondolanueva/Contorno"]
+shape = SubResource("apoyo_gondolanueva_contorno_015")
+
+[node name="Apoyo016" type="CollisionShape3D" parent="gondolanueva/Contorno"]
+shape = SubResource("apoyo_gondolanueva_contorno_016")
+
+[node name="Apoyo017" type="CollisionShape3D" parent="gondolanueva/Contorno"]
+shape = SubResource("apoyo_gondolanueva_contorno_017")
+
+[node name="Apoyo018" type="CollisionShape3D" parent="gondolanueva/Contorno"]
+shape = SubResource("apoyo_gondolanueva_contorno_018")
+
+[node name="Apoyo019" type="CollisionShape3D" parent="gondolanueva/Contorno"]
+shape = SubResource("apoyo_gondolanueva_contorno_019")
+
+[node name="Apoyo020" type="CollisionShape3D" parent="gondolanueva/Contorno"]
+shape = SubResource("apoyo_gondolanueva_contorno_020")
+
+[node name="Apoyo021" type="CollisionShape3D" parent="gondolanueva/Contorno"]
+shape = SubResource("apoyo_gondolanueva_contorno_021")
+
+[node name="Apoyo022" type="CollisionShape3D" parent="gondolanueva/Contorno"]
+shape = SubResource("apoyo_gondolanueva_contorno_022")
+
+[node name="Apoyo023" type="CollisionShape3D" parent="gondolanueva/Contorno"]
+shape = SubResource("apoyo_gondolanueva_contorno_023")
+
+[node name="Apoyo024" type="CollisionShape3D" parent="gondolanueva/Contorno"]
+shape = SubResource("apoyo_gondolanueva_contorno_024")
+
+[node name="Apoyo025" type="CollisionShape3D" parent="gondolanueva/Contorno"]
+shape = SubResource("apoyo_gondolanueva_contorno_025")
+
+[node name="Apoyo026" type="CollisionShape3D" parent="gondolanueva/Contorno"]
+shape = SubResource("apoyo_gondolanueva_contorno_026")
+
+[node name="Apoyo027" type="CollisionShape3D" parent="gondolanueva/Contorno"]
+shape = SubResource("apoyo_gondolanueva_contorno_027")
+
+[node name="Apoyo028" type="CollisionShape3D" parent="gondolanueva/Contorno"]
+shape = SubResource("apoyo_gondolanueva_contorno_028")
+
+[node name="Apoyo029" type="CollisionShape3D" parent="gondolanueva/Contorno"]
+shape = SubResource("apoyo_gondolanueva_contorno_029")
+
+[node name="Apoyo030" type="CollisionShape3D" parent="gondolanueva/Contorno"]
+shape = SubResource("apoyo_gondolanueva_contorno_030")
+
+[node name="Apoyo031" type="CollisionShape3D" parent="gondolanueva/Contorno"]
+shape = SubResource("apoyo_gondolanueva_contorno_031")
+
+[node name="Apoyo032" type="CollisionShape3D" parent="gondolanueva/Contorno"]
+shape = SubResource("apoyo_gondolanueva_contorno_032")
+
+[node name="Apoyo033" type="CollisionShape3D" parent="gondolanueva/Contorno"]
+shape = SubResource("apoyo_gondolanueva_contorno_033")
+
+[node name="Apoyo034" type="CollisionShape3D" parent="gondolanueva/Contorno"]
+shape = SubResource("apoyo_gondolanueva_contorno_034")
+
+[node name="Apoyo035" type="CollisionShape3D" parent="gondolanueva/Contorno"]
+shape = SubResource("apoyo_gondolanueva_contorno_035")
+
+[node name="Apoyo036" type="CollisionShape3D" parent="gondolanueva/Contorno"]
+shape = SubResource("apoyo_gondolanueva_contorno_036")
+
+[node name="Apoyo037" type="CollisionShape3D" parent="gondolanueva/Contorno"]
+shape = SubResource("apoyo_gondolanueva_contorno_037")
+
+[node name="Apoyo038" type="CollisionShape3D" parent="gondolanueva/Contorno"]
+shape = SubResource("apoyo_gondolanueva_contorno_038")
+
+[node name="Apoyo039" type="CollisionShape3D" parent="gondolanueva/Contorno"]
+shape = SubResource("apoyo_gondolanueva_contorno_039")
+
+[node name="Apoyo040" type="CollisionShape3D" parent="gondolanueva/Contorno"]
+shape = SubResource("apoyo_gondolanueva_contorno_040")
+
+[node name="Apoyo041" type="CollisionShape3D" parent="gondolanueva/Contorno"]
+shape = SubResource("apoyo_gondolanueva_contorno_041")
+
+[node name="Apoyo042" type="CollisionShape3D" parent="gondolanueva/Contorno"]
+shape = SubResource("apoyo_gondolanueva_contorno_042")
+
+[node name="Apoyo043" type="CollisionShape3D" parent="gondolanueva/Contorno"]
+shape = SubResource("apoyo_gondolanueva_contorno_043")
+
+[node name="Apoyo044" type="CollisionShape3D" parent="gondolanueva/Contorno"]
+shape = SubResource("apoyo_gondolanueva_contorno_044")
+
+[node name="Apoyo045" type="CollisionShape3D" parent="gondolanueva/Contorno"]
+shape = SubResource("apoyo_gondolanueva_contorno_045")
+
+[node name="Apoyo046" type="CollisionShape3D" parent="gondolanueva/Contorno"]
+shape = SubResource("apoyo_gondolanueva_contorno_046")
+
+[node name="Apoyo047" type="CollisionShape3D" parent="gondolanueva/Contorno"]
+shape = SubResource("apoyo_gondolanueva_contorno_047")
+
+[node name="Apoyo048" type="CollisionShape3D" parent="gondolanueva/Contorno"]
+shape = SubResource("apoyo_gondolanueva_contorno_048")
+
+[node name="Apoyo049" type="CollisionShape3D" parent="gondolanueva/Contorno"]
+shape = SubResource("apoyo_gondolanueva_contorno_049")
+
+[node name="Apoyo050" type="CollisionShape3D" parent="gondolanueva/Contorno"]
+shape = SubResource("apoyo_gondolanueva_contorno_050")
+
+[node name="Apoyo051" type="CollisionShape3D" parent="gondolanueva/Contorno"]
+shape = SubResource("apoyo_gondolanueva_contorno_051")
+
+[node name="Apoyo052" type="CollisionShape3D" parent="gondolanueva/Contorno"]
+shape = SubResource("apoyo_gondolanueva_contorno_052")
+
+[node name="Apoyo053" type="CollisionShape3D" parent="gondolanueva/Contorno"]
+shape = SubResource("apoyo_gondolanueva_contorno_053")
+
+[node name="Apoyo054" type="CollisionShape3D" parent="gondolanueva/Contorno"]
+shape = SubResource("apoyo_gondolanueva_contorno_054")
+
+[node name="Apoyo055" type="CollisionShape3D" parent="gondolanueva/Contorno"]
+shape = SubResource("apoyo_gondolanueva_contorno_055")
+
+[node name="Apoyo056" type="CollisionShape3D" parent="gondolanueva/Contorno"]
+shape = SubResource("apoyo_gondolanueva_contorno_056")
+
+[node name="Apoyo057" type="CollisionShape3D" parent="gondolanueva/Contorno"]
+shape = SubResource("apoyo_gondolanueva_contorno_057")
+
+[node name="Apoyo058" type="CollisionShape3D" parent="gondolanueva/Contorno"]
+shape = SubResource("apoyo_gondolanueva_contorno_058")
+
+[node name="Apoyo059" type="CollisionShape3D" parent="gondolanueva/Contorno"]
+shape = SubResource("apoyo_gondolanueva_contorno_059")
+
+[node name="Apoyo060" type="CollisionShape3D" parent="gondolanueva/Contorno"]
+shape = SubResource("apoyo_gondolanueva_contorno_060")
+
+[node name="Apoyo061" type="CollisionShape3D" parent="gondolanueva/Contorno"]
+shape = SubResource("apoyo_gondolanueva_contorno_061")
+
+[node name="Apoyo062" type="CollisionShape3D" parent="gondolanueva/Contorno"]
+shape = SubResource("apoyo_gondolanueva_contorno_062")
+
+[node name="Apoyo063" type="CollisionShape3D" parent="gondolanueva/Contorno"]
+shape = SubResource("apoyo_gondolanueva_contorno_063")
+
+[node name="Apoyo064" type="CollisionShape3D" parent="gondolanueva/Contorno"]
+shape = SubResource("apoyo_gondolanueva_contorno_064")
+
+[node name="Apoyo065" type="CollisionShape3D" parent="gondolanueva/Contorno"]
+shape = SubResource("apoyo_gondolanueva_contorno_065")
+
+[node name="Apoyo066" type="CollisionShape3D" parent="gondolanueva/Contorno"]
+shape = SubResource("apoyo_gondolanueva_contorno_066")
+
+[node name="Apoyo067" type="CollisionShape3D" parent="gondolanueva/Contorno"]
+shape = SubResource("apoyo_gondolanueva_contorno_067")
+
+[node name="Apoyo068" type="CollisionShape3D" parent="gondolanueva/Contorno"]
+shape = SubResource("apoyo_gondolanueva_contorno_068")
+
+[node name="Apoyo069" type="CollisionShape3D" parent="gondolanueva/Contorno"]
+shape = SubResource("apoyo_gondolanueva_contorno_069")
+
+[node name="Apoyo070" type="CollisionShape3D" parent="gondolanueva/Contorno"]
+shape = SubResource("apoyo_gondolanueva_contorno_070")
+
+[node name="Apoyo071" type="CollisionShape3D" parent="gondolanueva/Contorno"]
+shape = SubResource("apoyo_gondolanueva_contorno_071")
+
+[node name="Apoyo072" type="CollisionShape3D" parent="gondolanueva/Contorno"]
+shape = SubResource("apoyo_gondolanueva_contorno_072")
+
+[node name="Apoyo073" type="CollisionShape3D" parent="gondolanueva/Contorno"]
+shape = SubResource("apoyo_gondolanueva_contorno_073")
+
+[node name="Apoyo074" type="CollisionShape3D" parent="gondolanueva/Contorno"]
+shape = SubResource("apoyo_gondolanueva_contorno_074")
+
+[node name="Apoyo075" type="CollisionShape3D" parent="gondolanueva/Contorno"]
+shape = SubResource("apoyo_gondolanueva_contorno_075")
+
+[node name="Apoyo076" type="CollisionShape3D" parent="gondolanueva/Contorno"]
+shape = SubResource("apoyo_gondolanueva_contorno_076")
+
+[node name="Apoyo077" type="CollisionShape3D" parent="gondolanueva/Contorno"]
+shape = SubResource("apoyo_gondolanueva_contorno_077")
+
+[node name="Apoyo078" type="CollisionShape3D" parent="gondolanueva/Contorno"]
+shape = SubResource("apoyo_gondolanueva_contorno_078")
+
+[node name="Apoyo079" type="CollisionShape3D" parent="gondolanueva/Contorno"]
+shape = SubResource("apoyo_gondolanueva_contorno_079")
+
+[node name="Apoyo080" type="CollisionShape3D" parent="gondolanueva/Contorno"]
+shape = SubResource("apoyo_gondolanueva_contorno_080")
+
+[node name="Apoyo081" type="CollisionShape3D" parent="gondolanueva/Contorno"]
+shape = SubResource("apoyo_gondolanueva_contorno_081")
+
+[node name="Apoyo082" type="CollisionShape3D" parent="gondolanueva/Contorno"]
+shape = SubResource("apoyo_gondolanueva_contorno_082")
+
+[node name="Apoyo083" type="CollisionShape3D" parent="gondolanueva/Contorno"]
+shape = SubResource("apoyo_gondolanueva_contorno_083")
+
+[node name="Apoyo084" type="CollisionShape3D" parent="gondolanueva/Contorno"]
+shape = SubResource("apoyo_gondolanueva_contorno_084")
+
+[node name="Apoyo085" type="CollisionShape3D" parent="gondolanueva/Contorno"]
+shape = SubResource("apoyo_gondolanueva_contorno_085")
+
+[node name="Apoyo086" type="CollisionShape3D" parent="gondolanueva/Contorno"]
+shape = SubResource("apoyo_gondolanueva_contorno_086")
+
+[node name="Apoyo087" type="CollisionShape3D" parent="gondolanueva/Contorno"]
+shape = SubResource("apoyo_gondolanueva_contorno_087")
+
+[node name="Apoyo088" type="CollisionShape3D" parent="gondolanueva/Contorno"]
+shape = SubResource("apoyo_gondolanueva_contorno_088")
+
+[node name="Apoyo089" type="CollisionShape3D" parent="gondolanueva/Contorno"]
+shape = SubResource("apoyo_gondolanueva_contorno_089")
+
+[node name="Apoyo090" type="CollisionShape3D" parent="gondolanueva/Contorno"]
+shape = SubResource("apoyo_gondolanueva_contorno_090")
+
+[node name="Apoyo091" type="CollisionShape3D" parent="gondolanueva/Contorno"]
+shape = SubResource("apoyo_gondolanueva_contorno_091")
+
+[node name="Apoyo092" type="CollisionShape3D" parent="gondolanueva/Contorno"]
+shape = SubResource("apoyo_gondolanueva_contorno_092")
+
+[node name="Apoyo093" type="CollisionShape3D" parent="gondolanueva/Contorno"]
+shape = SubResource("apoyo_gondolanueva_contorno_093")
+
+[node name="Apoyo094" type="CollisionShape3D" parent="gondolanueva/Contorno"]
+shape = SubResource("apoyo_gondolanueva_contorno_094")
+
+[node name="Apoyo095" type="CollisionShape3D" parent="gondolanueva/Contorno"]
+shape = SubResource("apoyo_gondolanueva_contorno_095")
+
+[node name="Apoyo096" type="CollisionShape3D" parent="gondolanueva/Contorno"]
+shape = SubResource("apoyo_gondolanueva_contorno_096")
+
+[node name="Apoyo097" type="CollisionShape3D" parent="gondolanueva/Contorno"]
+shape = SubResource("apoyo_gondolanueva_contorno_097")
+
+[node name="Apoyo098" type="CollisionShape3D" parent="gondolanueva/Contorno"]
+shape = SubResource("apoyo_gondolanueva_contorno_098")
+
+[node name="Apoyo099" type="CollisionShape3D" parent="gondolanueva/Contorno"]
+shape = SubResource("apoyo_gondolanueva_contorno_099")
+
+[node name="Apoyo100" type="CollisionShape3D" parent="gondolanueva/Contorno"]
+shape = SubResource("apoyo_gondolanueva_contorno_100")
+
+[node name="Apoyo101" type="CollisionShape3D" parent="gondolanueva/Contorno"]
+shape = SubResource("apoyo_gondolanueva_contorno_101")
+
+[node name="Apoyo102" type="CollisionShape3D" parent="gondolanueva/Contorno"]
+shape = SubResource("apoyo_gondolanueva_contorno_102")
+
+[node name="Apoyo103" type="CollisionShape3D" parent="gondolanueva/Contorno"]
+shape = SubResource("apoyo_gondolanueva_contorno_103")
+
+[node name="Apoyo104" type="CollisionShape3D" parent="gondolanueva/Contorno"]
+shape = SubResource("apoyo_gondolanueva_contorno_104")
+
+[node name="Apoyo105" type="CollisionShape3D" parent="gondolanueva/Contorno"]
+shape = SubResource("apoyo_gondolanueva_contorno_105")
+
+[node name="Apoyo106" type="CollisionShape3D" parent="gondolanueva/Contorno"]
+shape = SubResource("apoyo_gondolanueva_contorno_106")
+
+[node name="Apoyo107" type="CollisionShape3D" parent="gondolanueva/Contorno"]
+shape = SubResource("apoyo_gondolanueva_contorno_107")
+
+[node name="Apoyo108" type="CollisionShape3D" parent="gondolanueva/Contorno"]
+shape = SubResource("apoyo_gondolanueva_contorno_108")
+
+[node name="Apoyo109" type="CollisionShape3D" parent="gondolanueva/Contorno"]
+shape = SubResource("apoyo_gondolanueva_contorno_109")
+
+[node name="Apoyo110" type="CollisionShape3D" parent="gondolanueva/Contorno"]
+shape = SubResource("apoyo_gondolanueva_contorno_110")
+
+[node name="Apoyo111" type="CollisionShape3D" parent="gondolanueva/Contorno"]
+shape = SubResource("apoyo_gondolanueva_contorno_111")
+
+[node name="Apoyo112" type="CollisionShape3D" parent="gondolanueva/Contorno"]
+shape = SubResource("apoyo_gondolanueva_contorno_112")
+
+[node name="Apoyo113" type="CollisionShape3D" parent="gondolanueva/Contorno"]
+shape = SubResource("apoyo_gondolanueva_contorno_113")
+
+[node name="Apoyo114" type="CollisionShape3D" parent="gondolanueva/Contorno"]
+shape = SubResource("apoyo_gondolanueva_contorno_114")
+
+[node name="Apoyo115" type="CollisionShape3D" parent="gondolanueva/Contorno"]
+shape = SubResource("apoyo_gondolanueva_contorno_115")
+
+[node name="Apoyo116" type="CollisionShape3D" parent="gondolanueva/Contorno"]
+shape = SubResource("apoyo_gondolanueva_contorno_116")
+
+[node name="Apoyo117" type="CollisionShape3D" parent="gondolanueva/Contorno"]
+shape = SubResource("apoyo_gondolanueva_contorno_117")
+
+[node name="Apoyo118" type="CollisionShape3D" parent="gondolanueva/Contorno"]
+shape = SubResource("apoyo_gondolanueva_contorno_118")
+
+[node name="Apoyo119" type="CollisionShape3D" parent="gondolanueva/Contorno"]
+shape = SubResource("apoyo_gondolanueva_contorno_119")
+
+[node name="Apoyo120" type="CollisionShape3D" parent="gondolanueva/Contorno"]
+shape = SubResource("apoyo_gondolanueva_contorno_120")
+
+[node name="Apoyo121" type="CollisionShape3D" parent="gondolanueva/Contorno"]
+shape = SubResource("apoyo_gondolanueva_contorno_121")
+
+[node name="Apoyo122" type="CollisionShape3D" parent="gondolanueva/Contorno"]
+shape = SubResource("apoyo_gondolanueva_contorno_122")
+
+[node name="Apoyo123" type="CollisionShape3D" parent="gondolanueva/Contorno"]
+shape = SubResource("apoyo_gondolanueva_contorno_123")
+
+[node name="Apoyo124" type="CollisionShape3D" parent="gondolanueva/Contorno"]
+shape = SubResource("apoyo_gondolanueva_contorno_124")
+
+[node name="Apoyo125" type="CollisionShape3D" parent="gondolanueva/Contorno"]
+shape = SubResource("apoyo_gondolanueva_contorno_125")
+
+[node name="Apoyo126" type="CollisionShape3D" parent="gondolanueva/Contorno"]
+shape = SubResource("apoyo_gondolanueva_contorno_126")
+
+[node name="Apoyo127" type="CollisionShape3D" parent="gondolanueva/Contorno"]
+shape = SubResource("apoyo_gondolanueva_contorno_127")
+
+[node name="Apoyo128" type="CollisionShape3D" parent="gondolanueva/Contorno"]
+shape = SubResource("apoyo_gondolanueva_contorno_128")
+
+[node name="Apoyo129" type="CollisionShape3D" parent="gondolanueva/Contorno"]
+shape = SubResource("apoyo_gondolanueva_contorno_129")
+
+[node name="Apoyo130" type="CollisionShape3D" parent="gondolanueva/Contorno"]
+shape = SubResource("apoyo_gondolanueva_contorno_130")
+
+[node name="Apoyo131" type="CollisionShape3D" parent="gondolanueva/Contorno"]
+shape = SubResource("apoyo_gondolanueva_contorno_131")
+
+[node name="Apoyo132" type="CollisionShape3D" parent="gondolanueva/Contorno"]
+shape = SubResource("apoyo_gondolanueva_contorno_132")
+
+[node name="Apoyo133" type="CollisionShape3D" parent="gondolanueva/Contorno"]
+shape = SubResource("apoyo_gondolanueva_contorno_133")
+
+[node name="Apoyo134" type="CollisionShape3D" parent="gondolanueva/Contorno"]
+shape = SubResource("apoyo_gondolanueva_contorno_134")
+
+[node name="Apoyo135" type="CollisionShape3D" parent="gondolanueva/Contorno"]
+shape = SubResource("apoyo_gondolanueva_contorno_135")
+
+[node name="Apoyo136" type="CollisionShape3D" parent="gondolanueva/Contorno"]
+shape = SubResource("apoyo_gondolanueva_contorno_136")
+
+[node name="Apoyo137" type="CollisionShape3D" parent="gondolanueva/Contorno"]
+shape = SubResource("apoyo_gondolanueva_contorno_137")
+
+[node name="Apoyo138" type="CollisionShape3D" parent="gondolanueva/Contorno"]
+shape = SubResource("apoyo_gondolanueva_contorno_138")
+
+[node name="Apoyo139" type="CollisionShape3D" parent="gondolanueva/Contorno"]
+shape = SubResource("apoyo_gondolanueva_contorno_139")
+
+[node name="Apoyo140" type="CollisionShape3D" parent="gondolanueva/Contorno"]
+shape = SubResource("apoyo_gondolanueva_contorno_140")
+
+[node name="Apoyo141" type="CollisionShape3D" parent="gondolanueva/Contorno"]
+shape = SubResource("apoyo_gondolanueva_contorno_141")
+
+[node name="Apoyo142" type="CollisionShape3D" parent="gondolanueva/Contorno"]
+shape = SubResource("apoyo_gondolanueva_contorno_142")
+
+[node name="Apoyo143" type="CollisionShape3D" parent="gondolanueva/Contorno"]
+shape = SubResource("apoyo_gondolanueva_contorno_143")
+
+[node name="Apoyo144" type="CollisionShape3D" parent="gondolanueva/Contorno"]
+shape = SubResource("apoyo_gondolanueva_contorno_144")
+
+[node name="Apoyo145" type="CollisionShape3D" parent="gondolanueva/Contorno"]
+shape = SubResource("apoyo_gondolanueva_contorno_145")
+
+[node name="Apoyo146" type="CollisionShape3D" parent="gondolanueva/Contorno"]
+shape = SubResource("apoyo_gondolanueva_contorno_146")
+
+[node name="Apoyo147" type="CollisionShape3D" parent="gondolanueva/Contorno"]
+shape = SubResource("apoyo_gondolanueva_contorno_147")
+
+[node name="Apoyo148" type="CollisionShape3D" parent="gondolanueva/Contorno"]
+shape = SubResource("apoyo_gondolanueva_contorno_148")
+
+[node name="Apoyo149" type="CollisionShape3D" parent="gondolanueva/Contorno"]
+shape = SubResource("apoyo_gondolanueva_contorno_149")
+
+[node name="Apoyo150" type="CollisionShape3D" parent="gondolanueva/Contorno"]
+shape = SubResource("apoyo_gondolanueva_contorno_150")
+
+[node name="Apoyo151" type="CollisionShape3D" parent="gondolanueva/Contorno"]
+shape = SubResource("apoyo_gondolanueva_contorno_151")
+
+[node name="Apoyo152" type="CollisionShape3D" parent="gondolanueva/Contorno"]
+shape = SubResource("apoyo_gondolanueva_contorno_152")
+
+[node name="Apoyo153" type="CollisionShape3D" parent="gondolanueva/Contorno"]
+shape = SubResource("apoyo_gondolanueva_contorno_153")
+
+[node name="Apoyo154" type="CollisionShape3D" parent="gondolanueva/Contorno"]
+shape = SubResource("apoyo_gondolanueva_contorno_154")
+
+[node name="Apoyo155" type="CollisionShape3D" parent="gondolanueva/Contorno"]
+shape = SubResource("apoyo_gondolanueva_contorno_155")
+
+[node name="Apoyo156" type="CollisionShape3D" parent="gondolanueva/Contorno"]
+shape = SubResource("apoyo_gondolanueva_contorno_156")
+
+[node name="Apoyo157" type="CollisionShape3D" parent="gondolanueva/Contorno"]
+shape = SubResource("apoyo_gondolanueva_contorno_157")
+
+[node name="Apoyo158" type="CollisionShape3D" parent="gondolanueva/Contorno"]
+shape = SubResource("apoyo_gondolanueva_contorno_158")
+
+[node name="Apoyo000" type="CollisionShape3D" parent="gondolanueva2/Contorno"]
+shape = SubResource("apoyo_gondolanueva2_contorno_000")
+
+[node name="Apoyo001" type="CollisionShape3D" parent="gondolanueva2/Contorno"]
+shape = SubResource("apoyo_gondolanueva2_contorno_001")
+
+[node name="Apoyo002" type="CollisionShape3D" parent="gondolanueva2/Contorno"]
+shape = SubResource("apoyo_gondolanueva2_contorno_002")
+
+[node name="Apoyo003" type="CollisionShape3D" parent="gondolanueva2/Contorno"]
+shape = SubResource("apoyo_gondolanueva2_contorno_003")
+
+[node name="Apoyo004" type="CollisionShape3D" parent="gondolanueva2/Contorno"]
+shape = SubResource("apoyo_gondolanueva2_contorno_004")
+
+[node name="Apoyo005" type="CollisionShape3D" parent="gondolanueva2/Contorno"]
+shape = SubResource("apoyo_gondolanueva2_contorno_005")
+
+[node name="Apoyo006" type="CollisionShape3D" parent="gondolanueva2/Contorno"]
+shape = SubResource("apoyo_gondolanueva2_contorno_006")
+
+[node name="Apoyo007" type="CollisionShape3D" parent="gondolanueva2/Contorno"]
+shape = SubResource("apoyo_gondolanueva2_contorno_007")
+
+[node name="Apoyo008" type="CollisionShape3D" parent="gondolanueva2/Contorno"]
+shape = SubResource("apoyo_gondolanueva2_contorno_008")
+
+[node name="Apoyo009" type="CollisionShape3D" parent="gondolanueva2/Contorno"]
+shape = SubResource("apoyo_gondolanueva2_contorno_009")
+
+[node name="Apoyo010" type="CollisionShape3D" parent="gondolanueva2/Contorno"]
+shape = SubResource("apoyo_gondolanueva2_contorno_010")
+
+[node name="Apoyo011" type="CollisionShape3D" parent="gondolanueva2/Contorno"]
+shape = SubResource("apoyo_gondolanueva2_contorno_011")
+
+[node name="Apoyo012" type="CollisionShape3D" parent="gondolanueva2/Contorno"]
+shape = SubResource("apoyo_gondolanueva2_contorno_012")
+
+[node name="Apoyo013" type="CollisionShape3D" parent="gondolanueva2/Contorno"]
+shape = SubResource("apoyo_gondolanueva2_contorno_013")
+
+[node name="Apoyo014" type="CollisionShape3D" parent="gondolanueva2/Contorno"]
+shape = SubResource("apoyo_gondolanueva2_contorno_014")
+
+[node name="Apoyo015" type="CollisionShape3D" parent="gondolanueva2/Contorno"]
+shape = SubResource("apoyo_gondolanueva2_contorno_015")
+
+[node name="Apoyo016" type="CollisionShape3D" parent="gondolanueva2/Contorno"]
+shape = SubResource("apoyo_gondolanueva2_contorno_016")
+
+[node name="Apoyo017" type="CollisionShape3D" parent="gondolanueva2/Contorno"]
+shape = SubResource("apoyo_gondolanueva2_contorno_017")
+
+[node name="Apoyo018" type="CollisionShape3D" parent="gondolanueva2/Contorno"]
+shape = SubResource("apoyo_gondolanueva2_contorno_018")
+
+[node name="Apoyo019" type="CollisionShape3D" parent="gondolanueva2/Contorno"]
+shape = SubResource("apoyo_gondolanueva2_contorno_019")
+
+[node name="Apoyo020" type="CollisionShape3D" parent="gondolanueva2/Contorno"]
+shape = SubResource("apoyo_gondolanueva2_contorno_020")
+
+[node name="Apoyo021" type="CollisionShape3D" parent="gondolanueva2/Contorno"]
+shape = SubResource("apoyo_gondolanueva2_contorno_021")
+
+[node name="Apoyo022" type="CollisionShape3D" parent="gondolanueva2/Contorno"]
+shape = SubResource("apoyo_gondolanueva2_contorno_022")
+
+[node name="Apoyo023" type="CollisionShape3D" parent="gondolanueva2/Contorno"]
+shape = SubResource("apoyo_gondolanueva2_contorno_023")
+
+[node name="Apoyo024" type="CollisionShape3D" parent="gondolanueva2/Contorno"]
+shape = SubResource("apoyo_gondolanueva2_contorno_024")
+
+[node name="Apoyo025" type="CollisionShape3D" parent="gondolanueva2/Contorno"]
+shape = SubResource("apoyo_gondolanueva2_contorno_025")
+
+[node name="Apoyo026" type="CollisionShape3D" parent="gondolanueva2/Contorno"]
+shape = SubResource("apoyo_gondolanueva2_contorno_026")
+
+[node name="Apoyo027" type="CollisionShape3D" parent="gondolanueva2/Contorno"]
+shape = SubResource("apoyo_gondolanueva2_contorno_027")
+
+[node name="Apoyo028" type="CollisionShape3D" parent="gondolanueva2/Contorno"]
+shape = SubResource("apoyo_gondolanueva2_contorno_028")
+
+[node name="Apoyo029" type="CollisionShape3D" parent="gondolanueva2/Contorno"]
+shape = SubResource("apoyo_gondolanueva2_contorno_029")
+
+[node name="Apoyo030" type="CollisionShape3D" parent="gondolanueva2/Contorno"]
+shape = SubResource("apoyo_gondolanueva2_contorno_030")
+
+[node name="Apoyo031" type="CollisionShape3D" parent="gondolanueva2/Contorno"]
+shape = SubResource("apoyo_gondolanueva2_contorno_031")
+
+[node name="Apoyo032" type="CollisionShape3D" parent="gondolanueva2/Contorno"]
+shape = SubResource("apoyo_gondolanueva2_contorno_032")
+
+[node name="Apoyo033" type="CollisionShape3D" parent="gondolanueva2/Contorno"]
+shape = SubResource("apoyo_gondolanueva2_contorno_033")
+
+[node name="Apoyo034" type="CollisionShape3D" parent="gondolanueva2/Contorno"]
+shape = SubResource("apoyo_gondolanueva2_contorno_034")
+
+[node name="Apoyo035" type="CollisionShape3D" parent="gondolanueva2/Contorno"]
+shape = SubResource("apoyo_gondolanueva2_contorno_035")
+
+[node name="Apoyo036" type="CollisionShape3D" parent="gondolanueva2/Contorno"]
+shape = SubResource("apoyo_gondolanueva2_contorno_036")
+
+[node name="Apoyo037" type="CollisionShape3D" parent="gondolanueva2/Contorno"]
+shape = SubResource("apoyo_gondolanueva2_contorno_037")
+
+[node name="Apoyo038" type="CollisionShape3D" parent="gondolanueva2/Contorno"]
+shape = SubResource("apoyo_gondolanueva2_contorno_038")
+
+[node name="Apoyo039" type="CollisionShape3D" parent="gondolanueva2/Contorno"]
+shape = SubResource("apoyo_gondolanueva2_contorno_039")
+
+[node name="Apoyo040" type="CollisionShape3D" parent="gondolanueva2/Contorno"]
+shape = SubResource("apoyo_gondolanueva2_contorno_040")
+
+[node name="Apoyo041" type="CollisionShape3D" parent="gondolanueva2/Contorno"]
+shape = SubResource("apoyo_gondolanueva2_contorno_041")
+
+[node name="Apoyo042" type="CollisionShape3D" parent="gondolanueva2/Contorno"]
+shape = SubResource("apoyo_gondolanueva2_contorno_042")
+
+[node name="Apoyo043" type="CollisionShape3D" parent="gondolanueva2/Contorno"]
+shape = SubResource("apoyo_gondolanueva2_contorno_043")
+
+[node name="Apoyo044" type="CollisionShape3D" parent="gondolanueva2/Contorno"]
+shape = SubResource("apoyo_gondolanueva2_contorno_044")
+
+[node name="Apoyo045" type="CollisionShape3D" parent="gondolanueva2/Contorno"]
+shape = SubResource("apoyo_gondolanueva2_contorno_045")
+
+[node name="Apoyo046" type="CollisionShape3D" parent="gondolanueva2/Contorno"]
+shape = SubResource("apoyo_gondolanueva2_contorno_046")
+
+[node name="Apoyo047" type="CollisionShape3D" parent="gondolanueva2/Contorno"]
+shape = SubResource("apoyo_gondolanueva2_contorno_047")
+
+[node name="Apoyo048" type="CollisionShape3D" parent="gondolanueva2/Contorno"]
+shape = SubResource("apoyo_gondolanueva2_contorno_048")
+
+[node name="Apoyo049" type="CollisionShape3D" parent="gondolanueva2/Contorno"]
+shape = SubResource("apoyo_gondolanueva2_contorno_049")
+
+[node name="Apoyo050" type="CollisionShape3D" parent="gondolanueva2/Contorno"]
+shape = SubResource("apoyo_gondolanueva2_contorno_050")
+
+[node name="Apoyo051" type="CollisionShape3D" parent="gondolanueva2/Contorno"]
+shape = SubResource("apoyo_gondolanueva2_contorno_051")
+
+[node name="Apoyo052" type="CollisionShape3D" parent="gondolanueva2/Contorno"]
+shape = SubResource("apoyo_gondolanueva2_contorno_052")
+
+[node name="Apoyo053" type="CollisionShape3D" parent="gondolanueva2/Contorno"]
+shape = SubResource("apoyo_gondolanueva2_contorno_053")
+
+[node name="Apoyo054" type="CollisionShape3D" parent="gondolanueva2/Contorno"]
+shape = SubResource("apoyo_gondolanueva2_contorno_054")
+
+[node name="Apoyo055" type="CollisionShape3D" parent="gondolanueva2/Contorno"]
+shape = SubResource("apoyo_gondolanueva2_contorno_055")
+
+[node name="Apoyo056" type="CollisionShape3D" parent="gondolanueva2/Contorno"]
+shape = SubResource("apoyo_gondolanueva2_contorno_056")
+
+[node name="Apoyo057" type="CollisionShape3D" parent="gondolanueva2/Contorno"]
+shape = SubResource("apoyo_gondolanueva2_contorno_057")
+
+[node name="Apoyo058" type="CollisionShape3D" parent="gondolanueva2/Contorno"]
+shape = SubResource("apoyo_gondolanueva2_contorno_058")
+
+[node name="Apoyo059" type="CollisionShape3D" parent="gondolanueva2/Contorno"]
+shape = SubResource("apoyo_gondolanueva2_contorno_059")
+
+[node name="Apoyo060" type="CollisionShape3D" parent="gondolanueva2/Contorno"]
+shape = SubResource("apoyo_gondolanueva2_contorno_060")
+
+[node name="Apoyo061" type="CollisionShape3D" parent="gondolanueva2/Contorno"]
+shape = SubResource("apoyo_gondolanueva2_contorno_061")
+
+[node name="Apoyo062" type="CollisionShape3D" parent="gondolanueva2/Contorno"]
+shape = SubResource("apoyo_gondolanueva2_contorno_062")
+
+[node name="Apoyo063" type="CollisionShape3D" parent="gondolanueva2/Contorno"]
+shape = SubResource("apoyo_gondolanueva2_contorno_063")
+
+[node name="Apoyo064" type="CollisionShape3D" parent="gondolanueva2/Contorno"]
+shape = SubResource("apoyo_gondolanueva2_contorno_064")
+
+[node name="Apoyo065" type="CollisionShape3D" parent="gondolanueva2/Contorno"]
+shape = SubResource("apoyo_gondolanueva2_contorno_065")
+
+[node name="Apoyo066" type="CollisionShape3D" parent="gondolanueva2/Contorno"]
+shape = SubResource("apoyo_gondolanueva2_contorno_066")
+
+[node name="Apoyo067" type="CollisionShape3D" parent="gondolanueva2/Contorno"]
+shape = SubResource("apoyo_gondolanueva2_contorno_067")
+
+[node name="Apoyo068" type="CollisionShape3D" parent="gondolanueva2/Contorno"]
+shape = SubResource("apoyo_gondolanueva2_contorno_068")
+
+[node name="Apoyo069" type="CollisionShape3D" parent="gondolanueva2/Contorno"]
+shape = SubResource("apoyo_gondolanueva2_contorno_069")
+
+[node name="Apoyo070" type="CollisionShape3D" parent="gondolanueva2/Contorno"]
+shape = SubResource("apoyo_gondolanueva2_contorno_070")
+
+[node name="Apoyo071" type="CollisionShape3D" parent="gondolanueva2/Contorno"]
+shape = SubResource("apoyo_gondolanueva2_contorno_071")
+
+[node name="Apoyo072" type="CollisionShape3D" parent="gondolanueva2/Contorno"]
+shape = SubResource("apoyo_gondolanueva2_contorno_072")
+
+[node name="Apoyo073" type="CollisionShape3D" parent="gondolanueva2/Contorno"]
+shape = SubResource("apoyo_gondolanueva2_contorno_073")
+
+[node name="Apoyo074" type="CollisionShape3D" parent="gondolanueva2/Contorno"]
+shape = SubResource("apoyo_gondolanueva2_contorno_074")
+
+[node name="Apoyo075" type="CollisionShape3D" parent="gondolanueva2/Contorno"]
+shape = SubResource("apoyo_gondolanueva2_contorno_075")
+
+[node name="Apoyo076" type="CollisionShape3D" parent="gondolanueva2/Contorno"]
+shape = SubResource("apoyo_gondolanueva2_contorno_076")
+
+[node name="Apoyo077" type="CollisionShape3D" parent="gondolanueva2/Contorno"]
+shape = SubResource("apoyo_gondolanueva2_contorno_077")
+
+[node name="Apoyo078" type="CollisionShape3D" parent="gondolanueva2/Contorno"]
+shape = SubResource("apoyo_gondolanueva2_contorno_078")
+
+[node name="Apoyo079" type="CollisionShape3D" parent="gondolanueva2/Contorno"]
+shape = SubResource("apoyo_gondolanueva2_contorno_079")
+
+[node name="Apoyo080" type="CollisionShape3D" parent="gondolanueva2/Contorno"]
+shape = SubResource("apoyo_gondolanueva2_contorno_080")
+
+[node name="Apoyo081" type="CollisionShape3D" parent="gondolanueva2/Contorno"]
+shape = SubResource("apoyo_gondolanueva2_contorno_081")
+
+[node name="Apoyo082" type="CollisionShape3D" parent="gondolanueva2/Contorno"]
+shape = SubResource("apoyo_gondolanueva2_contorno_082")
+
+[node name="Apoyo083" type="CollisionShape3D" parent="gondolanueva2/Contorno"]
+shape = SubResource("apoyo_gondolanueva2_contorno_083")
+
+[node name="Apoyo084" type="CollisionShape3D" parent="gondolanueva2/Contorno"]
+shape = SubResource("apoyo_gondolanueva2_contorno_084")
+
+[node name="Apoyo085" type="CollisionShape3D" parent="gondolanueva2/Contorno"]
+shape = SubResource("apoyo_gondolanueva2_contorno_085")
+
+[node name="Apoyo086" type="CollisionShape3D" parent="gondolanueva2/Contorno"]
+shape = SubResource("apoyo_gondolanueva2_contorno_086")
+
+[node name="Apoyo087" type="CollisionShape3D" parent="gondolanueva2/Contorno"]
+shape = SubResource("apoyo_gondolanueva2_contorno_087")
+
+[node name="Apoyo088" type="CollisionShape3D" parent="gondolanueva2/Contorno"]
+shape = SubResource("apoyo_gondolanueva2_contorno_088")
+
+[node name="Apoyo089" type="CollisionShape3D" parent="gondolanueva2/Contorno"]
+shape = SubResource("apoyo_gondolanueva2_contorno_089")
+
+[node name="Apoyo090" type="CollisionShape3D" parent="gondolanueva2/Contorno"]
+shape = SubResource("apoyo_gondolanueva2_contorno_090")
+
+[node name="Apoyo091" type="CollisionShape3D" parent="gondolanueva2/Contorno"]
+shape = SubResource("apoyo_gondolanueva2_contorno_091")
+
+[node name="Apoyo092" type="CollisionShape3D" parent="gondolanueva2/Contorno"]
+shape = SubResource("apoyo_gondolanueva2_contorno_092")
+
+[node name="Apoyo093" type="CollisionShape3D" parent="gondolanueva2/Contorno"]
+shape = SubResource("apoyo_gondolanueva2_contorno_093")
+
+[node name="Apoyo094" type="CollisionShape3D" parent="gondolanueva2/Contorno"]
+shape = SubResource("apoyo_gondolanueva2_contorno_094")
+
+[node name="Apoyo095" type="CollisionShape3D" parent="gondolanueva2/Contorno"]
+shape = SubResource("apoyo_gondolanueva2_contorno_095")
+
+[node name="Apoyo096" type="CollisionShape3D" parent="gondolanueva2/Contorno"]
+shape = SubResource("apoyo_gondolanueva2_contorno_096")
+
+[node name="Apoyo097" type="CollisionShape3D" parent="gondolanueva2/Contorno"]
+shape = SubResource("apoyo_gondolanueva2_contorno_097")
+
+[node name="Apoyo098" type="CollisionShape3D" parent="gondolanueva2/Contorno"]
+shape = SubResource("apoyo_gondolanueva2_contorno_098")
+
+[node name="Apoyo099" type="CollisionShape3D" parent="gondolanueva2/Contorno"]
+shape = SubResource("apoyo_gondolanueva2_contorno_099")
+
+[node name="Apoyo100" type="CollisionShape3D" parent="gondolanueva2/Contorno"]
+shape = SubResource("apoyo_gondolanueva2_contorno_100")
+
+[node name="Apoyo101" type="CollisionShape3D" parent="gondolanueva2/Contorno"]
+shape = SubResource("apoyo_gondolanueva2_contorno_101")
+
+[node name="Apoyo102" type="CollisionShape3D" parent="gondolanueva2/Contorno"]
+shape = SubResource("apoyo_gondolanueva2_contorno_102")
+
+[node name="Apoyo103" type="CollisionShape3D" parent="gondolanueva2/Contorno"]
+shape = SubResource("apoyo_gondolanueva2_contorno_103")
+
+[node name="Apoyo104" type="CollisionShape3D" parent="gondolanueva2/Contorno"]
+shape = SubResource("apoyo_gondolanueva2_contorno_104")
+
+[node name="Apoyo105" type="CollisionShape3D" parent="gondolanueva2/Contorno"]
+shape = SubResource("apoyo_gondolanueva2_contorno_105")
+
+[node name="Apoyo106" type="CollisionShape3D" parent="gondolanueva2/Contorno"]
+shape = SubResource("apoyo_gondolanueva2_contorno_106")
+
+[node name="Apoyo107" type="CollisionShape3D" parent="gondolanueva2/Contorno"]
+shape = SubResource("apoyo_gondolanueva2_contorno_107")
+
+[node name="Apoyo108" type="CollisionShape3D" parent="gondolanueva2/Contorno"]
+shape = SubResource("apoyo_gondolanueva2_contorno_108")
+
