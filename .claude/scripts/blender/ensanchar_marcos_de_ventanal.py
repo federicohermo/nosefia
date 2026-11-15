@@ -68,6 +68,8 @@ from mathutils.bvhtree import BVHTree  # type: ignore[import-not-found]
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import metal_con_detalle  # noqa: E402
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+from lib.consola import configurar  # noqa: E402
 
 RAIZ = Path(__file__).resolve().parents[3]
 REPORTE = RAIZ / "reports/ensanchar-marcos-de-ventanal.blend"
@@ -404,6 +406,7 @@ def _uv() -> str:
 
 
 def main() -> None:
+    configurar()
     marcos = [(bpy.data.objects[m.objeto], m) for m in MARCOS]
     estados = {m.objeto: _estado(o, m) for o, m in marcos}
     assert len(set(estados.values())) == 1, f"un marco ya está y el otro no: {estados}"
