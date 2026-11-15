@@ -3,6 +3,11 @@ extends GdUnitTestSuite
 const ALMACEN := "res://src/escenas/almacen.tscn"
 const Caja := preload("res://src/escenas/objetos/caja_de_productos.gd")
 const Zona := preload("res://src/escenas/puestos/zona_de_reposicion.gd")
+## Dos tandas a menos de esto en altura están en el mismo estante.
+const MISMO_ESTANTE := 0.05
+## Lo más que se corre una principal a lo largo de su estante al repartirse de punta a punta.
+const MISMO_TRAMO := 0.4
+const TOLERANCIA_DEL_FRENTE := Vector3.ONE * 0.002
 
 
 func _abrir(jornada: int) -> Node3D:
@@ -166,17 +171,25 @@ func test_un_frontal_repetido_central_se_agarra_y_repone() -> void:  # AC-STK-09
 	var local := _abrir(1)
 	var puesto: Node3D = local.get("_reposicion_manual")
 	var repositor: Repositor = local.get("_repositor")
-	var producto := Catalogo.de(Producto.Id.ARVECOR)
+	var producto := Catalogo.de(Producto.Id.PROGRES)
 	var zonas: Array = puesto.get("_casilleros")[producto.id]
-	var niveles: Dictionary[float, int] = {}
+	var disposicion: DisposicionDeLaGondola = puesto.get("disposicion")
+	var principal := _centro(disposicion.principales[producto.id])
+	# Un frontal repetido: el casillero más lejos en altura del estante de la principal.
+	var indice := -1
+	var lejos := MISMO_ESTANTE
 	for zona: Node3D in zonas:
-		niveles[snappedf(zona.global_position.y, 0.01)] = zona.casillero
-	assert_int(niveles.size()).is_equal(4)
-	if niveles.size() != 4:
+		var distancia := absf(zona.global_position.y - principal.y)
+		if distancia > lejos:
+			lejos = distancia
+			indice = zona.casillero
+	(
+		assert_int(indice)
+		. override_failure_message("Progres no tiene un frontal repetido")
+		. is_not_equal(-1)
+	)
+	if indice == -1:
 		return
-	var alturas := niveles.keys()
-	alturas.sort()
-	var indice: int = niveles[alturas[2]]
 	var antes := repositor.estante().unidades_en_gondola(producto)
 	assert_bool(repositor.estante().completada()).is_true()
 	await _usar_con_mira(local, zonas[indice])
@@ -186,6 +199,49 @@ func test_un_frontal_repetido_central_se_agarra_y_repone() -> void:  # AC-STK-09
 	await _usar_con_mira(local, zonas[indice])
 	assert_int(repositor.estante().unidades_en_gondola(producto)).is_equal(antes)
 	assert_bool(repositor.estante().completada()).is_true()
+
+
+func _centro(bloque: PackedFloat32Array) -> Vector3:
+	var suma := Vector3.ZERO
+	for indice in DisposicionDeLaGondola.copias(bloque):
+		suma += DisposicionDeLaGondola.copia(bloque, indice).origin
+	return suma / DisposicionDeLaGondola.copias(bloque)
+
+
+func test_cada_producto_de_prueba_conserva_el_estante_del_reparto_completo() -> void:  # AC-STK-096
+	var prueba: DisposicionDeLaGondola = _abrir(1).get("_reposicion_manual").get("disposicion")
+	var completa: DisposicionDeLaGondola = (
+		_abrir(ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA)
+		. get("_reposicion_manual")
+		. get("disposicion")
+	)
+	assert_object(prueba).is_not_same(completa)
+	for producto in Catalogo.de_la_jornada(1):
+		var id := producto.id
+		var aqui := _centro(prueba.principales[id])
+		var alla := _centro(completa.principales[id])
+		(
+			assert_float(aqui.y)
+			. override_failure_message("%s cambia de estante entre etapas" % producto.nombre)
+			. is_equal_approx(alla.y, MISMO_ESTANTE)
+		)
+		(
+			assert_float(Vector2(aqui.x - alla.x, aqui.z - alla.z).length())
+			. override_failure_message("%s cambia de lugar entre etapas" % producto.nombre)
+			. is_less(MISMO_TRAMO)
+		)
+		(
+			assert_vector(
+				DisposicionDeLaGondola.frente(prueba.principales[id], prueba.filas_de_adelante[id])
+			)
+			. override_failure_message("%s cambia de cara entre etapas" % producto.nombre)
+			. is_equal_approx(
+				DisposicionDeLaGondola.frente(
+					completa.principales[id], completa.filas_de_adelante[id]
+				),
+				TOLERANCIA_DEL_FRENTE
+			)
+		)
 
 
 func _usar_con_mira(local: Node3D, zona: Node3D) -> void:
