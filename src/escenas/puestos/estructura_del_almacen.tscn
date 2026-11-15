@@ -122,25 +122,25 @@ size = Vector3(2.174, 0.209805, 0.944824)
 size = Vector3(2.174, 2.281, 0.469)
 
 [sub_resource type="BoxShape3D" id="suelo_local"]
-size = Vector3(10.574003, 0.206508, 14.65329)
+size = Vector3(10.574003, 1.206508, 14.65329)
 
 [sub_resource type="BoxShape3D" id="suelo_deposito"]
-size = Vector3(5.1428, 0.206508, 6.608355)
+size = Vector3(5.1428, 1.206508, 6.608355)
 
 [sub_resource type="BoxShape3D" id="suelo_fondo"]
-size = Vector3(12.519912314, 0.206508000, 7.144681644)
+size = Vector3(12.519912314, 1.206508, 7.144681644)
 
 [sub_resource type="BoxShape3D" id="suelo_paso_deposito"]
-size = Vector3(0.420795, 0.206508, 1.527)
+size = Vector3(0.420795, 1.206508, 1.527)
 
 [sub_resource type="BoxShape3D" id="suelo_paso_fondo"]
-size = Vector3(1.703925, 0.206508, 0.382225)
+size = Vector3(1.703925, 1.206508, 0.382225)
 
 [sub_resource type="BoxShape3D" id="suelo_cuartito"]
-size = Vector3(2.72, 0.206508, 3.0)
+size = Vector3(2.72, 1.206508, 3.0)
 
 [sub_resource type="BoxShape3D" id="suelo_paso_cuartito"]
-size = Vector3(0.15447, 0.206508, 1.742248)
+size = Vector3(0.15447, 1.206508, 1.742248)
 
 [sub_resource type="BoxShape3D" id="volumen_1"]
 size = Vector3(8.567709163, 6.973860000, 0.200380564)
@@ -4038,31 +4038,31 @@ position = Vector3(0, -0.001017, 0)
 editor_description = "Volumen del piso modelado. Evita que los productos delgados atraviesen sus triangulos al apilarse."
 
 [node name="Local" type="CollisionShape3D" parent="SueloSolido"]
-position = Vector3(2.6870015, 0, -0.926645)
+position = Vector3(2.6870015, -0.500000000, -0.926645)
 shape = SubResource("suelo_local")
 
 [node name="Deposito" type="CollisionShape3D" parent="SueloSolido"]
-position = Vector3(10.86326, 0, 2.9741415)
+position = Vector3(10.86326, -0.500000000, 2.9741415)
 shape = SubResource("suelo_deposito")
 
 [node name="Fondo" type="CollisionShape3D" parent="SueloSolido"]
-position = Vector3(1.665579522, 0.000500000, -11.825630999)
+position = Vector3(1.665579522, -0.499500000, -11.825630999)
 shape = SubResource("suelo_fondo")
 
 [node name="PasoAlDeposito" type="CollisionShape3D" parent="SueloSolido"]
-position = Vector3(8.0814625, 0, 1.646)
+position = Vector3(8.0814625, -0.500000000, 1.646)
 shape = SubResource("suelo_paso_deposito")
 
 [node name="PasoAlFondo" type="CollisionShape3D" parent="SueloSolido"]
-position = Vector3(6.7493685, 0, -8.0621775)
+position = Vector3(6.7493685, -0.500000000, -8.0621775)
 shape = SubResource("suelo_paso_fondo")
 
 [node name="Cuartito" type="CollisionShape3D" parent="SueloSolido"]
-position = Vector3(9.440008, 0, -13.960002)
+position = Vector3(9.440008, -0.500000000, -13.960002)
 shape = SubResource("suelo_cuartito")
 
 [node name="PasoAlCuartito" type="CollisionShape3D" parent="SueloSolido"]
-position = Vector3(8.002773, 0, -13.960002)
+position = Vector3(8.002773, -0.500000000, -13.960002)
 shape = SubResource("suelo_paso_cuartito")
 
 [node name="HuecoDeLaVentanilla" type="Marker3D" parent="."]
