@@ -7,7 +7,7 @@
    "ancho": 3264,
    "alto": 3456,
    "formato": "bc1",
-   "huella": "091f8642e1d12bf69e430c938c8cab61d3886ac6266c5592d6c40789c1c727a7",
+   "huella": "62068766b3678e51692a2c21e2bcaa206585b397a7c376a17190e389a5f15f9e",
    "entradas": [
     {
      "ruta": "source/textures/props/jabón liquido amarillo.png",
@@ -106,11 +106,19 @@
      "y": 1616
     },
     {
+     "ruta": "source/products-textured/galletitas/pepito.png",
+     "ancho": 512,
+     "alto": 512,
+     "huella": "9beb96e41815fb3544e1560957a368c58fb68c96875b6fedeb16abd8657cb6bd",
+     "x": 1648,
+     "y": 1616
+    },
+    {
      "ruta": "source/products-textured/galletitas/saladick.png",
      "ancho": 512,
      "alto": 512,
      "huella": "f7efaf9f7f691c5360dc7a64ab49de5c0e2e886a529e2b68d1f74d379e052249",
-     "x": 1648,
+     "x": 2192,
      "y": 1616
     },
     {
@@ -118,7 +126,7 @@
      "ancho": 512,
      "alto": 512,
      "huella": "8a64ba0bc13c7cd9ccefccac1938370b955d4d3ad4354b18594edf844c3ab78f",
-     "x": 2192,
+     "x": 2736,
      "y": 1616
     },
     {
@@ -126,22 +134,14 @@
      "ancho": 512,
      "alto": 512,
      "huella": "d97531fe654683e8ba6e527cdde2f9f79160f56b7ecb0a2468286be88517849b",
-     "x": 2736,
-     "y": 1616
+     "x": 16,
+     "y": 2160
     },
     {
      "ruta": "source/textures/props/jorgillata.png",
      "ancho": 512,
      "alto": 512,
      "huella": "1160282acc809e78ad3b04ddeb2cabcf95e7fef6e83b4cd276d46cb061b99034",
-     "x": 16,
-     "y": 2160
-    },
-    {
-     "ruta": "source/products-textured/galletitas/pepito_paquete.png",
-     "ancho": 512,
-     "alto": 504,
-     "huella": "7f017c970e39512881cb9bf55fceb9f5077ca09a869e69ba050b72321d8dc157",
      "x": 560,
      "y": 2160
     },

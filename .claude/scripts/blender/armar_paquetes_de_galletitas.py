@@ -1,250 +1,336 @@
-"""Arma de nuevo los paquetes de Oremos y de Pepito: un flow pack con cierres prensados a los lados.
+"""Arma Oremos y Pepito como el paquete que dibuja su propio desplegado.
 
     blender assets/models/SEPT_JUEGOS_PROTOTIPO.blend --background --python-exit-code 1 \
-        --python .claude/scripts/blender/armar_paquetes_de_galletitas.py -- [--aplicar] \
-        [--oremos <png>] [--pepito <png>]
+        --python .claude/scripts/blender/armar_paquetes_de_galletitas.py -- [--aplicar]
 
-Sin `--aplicar` no toca el `.blend` del repo: guarda `reports/paquetes-de-galletitas.blend`. Con
-`--aplicar` guarda la fuente canónica. La textura de cada paquete sale de `source/`, o de la ruta
-que se le dé con `--oremos` y `--pepito`. **Tiene que ser del desplegado nuevo**, de
-`LIENZO_ANCHO` x `LIENZO_ALTO`: con otra medida el script se corta, porque la UV caería sobre
-arte que no es el suyo. Después van `armar_atlas.py`, `exportar_modelo.py` y
-`assets/models/extraer_mallas.gd`.
+Sin `--aplicar` no guarda el `.blend`: deja seis vistas de cada paquete en
+`reports/paquetes-de-galletitas/`. Con `--aplicar` guarda la fuente. Después van `armar_atlas.py`,
+`exportar_modelo.py`, `extraer_mallas.gd` y el resto de la cadena.
 
 ## Por qué
 
-Los dos paquetes eran un cubo de ocho vértices: una caja lisa con el arte estirado sobre sus caras.
-Se leían como una caja de cartón y no como el envase de galletitas que son. La forma de `lib/` es
-la del flow pack de tres tubos: cuerpo ancho y bajo, casi plano de frente y apenas abombado, que se
-afina hacia cada costura, y un cierre prensado, de borde recto, a la izquierda y a la derecha.
+El arte de cada paquete ya es el desplegado de un envase de film: un FRONT con sus dos cierres
+prensados pintados a los costados, un BACK, un TOP y un BOTTOM. La caja de 27 × 27 cm estiraba
+ese frente apaisado sobre una cara cuadrada.
 
-## Qué cambia
+**La textura no se toca: la malla toma sus medidas de los paneles.** El frente de la malla tiene
+la proporción del FRONT y lo lee entero. Los cierres del arte caen sobre las aletas, el TOP sobre
+el canto de arriba y el BOTTOM sobre el de abajo. No hay textura nueva, ni pieza movida, ni cara
+estirada.
 
-Cada malla se rehace entera con **el ancho y el fondo de la caja** que ocupaba el cubo, así que
-entran las mismas unidades por estante y por caja, y el paso de la partida de prueba es el mismo.
-El alto baja a la proporción apaisada de un flow pack real (`lib/paquete_de_galletitas.py`): el
-paquete apoya por la base y queda más bajo. Las unidades que comparten la malla la heredan. La UV
-sale del desplegado de `lib/paquete_de_galletitas.py`, y los cierres son los de
-`lib/cierre_de_envases.py`, los mismos de las bolsas.
+## Lo que no entra entero
 
-La caja del cubo se guarda en la malla la primera vez: correrlo de nuevo rehace el mismo paquete.
+- **El dorso.** El BACK es más apaisado que el frente. Va a lo ancho, sin estirar, como una
+  banda centrada. Arriba y abajo de la banda el dorso lee un solo píxel del fondo del BACK.
+- **Las esquinas del FRONT.** Vienen redondeadas sobre negro. Las aletas saltean esas filas.
+- **Los dientes de los cierres pintados.** El panel se recorta hasta la primera columna llena:
+  el cierre queda recto.
+
+## Lo que conserva
+
+El centro de la unidad, su apoyo y su ancho a lo largo del estante. Las copias comparten la
+malla, así que no hay que acomodar de nuevo. Es idempotente: el ancho se lee de `ANCHO`, no de
+la malla que encuentra.
 """
+
+from __future__ import annotations
 
 import math
 import sys
 from pathlib import Path
 
+import bmesh  # type: ignore[import-not-found]  # sólo existe adentro de Blender
 import bpy  # type: ignore[import-not-found]
+import numpy as np  # type: ignore[import-not-found]  # el que trae Blender
+from mathutils import Vector  # type: ignore[import-not-found]
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
-from lib import paquete_de_galletitas as forma  # noqa: E402
-from lib import recortes_de_paquetes as recortes  # noqa: E402
-from lib.cierre_de_envases import cierre  # noqa: E402
+RAIZ = Path(__file__).resolve().parents[3]
+sys.path.insert(0, str(RAIZ / ".claude/scripts"))
 from lib.consola import configurar  # noqa: E402
-from lib.repo import RAIZ  # noqa: E402
 
-#: Una unidad de cada paquete, que comparte la malla con las demás, y la textura que lleva.
+FUENTES = RAIZ / "assets/source/products-textured/galletitas"
+REPORTES = RAIZ / "reports/paquetes-de-galletitas"
+
+#: Un punto adentro de cada panel del desplegado, en píxeles con el origen arriba a la izquierda.
 PAQUETES = {
-    "oremos-col": ("OREMOS", "oremos_paquete.png"),
-    "pepitos2-col.025": ("PEPITO", "pepito_paquete.png"),
+    "oremos": {
+        "objeto": "oremos-col",
+        "imagen": "oremos.png",
+        "semillas": {
+            "frente": (630, 450), "dorso": (630, 890), "tapa": (630, 100), "base": (630, 1146),
+        },
+    },
+    "pepito": {
+        "objeto": "pepitos2-col.025",
+        "imagen": "pepito.png",
+        "semillas": {
+            "frente": (627, 520), "dorso": (627, 940), "tapa": (627, 115), "base": (627, 1160),
+        },
+    },
 }
-
-CARPETA_DE_TEXTURAS = RAIZ / "assets/source/products-textured/galletitas"
-CARPETA_DEL_REPORTE = RAIZ / "reports/paquetes-de-galletitas"
-MARCA = "caja_del_paquete"
-
-
-def caja_del_cubo(objeto) -> tuple[float, ...]:
-    """Los límites locales que ocupaba el cubo. Se guardan la primera vez."""
-    malla = objeto.data
-    if MARCA not in malla:
-        coordenadas = [tuple(v.co) for v in malla.vertices]
-        malla[MARCA] = [f(c[i] for c in coordenadas) for i in range(3) for f in (min, max)]
-    return tuple(malla[MARCA])
-
-
-def caja_del_paquete(objeto, producto: str) -> "forma.Caja":
-    """El ancho y el fondo son los del cubo; el alto, el que da la proporción del arte."""
-    x0, x1, y0, y1, _, _ = caja_del_cubo(objeto)
-    escala = objeto.scale
-    return forma.caja_del_paquete(producto, (y1 - y0) * escala.y, (x1 - x0) * escala.x)
+#: El ancho del paquete a lo largo del estante, con los cierres adentro, en metros. Las columnas
+#: de su tanda están a 32 cm: con 30 queda 1 cm de aire a cada lado.
+ANCHO = 0.30
+#: Lo que mide cada cierre pintado, como fracción del ancho del panel del frente.
+ALETA = 0.07
+#: Entre qué espesores queda el cuerpo, en metros. El TOP del arte da un valor intermedio.
+FONDO = (0.035, 0.06)
+#: En cuántas costillas se parte el cuerpo de una costura a la otra.
+SEGMENTOS = 12
+#: Cuántos píxeles se deja adentro del borde de cada panel, para que el filtro no lea el negro.
+BORDE = 2.0
+#: Por debajo de este brillo un píxel es el fondo negro del desplegado.
+NEGRO = 0.10
 
 
-def armar(objeto, producto: str) -> tuple[int, int]:
-    """Rehace la malla del objeto. Devuelve los triángulos de antes y de después."""
-    malla = objeto.data
-    antes = sum(len(p.vertices) - 2 for p in malla.polygons)
-    x0, x1, y0, y1, z0, z1 = caja_del_cubo(objeto)
-    escala = objeto.scale
-    caja = caja_del_paquete(objeto, producto)
-    centro = ((x0 + x1) / 2, (y0 + y1) / 2)
-
-    def a_local(x: float, y: float, z: float) -> tuple[float, float, float]:
-        return (x / escala.x + centro[0], y / escala.y + centro[1], z / escala.z + z0)
-
-    atlas = recortes.disposicion(producto)
-    secc = forma.seccion(caja)
-    ys = forma.alturas_de_los_anillos(caja)
-    espesor = 0.002 / (caja.fondo / 2)
-    zc = caja.alto / 2
-
-    vertices: list[tuple[float, float, float]] = []
-    caras: list[tuple[list[int], list[tuple[float, float]], bool]] = []
-
-    anillos = []
-    for y in ys:
-        g = forma.grosor_en(y, caja, espesor)
-        fila = []
-        for x, z in secc.puntos:
-            fila.append(len(vertices))
-            vertices.append((x * g, y, z))
-        anillos.append(fila)
-
-    def recorridos_del_anillo(g: float) -> list[tuple[float, float]]:
-        """Dónde cae cada gajo de un anillo en el recorrido de su panel, medido sobre ese anillo:
-        donde el cuerpo se afina el techo y el piso se angostan, y la `v` los sigue."""
-        puntos = [(x * g, z) for x, z in secc.puntos]
-        salida = []
-        acumulado = 0.0
-        for k in range(len(puntos)):
-            if k == 0 or secc.tramos[k] != secc.tramos[k - 1]:
-                acumulado = 0.0
-            m = (k + 1) % len(puntos)
-            paso = math.hypot(puntos[m][0] - puntos[k][0], puntos[m][1] - puntos[k][1])
-            largo = secc.largo_de_cada_panel[secc.tramos[k]]
-            salida.append((acumulado / largo, (acumulado + paso) / largo))
-            acumulado += paso
-        return salida
-
-    recorridos = [
-        recorridos_del_anillo(forma.grosor_en(y, caja, espesor)) for y in ys
-    ]
-
-    def hacia_afuera(ids: list[int], uvs: list[tuple[float, float]]):
-        p = [vertices[i] for i in ids]
-        normal = [0.0, 0.0, 0.0]
-        for a, b in zip(p, p[1:] + p[:1]):
-            normal[0] += (a[1] - b[1]) * (a[2] + b[2])
-            normal[1] += (a[2] - b[2]) * (a[0] + b[0])
-            normal[2] += (a[0] - b[0]) * (a[1] + b[1])
-        medio = [sum(q[j] for q in p) / len(p) for j in range(3)]
-        afuera = (medio[0], 0.0, medio[2] - zc)
-        if sum(normal[j] * afuera[j] for j in range(3)) < 0:
-            return ids[::-1], uvs[::-1]
-        return ids, uvs
-
-    n = len(secc.puntos)
-    for i in range(len(ys) - 1):
-        for k in range(n):
-            m = (k + 1) % n
-            panel = secc.tramos[k]
-            ids = [anillos[i][k], anillos[i][m], anillos[i + 1][m], anillos[i + 1][k]]
-            fk = abs(secc.puntos[k][0]) / (caja.fondo / 2)
-            fm = abs(secc.puntos[m][0]) / (caja.fondo / 2)
-            esquinas = [
-                (ys[i], recorridos[i][k][0], fk),
-                (ys[i], recorridos[i][k][1], fm),
-                (ys[i + 1], recorridos[i + 1][k][1], fm),
-                (ys[i + 1], recorridos[i + 1][k][0], fk),
-            ]
-            uvs = [forma.uv_del_cuerpo(atlas, panel, y, r, caja, f) for y, r, f in esquinas]
-            ids, uvs = hacia_afuera(ids, uvs)
-            caras.append((ids, uvs, True))
-
-    cuerpo = len(caras)
-    semi = caja.semiancho_del_cuerpo
-    for lado_de_y in (-1, 1):
-        c = cierre(
-            (0.0, lado_de_y * semi, 0.0), (0.0, 0.0, 1.0), caja.alto,
-            (0.0, float(lado_de_y), 0.0), caja.salida_del_cierre, (1.0, 0.0, 0.0),
-        )
-        base = len(vertices)
-        vertices.extend(c.vertices)
-        for cara in c.caras:
-            ids = [base + i for i in cara.vertices]
-            uvs = [
-                forma.uv_del_cierre(atlas, cara.lado, c.vertices[i][1], c.vertices[i][2], caja)
-                for i in cara.vertices
-            ]
-            caras.append((ids, uvs, False))
-
-    malla.clear_geometry()
-    malla.from_pydata([a_local(*v) for v in vertices], [], [ids for ids, _, _ in caras])
-    malla.update()
-    capa = malla.uv_layers.new(name="UVMap")
-    for indice, (poligono, (_, uvs, suave)) in enumerate(zip(malla.polygons, caras)):
-        poligono.use_smooth = suave
-        for lazo, valor in zip(poligono.loop_indices, uvs):
-            capa.data[lazo].uv = valor
-    despues = sum(len(p.vertices) - 2 for p in malla.polygons)
-    print(f"  cuerpo: {cuerpo} caras, cierres: {len(caras) - cuerpo} caras")
-    return antes, despues
-
-
-def apuntar_la_textura(objeto, ruta: Path, producto: str) -> Path:
-    """Cambia la imagen del material del paquete por la del desplegado nuevo."""
-    if not ruta.is_file():
-        raise SystemExit(f"falta la textura {ruta}")
+def cargar(ruta: Path):
+    """Los píxeles de la imagen, con la fila 0 arriba."""
     imagen = bpy.data.images.load(str(ruta), check_existing=False)
-    medida = tuple(imagen.size)
-    atlas = recortes.disposicion(producto)
-    if medida != (atlas.ancho, atlas.alto):
-        bpy.data.images.remove(imagen)
-        raise SystemExit(
-            f"{ruta.name} mide {medida[0]}x{medida[1]} y el atlas de {producto} pide "
-            f"{atlas.ancho}x{atlas.alto}: corré recortar_paquetes_de_galletitas.py"
-        )
+    ancho, alto = imagen.size
+    pixeles = np.array(imagen.pixels[:], dtype=np.float32).reshape(alto, ancho, 4)[::-1]
     bpy.data.images.remove(imagen)
-    material = objeto.material_slots[0].material
-    for nodo in material.node_tree.nodes:
-        if nodo.type != "TEX_IMAGE":
-            continue
-        actual = Path(bpy.path.abspath(nodo.image.filepath)) if nodo.image else None
-        if actual is not None and actual.resolve() == ruta.resolve():
-            continue
-        viejo = nodo.image
-        nueva = bpy.data.images.load(str(ruta), check_existing=False)
-        nueva.filepath = bpy.path.relpath(str(ruta))
-        nueva.colorspace_settings.name = "sRGB"
-        nodo.image = nueva
-        # La imagen conserva el nombre de la anterior: es el que lleva el `.glb`, y de él salen el
-        # nombre de la textura extraída y las rutas de los `.res`.
-        if viejo is not None and viejo.users == 0:
-            nombre = viejo.name
-            bpy.data.images.remove(viejo)
-            nueva.name = nombre
-    return ruta
+    return pixeles
 
 
-def argumento(nombre: str) -> Path | None:
-    if nombre in sys.argv:
-        return Path(sys.argv[sys.argv.index(nombre) + 1]).resolve()
-    return None
+def panel(mascara, semilla: tuple[int, int]) -> tuple[int, int, int, int]:
+    """La caja del panel que contiene a la semilla: crece hasta una fila o columna negra."""
+    sx, sy = semilla
+    banda = slice(sx - 40, sx + 40)
+    y0 = y1 = sy
+    while y0 > 0 and mascara[y0 - 1, banda].any():
+        y0 -= 1
+    while y1 < mascara.shape[0] - 1 and mascara[y1 + 1, banda].any():
+        y1 += 1
+    x0 = x1 = sx
+    while x0 > 0 and mascara[y0:y1 + 1, x0 - 1].any():
+        x0 -= 1
+    while x1 < mascara.shape[1] - 1 and mascara[y0:y1 + 1, x1 + 1].any():
+        x1 += 1
+    x1, y1 = x1 + 1, y1 + 1
+    # Los bordes del panel vienen dentados: se recorta hasta la primera columna que el arte llena
+    # casi entera, y el cierre queda recto.
+    while mascara[y0 + 6:y1 - 6, x0].mean() < 0.98:
+        x0 += 1
+    while mascara[y0 + 6:y1 - 6, x1 - 1].mean() < 0.98:
+        x1 -= 1
+    while mascara[y0, x0:x1].mean() < 0.9:
+        y0 += 1
+    while mascara[y1 - 1, x0:x1].mean() < 0.9:
+        y1 -= 1
+    return (x0, y0, x1, y1)
+
+
+def esquinas(mascara, caja: tuple[int, int, int, int]) -> tuple[int, int]:
+    """Cuántas filas de arriba y de abajo traen negro en los dos cierres pintados del panel.
+
+    Las esquinas del panel vienen redondeadas. El cuerpo no las lee, y las aletas las saltean.
+    """
+    x0, y0, x1, y1 = caja
+    franja = max(8, int((x1 - x0) * ALETA) + 2)
+
+    def llena(y: int) -> bool:
+        return bool(mascara[y, x0:x0 + franja].all() and mascara[y, x1 - franja:x1].all())
+
+    arriba = abajo = 0
+    while not llena(y0 + arriba):
+        arriba += 1
+    while not llena(y1 - 1 - abajo):
+        abajo += 1
+    return arriba + 1, abajo + 1
+
+
+def punto_liso(pixeles, caja: tuple[int, int, int, int]) -> tuple[float, float]:
+    """El píxel del panel con el fondo más parejo alrededor: de ahí sale el color liso."""
+    x0, y0, x1, y1 = caja
+    mejor, donde = None, None
+    for y in range(y0 + 12, y1 - 12, 3):
+        for x in range(x0 + 90, x1 - 90, 3):
+            rojo, _, azul = pixeles[y, x, :3]
+            if azul < rojo + 0.15 or azul < 0.3:
+                continue
+            ventana = pixeles[y - 5:y + 6, x - 5:x + 6, :3]
+            desvio = float(ventana.reshape(-1, 3).std(axis=0).sum())
+            if mejor is None or desvio < mejor:
+                mejor, donde = desvio, (x + 0.5, y + 0.5)
+    if donde is None:
+        raise SystemExit("el dorso no tiene un fondo liso de donde tomar el color")
+    return donde
+
+
+def armar(nombre: str, datos: dict):
+    objeto = bpy.data.objects.get(datos["objeto"])
+    if objeto is None:
+        raise SystemExit(f"falta el objeto {datos['objeto']}")
+    pixeles = cargar(FUENTES / datos["imagen"])
+    lado = pixeles.shape[0]
+    mascara = pixeles[:, :, :3].max(axis=2) > NEGRO
+    frente, dorso, tapa, base = (
+        panel(mascara, datos["semillas"][clave]) for clave in ("frente", "dorso", "tapa", "base")
+    )
+
+    escala = objeto.matrix_world.to_scale()
+    viejos = [Vector(v.co) for v in objeto.data.vertices]
+    centro_x = (max(v.x for v in viejos) + min(v.x for v in viejos)) / 2
+    centro_y = (max(v.y for v in viejos) + min(v.y for v in viejos)) / 2
+    piso = min(v.z for v in viejos)
+
+    alto = ANCHO * (frente[3] - frente[1]) / (frente[2] - frente[0])
+    fondo = min(FONDO[1], max(FONDO[0], ANCHO * (tapa[3] - tapa[1]) / (tapa[2] - tapa[0])))
+    cuerpo = ANCHO * (1 - 2 * ALETA)
+    banda = min(alto, ANCHO * (dorso[3] - dorso[1]) / (dorso[2] - dorso[0]))
+    liso_x, liso_y = punto_liso(pixeles, dorso)
+    color = (liso_x / lado, 1 - liso_y / lado)
+    de_arriba, de_abajo = esquinas(mascara, frente)
+
+    def uv(caja, u: float, v: float, espejo: bool = False) -> tuple[float, float]:
+        """`u` de izquierda a derecha y `v` de abajo hacia arriba, de 0 a 1, adentro del panel."""
+        x0, y0, x1, y1 = caja
+        if espejo:
+            u = 1 - u
+        x = x0 + BORDE + u * (x1 - x0 - 2 * BORDE)
+        y = y1 - BORDE - v * (y1 - y0 - 2 * BORDE)
+        return (x / lado, 1 - y / lado)
+
+    def uv_de_aleta(u: float, v: float, espejo: bool = False) -> tuple[float, float]:
+        x0, y0, x1, y1 = frente
+        return uv((x0, y0 + de_arriba, x1, y1 - de_abajo), u, v, espejo)
+
+    bm = bmesh.new()
+    capa = bm.loops.layers.uv.new("UVMap")
+    vertices: dict[tuple[float, float, float], object] = {}
+
+    def vertice(x: float, y: float, z: float):
+        clave = (round(x, 6), round(y, 6), round(z, 6))
+        if clave not in vertices:
+            vertices[clave] = bm.verts.new(
+                (centro_x + x / escala.x, centro_y + y / escala.y, piso + z / escala.z)
+            )
+        return vertices[clave]
+
+    def cara(puntos, uvs) -> None:
+        nueva = bm.faces.new([vertice(*p) for p in puntos])
+        nueva.smooth = True
+        for lazo, par in zip(nueva.loops, uvs):
+            lazo[capa].uv = par
+
+    def medio(i: int) -> float:
+        """Medio espesor del cuerpo en la costilla `i`: máximo al centro, casi nada en la costura."""
+        s = 2 * i / SEGMENTOS - 1
+        return max(0.0012, (fondo / 2) * (1 - abs(s) ** 3) ** 0.7)
+
+    ys = [-cuerpo / 2 + cuerpo * i / SEGMENTOS for i in range(SEGMENTOS + 1)]
+    us = [(y + ANCHO / 2) / ANCHO for y in ys]
+    z0, z1 = (alto - banda) / 2, (alto + banda) / 2
+    for i in range(SEGMENTOS):
+        a, c = medio(i), medio(i + 1)
+        ya, yc, ua, uc = ys[i], ys[i + 1], us[i], us[i + 1]
+        cara(
+            [(a, ya, 0), (c, yc, 0), (c, yc, alto), (a, ya, alto)],
+            [uv(frente, ua, 0), uv(frente, uc, 0), uv(frente, uc, 1), uv(frente, ua, 1)],
+        )
+        for desde, hasta, con_arte in ((0, z0, False), (z0, z1, True), (z1, alto, False)):
+            if hasta - desde < 1e-5:
+                continue
+            puntos = [(-c, yc, desde), (-a, ya, desde), (-a, ya, hasta), (-c, yc, hasta)]
+            if con_arte:
+                cara(puntos, [uv(dorso, uc, 0, True), uv(dorso, ua, 0, True),
+                              uv(dorso, ua, 1, True), uv(dorso, uc, 1, True)])
+            else:
+                cara(puntos, [color] * 4)
+        cara(
+            [(a, ya, alto), (c, yc, alto), (-c, yc, alto), (-a, ya, alto)],
+            [uv(tapa, ua, 0), uv(tapa, uc, 0), uv(tapa, uc, 1), uv(tapa, ua, 1)],
+        )
+        cara(
+            [(c, yc, 0), (a, ya, 0), (-a, ya, 0), (-c, yc, 0)],
+            [uv(base, uc, 1), uv(base, ua, 1), uv(base, ua, 0), uv(base, uc, 0)],
+        )
+    fino = medio(0)
+    for adentro, afuera in ((-cuerpo / 2, -ANCHO / 2), (cuerpo / 2, ANCHO / 2)):
+        ya, yc = sorted((adentro, afuera))
+        ua, uc = (ya + ANCHO / 2) / ANCHO, (yc + ANCHO / 2) / ANCHO
+        cara(
+            [(fino, ya, 0), (fino, yc, 0), (fino, yc, alto), (fino, ya, alto)],
+            [uv_de_aleta(ua, 0), uv_de_aleta(uc, 0), uv_de_aleta(uc, 1), uv_de_aleta(ua, 1)],
+        )
+        cara(
+            [(-fino, yc, 0), (-fino, ya, 0), (-fino, ya, alto), (-fino, yc, alto)],
+            [uv_de_aleta(uc, 0, True), uv_de_aleta(ua, 0, True), uv_de_aleta(ua, 1, True),
+             uv_de_aleta(uc, 1, True)],
+        )
+        canto = [(fino, afuera, 0), (-fino, afuera, 0), (-fino, afuera, alto), (fino, afuera, alto)]
+        cara(canto if afuera > 0 else canto[::-1], [color] * 4)
+    bm.normal_update()
+
+    malla = objeto.data
+    for modificador in list(objeto.modifiers):
+        objeto.modifiers.remove(modificador)
+    materiales = list(malla.materials)
+    bm.to_mesh(malla)
+    bm.free()
+    malla.materials.clear()
+    malla.materials.append(materiales[0])
+    malla.set_sharp_from_angle(angle=math.radians(35))
+    malla.update()
+    for nodo in materiales[0].node_tree.nodes:
+        if nodo.type == "TEX_IMAGE" and nodo.image is not None:
+            nodo.image.filepath = "//..\\source\\products-textured\\galletitas\\" + datos["imagen"]
+            nodo.image.reload()
+    triangulos = sum(len(p.vertices) - 2 for p in malla.polygons)
+    print(
+        f"{nombre}: {ANCHO:.3f} de ancho, {alto:.4f} de alto, {fondo:.4f} de fondo, "
+        f"banda del dorso de {banda:.4f}, {triangulos} triángulos, {malla.users} unidades"
+    )
+    return objeto
+
+
+def fotografiar(objetos: dict) -> None:
+    escena = bpy.context.scene
+    escena.render.engine = "BLENDER_WORKBENCH"
+    escena.display.shading.light = "STUDIO"
+    escena.display.shading.color_type = "TEXTURE"
+    escena.render.resolution_x, escena.render.resolution_y = 1000, 720
+    lente = bpy.data.cameras.new("foto")
+    lente.lens = 70
+    camara = bpy.data.objects.new("foto", lente)
+    escena.collection.objects.link(camara)
+    escena.camera = camara
+    REPORTES.mkdir(parents=True, exist_ok=True)
+    for nombre, objeto in objetos.items():
+        for otro in bpy.data.objects:
+            otro.hide_render = otro.name != objeto.name
+        mundo = [objeto.matrix_world @ v.co for v in objeto.data.vertices]
+        centro = Vector(
+            [(max(p[i] for p in mundo) + min(p[i] for p in mundo)) / 2 for i in range(3)]
+        )
+        giro = objeto.matrix_world.to_3x3()
+        adelante, derecha, arriba = [
+            (giro @ Vector(eje)).normalized() for eje in ((1, 0, 0), (0, 1, 0), (0, 0, 1))
+        ]
+        vistas = {
+            "frente": adelante,
+            "tres_cuartos": adelante + derecha * 0.9 + arriba * 0.6,
+            "desde_arriba": adelante * 0.7 + arriba - derecha * 0.4,
+            "dorso": -adelante + derecha * 0.3 + arriba * 0.25,
+            "desde_abajo": adelante * 0.6 - arriba,
+            "canto": derecha + adelante * 0.35 + arriba * 0.2,
+        }
+        for vista, direccion in vistas.items():
+            camara.location = centro + direccion.normalized() * 0.75
+            camara.rotation_euler = (centro - camara.location).to_track_quat("-Z", "Y").to_euler()
+            escena.render.filepath = str(REPORTES / f"{nombre}_{vista}.png")
+            bpy.ops.render.render(write_still=True)
 
 
 def main() -> None:
     configurar()
-    aplicar = "--aplicar" in sys.argv
-    elegidas = {"OREMOS": argumento("--oremos"), "PEPITO": argumento("--pepito")}
-    for nombre, (producto, archivo) in PAQUETES.items():
-        objeto = bpy.data.objects[nombre]
-        print(f"{nombre}: {objeto.data.users} unidades")
-        ruta = elegidas[producto] or CARPETA_DE_TEXTURAS / archivo
-        apuntar_la_textura(objeto, ruta, producto)
-        antes, despues = armar(objeto, producto)
-        caja = caja_del_paquete(objeto, producto)
-        print(
-            f"  {antes} -> {despues} triángulos, textura {ruta.name}, paquete de "
-            f"{caja.ancho:.3f} x {caja.alto:.3f} x {caja.fondo:.3f} m (ancho, alto, fondo)"
-        )
-    if aplicar:
+    objetos = {nombre: armar(nombre, datos) for nombre, datos in PAQUETES.items()}
+    if "--aplicar" in sys.argv:
         bpy.ops.wm.save_mainfile()
         print("fuente guardada")
     else:
-        destino = RAIZ / "reports/paquetes-de-galletitas.blend"
-        destino.parent.mkdir(parents=True, exist_ok=True)
-        bpy.ops.wm.save_as_mainfile(filepath=str(destino), check_existing=False)
-        print(f"prueba guardada en {destino}")
+        fotografiar(objetos)
+        print(f"vistas en {REPORTES}")
 
 
 if __name__ == "__main__":
