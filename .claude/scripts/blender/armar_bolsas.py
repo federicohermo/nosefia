@@ -37,13 +37,18 @@ cara. Pasan por la misma construcción, con tres diferencias:
   `lib/agujero_de_colgar.py`: se aplica sobre ese mismo cierre, no lo reemplaza.
 - **El desplegado** es el de `lib/desplegado_de_bolsas.py`: una sola textura de 512 x 352 con
   frente, dorso y los dos costados acostados, en lugar del par `completo` y `costado`.
-- **El frente** mira a `-x`, como mira hoy cada una de las tres, y la malla conserva la caja que
-  ocupaba: el ancho, el alto y el fondo de cada producto en el estante no cambian.
+- **El frente** mira a `-x`, como mira hoy cada una de las tres. El ancho y el alto de la caja que
+  ocupaba no cambian. El fondo sí: la bolsa es más flaca que el prisma (dos tercios de su grosor),
+  y el estante la mide más angosta, con las mismas filas y la misma cantidad por fila.
+- **La forma** sigue la de Chisitos con otras proporciones. El espesor sube desde cada costura
+  con un seno y llega a su máximo en el centro. El frente es más redondo (`planitud` 3,5) y el
+  ancho se recoge un 4 % donde la bolsa más se infla: los costados quedan apenas cóncavos entre
+  las dos aletas, que miden todo el ancho.
 
 ## Lo que cuesta
 
-608 triángulos por bolsa de papas, 512 por bolsa de galletitas con 2 surcos en cada cierre (528
-la de Macumbas, con su agujero), y ningún dibujo. La caja de la bolsa se guarda en la malla la
+608 triángulos por bolsa de papas, 448 por bolsa de galletitas (468 la de Macumbas, con su
+agujero), y ningún dibujo. La caja de la bolsa se guarda en la malla la
 primera vez: correrlo de nuevo rehace la misma bolsa.
 """
 
@@ -95,7 +100,19 @@ BANDA_DE_LA_ALETA = 0.014
 GROSOR = 0.85
 MARCA = "caja_de_la_bolsa"
 
-ANILLOS_DE_LAS_GALLETITAS = 12
+ANILLOS_DE_LAS_GALLETITAS = 11
+#: Qué parte del grosor de la caja que ocupaba la bolsa conserva el centro de las galletitas.
+#: Es una bolsa más flaca que el prisma: el estante la mide más angosta, sin cambiar su ancho ni
+#: su alto.
+GROSOR_DE_LAS_GALLETITAS = 0.66
+#: Qué parte del alto, en cada punta, ocupa el afinado de las galletitas. Con 0,5 el espesor sería
+#: un seno de punta a punta, y con 0,2 el de las papas: 6 cm de un alto de 31. Acá son 8 cm de 24,
+#: sin llegar a un tramo parejo.
+TRANSICION_DE_LAS_GALLETITAS = 0.35
+#: Qué tan plano es el frente de las galletitas. Más bajo que el de las papas: más redondo.
+PLANITUD_DE_LAS_GALLETITAS = 3.5
+#: Cuánto ancho recoge el film donde la bolsa más se infla, en fracción del ancho de la aleta.
+RECOGIDA_DE_LAS_GALLETITAS = 0.04
 #: El alto de la aleta de las galletitas, en fracción del alto de la bolsa: 1,56 cm, el mismo
 #: que el de las papas.
 ALETA_DE_LAS_GALLETITAS = 0.065
@@ -114,9 +131,10 @@ class Bolsa:
     lleva a la malla con la escala del objeto) o ya en la malla. `mira_a_menos_x` gira la bolsa 180
     grados sobre su eje vertical: el frente de las papas mira a `+x` y el de las galletitas a
     `-x`, que es hacia donde las acomoda `lib/reparto.py`. `textura` es la imagen que pasa a
-    llevar el material, y reemplaza a la de la malla anterior. `llena_el_fondo` estira el grosor
-    hasta que el punto más hondo del cuerpo toque el fondo de la caja que ocupaba la bolsa: sin
-    eso, los gajos del frente se quedan a un milímetro y el estante la mide más angosta.
+    llevar el material, y reemplaza a la de la malla anterior. `grosor` es la fracción del
+    grosor de la caja que conserva el centro; `transicion`, qué parte del alto ocupa el afinado en
+    cada punta; `planitud`, qué tan plano es el frente; `recogida`, cuánto ancho se recoge donde
+    la bolsa es más gruesa.
     `agujero` abre en el cierre de arriba el agujero para colgar. `acostadas` son los costados cuyo
     recorte va acostado en la textura: las papas llevan los suyos de pie, y mezclarlos rompe su UV.
     """
@@ -126,9 +144,11 @@ class Bolsa:
     mira_a_menos_x: bool = False
     anillos: int = ANILLOS
     grosor: float = GROSOR
+    transicion: float = TRANSICION
+    planitud: float = PLANITUD
+    recogida: float = 0.0
     aleta: float = ALETA
     textura: Path | None = None
-    llena_el_fondo: bool = False
     agujero: bool = False
     acostadas: tuple[str, ...] = ()
     banda: float = BANDA_DE_LA_ALETA
@@ -146,10 +166,12 @@ BOLSAS = (
             desplegado=DESPLEGADO_DE_GALLETITAS,
             mira_a_menos_x=True,
             anillos=ANILLOS_DE_LAS_GALLETITAS,
-            grosor=1.0,
+            grosor=GROSOR_DE_LAS_GALLETITAS,
+            transicion=TRANSICION_DE_LAS_GALLETITAS,
+            planitud=PLANITUD_DE_LAS_GALLETITAS,
+            recogida=RECOGIDA_DE_LAS_GALLETITAS,
             aleta=ALETA_DE_LAS_GALLETITAS,
             textura=TEXTURAS / f"{producto}.png",
-            llena_el_fondo=True,
             agujero=objeto == "macumbas-convcol",
             acostadas=ACOSTADAS,
             banda=BANDA_DE_LAS_GALLETITAS,
@@ -201,12 +223,10 @@ def armar(objeto, bolsa: Bolsa) -> tuple[int, int]:
             angulos.append(lerp(desde, hasta, k / gajos))
             caras_de_tramo.append(nombre)
     vueltas = len(angulos)
-    if bolsa.llena_el_fondo:
-        grosor /= max(abs(math.sin(angulo)) for angulo in angulos)
-    borde_del_frente = potencia(math.cos(COSTADO), 2 / PLANITUD)
+    borde_del_frente = potencia(math.cos(COSTADO), 2 / bolsa.planitud)
 
     def seccion(angulo: float) -> tuple[float, float]:
-        return potencia(math.cos(angulo), 2 / PLANITUD), math.sin(angulo)
+        return potencia(math.cos(angulo), 2 / bolsa.planitud), math.sin(angulo)
 
     vertices: list[tuple[float, float, float]] = []
     # Cada cara lleva sus vértices, su UV y si ya mira hacia afuera: las del cierre lo traen de
@@ -221,7 +241,7 @@ def armar(objeto, bolsa: Bolsa) -> tuple[int, int]:
     def espesor_en(t: float) -> float:
         # El cuerpo se afina de a poco hacia cada costura: sin quiebre donde empieza la curva, y en
         # cero en la costura, donde sigue la aleta.
-        return grosor * math.sin(math.pi / 2 * min(1.0, min(t, 1 - t) / TRANSICION))
+        return grosor * math.sin(math.pi / 2 * min(1.0, min(t, 1 - t) / bolsa.transicion))
 
     # La v de cada anillo sigue el largo de la superficie del frente, no la altura: el arte se
     # reparte parejo sobre la curva y no se aplasta cerca de la costura.
@@ -235,10 +255,13 @@ def armar(objeto, bolsa: Bolsa) -> tuple[int, int]:
         espesor = espesor_en(t)
         z = lerp(abajo, arriba, t)
         anillo = []
+        # Donde la bolsa se infla, el film se recoge: el ancho baja con el espesor y vuelve a ser el
+        # de la aleta en cada costura.
+        ancho_aca = ancho * (1.0 - bolsa.recogida * espesor / grosor)
         for angulo in angulos:
             c, s = seccion(angulo)
             anillo.append(len(vertices))
-            vertices.append((xc + espesor * s, yc + ancho * c, z))
+            vertices.append((xc + espesor * s, yc + ancho_aca * c, z))
         anillos.append(anillo)
 
     def uv(cara: str, angulo: float, t: float) -> tuple[float, float]:
