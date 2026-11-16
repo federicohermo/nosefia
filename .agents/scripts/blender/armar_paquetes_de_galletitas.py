@@ -20,8 +20,8 @@ estirada.
 
 ## Lo que no entra entero
 
-- **El dorso.** El BACK es más apaisado que el frente. Va a lo ancho, sin estirar, como una
-  banda centrada. Arriba y abajo de la banda el dorso lee un solo píxel del fondo del BACK.
+- **El dorso.** El BACK es más apaisado que el frente. Llena el dorso entero, estirado en alto:
+  es la única cara que se estira, y sólo se ve con el paquete en la mano y dado vuelta.
 - **Las esquinas del FRONT.** Vienen redondeadas sobre negro. Las aletas saltean esas filas.
 - **Los dientes de los cierres pintados.** El panel se recorta hasta la primera columna llena:
   el cierre queda recto.
@@ -144,8 +144,7 @@ def esquinas(mascara, caja: tuple[int, int, int, int]) -> tuple[int, int]:
 def punto_del_borde(pixeles, caja: tuple[int, int, int, int], fila: int) -> tuple[float, float]:
     """El píxel de una fila del panel que más se parece al color medio de esa fila.
 
-    De ahí sale el color liso que sigue al panel por arriba o por abajo: con el tono de su borde,
-    la banda del dorso no se lee como una calcomanía.
+    De ahí sale el color liso del canto de cada aleta.
     """
     x0, _, x1, _ = caja
     margen = int((x1 - x0) * (ALETA + 0.03))
@@ -175,7 +174,6 @@ def armar(nombre: str, datos: dict):
     alto = ANCHO * (frente[3] - frente[1]) / (frente[2] - frente[0])
     fondo = FONDO
     cuerpo = ANCHO * (1 - 2 * ALETA)
-    banda = min(alto, ANCHO * (dorso[3] - dorso[1]) / (dorso[2] - dorso[0]))
 
     def lomo(caja) -> float:
         """Cuánto sale el lomo para que el panel del canto lo cubra entero sin estirarse."""
@@ -185,11 +183,8 @@ def armar(nombre: str, datos: dict):
     lomo_de_arriba, lomo_de_abajo = lomo(tapa), lomo(base)
     cima, quilla = alto + lomo_de_arriba, -lomo_de_abajo
 
-    def color_de(fila: int) -> tuple[float, float]:
-        x, y = punto_del_borde(pixeles, dorso, fila)
-        return (x / lado, 1 - y / lado)
-
-    color_de_arriba, color_de_abajo = color_de(dorso[1] + 3), color_de(dorso[3] - 4)
+    liso_x, liso_y = punto_del_borde(pixeles, dorso, dorso[1] + 3)
+    color = (liso_x / lado, 1 - liso_y / lado)
     de_arriba, de_abajo = esquinas(mascara, frente)
 
     def uv(caja, u: float, v: float, espejo: bool = False) -> tuple[float, float]:
@@ -232,7 +227,6 @@ def armar(nombre: str, datos: dict):
 
     ys = [-cuerpo / 2 + cuerpo * i / SEGMENTOS for i in range(SEGMENTOS + 1)]
     us = [(y + ANCHO / 2) / ANCHO for y in ys]
-    z0, z1 = (alto - banda) / 2, (alto + banda) / 2
     for i in range(SEGMENTOS):
         a, c = medio(i), medio(i + 1)
         ya, yc, ua, uc = ys[i], ys[i + 1], us[i], us[i + 1]
@@ -240,17 +234,11 @@ def armar(nombre: str, datos: dict):
             [(a, ya, 0), (c, yc, 0), (c, yc, alto), (a, ya, alto)],
             [uv(frente, ua, 0), uv(frente, uc, 0), uv(frente, uc, 1), uv(frente, ua, 1)],
         )
-        for desde, hasta, liso in (
-            (0, z0, color_de_abajo), (z0, z1, None), (z1, alto, color_de_arriba)
-        ):
-            if hasta - desde < 1e-5:
-                continue
-            puntos = [(-c, yc, desde), (-a, ya, desde), (-a, ya, hasta), (-c, yc, hasta)]
-            if liso is None:
-                cara(puntos, [uv(dorso, uc, 0, True), uv(dorso, ua, 0, True),
-                              uv(dorso, ua, 1, True), uv(dorso, uc, 1, True)])
-            else:
-                cara(puntos, [liso] * 4)
+        cara(
+            [(-c, yc, 0), (-a, ya, 0), (-a, ya, alto), (-c, yc, alto)],
+            [uv(dorso, uc, 0, True), uv(dorso, ua, 0, True), uv(dorso, ua, 1, True),
+             uv(dorso, uc, 1, True)],
+        )
         # Cada canto es un lomo de dos faldones: el del frente lee la mitad del panel que da al
         # frente, y el del dorso la otra.
         cara(
@@ -287,7 +275,7 @@ def armar(nombre: str, datos: dict):
             (fino, afuera, quilla), (-fino, afuera, quilla),
             (-fino, afuera, cima), (fino, afuera, cima),
         ]
-        cara(canto if afuera > 0 else canto[::-1], [color_de_arriba] * 4)
+        cara(canto if afuera > 0 else canto[::-1], [color] * 4)
     bm.normal_update()
 
     malla = objeto.data
@@ -308,7 +296,7 @@ def armar(nombre: str, datos: dict):
     print(
         f"{nombre}: {ANCHO:.3f} de ancho, {cima - quilla:.4f} de alto ({alto:.4f} de frente), "
         f"{fondo:.4f} de fondo, "
-        f"banda del dorso de {banda:.4f}, {triangulos} triángulos, {malla.users} unidades"
+        f"{triangulos} triángulos, {malla.users} unidades"
     )
     return objeto
 
