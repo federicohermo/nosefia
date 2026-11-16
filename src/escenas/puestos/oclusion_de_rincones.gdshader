@@ -3,8 +3,8 @@ render_mode unshaded, fog_disabled, blend_mul, depth_test_disabled, depth_draw_n
 
 uniform sampler2D profundidad : hint_depth_texture, repeat_disable, filter_nearest;
 // Radio en metros: hasta dónde un vecino puede tapar la luz.
-uniform float radio : hint_range(0.05, 3.0) = 0.6;
-uniform float intensidad : hint_range(0.0, 6.0) = 1.5;
+uniform float radio : hint_range(0.05, 3.0) = 0.4;
+uniform float intensidad : hint_range(0.0, 6.0) = 1.0;
 uniform float sesgo : hint_range(0.0, 0.5) = 0.08;
 // Más allá de esta distancia el efecto se apaga: ahorra ruido y evita halos en el fondo.
 uniform float alcance : hint_range(1.0, 60.0) = 22.0;
