@@ -25,6 +25,9 @@ from pathlib import Path
 import bpy  # type: ignore[import-not-found]
 from mathutils import Vector  # type: ignore[import-not-found]
 
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+from lib.consola import configurar  # noqa: E402
+
 ALTURA_DE_LOS_OJOS = 1.7
 
 #: Qué se fotografía: la unidad y hacia dónde mira, en el espacio de su malla.
@@ -69,6 +72,7 @@ def fotografiar(camara, ruta: Path) -> None:
 
 
 def main() -> None:
+    configurar()
     carpeta, prefijo = sys.argv[sys.argv.index("--") + 1 :][:2]
     carpeta = Path(carpeta)
     carpeta.mkdir(parents=True, exist_ok=True)

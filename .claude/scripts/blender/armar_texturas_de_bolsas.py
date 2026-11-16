@@ -52,6 +52,7 @@ from scipy import ndimage
 
 RAIZ = Path(__file__).resolve().parents[3]
 sys.path.insert(0, str(RAIZ / ".claude" / "scripts"))
+from lib.consola import configurar  # noqa: E402
 from lib.desplegado_de_bolsas import ALTO, ANCHO, PRENSADO, REGIONES  # noqa: E402
 
 FUENTES = RAIZ / "assets" / "source"
@@ -382,6 +383,7 @@ def hoja(texturas: dict[str, Image.Image], ruta: Path) -> None:
 
 
 def main() -> None:
+    configurar()
     parser = argparse.ArgumentParser()
     parser.add_argument("--aplicar", action="store_true")
     parser.add_argument("--hoja", type=Path)
