@@ -31,8 +31,8 @@ Petisas, Macumbas y Don Saturados eran un prisma de seis caras con una mitad de 
 cara. Pasan por la misma construcción, con tres diferencias:
 
 - **El cierre** es el de `lib/cierre_de_envases.py`, el mismo de los paquetes de Oremos y Pepito:
-  una aleta de borde recto, como la de Chisitos y Lay'snt't, con dos surcos de relieve. Las papas
-  usan esa misma construcción sin surcos, y salen igual que siempre, vértice por vértice.
+  una aleta plana de borde recto, como la de Chisitos y Lay'snt't. Las papas usan esa misma
+  construcción y salen igual que siempre, vértice por vértice.
 - **El agujero para colgar** de Macumbas es una ventana en el cierre de arriba, de
   `lib/agujero_de_colgar.py`: se aplica sobre ese mismo cierre, no lo reemplaza.
 - **El desplegado** es el de `lib/desplegado_de_bolsas.py`: una sola textura de 512 x 352 con
@@ -109,8 +109,7 @@ TEXTURAS = RAIZ / "assets" / "source" / "products-textured" / "bolsas"
 class Bolsa:
     """Una bolsa a armar: su unidad, que comparte la malla con las demás, y lo que la distingue.
 
-    Las aletas las arma `lib/cierre_de_envases.py` para todas: `surcos` es cuántos lleva cada una,
-    `banda` qué franja del borde del frente y del dorso pinta, y `cierre_en_metros` si la cresta y
+    Las aletas las arma `lib/cierre_de_envases.py` para todas: `banda` es qué franja del borde del frente y del dorso pinta, y `cierre_en_metros` si la cresta y
     la separación se miden en metros del mundo (se llevan a la malla con la escala del objeto) o ya
     en la malla. `mira_a_menos_x` gira la bolsa 180
     grados sobre su eje vertical: el frente de las papas mira a `+x` y el de las galletitas a
@@ -130,13 +129,12 @@ class Bolsa:
     textura: Path | None = None
     llena_el_fondo: bool = False
     agujero: bool = False
-    surcos: int = 0
     banda: float = BANDA_DE_LA_ALETA
     cierre_en_metros: bool = False
 
 
 #: Las bolsas que se arman. Las papas llevan la aleta plana de siempre y las galletitas, con la
-#: misma forma y dos surcos de relieve: un borde recto en las cinco, como el de los paquetes.
+#: misma forma: una aleta plana de borde recto en las cinco, como la de los paquetes.
 BOLSAS = (
     Bolsa("chisitos2-convcol.001"),
     Bolsa("snackpapas1-convcol.002"),
@@ -151,7 +149,6 @@ BOLSAS = (
             textura=TEXTURAS / f"{producto}.png",
             llena_el_fondo=True,
             agujero=objeto == "macumbas-convcol",
-            surcos=cierre_de_envases.SURCOS,
             banda=BANDA_DE_LAS_GALLETITAS,
             cierre_en_metros=True,
         )
@@ -346,15 +343,11 @@ def _cierres(
             afuera=(0.0, 0.0, 1.0 if arriba_de_todo else -1.0),
             salida=aleta,
             normal=(1.0, 0.0, 0.0),
-            surcos=bolsa.surcos,
-            relieve=cierre_de_envases.RELIEVE * por_metro,
             separacion=cierre_de_envases.SEPARACION * por_metro,
         )
         if bolsa.agujero and arriba_de_todo:
             c = agujero_de_colgar.abrir_agujero(
-                c,
-                alturas_de_la_banda(bolsa.surcos),
-                _punto_del_cierre((xc, y0, borde), y1 - y0, 1.0, aleta, por_metro, bolsa.surcos),
+                c, _punto_del_cierre((xc, y0, borde), y1 - y0, 1.0, aleta, por_metro)
             )
         base = len(vertices)
         vertices.extend(c.vertices)
@@ -368,22 +361,12 @@ def _cierres(
             caras.append(([base + i for i in cara.vertices], uvs, True))
 
 
-def alturas_de_la_banda(surcos: int) -> list[float]:
-    """Los `t` de las filas de la banda, como los arma `cierre_de_envases.cierre`."""
-    filas = 2 * surcos or 1
-    t_valle = 1.0 - cierre_de_envases.DIENTE
-    return [t_valle * i / filas for i in range(filas + 1)]
-
-
-def _punto_del_cierre(origen, largo, afuera_z, salida, por_metro, surcos):
+def _punto_del_cierre(origen, largo, afuera_z, salida, por_metro):
     """La posición de un `(s, t)` de un lado del cierre de arriba, con la misma regla con que
-    `cierre_de_envases.cierre` pone sus vértices: los surcos son las filas impares."""
-    alturas = alturas_de_la_banda(surcos)
+    `cierre_de_envases.cierre` pone sus vértices, sin surcos."""
 
     def punto(s: float, t: float, lado: int) -> tuple[float, float, float]:
-        fila = next((i for i, a in enumerate(alturas) if abs(a - t) < 1e-9), 0)
-        relieve = cierre_de_envases.RELIEVE if fila % 2 and surcos else 0.0
-        salto = lado * (cierre_de_envases.SEPARACION + relieve) * por_metro
+        salto = lado * cierre_de_envases.SEPARACION * por_metro
         return (origen[0] + salto, origen[1] + s * largo, origen[2] + afuera_z * t * salida)
 
     return punto

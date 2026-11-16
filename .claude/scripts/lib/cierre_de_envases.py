@@ -18,15 +18,15 @@ El prensado se hace de dos maneras:
 
 - **En la malla**, la banda tiene surcos paralelos a la costura: filas de vértices que salen del
   plano `relieve`, una sí y una no. La luz marca los surcos que el cierre tiene en la realidad.
-  Con `surcos=0` la aleta es una sola cara plana por lado, y la textura lleva todo el prensado: es
-  el cierre de las bolsas de papas.
+  Por defecto no hay surcos (`SURCOS = 0`): la aleta es una sola cara plana por lado, y la
+  textura lleva todo el prensado, como en Chisitos y Lay'snt't.
 - **En la textura**, que cada envase pinta: cada vértice lleva su `(s, t)` y quien llama lo lleva a
   su UV. La aleta no tiene letras: repite la franja del borde del frente o del dorso.
 
 ## Lo que cuesta
 
-Con dos surcos, cuatro filas de una cara: ocho triángulos por lado y dieciséis entre los dos lados
-de un cierre. Sin surcos, dos triángulos por lado.
+Sin surcos, dos triángulos por lado y cuatro por cierre. Cada par de surcos suma cuatro filas de
+dos triángulos por lado.
 """
 
 from __future__ import annotations
@@ -43,8 +43,9 @@ DIENTES = 8
 #: borde es recto.
 DIENTE = 0.0
 
-#: Cuántos surcos paralelos a la costura lleva la banda lisa de la aleta.
-SURCOS = 2
+#: Cuántos surcos paralelos a la costura lleva la banda lisa de la aleta. Con cero, que es lo que
+#: llevan los cinco envases, la aleta es una cara plana por lado, como la de Chisitos.
+SURCOS = 0
 
 #: Cuánto sale cada surco del plano de la aleta, en metros.
 RELIEVE = 0.0015

@@ -57,6 +57,11 @@ class CierreDeEnvases(unittest.TestCase):
         self.assertEqual(len(afuera), 4)
         self.assertTrue(all(len(cara.vertices) == 4 for cara in c.caras))
 
+    def test_por_defecto_cada_lado_es_una_sola_cara_plana(self):
+        c = self._armar()
+        self.assertEqual(len(c.caras), 2)
+        self.assertEqual({round(abs(v[0]) - 0.002, 9) for v in c.vertices}, {0.0})
+
     def test_con_dos_surcos_la_banda_son_cuatro_filas_de_una_cara_por_lado(self):
         c = self._armar(surcos=2)
         self.assertEqual(len(c.caras), 4 * 2)
