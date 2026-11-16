@@ -7,7 +7,7 @@
    "ancho": 3264,
    "alto": 3456,
    "formato": "bc1",
-   "huella": "62068766b3678e51692a2c21e2bcaa206585b397a7c376a17190e389a5f15f9e",
+   "huella": "7a4cab8d19f6c2af33a4c129d27b1549d061ebc57e4ee60e19f33197ef8e58f4",
    "entradas": [
     {
      "ruta": "source/textures/props/jabón liquido amarillo.png",
@@ -181,7 +181,7 @@
      "ruta": "source/products-textured/bolsas/donsaturados.png",
      "ancho": 512,
      "alto": 352,
-     "huella": "f3c77ff9bd2af13de33963c90c3c4d680ee5eb30eebbe945c86cba95856e77f0",
+     "huella": "f0cef9d987dfd9c4c7ae4d30b05d76f59d22e1164e9ab2b5e9b2dd6d526e0998",
      "x": 1072,
      "y": 2704
     },
@@ -189,7 +189,7 @@
      "ruta": "source/products-textured/bolsas/macumbas.png",
      "ancho": 512,
      "alto": 352,
-     "huella": "88b613acfc8e50124c93e778fa93288b34b654422830d0835fb05e8f6237bc18",
+     "huella": "731b9e14b1dcb720483eb1496474059ba0388e8107d22f451d78709f9c605a52",
      "x": 1616,
      "y": 2704
     },
@@ -197,7 +197,7 @@
      "ruta": "source/products-textured/bolsas/petisas.png",
      "ancho": 512,
      "alto": 352,
-     "huella": "42885091514689a8040d41e7ecaae3174a2801dbeedd9f2461076a6a6e8d1650",
+     "huella": "b559f8fad976d988fc3dbb29239956570c1c3fb510d530996d2e7f6f272b9cb6",
      "x": 2160,
      "y": 2704
     },

@@ -73,8 +73,10 @@ PAQUETES = {
 ANCHO = 0.30
 #: Lo que mide cada cierre pintado, como fracción del ancho del panel del frente.
 ALETA = 0.07
-#: Entre qué espesores queda el cuerpo, en metros. El TOP del arte da un valor intermedio.
-FONDO = (0.035, 0.06)
+#: El espesor del cuerpo en su centro, en metros.
+FONDO = 0.036
+#: Lo mínimo que sube el lomo de arriba y baja el de abajo, en metros.
+LOMO_MINIMO = 0.008
 #: En cuántas costillas se parte el cuerpo de una costura a la otra.
 SEGMENTOS = 12
 #: Cuántos píxeles se deja adentro del borde de cada panel, para que el filtro no lea el negro.
@@ -139,22 +141,18 @@ def esquinas(mascara, caja: tuple[int, int, int, int]) -> tuple[int, int]:
     return arriba + 1, abajo + 1
 
 
-def punto_liso(pixeles, caja: tuple[int, int, int, int]) -> tuple[float, float]:
-    """El píxel del panel con el fondo más parejo alrededor: de ahí sale el color liso."""
-    x0, y0, x1, y1 = caja
-    mejor, donde = None, None
-    for y in range(y0 + 12, y1 - 12, 3):
-        for x in range(x0 + 90, x1 - 90, 3):
-            rojo, _, azul = pixeles[y, x, :3]
-            if azul < rojo + 0.15 or azul < 0.3:
-                continue
-            ventana = pixeles[y - 5:y + 6, x - 5:x + 6, :3]
-            desvio = float(ventana.reshape(-1, 3).std(axis=0).sum())
-            if mejor is None or desvio < mejor:
-                mejor, donde = desvio, (x + 0.5, y + 0.5)
-    if donde is None:
-        raise SystemExit("el dorso no tiene un fondo liso de donde tomar el color")
-    return donde
+def punto_del_borde(pixeles, caja: tuple[int, int, int, int], fila: int) -> tuple[float, float]:
+    """El píxel de una fila del panel que más se parece al color medio de esa fila.
+
+    De ahí sale el color liso que sigue al panel por arriba o por abajo: con el tono de su borde,
+    la banda del dorso no se lee como una calcomanía.
+    """
+    x0, _, x1, _ = caja
+    margen = int((x1 - x0) * (ALETA + 0.03))
+    tramo = pixeles[fila, x0 + margen:x1 - margen, :3]
+    medio = np.median(tramo, axis=0)
+    cerca = int(np.abs(tramo - medio).sum(axis=1).argmin())
+    return (x0 + margen + cerca + 0.5, fila + 0.5)
 
 
 def armar(nombre: str, datos: dict):
@@ -175,11 +173,23 @@ def armar(nombre: str, datos: dict):
     piso = min(v.z for v in viejos)
 
     alto = ANCHO * (frente[3] - frente[1]) / (frente[2] - frente[0])
-    fondo = min(FONDO[1], max(FONDO[0], ANCHO * (tapa[3] - tapa[1]) / (tapa[2] - tapa[0])))
+    fondo = FONDO
     cuerpo = ANCHO * (1 - 2 * ALETA)
     banda = min(alto, ANCHO * (dorso[3] - dorso[1]) / (dorso[2] - dorso[0]))
-    liso_x, liso_y = punto_liso(pixeles, dorso)
-    color = (liso_x / lado, 1 - liso_y / lado)
+
+    def lomo(caja) -> float:
+        """Cuánto sale el lomo para que el panel del canto lo cubra entero sin estirarse."""
+        faldon = ANCHO * (caja[3] - caja[1]) / (caja[2] - caja[0]) / 2
+        return max(LOMO_MINIMO, math.sqrt(max(0.0, faldon ** 2 - (fondo / 2) ** 2)))
+
+    lomo_de_arriba, lomo_de_abajo = lomo(tapa), lomo(base)
+    cima, quilla = alto + lomo_de_arriba, -lomo_de_abajo
+
+    def color_de(fila: int) -> tuple[float, float]:
+        x, y = punto_del_borde(pixeles, dorso, fila)
+        return (x / lado, 1 - y / lado)
+
+    color_de_arriba, color_de_abajo = color_de(dorso[1] + 3), color_de(dorso[3] - 4)
     de_arriba, de_abajo = esquinas(mascara, frente)
 
     def uv(caja, u: float, v: float, espejo: bool = False) -> tuple[float, float]:
@@ -202,9 +212,11 @@ def armar(nombre: str, datos: dict):
     def vertice(x: float, y: float, z: float):
         clave = (round(x, 6), round(y, 6), round(z, 6))
         if clave not in vertices:
-            vertices[clave] = bm.verts.new(
-                (centro_x + x / escala.x, centro_y + y / escala.y, piso + z / escala.z)
-            )
+            vertices[clave] = bm.verts.new((
+                centro_x + x / escala.x,
+                centro_y + y / escala.y,
+                piso + (z + lomo_de_abajo) / escala.z,
+            ))
         return vertices[clave]
 
     def cara(puntos, uvs) -> None:
@@ -228,38 +240,54 @@ def armar(nombre: str, datos: dict):
             [(a, ya, 0), (c, yc, 0), (c, yc, alto), (a, ya, alto)],
             [uv(frente, ua, 0), uv(frente, uc, 0), uv(frente, uc, 1), uv(frente, ua, 1)],
         )
-        for desde, hasta, con_arte in ((0, z0, False), (z0, z1, True), (z1, alto, False)):
+        for desde, hasta, liso in (
+            (0, z0, color_de_abajo), (z0, z1, None), (z1, alto, color_de_arriba)
+        ):
             if hasta - desde < 1e-5:
                 continue
             puntos = [(-c, yc, desde), (-a, ya, desde), (-a, ya, hasta), (-c, yc, hasta)]
-            if con_arte:
+            if liso is None:
                 cara(puntos, [uv(dorso, uc, 0, True), uv(dorso, ua, 0, True),
                               uv(dorso, ua, 1, True), uv(dorso, uc, 1, True)])
             else:
-                cara(puntos, [color] * 4)
+                cara(puntos, [liso] * 4)
+        # Cada canto es un lomo de dos faldones: el del frente lee la mitad del panel que da al
+        # frente, y el del dorso la otra.
         cara(
-            [(a, ya, alto), (c, yc, alto), (-c, yc, alto), (-a, ya, alto)],
-            [uv(tapa, ua, 0), uv(tapa, uc, 0), uv(tapa, uc, 1), uv(tapa, ua, 1)],
+            [(a, ya, alto), (c, yc, alto), (0, yc, cima), (0, ya, cima)],
+            [uv(tapa, ua, 0), uv(tapa, uc, 0), uv(tapa, uc, 0.5), uv(tapa, ua, 0.5)],
         )
         cara(
-            [(c, yc, 0), (a, ya, 0), (-a, ya, 0), (-c, yc, 0)],
-            [uv(base, uc, 1), uv(base, ua, 1), uv(base, ua, 0), uv(base, uc, 0)],
+            [(0, ya, cima), (0, yc, cima), (-c, yc, alto), (-a, ya, alto)],
+            [uv(tapa, ua, 0.5), uv(tapa, uc, 0.5), uv(tapa, uc, 1), uv(tapa, ua, 1)],
+        )
+        cara(
+            [(c, yc, 0), (a, ya, 0), (0, ya, quilla), (0, yc, quilla)],
+            [uv(base, uc, 1), uv(base, ua, 1), uv(base, ua, 0.5), uv(base, uc, 0.5)],
+        )
+        cara(
+            [(0, yc, quilla), (0, ya, quilla), (-a, ya, 0), (-c, yc, 0)],
+            [uv(base, uc, 0.5), uv(base, ua, 0.5), uv(base, ua, 0), uv(base, uc, 0)],
         )
     fino = medio(0)
     for adentro, afuera in ((-cuerpo / 2, -ANCHO / 2), (cuerpo / 2, ANCHO / 2)):
         ya, yc = sorted((adentro, afuera))
         ua, uc = (ya + ANCHO / 2) / ANCHO, (yc + ANCHO / 2) / ANCHO
+        # La aleta llega de la quilla a la cima.
         cara(
-            [(fino, ya, 0), (fino, yc, 0), (fino, yc, alto), (fino, ya, alto)],
+            [(fino, ya, quilla), (fino, yc, quilla), (fino, yc, cima), (fino, ya, cima)],
             [uv_de_aleta(ua, 0), uv_de_aleta(uc, 0), uv_de_aleta(uc, 1), uv_de_aleta(ua, 1)],
         )
         cara(
-            [(-fino, yc, 0), (-fino, ya, 0), (-fino, ya, alto), (-fino, yc, alto)],
+            [(-fino, yc, quilla), (-fino, ya, quilla), (-fino, ya, cima), (-fino, yc, cima)],
             [uv_de_aleta(uc, 0, True), uv_de_aleta(ua, 0, True), uv_de_aleta(ua, 1, True),
              uv_de_aleta(uc, 1, True)],
         )
-        canto = [(fino, afuera, 0), (-fino, afuera, 0), (-fino, afuera, alto), (fino, afuera, alto)]
-        cara(canto if afuera > 0 else canto[::-1], [color] * 4)
+        canto = [
+            (fino, afuera, quilla), (-fino, afuera, quilla),
+            (-fino, afuera, cima), (fino, afuera, cima),
+        ]
+        cara(canto if afuera > 0 else canto[::-1], [color_de_arriba] * 4)
     bm.normal_update()
 
     malla = objeto.data
@@ -278,7 +306,8 @@ def armar(nombre: str, datos: dict):
             nodo.image.reload()
     triangulos = sum(len(p.vertices) - 2 for p in malla.polygons)
     print(
-        f"{nombre}: {ANCHO:.3f} de ancho, {alto:.4f} de alto, {fondo:.4f} de fondo, "
+        f"{nombre}: {ANCHO:.3f} de ancho, {cima - quilla:.4f} de alto ({alto:.4f} de frente), "
+        f"{fondo:.4f} de fondo, "
         f"banda del dorso de {banda:.4f}, {triangulos} triángulos, {malla.users} unidades"
     )
     return objeto

@@ -6,9 +6,10 @@ una línea acá, y las dos herramientas siguen de acuerdo.
 
 ## La imagen
 
-Cuatro regiones, en píxeles y de arriba a abajo: el frente y el dorso, cuadrados, lado a lado,
-y debajo los dos costados, acostados. Cada panel lleva en su primera y su última fila el prensado
-del cierre; la aleta del cierre repite esa franja.
+El frente y el dorso, cuadrados, lado a lado. Debajo, a la izquierda, los dos costados,
+acostados. Debajo, a la derecha, una franja por aleta: el color del borde de su panel con el
+prensado del cierre, sin arte. Una aleta que repite el borde del panel se lleva los sellos y el
+dibujo que llegan hasta ese borde.
 
 ## Qué no hace
 
@@ -29,6 +30,10 @@ REGIONES: dict[str, tuple[int, int, int, int]] = {
     "dorso": (260, 8, 504, 252),
     "derecha": (8, 260, 252, 296),
     "izquierda": (8, 304, 252, 340),
+    "aleta_frente_arriba": (260, 260, 504, 272),
+    "aleta_frente_abajo": (260, 280, 504, 292),
+    "aleta_dorso_arriba": (260, 300, 504, 312),
+    "aleta_dorso_abajo": (260, 320, 504, 332),
 }
 
 #: Las regiones cuyo largo corre a lo ancho de la imagen: el costado va acostado.

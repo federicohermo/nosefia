@@ -33,8 +33,6 @@ cara. Pasan por la misma construcción, con tres diferencias:
 - **El cierre** es el de `lib/cierre_de_envases.py`, el mismo de los paquetes de Oremos y Pepito:
   una aleta plana de borde recto, como la de Chisitos y Lay'snt't. Las papas usan esa misma
   construcción y salen igual que siempre, vértice por vértice.
-- **El agujero para colgar** de Macumbas es una ventana en el cierre de arriba, de
-  `lib/agujero_de_colgar.py`: se aplica sobre ese mismo cierre, no lo reemplaza.
 - **El desplegado** es el de `lib/desplegado_de_bolsas.py`: una sola textura de 512 x 352 con
   frente, dorso y los dos costados acostados, en lugar del par `completo` y `costado`.
 - **El frente** mira a `-x`, como mira hoy cada una de las tres. El ancho y el alto de la caja que
@@ -61,7 +59,7 @@ import bpy  # type: ignore[import-not-found]
 
 RAIZ = Path(__file__).resolve().parents[3]
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
-from lib import agujero_de_colgar, cierre_de_envases, desplegado_de_bolsas  # noqa: E402
+from lib import cierre_de_envases, desplegado_de_bolsas  # noqa: E402
 from lib.consola import configurar  # noqa: E402
 
 Rect = tuple[float, float, float, float]
@@ -135,7 +133,7 @@ class Bolsa:
     grosor de la caja que conserva el centro; `transicion`, qué parte del alto ocupa el afinado en
     cada punta; `planitud`, qué tan plano es el frente; `recogida`, cuánto ancho se recoge donde
     la bolsa es más gruesa.
-    `agujero` abre en el cierre de arriba el agujero para colgar. `acostadas` son los costados cuyo
+    `acostadas` son los costados cuyo
     recorte va acostado en la textura: las papas llevan los suyos de pie, y mezclarlos rompe su UV.
     """
 
@@ -149,7 +147,6 @@ class Bolsa:
     recogida: float = 0.0
     aleta: float = ALETA
     textura: Path | None = None
-    agujero: bool = False
     acostadas: tuple[str, ...] = ()
     banda: float = BANDA_DE_LA_ALETA
     cierre_en_metros: bool = False
@@ -172,7 +169,6 @@ BOLSAS = (
             recogida=RECOGIDA_DE_LAS_GALLETITAS,
             aleta=ALETA_DE_LAS_GALLETITAS,
             textura=TEXTURAS / f"{producto}.png",
-            agujero=objeto == "macumbas-convcol",
             acostadas=ACOSTADAS,
             banda=BANDA_DE_LAS_GALLETITAS,
             cierre_en_metros=True,
@@ -371,31 +367,20 @@ def _cierres(
             normal=(1.0, 0.0, 0.0),
             separacion=cierre_de_envases.SEPARACION * por_metro,
         )
-        if bolsa.agujero and arriba_de_todo:
-            c = agujero_de_colgar.abrir_agujero(
-                c, _punto_del_cierre((xc, y0, borde), y1 - y0, 1.0, aleta, por_metro)
-            )
         base = len(vertices)
         vertices.extend(c.vertices)
         for cara in c.caras:
-            u0, u1, v0, v1 = desplegado["frente" if cara.lado == 1 else "dorso"]
+            panel = "frente" if cara.lado == 1 else "dorso"
+            franja = desplegado.get(f"aleta_{panel}_{'arriba' if arriba_de_todo else 'abajo'}")
+            u0, u1, v0, v1 = franja or desplegado[panel]
+            # Con franja propia la aleta la recorre entera; sin ella repite el borde del panel.
+            banda = (v1 - v0) if franja else bolsa.banda
             uvs = []
             for s, t in cara.st:
                 u = _entre(u0, u1, s) if cara.lado == 1 else _entre(u1, u0, s)
-                v = v1 - bolsa.banda * t if arriba_de_todo else v0 + bolsa.banda * t
+                v = v1 - banda * t if arriba_de_todo else v0 + banda * t
                 uvs.append((u, v))
             caras.append(([base + i for i in cara.vertices], uvs, True))
-
-
-def _punto_del_cierre(origen, largo, afuera_z, salida, por_metro):
-    """La posición de un `(s, t)` de un lado del cierre de arriba, con la misma regla con que
-    `cierre_de_envases.cierre` pone sus vértices, sin surcos."""
-
-    def punto(s: float, t: float, lado: int) -> tuple[float, float, float]:
-        salto = lado * cierre_de_envases.SEPARACION * por_metro
-        return (origen[0] + salto, origen[1] + s * largo, origen[2] + afuera_z * t * salida)
-
-    return punto
 
 
 def usar_textura(malla, textura: Path) -> None:

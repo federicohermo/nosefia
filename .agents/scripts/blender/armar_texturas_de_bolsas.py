@@ -181,6 +181,24 @@ def aplicar_prensado(panel: np.ndarray) -> np.ndarray:
     return salida
 
 
+def franja_de_la_aleta(panel: np.ndarray, arriba: bool) -> np.ndarray:
+    """La franja que pinta una aleta: el color medio del borde del panel, con el prensado.
+
+    Sale del panel antes de los sellos y del prensado. La mediana de cada columna de color deja
+    afuera el dibujo que llega hasta el borde.
+    """
+    borde = panel[:3] if arriba else panel[-3:]
+    color = np.median(borde.reshape(-1, 3), axis=0)
+    ganancia = prensado()
+    perfil = np.interp(
+        np.linspace(0, len(ganancia) - 1, PRENSADO), np.arange(len(ganancia)), ganancia
+    )
+    if not arriba:
+        perfil = perfil[::-1]
+    franja = perfil[:, None, None] * color[None, None, :]
+    return franja * np.ones((PRENSADO, panel.shape[1], 3), dtype=np.float32)
+
+
 def sello(indice: int, lado: int) -> tuple[np.ndarray, np.ndarray]:
     """El sello `indice` de Chisitos con su borde blanco, sin el fondo verde, llevado a `lado`
     píxeles de ancho. La máscara es la zona negra del sello y 3 píxeles de su borde."""
@@ -345,6 +363,11 @@ SELLOS = {
 
 def armar(producto: str) -> np.ndarray:
     frente, dorso = paneles_de(producto)
+    aletas = {
+        f"aleta_{cara}_{'arriba' if arriba else 'abajo'}": franja_de_la_aleta(panel, arriba)
+        for cara, panel in (("frente", frente), ("dorso", dorso))
+        for arriba in (True, False)
+    }
     sellos, x, y, lado_del_sello = SELLOS[producto]
     pegar_sellos(frente, sellos, x, y, lado_del_sello)
     frente, dorso = aplicar_prensado(frente), aplicar_prensado(dorso)
@@ -355,6 +378,7 @@ def armar(producto: str) -> np.ndarray:
         ("dorso", dorso),
         ("derecha", costado(frente, dorso, "derecha", COSTADOS_ACTUALES[producto])),
         ("izquierda", costado(frente, dorso, "izquierda", COSTADOS_ACTUALES[producto])),
+        *aletas.items(),
     ):
         x0, y0, x1, y1 = REGIONES[nombre]
         lienzo[y0:y1, x0:x1] = panel
