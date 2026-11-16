@@ -125,8 +125,7 @@ class Bolsa:
     """Una bolsa a armar: su unidad, que comparte la malla con las demás, y lo que la distingue.
 
     Las aletas las arma `lib/cierre_de_envases.py` para todas: `banda` es qué franja del borde del
-    frente y del dorso pinta, y `cierre_en_metros` si la separación se mide en metros del mundo (se
-    lleva a la malla con la escala del objeto) o ya en la malla. `mira_a_menos_x` gira la bolsa 180
+    frente y del dorso pinta. `mira_a_menos_x` gira la bolsa 180
     grados sobre su eje vertical: el frente de las papas mira a `+x` y el de las galletitas a
     `-x`, que es hacia donde las acomoda `lib/reparto.py`. `textura` es la imagen que pasa a
     llevar el material, y reemplaza a la de la malla anterior. `grosor` es la fracción del
@@ -149,7 +148,6 @@ class Bolsa:
     textura: Path | None = None
     acostadas: tuple[str, ...] = ()
     banda: float = BANDA_DE_LA_ALETA
-    cierre_en_metros: bool = False
 
 
 #: Las bolsas que se arman. Las papas llevan la aleta plana de siempre y las galletitas, con la
@@ -171,7 +169,6 @@ BOLSAS = (
             textura=TEXTURAS / f"{producto}.png",
             acostadas=ACOSTADAS,
             banda=BANDA_DE_LAS_GALLETITAS,
-            cierre_en_metros=True,
         )
         for objeto, producto in (
             ("petisas-convcol", "petisas"),
@@ -293,7 +290,7 @@ def armar(objeto, bolsa: Bolsa) -> tuple[int, int]:
     cuerpo = len(caras)
 
     _cierres(
-        vertices, caras, desplegado, (xc, y0, y1), (abajo, arriba, aleta), objeto.scale.x, bolsa
+        vertices, caras, desplegado, (xc, y0, y1), (abajo, arriba, aleta), bolsa
     )
 
     # Toda cara mira hacia afuera del centro de la bolsa.
@@ -343,7 +340,6 @@ def _cierres(
     desplegado: dict[str, Rect],
     ancho_y: tuple[float, float, float],
     alturas_z: tuple[float, float, float],
-    escala_x: float,
     bolsa: Bolsa,
 ) -> None:
     """Agrega el cierre de arriba y el de abajo, armados por `lib/cierre_de_envases.py`.
@@ -355,8 +351,6 @@ def _cierres(
     """
     xc, y0, y1 = ancho_y
     abajo, arriba, aleta = alturas_z
-    # Las medidas del cierre van en metros; las de las papas, que ya salían así, en la malla.
-    por_metro = 1.0 / escala_x if bolsa.cierre_en_metros else 1.0
     for arriba_de_todo, borde in ((False, abajo), (True, arriba)):
         c = cierre_de_envases.cierre(
             origen=(xc, y0, borde),
@@ -365,7 +359,7 @@ def _cierres(
             afuera=(0.0, 0.0, 1.0 if arriba_de_todo else -1.0),
             salida=aleta,
             normal=(1.0, 0.0, 0.0),
-            separacion=cierre_de_envases.SEPARACION * por_metro,
+            separacion=cierre_de_envases.SEPARACION,
         )
         base = len(vertices)
         vertices.extend(c.vertices)

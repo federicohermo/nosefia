@@ -20,8 +20,9 @@ estirada.
 
 ## Lo que no entra entero
 
-- **El dorso.** El BACK es más apaisado que el frente. Llena el dorso entero, estirado en alto:
-  es la única cara que se estira, y sólo se ve con el paquete en la mano y dado vuelta.
+- **El dorso.** El BACK es más apaisado que el frente. El de Pepito, que lo es tres veces, se
+  parte en dos filas por un hueco entre sus bloques (`cortes`) y cada fila va sin estirar. El de
+  Oremos no tiene dónde partirse: llena el dorso estirado en alto.
 - **Las esquinas del FRONT.** Vienen redondeadas sobre negro. Las aletas saltean esas filas.
 - **Los dientes de los cierres pintados.** El panel se recorta hasta la primera columna llena:
   el cierre queda recto.
@@ -66,17 +67,24 @@ PAQUETES = {
         "semillas": {
             "frente": (627, 520), "dorso": (627, 940), "tapa": (627, 115), "base": (627, 1160),
         },
+        "cortes": (701,),
     },
 }
+#: Cuántas filas de arriba y de abajo del BACK no entran en una fila del dorso partido: son sólo
+#: fondo, y sin ellas la fila más ancha llena el dorso.
+MARGEN_DEL_DORSO = 12
+#: Desde qué parte del ancho del cuerpo una fila lo llena entero en vez de dejar dos márgenes.
+LLENA = 0.95
 #: El ancho del paquete a lo largo del estante, con los cierres adentro, en metros. Las columnas
 #: de su tanda están a 32 cm: con 30 queda 1 cm de aire a cada lado.
 ANCHO = 0.30
 #: Lo que mide cada cierre pintado, como fracción del ancho del panel del frente.
 ALETA = 0.07
 #: El espesor del cuerpo en su centro, en metros.
-FONDO = 0.036
-#: Lo mínimo que sube el lomo de arriba y baja el de abajo, en metros.
-LOMO_MINIMO = 0.008
+FONDO = 0.05
+#: Lo mínimo que sube el lomo de arriba y baja el de abajo, en metros. Con este espesor el panel
+#: del canto ya no alcanza a cubrir un lomo más alto sin estirarse: se estira un 15 %.
+LOMO_MINIMO = 0.014
 #: En cuántas costillas se parte el cuerpo de una costura a la otra.
 SEGMENTOS = 12
 #: Cuántos píxeles se deja adentro del borde de cada panel, para que el filtro no lea el negro.
@@ -227,17 +235,53 @@ def armar(nombre: str, datos: dict):
 
     ys = [-cuerpo / 2 + cuerpo * i / SEGMENTOS for i in range(SEGMENTOS + 1)]
     us = [(y + ANCHO / 2) / ANCHO for y in ys]
+
+    def espesor_en(y: float) -> float:
+        """Medio espesor en `y`, sobre la cuerda entre las dos costillas que lo encierran."""
+        i = min(SEGMENTOS - 1, max(0, int((y - ys[0]) / (cuerpo / SEGMENTOS))))
+        parte = (y - ys[i]) / (ys[i + 1] - ys[i])
+        return medio(i) + (medio(i + 1) - medio(i)) * parte
+
+    # El dorso, visto de atrás: cada fila lee un tramo del BACK de izquierda a derecha.
+    x0, y0, x1, y1 = dorso
+    aleta_px = (x1 - x0) * ALETA
+    cortes = (x0 + aleta_px, *datos.get("cortes", ()), x1 - aleta_px)
+    filas = len(cortes) - 1
+    margen = MARGEN_DEL_DORSO if filas > 1 else 0
+    alto_de_fila = alto / filas
+    por_pixel = alto_de_fila / (y1 - y0 - 2 * margen)
+    for fila in range(filas):
+        desde_px, hasta_px = cortes[fila], cortes[fila + 1]
+        ancho_de_fila = (hasta_px - desde_px) * por_pixel
+        if ancho_de_fila >= cuerpo * LLENA:
+            ancho_de_fila = cuerpo
+        techo = alto - fila * alto_de_fila
+        piso_de_fila = techo - alto_de_fila
+        limites = sorted({*ys, -ancho_de_fila / 2, ancho_de_fila / 2})
+        limites = [y for y in limites if -cuerpo / 2 - 1e-9 <= y <= cuerpo / 2 + 1e-9]
+
+        def uv_del_dorso(y: float, arriba: bool) -> tuple[float, float]:
+            parte = (ancho_de_fila / 2 - y) / ancho_de_fila
+            x = desde_px + BORDE + parte * (hasta_px - desde_px - 2 * BORDE)
+            y_px = (y0 + margen + BORDE) if arriba else (y1 - margen - BORDE)
+            return (x / lado, 1 - y_px / lado)
+
+        for ya, yc in zip(limites, limites[1:]):
+            if yc - ya < 1e-7:
+                continue
+            a, c = espesor_en(ya), espesor_en(yc)
+            puntos = [(-c, yc, piso_de_fila), (-a, ya, piso_de_fila), (-a, ya, techo), (-c, yc, techo)]
+            if abs((ya + yc) / 2) > ancho_de_fila / 2:
+                cara(puntos, [color] * 4)
+            else:
+                cara(puntos, [uv_del_dorso(yc, False), uv_del_dorso(ya, False),
+                              uv_del_dorso(ya, True), uv_del_dorso(yc, True)])
     for i in range(SEGMENTOS):
         a, c = medio(i), medio(i + 1)
         ya, yc, ua, uc = ys[i], ys[i + 1], us[i], us[i + 1]
         cara(
             [(a, ya, 0), (c, yc, 0), (c, yc, alto), (a, ya, alto)],
             [uv(frente, ua, 0), uv(frente, uc, 0), uv(frente, uc, 1), uv(frente, ua, 1)],
-        )
-        cara(
-            [(-c, yc, 0), (-a, ya, 0), (-a, ya, alto), (-c, yc, alto)],
-            [uv(dorso, uc, 0, True), uv(dorso, ua, 0, True), uv(dorso, ua, 1, True),
-             uv(dorso, uc, 1, True)],
         )
         # Cada canto es un lomo de dos faldones: el del frente lee la mitad del panel que da al
         # frente, y el del dorso la otra.
