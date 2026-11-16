@@ -38,6 +38,7 @@ import bpy  # type: ignore[import-not-found]
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from lib import paquete_de_galletitas as forma  # noqa: E402
+from lib import recortes_de_paquetes as recortes  # noqa: E402
 from lib.cierre_de_envases import cierre  # noqa: E402
 from lib.consola import configurar  # noqa: E402
 from lib.repo import RAIZ  # noqa: E402
@@ -63,13 +64,10 @@ def caja_del_cubo(objeto) -> tuple[float, ...]:
 
 
 def caja_del_paquete(objeto, producto: str) -> "forma.Caja":
-    """El ancho y el fondo son los del cubo; el alto, el de la proporción del producto."""
+    """El ancho y el fondo son los del cubo; el alto, el que da la proporción del arte."""
     x0, x1, y0, y1, _, _ = caja_del_cubo(objeto)
     escala = objeto.scale
-    ancho = (y1 - y0) * escala.y
-    return forma.Caja(
-        ancho=ancho, fondo=(x1 - x0) * escala.x, alto=forma.alto_del_paquete(producto, ancho)
-    )
+    return forma.caja_del_paquete(producto, (y1 - y0) * escala.y, (x1 - x0) * escala.x)
 
 
 def armar(objeto, producto: str) -> tuple[int, int]:
@@ -84,7 +82,7 @@ def armar(objeto, producto: str) -> tuple[int, int]:
     def a_local(x: float, y: float, z: float) -> tuple[float, float, float]:
         return (x / escala.x + centro[0], y / escala.y + centro[1], z / escala.z + z0)
 
-    rects = forma.desplegado(caja)
+    atlas = recortes.disposicion(producto)
     secc = forma.seccion(caja)
     ys = forma.alturas_de_los_anillos(caja)
     espesor = 0.002 / (caja.fondo / 2)
@@ -149,14 +147,7 @@ def armar(objeto, producto: str) -> tuple[int, int]:
                 (ys[i + 1], recorridos[i + 1][k][1], fm),
                 (ys[i + 1], recorridos[i + 1][k][0], fk),
             ]
-            uvs = [
-                forma.uv_en_el_panel(
-                    rects[panel],
-                    forma.u_del_cuerpo(panel, y, caja, f),
-                    forma.v_del_cuerpo(panel, r),
-                )
-                for y, r, f in esquinas
-            ]
+            uvs = [forma.uv_del_cuerpo(atlas, panel, y, r, caja, f) for y, r, f in esquinas]
             ids, uvs = hacia_afuera(ids, uvs)
             caras.append((ids, uvs, True))
 
@@ -171,8 +162,10 @@ def armar(objeto, producto: str) -> tuple[int, int]:
         vertices.extend(c.vertices)
         for cara in c.caras:
             ids = [base + i for i in cara.vertices]
-            uvs = [forma.uv_del_cierre(cara.lado, c.vertices[i][1], c.vertices[i][2], caja, rects)
-                   for i in cara.vertices]
+            uvs = [
+                forma.uv_del_cierre(atlas, cara.lado, c.vertices[i][1], c.vertices[i][2], caja)
+                for i in cara.vertices
+            ]
             caras.append((ids, uvs, False))
 
     malla.clear_geometry()
@@ -188,17 +181,18 @@ def armar(objeto, producto: str) -> tuple[int, int]:
     return antes, despues
 
 
-def apuntar_la_textura(objeto, ruta: Path) -> Path:
+def apuntar_la_textura(objeto, ruta: Path, producto: str) -> Path:
     """Cambia la imagen del material del paquete por la del desplegado nuevo."""
     if not ruta.is_file():
         raise SystemExit(f"falta la textura {ruta}")
     imagen = bpy.data.images.load(str(ruta), check_existing=False)
     medida = tuple(imagen.size)
-    if medida != (forma.LIENZO_ANCHO, forma.LIENZO_ALTO):
+    atlas = recortes.disposicion(producto)
+    if medida != (atlas.ancho, atlas.alto):
         bpy.data.images.remove(imagen)
         raise SystemExit(
-            f"{ruta.name} mide {medida[0]}x{medida[1]} y el desplegado pide "
-            f"{forma.LIENZO_ANCHO}x{forma.LIENZO_ALTO}: no es la textura de este desplegado"
+            f"{ruta.name} mide {medida[0]}x{medida[1]} y el atlas de {producto} pide "
+            f"{atlas.ancho}x{atlas.alto}: corré recortar_paquetes_de_galletitas.py"
         )
     bpy.data.images.remove(imagen)
     material = objeto.material_slots[0].material
@@ -236,7 +230,7 @@ def main() -> None:
         objeto = bpy.data.objects[nombre]
         print(f"{nombre}: {objeto.data.users} unidades")
         ruta = elegidas[producto] or CARPETA_DE_TEXTURAS / archivo
-        apuntar_la_textura(objeto, ruta)
+        apuntar_la_textura(objeto, ruta, producto)
         antes, despues = armar(objeto, producto)
         caja = caja_del_paquete(objeto, producto)
         print(

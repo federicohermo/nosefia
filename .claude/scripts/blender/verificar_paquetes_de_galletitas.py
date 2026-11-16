@@ -1,17 +1,19 @@
-"""Mide sobre la malla que el desplegado de Oremos y de Pepito no estira y es parejo.
+"""Mide sobre la malla que el arte de Oremos y de Pepito no queda estirado. Corre en Blender.
 
     blender <archivo>.blend --background --python-exit-code 1 \
         --python .claude/scripts/blender/verificar_paquetes_de_galletitas.py
 
-No guarda nada. Arma en memoria cada paquete con su forma y su UV, y en cada panel mide, sobre los
-triángulos de su zona segura del arte, la transformación de la UV a metros:
+No guarda nada. Arma en memoria cada paquete con su forma y su UV y mide, sobre los triángulos
+cuya UV cae dentro del recorte del frente y del dorso, la transformación de la UV a metros:
 
 - **Si estira:** la relación entre los dos valores singulares. Con 1, un píxel mide lo mismo en x
-  que en y. Falla si el peor triángulo se desvía más del 2 %.
-- **Cuántos píxeles por metro lleva:** la media geométrica de los dos. Tiene que ser la del
-  desplegado en todos los paneles, con 2 % de tolerancia: la misma densidad en todas las caras.
+  que en y. Falla si el peor triángulo se desvía más del 1 %.
+- **Cuántos píxeles por metro lleva** a lo ancho y a lo alto, y que sea la del recorte sobre la zona
+  que cubre.
 
-Además comprueba que la UV de la malla cae dentro del rectángulo de su panel.
+Además mide **la proporción del frente**: el ancho y el alto de la zona que cubre el recorte del
+frente, sobre la malla, contra la relación de aspecto del recorte. Y que el recorte del frente
+cubra su zona **de borde a borde**: la UV del frente llega a los cuatro bordes del recorte.
 """
 
 import math
@@ -25,43 +27,28 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import armar_paquetes_de_galletitas as armado  # noqa: E402
 from lib import paquete_de_galletitas as forma  # noqa: E402
+from lib import recortes_de_paquetes as recortes  # noqa: E402
 from lib.consola import configurar  # noqa: E402
 
-TOLERANCIA = 0.02
+TOLERANCIA = 0.01
 
 
-def triangulos_por_panel(objeto, rects):
-    """Los triángulos de cada panel: sus tres UV en píxeles de la hoja y sus tres puntos en
-    metros."""
+def triangulos(objeto, atlas):
+    """Los triángulos de la malla: sus tres UV en píxeles del atlas y sus tres puntos en metros."""
     malla = objeto.data
     escala = objeto.scale
     capa = malla.uv_layers[0].data
-    por_panel = {panel: [] for panel in rects}
+    salida = []
     for poligono in malla.polygons:
         lazos = list(poligono.loop_indices)
-        uvs = [
-            (capa[i].uv.x * forma.LIENZO_ANCHO, (1.0 - capa[i].uv.y) * forma.LIENZO_ALTO)
-            for i in lazos
-        ]
+        uvs = [(capa[i].uv.x * atlas.ancho, (1.0 - capa[i].uv.y) * atlas.alto) for i in lazos]
         puntos = []
         for i in lazos:
             c = malla.vertices[malla.loops[i].vertex_index].co
             puntos.append(Vector((c.x * escala.x, c.y * escala.y, c.z * escala.z)))
-        centro = (sum(u[0] for u in uvs) / len(uvs), sum(u[1] for u in uvs) / len(uvs))
-        panel = next(
-            (
-                n
-                for n, (x, y, w, h) in rects.items()
-                if x <= centro[0] <= x + w and y <= centro[1] <= y + h
-            ),
-            None,
-        )
-        if panel is None:
-            continue
         for k in range(1, len(lazos) - 1):
-            triangulo = ((uvs[0], uvs[k], uvs[k + 1]), (puntos[0], puntos[k], puntos[k + 1]))
-            por_panel[panel].append(triangulo)
-    return por_panel
+            salida.append(((uvs[0], uvs[k], uvs[k + 1]), (puntos[0], puntos[k], puntos[k + 1])))
+    return salida
 
 
 def valores_singulares(par):
@@ -80,6 +67,15 @@ def valores_singulares(par):
     return math.sqrt(media + resto), math.sqrt(max(media - resto, 1e-18))
 
 
+def dentro(par, rect, margen=1.0):
+    x, y, ancho, alto = rect
+    uvs = par[0]
+    return all(
+        x + margen <= u <= x + ancho - margen and y + margen <= v <= y + alto - margen
+        for u, v in uvs
+    )
+
+
 def main() -> None:
     configurar()
     fallas = []
@@ -87,53 +83,60 @@ def main() -> None:
         objeto = bpy.data.objects[nombre]
         armado.armar(objeto, clave)
         caja = armado.caja_del_paquete(objeto, clave)
-        zonas = forma.zonas(caja)
-        rects = forma.desplegado(caja)
-        esperada = forma.densidad(caja)
-        triangulos = triangulos_por_panel(objeto, rects)
-        print(f"\n{clave}: paquete de {caja.ancho:.3f} x {caja.alto:.3f} x {caja.fondo:.3f} m")
-        print(f"  densidad del desplegado: {esperada:.0f} px por metro")
-        for panel in forma.PANELES:
-            x0, y0, w, h = zonas[panel]["zona_segura"]
-            bajo_el_arte = []
-            for par in triangulos[panel]:
-                cx = sum(u[0] for u in par[0]) / 3
-                cy = sum(u[1] for u in par[0]) / 3
-                if x0 <= cx <= x0 + w and y0 <= cy <= y0 + h:
-                    s = valores_singulares(par)
-                    if s is not None:
-                        bajo_el_arte.append(s)
+        atlas = recortes.disposicion(clave)
+        todos = triangulos(objeto, atlas)
+        print(f"\n{clave}: paquete de {caja.ancho:.3f} x {caja.alto:.4f} x {caja.fondo:.3f} m")
+        ancho_f, alto_f = recortes.medida(recortes.RECORTES[clave][recortes.FRENTE])
+        arte = 2 * caja.semiancho_de_arte
+        largo_frente = forma.seccion(caja).largo_de_cada_panel[forma.FRENTE]
+        relacion = recortes.relacion_del_frente(clave)
+        desvio = (arte / largo_frente) / relacion - 1
+        print(
+            f"  frente del envase: {arte:.4f} x {largo_frente:.4f} m, "
+            f"relación {arte / largo_frente:.4f}; "
+            f"la del arte es {relacion:.4f} ({desvio * 100:+.2f} %)"
+        )
+        if abs(desvio) > TOLERANCIA:
+            fallas.append(
+                f"{clave}: el frente no tiene la proporción del arte ({desvio * 100:+.2f} %)"
+            )
+        for zona in (recortes.FRENTE, recortes.DORSO):
+            rect = atlas.rects[zona]
+            bajo_el_arte = [valores_singulares(p) for p in todos if dentro(p, rect)]
+            bajo_el_arte = [s for s in bajo_el_arte if s is not None]
             if not bajo_el_arte:
-                fallas.append(f"{clave} {panel}: ningún triángulo bajo su zona segura")
+                fallas.append(f"{clave} {zona}: ningún triángulo bajo el recorte")
                 continue
             desvios = [max(a, b) / min(a, b) - 1 for a, b in bajo_el_arte]
+            ancho_px, alto_px = rect[2], rect[3]
+            esperada = ancho_px / arte
             densidades = [1 / math.sqrt(a * b) for a, b in bajo_el_arte]
-            peor, media = max(desvios), sum(densidades) / len(densidades)
-            diferencia = media / esperada - 1
-            marca = ""
-            if peor > TOLERANCIA or abs(diferencia) > TOLERANCIA:
-                marca = "  <-- FALLA"
-                fallas.append(
-                    f"{clave} {panel}: estiramiento {peor * 100:.1f} %, "
-                    f"densidad {diferencia * 100:+.1f} %"
-                )
+            peor = max(desvios)
+            media = sum(densidades) / len(densidades)
+            bien = peor <= TOLERANCIA and abs(media / esperada - 1) <= TOLERANCIA
+            marca = "" if bien else "  <-- FALLA"
             print(
-                f"  {panel:7} {len(bajo_el_arte):3} triángulos bajo la zona segura: estiramiento "
-                f"{peor * 100:4.1f} %, {media:6.0f} px por metro ({diferencia * 100:+.1f} %){marca}"
+                f"  {zona:7} {len(bajo_el_arte):3} triángulos bajo el recorte: estiramiento "
+                f"{peor * 100:5.2f} %, {media:6.0f} px por metro "
+                f"(el recorte da {esperada:.0f}){marca}"
             )
-        for panel, (x, y, w, h) in rects.items():
-            for uvs, _ in triangulos[panel]:
-                for u, v in uvs:
-                    if not (x - 0.5 <= u <= x + w + 0.5 and y - 0.5 <= v <= y + h + 0.5):
-                        fallas.append(f"{clave} {panel}: una UV cae fuera de su panel")
-                        break
-                else:
-                    continue
-                break
+            if marca:
+                fallas.append(f"{clave} {zona}: estiramiento {peor * 100:.2f} %")
+        rect = atlas.rects[recortes.FRENTE]
+        us = [u for p in todos if dentro(p, rect, -0.01) for u, _ in p[0]]
+        vs = [v for p in todos if dentro(p, rect, -0.01) for _, v in p[0]]
+        x, y, w, h = rect
+        bordes = (min(us) - x, x + w - max(us), min(vs) - y, y + h - max(vs))
+        print(
+            "  el frente llega a los bordes de su recorte (píxeles que faltan: izquierda, derecha, "
+            f"arriba, abajo): {tuple(round(b, 2) for b in bordes)}"
+        )
+        if max(abs(b) for b in bordes) > 1.0:
+            fallas.append(f"{clave}: el arte del frente no llega a todos los bordes de su recorte")
     if fallas:
         print("\nFALLAS:\n  " + "\n  ".join(sorted(set(fallas))))
         raise SystemExit(1)
-    print("\nsin estiramiento y con la misma densidad en todas las caras, dentro del 2 %")
+    print("\nsin estiramiento (menos del 1 %), con la proporción del arte y de borde a borde")
 
 
 if __name__ == "__main__":
