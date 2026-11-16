@@ -48,6 +48,23 @@ Cómo se mide el costo de las luces, en [rendimiento](./rendimiento.md).
   adentro no se toca aunque esté negra: es la luz de un ambiente oscuro. Un horneado hecho a mano
   desde el editor no pasa por ese paso.
 
+## La oclusión ambiental en pantalla
+
+El `Environment` de `ambiente_del_almacen.tscn` tiene SSAO. Compatibility lo trae desde Godot 4.6,
+en una versión simplificada.
+
+- **Es un paso del pase final.** Lee la profundidad y multiplica el color ya compuesto, horneado
+  incluido. No es luz ambiente, y no hay `Light Affect`.
+- **Sólo se ajustan `Radius` e `Intensity`.** La calidad es el ajuste del proyecto
+  `rendering/environment/ssao/quality`.
+- **Oscurece los bordes donde la profundidad salta**, no los rincones: una pata de silla, el marco
+  de una puerta, el borde de una góndola. El pliegue entre pared y piso no cambia. Ahí sigue
+  mandando el lightmap.
+- **No suma programas a la carga.** Cambia la variante del pase final, que ya se usa por el
+  brillo.
+
+El costo medido en la web está en el PR que lo agregó.
+
 ## Los reflejos de los metales
 
 El entorno no refleja el cielo (`reflected_light_source` apagado). Un metal sólo recibe reflejo de
