@@ -74,7 +74,10 @@ PERFIL = 0.07
 # La tabla: su cara de arriba es la del apoyo de las entregas.
 TAPA = 1.08
 GROSOR = 0.05
-BORDE_DE_ADENTRO = -5.78
+# Sobresale 30 cm de la pared, menos que el medio cuerpo del jugador (40 cm): la pared lo frena
+# con la vista 10 cm antes del canto. Con 50 cm la vista quedaba encima de la madera, y frenarlo
+# en la tabla lo alejaba de la pared hasta no ver lo que cae a la calle.
+BORDE_DE_ADENTRO = -5.98
 LUZ_CON_LA_JAMBA = 0.002
 # La manija que quedó de una corrida anterior como objeto aparte: se borra.
 MANIJA_SUELTA = "local_manija_ventanilla"
@@ -85,8 +88,8 @@ MANIJA_SEPARACION = 0.055
 # Las escuadras, medidas desde la pared.
 ESCUADRA_X = (-1.3, -0.3)
 BARRA = 0.025
-BRAZO = 0.40
-PARANTE = 0.28
+BRAZO = 0.24
+PARANTE = 0.22
 # La franja de tablas limpias del atlas de madera de las sillas, en UV.
 MADERA_V = (0.02, 0.27)
 TOLERANCIA = 1e-4
