@@ -27,6 +27,8 @@ const DISTANCIA_A_LA_CABECERA := 1.0
 ## Hacia qué alto mira quien suelta algo hacia la góndola, con la mano alta y con la baja.
 const ALTURA_ALTA := 1.9
 const ALTURA_BAJA := 0.5
+## Cuánto fondo tiene que tener la góndola para apuntarle al piso: más angosta, la mano cae antes.
+const FONDO_PARA_APUNTAR_AL_PISO := 0.9
 ## Cuánto entra en la cabecera el punto que mira quien suelta una caja chica, en metros.
 const MEDIDA_DENTRO_DE_LA_CABECERA := 0.1
 ## Los huecos del costado que se miran, como fracción del largo y del alto del mueble.
@@ -138,15 +140,18 @@ func test_un_producto_soltado_hacia_la_gondola_no_queda_adentro_de_ella() -> voi
 	jugador.set_physics_process(false)
 	var agarre: Agarre = almacen.get("_agarre")
 	var gondola := almacen.get_node("Estructura/gondolanueva") as MeshInstance3D
-	var mueble := LadosDelMueble.caja(gondola)
+	var mueble := LadosDelMueble.pieza(gondola)
 	var centro := mueble.get_center()
 	var casos := []
 	var costados := LadosDelMueble.libres(almacen, gondola, DISTANCIA_PARA_SOLTAR, false)
 	var cabeceras := LadosDelMueble.libres(almacen, gondola, DISTANCIA_PARA_SOLTAR, true)
-	assert_array(costados).is_not_empty()
-	assert_array(cabeceras).is_not_empty()
+	# Una góndola contra la pared puede no tener cabecera con lugar para pararse.
+	assert_array(costados + cabeceras).is_not_empty()
 	for costado in costados:
-		for altura: float in [ALTURA_ALTA, ALTURA_BAJA]:
+		var alturas: Array[float] = [ALTURA_ALTA]
+		if costado.mitad * 2.0 >= FONDO_PARA_APUNTAR_AL_PISO:
+			alturas.append(ALTURA_BAJA)
+		for altura: float in alturas:
 			casos.append(
 				[
 					LadosDelMueble.pie_junto_a(gondola, costado, DISTANCIA_PARA_SOLTAR),
@@ -172,7 +177,10 @@ func test_un_producto_soltado_hacia_la_gondola_no_queda_adentro_de_ella() -> voi
 		(
 			assert_bool(mueble.has_point(agarre.punto_de_soltado.global_position))
 			. override_failure_message(
-				"desde %v, el punto de soltado no cae en la góndola" % caso[0]
+				(
+					"desde %v mirando %v, el punto de soltado %v no cae en la góndola"
+					% [caso[0], caso[1], agarre.punto_de_soltado.global_position]
+				)
 			)
 			. is_true()
 		)
@@ -201,15 +209,15 @@ func test_una_caja_chica_soltada_hacia_la_gondola_no_atraviesa_sus_solidos() -> 
 	await get_tree().physics_frame
 	var jugador: CharacterBody3D = almacen.get("_jugador")
 	var gondola := almacen.get_node("Estructura/gondolanueva") as MeshInstance3D
-	var mueble := LadosDelMueble.caja(gondola)
+	var mueble := LadosDelMueble.pieza(gondola)
 	var caja: RigidBody3D = almacen.get("_cajas_de_productos")[Producto.Id.MALBARDO]
 	var mano: Node3D = jugador.get_node("Giro/PuntoDeCaja")
 	jugador.set_physics_process(false)
 	var casos := []
 	var costados := LadosDelMueble.libres(almacen, gondola, DISTANCIA_PARA_SOLTAR, false)
 	var cabeceras := LadosDelMueble.libres(almacen, gondola, DISTANCIA_A_LA_CABECERA, true)
-	assert_array(costados).is_not_empty()
-	assert_array(cabeceras).is_not_empty()
+	# Una góndola contra la pared puede no tener cabecera con lugar para pararse.
+	assert_array(costados + cabeceras).is_not_empty()
 	for costado in costados:
 		var desde := LadosDelMueble.pie_junto_a(gondola, costado, DISTANCIA_PARA_SOLTAR)
 		var a_lo_largo := costado.hacia.cross(Vector3.UP)

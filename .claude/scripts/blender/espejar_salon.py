@@ -247,7 +247,10 @@ def correr_a() -> bool:
     """
     bpy.context.view_layer.update()
     gondola = _objeto("gondolanueva-col")
-    _, este = _limites_x(gondola)
+    oeste, este = _limites_x(gondola)
+    if oeste > PARED_ESTE_X - PASILLO_A_PARED_ESTE:
+        print("A ya está contra la pared este; `gondola_a_la_pared.py` la puso ahí")
+        return False
     corrimiento = PARED_ESTE_X - PASILLO_A_PARED_ESTE - este
     if abs(corrimiento) < 1e-4:
         print("A ya está a su distancia de la pared este; no cambia nada")

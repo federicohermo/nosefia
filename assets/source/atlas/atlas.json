@@ -5,9 +5,9 @@
   {
    "archivo": "etiquetas_bc1.png",
    "ancho": 3264,
-   "alto": 3120,
+   "alto": 3456,
    "formato": "bc1",
-   "huella": "e433773ea52059173ae66394c7e35ff4e4f5d95d412a9821207b9cb7082d6f54",
+   "huella": "7a4cab8d19f6c2af33a4c129d27b1549d061ebc57e4ee60e19f33197ef8e58f4",
    "entradas": [
     {
      "ruta": "source/textures/props/jabón liquido amarillo.png",
@@ -146,35 +146,11 @@
      "y": 2160
     },
     {
-     "ruta": "source/products-cam/don saturados/Don Saturados costado.png",
-     "ancho": 160,
-     "alto": 512,
-     "huella": "f4ec249e1db59940e977c5ca7beabed4b2bbf2783cd3485e11704aee7f5c45c0",
-     "x": 1104,
-     "y": 2160
-    },
-    {
-     "ruta": "source/products-cam/macumbas/macumbas costado.png",
-     "ancho": 160,
-     "alto": 512,
-     "huella": "9c332cd44ff6cfade9770e896d39987d94efd8db2d681657c1b75b623c78cca0",
-     "x": 1296,
-     "y": 2160
-    },
-    {
-     "ruta": "source/products-cam/petisas/petisas costado.png",
-     "ancho": 160,
-     "alto": 512,
-     "huella": "990f063b8946cdb9009589c5b975a324d2556f3a3d4bfa6b36ada3f24b75a72c",
-     "x": 1488,
-     "y": 2160
-    },
-    {
      "ruta": "source/textures/props/progres.png",
      "ancho": 512,
      "alto": 493,
      "huella": "3d126f771ecaf8a0219ad191d7a66b95b262254111c06dc2def22878888ad788",
-     "x": 1680,
+     "x": 1104,
      "y": 2160
     },
     {
@@ -182,7 +158,7 @@
      "ancho": 512,
      "alto": 462,
      "huella": "44351d869d76ee6c6d859e9b6fe10b2e7c23f6496033f092d3a8cdd72ce69444",
-     "x": 2224,
+     "x": 1648,
      "y": 2160
     },
     {
@@ -190,15 +166,39 @@
      "ancho": 1024,
      "alto": 385,
      "huella": "30c7502bb833b7f6f5f9d97e85ed5bddd9d45bb0617b65b607e2214513d0f86c",
-     "x": 16,
-     "y": 2704
+     "x": 2192,
+     "y": 2160
     },
     {
      "ruta": "source/textures/props/soap-labels/jabon_azul_sin_margenes.png",
      "ancho": 1024,
      "alto": 362,
      "huella": "48223fcb42f583455e7fb097724d78af7c2f9d3603386142c904f7df163ee683",
+     "x": 16,
+     "y": 2704
+    },
+    {
+     "ruta": "source/products-textured/bolsas/donsaturados.png",
+     "ancho": 512,
+     "alto": 352,
+     "huella": "f0cef9d987dfd9c4c7ae4d30b05d76f59d22e1164e9ab2b5e9b2dd6d526e0998",
      "x": 1072,
+     "y": 2704
+    },
+    {
+     "ruta": "source/products-textured/bolsas/macumbas.png",
+     "ancho": 512,
+     "alto": 352,
+     "huella": "731b9e14b1dcb720483eb1496474059ba0388e8107d22f451d78709f9c605a52",
+     "x": 1616,
+     "y": 2704
+    },
+    {
+     "ruta": "source/products-textured/bolsas/petisas.png",
+     "ancho": 512,
+     "alto": 352,
+     "huella": "b559f8fad976d988fc3dbb29239956570c1c3fb510d530996d2e7f6f272b9cb6",
+     "x": 2160,
      "y": 2704
     },
     {
@@ -206,17 +206,17 @@
      "ancho": 1024,
      "alto": 334,
      "huella": "fa4c68cf53ab2041c492768b25641c0335af69451311e4d77f4d21c94ed2d2f1",
-     "x": 2128,
-     "y": 2704
+     "x": 16,
+     "y": 3104
     }
    ]
   },
   {
    "archivo": "etiquetas_bc3.png",
    "ancho": 1088,
-   "alto": 2848,
+   "alto": 2240,
    "formato": "bc3",
-   "huella": "aca96d72bf3f5f5d2a18252bb65c52cea7d4d73535fab6283d73348654b12d8a",
+   "huella": "d53514fa0d2be0b011fd500081bf8f7ba614bde9ce359519e92e581745ca0131",
    "entradas": [
     {
      "ruta": "source/products-cam/amargadito/amargadito completo.png",
@@ -291,36 +291,12 @@
      "y": 1888
     },
     {
-     "ruta": "source/products-cam/don saturados/Don Saturados completo.png",
-     "ancho": 512,
-     "alto": 302,
-     "huella": "f61c367eb6b4ee6002e6a0a9633229fd123a9619be9a14c818e64e9d76b203fd",
-     "x": 560,
-     "y": 1888
-    },
-    {
-     "ruta": "source/products-cam/petisas/petisas completo.png",
-     "ancho": 512,
-     "alto": 283,
-     "huella": "58de91eb293af8c9f82e9c7c00ee357109b60a2d285974ce288058cff5680886",
-     "x": 16,
-     "y": 2256
-    },
-    {
      "ruta": "source/products-textured/Actroncito/Actroncito completo.png",
      "ancho": 512,
      "alto": 270,
      "huella": "271fcadb5a8bb9508cae877ff577dcaa15e8535a6f821c4d55caecb286c5742b",
      "x": 560,
-     "y": 2256
-    },
-    {
-     "ruta": "source/products-cam/macumbas/macumbas completo.png",
-     "ancho": 512,
-     "alto": 241,
-     "huella": "1efede55fccdd3de568be9536beb92885aa586bdb88231d38e3c68831dac407c",
-     "x": 16,
-     "y": 2576
+     "y": 1888
     }
    ]
   },

@@ -241,8 +241,7 @@ def armar():
     import acomodar
     import disponer
     import disponer_prueba
-    from lib.reparto import partes, producto
-    from lib.reparto_de_prueba import CARAS
+    from lib.reparto import PRODUCTOS
 
     imagen = bpy.data.images.get(TIRAS)
     if imagen is None:
@@ -257,43 +256,28 @@ def armar():
     bandejas = [b for objeto in caras for b in bandejas_de(objeto)]
     completo = disponer.tandas_del_blend()
     por_producto = moldes(bandejas, completo)
-    anchos = {}
-    for copias in completo.values():
-        clave = str(copias[0]["producto"])
-        modelo = producto(clave)
-        anchos[clave] = acomodar.envase_de(modelo, bpy.data.objects[modelo.objeto]).ancho
-    por_cara = {}
-    for clave, copias in completo.items():
-        letra, cara, _ = partes(clave.split("/")[0])
-        if f"{letra}.{cara}" in CARAS:
-            por_cara.setdefault(f"{letra}.{cara}", {})[clave] = copias
+    anchos = {p.clave: acomodar.envase_de(p, bpy.data.objects[p.objeto]).ancho for p in PRODUCTOS}
     nuevas = {objeto.name: [] for objeto in caras}
     sin_tira = set()
-    temporales = []
-    for cara, de_la_cara in sorted(por_cara.items()):
-        dispuestas = disponer_prueba.disponer_cara(cara, de_la_cara, completo)
-        for clave, (nuevo, unidades) in sorted(dispuestas.items()):
-            temporales += unidades
-            debajo = [b for b in bandejas if b.unidades and any(
-                b.contiene(_caja(u)) for u in de_la_cara[clave] if u["fila"] == "adelante")]
-            if not debajo:
-                continue
-            if nuevo not in anchos:
-                modelo = producto(nuevo)
-                anchos[nuevo] = acomodar.envase_de(
-                    modelo, bpy.data.objects[modelo.objeto]).ancho
-            molde, corrimiento = por_producto.get(nuevo), 0.0
-            if molde is None:
-                molde, corrimiento = molde_prestado(nuevo, por_producto, anchos)
-            if molde is None:
-                sin_tira.add(nuevo)
-                continue
-            como = debajo[0]
-            bordes = [c + s * a / 2 for c, a in _centros(unidades, como.derecha) for s in (-1, 1)]
-            limites = (min(min(b.desde for b in debajo), min(bordes) - max(molde.margen, 0.0)),
-                       max(max(b.desde + b.ancho for b in debajo),
-                           max(bordes) + max(molde.margen, 0.0)))
-            nuevas[como.objeto.name] += bandejas_nuevas(como, molde, corrimiento, unidades, limites)
+    tandas, temporales = disponer_prueba.tandas_de_prueba(completo)
+    for clave, (nuevo, _, lugar) in sorted(tandas.items()):
+        unidades = [u for u in lugar if u["fila"] == "adelante"]
+        debajo = [b for b in bandejas if b.unidades and any(
+            b.contiene(_caja(u)) for u in completo[clave] if u["fila"] == "adelante")]
+        if not debajo:
+            continue
+        molde, corrimiento = por_producto.get(nuevo), 0.0
+        if molde is None:
+            molde, corrimiento = molde_prestado(nuevo, por_producto, anchos)
+        if molde is None:
+            sin_tira.add(nuevo)
+            continue
+        como = debajo[0]
+        bordes = [c + s * a / 2 for c, a in _centros(unidades, como.derecha) for s in (-1, 1)]
+        limites = (min(min(b.desde for b in debajo), min(bordes) - max(molde.margen, 0.0)),
+                   max(max(b.desde + b.ancho for b in debajo),
+                       max(bordes) + max(molde.margen, 0.0)))
+        nuevas[como.objeto.name] += bandejas_nuevas(como, molde, corrimiento, unidades, limites)
     for unidad in temporales:
         bpy.data.objects.remove(unidad, do_unlink=True)
     for objeto in caras:

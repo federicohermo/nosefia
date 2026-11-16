@@ -26,7 +26,8 @@ Las verifica `tests/test_reparto.py` sobre este mismo dato, antes de que llegue 
 
 `<mueble>.<cara>.<nivel>`: el mueble por su letra en `MUEBLES`, la cara por el punto cardinal
 hacia el que mira —las cabeceras son `norte` y `sur`—, y el nivel contando desde abajo, con el
-zócalo como 0. En Blender el norte es +Y y el este +X.
+zócalo como 0. En Blender el norte es +Y y el este +X. Hacia dónde mira cada cara lo dice
+`mira()`: las piezas de `A` conservan su nombre aunque ya no miren hacia donde dice.
 """
 
 from __future__ import annotations
@@ -111,12 +112,37 @@ HELADERAS = ("H1", "H2")
 #: Las caras de una góndola que son cabecera.
 CABECERAS = ("norte", "sur")
 
+#: Hacia dónde mira una cara por su nombre, en el mundo de Blender: el punto cardinal.
+_MIRA_POR_NOMBRE = {
+    "oeste": (-1.0, 0.0, 0.0),
+    "este": (1.0, 0.0, 0.0),
+    "sur": (0.0, -1.0, 0.0),
+    "norte": (0.0, 1.0, 0.0),
+}
+
+#: Las caras que no miran hacia donde dice su nombre. Tres piezas de `A` están contra la pared este
+#: y miran al salón; su nombre sólo dice de qué parte del mueble salieron. La cabecera norte está
+#: contra la pared norte, a la izquierda de la puerta del depósito, y mira al sur.
+MIRAN_A_OTRO_LADO = {
+    "A.este": "oeste",
+    "A.oeste": "oeste",
+    "A.sur": "oeste",
+    "A.norte": "sur",
+}
+
+
+def mira(cara: str) -> tuple[float, float, float]:
+    """Hacia dónde mira una cara, en el mundo de Blender. Acepta `A.este` o `A.este.2`."""
+    mueble, nombre = cara.split(".")[:2]
+    return _MIRA_POR_NOMBRE[MIRAN_A_OTRO_LADO.get(f"{mueble}.{nombre}", nombre)]
+
+
 #: Lo que se vende frío, y por eso va en la heladera y en ningún otro lado.
 FRIOS = ("PURA_COLA", "OAAAA", "CINDOLOR", "MAYONCHIS")
 
 #: Lo que se exhibe en una cabecera y en ningún otro lado.
-DE_CABECERA = ("MALBARDO", "AMARGADITO", "FERNET_GOD", "TERMINATOR", "COSA_DE_MANI",
-               "JORGILLO", "BURBALOO", "FLIM_POF")
+DE_CABECERA = ("MALBARDO", "AMARGADITO", "FERNET_GOD", "TERMINATOR", "JORGILLO", "BURBALOO",
+               "OREMOS", "PEPITO")
 
 #: Capacidad para futuras declaraciones explícitas; los 32 productos actuales se exhiben.
 SOLO_DEPOSITO: tuple[str, ...] = ()
@@ -131,10 +157,11 @@ SECTORES = {
     "almacen": ("MAROLINI", "ARVECOR", "UAKALAS", "MARRANOS"),
     "cereales": ("ZUCARACHAS", "FROT_LUPS"),
     "bebidas_sin_refrigerar": ("FERNET_GOD", "TERMINATOR"),
-    "dulces_primera_isla": ("MACUMBAS", "PEPITO"),
-    "dulces_segunda_isla": ("OREMOS", "PETISAS", "COSA_DE_MANI", "FEEL_RICKY_FORT"),
-    "salados": ("DON_SATURADOS", "PROGRES", "CHISITOS", "LAYSNNT", "SALADICK"),
-    "golosinas": ("BURBALOO", "FLIM_POF", "JORGILLO"),
+    "snacks_junto_a_cereales": ("FEEL_RICKY_FORT", "DON_SATURADOS"),
+    "dulces_segunda_isla": ("PETISAS", "MACUMBAS", "FLIM_POF", "COSA_DE_MANI"),
+    "salados": ("PROGRES", "CHISITOS", "LAYSNNT", "SALADICK"),
+    "golosinas": ("BURBALOO", "JORGILLO"),
+    "galletitas_de_marca": ("OREMOS", "PEPITO"),
 }
 
 #: Cada columna conserva su sector también en zócalo y referencias superiores.
@@ -143,19 +170,16 @@ DESTINOS = {
     "N.sur": ("no_comestibles", "no_comestibles"),
     "A.este": ("almacen", "almacen"),
     "A.oeste.0": ("cereales", "cereales"), "A.oeste.1": ("cereales", "cereales"),
-    "A.oeste.2": ("dulces_primera_isla", "dulces_primera_isla"),
-    "A.oeste.3": ("dulces_primera_isla", "dulces_primera_isla"),
+    "A.oeste.2": ("snacks_junto_a_cereales", "snacks_junto_a_cereales"),
+    "A.oeste.3": ("snacks_junto_a_cereales", "snacks_junto_a_cereales"),
     "A.sur.0": ("cabecera_almacen",), "A.sur.1": ("cabecera_almacen",),
     "A.sur.2": ("cabecera_no_comestibles",), "A.sur.3": ("cabecera_no_comestibles",),
     "A.norte": ("bebidas_sin_refrigerar",),
-    "B.oeste.0": ("dulces_segunda_isla", "dulces_segunda_isla"),
-    "B.oeste.1": ("dulces_segunda_isla", "dulces_segunda_isla"),
-    "B.oeste.2": ("dulces_segunda_isla", "salados"),
-    "B.oeste.3": ("dulces_segunda_isla", "salados"),
+    "B.oeste": ("dulces_segunda_isla", "dulces_segunda_isla"),
     "B.este": ("salados", "salados"),
-    "B.norte.0": ("golosinas",), "B.norte.1": ("golosinas",),
-    "B.norte.2": ("dulces_segunda_isla",), "B.norte.3": ("dulces_segunda_isla",),
-    "B.sur": ("golosinas", "golosinas"),
+    "B.norte": ("golosinas",),
+    # La cabecera ploteada con las dos marcas.
+    "B.sur": ("galletitas_de_marca",),
 }
 
 
@@ -208,8 +232,8 @@ ESTANTES: dict[str, tuple[Tanda, ...]] = {
     "A.este.2": (_p("ARVECOR"), _p("MARRANOS")),
     "A.este.1": (_p("MAROLINI"), _p("UAKALAS")),
     "A.este.0": (_f("MAROLINI"), _f("UAKALAS")),
-    "A.oeste.3": (_f("PEPITO"), _f("MACUMBAS")),
-    "A.oeste.2": (_p("PEPITO"), _p("MACUMBAS")),
+    "A.oeste.3": (_f("FEEL_RICKY_FORT"), _f("DON_SATURADOS")),
+    "A.oeste.2": (_p("FEEL_RICKY_FORT"), _p("DON_SATURADOS")),
     "A.oeste.1": (_p("FROT_LUPS"), _p("ZUCARACHAS")),
     "A.oeste.0": (_f("FROT_LUPS"), _f("ZUCARACHAS")),
     "A.sur.3": (_f("MALBARDO"),),
@@ -221,26 +245,29 @@ ESTANTES: dict[str, tuple[Tanda, ...]] = {
     "A.norte.1": (_p("FERNET_GOD"),),
     "A.norte.0": (_f("FERNET_GOD"),),
     # Segunda isla del salón (junto a las mesas): su cara este mira al pasillo entre góndolas.
-    "B.oeste.3": (_f("PETISAS"), _f("DON_SATURADOS")),
-    "B.oeste.2": (_p("PETISAS"), _p("DON_SATURADOS")),
-    "B.oeste.1": (_p("FEEL_RICKY_FORT"), _p("OREMOS")),
-    "B.oeste.0": (_f("FEEL_RICKY_FORT"), _f("OREMOS")),
+    "B.oeste.3": (_f("PETISAS"), _f("MACUMBAS")),
+    "B.oeste.2": (_p("PETISAS"), _p("MACUMBAS")),
+    "B.oeste.1": (_p("FLIM_POF"), _p("COSA_DE_MANI")),
+    "B.oeste.0": (_f("FLIM_POF"), _f("COSA_DE_MANI")),
     "B.este.3": (_f("PROGRES"), _f("SALADICK")),
     "B.este.2": (_p("PROGRES"), _p("SALADICK")),
     "B.este.1": (_p("LAYSNNT"), _p("CHISITOS")),
     "B.este.0": (_f("LAYSNNT"), _f("CHISITOS")),
-    "B.norte.3": (_f("COSA_DE_MANI"),),
-    "B.norte.2": (_p("COSA_DE_MANI"),),
-    "B.norte.1": (_p("FLIM_POF"),),
-    "B.norte.0": (_f("FLIM_POF"),),
-    "B.sur.3": (_f("JORGILLO"),),
-    "B.sur.2": (_p("JORGILLO"),),
-    "B.sur.1": (_p("BURBALOO"),),
-    "B.sur.0": (_f("BURBALOO"),),
-    # La estantería existente de no comestibles.
-    "N.sur.3": (_f("DURONGA"), _f("DUREXTRA")),
-    "N.sur.2": (_p("DURONGA"), _p("DUREXTRA")),
-    "N.sur.1": (_p("POETICO"), _p("ACTRONCITO")),
+    "B.norte.3": (_f("JORGILLO"),),
+    "B.norte.2": (_p("JORGILLO"),),
+    "B.norte.1": (_p("BURBALOO"),),
+    "B.norte.0": (_f("BURBALOO"),),
+    # La cabecera ploteada: las dos marcas que lleva pintadas en sus laterales.
+    "B.sur.3": (_f("PEPITO"),),
+    "B.sur.2": (_p("PEPITO"),),
+    "B.sur.1": (_p("OREMOS"),),
+    "B.sur.0": (_f("OREMOS"),),
+    # La estantería existente de no comestibles, con cinco estantes por columna: Poético y
+    # Actroncito ocupan los tres de abajo, y Duronga y Durextra los dos de arriba.
+    "N.sur.4": (_f("DURONGA"), _f("DUREXTRA")),
+    "N.sur.3": (_p("DURONGA"), _p("DUREXTRA")),
+    "N.sur.2": (_p("POETICO"), _p("ACTRONCITO")),
+    "N.sur.1": (_f("POETICO"), _f("ACTRONCITO")),
     "N.sur.0": (_f("POETICO"), _f("ACTRONCITO")),
     # Las heladeras. Lo frío es menos que las bandejas: cada uno va una vez con casilleros, y las
     # bandejas que sobran llevan repetidos fijos de lo frío. Decidido por el usuario el

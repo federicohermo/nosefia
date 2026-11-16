@@ -61,6 +61,21 @@ func _inventariar() -> void:
 			)
 			fila["aabb"] = var_to_str(objeto.get_aabb())
 			fila["global_aabb"] = var_to_str(objeto.global_transform * objeto.get_aabb())
+			if objeto.name in [&"gondolanueva", &"gondolanueva2"]:
+				var piezas: Array[float] = []
+				for pieza: AABB in PiezasDeUnMueble.de_la_malla(objeto.mesh):
+					var global_pieza := objeto.global_transform * pieza
+					piezas.append_array(
+						[
+							global_pieza.position.x,
+							global_pieza.position.y,
+							global_pieza.position.z,
+							global_pieza.size.x,
+							global_pieza.size.y,
+							global_pieza.size.z
+						]
+					)
+				fila["global_piezas"] = piezas
 			var puntos: Array[float] = []
 			for punto: Vector3 in objeto.mesh.create_convex_shape(true, false).points:
 				puntos.append_array([punto.x, punto.y, punto.z])

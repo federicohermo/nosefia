@@ -205,7 +205,7 @@ func test_laysntt_y_jorgillo_quedan_sobre_el_suelo_al_mover_la_camara() -> void:
 		var vista: MeshInstance3D = cuerpo.get_node("Malla")
 		var limites := vista.global_transform * vista.mesh.get_aabb()
 		var mancha: MeshInstance3D = almacen.get_node(
-			"LimpiezaDelAlmacen/ManchaEntreLasGondolas/Malla"
+			"LimpiezaDelAlmacen/ManchaEntreLaIslaYLasMesas/Malla"
 		)
 		var limites_mancha := mancha.global_transform * mancha.mesh.get_aabb()
 		assert_float(limites.end.y).is_greater(limites_mancha.end.y)
@@ -1035,10 +1035,12 @@ func _ocupaciones_en_pose(
 		fisicos.append_array(jugador.get_world_3d().direct_space_state.intersect_shape(consulta))
 		for mueble in muebles:
 			var malla := mueble.get_parent() as MeshInstance3D
-			if ReservaDeLaGondola.se_superponen(
-				LimitesDeForma.de(forma.shape), global, malla.get_aabb(), malla.global_transform
-			):
-				reservas.append(malla)
+			for pieza: AABB in PiezasDeUnMueble.de_la_malla(malla.mesh):
+				if ReservaDeLaGondola.se_superponen(
+					LimitesDeForma.de(forma.shape), global, pieza, malla.global_transform
+				):
+					reservas.append(malla)
+					break
 	return {"fisicos": fisicos, "reservas": reservas}
 
 

@@ -32,7 +32,7 @@ func test_soltar_hacia_la_gondola_deja_el_producto_visible_y_recuperable() -> vo
 		if lado.de_cabecera and probados[clase] > 0:
 			continue
 		probados[clase] += 1
-		var centro := LadosDelMueble.caja(malla).get_center()
+		var centro := LadosDelMueble.pieza(malla).get_center()
 		var destino := Vector3(centro.x, 1.7, centro.z)
 		AperturaConLugar.abrir_con_todo_el_lugar(almacen)
 		var jugador: CharacterBody3D = almacen.get_node("Jugador")
@@ -86,12 +86,12 @@ func test_soltar_hacia_la_gondola_deja_el_producto_visible_y_recuperable() -> vo
 			camara.look_at(destino)
 		almacen.queue_free()
 		await get_tree().process_frame
-	for clase: String in probados:
-		(
-			assert_int(probados[clase])
-			. override_failure_message("ninguna cara de %s tiene lugar para pararse" % clase)
-			. is_greater(0)
-		)
+	# Una góndola contra la pared no tiene por qué dejar lugar junto a sus cabeceras.
+	(
+		assert_int(probados["costado"] + probados["cabecera"])
+		. override_failure_message("ninguna cara de la góndola tiene lugar para pararse")
+		. is_greater(0)
+	)
 
 
 func test_la_bolsa_sostenida_no_desplaza_al_jugador() -> void:
