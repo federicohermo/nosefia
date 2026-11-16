@@ -111,9 +111,9 @@ TRANSICION_DE_LAS_GALLETITAS = 0.35
 PLANITUD_DE_LAS_GALLETITAS = 3.5
 #: Cuánto ancho recoge el film donde la bolsa más se infla, en fracción del ancho de la aleta.
 RECOGIDA_DE_LAS_GALLETITAS = 0.04
-#: El alto de la aleta de las galletitas, en fracción del alto de la bolsa: 1,56 cm, el mismo
-#: que el de las papas.
-ALETA_DE_LAS_GALLETITAS = 0.065
+#: El alto de la aleta de las galletitas, en fracción del alto de la bolsa: 1,1 cm. Es más corta
+#: que la de las papas, de 1,56 cm: en una bolsa más baja, esa se veía larga.
+ALETA_DE_LAS_GALLETITAS = 0.045
 #: La franja del borde que pinta la aleta de las galletitas, en fracción de la textura.
 BANDA_DE_LAS_GALLETITAS = desplegado_de_bolsas.banda_del_cierre()
 
