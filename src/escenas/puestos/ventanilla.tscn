@@ -4,7 +4,7 @@
 [ext_resource type="Script" path="res://src/escenas/objetos/comprador_interactuable.gd" id="2_comprador"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_acceso"]
-size = Vector3(1.2, 1.4, 0.001)
+size = Vector3(1.2, 1.34, 0.001)
 
 [sub_resource type="BoxMesh" id="BoxMesh_antepecho"]
 size = Vector3(1.4, 0.08, 0.4)
@@ -19,7 +19,7 @@ size = Vector3(1.4, 0.08, 0.8)
 size = Vector3(1.4, 0.12, 0.02)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_pano_fijo"]
-size = Vector3(1.4, 0.3, 0.12)
+size = Vector3(1.4, 0.36, 0.12)
 
 [node name="Ventanilla" type="StaticBody3D" node_paths=PackedStringArray("borde_superior", "antepecho", "comprador_visible", "apoyo_de_entregas", "objetivo", "acceso_al_cobro")]
 collision_layer = 0
@@ -33,7 +33,7 @@ objetivo = NodePath("Comprador/Objetivo")
 acceso_al_cobro = NodePath("AccesoAlCobro")
 
 [node name="AccesoAlCobro" type="CollisionShape3D" parent="."]
-position = Vector3(0, 0.7, 0)
+position = Vector3(0, 0.67, 0)
 shape = SubResource("BoxShape3D_acceso")
 disabled = true
 
@@ -63,7 +63,7 @@ gi_mode = 2
 
 
 [node name="BordeSuperior" type="Marker3D" parent="."]
-position = Vector3(0, 1.4, 0.02)
+position = Vector3(0, 1.34, 0.02)
 rotation = Vector3(0, 3.1415927, 0)
 
 [node name="ApoyoInterior" type="MeshInstance3D" parent="."]
@@ -74,7 +74,7 @@ gi_mode = 2
 
 [node name="PanoFijo" type="StaticBody3D" parent="."]
 editor_description = "El paño de vidrio fijo sobre la abertura. Cierra el hueco de la pared desde el borde superior: nada pasa por el vidrio."
-position = Vector3(0, 1.55, -0.04)
+position = Vector3(0, 1.52, -0.04)
 
 [node name="Forma" type="CollisionShape3D" parent="PanoFijo"]
 shape = SubResource("BoxShape3D_pano_fijo")

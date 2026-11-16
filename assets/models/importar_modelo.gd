@@ -84,12 +84,6 @@ func _post_import(escena: Node) -> Object:
 			# dibuja y la sombra quedaba sola. Dinámicas no entran al horneado. Apagar su sombra
 			# no alcanza: el horneador la ignora.
 			malla.gi_mode = GeometryInstance3D.GI_MODE_DYNAMIC
-		if (
-			str(malla.name).begins_with("local_escuadra_ventanilla")
-			or str(malla.name).begins_with("local_manija_ventanilla")
-		):
-			# Sus barras, de 2,5 cm o menos, son más finas que un texel del mapa de luz.
-			malla.gi_mode = GeometryInstance3D.GI_MODE_DYNAMIC
 		if str(malla.name).begins_with("local_vidrio_ventanilla"):
 			# La ventanilla es un hueco abierto. La malla queda en el modelo porque los mapas de
 			# luz ya la nombran, y sólo se esconde.
