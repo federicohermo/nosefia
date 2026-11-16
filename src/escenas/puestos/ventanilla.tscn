@@ -72,7 +72,7 @@ mesh = SubResource("BoxMesh_apoyo_interior")
 position = Vector3(0, 0, -0.4)
 gi_mode = 2
 
-[node name="PanoFijo" type="StaticBody3D" parent="."]
+[node name="PanoFijo" type="StaticBody3D" parent="." groups=["cierre_de_la_cascara"]]
 editor_description = "El paño de vidrio fijo sobre la abertura. Cierra el hueco de la pared desde el borde superior: nada pasa por el vidrio."
 position = Vector3(0, 1.52, -0.04)
 
