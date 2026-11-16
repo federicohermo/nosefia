@@ -19,8 +19,9 @@ por caja.
 ## El desplegado
 
 Cuatro paneles: el frente, el dorso, el canto de arriba y el de abajo. El frente lleva el arte
-entero y el resto va a la mitad de densidad: es lo que se ve. Cada panel tiene la `u` a lo largo
-del ancho y la `v` sobre el recorrido de la superficie, así el arte no se aplasta en la curva. Los
+entero y el resto va a la mitad de densidad: es lo que se ve. Cada panel tiene la `u` sobre el
+recorrido de la superficie a lo ancho y la `v` sobre el recorrido a lo alto, así el arte no se
+aplasta ni se estira en la curva: **un píxel mide lo mismo en x y en y**, y la hoja lo cumple. Los
 cierres repiten la franja de los extremos del frente y del dorso: no llevan letras.
 """
 
@@ -28,23 +29,24 @@ from __future__ import annotations
 
 import math
 from collections.abc import Sequence
+from functools import lru_cache
 from dataclasses import dataclass
 
 #: Cuánto del ancho, de cada lado, es cierre.
 FRANJA_DEL_CIERRE = 0.085
 
 #: Qué tan plano es el frente: con 2 la sección sería una elipse.
-PLANITUD = 4.0
+PLANITUD = 6.0
 
 #: Gajos de la sección en el frente y en el dorso, y en el canto de arriba y el de abajo.
 GAJOS_DEL_FRENTE = 6
 GAJOS_DEL_CANTO = 2
 
 #: Anillos del cuerpo a lo largo del ancho, de costura a costura.
-INTERVALOS = 10
+INTERVALOS = 12
 
 #: Cuánto antes de cada costura el cuerpo ya está afinándose, en metros.
-TRANSICION = 0.05
+TRANSICION = 0.055
 
 #: El ancho de la hoja de arte, en píxeles. Sale a la mitad, que es el lado con que viajan las
 #: etiquetas de producto.
@@ -55,7 +57,7 @@ LIENZO_ALTO = 576
 CALLE = 12
 
 #: Cuántos píxeles por metro lleva el frente, y qué fracción de eso el resto de los paneles.
-DENSIDAD_DEL_FRENTE = 640 / 0.27
+DENSIDAD_DEL_FRENTE = 2140.0
 FRACCION_DEL_RESTO = 0.5
 
 FRENTE = "frente"
@@ -142,11 +144,11 @@ def seccion(caja: Caja) -> Seccion:
     largos: dict[str, float] = {}
     for panel, desde, hasta, gajos in tramos_de_la_curva:
         elegidos, largo = _tramo_de_la_curva(desde, hasta, gajos, caja)
-        largos[panel] = largo
         acumulado = [0.0]
         for a, b in zip(elegidos, elegidos[1:]):
             acumulado.append(acumulado[-1] + math.hypot(b[0] - a[0], b[1] - a[1]))
         total = acumulado[-1]
+        largos[panel] = total
         for k in range(gajos):
             puntos.append(elegidos[k])
             tramos.append(panel)
@@ -172,16 +174,70 @@ def grosor_en(y: float, caja: Caja, espesor_en_la_costura: float) -> float:
 Rect = tuple[int, int, int, int]
 
 
+@lru_cache(maxsize=None)
+def recorrido_a_lo_ancho(caja: Caja, factor: float = 1.0) -> tuple[tuple[float, float], ...]:
+    """El recorrido de la superficie a lo ancho hasta cada anillo del lado derecho: `(y, s)` con
+    `s` en metros desde el centro. `factor` es qué fracción del grosor máximo tiene el punto de la
+    sección que se recorre: el frente por el medio es 1 y el centro del canto es 0.
+
+    Ahí el cuerpo se afina y la superficie es más larga que su proyección: medir `u` sobre `y` la
+    estiraría. Cada punto de la sección tiene su propio recorrido, porque a media altura el
+    frente está más adelante que cerca de los hombros. Se mide sobre la poligonal que unen los
+    anillos, que es lo que la malla dibuja entre ellos."""
+    espesor = 0.002 / (caja.fondo / 2)
+    anillos = [y for y in alturas_de_los_anillos(caja) if y >= -1e-12]
+    puntos = [(0.0, 0.0)]
+    anterior = (0.0, caja.fondo / 2 * factor * grosor_en(0.0, caja, espesor))
+    s = 0.0
+    for y in anillos[1:]:
+        x = caja.fondo / 2 * factor * grosor_en(y, caja, espesor)
+        s += math.hypot(y - anterior[0], x - anterior[1])
+        anterior = (y, x)
+        puntos.append((y, s))
+    return tuple(puntos)
+
+
+def recorrido_hasta(y: float, caja: Caja, factor: float = 1.0) -> float:
+    """El recorrido a lo ancho desde el centro hasta `y`, con signo. Pasada la costura, el
+    cierre es plano: ahí el recorrido es la proyección."""
+    tabla = recorrido_a_lo_ancho(caja, round(factor, 6))
+    semi = caja.semiancho_del_cuerpo
+    magnitud = abs(y)
+    if magnitud >= semi - 1e-12:
+        valor = tabla[-1][1] + max(0.0, magnitud - semi)
+    else:
+        i = max(j for j, (yj, _) in enumerate(tabla) if yj <= magnitud + 1e-12)
+        (y0, s0), (y1, s1) = tabla[i], tabla[i + 1]
+        valor = s0 + (s1 - s0) * (magnitud - y0) / (y1 - y0)
+    return math.copysign(valor, y)
+
+
+def mitad_del_recorrido(caja: Caja) -> float:
+    """La mitad del recorrido del frente a lo ancho, de una punta de cierre a la otra."""
+    return recorrido_hasta(caja.ancho / 2, caja)
+
+
+def factor_del_canto(caja: Caja) -> float:
+    """El grosor relativo del punto más adelantado del canto de arriba: ahí el recorrido es el
+    más largo, y es el que fija el ancho del panel."""
+    return max(abs(x) for (x, _), panel in zip(seccion(caja).puntos, seccion(caja).tramos)
+               if panel == ARRIBA) / (caja.fondo / 2)
+
+
+def mitad_del_canto(caja: Caja) -> float:
+    return recorrido_hasta(caja.semiancho_del_cuerpo, caja, factor_del_canto(caja))
+
+
 def desplegado(caja: Caja) -> dict[str, Rect]:
     """El rectángulo de cada panel en la hoja de arte, como `(x, y, ancho, alto)` en píxeles con
-    el origen arriba a la izquierda."""
+    el origen arriba a la izquierda. Los píxeles por metro son los mismos a lo ancho y a lo alto."""
     secc = seccion(caja)
-    ancho_f = round(caja.ancho * DENSIDAD_DEL_FRENTE)
-    alto_f = round(secc.largo_de_cada_panel[FRENTE] * DENSIDAD_DEL_FRENTE)
     densidad = DENSIDAD_DEL_FRENTE * FRACCION_DEL_RESTO
-    ancho_d = round(caja.ancho * densidad)
+    ancho_f = round(2 * mitad_del_recorrido(caja) * DENSIDAD_DEL_FRENTE)
+    alto_f = round(secc.largo_de_cada_panel[FRENTE] * DENSIDAD_DEL_FRENTE)
+    ancho_d = round(2 * mitad_del_recorrido(caja) * densidad)
     alto_d = round(secc.largo_de_cada_panel[DORSO] * densidad)
-    ancho_c = round(2 * caja.semiancho_del_cuerpo * densidad)
+    ancho_c = round(2 * mitad_del_canto(caja) * densidad)
     alto_c = round(secc.largo_de_cada_panel[ARRIBA] * densidad)
     x_resto = CALLE + ancho_f + CALLE
     rects = {
@@ -203,15 +259,15 @@ def uv_en_el_panel(rect: Rect, u: float, v_abajo: float) -> tuple[float, float]:
     return (x + u * ancho) / LIENZO_ANCHO, 1.0 - (y + v_abajo * alto) / LIENZO_ALTO
 
 
-def u_del_cuerpo(panel: str, y: float, caja: Caja) -> float:
-    """Dónde cae `y` a lo ancho de un panel. El frente y el dorso cubren el ancho entero, con las
-    franjas del cierre en los extremos, y el dorso se lee al revés. Los cantos cubren el cuerpo."""
+def u_del_cuerpo(panel: str, y: float, caja: Caja, factor: float = 1.0) -> float:
+    """Dónde cae `y` a lo ancho de un panel, para un punto de la sección de grosor relativo
+    `factor`. Todos miden el recorrido de la superficie con la misma escala que la `v`: un píxel
+    mide lo mismo en x y en y. El dorso se lee al revés."""
     if panel == FRENTE:
-        return (y + caja.ancho / 2) / caja.ancho
+        return 0.5 + recorrido_hasta(y, caja, factor) / (2 * mitad_del_recorrido(caja))
     if panel == DORSO:
-        return (caja.ancho / 2 - y) / caja.ancho
-    semi = caja.semiancho_del_cuerpo
-    return (y + semi) / (2 * semi)
+        return 0.5 - recorrido_hasta(y, caja, factor) / (2 * mitad_del_recorrido(caja))
+    return 0.5 + recorrido_hasta(y, caja, factor) / (2 * mitad_del_canto(caja))
 
 
 def v_del_cuerpo(panel: str, recorrido: float) -> float:

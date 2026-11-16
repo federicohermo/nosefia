@@ -13,7 +13,7 @@ con la textura de `source/`. Antes va `texturizar_paquetes_de_galletitas.py`. De
 Los dos paquetes eran un cubo de ocho vértices: una caja lisa con el arte estirado sobre sus caras.
 Se leían como una caja de cartón y no como el envase de galletitas que son. La forma de `lib/` es
 la del flow pack de tres tubos: cuerpo ancho y bajo, casi plano de frente y apenas abombado, que se
-afina hacia cada costura, y un cierre prensado y dentado a la izquierda y a la derecha.
+afina hacia cada costura, y un cierre prensado, de borde recto, a la izquierda y a la derecha.
 
 ## Qué cambia
 
@@ -26,6 +26,7 @@ de las bolsas.
 La caja del cubo se guarda en la malla la primera vez: correrlo de nuevo rehace el mismo paquete.
 """
 
+import math
 import sys
 from pathlib import Path
 
@@ -89,6 +90,26 @@ def armar(objeto) -> tuple[int, int]:
             vertices.append((x * g, y, z))
         anillos.append(fila)
 
+    def recorridos_del_anillo(g: float) -> list[tuple[float, float]]:
+        """Dónde cae cada gajo de un anillo en el recorrido de su panel, medido sobre ese anillo:
+        donde el cuerpo se afina el techo y el piso se angostan, y la `v` los sigue."""
+        puntos = [(x * g, z) for x, z in secc.puntos]
+        salida = []
+        acumulado = 0.0
+        for k in range(len(puntos)):
+            if k == 0 or secc.tramos[k] != secc.tramos[k - 1]:
+                acumulado = 0.0
+            m = (k + 1) % len(puntos)
+            paso = math.hypot(puntos[m][0] - puntos[k][0], puntos[m][1] - puntos[k][1])
+            largo = secc.largo_de_cada_panel[secc.tramos[k]]
+            salida.append((acumulado / largo, (acumulado + paso) / largo))
+            acumulado += paso
+        return salida
+
+    recorridos = [
+        recorridos_del_anillo(forma.grosor_en(y, caja, espesor)) for y in ys
+    ]
+
     def hacia_afuera(ids: list[int], uvs: list[tuple[float, float]]):
         p = [vertices[i] for i in ids]
         normal = [0.0, 0.0, 0.0]
@@ -107,14 +128,22 @@ def armar(objeto) -> tuple[int, int]:
         for k in range(n):
             m = (k + 1) % n
             panel = secc.tramos[k]
-            r0, r1 = secc.recorrido[k]
             ids = [anillos[i][k], anillos[i][m], anillos[i + 1][m], anillos[i + 1][k]]
-            esquinas = [(ys[i], r0), (ys[i], r1), (ys[i + 1], r1), (ys[i + 1], r0)]
+            fk = abs(secc.puntos[k][0]) / (caja.fondo / 2)
+            fm = abs(secc.puntos[m][0]) / (caja.fondo / 2)
+            esquinas = [
+                (ys[i], recorridos[i][k][0], fk),
+                (ys[i], recorridos[i][k][1], fm),
+                (ys[i + 1], recorridos[i + 1][k][1], fm),
+                (ys[i + 1], recorridos[i + 1][k][0], fk),
+            ]
             uvs = [
                 forma.uv_en_el_panel(
-                    rects[panel], forma.u_del_cuerpo(panel, y, caja), forma.v_del_cuerpo(panel, r)
+                    rects[panel],
+                    forma.u_del_cuerpo(panel, y, caja, f),
+                    forma.v_del_cuerpo(panel, r),
                 )
-                for y, r in esquinas
+                for y, r, f in esquinas
             ]
             ids, uvs = hacia_afuera(ids, uvs)
             caras.append((ids, uvs, True))

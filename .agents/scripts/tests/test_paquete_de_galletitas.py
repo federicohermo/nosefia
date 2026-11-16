@@ -89,16 +89,48 @@ class Desplegado(unittest.TestCase):
                 u, v = forma.uv_del_cierre(cara.lado, y, z, CAJA, rects)
                 self.assertTrue(0.0 <= u <= 1.0 and 0.0 <= v <= 1.0)
 
-    def test_el_cierre_cae_en_la_franja_del_extremo_del_panel_de_su_lado(self):
+    def test_el_cierre_ocupa_su_largo_real_en_el_extremo_del_panel(self):
         rects = forma.desplegado(CAJA)
         semi = CAJA.semiancho_del_cuerpo
-        u_frente, _ = forma.uv_del_cierre(1, CAJA.ancho / 2, 0.1, CAJA, rects)
-        u_cuerpo, _ = forma.uv_del_cierre(1, semi, 0.1, CAJA, rects)
         x, _, ancho, _ = rects[forma.FRENTE]
-        self.assertAlmostEqual((u_frente * forma.LIENZO_ANCHO - x) / ancho, 1.0)
+        u_punta, _ = forma.uv_del_cierre(1, CAJA.ancho / 2, 0.1, CAJA, rects)
+        u_costura, _ = forma.uv_del_cierre(1, semi, 0.1, CAJA, rects)
+        self.assertAlmostEqual((u_punta * forma.LIENZO_ANCHO - x) / ancho, 1.0)
+        franja = 1 - (u_costura * forma.LIENZO_ANCHO - x) / ancho
+        largo = franja * ancho / forma.DENSIDAD_DEL_FRENTE
+        self.assertAlmostEqual(largo, CAJA.salida_del_cierre, 3)
+
+    def test_un_pixel_mide_lo_mismo_a_lo_ancho_y_a_lo_alto_en_cada_panel(self):
+        rects = forma.desplegado(CAJA)
+        secc = forma.seccion(CAJA)
+        densidad = forma.DENSIDAD_DEL_FRENTE
+        mitad = forma.mitad_del_recorrido(CAJA)
+        esperado = {
+            forma.FRENTE: (2 * mitad, secc.largo_de_cada_panel[forma.FRENTE], densidad),
+            forma.DORSO: (2 * mitad, secc.largo_de_cada_panel[forma.DORSO], densidad / 2),
+            forma.ARRIBA: (
+                2 * forma.mitad_del_canto(CAJA),
+                secc.largo_de_cada_panel[forma.ARRIBA],
+                densidad / 2,
+            ),
+        }
+        for panel, (largo, alto, px_por_metro) in esperado.items():
+            _, _, ancho_px, alto_px = rects[panel]
+            self.assertAlmostEqual(ancho_px / largo / px_por_metro, 1.0, delta=0.01)
+            self.assertAlmostEqual(alto_px / alto / px_por_metro, 1.0, delta=0.01)
+
+    def test_el_recorrido_a_lo_ancho_es_mas_largo_que_su_proyeccion_donde_el_cuerpo_se_afina(self):
+        semi = CAJA.semiancho_del_cuerpo
+        self.assertGreater(forma.recorrido_hasta(semi, CAJA), semi)
+        self.assertAlmostEqual(forma.recorrido_hasta(0.0, CAJA), 0.0)
         self.assertAlmostEqual(
-            (u_cuerpo * forma.LIENZO_ANCHO - x) / ancho, 1 - forma.FRANJA_DEL_CIERRE
+            forma.recorrido_hasta(-0.05, CAJA), -forma.recorrido_hasta(0.05, CAJA)
         )
+
+    def test_un_punto_mas_cerca_de_los_hombros_recorre_menos_que_el_del_medio(self):
+        semi = CAJA.semiancho_del_cuerpo
+        cerca = forma.recorrido_hasta(semi, CAJA, 0.8)
+        self.assertLess(cerca, forma.recorrido_hasta(semi, CAJA, 1.0))
 
     def test_el_dorso_se_lee_al_reves_que_el_frente(self):
         frente = forma.u_del_cuerpo(forma.FRENTE, 0.05, CAJA)

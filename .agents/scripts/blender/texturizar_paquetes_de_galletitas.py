@@ -15,16 +15,22 @@ paquete es un flow pack de frente casi cuadrado, y su UV sale de `lib/paquete_de
 Esta herramienta rearma el desplegado para esa forma, con el mismo logo, los mismos colores y la
 misma ilustración:
 
-- **El frente** se compone para el cuadrado: los sellos de advertencia arriba en fila, el nombre y
-  la galletita, y el peso neto abajo. Cada pieza sale del arte original, recortada contra un fondo
-  que se rehace estirando el degradé del original.
+- **El frente** se compone para el cuadrado: los sellos de advertencia arriba en una fila, el
+  nombre y la galletita, y el peso neto abajo. Cada pieza (sellos, logo, galletita, personaje,
+  cartel, peso) se recorta del arte original con su transparencia y se pone **con una sola escala
+  en x y en y**: nada se estira. El fondo es el del propio arte, el degradé de Oremos o el azul con
+  copos y chispas de Pepito, repetido en espejo: nunca un plano liso.
 - **Los cierres** repiten el prensado de los extremos del frente: franjas de surcos sin letras.
-- **El dorso y los cantos** reacomodan los del original a la mitad de densidad: es lo que menos se
-  ve.
+- **El dorso** reacomoda sus piezas con el mismo criterio, a la mitad de densidad. **Los cantos**
+  llevan sólo el fondo: se ven de costado, y cualquier pieza se vería cortada.
+- **`composicion_<producto>.json`**, en `reports/`, dice dónde cayó cada pieza. Lo lee
+  `verificar_paquetes_de_galletitas.py`, que mide sobre la malla que nada quedó estirado.
 
 La hoja sale de 1024 x 576 y viaja a 512 x 288.
 """
 
+import json
+import math
 import sys
 from pathlib import Path
 
@@ -127,6 +133,12 @@ def es_fondo(rgb: np.ndarray) -> np.ndarray:
     return (r < 0.06) & (b > 0.35) & (b > g * 1.25)
 
 
+def es_fondo_de_pepito(rgb: np.ndarray) -> np.ndarray:
+    """El azul de Pepito, con sus copos: claro y verdoso a veces, nunca rojo ni oscuro."""
+    r, g, b = rgb[..., 0], rgb[..., 1], rgb[..., 2]
+    return (b > 0.55) & (b > g * 1.1) & (b > r * 1.4)
+
+
 def rellenar(rgb: np.ndarray, vacio: np.ndarray, paso: int = 4, vueltas: int = 400) -> np.ndarray:
     """Rellena lo marcado en `vacio` con el degradé de lo que lo rodea, difundiéndolo desde el
     borde. Trabaja a 1/`paso` de la resolución, y sube el resultado sin detalle fino."""
@@ -154,49 +166,161 @@ def rellenar(rgb: np.ndarray, vacio: np.ndarray, paso: int = 4, vueltas: int = 4
     return base[..., :3]
 
 
+class Pieza:
+    """Un recorte del arte original: sus píxeles, su transparencia y de dónde salió."""
+
+    def __init__(self, nombre: str, rgb: np.ndarray, alfa: np.ndarray, origen: tuple[int, int]):
+        self.nombre = nombre
+        self.rgb = rgb
+        self.alfa = alfa
+        self.origen = origen
+
+    @property
+    def alto(self) -> int:
+        return self.rgb.shape[0]
+
+    @property
+    def ancho(self) -> int:
+        return self.rgb.shape[1]
+
+
 class Fuente:
     """Un arte original y el fondo sin piezas de cada una de sus zonas, para recortar piezas con
     su transparencia."""
 
-    def __init__(self, ruta: Path, zonas: tuple[Rect, ...]):
+    def __init__(self, ruta: Path, zonas: tuple[Rect, ...], criterio=es_fondo, margen: int = 10):
         self.todo = leer(ruta)[..., :3]
         self.zonas = {}
+        self.vacios = {}
         for zona in zonas:
             x0, y0, x1, y1 = zona
             region = self.todo[y0:y1, x0:x1]
-            self.zonas[zona] = rellenar(region, dilatar(~es_fondo(region), 10))
+            vacio = dilatar(~criterio(region), margen)
+            self.vacios[zona] = vacio
+            self.zonas[zona] = rellenar(region, vacio)
+
+    def zona_de(self, rect: Rect) -> tuple[Rect, np.ndarray]:
+        x0, y0, x1, y1 = rect
+        for zona, fondo in self.zonas.items():
+            zx0, zy0, zx1, zy1 = zona
+            if zx0 <= x0 and zy0 <= y0 and x1 <= zx1 and y1 <= zy1:
+                return zona, fondo
+        raise ValueError(f"el recorte {rect} no cae en ninguna zona de fondo")
+
+    def fondo_de_la_zona(self, zona: Rect) -> np.ndarray:
+        return self.zonas[zona]
 
     def fondo(self, rect: Rect) -> np.ndarray:
         x0, y0, x1, y1 = rect
-        for (zx0, zy0, zx1, zy1), fondo in self.zonas.items():
-            if zx0 <= x0 and zy0 <= y0 and x1 <= zx1 and y1 <= zy1:
-                return fondo[y0 - zy0 : y1 - zy0, x0 - zx0 : x1 - zx0]
-        raise ValueError(f"el recorte {rect} no cae en ninguna zona de fondo")
+        (zx0, zy0, _, _), fondo = self.zona_de(rect)
+        return fondo[y0 - zy0 : y1 - zy0, x0 - zx0 : x1 - zx0]
 
-    def pieza(self, rect: Rect, borrar: tuple[Rect, ...] = ()) -> np.ndarray:
-        """El recorte RGBA: opaco donde hay dibujo, transparente donde sólo hay fondo."""
+    def alfa(self, rect: Rect) -> np.ndarray:
+        """Qué tanto dibujo hay en cada píxel: la diferencia contra el fondo sin piezas."""
+        x0, y0, x1, y1 = rect
+        rgb = self.todo[y0:y1, x0:x1]
+        diferencia = np.abs(rgb - self.fondo(rect)).max(axis=2)
+        alfa = np.clip((diferencia - 0.07) / 0.14, 0.0, 1.0)
+        return np.maximum(alfa, 0.7 * difuminar(alfa, 1))
+
+    def pieza(self, nombre: str, rect: Rect, mascara=None) -> Pieza:
+        """El recorte de `rect`, ajustado a lo que tiene dibujo. `mascara(rgb, alfa, x0, y0)` puede
+        apagar los píxeles que son de otra pieza."""
         x0, y0, x1, y1 = rect
         rgb = self.todo[y0:y1, x0:x1].copy()
-        fondo = self.fondo(rect)
-        alfa = np.clip((np.abs(rgb - fondo).max(axis=2) - 0.07) / 0.14, 0.0, 1.0)
-        alfa = np.maximum(alfa, 0.7 * difuminar(alfa, 1))
-        for bx0, by0, bx1, by1 in borrar:
-            alfa[max(by0 - y0, 0) : max(by1 - y0, 0), max(bx0 - x0, 0) : max(bx1 - x0, 0)] = 0.0
-        return np.dstack([rgb, alfa])
+        alfa = self.alfa(rect)
+        if mascara is not None:
+            alfa = alfa * mascara(rgb, alfa, x0, y0)
+        filas = np.where(alfa.max(axis=1) > 0.05)[0]
+        columnas = np.where(alfa.max(axis=0) > 0.05)[0]
+        if not len(filas):
+            raise ValueError(f"la pieza {nombre} no tiene dibujo")
+        arriba, abajo = filas[0], filas[-1] + 1
+        izquierda, derecha = columnas[0], columnas[-1] + 1
+        return Pieza(
+            nombre,
+            rgb[arriba:abajo, izquierda:derecha],
+            alfa[arriba:abajo, izquierda:derecha],
+            (x0 + int(izquierda), y0 + int(arriba)),
+        )
 
 
-def pegar(lienzo: np.ndarray, pieza: np.ndarray, x: int, y: int, escala: float) -> None:
-    """Pega una pieza RGBA sobre el lienzo, escalada, con su transparencia."""
-    alto, ancho = pieza.shape[:2]
-    nuevo_ancho, nuevo_alto = max(1, round(ancho * escala)), max(1, round(alto * escala))
-    premultiplicada = pieza.copy()
-    premultiplicada[..., :3] *= premultiplicada[..., 3:4]
-    chica = escalar(premultiplicada, nuevo_ancho, nuevo_alto)
-    alfa = chica[..., 3:4]
-    rgb = np.where(alfa > 1e-4, chica[..., :3] / np.maximum(alfa, 1e-4), 0.0)
-    destino = lienzo[y : y + nuevo_alto, x : x + nuevo_ancho]
-    h, w = destino.shape[:2]
-    destino[..., :3] = destino[..., :3] * (1 - alfa[:h, :w]) + rgb[:h, :w] * alfa[:h, :w]
+def reflejar(indices: np.ndarray, largo: int) -> np.ndarray:
+    resto = np.mod(indices, 2 * largo)
+    return np.where(resto >= largo, 2 * largo - 1 - resto, resto)
+
+
+def tapizar(fondo: np.ndarray, escala: float, ancho: int, alto: int) -> np.ndarray:
+    """El fondo de un panel: el de la zona del original, con su motivo, a una sola escala y
+    repetido en espejo hasta cubrirlo. Nunca un plano liso."""
+    h, w = fondo.shape[:2]
+    chico = escalar(
+        np.dstack([fondo, np.ones((h, w), np.float32)]), round(w * escala), round(h * escala)
+    )[..., :3]
+    h, w = chico.shape[:2]
+    columnas = reflejar(np.arange(ancho) - (ancho - w) // 2, w)
+    filas = reflejar(np.arange(alto) - (alto - h) // 2, h)
+    return chico[np.ix_(filas, columnas)]
+
+
+class Lienzo:
+    """Un panel en construcción y el registro de dónde cayó cada pieza."""
+
+    def __init__(self, panel: str, fondo: np.ndarray, rect: Rect, escala_del_fondo: float,
+                 registro: list):
+        self.panel = panel
+        self.rect = rect
+        self.ancho, self.alto = rect[2], rect[3]
+        self.rgba = np.ones((self.alto, self.ancho, 4), dtype=np.float32)
+        self.rgba[..., :3] = tapizar(fondo, escala_del_fondo, self.ancho, self.alto)
+        self.registro = registro
+
+    @staticmethod
+    def tamano(pieza: Pieza, escala: float) -> tuple[int, int]:
+        """El tamaño en píxeles que más se acerca a la escala sin deformar la pieza: de los cuatro
+        redondeos posibles, el de relación de aspecto más parecida a la del recorte."""
+        aspecto = pieza.ancho / pieza.alto
+        candidatos = [
+            (max(1, ancho), max(1, alto))
+            for ancho in (math.floor(pieza.ancho * escala), math.ceil(pieza.ancho * escala))
+            for alto in (math.floor(pieza.alto * escala), math.ceil(pieza.alto * escala))
+        ]
+        return min(candidatos, key=lambda c: abs(c[0] / c[1] / aspecto - 1))
+
+    def poner(self, pieza: Pieza, x: int, y: int, escala: float) -> tuple[int, int, int, int]:
+        """Pone la pieza con una sola escala en x y en y. Devuelve el rectángulo que ocupa."""
+        ancho, alto = self.tamano(pieza, escala)
+        if x < 0 or y < 0 or x + ancho > self.ancho or y + alto > self.alto:
+            raise ValueError(
+                f"{pieza.nombre} se sale del panel {self.panel}: {(x, y, ancho, alto)} en "
+                f"{self.ancho}x{self.alto}"
+            )
+        premultiplicada = np.dstack([pieza.rgb * pieza.alfa[..., None], pieza.alfa])
+        chica = escalar(premultiplicada, ancho, alto)
+        alfa = chica[..., 3:4]
+        rgb = np.where(alfa > 1e-4, chica[..., :3] / np.maximum(alfa, 1e-4), 0.0)
+        destino = self.rgba[y : y + alto, x : x + ancho, :3]
+        destino[...] = destino * (1 - alfa) + rgb * alfa
+        self.registro.append(
+            {
+                "panel": self.panel,
+                "pieza": pieza.nombre,
+                "rect_en_el_panel": [x, y, ancho, alto],
+                "rect_en_la_hoja": [self.rect[0] + x, self.rect[1] + y, ancho, alto],
+                "tamano_original": [pieza.ancho, pieza.alto],
+                "escala": escala,
+            }
+        )
+        return x, y, ancho, alto
+
+    def con_cierres(
+        self, fuente: "Fuente", columnas: tuple[int, int], filas: tuple[int, int]
+    ) -> None:
+        """Pone en los extremos las franjas prensadas, del ancho que mide el cierre."""
+        ancho_del_cierre = round(forma.FRANJA_DEL_CIERRE * self.ancho)
+        franja = franja_de_cierre(fuente, columnas, filas, ancho_del_cierre, self.alto)
+        self.rgba[:, :ancho_del_cierre] = franja
+        self.rgba[:, self.ancho - ancho_del_cierre :] = franja[:, ::-1]
 
 
 def franja_de_cierre(fuente: Fuente, columnas: tuple[int, int], filas: tuple[int, int],
@@ -212,28 +336,6 @@ def franja_de_cierre(fuente: Fuente, columnas: tuple[int, int], filas: tuple[int
     return franja
 
 
-def franja_del_dorso(fuente: Fuente, columnas: tuple[int, int], filas: tuple[int, int],
-                     rects: dict[str, Rect]) -> np.ndarray:
-    _, _, ancho, alto = rects[forma.DORSO]
-    return franja_de_cierre(fuente, columnas, filas, round(ancho * forma.FRANJA_DEL_CIERRE), alto)
-
-
-def panel_base(ancho: int, alto: int, fondo: np.ndarray) -> np.ndarray:
-    base = np.zeros((alto, ancho, 4), dtype=np.float32)
-    base[..., 3] = 1.0
-    opaco = np.dstack([fondo, np.ones(fondo.shape[:2], np.float32)])
-    base[..., :3] = escalar(opaco, ancho, alto)[..., :3]
-    return base
-
-
-def con_cierres(
-    panel: np.ndarray, franja_izquierda: np.ndarray, franja_derecha: np.ndarray
-) -> None:
-    ancho_izq, ancho_der = franja_izquierda.shape[1], franja_derecha.shape[1]
-    panel[:, :ancho_izq] = franja_izquierda
-    panel[:, panel.shape[1] - ancho_der :] = franja_derecha
-
-
 def poner_el_panel(hoja: np.ndarray, panel: np.ndarray, rect: Rect) -> None:
     """Pone un panel en la hoja y repite sus bordes `CALLE / 2` píxeles hacia afuera: el filtro y
     los primeros mips no mezclan el panel con el de al lado."""
@@ -243,133 +345,218 @@ def poner_el_panel(hoja: np.ndarray, panel: np.ndarray, rect: Rect) -> None:
     hoja[y - margen : y + alto + margen, x - margen : x + ancho + margen] = relleno
 
 
-def estirar_el_degrade(fuente: Fuente, rect: Rect, ancho: int, alto: int) -> np.ndarray:
-    return escalar(
-        np.dstack([fuente.fondo(rect), np.ones(fuente.fondo(rect).shape[:2], np.float32)]),
-        ancho,
-        alto,
-    )[..., :3]
-
-
-def paneles_secundarios(fuente: Fuente, dorso: dict, arriba: tuple, abajo: tuple,
-                        rects: dict[str, Rect], franjas: dict[str, np.ndarray]) -> dict:
-    """El dorso y los cantos, a la mitad de densidad, como piezas del original."""
-    paneles = {}
-    _, _, ancho, alto = rects[forma.DORSO]
-    cierre = franjas[forma.DORSO]
-    panel = panel_base(ancho, alto, estirar_el_degrade(fuente, dorso["fondo"], ancho, alto))
-    for rect, escala, (x, y) in dorso["piezas"]:
-        pegar(panel, fuente.pieza(rect), x, y, escala)
-    con_cierres(panel, cierre, cierre[:, ::-1])
-    paneles[forma.DORSO] = panel
-    for nombre, (rect, escala, desfase) in ((forma.ARRIBA, arriba), (forma.ABAJO, abajo)):
-        _, _, ancho, alto = rects[nombre]
+def copos_de(fuente: Fuente, rects: tuple[Rect, ...]) -> list[Pieza]:
+    """Los copos de nieve del original: celeste claro, sin nada alrededor."""
+    copos = []
+    for i, rect in enumerate(rects):
         x0, y0, x1, y1 = rect
-        tira = np.dstack([fuente.todo[y0:y1, x0:x1], np.ones((y1 - y0, x1 - x0), np.float32)])
-        chica = escalar(tira, round((x1 - x0) * escala), round((y1 - y0) * escala))
-        panel = np.zeros((alto, ancho, 4), dtype=np.float32)
-        arriba_o_abajo = (alto - chica.shape[0]) // 2 + desfase
-        sobra_arriba = max(arriba_o_abajo, 0)
-        sobra_abajo = max(alto - chica.shape[0] - arriba_o_abajo, 0)
-        sobra_a_la_derecha = max(ancho - chica.shape[1], 0)
-        panel[...] = np.pad(
-            chica[:, :ancho],
-            ((sobra_arriba, sobra_abajo), (0, sobra_a_la_derecha), (0, 0)),
-            mode="edge",
-        )[:alto, :ancho]
-        paneles[nombre] = panel
+        rgb = fuente.todo[y0:y1, x0:x1].copy()
+        copo = (rgb[..., 0] < 0.43) & (rgb[..., 1] > 0.5) & (rgb[..., 2] > 0.85)
+        alfa = np.maximum(copo.astype(np.float32), 0.6 * difuminar(copo.astype(np.float32), 1))
+        copos.append(Pieza(f"copo_{i}", rgb, alfa, (x0, y0)))
+    return copos
+
+
+def sembrar(lienzo: Lienzo, copos: list[Pieza], cantidad: int, escala: float, semilla: int) -> None:
+    """Reparte copos por el fondo del panel, parejos y sin repetir el mismo en fila. No entran en
+    el registro: son fondo, no piezas de arte."""
+    azar = np.random.default_rng(semilla)
+    for i in range(cantidad):
+        copo = copos[i % len(copos)]
+        factor = escala * azar.uniform(0.8, 1.25)
+        ancho, alto = round(copo.ancho * factor), round(copo.alto * factor)
+        x = int(azar.integers(4, max(5, lienzo.ancho - ancho - 4)))
+        y = int(azar.integers(4, max(5, lienzo.alto - alto - 4)))
+        rgb = copo.rgb if azar.random() < 0.5 else copo.rgb[:, ::-1]
+        alfa = copo.alfa if (rgb is copo.rgb) else copo.alfa[:, ::-1]
+        premultiplicada = np.dstack([rgb * alfa[..., None], alfa])
+        chica = escalar(premultiplicada, ancho, alto)
+        a = chica[..., 3:4]
+        destino = lienzo.rgba[y : y + alto, x : x + ancho, :3]
+        destino[...] = destino * (1 - a * 0.85) + chica[..., :3] * 0.85
+
+
+def centrada(contenedor: int, pieza: int) -> int:
+    return (contenedor - pieza) // 2
+
+
+def es_de_galleta(rgb: np.ndarray) -> np.ndarray:
+    """Marrón y tostado: no el azul, el blanco ni el rojo."""
+    r, g, b = rgb[..., 0], rgb[..., 1], rgb[..., 2]
+    tostado = (r > 0.12) & (r > b + 0.04) & ~((r > 0.6) & (g < 0.3) & (b < 0.3))
+    return tostado | (rgb.max(axis=2) < 0.2)
+
+
+def pieza_en(registro_zona: np.ndarray, zona: Rect, rect: Rect) -> np.ndarray:
+    x0, y0, x1, y1 = rect
+    return registro_zona[y0 - zona[1] : y1 - zona[1], x0 - zona[0] : x1 - zona[0]]
+
+
+def oremos(rects: dict[str, Rect], registro: list) -> dict[str, np.ndarray]:
+    fuente = Fuente(
+        ORIGINALES / "oremos.png",
+        (
+            (220, 213, 1035, 700),
+            (220, 745, 1035, 1030),
+            (190, 34, 1062, 167),
+            (191, 1071, 1055, 1225),
+        ),
+        margen=16,
+    )
+
+    def arriba_de_la_base(rgb, alfa, x0, y0):
+        """El logo es lo que queda sobre la recta que roza su base, sin la galleta."""
+        ys, xs = np.mgrid[0 : alfa.shape[0], 0 : alfa.shape[1]]
+        dentro = ((ys + y0) < 575 - (xs + x0 - 300) * 0.25) & ((xs + x0) < 760)
+        return (dentro & ~dilatar(es_de_galleta(rgb), 3)).astype(np.float32)
+
+    logo = fuente.pieza("logo", (268, 380, 760, 585), arriba_de_la_base)
+    ocupado = np.zeros((694 - 380, 1024 - 268), bool)
+    lx, ly = logo.origen
+    ocupado[ly - 380 : ly - 380 + logo.alto, lx - 268 : lx - 268 + logo.ancho] = logo.alfa > 0.3
+    ocupado = dilatar(ocupado, 1)
+
+    def lo_que_no_es_logo(rgb, alfa, x0, y0):
+        alto, ancho = alfa.shape
+        tapado = pieza_en(ocupado, (268, 380, 1024, 694), (x0, y0, x0 + ancho, y0 + alto))
+        salida = (~tapado).astype(np.float32)
+        ys, xs = np.mgrid[0 : alfa.shape[0], 0 : alfa.shape[1]]
+        salida[((xs + x0) >= 792) & ((ys + y0) >= 654)] = 0.0
+        return salida
+
+    galleta = fuente.pieza("galleta", (525, 380, 1024, 694), lo_que_no_es_logo)
+    sellos = fuente.pieza("sellos", (370, 214, 994, 380))
+    texto = fuente.pieza("texto", (262, 640, 520, 696))
+    peso = fuente.pieza("peso", (792, 654, 1000, 694))
+
+    fondo = fuente.fondo_de_la_zona((220, 213, 1035, 700))
+    frente = Lienzo(forma.FRENTE, fondo, rects[forma.FRENTE], 0.8, registro)
+    centro = frente.ancho // 2
+    util = 430
+    izquierda = centro - util // 2
+    escala_de_los_sellos = util / sellos.ancho
+    y = 14
+    _, y_sellos, _, alto_sellos = frente.poner(
+        sellos, centro - round(sellos.ancho * escala_de_los_sellos) // 2, y, escala_de_los_sellos
+    )
+    y = y_sellos + alto_sellos + 12
+    _, y_logo, _, alto_logo = frente.poner(logo, izquierda, y, 0.82)
+    escala_galleta = 0.62
+    frente.poner(
+        galleta, izquierda + util - round(galleta.ancho * escala_galleta), y_logo + alto_logo - 38,
+        escala_galleta,
+    )
+    base = frente.alto - 16
+    frente.poner(texto, izquierda, base - round(texto.alto * 0.6), 0.6)
+    x_peso = izquierda + util - round(peso.ancho * 0.75)
+    frente.poner(peso, x_peso, base - round(peso.alto * 0.75), 0.75)
+    frente.con_cierres(fuente, (186, 226), (300, 600))
+    paneles = {forma.FRENTE: frente.rgba}
+
+    fondo = fuente.fondo_de_la_zona((220, 745, 1035, 1030))
+    dorso = Lienzo(forma.DORSO, fondo, rects[forma.DORSO], 0.5, registro)
+    ingredientes = fuente.pieza("ingredientes", (533, 775, 812, 910))
+    lema = fuente.pieza("lema", (835, 765, 985, 885))
+    tabla = fuente.pieza("tabla_nutricional", (275, 770, 515, 985))
+    barras = fuente.pieza("codigo_de_barras", (825, 900, 995, 1008))
+    sello = fuente.pieza("industria", (530, 940, 830, 992))
+    e = 0.45
+    x0 = centrada(dorso.ancho, 232)
+    dorso.poner(ingredientes, x0, 18, e)
+    dorso.poner(lema, x0 + round(ingredientes.ancho * e) + 14, 18, e)
+    y2 = 18 + round(ingredientes.alto * e) + 14
+    dorso.poner(tabla, x0, y2, e)
+    dorso.poner(barras, x0 + round(tabla.ancho * e) + 14, y2, e)
+    dorso.poner(sello, x0, y2 + round(tabla.alto * e) + 10, e)
+    dorso.con_cierres(fuente, (186, 226), (300, 600))
+    paneles[forma.DORSO] = dorso.rgba
+
+    # Los cantos llevan el degradé y nada más: se ven de costado, y una pieza se vería cortada.
+    zonas = {forma.ARRIBA: (190, 34, 1062, 167), forma.ABAJO: (191, 1071, 1055, 1225)}
+    for nombre, zona in zonas.items():
+        fondo = fuente.fondo_de_la_zona(zona)
+        paneles[nombre] = Lienzo(nombre, fondo, rects[nombre], 0.5, registro).rgba
     return paneles
 
 
-def oremos(rects: dict[str, Rect]) -> dict[str, np.ndarray]:
-    fuente = Fuente(ORIGINALES / "oremos.png", ((220, 213, 1035, 700), (220, 745, 1035, 1030)))
-    _, _, ancho, alto = rects[forma.FRENTE]
-    cierre_ancho = round(ancho * forma.FRANJA_DEL_CIERRE)
-    cuerpo = ancho - 2 * cierre_ancho
-    franja = franja_de_cierre(fuente, (186, 226), (300, 600), cierre_ancho, alto)
-    panel = panel_base(ancho, alto, estirar_el_degrade(fuente, (220, 213, 1035, 700), ancho, alto))
-    sellos = (370, 214, 994, 380)
-    heroe = (268, 380, 1024, 694)
-    texto = (262, 640, 520, 696)
-    peso = (786, 654, 1002, 698)
-    margen = 26
-    escala_sellos = 0.84
-    ancho_sellos = round((sellos[2] - sellos[0]) * escala_sellos)
-    alto_sellos = round((sellos[3] - sellos[1]) * escala_sellos)
-    x_sellos = cierre_ancho + (cuerpo - ancho_sellos) // 2
-    pegar(panel, fuente.pieza(sellos), x_sellos, margen, escala_sellos)
-    escala_heroe = cuerpo / (heroe[2] - heroe[0])
-    pegar(panel, fuente.pieza(heroe, borrar=(texto, peso)), cierre_ancho,
-          margen + alto_sellos + 30, escala_heroe)
-    alto_peso = round((peso[3] - peso[1]) * 0.9)
-    alto_texto = round((texto[3] - texto[1]) * 0.8)
-    pegar(panel, fuente.pieza(texto), cierre_ancho + 14, alto - margen - alto_texto, 0.8)
-    pegar(panel, fuente.pieza(peso), ancho - cierre_ancho - 14 - round((peso[2] - peso[0]) * 0.9),
-          alto - margen - alto_peso, 0.9)
-    con_cierres(panel, franja, franja[:, ::-1])
-    secundarios = paneles_secundarios(
-        fuente,
-        {
-            "fondo": (220, 745, 1035, 1030),
-            "piezas": (
-                ((533, 775, 812, 910), 0.5, (34, 14)),
-                ((835, 765, 985, 885), 0.5, (184, 12)),
-                ((275, 770, 515, 985), 0.5, (34, 96)),
-                ((825, 900, 995, 1008), 0.5, (164, 96)),
-                ((530, 940, 830, 992), 0.4, (150, 152)),
-            ),
-        },
-        ((400, 48, 755, 158), 0.75, 0),
-        ((395, 1086, 750, 1212), 0.75, 0),
-        rects,
-        {forma.DORSO: franja_del_dorso(fuente, (186, 226), (300, 600), rects)},
+def pepito(rects: dict[str, Rect], registro: list) -> dict[str, np.ndarray]:
+    fuente = Fuente(
+        ORIGINALES / "pepito.png",
+        (
+            (212, 248, 1040, 806),
+            (140, 840, 1130, 1040),
+            (154, 35, 1099, 197),
+            (134, 1080, 1119, 1229),
+        ),
+        criterio=es_fondo_de_pepito,
     )
-    secundarios[forma.FRENTE] = panel
-    return secundarios
 
+    def sin_el_logo(rgb, alfa, x0, y0):
+        ys, xs = np.mgrid[0 : alfa.shape[0], 0 : alfa.shape[1]]
+        return (~(((xs + x0) > 540) & ((ys + y0) < 560))).astype(np.float32)
 
-def pepito(rects: dict[str, Rect]) -> dict[str, np.ndarray]:
-    fuente = Fuente(ORIGINALES / "pepito.png", ((212, 248, 1040, 806), (140, 840, 1130, 1040)))
-    _, _, ancho, alto = rects[forma.FRENTE]
-    cierre_ancho = round(ancho * forma.FRANJA_DEL_CIERRE)
-    cuerpo = ancho - 2 * cierre_ancho
-    franja = franja_de_cierre(fuente, (174, 212), (320, 700), cierre_ancho, alto)
-    heroe = (270, 248, 1020, 788)
-    escala = cuerpo / (heroe[2] - heroe[0])
-    alto_heroe = round((heroe[3] - heroe[1]) * escala)
-    arriba = (alto - alto_heroe) // 2
-    panel = np.zeros((alto, ancho, 4), dtype=np.float32)
-    panel[..., 3] = 1.0
-    imagen = np.dstack([fuente.todo[heroe[1] : heroe[3], heroe[0] : heroe[2]],
-                        np.ones((heroe[3] - heroe[1], heroe[2] - heroe[0]), np.float32)])
-    chica = escalar(imagen, cuerpo, alto_heroe)
-    panel[arriba : arriba + alto_heroe, cierre_ancho : cierre_ancho + cuerpo] = chica
-    for desde, hasta, fila in ((0, arriba, 0), (arriba + alto_heroe, alto, alto_heroe - 1)):
-        borde = difuminar(chica[fila : fila + 1, :, :3].astype(np.float32), 12)
-        panel[desde:hasta, cierre_ancho : cierre_ancho + cuerpo, :3] = borde
-    panel[:, :cierre_ancho, :3] = panel[:, cierre_ancho : cierre_ancho + 1, :3]
-    borde = ancho - cierre_ancho
-    panel[:, borde:, :3] = panel[:, borde - 1 : borde, :3]
-    con_cierres(panel, franja, franja[:, ::-1])
-    secundarios = paneles_secundarios(
+    def sin_el_retrato(rgb, alfa, x0, y0):
+        ys, xs = np.mgrid[0 : alfa.shape[0], 0 : alfa.shape[1]]
+        return (~(((xs + x0) < 592) & ((ys + y0) >= 560))).astype(np.float32)
+
+    sellos = fuente.pieza("sellos", (636, 256, 1014, 392))
+    retrato = fuente.pieza("personaje", (250, 262, 592, 790), sin_el_logo)
+    resto = fuente.pieza("logo_galleta_y_peso", (540, 390, 1012, 790), sin_el_retrato)
+
+    fondo = fuente.fondo_de_la_zona((212, 248, 1040, 806))
+    frente = Lienzo(forma.FRENTE, fondo, rects[forma.FRENTE], 0.55, registro)
+    copos = copos_de(
         fuente,
-        {
-            "fondo": (140, 840, 1130, 1040),
-            "piezas": (
-                ((145, 865, 345, 1025), 0.42, (34, 14)),
-                ((415, 843, 695, 1030), 0.42, (122, 12)),
-                ((708, 845, 925, 1025), 0.42, (34, 110)),
-                ((935, 845, 1085, 945), 0.42, (130, 110)),
-                ((948, 948, 1112, 1012), 0.42, (130, 160)),
-            ),
-        },
-        ((305, 48, 660, 190), 0.75, 0),
-        ((270, 1095, 625, 1215), 0.75, 0),
-        rects,
-        {forma.DORSO: franja_del_dorso(fuente, (174, 212), (320, 700), rects)},
+        ((555, 314, 609, 369), (570, 702, 620, 754), (714, 729, 744, 759), (541, 543, 570, 571)),
     )
-    secundarios[forma.FRENTE] = panel
-    return secundarios
+    sembrar(frente, copos, 70, 0.55, 3)
+    centro = frente.ancho // 2
+    util = 430
+    escala_de_los_sellos = util / sellos.ancho
+    _, y_sellos, _, alto_sellos = frente.poner(
+        sellos, centro - round(sellos.ancho * escala_de_los_sellos) // 2, 14, escala_de_los_sellos
+    )
+    # El personaje y el resto del arte siguen en su lugar uno del otro, a una sola escala.
+    escala = 0.55
+    x_base = centro - round((1012 - 250) * escala) // 2
+    y_base = y_sellos + alto_sellos + 12
+    for pieza in (retrato, resto):
+        frente.poner(
+            pieza,
+            x_base + round((pieza.origen[0] - 250) * escala),
+            y_base + round((pieza.origen[1] - 262) * escala),
+            escala,
+        )
+    frente.con_cierres(fuente, (174, 212), (320, 700))
+    paneles = {forma.FRENTE: frente.rgba}
+
+    fondo = fuente.fondo_de_la_zona((140, 840, 1130, 1040))
+    dorso = Lienzo(forma.DORSO, fondo, rects[forma.DORSO], 0.45, registro)
+    sembrar(dorso, copos, 22, 0.45, 5)
+    tarjeta = fuente.pieza("tarjeta", (145, 865, 345, 1025))
+    papel = fuente.pieza("lista", (415, 843, 695, 1030))
+    tabla = fuente.pieza("tabla_nutricional", (708, 845, 925, 1025))
+    lema = fuente.pieza("lema", (935, 845, 1085, 945))
+    barras = fuente.pieza("codigo_de_barras", (948, 948, 1112, 1012))
+    e = 0.45
+    x0 = centrada(dorso.ancho, 232)
+    dorso.poner(tarjeta, x0, 20, e)
+    dorso.poner(papel, x0 + round(tarjeta.ancho * e) + 10, 20, e)
+    y2 = 20 + round(papel.alto * e) + 16
+    dorso.poner(tabla, x0, y2, e)
+    x_derecha = x0 + round(tabla.ancho * e) + 14
+    dorso.poner(lema, x_derecha, y2, e)
+    dorso.poner(barras, x_derecha, y2 + round(lema.alto * e) + 12, e)
+    dorso.con_cierres(fuente, (174, 212), (320, 700))
+    paneles[forma.DORSO] = dorso.rgba
+
+    # Los cantos llevan el azul con copos y solo: se ven de costado y una pieza queda cortada.
+    zonas = {forma.ARRIBA: (154, 35, 1099, 197), forma.ABAJO: (134, 1080, 1119, 1229)}
+    for nombre, zona in zonas.items():
+        canto = Lienzo(nombre, fuente.fondo_de_la_zona(zona), rects[nombre], 0.5, registro)
+        sembrar(canto, copos, 9, 0.45, 7)
+        paneles[nombre] = canto.rgba
+    return paneles
 
 
 def nombre_del_original(objeto: str) -> str:
@@ -405,12 +592,13 @@ def hoja_comparativa(filas: list[tuple[np.ndarray, np.ndarray]], destino: Path) 
 def main() -> None:
     configurar()
     aplicar = "--aplicar" in sys.argv
-    carpeta = ORIGINALES if aplicar else RAIZ / "reports/paquetes-de-galletitas"
+    reporte = RAIZ / "reports/paquetes-de-galletitas"
+    carpeta = ORIGINALES if aplicar else reporte
     carpeta.mkdir(parents=True, exist_ok=True)
-    if bpy.data.filepath:
-        cajas = {n: armado.caja_del_cubo(bpy.data.objects[n]) for n in PRODUCTOS}
-    else:
+    reporte.mkdir(parents=True, exist_ok=True)
+    if not bpy.data.filepath:
         raise SystemExit("falta el .blend: se mide el tamaño de cada paquete en su malla")
+    cajas = {n: armado.caja_del_cubo(bpy.data.objects[n]) for n in PRODUCTOS}
     comparadas: list[tuple[np.ndarray, np.ndarray]] = []
     for nombre, (archivo, componer) in PRODUCTOS.items():
         objeto = bpy.data.objects[nombre]
@@ -419,18 +607,19 @@ def main() -> None:
             (y1 - y0) * objeto.scale.y, (x1 - x0) * objeto.scale.x, (z1 - z0) * objeto.scale.z
         )
         rects = forma.desplegado(caja)
-        paneles = componer(rects)
+        registro: list = []
+        paneles = componer(rects, registro)
         hoja = np.zeros((forma.LIENZO_ALTO, forma.LIENZO_ANCHO, 4), dtype=np.float32)
         hoja[..., :3] = FONDO_DE_LA_HOJA
         hoja[..., 3] = 1.0
         for panel, rect in rects.items():
             poner_el_panel(hoja, paneles[panel], rect)
         escribir(hoja, carpeta / archivo)
-        print(f"{archivo}: {hoja.shape[1]}x{hoja.shape[0]} en {carpeta}")
-        original = nombre_del_original(nombre)
-        comparadas.append((leer(ORIGINALES / original), hoja))
-    reporte = RAIZ / "reports/paquetes-de-galletitas"
-    reporte.mkdir(parents=True, exist_ok=True)
+        (reporte / f"composicion_{archivo.removesuffix('.png')}.json").write_text(
+            json.dumps({"producto": nombre, "piezas": registro}, indent=1), encoding="utf-8"
+        )
+        print(f"{archivo}: {hoja.shape[1]}x{hoja.shape[0]} en {carpeta}, {len(registro)} piezas")
+        comparadas.append((leer(ORIGINALES / nombre_del_original(nombre)), hoja))
     hoja_comparativa(comparadas, reporte / "hoja_de_texturas.png")
 
 
