@@ -36,6 +36,9 @@ PRODUCTOS = {
     "macumbas": ("macumbas-convcol", (-1.0, 0.0, 0.0)),
     "donsaturados": ("donsaturados-convcol.001", (-1.0, 0.0, 0.0)),
     "chisitos": ("chisitos2-convcol.001", (1.0, 0.0, 0.0)),
+    "laysntt": ("snackpapas1-convcol.002", (1.0, 0.0, 0.0)),
+    "oremos": ("oremos-col", (1.0, 0.0, 0.0)),
+    "pepito": ("pepitos2-col.025", (1.0, 0.0, 0.0)),
 }
 
 

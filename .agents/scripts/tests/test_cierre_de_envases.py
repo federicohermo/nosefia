@@ -1,4 +1,4 @@
-"""El cierre de los envases: una aleta plana con dientes de sierra, igual para todos."""
+"""El cierre de los envases: una aleta plana de borde recto, igual para todos."""
 
 import unittest
 
@@ -24,8 +24,8 @@ class CierreDeEnvases(unittest.TestCase):
     def _armar(self, **kw):
         return cierre((0.0, 0.1, -0.05), EJE, 0.1, AFUERA, 0.03, NORMAL, **kw)
 
-    def test_la_punta_de_los_dientes_llega_a_la_salida_y_la_costura_al_origen(self):
-        c = self._armar(dientes=6)
+    def test_el_borde_de_afuera_llega_a_la_salida_y_la_costura_al_origen(self):
+        c = self._armar()
         ys = [v[1] for v in c.vertices]
         self.assertAlmostEqual(max(ys), 0.1 + 0.03)
         self.assertAlmostEqual(min(ys), 0.1)
@@ -49,8 +49,26 @@ class CierreDeEnvases(unittest.TestCase):
         self.assertTrue(all(abs(x) > 0.0019 for x in xs))
         self.assertTrue(any(x > 0 for x in xs) and any(x < 0 for x in xs))
 
-    def test_la_banda_tiene_filas_enteras_y_cada_diente_su_cuadrilatero_y_su_punta(self):
-        c = self._armar(dientes=5, surcos=2)
+    def test_el_borde_de_afuera_es_recto_y_sin_dientes_por_defecto(self):
+        c = self._armar()
+        puntas = {(s, t) for cara in c.caras for s, t in cara.st if t == 1.0}
+        self.assertEqual({s for s, _ in puntas}, {0.0, 1.0})
+        afuera = [v for v in c.vertices if abs(v[1] - 0.13) < 1e-12]
+        self.assertEqual(len(afuera), 4)
+        self.assertTrue(all(len(cara.vertices) == 4 for cara in c.caras))
+
+    def test_con_dos_surcos_la_banda_son_cuatro_filas_de_una_cara_por_lado(self):
+        c = self._armar(surcos=2)
+        self.assertEqual(len(c.caras), 4 * 2)
+        self.assertEqual(c.triangulos(), 4 * 2 * 2)
+
+    def test_sin_surcos_cada_lado_es_una_sola_cara_plana(self):
+        c = self._armar(surcos=0, relieve=0.0015)
+        self.assertEqual(len(c.caras), 2)
+        self.assertEqual({round(abs(v[0]) - 0.002, 9) for v in c.vertices}, {0.0})
+
+    def test_con_dientes_la_banda_lleva_a_cada_uno_su_cuadrilatero_y_su_punta(self):
+        c = self._armar(dientes=5, surcos=2, diente=0.35)
         por_lado = (2 * 2 - 1) + 5 * 2
         self.assertEqual(len(c.caras), por_lado * 2)
         self.assertEqual(c.triangulos(), ((2 * 2 - 1) * 2 + 5 * 2 + 5) * 2)
@@ -61,7 +79,7 @@ class CierreDeEnvases(unittest.TestCase):
         self.assertEqual(salidas, {0.0, 0.0015})
 
     def test_los_st_recorren_el_cuadrado_unidad(self):
-        c = self._armar(dientes=4)
+        c = self._armar(dientes=4, diente=0.35)
         s = [p[0] for cara in c.caras for p in cara.st]
         t = [p[1] for cara in c.caras for p in cara.st]
         self.assertEqual((min(s), max(s)), (0.0, 1.0))
@@ -72,6 +90,8 @@ class CierreDeEnvases(unittest.TestCase):
             self._armar(dientes=0)
         with self.assertRaises(ValueError):
             self._armar(diente=1.0)
+        with self.assertRaises(ValueError):
+            self._armar(surcos=-1)
         with self.assertRaises(ValueError):
             cierre((0, 0, 0), EJE, 0.0, AFUERA, 0.03, NORMAL)
 

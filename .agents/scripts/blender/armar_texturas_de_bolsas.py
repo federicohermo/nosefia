@@ -80,6 +80,9 @@ GRASAS, SODIO, CALORIAS = 0, 1, 2
 
 Caja = tuple[int, int, int, int]
 
+#: Cuánto se borronea el fondo que se agrega alrededor del arte, en píxeles.
+LARGO_DEL_BORROSO = 24.0
+
 
 def cargar(ruta: Path) -> np.ndarray:
     """La imagen como flotantes RGB de 0 a 255. Lo transparente se pinta del color de su vecino."""
@@ -120,14 +123,17 @@ def extender(
     lleno = np.pad(arte, ((arriba, abajo), (izquierda, derecha), (0, 0)), mode=modo)
     if not (arriba or abajo or izquierda or derecha):
         return lleno
-    borroso = np.stack(
-        [ndimage.gaussian_filter(lleno[..., c], sigma=2.5) for c in range(3)], axis=-1
-    )
+    # Arriba y abajo el borroso corre a lo largo de la costura, y a los lados a lo alto: lo que
+    # queda es un fondo parejo, sin las vetas que el borde del arte dibujaría como dientes en la
+    # franja del cierre.
+    a_lo_ancho = ndimage.gaussian_filter(lleno, sigma=(0, LARGO_DEL_BORROSO, 0))
+    a_lo_alto = ndimage.gaussian_filter(lleno, sigma=(LARGO_DEL_BORROSO, 0, 0))
     y, x = np.mgrid[0 : lleno.shape[0], 0 : lleno.shape[1]]
     # La distancia de cada píxel al rectángulo del arte, en píxeles.
     dy = np.maximum(np.maximum(arriba - y, y - (arriba + alto - 1)), 0)
     dx = np.maximum(np.maximum(izquierda - x, x - (izquierda + ancho - 1)), 0)
-    peso = np.clip(np.hypot(dx, dy) / 12.0, 0.0, 1.0)[..., None]
+    borroso = np.where((dy >= dx)[..., None], a_lo_ancho, a_lo_alto)
+    peso = np.clip(np.hypot(dx, dy) / 6.0, 0.0, 1.0)[..., None]
     return lleno * (1 - peso) + borroso * peso
 
 

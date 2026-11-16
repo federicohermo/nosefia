@@ -1,7 +1,7 @@
 """El agujero para colgar en el cierre de una bolsa: una ventana en la banda lisa de la aleta.
 
-Se aplica sobre un `Cierre` de `lib/cierre_de_envases.py` y no lo reemplaza: la aleta, sus dientes
-y sus surcos siguen siendo los de todos los envases. Es Python puro, sin Blender.
+Se aplica sobre un `Cierre` de `lib/cierre_de_envases.py` y no lo reemplaza: la aleta y sus
+surcos siguen siendo los de todos los envases. Es Python puro, sin Blender.
 
 ## Qué hace
 
@@ -55,7 +55,7 @@ def abrir_agujero(
     la posición de un `(s, t)` de un lado (`1` o `-1`), con la misma regla con que se armó `c`.
     """
     if len(alturas) < 4:
-        raise ValueError("el agujero necesita dos filas de banda entre la costura y los dientes")
+        raise ValueError("el agujero necesita dos filas de banda entre la costura y el borde")
     if not 0.0 < ancho < 1.0 or not 0.0 < centro - ancho / 2 < centro + ancho / 2 < 1.0:
         raise ValueError("el agujero cabe entre la costura y su otro extremo")
     s0, s1 = centro - ancho / 2, centro + ancho / 2

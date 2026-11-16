@@ -1,4 +1,4 @@
-"""El cierre prensado de un envase flexible: una aleta plana con dientes de sierra.
+"""El cierre prensado de un envase flexible: una aleta plana de borde recto.
 
 Es la **única** construcción del cierre. La usan los envases con cierre a los costados (los
 paquetes apaisados de galletitas) y los de cierre arriba y abajo (las bolsas), cada uno con su
@@ -9,21 +9,24 @@ el script de cada envase pone los vértices en su malla.
 
 Una aleta se apoya sobre una costura recta y sale hacia afuera, en el plano medio del envase. Cada
 lado (el del frente y el del dorso) es una cara aparte, separada del plano medio, para que no se
-pisen. La costura es el eje `s`, de 0 a 1; hacia afuera es `t`, de 0 a 1. El borde de afuera es un
-diente de sierra: cada diente es un triángulo cuya punta llega a `t = 1`, y entre dos dientes la
-aleta llega sólo a `1 - diente`.
+pisen. La costura es el eje `s`, de 0 a 1; hacia afuera es `t`, de 0 a 1. **El borde de afuera
+es recto**, como el de Chisitos y el de Lay'snt't: la aleta es un rectángulo de lado a lado de la
+costura. Con `diente` mayor que cero el borde sería un diente de sierra, cada diente un triángulo
+que llega a `t = 1`: ningún envase lo usa, y el parámetro queda para quien lo pida.
 
 El prensado se hace de dos maneras:
 
 - **En la malla**, la banda tiene surcos paralelos a la costura: filas de vértices que salen del
   plano `relieve`, una sí y una no. La luz marca los surcos que el cierre tiene en la realidad.
+  Con `surcos=0` la aleta es una sola cara plana por lado, y la textura lleva todo el prensado: es
+  el cierre de las bolsas de papas.
 - **En la textura**, que cada envase pinta: cada vértice lleva su `(s, t)` y quien llama lo lleva a
   su UV. La aleta no tiene letras: repite la franja del borde del frente o del dorso.
 
 ## Lo que cuesta
 
-Con ocho dientes y dos surcos, unos treinta triángulos por lado: ciento veinte entre los dos lados
-de un cierre.
+Con dos surcos, cuatro filas de una cara: ocho triángulos por lado y dieciséis entre los dos lados
+de un cierre. Sin surcos, dos triángulos por lado.
 """
 
 from __future__ import annotations
@@ -33,11 +36,12 @@ from dataclasses import dataclass
 
 Vector = tuple[float, float, float]
 
-#: Cuántos dientes lleva un cierre por defecto.
+#: Cuántos dientes lleva el borde si lo lleva. Sin efecto con `DIENTE` en cero.
 DIENTES = 8
 
-#: Cuánto del largo de la aleta, hacia afuera, es el diente. El resto es la banda lisa.
-DIENTE = 0.35
+#: Cuánto del largo de la aleta, hacia afuera, es el diente. El resto es la banda lisa. Con cero el
+#: borde es recto.
+DIENTE = 0.0
 
 #: Cuántos surcos paralelos a la costura lleva la banda lisa de la aleta.
 SURCOS = 2
@@ -113,19 +117,20 @@ def cierre(
     """El cierre apoyado en la costura que va de `origen` a `origen + eje * largo`.
 
     `eje`, `afuera` y `normal` son unitarios y perpendiculares entre sí. `salida` es lo que sale
-    la aleta de la costura, hasta la punta de sus dientes. `normal` es hacia donde mira el lado
+    la aleta de la costura, hasta su borde de afuera. `normal` es hacia donde mira el lado
     del frente. La costura queda en el plano medio: las dos caras se separan de él `separacion`,
     y los surcos salen `relieve` más.
     """
-    if dientes < 1 or surcos < 1:
-        raise ValueError("un cierre lleva al menos un diente y un surco")
-    if not 0.0 < diente < 1.0:
-        raise ValueError("el diente es una fracción del largo de la aleta, entre 0 y 1")
+    if dientes < 1 or surcos < 0:
+        raise ValueError("un cierre lleva al menos un diente, y cero o más surcos")
+    if not 0.0 <= diente < 1.0:
+        raise ValueError("el diente es una fracción de la aleta: de 0 a 1, sin llegar a 1")
     if min(largo, salida) <= 0:
         raise ValueError("el largo y la salida del cierre son positivos")
 
     t_valle = 1.0 - diente
-    filas = 2 * surcos
+    filas = 2 * surcos or 1
+    relieve = relieve if surcos else 0.0
     alturas = [t_valle * i / filas for i in range(filas + 1)]
     # Con la terna directa, el orden antihorario en (s, t) mira hacia `normal`.
     directa = _punto(_cruz(eje, afuera), normal) > 0
@@ -153,10 +158,13 @@ def cierre(
                 indices, st = indices[::-1], st[::-1]
             caras.append(CaraDeCierre(tuple(indices), tuple(st), lado))
 
-        # La banda lisa: una fila de surcos tras otra, enteras a lo largo de la costura. La última
-        # se parte por dientes, para que cada punta tenga sus vértices.
-        for t0, t1 in zip(alturas[:-2], alturas[1:-1]):
+        # La banda lisa: una fila de surcos tras otra, enteras a lo largo de la costura. Con
+        # dientes, la última se parte por dientes, para que cada punta tenga sus vértices.
+        enteras = zip(alturas[:-1], alturas[1:]) if not diente else zip(alturas[:-2], alturas[1:-1])
+        for t0, t1 in enteras:
             cara([(0.0, t0), (1.0, t0), (1.0, t1), (0.0, t1)])
+        if not diente:
+            continue
         t0, t1 = alturas[-2], alturas[-1]
         for k in range(dientes):
             s0, s1 = k / dientes, (k + 1) / dientes

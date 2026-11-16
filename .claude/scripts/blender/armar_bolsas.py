@@ -31,19 +31,20 @@ Petisas, Macumbas y Don Saturados eran un prisma de seis caras con una mitad de 
 cara. Pasan por la misma construcción, con tres diferencias:
 
 - **El cierre** es el de `lib/cierre_de_envases.py`, el mismo de los paquetes de Oremos y Pepito:
-  una aleta con dientes de sierra y relieve, y no una aleta lisa.
+  una aleta de borde recto, como la de Chisitos y Lay'snt't, con dos surcos de relieve. Las papas
+  usan esa misma construcción sin surcos, y salen igual que siempre, vértice por vértice.
 - **El agujero para colgar** de Macumbas es una ventana en el cierre de arriba, de
   `lib/agujero_de_colgar.py`: se aplica sobre ese mismo cierre, no lo reemplaza.
-- **El desplegado** es el de `lib/desplegado_de_bolsas.py`: una sola textura de 512 x 320 con
+- **El desplegado** es el de `lib/desplegado_de_bolsas.py`: una sola textura de 512 x 352 con
   frente, dorso y los dos costados acostados, en lugar del par `completo` y `costado`.
 - **El frente** mira a `-x`, como mira hoy cada una de las tres, y la malla conserva la caja que
   ocupaba: el ancho, el alto y el fondo de cada producto en el estante no cambian.
 
 ## Lo que cuesta
 
-608 triángulos por bolsa de papas, 600 por bolsa de galletitas con 8 dientes y 2 surcos en
-cada cierre (616 la de Macumbas, con su agujero), y ningún dibujo. La caja de la bolsa se guarda en la malla la primera vez:
-correrlo de nuevo rehace la misma bolsa.
+608 triángulos por bolsa de papas, 512 por bolsa de galletitas con 2 surcos en cada cierre (528
+la de Macumbas, con su agujero), y ningún dibujo. La caja de la bolsa se guarda en la malla la
+primera vez: correrlo de nuevo rehace la misma bolsa.
 """
 
 import math
@@ -92,18 +93,14 @@ ALETA = 0.05
 BANDA_DE_LA_ALETA = 0.014
 #: Qué parte del grosor anterior conserva el centro de la bolsa.
 GROSOR = 0.85
-#: Cuánto se separa cada cara de la aleta del plano medio, para que no se pisen.
-SEPARACION = 0.002
 MARCA = "caja_de_la_bolsa"
 
-#: Cuántos dientes lleva cada cierre de las galletitas. La cresta y la separación de
-#: `lib/cierre_de_envases.py` van en metros: acá se llevan al espacio de la malla, que el objeto
-#: escala.
-DIENTES = cierre_de_envases.DIENTES
 ANILLOS_DE_LAS_GALLETITAS = 12
-#: El alto de la aleta de las galletitas, en fracción del alto de la bolsa. Más alta que la de las
-#: papas: el diente necesita altura para leerse a 1,7 m.
+#: El alto de la aleta de las galletitas, en fracción del alto de la bolsa: 1,56 cm, el mismo
+#: que el de las papas.
 ALETA_DE_LAS_GALLETITAS = 0.065
+#: La franja del borde que pinta la aleta de las galletitas, en fracción de la textura.
+BANDA_DE_LAS_GALLETITAS = desplegado_de_bolsas.banda_del_cierre()
 
 TEXTURAS = RAIZ / "assets" / "source" / "products-textured" / "bolsas"
 
@@ -112,7 +109,10 @@ TEXTURAS = RAIZ / "assets" / "source" / "products-textured" / "bolsas"
 class Bolsa:
     """Una bolsa a armar: su unidad, que comparte la malla con las demás, y lo que la distingue.
 
-    `cierre` arma las aletas con `lib/cierre_de_envases.py`. `mira_a_menos_x` gira la bolsa 180
+    Las aletas las arma `lib/cierre_de_envases.py` para todas: `surcos` es cuántos lleva cada una,
+    `banda` qué franja del borde del frente y del dorso pinta, y `cierre_en_metros` si la cresta y
+    la separación se miden en metros del mundo (se llevan a la malla con la escala del objeto) o ya
+    en la malla. `mira_a_menos_x` gira la bolsa 180
     grados sobre su eje vertical: el frente de las papas mira a `+x` y el de las galletitas a
     `-x`, que es hacia donde las acomoda `lib/reparto.py`. `textura` es la imagen que pasa a
     llevar el material, y reemplaza a la de la malla anterior. `llena_el_fondo` estira el grosor
@@ -123,7 +123,6 @@ class Bolsa:
 
     objeto: str
     desplegado: dict[str, Rect] = field(default_factory=lambda: DESPLEGADO)
-    cierre: bool = False
     mira_a_menos_x: bool = False
     anillos: int = ANILLOS
     grosor: float = GROSOR
@@ -131,10 +130,13 @@ class Bolsa:
     textura: Path | None = None
     llena_el_fondo: bool = False
     agujero: bool = False
+    surcos: int = 0
+    banda: float = BANDA_DE_LA_ALETA
+    cierre_en_metros: bool = False
 
 
-#: Las bolsas que se arman. Las papas conservan su aleta lisa; las galletitas llevan el cierre
-#: prensado y dentado de los paquetes de la misma fábrica.
+#: Las bolsas que se arman. Las papas llevan la aleta plana de siempre y las galletitas, con la
+#: misma forma y dos surcos de relieve: un borde recto en las cinco, como el de los paquetes.
 BOLSAS = (
     Bolsa("chisitos2-convcol.001"),
     Bolsa("snackpapas1-convcol.002"),
@@ -142,7 +144,6 @@ BOLSAS = (
         Bolsa(
             objeto,
             desplegado=DESPLEGADO_DE_GALLETITAS,
-            cierre=True,
             mira_a_menos_x=True,
             anillos=ANILLOS_DE_LAS_GALLETITAS,
             grosor=1.0,
@@ -150,6 +151,9 @@ BOLSAS = (
             textura=TEXTURAS / f"{producto}.png",
             llena_el_fondo=True,
             agujero=objeto == "macumbas-convcol",
+            surcos=cierre_de_envases.SURCOS,
+            banda=BANDA_DE_LAS_GALLETITAS,
+            cierre_en_metros=True,
         )
         for objeto, producto in (
             ("petisas-convcol", "petisas"),
@@ -269,26 +273,9 @@ def armar(objeto, bolsa: Bolsa) -> tuple[int, int]:
             caras.append((ids, uvs, False))
     cuerpo = len(caras)
 
-    if bolsa.cierre:
-        _cierres(
-            vertices, caras, desplegado, (xc, y0, y1), (abajo, arriba, aleta), objeto.scale.x,
-            bolsa.agujero,
-        )
-    else:
-        # Las aletas: una cara por lado. Cada una repite, en espejo, la franja del borde del frente
-        # o del dorso que toca: sigue el paquete y no lleva letras.
-        for arriba_de_todo, borde, punta in ((False, abajo, z0), (True, arriba, z1)):
-            for lado, cara in ((1, "frente"), (-1, "dorso")):
-                u0, u1, v0, v1 = desplegado[cara]
-                x = xc + lado * SEPARACION
-                ids = []
-                for y, z in ((y0, borde), (y1, borde), (y1, punta), (y0, punta)):
-                    ids.append(len(vertices))
-                    vertices.append((x, y, z))
-                va = v1 if arriba_de_todo else v0
-                vb = va - BANDA_DE_LA_ALETA if arriba_de_todo else va + BANDA_DE_LA_ALETA
-                ua, ub = (u0, u1) if lado == 1 else (u1, u0)
-                caras.append((ids, [(ua, va), (ub, va), (ub, vb), (ua, vb)], False))
+    _cierres(
+        vertices, caras, desplegado, (xc, y0, y1), (abajo, arriba, aleta), objeto.scale.x, bolsa
+    )
 
     # Toda cara mira hacia afuera del centro de la bolsa.
     centro = (xc, yc, (z0 + z1) / 2)
@@ -326,6 +313,11 @@ def armar(objeto, bolsa: Bolsa) -> tuple[int, int]:
     return antes, despues
 
 
+def _entre(a: float, b: float, t: float) -> float:
+    """Como `lerp`, pero los extremos salen exactos: la UV de una punta es la del recorte."""
+    return a if t == 0.0 else b if t == 1.0 else lerp(a, b, t)
+
+
 def _cierres(
     vertices: list[tuple[float, float, float]],
     caras: list[tuple[list[int], list[tuple[float, float]], bool]],
@@ -333,7 +325,7 @@ def _cierres(
     ancho_y: tuple[float, float, float],
     alturas_z: tuple[float, float, float],
     escala_x: float,
-    agujero: bool,
+    bolsa: Bolsa,
 ) -> None:
     """Agrega el cierre de arriba y el de abajo, armados por `lib/cierre_de_envases.py`.
 
@@ -344,7 +336,8 @@ def _cierres(
     """
     xc, y0, y1 = ancho_y
     abajo, arriba, aleta = alturas_z
-    banda = desplegado_de_bolsas.banda_del_cierre()
+    # Las medidas del cierre van en metros; las de las papas, que ya salían así, en la malla.
+    por_metro = 1.0 / escala_x if bolsa.cierre_en_metros else 1.0
     for arriba_de_todo, borde in ((False, abajo), (True, arriba)):
         c = cierre_de_envases.cierre(
             origen=(xc, y0, borde),
@@ -353,43 +346,44 @@ def _cierres(
             afuera=(0.0, 0.0, 1.0 if arriba_de_todo else -1.0),
             salida=aleta,
             normal=(1.0, 0.0, 0.0),
-            dientes=DIENTES,
-            relieve=cierre_de_envases.RELIEVE / escala_x,
-            separacion=cierre_de_envases.SEPARACION / escala_x,
+            surcos=bolsa.surcos,
+            relieve=cierre_de_envases.RELIEVE * por_metro,
+            separacion=cierre_de_envases.SEPARACION * por_metro,
         )
-        if agujero and arriba_de_todo:
-            c = agujero_de_colgar.abrir_agujero(c, alturas_de_la_banda(), _punto_del_cierre(
-                (xc, y0, borde), largo=y1 - y0, afuera_z=1.0, salida=aleta, escala_x=escala_x
-            ))
+        if bolsa.agujero and arriba_de_todo:
+            c = agujero_de_colgar.abrir_agujero(
+                c,
+                alturas_de_la_banda(bolsa.surcos),
+                _punto_del_cierre((xc, y0, borde), y1 - y0, 1.0, aleta, por_metro, bolsa.surcos),
+            )
         base = len(vertices)
         vertices.extend(c.vertices)
         for cara in c.caras:
             u0, u1, v0, v1 = desplegado["frente" if cara.lado == 1 else "dorso"]
             uvs = []
             for s, t in cara.st:
-                u = lerp(u0, u1, s) if cara.lado == 1 else lerp(u1, u0, s)
-                v = v1 - banda * t if arriba_de_todo else v0 + banda * t
+                u = _entre(u0, u1, s) if cara.lado == 1 else _entre(u1, u0, s)
+                v = v1 - bolsa.banda * t if arriba_de_todo else v0 + bolsa.banda * t
                 uvs.append((u, v))
             caras.append(([base + i for i in cara.vertices], uvs, True))
 
 
-def alturas_de_la_banda() -> list[float]:
-    """Los `t` de las filas de la banda lisa, como los arma `cierre_de_envases.cierre`."""
-    filas = 2 * cierre_de_envases.SURCOS
+def alturas_de_la_banda(surcos: int) -> list[float]:
+    """Los `t` de las filas de la banda, como los arma `cierre_de_envases.cierre`."""
+    filas = 2 * surcos or 1
     t_valle = 1.0 - cierre_de_envases.DIENTE
     return [t_valle * i / filas for i in range(filas + 1)]
 
 
-def _punto_del_cierre(origen, largo: float, afuera_z: float, salida: float, escala_x: float):
+def _punto_del_cierre(origen, largo, afuera_z, salida, por_metro, surcos):
     """La posición de un `(s, t)` de un lado del cierre de arriba, con la misma regla con que
     `cierre_de_envases.cierre` pone sus vértices: los surcos son las filas impares."""
-    alturas = alturas_de_la_banda()
+    alturas = alturas_de_la_banda(surcos)
 
     def punto(s: float, t: float, lado: int) -> tuple[float, float, float]:
         fila = next((i for i, a in enumerate(alturas) if abs(a - t) < 1e-9), 0)
-        salto = lado * (
-            cierre_de_envases.SEPARACION + (cierre_de_envases.RELIEVE if fila % 2 else 0.0)
-        ) / escala_x
+        relieve = cierre_de_envases.RELIEVE if fila % 2 and surcos else 0.0
+        salto = lado * (cierre_de_envases.SEPARACION + relieve) * por_metro
         return (origen[0] + salto, origen[1] + s * largo, origen[2] + afuera_z * t * salida)
 
     return punto
