@@ -109,9 +109,9 @@ TEXTURAS = RAIZ / "assets" / "source" / "products-textured" / "bolsas"
 class Bolsa:
     """Una bolsa a armar: su unidad, que comparte la malla con las demás, y lo que la distingue.
 
-    Las aletas las arma `lib/cierre_de_envases.py` para todas: `banda` es qué franja del borde del frente y del dorso pinta, y `cierre_en_metros` si la cresta y
-    la separación se miden en metros del mundo (se llevan a la malla con la escala del objeto) o ya
-    en la malla. `mira_a_menos_x` gira la bolsa 180
+    Las aletas las arma `lib/cierre_de_envases.py` para todas: `banda` es qué franja del borde del
+    frente y del dorso pinta, y `cierre_en_metros` si la separación se mide en metros del mundo (se
+    lleva a la malla con la escala del objeto) o ya en la malla. `mira_a_menos_x` gira la bolsa 180
     grados sobre su eje vertical: el frente de las papas mira a `+x` y el de las galletitas a
     `-x`, que es hacia donde las acomoda `lib/reparto.py`. `textura` es la imagen que pasa a
     llevar el material, y reemplaza a la de la malla anterior. `llena_el_fondo` estira el grosor

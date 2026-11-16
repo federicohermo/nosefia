@@ -92,14 +92,12 @@ def abrir_agujero(
         cortes = sorted({t0, t1} | {t for t in (t_bajo, t_alto) if t0 < t < t1})
         for desde, hasta in zip(cortes, cortes[1:]):
             if t_bajo - 1e-9 <= desde and hasta <= t_alto + 1e-9:
-                for a, b in ((0.0, s0), (s1, 1.0)):
-                    caras.append(
-                        cara_de([(a, desde), (b, desde), (b, hasta), (a, hasta)], cara.lado, antihoraria)
-                    )
+                trozos = ((0.0, s0), (s1, 1.0))
             else:
-                caras.append(
-                    cara_de([(0.0, desde), (1.0, desde), (1.0, hasta), (0.0, hasta)], cara.lado, antihoraria)
-                )
+                trozos = ((0.0, 1.0),)
+            for a, b in trozos:
+                st = [(a, desde), (b, desde), (b, hasta), (a, hasta)]
+                caras.append(cara_de(st, cara.lado, antihoraria))
 
     # Las paredes: unen el lado del frente con el del dorso por el borde de la ventana. Miran hacia
     # el centro del agujero.
