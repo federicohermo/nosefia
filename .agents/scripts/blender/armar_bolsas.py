@@ -117,6 +117,12 @@ ALETA_DE_LAS_GALLETITAS = 0.065
 #: La franja del borde que pinta la aleta de las galletitas, en fracción de la textura.
 BANDA_DE_LAS_GALLETITAS = desplegado_de_bolsas.banda_del_cierre()
 
+#: Cuánto se aparta del plano de la costura cada hoja del cierre de las galletitas, en metros del
+#: mundo. Las papas llevan `cierre_de_envases.SEPARACION` en su malla, que con su escala son
+#: 0,4 mm. Las galletitas tienen otra escala: con esa misma cifra cada hoja quedaba a 1,3 mm, y
+#: el cierre se veía doble y despegado de la costura, donde el cuerpo cierra en cero.
+SEPARACION_DE_LAS_GALLETITAS = 0.0002
+
 TEXTURAS = RAIZ / "assets" / "source" / "products-textured" / "bolsas"
 
 
@@ -148,6 +154,7 @@ class Bolsa:
     textura: Path | None = None
     acostadas: tuple[str, ...] = ()
     banda: float = BANDA_DE_LA_ALETA
+    separacion_en_metros: float | None = None
 
 
 #: Las bolsas que se arman. Las papas llevan la aleta plana de siempre y las galletitas, con la
@@ -169,6 +176,7 @@ BOLSAS = (
             textura=TEXTURAS / f"{producto}.png",
             acostadas=ACOSTADAS,
             banda=BANDA_DE_LAS_GALLETITAS,
+            separacion_en_metros=SEPARACION_DE_LAS_GALLETITAS,
         )
         for objeto, producto in (
             ("petisas-convcol", "petisas"),
@@ -290,7 +298,7 @@ def armar(objeto, bolsa: Bolsa) -> tuple[int, int]:
     cuerpo = len(caras)
 
     _cierres(
-        vertices, caras, desplegado, (xc, y0, y1), (abajo, arriba, aleta), bolsa
+        vertices, caras, desplegado, (xc, y0, y1), (abajo, arriba, aleta), objeto.matrix_world.to_scale().x, bolsa
     )
 
     # Toda cara mira hacia afuera del centro de la bolsa.
@@ -340,6 +348,7 @@ def _cierres(
     desplegado: dict[str, Rect],
     ancho_y: tuple[float, float, float],
     alturas_z: tuple[float, float, float],
+    escala_x: float,
     bolsa: Bolsa,
 ) -> None:
     """Agrega el cierre de arriba y el de abajo, armados por `lib/cierre_de_envases.py`.
@@ -351,6 +360,9 @@ def _cierres(
     """
     xc, y0, y1 = ancho_y
     abajo, arriba, aleta = alturas_z
+    separacion = cierre_de_envases.SEPARACION
+    if bolsa.separacion_en_metros is not None:
+        separacion = bolsa.separacion_en_metros / escala_x
     for arriba_de_todo, borde in ((False, abajo), (True, arriba)):
         c = cierre_de_envases.cierre(
             origen=(xc, y0, borde),
@@ -359,7 +371,7 @@ def _cierres(
             afuera=(0.0, 0.0, 1.0 if arriba_de_todo else -1.0),
             salida=aleta,
             normal=(1.0, 0.0, 0.0),
-            separacion=cierre_de_envases.SEPARACION,
+            separacion=separacion,
         )
         base = len(vertices)
         vertices.extend(c.vertices)

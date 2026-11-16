@@ -85,6 +85,9 @@ FONDO = 0.05
 #: Lo mínimo que sube el lomo de arriba y baja el de abajo, en metros. Con este espesor el panel
 #: del canto ya no alcanza a cubrir un lomo más alto sin estirarse: se estira un 15 %.
 LOMO_MINIMO = 0.014
+#: Cuánto se aparta del plano de la costura cada hoja de la aleta, en metros. Es lo que mide el
+#: cierre de Chisitos y Lay'snt't: con más, las dos hojas se ven por separado.
+HOJA = 0.0002
 #: En cuántas costillas se parte el cuerpo de una costura a la otra.
 SEGMENTOS = 12
 #: Cuántos píxeles se deja adentro del borde de cada panel, para que el filtro no lea el negro.
@@ -149,19 +152,6 @@ def esquinas(mascara, caja: tuple[int, int, int, int]) -> tuple[int, int]:
     return arriba + 1, abajo + 1
 
 
-def punto_del_borde(pixeles, caja: tuple[int, int, int, int], fila: int) -> tuple[float, float]:
-    """El píxel de una fila del panel que más se parece al color medio de esa fila.
-
-    De ahí sale el color liso del canto de cada aleta.
-    """
-    x0, _, x1, _ = caja
-    margen = int((x1 - x0) * (ALETA + 0.03))
-    tramo = pixeles[fila, x0 + margen:x1 - margen, :3]
-    medio = np.median(tramo, axis=0)
-    cerca = int(np.abs(tramo - medio).sum(axis=1).argmin())
-    return (x0 + margen + cerca + 0.5, fila + 0.5)
-
-
 def armar(nombre: str, datos: dict):
     objeto = bpy.data.objects.get(datos["objeto"])
     if objeto is None:
@@ -191,8 +181,6 @@ def armar(nombre: str, datos: dict):
     lomo_de_arriba, lomo_de_abajo = lomo(tapa), lomo(base)
     cima, quilla = alto + lomo_de_arriba, -lomo_de_abajo
 
-    liso_x, liso_y = punto_del_borde(pixeles, dorso, dorso[1] + 3)
-    color = (liso_x / lado, 1 - liso_y / lado)
     de_arriba, de_abajo = esquinas(mascara, frente)
 
     def uv(caja, u: float, v: float, espejo: bool = False) -> tuple[float, float]:
@@ -231,7 +219,7 @@ def armar(nombre: str, datos: dict):
     def medio(i: int) -> float:
         """Medio espesor del cuerpo en la costilla `i`: máximo al centro, casi nada en la costura."""
         s = 2 * i / SEGMENTOS - 1
-        return max(0.0012, (fondo / 2) * (1 - abs(s) ** 3) ** 0.7)
+        return max(HOJA, (fondo / 2) * (1 - abs(s) ** 3) ** 0.7)
 
     ys = [-cuerpo / 2 + cuerpo * i / SEGMENTOS for i in range(SEGMENTOS + 1)]
     us = [(y + ANCHO / 2) / ANCHO for y in ys]
@@ -304,11 +292,6 @@ def armar(nombre: str, datos: dict):
             [uv_de_aleta(uc, 0, True), uv_de_aleta(ua, 0, True), uv_de_aleta(ua, 1, True),
              uv_de_aleta(uc, 1, True)],
         )
-        canto = [
-            (fino, afuera, quilla), (-fino, afuera, quilla),
-            (-fino, afuera, cima), (fino, afuera, cima),
-        ]
-        cara(canto if afuera > 0 else canto[::-1], [color] * 4)
     bm.normal_update()
 
     malla = objeto.data
