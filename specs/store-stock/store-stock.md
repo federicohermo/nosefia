@@ -456,14 +456,16 @@ no implica renombrar productos.
 | Lado de almacén | Marolini, Arvejas (Arvecor), Uakas (Uakalas), Marranos |
 | Lado de cereales, misma isla | Zucarachas, Frotlups (Frot Lups) |
 | Cabecera de bebidas sin refrigerar, misma isla | Fernet God, Terminator |
-| Mitad de snacks dulces junto a cereales, primera isla | Macumbas, Pepitos (Pepito) |
-| Lado de snacks dulces, segunda isla | Oremos, Petisas, Cosa de Maní, Feel Ricky Fort |
-| Lado/cabecera de snacks salados, isla de snacks | Donsaturados (Don Saturados), Prongles (Progres), Chisitos, Laysntt (Laysnnt), Saladik (Saladick) |
-| Cabeceras de golosinas, isla de snacks | Burbaloo, Flinpuf (Flim Pof), Jorgillata |
+| Mitad de snacks junto a cereales, primera isla | Feel Ricky Fort, Donsaturados (Don Saturados) |
+| Lado de snacks dulces, segunda isla | Petisas, Macumbas, Flinpuf (Flim Pof), Cosa de Maní |
+| Lado de snacks salados, isla de snacks | Prongles (Progres), Chisitos, Laysntt (Laysnnt), Saladik (Saladick) |
+| Cabecera de golosinas, isla de snacks | Burbaloo, Jorgillata |
+| Cabecera con las marcas de galletitas, isla de snacks | Oremos, Pepitos (Pepito) |
 
-La primera isla DEBE reunir almacén, cereales y la mitad de snacks dulces junto a cereales,
-con bebidas sin refrigerar en una cabecera. La segunda DEBE reunir los otros snacks dulces,
-snacks salados y golosinas. Los cuatro no comestibles DEBEN ocupar la estantería existente;
+La primera isla DEBE reunir almacén, cereales y la mitad de snacks junto a cereales,
+con bebidas sin refrigerar en una cabecera. La segunda DEBE reunir los snacks dulces,
+los snacks salados y las golosinas. Oremos y Pepito DEBEN exhibirse en la cabecera que lleva
+sus marcas. Los cuatro no comestibles DEBEN ocupar la estantería existente;
 el reparto NO DEBE reconstruir un segundo mural ausente ni duplicar tandas principales.
 Cada heladera funcional DEBE agrupar sus dos productos en mitades verticales según el
 [esquema de diseño](https://app.notion.com/p/3f186efecd9d8096bb5beb6c93d5a676): Coracola
@@ -565,27 +567,30 @@ DESDE la primera jornada completa, el sistema DEBE recuperar los treinta y dos p
 y su reparto completo, también al retomar desde el menú. Cambiar de etapa dentro del mismo
 local NO DEBE conservar cupos, dibujos, objetivos ni unidades sueltas de la etapa anterior.
 
-### BR-STK-047 — Las jornadas de prueba ocupan los cuatro niveles
+### BR-STK-047 — Las jornadas de prueba derivan del reparto completo
 
-EN las jornadas de prueba, el sistema DEBE ocupar los cuatro niveles de cada cara con
-los mismos productos del mapa de prueba, sin estantes vacíos:
+EN las jornadas de prueba, cada producto presente DEBE conservar el estante, el lado y la tanda
+principal que tiene en el reparto completo de BR-STK-043 y BR-STK-044. El lugar de un producto
+ausente DEBE llenarlo un producto presente de su misma cara, como tanda fija, sin estantes
+vacíos:
 
-| Destino del mapa de prueba | Productos |
+| Cara del reparto completo | Productos en las jornadas de prueba |
 |---|---|
-| Lado de almacén de la primera isla | Arvecor y Marolini |
-| Lado opuesto de esa isla | Terminator y Zucarachas |
-| Cabecera de bebidas de esa isla | Poético |
-| Cabecera opuesta de esa isla | Fernet God |
-| Lado de dulces de la segunda isla | Pepito y Petisas |
-| Lado de salados de la segunda isla | Progres y Don Saturados |
-| Cabecera que conserva Jorgillata en el mapa completo | Jorgillata |
-| Cabecera opuesta de la segunda isla | Malbardo |
-| Estantería de no comestibles | Actroncito y Duronga |
+| Lado de almacén de la primera isla | Marolini abajo y Arvecor arriba |
+| Lado de cereales de la primera isla | Zucarachas abajo y Don Saturados arriba |
+| Cabecera de bebidas sin refrigerar | Fernet God abajo y Terminator arriba |
+| Cabecera de almacén y de no comestibles | Malbardo |
+| Lado de snacks dulces de la segunda isla | Petisas |
+| Lado de snacks salados de la segunda isla | Progres |
+| Cabecera de golosinas | Jorgillata |
+| Cabecera con las marcas de galletitas | Pepito |
+| Estantería de no comestibles | Poético y Actroncito abajo, Duronga arriba |
 | Primera heladera funcional | Pura-Cola |
 | Segunda heladera funcional | Mayonchis |
 
-Cada producto DEBE conservar una sola tanda principal a altura de reposición. Las
-repeticiones de los demás niveles, incluido el otro nivel central, DEBEN ser tandas fijas
+CUANDO un estante lleva un solo producto, sus unidades DEBEN repartirse de punta a punta, con
+una separación pareja. Cada producto DEBE conservar una sola tanda principal a altura de
+reposición. Las repeticiones, incluida la del otro nivel central, DEBEN ser tandas fijas
 con frontales que se agarran y reponen. El freezer NO DEBE exhibir productos. El cambio a la
 etapa completa DEBE restituir los sectores de BR-STK-043 y BR-STK-044 y lo exhibido en el freezer.
 
@@ -1297,14 +1302,14 @@ Durextra ausente. Cada caja presente abre llena; cada producto ausente tiene cer
 cero cupo. Los faltantes sólo
 incluyen presentes. DADO jornadas 3 y 7 ENTONCES están las treinta y dos identidades.
 
-### AC-STK-096 — Cada nivel de prueba coincide con el mapa *(verifica BR-STK-047, BR-STK-024, BR-STK-025, BR-STK-035)*
+### AC-STK-096 — La prueba conserva el lugar de cada producto *(verifica BR-STK-047, BR-STK-024, BR-STK-025, BR-STK-035)*
 
-DADO una apertura de prueba CUANDO se recorren las cuatro alturas de cada destino de
-BR-STK-047 ENTONCES sus productos coinciden con la tabla, sin ajenos ni niveles vacíos; en
-la estantería de no comestibles, Duronga está en los cuatro niveles junto a Actroncito.
+DADO una apertura de prueba CUANDO se recorre cada cara de BR-STK-047 ENTONCES sus productos
+coinciden con la tabla, sin ajenos ni estantes vacíos. La principal de cada producto presente
+está en el mismo estante y mira hacia el mismo lado que en el reparto completo.
 Cada producto tiene una sola principal y los cupos suman todos sus frontales.
 El freezer no exhibe ningún producto.
-CUANDO se agarra y repone una unidad del frontal repetido en el otro nivel central ENTONCES
+CUANDO se agarra y repone una unidad de un frontal repetido ENTONCES
 sólo cambia ese casillero y la cuenta de reponer responde a ambos gestos.
 
 ### AC-STK-097 — Las cajas ausentes tampoco se pueden tocar *(verifica BR-STK-046)*

@@ -10,7 +10,7 @@ Todo el cuerpo de la góndola pasa a **un solo gris**, `TONO`:
 - Las texturas de `TEXTURAS` se multiplican por un factor por canal hasta llegar a su tono: el
   detalle conserva su proporción y sólo cambia el nivel.
 - Los grises de la paleta (`PIXELES_GRISES`) valen `TONO`, y su rojo vale `ROJO`. El píxel 4 de la
-  paleta era un azul casi negro, el de los estantes del exhibidor: vale `TONO_APARTE`.
+  paleta es el de los estantes del exhibidor: vale `TONO_APARTE`, el crema de su interior.
 - **El rojo de las franjas también emite** (`EMISION_ROJO`). La luz de afuera es verde azulada, y
   un rojo bajo esa luz sale casi negro: el albedo solo no alcanza.
 - Los materiales lisos de `COLORES_LISOS` toman su tono como color base.
@@ -22,8 +22,8 @@ Todo el cuerpo de la góndola pasa a **un solo gris**, `TONO`:
   ranuras del parante tienen que seguir negros para leerse como agujeros.
 - **Los laterales de los exhibidores** (Oremos, Pepito) tenían un color base azul que teñía por
   segunda vez una textura ya oscura. Pasan a blanco, y la textura sube su negro hasta `PISO_AZUL`.
-- **El fondo de los exhibidores es azul marino.** Su textura ya era casi negra y el color base
-  la volvía a teñir de azul: el panel del fondo salía negro. Pasa a `AZUL` y el color base a blanco.
+- **El interior de los exhibidores es crema.** Los productos que lleva son azules, y sobre un
+  fondo azul marino no se despegaban. La textura del fondo va a `CREMA` y el color base a blanco.
 
 El tono es más claro que el de la puerta (0,21) a propósito: la puerta se ve de cerca con la luz
 del jugador, y una góndola a tres metros recibe menos. La herramienta es
@@ -60,10 +60,14 @@ TONO_DE_LA_PALETA = (0.36, 0.36, 0.37)
 #: marrones.
 RUGOSIDAD_DE_LA_PALETA = 1.0
 
-#: El gris de los estantes del exhibidor, que no cambia con el del cuerpo.
-TONO_APARTE = (0.30, 0.30, 0.31)
+#: El crema del interior de los exhibidores, en valores de imagen: un beige desaturado, entre el
+#: relleno de la Oremos y la galletita de Pepito.
+CREMA = (218 / 255, 204 / 255, 176 / 255)
 
-#: El azul marino del fondo de los exhibidores, en valores de imagen.
+#: El tono de los estantes del exhibidor, que no cambia con el del cuerpo: el de su interior.
+TONO_APARTE = CREMA
+
+#: El azul marino de los estantes lisos del exhibidor, en valores de imagen.
 AZUL = (0.14, 0.26, 0.46)
 
 #: El negro más claro que puede tener la textura de un lateral de exhibidor: el azul del cartel.
@@ -79,7 +83,7 @@ TEXTURAS = {
     "gondola_panel_blanca_1024_basecolor_negra": TONO_DE_LAS_CHAPAS,
     "gondola_parante_ranura_blanca": TONO_DE_LAS_CHAPAS,
     "gondola_grilla_alambre": TONO,
-    "exhibidor fondo.png": AZUL,
+    "exhibidor fondo.png": CREMA,
 }
 
 #: Los agujeros de las imágenes del cuerpo: no se aclaran, quedan negros. «oscuros» son los píxeles
