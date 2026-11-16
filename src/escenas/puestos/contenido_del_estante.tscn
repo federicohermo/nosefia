@@ -116,7 +116,7 @@ metadata/frente_del_modelo = Vector3(1, 0, 0)
 metadata/producto_id = 9
 
 [node name="Oremos" type="MeshInstance3D" parent="."]
-transform = Transform3D(0, 0, -0.135, -0.000276, 0.067319, 0, 0.152112, 0.000122, 0, 4.1488, 0.700595, -1.40849)
+transform = Transform3D(0, 0, -0.135, -0.000276, 0.067319, 0, 0.152112, 0.000122, 0, 4.099799, 0.700595, -1.40849)
 visible = false
 mesh = ExtResource("malla10")
 gi_mode = 2
@@ -124,7 +124,7 @@ metadata/frente_del_modelo = Vector3(1, 0, 0)
 metadata/producto_id = 10
 
 [node name="Pepito" type="MeshInstance3D" parent="."]
-transform = Transform3D(-0.000014, 0, -0.135, -0.000418, 0.067319, 0, 0.152112, 0.000185, -0.000012, 4.168536, 1.189333, -1.419821)
+transform = Transform3D(-0.000014, 0, -0.135, -0.000418, 0.067319, 0, 0.152112, 0.000185, -0.000012, 4.09982, 1.189333, -1.419821)
 visible = false
 mesh = ExtResource("malla11")
 gi_mode = 2
