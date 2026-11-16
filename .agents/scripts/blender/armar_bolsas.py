@@ -117,7 +117,8 @@ class Bolsa:
     llevar el material, y reemplaza a la de la malla anterior. `llena_el_fondo` estira el grosor
     hasta que el punto más hondo del cuerpo toque el fondo de la caja que ocupaba la bolsa: sin
     eso, los gajos del frente se quedan a un milímetro y el estante la mide más angosta.
-    `agujero` abre en el cierre de arriba el agujero para colgar.
+    `agujero` abre en el cierre de arriba el agujero para colgar. `acostadas` son los costados cuyo
+    recorte va acostado en la textura: las papas llevan los suyos de pie, y mezclarlos rompe su UV.
     """
 
     objeto: str
@@ -129,6 +130,7 @@ class Bolsa:
     textura: Path | None = None
     llena_el_fondo: bool = False
     agujero: bool = False
+    acostadas: tuple[str, ...] = ()
     banda: float = BANDA_DE_LA_ALETA
     cierre_en_metros: bool = False
 
@@ -149,6 +151,7 @@ BOLSAS = (
             textura=TEXTURAS / f"{producto}.png",
             llena_el_fondo=True,
             agujero=objeto == "macumbas-convcol",
+            acostadas=ACOSTADAS,
             banda=BANDA_DE_LAS_GALLETITAS,
             cierre_en_metros=True,
         )
@@ -251,7 +254,7 @@ def armar(objeto, bolsa: Bolsa) -> tuple[int, int]:
         else:
             a = (math.pi + COSTADO - angulo) / (2 * COSTADO)
         a = min(max(a, 0.0), 1.0)
-        if cara in ACOSTADAS:
+        if cara in bolsa.acostadas:
             # El costado va acostado: su alto corre a lo ancho de la imagen, y del frente al dorso
             # baja por ella. A la izquierda `a` crece del dorso al frente.
             del_frente = a if cara == "derecha" else 1.0 - a
