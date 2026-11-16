@@ -2,12 +2,19 @@ shader_type spatial;
 render_mode unshaded, fog_disabled, blend_mul, depth_test_disabled, depth_draw_never, cull_disabled;
 
 uniform sampler2D profundidad : hint_depth_texture, repeat_disable, filter_nearest;
+uniform sampler2D pantalla : hint_screen_texture, repeat_disable, filter_nearest;
 // Radio en metros: hasta dónde un vecino puede tapar la luz.
 uniform float radio : hint_range(0.05, 3.0) = 0.4;
-uniform float intensidad : hint_range(0.0, 6.0) = 1.0;
+uniform float intensidad : hint_range(0.0, 6.0) = 0.8;
 uniform float sesgo : hint_range(0.0, 0.5) = 0.08;
 // Más allá de esta distancia el efecto se apaga: ahorra ruido y evita halos en el fondo.
 uniform float alcance : hint_range(1.0, 60.0) = 22.0;
+
+// Brillo de la imagen ya dibujada: por debajo de `penumbra` el pase actúa entero, por encima de `luz`
+// casi no actúa. Una superficie que recibe luz directa sale clara; la penumbra sale oscura.
+uniform float penumbra : hint_range(0.0, 1.0) = 0.06;
+uniform float luz : hint_range(0.0, 2.0) = 0.35;
+uniform float resto_en_la_luz : hint_range(0.0, 1.0) = 0.1;
 
 const int MUESTRAS = 8;
 const vec2 GIRO_AUREO = vec2(-0.737368878, 0.675490294);
@@ -54,6 +61,8 @@ void fragment() {
 		// Un salto brusco de profundidad es un contorno y no un rincón: ahí la normal sale mal.
 		float salto = max(abs(dFdx(p.z)), abs(dFdy(p.z))) / distancia;
 		float suave = (1.0 - smoothstep(alcance * 0.6, alcance, distancia)) * (1.0 - smoothstep(0.04, 0.16, salto));
+		float brillo = dot(textureLod(pantalla, SCREEN_UV, 0.0).rgb, vec3(0.2126, 0.7152, 0.0722));
+		suave *= mix(1.0, resto_en_la_luz, smoothstep(penumbra, luz, brillo));
 		float ao = clamp(1.0 - intensidad * oclusion / float(MUESTRAS), 0.0, 1.0);
 		ALBEDO = vec3(mix(1.0, ao, suave));
 	}

@@ -59,12 +59,17 @@ Cómo se mide el costo de las luces, en [rendimiento](./rendimiento.md).
 - **Qué hace el pase.** Un quad a pantalla completa lee la profundidad, reconstruye la normal y
   oscurece por oclusión de hemisferio con 8 muestras. Multiplica la imagen antes del tonemap, así
   que oscurece el horneado también. No es luz ambiente.
-- **Los mandos** son `radio` (metros) e `intensidad`, en el shader. Un salto brusco de profundidad
+- **Sigue a la luz por el brillo de la imagen.** El pase lee `hint_screen_texture`: donde la
+  superficie ya sale clara casi no actúa, y donde sale oscura actúa entero. No distingue una
+  penumbra de una superficie de color oscuro: ambas reciben el pase. El horneado no se puede leer
+  desde un pase en pantalla, así que esa es la señal más barata.
+- **Los mandos** son `radio` (metros) e `intensidad`, en el shader. `penumbra`, `luz` y
+  `resto_en_la_luz` fijan hasta qué brillo actúa. Un salto brusco de profundidad
   se atenúa: es un contorno y no un rincón.
 - **Lo que oscurece nunca alumbra.** `luz_de_cada_objeto.gd` lo trata como transparente, y no
   cuenta como una luz que se queda prendida en el corte.
-- **Suma un programa a la carga.** El costo por cuadro medido en la web está en el PR que lo
-  agregó.
+- **Suma un programa a la carga y una copia de pantalla por cuadro.** El costo medido en la web
+  está en el PR que lo agregó.
 
 ## Los reflejos de los metales
 
