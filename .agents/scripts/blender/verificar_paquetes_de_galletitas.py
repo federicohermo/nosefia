@@ -1,23 +1,19 @@
-"""Mide sobre la malla que la textura de Oremos y de Pepito no quedó estirada. Corre en Blender.
+"""Mide sobre la malla que el desplegado de Oremos y de Pepito no estira y es parejo.
 
     blender <archivo>.blend --background --python-exit-code 1 \
         --python .claude/scripts/blender/verificar_paquetes_de_galletitas.py
 
-No guarda nada. Sale con error si algo se estira más del 2 %. Lee
-`reports/paquetes-de-galletitas/composicion_*.json`, que escribe
-`texturizar_paquetes_de_galletitas.py`, y mide dos cosas:
+No guarda nada. Arma en memoria cada paquete con su forma y su UV, y en cada panel mide, sobre los
+triángulos de su zona segura del arte, la transformación de la UV a metros:
 
-- **La relación de aspecto de cada pieza**, en metros sobre la malla: el ancho y el alto de su
-  rectángulo, recorridos sobre la superficie, contra la relación de aspecto de su recorte en el arte
-  original. Un cuerpo curvo y afinado no se mide por su proyección.
-- **Los texeles por metro en x y en y** de la UV del frente y del dorso, en cada triángulo: la
-  relación entre los dos valores singulares de la transformación de la UV a metros. Con 1 no hay
-  estiramiento. Una superficie con doble curvatura no se desarrolla sin corte: en las cuatro
-  esquinas del arte, donde el afinado del costado se junta con el hombro, el corte llega a un 6 %.
-  Falla si más del 20 % de los triángulos pasa del 2 % o si alguno pasa del 7 %.
+- **Si estira:** la relación entre los dos valores singulares. Con 1, un píxel mide lo mismo en x
+  que en y. Falla si el peor triángulo se desvía más del 2 %.
+- **Cuántos píxeles por metro lleva:** la media geométrica de los dos. Tiene que ser la del
+  desplegado en todos los paneles, con 2 % de tolerancia: la misma densidad en todas las caras.
+
+Además comprueba que la UV de la malla cae dentro del rectángulo de su panel.
 """
 
-import json
 import math
 import sys
 from pathlib import Path
@@ -30,15 +26,8 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 import armar_paquetes_de_galletitas as armado  # noqa: E402
 from lib import paquete_de_galletitas as forma  # noqa: E402
 from lib.consola import configurar  # noqa: E402
-from lib.repo import RAIZ  # noqa: E402
 
 TOLERANCIA = 0.02
-MUESTRAS = 48
-REPORTE = RAIZ / "reports/paquetes-de-galletitas"
-COMPOSICIONES = {
-    "oremos-col": "composicion_oremos_paquete.json",
-    "pepitos2-col.025": "composicion_pepito_paquete.json",
-}
 
 
 def triangulos_por_panel(objeto, rects):
@@ -75,39 +64,8 @@ def triangulos_por_panel(objeto, rects):
     return por_panel
 
 
-def punto_en_metros(triangulos, px, py):
-    for uvs, pts in triangulos:
-        (ax, ay), (bx, by), (cx, cy) = uvs
-        det = (by - cy) * (ax - cx) + (cx - bx) * (ay - cy)
-        if abs(det) < 1e-12:
-            continue
-        l1 = ((by - cy) * (px - cx) + (cx - bx) * (py - cy)) / det
-        l2 = ((cy - ay) * (px - cx) + (ax - cx) * (py - cy)) / det
-        l3 = 1 - l1 - l2
-        if min(l1, l2, l3) >= -1e-6:
-            return pts[0] * l1 + pts[1] * l2 + pts[2] * l3
-    return None
-
-
-def largo_de_la_linea(triangulos, desde, hasta):
-    anterior = None
-    total = 0.0
-    for i in range(MUESTRAS + 1):
-        t = i / MUESTRAS
-        px = desde[0] + (hasta[0] - desde[0]) * t
-        py = desde[1] + (hasta[1] - desde[1]) * t
-        punto = punto_en_metros(triangulos, px, py)
-        if punto is None:
-            raise ValueError(f"la línea {desde} -> {hasta} sale de la malla")
-        if anterior is not None:
-            total += (punto - anterior).length
-        anterior = punto
-    return total
-
-
-def isotropia(par):
-    """Los valores singulares de la transformación de píxeles de la hoja a metros, en un
-    triángulo."""
+def valores_singulares(par):
+    """Los valores singulares, en metros por píxel, de la transformación en un triángulo."""
     (uvs, pts) = par
     e1, e2 = pts[1] - pts[0], pts[2] - pts[0]
     a = (uvs[1][0] - uvs[0][0], uvs[1][1] - uvs[0][1])
@@ -115,85 +73,67 @@ def isotropia(par):
     det = a[0] * b[1] - a[1] * b[0]
     if abs(det) < 1e-12:
         return None
-    # d(metros)/d(px_x) y d(metros)/d(px_y): la inversa de [a b] aplicada a [e1 e2].
     ix = (e1 * b[1] - e2 * a[1]) / det
     iy = (e2 * a[0] - e1 * b[0]) / det
     g11, g22, g12 = ix.dot(ix), iy.dot(iy), ix.dot(iy)
     media, resto = (g11 + g22) / 2, math.sqrt(((g11 - g22) / 2) ** 2 + g12**2)
-    mayor, menor = math.sqrt(media + resto), math.sqrt(max(media - resto, 1e-18))
-    return mayor / menor
+    return math.sqrt(media + resto), math.sqrt(max(media - resto, 1e-18))
 
 
 def main() -> None:
     configurar()
     fallas = []
-    for nombre, archivo in COMPOSICIONES.items():
+    for nombre, (clave, _) in armado.PAQUETES.items():
         objeto = bpy.data.objects[nombre]
-        x0, x1, y0, y1, z0, z1 = armado.caja_del_cubo(objeto)
-        caja = forma.Caja(
-            (y1 - y0) * objeto.scale.y, (x1 - x0) * objeto.scale.x, (z1 - z0) * objeto.scale.z
-        )
+        armado.armar(objeto, clave)
+        caja = armado.caja_del_paquete(objeto, clave)
+        zonas = forma.zonas(caja)
         rects = forma.desplegado(caja)
+        esperada = forma.densidad(caja)
         triangulos = triangulos_por_panel(objeto, rects)
-        composicion = json.loads((REPORTE / archivo).read_text(encoding="utf-8"))["piezas"]
-        print(f"\n{nombre}: aspecto de cada pieza, en metros sobre la malla")
-        print(
-            f"  {'panel':8} {'pieza':22} {'original':>9} {'en la malla':>12} {'error':>7}  "
-            "texeles/m x, y"
-        )
-        for pieza in composicion:
-            x, y, ancho, alto = pieza["rect_en_la_hoja"]
-            tri = triangulos[pieza["panel"]]
-            w_m = largo_de_la_linea(tri, (x, y + alto / 2), (x + ancho, y + alto / 2))
-            h_m = largo_de_la_linea(tri, (x + ancho / 2, y), (x + ancho / 2, y + alto))
-            original = pieza["tamano_original"][0] / pieza["tamano_original"][1]
-            medido = w_m / h_m
-            error = medido / original - 1
-            marca = "" if abs(error) <= TOLERANCIA else "  <-- SE ESTIRA"
-            print(
-                f"  {pieza['panel']:8} {pieza['pieza']:22} {original:9.3f} {medido:12.3f} "
-                f"{error * 100:+6.1f}%  {ancho / w_m:6.0f}, {alto / h_m:6.0f}{marca}"
-            )
-            if abs(error) > TOLERANCIA:
-                fallas.append(f"{nombre} {pieza['panel']} {pieza['pieza']}: {error * 100:+.1f} %")
-        for panel in (forma.FRENTE, forma.DORSO):
-            piezas = [p["rect_en_la_hoja"] for p in composicion if p["panel"] == panel]
-            ux0 = min(p[0] for p in piezas)
-            ux1 = max(p[0] + p[2] for p in piezas)
-            uy0 = min(p[1] for p in piezas)
-            uy1 = max(p[1] + p[3] for p in piezas)
-            razones = []
-            lugares = []
+        print(f"\n{clave}: paquete de {caja.ancho:.3f} x {caja.alto:.3f} x {caja.fondo:.3f} m")
+        print(f"  densidad del desplegado: {esperada:.0f} px por metro")
+        for panel in forma.PANELES:
+            x0, y0, w, h = zonas[panel]["zona_segura"]
+            bajo_el_arte = []
             for par in triangulos[panel]:
-                uvs = par[0]
-                cx = sum(u[0] for u in uvs) / 3
-                cy = sum(u[1] for u in uvs) / 3
-                if ux0 <= cx <= ux1 and uy0 <= cy <= uy1:
-                    r = isotropia(par)
-                    if r is not None:
-                        razones.append(r)
-                        px, py = round(cx - rects[panel][0]), round(cy - rects[panel][1])
-                        lugares.append((r, px, py))
-            peor = max(razones)
-            razones.sort()
-            fuera = sum(1 for r in razones if r - 1 > TOLERANCIA)
+                cx = sum(u[0] for u in par[0]) / 3
+                cy = sum(u[1] for u in par[0]) / 3
+                if x0 <= cx <= x0 + w and y0 <= cy <= y0 + h:
+                    s = valores_singulares(par)
+                    if s is not None:
+                        bajo_el_arte.append(s)
+            if not bajo_el_arte:
+                fallas.append(f"{clave} {panel}: ningún triángulo bajo su zona segura")
+                continue
+            desvios = [max(a, b) / min(a, b) - 1 for a, b in bajo_el_arte]
+            densidades = [1 / math.sqrt(a * b) for a, b in bajo_el_arte]
+            peor, media = max(desvios), sum(densidades) / len(densidades)
+            diferencia = media / esperada - 1
+            marca = ""
+            if peor > TOLERANCIA or abs(diferencia) > TOLERANCIA:
+                marca = "  <-- FALLA"
+                fallas.append(
+                    f"{clave} {panel}: estiramiento {peor * 100:.1f} %, "
+                    f"densidad {diferencia * 100:+.1f} %"
+                )
             print(
-                f"  {panel}: {fuera} de {len(razones)} triángulos pasan del 2 %; "
-                f"mediana {100 * (razones[len(razones) // 2] - 1):.1f} %; "
-                "peores en (x, y del panel): "
-                f"{[(x, y, round(100 * (r - 1), 1)) for r, x, y in sorted(lugares)[-4:]]}"
+                f"  {panel:7} {len(bajo_el_arte):3} triángulos bajo la zona segura: estiramiento "
+                f"{peor * 100:4.1f} %, {media:6.0f} px por metro ({diferencia * 100:+.1f} %){marca}"
             )
-            print(
-                f"  {panel}: {len(razones)} triángulos bajo el arte, "
-                "texeles por metro en x / en y: "
-                f"de {1 / peor:.3f} a {peor:.3f} (peor desvío {100 * (peor - 1):.1f} %)"
-            )
-            if fuera > 0.2 * len(razones) or peor - 1 > 0.07:
-                fallas.append(f"{nombre} {panel}: UV anisótropa, desvío {100 * (peor - 1):.1f} %")
+        for panel, (x, y, w, h) in rects.items():
+            for uvs, _ in triangulos[panel]:
+                for u, v in uvs:
+                    if not (x - 0.5 <= u <= x + w + 0.5 and y - 0.5 <= v <= y + h + 0.5):
+                        fallas.append(f"{clave} {panel}: una UV cae fuera de su panel")
+                        break
+                else:
+                    continue
+                break
     if fallas:
-        print("\nFALLAS:\n  " + "\n  ".join(fallas))
+        print("\nFALLAS:\n  " + "\n  ".join(sorted(set(fallas))))
         raise SystemExit(1)
-    print("\nninguna pieza pasa del 2 %: la UV queda dentro de lo que admite una superficie curva")
+    print("\nsin estiramiento y con la misma densidad en todas las caras, dentro del 2 %")
 
 
 if __name__ == "__main__":

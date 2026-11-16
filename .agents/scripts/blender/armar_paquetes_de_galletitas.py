@@ -1,12 +1,15 @@
 """Arma de nuevo los paquetes de Oremos y de Pepito: un flow pack con cierres prensados a los lados.
 
     blender assets/models/SEPT_JUEGOS_PROTOTIPO.blend --background --python-exit-code 1 \
-        --python .claude/scripts/blender/armar_paquetes_de_galletitas.py -- [--aplicar]
+        --python .claude/scripts/blender/armar_paquetes_de_galletitas.py -- [--aplicar] \
+        [--oremos <png>] [--pepito <png>]
 
-Sin `--aplicar` no toca el `.blend` del repo: guarda `reports/paquetes-de-galletitas.blend`, con la
-textura de `reports/paquetes-de-galletitas/` si existe. Con `--aplicar` guarda la fuente canónica,
-con la textura de `source/`. Antes va `texturizar_paquetes_de_galletitas.py`. Después van
-`armar_atlas.py`, `exportar_modelo.py` y `assets/models/extraer_mallas.gd`.
+Sin `--aplicar` no toca el `.blend` del repo: guarda `reports/paquetes-de-galletitas.blend`. Con
+`--aplicar` guarda la fuente canónica. La textura de cada paquete sale de `source/`, o de la ruta
+que se le dé con `--oremos` y `--pepito`. **Tiene que ser del desplegado nuevo**, de
+`LIENZO_ANCHO` x `LIENZO_ALTO`: con otra medida el script se corta, porque la UV caería sobre
+arte que no es el suyo. Después van `armar_atlas.py`, `exportar_modelo.py` y
+`assets/models/extraer_mallas.gd`.
 
 ## Por qué
 
@@ -17,11 +20,12 @@ afina hacia cada costura, y un cierre prensado, de borde recto, a la izquierda y
 
 ## Qué cambia
 
-Cada malla se rehace entera **dentro de la misma caja** que ocupaba el cubo: ancho, alto y fondo no
-cambian, así que entran las mismas unidades por estante y por caja, y el paso de la partida de
-prueba es el mismo. Las unidades que comparten la malla la heredan. La UV sale del desplegado de
-`lib/paquete_de_galletitas.py`, y los cierres son los de `lib/cierre_de_envases.py`, los mismos
-de las bolsas.
+Cada malla se rehace entera con **el ancho y el fondo de la caja** que ocupaba el cubo, así que
+entran las mismas unidades por estante y por caja, y el paso de la partida de prueba es el mismo.
+El alto baja a la proporción apaisada de un flow pack real (`lib/paquete_de_galletitas.py`): el
+paquete apoya por la base y queda más bajo. Las unidades que comparten la malla la heredan. La UV
+sale del desplegado de `lib/paquete_de_galletitas.py`, y los cierres son los de
+`lib/cierre_de_envases.py`, los mismos de las bolsas.
 
 La caja del cubo se guarda en la malla la primera vez: correrlo de nuevo rehace el mismo paquete.
 """
@@ -40,8 +44,8 @@ from lib.repo import RAIZ  # noqa: E402
 
 #: Una unidad de cada paquete, que comparte la malla con las demás, y la textura que lleva.
 PAQUETES = {
-    "oremos-col": "oremos_paquete.png",
-    "pepitos2-col.025": "pepito_paquete.png",
+    "oremos-col": ("OREMOS", "oremos_paquete.png"),
+    "pepitos2-col.025": ("PEPITO", "pepito_paquete.png"),
 }
 
 CARPETA_DE_TEXTURAS = RAIZ / "assets/source/products-textured/galletitas"
@@ -58,15 +62,23 @@ def caja_del_cubo(objeto) -> tuple[float, ...]:
     return tuple(malla[MARCA])
 
 
-def armar(objeto) -> tuple[int, int]:
+def caja_del_paquete(objeto, producto: str) -> "forma.Caja":
+    """El ancho y el fondo son los del cubo; el alto, el de la proporción del producto."""
+    x0, x1, y0, y1, _, _ = caja_del_cubo(objeto)
+    escala = objeto.scale
+    ancho = (y1 - y0) * escala.y
+    return forma.Caja(
+        ancho=ancho, fondo=(x1 - x0) * escala.x, alto=forma.alto_del_paquete(producto, ancho)
+    )
+
+
+def armar(objeto, producto: str) -> tuple[int, int]:
     """Rehace la malla del objeto. Devuelve los triángulos de antes y de después."""
     malla = objeto.data
     antes = sum(len(p.vertices) - 2 for p in malla.polygons)
     x0, x1, y0, y1, z0, z1 = caja_del_cubo(objeto)
     escala = objeto.scale
-    caja = forma.Caja(
-        ancho=(y1 - y0) * escala.y, fondo=(x1 - x0) * escala.x, alto=(z1 - z0) * escala.z
-    )
+    caja = caja_del_paquete(objeto, producto)
     centro = ((x0 + x1) / 2, (y0 + y1) / 2)
 
     def a_local(x: float, y: float, z: float) -> tuple[float, float, float]:
@@ -176,14 +188,19 @@ def armar(objeto) -> tuple[int, int]:
     return antes, despues
 
 
-def apuntar_la_textura(objeto, archivo: str, aplicar: bool) -> Path:
-    """Cambia la imagen del material del paquete por la del nuevo desplegado."""
-    carpeta = CARPETA_DE_TEXTURAS if aplicar else CARPETA_DEL_REPORTE
-    ruta = carpeta / archivo
+def apuntar_la_textura(objeto, ruta: Path) -> Path:
+    """Cambia la imagen del material del paquete por la del desplegado nuevo."""
     if not ruta.is_file():
-        ruta = CARPETA_DE_TEXTURAS / archivo
-    if not ruta.is_file():
-        raise SystemExit(f"falta la textura {ruta}: corré texturizar_paquetes_de_galletitas.py")
+        raise SystemExit(f"falta la textura {ruta}")
+    imagen = bpy.data.images.load(str(ruta), check_existing=False)
+    medida = tuple(imagen.size)
+    if medida != (forma.LIENZO_ANCHO, forma.LIENZO_ALTO):
+        bpy.data.images.remove(imagen)
+        raise SystemExit(
+            f"{ruta.name} mide {medida[0]}x{medida[1]} y el desplegado pide "
+            f"{forma.LIENZO_ANCHO}x{forma.LIENZO_ALTO}: no es la textura de este desplegado"
+        )
+    bpy.data.images.remove(imagen)
     material = objeto.material_slots[0].material
     for nodo in material.node_tree.nodes:
         if nodo.type != "TEX_IMAGE":
@@ -192,28 +209,40 @@ def apuntar_la_textura(objeto, archivo: str, aplicar: bool) -> Path:
         if actual is not None and actual.resolve() == ruta.resolve():
             continue
         viejo = nodo.image
-        imagen = bpy.data.images.load(str(ruta), check_existing=False)
-        imagen.filepath = bpy.path.relpath(str(ruta))
-        imagen.colorspace_settings.name = "sRGB"
-        nodo.image = imagen
+        nueva = bpy.data.images.load(str(ruta), check_existing=False)
+        nueva.filepath = bpy.path.relpath(str(ruta))
+        nueva.colorspace_settings.name = "sRGB"
+        nodo.image = nueva
         # La imagen conserva el nombre de la anterior: es el que lleva el `.glb`, y de él salen el
         # nombre de la textura extraída y las rutas de los `.res`.
         if viejo is not None and viejo.users == 0:
             nombre = viejo.name
             bpy.data.images.remove(viejo)
-            imagen.name = nombre
+            nueva.name = nombre
     return ruta
+
+
+def argumento(nombre: str) -> Path | None:
+    if nombre in sys.argv:
+        return Path(sys.argv[sys.argv.index(nombre) + 1]).resolve()
+    return None
 
 
 def main() -> None:
     configurar()
     aplicar = "--aplicar" in sys.argv
-    for nombre, archivo in PAQUETES.items():
+    elegidas = {"OREMOS": argumento("--oremos"), "PEPITO": argumento("--pepito")}
+    for nombre, (producto, archivo) in PAQUETES.items():
         objeto = bpy.data.objects[nombre]
         print(f"{nombre}: {objeto.data.users} unidades")
-        antes, despues = armar(objeto)
-        ruta = apuntar_la_textura(objeto, archivo, aplicar)
-        print(f"  {antes} -> {despues} triángulos, textura {ruta.name}")
+        ruta = elegidas[producto] or CARPETA_DE_TEXTURAS / archivo
+        apuntar_la_textura(objeto, ruta)
+        antes, despues = armar(objeto, producto)
+        caja = caja_del_paquete(objeto, producto)
+        print(
+            f"  {antes} -> {despues} triángulos, textura {ruta.name}, paquete de "
+            f"{caja.ancho:.3f} x {caja.alto:.3f} x {caja.fondo:.3f} m (ancho, alto, fondo)"
+        )
     if aplicar:
         bpy.ops.wm.save_mainfile()
         print("fuente guardada")
