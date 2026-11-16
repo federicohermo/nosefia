@@ -2,6 +2,7 @@
 
 [ext_resource type="PackedScene" path="res://src/escenas/puestos/agua_del_bano.tscn" id="1_agua"]
 [ext_resource type="PackedScene" path="res://src/escenas/puestos/bloom_del_almacen.tscn" id="2_bloom"]
+[ext_resource type="PackedScene" path="res://src/escenas/puestos/oclusion_de_rincones.tscn" id="3_oclusion"]
 
 [sub_resource type="Environment" id="Environment_almacen"]
 background_mode = 1
@@ -18,7 +19,6 @@ fog_sky_affect = 0.0
 fog_depth_begin = 8.0
 fog_depth_end = 24.0
 fog_depth_curve = 1.0
-ssao_enabled = true
 adjustment_enabled = true
 adjustment_saturation = 0.68
 adjustment_brightness = 0.92
@@ -30,6 +30,8 @@ adjustment_contrast = 1.04
 environment = SubResource("Environment_almacen")
 
 [node name="Bloom" parent="." instance=ExtResource("2_bloom")]
+
+[node name="OclusionDeRincones" parent="." instance=ExtResource("3_oclusion")]
 
 [node name="ReflejosDelSalon" type="ReflectionProbe" parent="."]
 position = Vector3(2.695, 1.801, -0.795)

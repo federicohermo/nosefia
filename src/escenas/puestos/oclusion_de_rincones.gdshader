@@ -1,0 +1,59 @@
+shader_type spatial;
+render_mode unshaded, fog_disabled, blend_mul, depth_test_disabled, depth_draw_never, cull_disabled;
+
+uniform sampler2D profundidad : hint_depth_texture, repeat_disable, filter_nearest;
+// Radio en metros: hasta dónde un vecino puede tapar la luz.
+uniform float radio : hint_range(0.05, 3.0) = 1.0;
+uniform float intensidad : hint_range(0.0, 4.0) = 3.0;
+uniform float sesgo : hint_range(0.0, 0.5) = 0.08;
+// Más allá de esta distancia el efecto se apaga: ahorra ruido y evita halos en el fondo.
+uniform float alcance : hint_range(1.0, 60.0) = 22.0;
+
+const int MUESTRAS = 12;
+const float ANGULO_AUREO = 2.39996323;
+
+vec3 posicion_de_vista(vec2 uv, mat4 inversa) {
+	float d = textureLod(profundidad, uv, 0.0).x;
+	vec3 ndc = vec3(uv, d) * 2.0 - 1.0;
+	vec4 v = inversa * vec4(ndc, 1.0);
+	return v.xyz / v.w;
+}
+
+float ruido(vec2 pixel) {
+	return fract(52.9829189 * fract(dot(pixel, vec2(0.06711056, 0.00583715))));
+}
+
+void vertex() {
+	POSITION = vec4(VERTEX.xy, 1.0, 1.0);
+}
+
+void fragment() {
+	vec3 p = posicion_de_vista(SCREEN_UV, INV_PROJECTION_MATRIX);
+	float distancia = -p.z;
+	if (distancia > alcance || distancia < 0.01) {
+		ALBEDO = vec3(1.0);
+	} else {
+		vec3 n = normalize(cross(dFdx(p), dFdy(p)));
+		// La normal tiene que mirar hacia la cámara.
+		n *= sign(dot(n, -p));
+		float giro = ruido(FRAGCOORD.xy) * 6.2831853;
+		float escala = radio * PROJECTION_MATRIX[1][1] * 0.5 / distancia;
+		float oclusion = 0.0;
+		for (int i = 0; i < MUESTRAS; i++) {
+			float t = (float(i) + 0.5) / float(MUESTRAS);
+			float a = giro + float(i) * ANGULO_AUREO;
+			vec2 desfase = vec2(cos(a), sin(a)) * sqrt(t) * escala;
+			desfase.x *= VIEWPORT_SIZE.y / VIEWPORT_SIZE.x;
+			vec3 q = posicion_de_vista(SCREEN_UV + desfase, INV_PROJECTION_MATRIX);
+			vec3 v = q - p;
+			float d2 = dot(v, v);
+			float cara = max(dot(n, v) * inversesqrt(d2 + 1e-5) - sesgo, 0.0);
+			oclusion += cara * (1.0 - smoothstep(radio * 0.5, radio * 1.5, sqrt(d2)));
+		}
+		// Un salto brusco de profundidad es un contorno y no un rincón: ahí la normal sale mal.
+		float salto = max(abs(dFdx(p.z)), abs(dFdy(p.z))) / distancia;
+		float suave = (1.0 - smoothstep(alcance * 0.6, alcance, distancia)) * (1.0 - smoothstep(0.04, 0.16, salto));
+		float ao = clamp(1.0 - intensidad * oclusion / float(MUESTRAS), 0.0, 1.0);
+		ALBEDO = vec3(mix(1.0, ao, suave));
+	}
+}
