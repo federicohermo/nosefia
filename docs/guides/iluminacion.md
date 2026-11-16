@@ -50,20 +50,21 @@ Cómo se mide el costo de las luces, en [rendimiento](./rendimiento.md).
 
 ## La oclusión ambiental en pantalla
 
-El `Environment` de `ambiente_del_almacen.tscn` tiene SSAO. Compatibility lo trae desde Godot 4.6,
-en una versión simplificada.
+`oclusion_de_rincones.tscn` es un pase propio, instanciado en `ambiente_del_almacen.tscn`. El
+`Environment` no tiene SSAO.
 
-- **Es un paso del pase final.** Lee la profundidad y multiplica el color ya compuesto, horneado
-  incluido. No es luz ambiente, y no hay `Light Affect`.
-- **Sólo se ajustan `Radius` e `Intensity`.** La calidad es el ajuste del proyecto
-  `rendering/environment/ssao/quality`.
-- **Oscurece los bordes donde la profundidad salta**, no los rincones: una pata de silla, el marco
-  de una puerta, el borde de una góndola. El pliegue entre pared y piso no cambia. Ahí sigue
-  mandando el lightmap.
-- **No suma programas a la carga.** Cambia la variante del pase final, que ya se usa por el
-  brillo.
-
-El costo medido en la web está en el PR que lo agregó.
+- **Por qué no el SSAO del motor.** Compatibility lo trae desde Godot 4.6, pero sólo oscurece los
+  bordes donde la profundidad salta: una pata de silla, el marco de una puerta. No oscurece los
+  rincones ni el encuentro de piso y pared, y subir `Radius` e `Intensity` casi no cambia la imagen.
+- **Qué hace el pase.** Un quad a pantalla completa lee la profundidad, reconstruye la normal y
+  oscurece por oclusión de hemisferio con 8 muestras. Multiplica la imagen antes del tonemap, así
+  que oscurece el horneado también. No es luz ambiente.
+- **Los mandos** son `radio` (metros) e `intensidad`, en el shader. Un salto brusco de profundidad
+  se atenúa: es un contorno y no un rincón.
+- **Lo que oscurece nunca alumbra.** `luz_de_cada_objeto.gd` lo trata como transparente, y no
+  cuenta como una luz que se queda prendida en el corte.
+- **Suma un programa a la carga.** El costo por cuadro medido en la web está en el PR que lo
+  agregó.
 
 ## Los reflejos de los metales
 
