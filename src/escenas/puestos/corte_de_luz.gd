@@ -51,6 +51,7 @@ const VIDRIOS_A_LA_CALLE := [
 	"local_vidrio_sobre_entrada",
 	"local_vidrio_puerta_entrada",
 	"local_vidrio_ventanilla",
+	"local_vidrio_sobre_ventanilla",
 ]
 
 ## La luz de emergencia de la noche sin luz: alcanza para orientarse alrededor del tablero. Vale

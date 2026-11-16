@@ -1,81 +1,25 @@
-[gd_scene format=3]
+[gd_scene load_steps=9 format=3]
 
 [ext_resource type="Script" path="res://src/escenas/puestos/ventanilla.gd" id="1_ventanilla"]
 [ext_resource type="Script" path="res://src/escenas/objetos/comprador_interactuable.gd" id="2_comprador"]
-[ext_resource type="Texture2D" path="res://assets/models/SEPT_JUEGOS_PROTOTIPO_silla_patas_madera.png" id="3_madera"]
-[ext_resource type="Texture2D" path="res://assets/models/SEPT_JUEGOS_PROTOTIPO_aluminio_del_local_color.png" id="4_aluminio"]
-
-[sub_resource type="StandardMaterial3D" id="Material_madera"]
-resource_name = "VENTANILLA | Tabla de madera"
-albedo_texture = ExtResource("3_madera")
-roughness = 0.55
-uv1_scale = Vector3(1, 0.25, 1)
-uv1_offset = Vector3(0, 0.73, 0)
-texture_filter = 2
-
-[sub_resource type="StandardMaterial3D" id="Material_aluminio"]
-resource_name = "VENTANILLA | Aluminio"
-albedo_color = Color(0.4, 0.43, 0.41, 1)
-albedo_texture = ExtResource("4_aluminio")
-metallic = 0.25
-roughness = 0.32
-texture_filter = 2
-
-[sub_resource type="StandardMaterial3D" id="Material_vidrio"]
-resource_name = "VENTANILLA | Vidrio"
-transparency = 1
-albedo_color = Color(0.58, 0.72, 0.71, 0.2)
-metallic = 0.05
-roughness = 0.18
-
-[sub_resource type="BoxMesh" id="BoxMesh_parante"]
-material = SubResource("Material_aluminio")
-size = Vector3(0.03, 0.3, 0.03)
-
-[sub_resource type="BoxMesh" id="BoxMesh_brazo"]
-material = SubResource("Material_aluminio")
-size = Vector3(0.03, 0.03, 0.42)
-
-[sub_resource type="BoxMesh" id="BoxMesh_tornapunta"]
-material = SubResource("Material_aluminio")
-size = Vector3(0.025, 0.025, 0.47)
-
-[sub_resource type="BoxMesh" id="BoxMesh_guia"]
-material = SubResource("Material_aluminio")
-size = Vector3(0.04, 2.3, 0.035)
-
-[sub_resource type="BoxMesh" id="BoxMesh_travesano_de_hoja"]
-material = SubResource("Material_aluminio")
-size = Vector3(1.44, 0.05, 0.03)
-
-[sub_resource type="BoxMesh" id="BoxMesh_larguero_de_hoja"]
-material = SubResource("Material_aluminio")
-size = Vector3(0.05, 0.9, 0.03)
-
-[sub_resource type="BoxMesh" id="BoxMesh_manija"]
-material = SubResource("Material_aluminio")
-size = Vector3(0.16, 0.02, 0.03)
-
-[sub_resource type="QuadMesh" id="QuadMesh_vidrio_de_hoja"]
-material = SubResource("Material_vidrio")
-size = Vector2(1.34, 0.8)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_acceso"]
 size = Vector3(1.2, 1.4, 0.001)
 
 [sub_resource type="BoxMesh" id="BoxMesh_antepecho"]
-material = SubResource("Material_madera")
 size = Vector3(1.4, 0.08, 0.4)
 
 [sub_resource type="BoxMesh" id="BoxMesh_apoyo_interior"]
-material = SubResource("Material_madera")
-size = Vector3(1.4, 0.08, 0.22)
+size = Vector3(1.4, 0.08, 0.4)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_apoyo"]
 size = Vector3(1.4, 0.08, 0.8)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_tope"]
 size = Vector3(1.4, 0.12, 0.02)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_pano_fijo"]
+size = Vector3(1.4, 0.3, 0.12)
 
 [node name="Ventanilla" type="StaticBody3D" node_paths=PackedStringArray("borde_superior", "antepecho", "comprador_visible", "apoyo_de_entregas", "objetivo", "acceso_al_cobro")]
 collision_layer = 0
@@ -111,8 +55,9 @@ antepecho = NodePath("../../Antepecho")
 [node name="Forma" type="CollisionShape3D" parent="Comprador/Objetivo"]
 
 [node name="Antepecho" type="MeshInstance3D" parent="."]
+visible = false
 position = Vector3(0, 0, -0.1795)
-editor_description = "Termina en el plano exterior de la pared y sobresale sólo hacia adentro. Medio milímetro por delante del dintel mantiene positiva la profundidad del encuadre."
+editor_description = "Termina en el plano exterior de la pared y sobresale sólo hacia adentro. Medio milímetro por delante del dintel mantiene positiva la profundidad del encuadre. No se dibuja: la tabla que se ve es la del modelo, y esta caja da las medidas del encuadre."
 mesh = SubResource("BoxMesh_antepecho")
 gi_mode = 2
 
@@ -122,98 +67,17 @@ position = Vector3(0, 1.4, 0.02)
 rotation = Vector3(0, 3.1415927, 0)
 
 [node name="ApoyoInterior" type="MeshInstance3D" parent="."]
+visible = false
 mesh = SubResource("BoxMesh_apoyo_interior")
-position = Vector3(0, 0, -0.4895)
-editor_description = "Sigue al antepecho hacia adentro sin pisarlo: las dos tablas se tocan y no comparten cara."
+position = Vector3(0, 0, -0.4)
 gi_mode = 2
 
-[node name="Escuadras" type="Node3D" parent="."]
-editor_description = "Sostienen la tabla del lado de adentro, apoyadas en la pared."
+[node name="PanoFijo" type="StaticBody3D" parent="."]
+editor_description = "El paño de vidrio fijo sobre la abertura. Cierra el hueco de la pared desde el borde superior: nada pasa por el vidrio."
+position = Vector3(0, 1.55, -0.04)
 
-[node name="Izquierda" type="Node3D" parent="Escuadras"]
-position = Vector3(-0.5, 0, 0)
-
-[node name="Parante" type="MeshInstance3D" parent="Escuadras/Izquierda"]
-position = Vector3(0, -0.19, -0.125)
-mesh = SubResource("BoxMesh_parante")
-gi_mode = 2
-
-[node name="Brazo" type="MeshInstance3D" parent="Escuadras/Izquierda"]
-position = Vector3(0, -0.055, -0.32)
-mesh = SubResource("BoxMesh_brazo")
-gi_mode = 2
-
-[node name="Tornapunta" type="MeshInstance3D" parent="Escuadras/Izquierda"]
-position = Vector3(0, -0.1975, -0.3125)
-rotation = Vector3(0.65, 0, 0)
-mesh = SubResource("BoxMesh_tornapunta")
-gi_mode = 2
-
-[node name="Derecha" type="Node3D" parent="Escuadras"]
-position = Vector3(0.5, 0, 0)
-
-[node name="Parante" type="MeshInstance3D" parent="Escuadras/Derecha"]
-position = Vector3(0, -0.19, -0.125)
-mesh = SubResource("BoxMesh_parante")
-gi_mode = 2
-
-[node name="Brazo" type="MeshInstance3D" parent="Escuadras/Derecha"]
-position = Vector3(0, -0.055, -0.32)
-mesh = SubResource("BoxMesh_brazo")
-gi_mode = 2
-
-[node name="Tornapunta" type="MeshInstance3D" parent="Escuadras/Derecha"]
-position = Vector3(0, -0.1975, -0.3125)
-rotation = Vector3(0.65, 0, 0)
-mesh = SubResource("BoxMesh_tornapunta")
-gi_mode = 2
-
-[node name="HojaLevantada" type="Node3D" parent="."]
-editor_description = "La hoja de la ventana, corrida hacia arriba por sus guías: la ventanilla atiende abierta. Queda sobre el dintel, del lado de adentro, y no tapa al comprador."
-position = Vector3(0.005, 0, -0.13)
-
-[node name="GuiaIzquierda" type="MeshInstance3D" parent="HojaLevantada"]
-position = Vector3(-0.745, 1.15, 0)
-mesh = SubResource("BoxMesh_guia")
-gi_mode = 2
-
-[node name="GuiaDerecha" type="MeshInstance3D" parent="HojaLevantada"]
-position = Vector3(0.745, 1.15, 0)
-mesh = SubResource("BoxMesh_guia")
-gi_mode = 2
-
-[node name="Hoja" type="Node3D" parent="HojaLevantada"]
-position = Vector3(0, 1.85, -0.033)
-
-[node name="TravesanoDeAbajo" type="MeshInstance3D" parent="HojaLevantada/Hoja"]
-position = Vector3(0, -0.425, 0)
-mesh = SubResource("BoxMesh_travesano_de_hoja")
-gi_mode = 2
-
-[node name="TravesanoDeArriba" type="MeshInstance3D" parent="HojaLevantada/Hoja"]
-position = Vector3(0, 0.425, 0)
-mesh = SubResource("BoxMesh_travesano_de_hoja")
-gi_mode = 2
-
-[node name="LargueroIzquierdo" type="MeshInstance3D" parent="HojaLevantada/Hoja"]
-position = Vector3(-0.695, 0, 0)
-mesh = SubResource("BoxMesh_larguero_de_hoja")
-gi_mode = 2
-
-[node name="LargueroDerecho" type="MeshInstance3D" parent="HojaLevantada/Hoja"]
-position = Vector3(0.695, 0, 0)
-mesh = SubResource("BoxMesh_larguero_de_hoja")
-gi_mode = 2
-
-[node name="Manija" type="MeshInstance3D" parent="HojaLevantada/Hoja"]
-position = Vector3(0, -0.425, -0.03)
-mesh = SubResource("BoxMesh_manija")
-gi_mode = 2
-
-[node name="Vidrio" type="MeshInstance3D" parent="HojaLevantada/Hoja"]
-rotation = Vector3(0, 3.1415927, 0)
-mesh = SubResource("QuadMesh_vidrio_de_hoja")
-gi_mode = 2
+[node name="Forma" type="CollisionShape3D" parent="PanoFijo"]
+shape = SubResource("BoxShape3D_pano_fijo")
 
 [node name="ApoyoDeEntregas" type="Marker3D" parent="."]
 position = Vector3(0, 0.04, -0.13)
