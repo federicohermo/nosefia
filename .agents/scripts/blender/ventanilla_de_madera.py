@@ -15,11 +15,13 @@ guarda la fuente y reescribe `aluminio_del_local_{color,orm}.png`. Después van 
   hasta el dintel nuevo, y un travesaño separa la abertura del paño.
 - **El paño** (`local_vidrio_sobre_ventanilla`) es un vidrio fijo entre el travesaño y el dintel.
   `local_vidrio_ventanilla` no se toca: el juego lo esconde, y los mapas de luz lo nombran.
-- **La tabla** (`local_tabla_ventanilla`) lleva la madera de las sillas. Del lado de adentro
-  mide el ancho del marco y termina contra él, sin pisarlo. Por la abertura pasa sólo una lengua
-  que entra entre las jambas y se apoya en el perfil de abajo.
-- **Las escuadras** (`local_escuadra_ventanilla`) sostienen la tabla contra la pared, con el
+- **La tabla** (`local_tabla_ventanilla`) lleva la madera de las sillas. Es una sola pieza que
+  pasa entre las dos jambas y se apoya sobre el perfil de abajo: no tapa ninguna cara del marco.
+  Para eso el perfil de abajo baja 4 cm, y la tabla ocupa su lugar en la abertura.
+- **Las escuadras** (`local_escuadra_ventanilla`) sostienen la tabla del lado de adentro, con el
   aluminio del marco.
+- **La manija** (`local_manija_ventanilla`) va en el travesaño, del lado de adentro: es de donde
+  se baja el vidrio.
 
 Es idempotente: todo sale de las medidas de este archivo, y la pared se mide antes de moverla.
 """
@@ -34,7 +36,6 @@ import bmesh  # type: ignore[import-not-found]
 import bpy  # type: ignore[import-not-found]
 import numpy as np
 from mathutils import Matrix, Vector  # type: ignore[import-not-found]
-from mathutils.geometry import tessellate_polygon  # type: ignore[import-not-found]
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import metal_con_detalle  # noqa: E402
@@ -63,7 +64,10 @@ DINTEL = 2.74
 # El marco: sus caras de afuera y de adentro, y sus perfiles.
 MARCO_Y = (-6.41, -6.27)
 MARCO_X = (-1.54, -1.47, -0.13, -0.05)
-MARCO_ABAJO = (1.0, 1.07)
+# El perfil de abajo queda debajo de la tabla, que se apoya en él.
+MARCO_ABAJO = (0.96, 1.03)
+# Cuánto entra en la pared el perfil de arriba: el resto asoma en la abertura, como las jambas.
+ENTRADA_DEL_DINTEL = 0.04
 # El travesaño va sobre la abertura: su canto de abajo es el dintel de antes.
 TRAVESANO = (2.44, 2.51)
 PERFIL = 0.07
@@ -71,7 +75,12 @@ PERFIL = 0.07
 TAPA = 1.08
 GROSOR = 0.05
 BORDE_DE_ADENTRO = -5.78
-LUZ_CON_LA_JAMBA = 0.005
+LUZ_CON_LA_JAMBA = 0.002
+MANIJA = "local_manija_ventanilla"
+# La manija: el largo de su barra, su grosor y cuánto se separa del travesaño.
+MANIJA_LARGO = 0.16
+MANIJA_GROSOR = 0.012
+MANIJA_SEPARACION = 0.035
 # Las escuadras, medidas desde la pared.
 ESCUADRA_X = (-1.3, -0.3)
 BARRA = 0.025
@@ -114,32 +123,13 @@ def _escribir(nombre: str, bm, material: str, como):
     return objeto
 
 
-def _lazos(caras: set) -> list[list]:
-    """Los bordes de un grupo de caras, cada uno como una vuelta de vértices."""
-    siguiente = {}
-    for cara in caras:
-        for lazo in cara.loops:
-            if sum(1 for c in lazo.edge.link_faces if c in caras) == 1:
-                siguiente[lazo.vert] = lazo.link_loop_next.vert
-    vueltas = []
-    while siguiente:
-        inicio, vertice = next(iter(siguiente.items()))
-        vuelta = [inicio]
-        del siguiente[inicio]
-        while vertice is not inicio:
-            vuelta.append(vertice)
-            vertice = siguiente.pop(vertice)
-        vueltas.append(vuelta)
-    return vueltas
-
-
 def subir_el_hueco() -> int:
     """Sube el dintel del hueco de la pared.
 
     Las dos caras de la pared son polígonos de muchos lados que rodean el hueco, y uno de sus
     bordes pasa justo por arriba del dintel: con sólo subir las esquinas, el polígono se cruza y
-    tapa la abertura. Por eso cada cara de la pared se rehace en triángulos entre su borde de
-    afuera y el hueco nuevo, con la misma proyección de UV.
+    tapa la abertura. Por eso cada cara de la pared se rellena de nuevo entre su borde de afuera
+    y el hueco nuevo, con la misma proyección de UV, sin caras sin área ni aristas sueltas.
     """
     objeto = bpy.data.objects[PARED]
     malla = objeto.data
@@ -195,21 +185,26 @@ def subir_el_hueco() -> int:
             lazo[uv].uv = uv_de(lazo.vert, ajuste)
 
     for caras, ajuste, normal, material in planos.values():
-        vueltas = _lazos(caras)
-        assert len(vueltas) == 2, f"la pared tiene {len(vueltas)} bordes alrededor del hueco"
-        vueltas.sort(key=len, reverse=True)
+        borde = {
+            lazo.edge for cara in caras for lazo in cara.loops
+            if sum(1 for c in lazo.edge.link_faces if c in caras) == 1
+        }
+        de_adentro = {arista for cara in caras for arista in cara.edges} - borde
         bmesh.ops.delete(bm, geom=list(caras), context="FACES_ONLY")
-        vertices = [v for vuelta in vueltas for v in vuelta]
-        triangulos = tessellate_polygon([[v.co for v in vuelta] for vuelta in vueltas])
-        for indices in triangulos:
-            esquinas = [vertices[i] for i in indices]
-            a, b, c = (v.co for v in esquinas)
-            if (b - a).cross(c - a).dot(normal) < 0:
-                esquinas.reverse()
-            cara = bm.faces.new(esquinas)
+        bmesh.ops.delete(bm, geom=list(de_adentro), context="EDGES")
+        relleno = bmesh.ops.triangle_fill(
+            bm, edges=list(borde), use_beauty=True, use_dissolve=False, normal=normal
+        )
+        nuevas = [g for g in relleno["geom"] if isinstance(g, bmesh.types.BMFace)]
+        assert nuevas, "la pared no se pudo rellenar alrededor del hueco"
+        for cara in nuevas:
+            assert cara.calc_area() > 1e-8, "el relleno de la pared dejó una cara sin área"
+            if cara.normal.dot(normal) < 0:
+                cara.normal_flip()
             cara.material_index = material
             for lazo in cara.loops:
                 lazo[uv].uv = uv_de(lazo.vert, ajuste)
+    assert not [a for a in bm.edges if not a.link_faces], "quedó una arista suelta en la pared"
     bm.normal_update()
     bm.to_mesh(malla)
     bm.free()
@@ -221,7 +216,7 @@ def rehacer_el_marco() -> None:
     marco = bpy.data.objects[MARCO]
     y0, y1 = MARCO_Y
     x0, x1, x2, x3 = MARCO_X
-    arriba = DINTEL + (TRAVESANO[1] - DINTEL_VIEJO)
+    arriba = DINTEL + ENTRADA_DEL_DINTEL
     bm = bmesh.new()
     _caja(bm, (x0, y0, MARCO_ABAJO[0]), (x1, y1, arriba))
     _caja(bm, (x2, y0, MARCO_ABAJO[0]), (x3, y1, arriba))
@@ -242,7 +237,7 @@ def poner_el_pano() -> None:
             coleccion.objects.link(pano)
     al_objeto = pano.matrix_world.inverted()
     al_mundo = vidrio.matrix_world
-    arriba = DINTEL + (TRAVESANO[1] - DINTEL_VIEJO) - PERFIL
+    arriba = DINTEL + ENTRADA_DEL_DINTEL - PERFIL
     viejos = [al_mundo @ v.co for v in vidrio.data.vertices]
     x_medio = sum(p.x for p in viejos) / len(viejos)
     z_medio = sum(p.z for p in viejos) / len(viejos)
@@ -258,15 +253,9 @@ def poner_la_tabla() -> None:
     bm = bmesh.new()
     uv = bm.loops.layers.uv.new("UVMap")
     piso = TAPA - GROSOR
-    # Del lado de adentro, contra el marco. Por la abertura, una lengua sobre el perfil de abajo.
-    piezas = [
-        ((HUECO_X[0], MARCO_Y[1], piso), (HUECO_X[1], BORDE_DE_ADENTRO, TAPA)),
-        (
-            (MARCO_X[1] + LUZ_CON_LA_JAMBA, AFUERA, MARCO_ABAJO[1]),
-            (MARCO_X[2] - LUZ_CON_LA_JAMBA, MARCO_Y[1], TAPA),
-        ),
-    ]
-    largo = HUECO_X[1] - HUECO_X[0]
+    izquierda, derecha = MARCO_X[1] + LUZ_CON_LA_JAMBA, MARCO_X[2] - LUZ_CON_LA_JAMBA
+    piezas = [((izquierda, AFUERA, piso), (derecha, BORDE_DE_ADENTRO, TAPA))]
+    largo = derecha - izquierda
     fondo = BORDE_DE_ADENTRO - AFUERA
     v0, v1 = MADERA_V
     for desde, hasta in piezas:
@@ -278,9 +267,9 @@ def poner_la_tabla() -> None:
                 if vertical and abs(cara.normal.x) > 0.5:
                     u, a = (p.y - AFUERA) / fondo, (p.z - piso) / GROSOR * 0.12
                 elif vertical:
-                    u, a = (p.x - HUECO_X[0]) / largo, (p.z - piso) / GROSOR * 0.12
+                    u, a = (p.x - izquierda) / largo, (p.z - piso) / GROSOR * 0.12
                 else:
-                    u, a = (p.x - HUECO_X[0]) / largo, (p.y - AFUERA) / fondo
+                    u, a = (p.x - izquierda) / largo, (p.y - AFUERA) / fondo
                 lazo[uv].uv = (u, v0 + (v1 - v0) * a)
     bm.transform(marco.matrix_world.inverted())
     _escribir(TABLA, bm, MADERA, marco)
@@ -291,12 +280,14 @@ def poner_las_escuadras() -> None:
     bm = bmesh.new()
     techo = TAPA - GROSOR
     medio = BARRA / 2
+    # Arrancan en la cara del marco: el parante baja por delante del perfil de abajo.
+    pared = MARCO_Y[1]
     for x in ESCUADRA_X:
-        _caja(bm, (x - medio, ADENTRO, techo - BARRA), (x + medio, ADENTRO + BRAZO, techo))
-        _caja(bm, (x - medio, ADENTRO, techo - PARANTE), (x + medio, ADENTRO + BARRA, techo - BARRA))
+        _caja(bm, (x - medio, pared, techo - BARRA), (x + medio, pared + BRAZO, techo))
+        _caja(bm, (x - medio, pared, techo - PARANTE), (x + medio, pared + BARRA, techo - BARRA))
         # La tornapunta, del pie del parante a la punta del brazo.
-        pie = Vector((x, ADENTRO + BARRA, techo - PARANTE + medio))
-        punta = Vector((x, ADENTRO + BRAZO - BARRA, techo - BARRA))
+        pie = Vector((x, pared + BARRA, techo - PARANTE + medio))
+        punta = Vector((x, pared + BRAZO - BARRA, techo - BARRA))
         largo = (punta - pie).length
         barra = _caja(bm, (-medio * 0.8, 0.0, -medio * 0.8), (medio * 0.8, largo, medio * 0.8))
         giro = Matrix.Rotation(math.atan2(punta.z - pie.z, punta.y - pie.y), 4, "X")
@@ -308,6 +299,23 @@ def poner_las_escuadras() -> None:
     _escribir(ESCUADRAS, bm, ALUMINIO, marco)
 
 
+def poner_la_manija() -> None:
+    marco = bpy.data.objects[MARCO]
+    bm = bmesh.new()
+    centro = (MARCO_X[1] + MARCO_X[2]) / 2
+    alto = (TRAVESANO[0] + TRAVESANO[1]) / 2
+    cara = MARCO_Y[1]
+    g = MANIJA_GROSOR / 2
+    barra = cara + MANIJA_SEPARACION
+    _caja(bm, (centro - MANIJA_LARGO / 2, barra - MANIJA_GROSOR, alto - g),
+          (centro + MANIJA_LARGO / 2, barra, alto + g))
+    for lado in (-1, 1):
+        x = centro + lado * (MANIJA_LARGO / 2 - MANIJA_GROSOR)
+        _caja(bm, (x - g, cara, alto - g), (x + g, barra - MANIJA_GROSOR, alto + g))
+    bm.transform(marco.matrix_world.inverted())
+    _escribir(MANIJA, bm, ALUMINIO, marco)
+
+
 def main() -> None:
     configurar()
     movidos = subir_el_hueco()
@@ -316,13 +324,14 @@ def main() -> None:
     poner_el_pano()
     poner_la_tabla()
     poner_las_escuadras()
+    poner_la_manija()
     bpy.context.view_layer.update()
     conjunto = next(c for c in metal_con_detalle.CONJUNTOS if c.nombre == CONJUNTO)
     aplicar = "--aplicar" in sys.argv
     print(metal_con_detalle.aplicar(
         conjunto, metal_con_detalle.CARPETA if aplicar else TEXTURAS_DE_REPORTE
     ))
-    for nombre in (MARCO, PANO, TABLA, ESCUADRAS):
+    for nombre in (MARCO, PANO, TABLA, ESCUADRAS, MANIJA):
         objeto = bpy.data.objects[nombre]
         puntos = [objeto.matrix_world @ v.co for v in objeto.data.vertices]
         print(nombre, [
