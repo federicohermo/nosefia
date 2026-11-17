@@ -1,6 +1,14 @@
 ## El espacio comercial se conserva sin crear un soporte invisible bajo las cajas.
 extends GdUnitTestSuite
 
+const LadosDelMueble := preload("res://test/escenas/lados_del_mueble.gd")
+## A cuánto de la cara se para quien suelta algo hacia la góndola.
+const DISTANCIA_PARA_SOLTAR := 0.8
+## Hacia qué alto mira quien apunta al piso, junto a la góndola.
+const ALTURA_BAJA := 0.5
+## Cuánto fondo tiene que tener un mueble para apuntarle al piso: más angosto, la mano cae antes.
+const FONDO_PARA_APUNTAR_AL_PISO := 0.9
+
 
 func test_las_unidades_soltadas_hacia_las_tres_gondolas_quedan_afuera() -> void:  # AC-PLY-018
 	var almacen := await _abrir()
@@ -9,14 +17,29 @@ func test_las_unidades_soltadas_hacia_las_tres_gondolas_quedan_afuera() -> void:
 	var agarre: Agarre = almacen.get("_agarre")
 	var reservados: Array[PhysicsBody3D] = almacen.get("_muebles_con_contorno")
 	assert_int(reservados.size()).is_equal(3)
+	var casos: Array[Array] = []
 	for cuerpo: PhysicsBody3D in reservados:
 		var malla := cuerpo.get_parent() as MeshInstance3D
-		var mueble := malla.global_transform * malla.get_aabb()
-		var centro := mueble.get_center()
-		var hacia := (
-			Vector3.FORWARD if str(malla.name).begins_with("gondolanueva_001") else Vector3.RIGHT
+		var costados := LadosDelMueble.libres(almacen, malla, DISTANCIA_PARA_SOLTAR, false)
+		(
+			assert_array(costados)
+			. override_failure_message("%s no tiene un costado con lugar" % malla.name)
+			. is_not_empty()
 		)
-		var pies := centro - hacia * (mueble.size.dot(hacia.abs()) / 2.0 + 0.8)
+		for costado in costados:
+			# Una góndola angosta se aborda a la altura de su centro: apuntar al piso acorta la
+			# proyección horizontal de la mano y no entra en su reserva.
+			var alturas: Array[bool] = [false]
+			if costado.mitad * 2.0 >= FONDO_PARA_APUNTAR_AL_PISO:
+				alturas.append(true)
+			for baja in alturas:
+				casos.append([malla, costado, baja])
+	for caso: Array in casos:
+		var malla: MeshInstance3D = caso[0]
+		var costado: LadosDelMueble.Lado = caso[1]
+		var mueble := LadosDelMueble.pieza(malla)
+		var centro := mueble.get_center()
+		var pies := LadosDelMueble.pie_junto_a(malla, costado, DISTANCIA_PARA_SOLTAR)
 		var suelo := PhysicsRayQueryParameters3D.create(
 			Vector3(pies.x, 0.8, pies.z), Vector3(pies.x, -1, pies.z), jugador.collision_mask
 		)
@@ -27,9 +50,7 @@ func test_las_unidades_soltadas_hacia_las_tres_gondolas_quedan_afuera() -> void:
 			return
 		pies.y = (piso.position as Vector3).y + ReglasDeLosObjetos.ROCE
 		jugador.global_position = pies
-		# La góndola norte se aborda por la cabecera; apuntar al piso acorta
-		# la proyección horizontal de la mano y no entra en su reserva.
-		var alto := centro.y if hacia == Vector3.FORWARD else 0.5
+		var alto := ALTURA_BAJA if caso[2] else centro.y
 		await _mirar(jugador, Vector3(centro.x, alto, centro.z))
 		var capsula: CollisionShape3D = jugador.get_node("Cuerpo")
 		var consulta := PhysicsShapeQueryParameters3D.new()
@@ -91,13 +112,20 @@ func test_una_unidad_exterior_oblicua_no_se_retrocede_por_su_aabb() -> void:  # 
 		return
 	unidad.freeze = true
 	var mueble: MeshInstance3D = almacen.get_node("Estructura/gondolanueva")
-	var limites := mueble.get_aabb()
+	# La pieza del extremo sur: no tiene otra pieza pegada de ese lado.
+	var piezas := PiezasDeUnMueble.de_la_malla(mueble.mesh)
+	var limites: AABB = piezas[0]
+	for pieza: AABB in piezas:
+		if pieza.end.z > limites.end.z:
+			limites = pieza
 	var forma: CollisionShape3D = unidad.get_node("Forma")
 	var volumen := LimitesDeForma.de(forma.shape)
 	var giro := Basis(Vector3.UP, PI / 4.0)
 	var envuelta := Transform3D(giro, Vector3.ZERO) * volumen
 	var afuera := minf(envuelta.size.x, envuelta.size.z) * 0.4
-	var centro := Vector3(limites.end.x + afuera, limites.get_center().y, limites.end.z + afuera)
+	var centro := Vector3(
+		limites.position.x - afuera, limites.get_center().y, limites.end.z + afuera
+	)
 	unidad.global_transform = mueble.global_transform * Transform3D(giro, centro)
 	var local := mueble.global_transform.affine_inverse() * forma.global_transform * volumen
 	assert_bool(local.intersects(limites)).is_true()

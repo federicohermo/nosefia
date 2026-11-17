@@ -11,7 +11,7 @@ const NOTAS: Array[String] = [
 func test_las_botellas_entran_en_su_colision_y_conservan_tres_etiquetas() -> void:
 	var almacen: Node3D = auto_free(ALMACEN.instantiate())
 	add_child(almacen)
-	var etiquetas: Array[Array] = []
+	var etiquetas: Array[PackedVector2Array] = []
 	for nombre: String in ["JabonAzul", "JabonRosa", "JabonAmarillo"]:
 		var jabon: UtilDeLimpieza = almacen.get_node("Objetos/" + nombre)
 		var volumen: AABB = jabon.malla.transform * jabon.malla.mesh.get_aabb()
@@ -19,14 +19,17 @@ func test_las_botellas_entran_en_su_colision_y_conservan_tres_etiquetas() -> voi
 		var cilindro: CylinderShape3D = forma.shape
 		assert_float(cilindro.height).is_equal_approx(volumen.size.y, 0.001)
 		assert_float(cilindro.radius * 2.0).is_greater_equal(volumen.size.x - 0.001)
-		var texturas: Array[Texture2D] = []
+		# Las etiquetas viajan en un atlas: lo que distingue a una botella es qué parte muestra.
+		var dibujo := PackedVector2Array()
 		for superficie in jabon.malla.mesh.get_surface_count():
 			var material: StandardMaterial3D = jabon.malla.mesh.surface_get_material(superficie)
 			if material.albedo_texture != null:
-				texturas.append(material.albedo_texture)
-		assert_array(texturas).override_failure_message(nombre).is_not_empty()
-		assert_bool(etiquetas.has(texturas)).override_failure_message(nombre).is_false()
-		etiquetas.append(texturas)
+				dibujo.append_array(
+					jabon.malla.mesh.surface_get_arrays(superficie)[Mesh.ARRAY_TEX_UV]
+				)
+		assert_bool(dibujo.is_empty()).override_failure_message(nombre).is_false()
+		assert_bool(etiquetas.has(dibujo)).override_failure_message(nombre).is_false()
+		etiquetas.append(dibujo)
 
 
 func test_las_cuatro_notas_se_ven_en_su_cuarto_con_sus_imagenes() -> void:  # AC-PLY-071

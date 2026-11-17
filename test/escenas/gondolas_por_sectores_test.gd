@@ -2,6 +2,7 @@ extends GdUnitTestSuite
 
 const ALMACEN := "res://src/escenas/almacen.tscn"
 const AperturaConLugar := preload("res://test/escenas/apertura_con_lugar.gd")
+const TOLERANCIA_DEL_FRENTE := Vector3.ONE * 0.002
 
 
 func _almacen() -> Node3D:
@@ -25,56 +26,50 @@ func _inventario(almacen: Node3D) -> Inventario:
 	return repositor.estante().get("_inventario")
 
 
+## Qué productos van juntos en cada destino de cada mueble. Dónde cae el destino en el local no se
+## declara: sale del mueble.
 func _destinos() -> Dictionary:
 	return {
 		"gondolanueva":
-		{
-			Vector3.LEFT:
+		[
 			[Producto.Id.MAROLINI, Producto.Id.ARVECOR, Producto.Id.UAKALAS, Producto.Id.MARRANOS],
-			Vector3.RIGHT:
 			[
-				Producto.Id.MACUMBAS,
-				Producto.Id.PEPITO,
+				Producto.Id.FEEL_RICKY_FORT,
+				Producto.Id.DON_SATURADOS,
 				Producto.Id.ZUCARACHAS,
 				Producto.Id.FROT_LUPS
 			],
-			Vector3.BACK: [Producto.Id.MALBARDO, Producto.Id.AMARGADITO],
-			Vector3.FORWARD: [Producto.Id.FERNET_GOD, Producto.Id.TERMINATOR],
-		},
+			[Producto.Id.MALBARDO, Producto.Id.AMARGADITO],
+			[Producto.Id.FERNET_GOD, Producto.Id.TERMINATOR],
+		],
 		"gondolanueva2":
-		{
-			Vector3.RIGHT:
+		[
 			[
-				Producto.Id.OREMOS,
 				Producto.Id.PETISAS,
-				Producto.Id.DON_SATURADOS,
-				Producto.Id.FEEL_RICKY_FORT
+				Producto.Id.MACUMBAS,
+				Producto.Id.FLIM_POF,
+				Producto.Id.COSA_DE_MANI
 			],
-			Vector3.LEFT:
 			[Producto.Id.SALADICK, Producto.Id.PROGRES, Producto.Id.CHISITOS, Producto.Id.LAYSNNT],
-			Vector3.BACK: [Producto.Id.JORGILLO, Producto.Id.BURBALOO],
-			Vector3.FORWARD: [Producto.Id.COSA_DE_MANI, Producto.Id.FLIM_POF],
-		},
+			[Producto.Id.JORGILLO, Producto.Id.BURBALOO],
+			[Producto.Id.OREMOS, Producto.Id.PEPITO],
+		],
 		"gondolanueva_001":
-		{
-			Vector3.BACK:
-			[Producto.Id.ACTRONCITO, Producto.Id.DUREXTRA, Producto.Id.POETICO, Producto.Id.DURONGA]
-		},
-		"heladeranueva": {Vector3.BACK: [Producto.Id.PURA_COLA, Producto.Id.OAAAA]},
-		"heladeranueva_001": {Vector3.BACK: [Producto.Id.CINDOLOR, Producto.Id.MAYONCHIS]},
+		[[Producto.Id.ACTRONCITO, Producto.Id.DUREXTRA, Producto.Id.POETICO, Producto.Id.DURONGA]],
+		"heladeranueva": [[Producto.Id.PURA_COLA, Producto.Id.OAAAA]],
+		"heladeranueva_001": [[Producto.Id.CINDOLOR, Producto.Id.MAYONCHIS]],
 	}
 
 
+## Comprueba que la tanda se apoya en el mueble y devuelve hacia dónde mira su frente.
 func _comprobar_tanda(
-	almacen: Node3D,
-	mueble: Node3D,
-	id: Producto.Id,
-	bloque: PackedFloat32Array,
-	fila: int,
-	frente: Vector3
-) -> void:
-	assert_vector(DisposicionDeLaGondola.frente(bloque, fila)).is_equal_approx(
-		frente, Vector3.ONE * 0.002
+	almacen: Node3D, mueble: Node3D, id: Producto.Id, bloque: PackedFloat32Array, fila: int
+) -> Vector3:
+	var frente := DisposicionDeLaGondola.frente(bloque, fila)
+	(
+		assert_float(frente.length())
+		. override_failure_message("%s no tiene frente" % Catalogo.de(id).nombre)
+		. is_equal_approx(1.0, 0.002)
 	)
 	var malla: Mesh = _puesto(almacen).get("_modelos")[id]
 	for indice in DisposicionDeLaGondola.copias(bloque):
@@ -91,39 +86,86 @@ func _comprobar_tanda(
 				)
 				. is_true()
 			)
+	return frente
+
+
+## Hacia dónde miran la principal y las referencias de un producto.
+func _frentes_de(almacen: Node3D, mueble: Node3D, id: Producto.Id) -> Array[Vector3]:
+	var disposicion: DisposicionDeLaGondola = _puesto(almacen).get("disposicion")
+	var frentes: Array[Vector3] = [
+		_comprobar_tanda(
+			almacen, mueble, id, disposicion.principales[id], disposicion.filas_de_adelante[id]
+		)
+	]
+	for indice in disposicion.guias.size():
+		if disposicion.productos_de_las_guias[indice] == id:
+			frentes.append(
+				_comprobar_tanda(
+					almacen,
+					mueble,
+					id,
+					disposicion.guias[indice],
+					disposicion.filas_de_adelante_de_las_guias[indice]
+				)
+			)
+	return frentes
+
+
+## Dónde está cada unidad de un producto: la de su principal y las de sus referencias.
+func _origenes_de(almacen: Node3D, id: Producto.Id) -> Array[Vector3]:
+	var disposicion: DisposicionDeLaGondola = _puesto(almacen).get("disposicion")
+	var bloques: Array[PackedFloat32Array] = [disposicion.principales[id]]
+	for indice in disposicion.guias.size():
+		if disposicion.productos_de_las_guias[indice] == id:
+			bloques.append(disposicion.guias[indice])
+	var origenes: Array[Vector3] = []
+	for bloque in bloques:
+		for indice in DisposicionDeLaGondola.copias(bloque):
+			origenes.append(DisposicionDeLaGondola.copia(bloque, indice).origin)
+	return origenes
 
 
 func test_las_principales_y_referencias_ocupan_los_sectores_de_jornada_dos() -> void:  # AC-STK-086
 	var almacen := _almacen()
 	await get_tree().physics_frame
 	await get_tree().physics_frame
-	var disposicion: DisposicionDeLaGondola = _puesto(almacen).get("disposicion")
 	var encontrados: Array[int] = []
 	for nombre: String in _destinos():
-		var mueble: Node3D = almacen.get_node("Estructura/" + nombre)
-		var caras: Dictionary = _destinos()[nombre]
-		for frente: Vector3 in caras:
-			for id: Producto.Id in caras[frente]:
+		var mueble := almacen.get_node("Estructura/" + nombre) as MeshInstance3D
+		var lugares: Array[AABB] = []
+		var origenes_por_destino: Array[Array] = []
+		for destino: Array in _destinos()[nombre]:
+			var del_destino: Array[Vector3] = []
+			var origenes: Array[Vector3] = []
+			for id: Producto.Id in destino:
 				assert_array(encontrados).not_contains(id)
 				encontrados.append(id)
-				_comprobar_tanda(
-					almacen,
-					mueble,
-					id,
-					disposicion.principales[id],
-					disposicion.filas_de_adelante[id],
-					frente
+				del_destino.append_array(_frentes_de(almacen, mueble, id))
+				origenes.append_array(_origenes_de(almacen, id))
+			# Un destino mira siempre hacia el mismo lado.
+			var frente := del_destino[0]
+			for otro in del_destino:
+				(
+					assert_vector(otro)
+					. override_failure_message("%s: el destino mira hacia dos lados" % nombre)
+					. is_equal_approx(frente, TOLERANCIA_DEL_FRENTE)
 				)
-				for indice in disposicion.guias.size():
-					if disposicion.productos_de_las_guias[indice] == id:
-						_comprobar_tanda(
-							almacen,
-							mueble,
-							id,
-							disposicion.guias[indice],
-							disposicion.filas_de_adelante_de_las_guias[indice],
-							frente
-						)
+			var lugar := AABB(origenes[0], Vector3.ZERO)
+			for origen in origenes:
+				lugar = lugar.expand(origen)
+			lugares.append(lugar)
+			origenes_por_destino.append(origenes)
+		# Y ocupa un lugar propio: ninguna unidad de otro destino cae adentro.
+		for propio in lugares.size():
+			for ajeno in lugares.size():
+				if propio == ajeno:
+					continue
+				for origen: Vector3 in origenes_por_destino[ajeno]:
+					(
+						assert_bool(lugares[propio].has_point(origen))
+						. override_failure_message("%s: dos destinos comparten lugar" % nombre)
+						. is_false()
+					)
 	assert_int(encontrados.size()).is_equal(Catalogo.todos().size())
 	assert_array(encontrados).contains(Producto.Id.DURONGA)
 

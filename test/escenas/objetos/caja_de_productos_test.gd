@@ -9,7 +9,7 @@ const ESCENA := "res://src/escenas/objetos/caja_de_productos.tscn"
 const SCRIPT := "res://src/escenas/objetos/caja_de_productos.gd"
 const CABLEADO := "res://src/escenas/almacen.gd"
 
-## Las escenas que declaran las 32 cajas. Ninguna les pisa el material.
+## Las escenas que declaran las 31 cajas. Ninguna les pisa el material.
 const ESCENAS_CON_CAJAS := [
 	"res://src/escenas/puestos/objetos_del_almacen.tscn", "res://src/escenas/almacen.tscn"
 ]
@@ -17,8 +17,13 @@ const ESCENAS_CON_CAJAS := [
 ## La escena que lista las cajas, en `_cajas_de_productos`.
 const CAJAS_DEL_ALMACEN := "res://src/escenas/almacen.tscn"
 
-## Donde el juego carga las etiquetas: `source/` no se importa, y el juego no lo ve.
-const ETIQUETAS := "res://assets/boxes/"
+## Las copias de las etiquetas, en ASCII. `source/` no se importa: lo que el juego carga es el atlas
+## que sale de ellas.
+const ETIQUETAS := "res://assets/source/boxes/"
+
+## Dónde dice el atlas en qué rectángulo cae la etiqueta de cada caja, y dónde están sus PNG.
+const REPARTO := "res://assets/boxes/atlas_de_cajas.json"
+const CARPETA_DEL_ATLAS := "res://assets/boxes/"
 
 ## Los archivos conservan el nombre del arte, aunque cambie el nombre visible del producto.
 const NOMBRES_DISTINTOS_DEL_ID := {
@@ -34,37 +39,29 @@ const NOMBRES_DISTINTOS_DEL_ID := {
 	Producto.Id.DON_SATURADOS: "donsaturados",
 }
 
-## La textura de la caja genérica «DEPÓSITO».
-const GENERICA := "res://assets/models/SEPT_JUEGOS_PROTOTIPO_caja.png"
-
-## El parámetro de importación que achica una textura: su lado más grande, en píxeles.
-const LADO_TOPE := "process/size_limit"
-
-## Una etiqueta de la góndola. Viaja en el `.glb` con el lado que el exportador le da a las de
-## los productos, y ése es el lado con el que viajan las de las cajas.
-const ETIQUETA_DE_LA_GONDOLA := "res://assets/models/SEPT_JUEGOS_PROTOTIPO_Actroncito completo.png"
-
-const CON_ETIQUETA_PROPIA := [
-	Producto.Id.ACTRONCITO,
-	Producto.Id.AMARGADITO,
-	Producto.Id.BURBALOO,
-	Producto.Id.CINDOLOR,
-	Producto.Id.COSA_DE_MANI,
-	Producto.Id.DON_SATURADOS,
-	Producto.Id.DUREXTRA,
-	Producto.Id.DURONGA,
-	Producto.Id.FERNET_GOD,
-	Producto.Id.FLIM_POF,
-	Producto.Id.FROT_LUPS,
-	Producto.Id.JORGILLO,
-	Producto.Id.LAYSNNT,
-	Producto.Id.MACUMBAS,
-	Producto.Id.MAYONCHIS,
-	Producto.Id.OAAAA,
-	Producto.Id.PETISAS,
-	Producto.Id.TERMINATOR,
-	Producto.Id.ZUCARACHAS,
-]
+## Los productos con etiqueta propia, con el archivo del artista del que sale cada una.
+## `caja jorgillata.png` es otra textura de Jorgillo, y no va: va `CAJA JORGILLO.png`.
+const ORIGEN_DE_CADA_ETIQUETA := {
+	Producto.Id.ACTRONCITO: "CAJA ACTRÓNCITO.png",
+	Producto.Id.AMARGADITO: "CAJA AMARGADITO.png",
+	Producto.Id.BURBALOO: "CAJA BURBALOO.png",
+	Producto.Id.CINDOLOR: "CAJA CINDOLOR.png",
+	Producto.Id.COSA_DE_MANI: "CAJA COSA DE MANÍ.png",
+	Producto.Id.DON_SATURADOS: "CAJA DON SATURADOS.png",
+	Producto.Id.DUREXTRA: "CAJA DUREXTRA.png",
+	Producto.Id.DURONGA: "CAJA DURONGA.png",
+	Producto.Id.FERNET_GOD: "CAJA FERNET-GOD.png",
+	Producto.Id.FLIM_POF: "CAJA FLIN POF.png",
+	Producto.Id.FROT_LUPS: "CAJA FROTLUPS.png",
+	Producto.Id.JORGILLO: "CAJA JORGILLO.png",
+	Producto.Id.LAYSNNT: "CAJA LAYSNT´T.png",
+	Producto.Id.MACUMBAS: "CAJA MACUMBAS.png",
+	Producto.Id.MAYONCHIS: "CAJA MAYONCHIS.png",
+	Producto.Id.OAAAA: "CAJA OAAAAA.png",
+	Producto.Id.PETISAS: "CAJA PETISAS.png",
+	Producto.Id.TERMINATOR: "CAJA TERMINATOR.png",
+	Producto.Id.ZUCARACHAS: "CAJA ZUCARACHAS.png",
+}
 
 ## Los que el artista no dibujó: su caja lleva el logo del envase en tinta.
 const DEL_ENVASE := [
@@ -174,6 +171,7 @@ func test_reparentar_conserva_las_etiquetas_y_destruir_no_da_error() -> void:
 	var material_generico: BaseMaterial3D
 	var etiqueta_retenida: BaseMaterial3D
 	var generica := ""
+	var esperado := _rectangulo_esperado(_reparto(), Producto.Id.ACTRONCITO)
 	for _indice in 2:
 		# Se liberan dentro del callable: no registrarlas también en auto_free.
 		var caja := load(ESCENA).instantiate() as Node3D
@@ -186,8 +184,9 @@ func test_reparentar_conserva_las_etiquetas_y_destruir_no_da_error() -> void:
 		var material := _material(caja)
 		etiqueta_retenida = material
 		var identidad := material.get_instance_id()
-		var textura := material.albedo_texture.resource_path
-		assert_str(textura).is_equal(_ruta_de_la_etiqueta(Producto.Id.ACTRONCITO))
+		var textura := material.albedo_texture
+		assert_object(textura).is_not_null()
+		assert_bool(_rectangulo_que_muestra(material).is_equal_approx(esperado)).is_true()
 		materiales.append(identidad)
 		fuente = malla.mesh
 		material_generico = fuente.surface_get_material(0) as BaseMaterial3D
@@ -196,7 +195,7 @@ func test_reparentar_conserva_las_etiquetas_y_destruir_no_da_error() -> void:
 		caja.reparent(destino, true)
 		assert_object(caja.get_parent()).is_same(destino)
 		assert_int(_material(caja).get_instance_id()).is_equal(identidad)
-		assert_str(_material(caja).albedo_texture.resource_path).is_equal(textura)
+		assert_object(_material(caja).albedo_texture).is_same(textura)
 		assert_int(caja.get("producto")).is_equal(Producto.Id.ACTRONCITO)
 		assert_object(caja.get("datos")).is_same(datos)
 	assert_int(materiales[0]).is_not_equal(materiales[1])
@@ -210,9 +209,7 @@ func test_reparentar_conserva_las_etiquetas_y_destruir_no_da_error() -> void:
 	await assert_error(destruir).is_success()
 	cajas.clear()
 	assert_object(fuente.surface_get_material(0)).is_same(material_generico)
-	assert_str(etiqueta_retenida.albedo_texture.resource_path).is_equal(
-		_ruta_de_la_etiqueta(Producto.Id.ACTRONCITO)
-	)
+	assert_bool(_rectangulo_que_muestra(etiqueta_retenida).is_equal_approx(esperado)).is_true()
 	(
 		assert_str((fuente.surface_get_material(0) as BaseMaterial3D).albedo_texture.resource_path)
 		. is_equal(generica)
@@ -235,31 +232,33 @@ func test_la_caja_ya_no_despacha_por_su_cuenta() -> void:
 		)
 
 
-func test_cada_caja_con_textura_muestra_la_etiqueta_de_su_producto() -> void:
-	for id: Producto.Id in CON_ETIQUETA_PROPIA:
-		var caja := _caja_armada(id)
+func test_cada_caja_muestra_la_etiqueta_de_su_producto() -> void:
+	var reparto := _reparto()
+	for id: Producto.Id in ORIGEN_DE_CADA_ETIQUETA.keys() + DEL_ENVASE:
+		var esperado := _rectangulo_esperado(reparto, id)
+		var visto := _rectangulo_que_muestra(_material(_caja_armada(id)))
 		(
-			assert_str(_material(caja).albedo_texture.resource_path)
-			. override_failure_message("la caja de %s no lleva su etiqueta" % _nombre(id))
-			. is_equal(_ruta_de_la_etiqueta(id))
+			assert_vector(visto.position)
+			. override_failure_message("la caja de %s no muestra su etiqueta" % _nombre(id))
+			. is_equal_approx(esperado.position, Vector2.ONE * 0.5)
 		)
+		assert_vector(visto.size).is_equal_approx(esperado.size, Vector2.ONE * 0.5)
 
 
-## Las que el artista no dibujó llevan el logo de su envase en tinta: ninguna queda genérica.
-func test_las_cajas_sin_arte_llevan_su_propia_etiqueta() -> void:
-	for id: Producto.Id in DEL_ENVASE:
-		var caja := _caja_armada(id)
-		(
-			assert_str(_material(caja).albedo_texture.resource_path)
-			. override_failure_message("la caja de %s no lleva su etiqueta" % _nombre(id))
-			. is_equal(_ruta_de_la_etiqueta(id))
-		)
+## Dos productos no comparten rectángulo: la etiqueta de uno nunca es la de otro.
+func test_ninguna_caja_muestra_el_rectangulo_de_otra() -> void:
+	var vistos: Array[Rect2] = []
+	for id: Producto.Id in ORIGEN_DE_CADA_ETIQUETA.keys() + DEL_ENVASE:
+		vistos.append(_rectangulo_que_muestra(_material(_caja_armada(id))))
+	for i in vistos.size():
+		for j in range(i + 1, vistos.size()):
+			assert_bool(vistos[i].intersects(vistos[j])).is_false()
 
 
 ## Las dos listas cubren el catálogo, y ningún producto está en las dos. En el cruce del lote
 ## faltaba Malbardo en las dos: un producto nuevo tiene que decidir qué caja lleva.
 func test_cada_producto_tiene_decidida_su_caja() -> void:
-	var decididos: Array = CON_ETIQUETA_PROPIA + DEL_ENVASE
+	var decididos: Array = ORIGEN_DE_CADA_ETIQUETA.keys() + DEL_ENVASE
 	assert_int(decididos.size()).is_equal(Producto.Id.size())
 	for id: Producto.Id in Producto.Id.values():
 		(
@@ -270,21 +269,20 @@ func test_cada_producto_tiene_decidida_su_caja() -> void:
 
 
 ## Agregar la etiqueta de un producto es una línea: la tabla del script de la caja. Treinta y
-## dos sobreescrituras de material en las escenas serían treinta y dos lugares para olvidarse.
+## una sobreescrituras de material en las escenas serían treinta y un lugares para olvidarse.
 func test_la_etiqueta_de_cada_producto_es_una_linea_del_script() -> void:
 	var texto := FileAccess.get_file_as_string(SCRIPT)
 	assert_str(texto).is_not_empty()
-	for id: Producto.Id in CON_ETIQUETA_PROPIA + DEL_ENVASE:
-		var linea := (
-			'Producto.Id.%s: preload("%s"),' % [Producto.Id.keys()[id], _ruta_de_la_etiqueta(id)]
-		)
+	for id: Producto.Id in ORIGEN_DE_CADA_ETIQUETA.keys() + DEL_ENVASE:
+		var linea := 'Producto.Id.%s: "%s",' % [Producto.Id.keys()[id], _nombre_del_png(id)]
 		(
 			assert_int(texto.count(linea))
 			. override_failure_message("el script no tiene la línea `%s`" % linea)
 			. is_equal(1)
 		)
+		assert_bool(FileAccess.file_exists(_ruta_de_la_etiqueta(id))).is_true()
 	var cajas := _nombres_de_las_cajas()
-	assert_int(cajas.size()).is_equal(CON_ETIQUETA_PROPIA.size() + DEL_ENVASE.size())
+	assert_int(cajas.size()).is_equal(ORIGEN_DE_CADA_ETIQUETA.size() + DEL_ENVASE.size())
 	for ruta: String in ESCENAS_CON_CAJAS + [ESCENA]:
 		var escena := FileAccess.get_file_as_string(ruta)
 		assert_str(escena).is_not_empty()
@@ -330,23 +328,13 @@ static func _nombres_de_las_cajas() -> Array[String]:
 
 
 ## Filtra pixelado como el resto del arte: el material es el de la caja genérica con otra
-## textura, y la textura se importa con los mismos parámetros que la de la genérica, comprimida
-## y con mipmaps. El mismo material es también el mismo shader: en la web un shader nuevo se
-## compila en la pantalla de carga.
-##
-## **El lado tope es el único parámetro que cambia**, y no pasa el de la genérica. Las etiquetas
-## viajan a 512 como las de la góndola. Medido: a 1024 el `.pck` de la web crecía 12,7 MiB, a 512
-## crece 3,2, y la caja en la mano se ve igual.
+## textura, y la textura se importa comprimida y con mipmaps. El mismo material es también el
+## mismo shader: en la web un shader nuevo se compila en la pantalla de carga.
 ##
 ## Y no va como `material_override`: el calentamiento de shaders dibuja uno por cuadro, y con
 ## las 31 cajas pasaba de 129 cuadros a 159 sin compilar nada nuevo.
 func test_la_etiqueta_filtra_pixelado_como_la_caja_generica() -> void:
-	var generica := ConfigFile.new()
-	assert_int(generica.load(GENERICA + ".import")).is_equal(OK)
-	var gondola: Texture2D = load(ETIQUETA_DE_LA_GONDOLA)
-	var lado_de_la_gondola := maxi(gondola.get_width(), gondola.get_height())
-	assert_int(lado_de_la_gondola).is_less(generica.get_value("params", LADO_TOPE))
-	for id: Producto.Id in CON_ETIQUETA_PROPIA:
+	for id: Producto.Id in ORIGEN_DE_CADA_ETIQUETA:
 		var caja := _caja_armada(id)
 		var material := _material(caja)
 		(
@@ -363,7 +351,10 @@ func test_la_etiqueta_filtra_pixelado_como_la_caja_generica() -> void:
 		for propiedad: Dictionary in propio.get_property_list():
 			var nombre: String = propiedad["name"]
 			var uso: int = propiedad["usage"]
-			var propia_de_la_copia := nombre == "albedo_texture" or nombre.begins_with("resource_")
+			var propia_de_la_copia := (
+				nombre in ["albedo_texture", "uv1_scale", "uv1_offset"]
+				or nombre.begins_with("resource_")
+			)
 			if uso & PROPERTY_USAGE_STORAGE == 0 or propia_de_la_copia:
 				continue
 			(
@@ -371,31 +362,24 @@ func test_la_etiqueta_filtra_pixelado_como_la_caja_generica() -> void:
 				. override_failure_message("%s cambia `%s`" % [_nombre(id), nombre])
 				. is_equal(propio.get(nombre))
 			)
-		var suya := ConfigFile.new()
-		assert_int(suya.load(_ruta_de_la_etiqueta(id) + ".import")).is_equal(OK)
-		for clave: String in generica.get_section_keys("params"):
-			if clave == LADO_TOPE:
-				continue
-			(
-				assert_that(suya.get_value("params", clave))
-				. override_failure_message("%s importa `%s` distinto" % [_nombre(id), clave])
-				. is_equal(generica.get_value("params", clave))
-			)
-		# Un lado tope en cero es sin tope: Godot importa la textura entera, de 2084 px. Y quedar
-		# por debajo de la genérica no alcanza: a 1024 el `.pck` crece 12,7 MiB.
-		(
-			assert_int(suya.get_value("params", LADO_TOPE))
-			. override_failure_message(
-				"%s no viaja con el lado de las etiquetas de la góndola" % _nombre(id)
-			)
-			. is_equal(lado_de_la_gondola)
-		)
+
+
+## El atlas se importa comprimido y con mipmaps, y sin tope de lado: un tope lo achicaría.
+func test_el_atlas_se_importa_comprimido_con_mipmaps_y_sin_tope() -> void:
+	var archivos := _atlas_de_cajas()
+	assert_int(archivos.size()).is_greater(0)
+	for archivo: String in archivos:
+		var importacion := ConfigFile.new()
+		assert_int(importacion.load(CARPETA_DEL_ATLAS + archivo + ".import")).is_equal(OK)
+		assert_int(importacion.get_value("params", "compress/mode")).is_equal(2)
+		assert_bool(importacion.get_value("params", "mipmaps/generate")).is_true()
+		assert_int(importacion.get_value("params", "process/size_limit")).is_equal(0)
 
 
 ## El arte puede corregirse sin conservar sus bytes originales. La correspondencia entre
 ## producto y material se ejerce en los otros casos; acá se comprueba que la imagen se decodifica.
 func test_cada_etiqueta_contiene_una_imagen_valida() -> void:
-	for id: Producto.Id in CON_ETIQUETA_PROPIA + DEL_ENVASE:
+	for id: Producto.Id in ORIGEN_DE_CADA_ETIQUETA.keys() + DEL_ENVASE:
 		var imagen := Image.new()
 		var bytes := FileAccess.get_file_as_bytes(_ruta_de_la_etiqueta(id))
 		(
@@ -411,7 +395,9 @@ func test_cada_etiqueta_contiene_una_imagen_valida() -> void:
 ## de Linux y en la web.
 func test_las_etiquetas_tienen_nombres_en_ascii() -> void:
 	var ascii := RegEx.create_from_string("^[a-z0-9_]+(\\.[a-z]+)+$")
-	var archivos := DirAccess.get_files_at(ETIQUETAS)
+	var archivos := Array(DirAccess.get_files_at(ETIQUETAS)).filter(
+		func(archivo: String) -> bool: return archivo.ends_with(".png")
+	)
 	assert_int(archivos.size()).is_greater(0)
 	for archivo: String in archivos:
 		(
@@ -441,9 +427,36 @@ func _nombre(id: Producto.Id) -> String:
 	return Catalogo.de(id).nombre
 
 
+func _nombre_del_png(id: Producto.Id) -> String:
+	return NOMBRES_DISTINTOS_DEL_ID.get(id, (Producto.Id.keys()[id] as String).to_lower())
+
+
+func _reparto() -> Dictionary:
+	return (load(REPARTO) as JSON).data
+
+
+func _atlas_de_cajas() -> Array[String]:
+	var archivos: Array[String] = []
+	for archivo: String in _reparto()["atlas"]:
+		archivos.append(archivo)
+	return archivos
+
+
+## El rectángulo, en píxeles del atlas, que el reparto asigna a un producto. Los nombres de los
+## PNG salen de la lista de la suite y no de la tabla del script que viste cada caja.
+func _rectangulo_esperado(reparto: Dictionary, id: Producto.Id) -> Rect2:
+	var rect: Array = reparto["cajas"][_nombre_del_png(id)]["rect"]
+	return Rect2(rect[0], rect[1], rect[2], rect[3])
+
+
+## Lo que muestra un material de caja, en píxeles de su textura: dónde empieza y cuánto abarca.
+func _rectangulo_que_muestra(material: BaseMaterial3D) -> Rect2:
+	var tamano := Vector2(material.albedo_texture.get_size())
+	var desplazamiento := Vector2(material.uv1_offset.x, material.uv1_offset.y)
+	var escala := Vector2(material.uv1_scale.x, material.uv1_scale.y)
+	return Rect2(desplazamiento * tamano, escala * tamano)
+
+
 ## Las rutas esperadas son independientes de la tabla del script que viste cada caja.
 func _ruta_de_la_etiqueta(id: Producto.Id) -> String:
-	var nombre: String = NOMBRES_DISTINTOS_DEL_ID.get(
-		id, (Producto.Id.keys()[id] as String).to_lower()
-	)
-	return ETIQUETAS + nombre + ".png"
+	return ETIQUETAS + _nombre_del_png(id) + ".png"

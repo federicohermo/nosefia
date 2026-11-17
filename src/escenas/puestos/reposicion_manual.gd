@@ -321,17 +321,19 @@ func _desatascar_lo_soltado(nodo: Node3D) -> void:
 		unidad.global_position += atras * paso
 
 
-## Conserva orientación y escala de la unidad, sin añadir formas a la simulación.
+## Conserva orientación y escala de la unidad, sin añadir formas a la simulación. La reserva es la
+## de cada pieza del mueble, no la caja que las envuelve a todas.
 func _ocupa_una_reserva(forma: CollisionShape3D) -> bool:
 	var volumen := LimitesDeForma.de(forma.shape)
 	for cuerpo: PhysicsBody3D in muebles_con_reserva:
 		var malla := cuerpo.get_parent() as MeshInstance3D
 		if malla == null or malla.mesh == null:
 			continue
-		if ReservaDeLaGondola.se_superponen(
-			volumen, forma.global_transform, malla.get_aabb(), malla.global_transform
-		):
-			return true
+		for pieza: AABB in PiezasDeUnMueble.de_la_malla(malla.mesh):
+			if ReservaDeLaGondola.se_superponen(
+				volumen, forma.global_transform, pieza, malla.global_transform
+			):
+				return true
 	return false
 
 
@@ -1455,6 +1457,8 @@ func _material_de_la_gondola(original: BaseMaterial3D) -> ShaderMaterial:
 	material.shader = PRODUCTO
 	material.set_shader_parameter("color", original.albedo_color)
 	material.set_shader_parameter("textura", original.albedo_texture)
+	material.set_shader_parameter("escala_uv", original.uv1_scale)
+	material.set_shader_parameter("desplazamiento_uv", original.uv1_offset)
 	material.set_shader_parameter("rugosidad", original.roughness)
 	material.set_shader_parameter("metalico", original.metallic)
 	material.set_shader_parameter("especular", original.metallic_specular)

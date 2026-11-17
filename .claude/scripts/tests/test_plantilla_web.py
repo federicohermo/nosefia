@@ -1,5 +1,6 @@
 """La caché y la exportación deben conservar la plantilla elegida, sin fallback oficial."""
 
+import contextlib
 import hashlib
 import importlib.util
 import io
@@ -442,8 +443,10 @@ class PlantillaWebTest(unittest.TestCase):
             with self.subTest(otro=otro):
                 with patch.object(sys, "argv", ["preparar", "--descargar", *otro]):
                     with patch.object(plantilla, "preparar") as preparar:
-                        with self.assertRaises(SystemExit):
-                            plantilla.main()
+                        # argparse imprime el motivo en stderr: no es un rojo, lo callamos.
+                        with contextlib.redirect_stderr(io.StringIO()):
+                            with self.assertRaises(SystemExit):
+                                plantilla.main()
                 preparar.assert_not_called()
 
     def test_la_receta_del_repo_declara_una_sola_plantilla_publicada(self):

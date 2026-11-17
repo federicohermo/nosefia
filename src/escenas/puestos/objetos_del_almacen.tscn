@@ -106,7 +106,7 @@ gi_mode = 2
 
 [node name="BolsaDeBasura1" parent="." instance=ExtResource("29_bolsa")]
 datos = ExtResource("26_bolsa1")
-transform = Transform3D(1.000000000,0.000000000,0.000000000,0.000000000,1.000000000,0.000000000,0.000000000,0.000000000,1.000000000,7.364315300,1.275648410,4.839459635)
+transform = Transform3D(1.000000000,0.000000000,0.000000000,0.000000000,1.000000000,0.000000000,0.000000000,0.000000000,1.000000000,7.364315300,1.275648170,4.496500035)
 
 [node name="BolsaDeBasura2" parent="." instance=ExtResource("29_bolsa")]
 datos = ExtResource("27_bolsa2")

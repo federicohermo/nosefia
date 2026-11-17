@@ -49,6 +49,7 @@ func _preparar() -> void:
 		if original.resource_name.begins_with("util_fibra"):
 			pintura.shader = FIBRAS
 			pintura.set_shader_parameter("color_de_fibra", original.albedo_color)
+			pintura.set_shader_parameter("textura", original.albedo_texture)
 			_pinturas.append(pintura)
 			contorno.shader = CONTORNO_DEL_UTIL
 			contorno.set_shader_parameter("deformacion", 0)
@@ -56,6 +57,7 @@ func _preparar() -> void:
 		elif original.resource_name in ["util_plastico_azul", "util_asa_grafito"]:
 			pintura.shader = CABEZA
 			pintura.set_shader_parameter("color_plastico", original.albedo_color)
+			pintura.set_shader_parameter("textura", original.albedo_texture)
 			pintura.set_shader_parameter("rugosidad", original.roughness)
 			_rigidas.append(pintura)
 			contorno.shader = CONTORNO_DEL_UTIL

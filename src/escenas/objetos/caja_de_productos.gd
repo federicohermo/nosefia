@@ -23,46 +23,50 @@ signal contacto_recibido(nodo: Node3D, rapidez: float)
 ## Qué tamaño lleva cada producto lo dice el catálogo; cuánto mide cada tamaño es de la escena.
 const MEDIA_CAJA := {Catalogo.TamanoDeCaja.CHICA: 0.2, Catalogo.TamanoDeCaja.GRANDE: 0.3037077}
 
-## La etiqueta de cada producto. Las primeras las dibujó el artista; las que siguen a Terminator
-## son su misma caja con el logo del envase en tinta, porque no había arte. Agregar la de un
-## producto es una línea: su copia va a `assets/boxes/`, con el `Producto.Id` en minúsculas.
+## La etiqueta de cada producto, por el nombre de su PNG. Las primeras las dibujó el artista; las
+## que siguen a Terminator son su misma caja con el logo del envase en tinta, porque no había
+## arte. Agregar la de un producto es una línea acá y su copia en `assets/source/boxes/`, con
+## el nombre en ASCII: el del artista lleva acentos, y «Ó» se escribe distinto en cada sistema
+## de archivos.
 ##
-## **Las copias existen porque `source/` no se importa.** El nombre en ASCII es a propósito: el
-## del artista lleva acentos, y «Ó» se escribe distinto en cada sistema de archivos.
+## **Las etiquetas viajan en un atlas.** `armar_atlas.py` las junta, y `atlas_de_cajas.json`
+## dice en qué rectángulo cae cada una. Sin ese reparto una caja no sabe qué dibujar.
 const ETIQUETAS := {
-	Producto.Id.ACTRONCITO: preload("res://assets/boxes/actroncito.png"),
-	Producto.Id.DUREXTRA: preload("res://assets/boxes/durextra.png"),
-	Producto.Id.BURBALOO: preload("res://assets/boxes/burbaloo.png"),
-	Producto.Id.ZUCARACHAS: preload("res://assets/boxes/zucarachas.png"),
-	Producto.Id.LAYSNNT: preload("res://assets/boxes/laysntt.png"),
-	Producto.Id.JORGILLO: preload("res://assets/boxes/jorgillo.png"),
-	Producto.Id.FROT_LUPS: preload("res://assets/boxes/frotlups.png"),
-	Producto.Id.AMARGADITO: preload("res://assets/boxes/amargadito.png"),
-	Producto.Id.CINDOLOR: preload("res://assets/boxes/cindolor.png"),
-	Producto.Id.FLIM_POF: preload("res://assets/boxes/flinpuf.png"),
-	Producto.Id.DON_SATURADOS: preload("res://assets/boxes/donsaturados.png"),
-	Producto.Id.PETISAS: preload("res://assets/boxes/petisas.png"),
-	Producto.Id.MACUMBAS: preload("res://assets/boxes/macumbas.png"),
-	Producto.Id.COSA_DE_MANI: preload("res://assets/boxes/cosa_de_mani.png"),
-	Producto.Id.DURONGA: preload("res://assets/boxes/duronga.png"),
-	Producto.Id.FERNET_GOD: preload("res://assets/boxes/fernet_god.png"),
-	Producto.Id.MAYONCHIS: preload("res://assets/boxes/mayonchis.png"),
-	Producto.Id.OAAAA: preload("res://assets/boxes/oaaaa.png"),
-	Producto.Id.TERMINATOR: preload("res://assets/boxes/terminator.png"),
-	Producto.Id.MALBARDO: preload("res://assets/boxes/malbardo.png"),
-	Producto.Id.PROGRES: preload("res://assets/boxes/prongles.png"),
-	Producto.Id.ARVECOR: preload("res://assets/boxes/arvejas.png"),
-	Producto.Id.CHISITOS: preload("res://assets/boxes/chisitos.png"),
-	Producto.Id.OREMOS: preload("res://assets/boxes/oremos.png"),
-	Producto.Id.PEPITO: preload("res://assets/boxes/pepitos.png"),
-	Producto.Id.SALADICK: preload("res://assets/boxes/saladik.png"),
-	Producto.Id.UAKALAS: preload("res://assets/boxes/uakas.png"),
-	Producto.Id.PURA_COLA: preload("res://assets/boxes/coracola.png"),
-	Producto.Id.MAROLINI: preload("res://assets/boxes/marolini.png"),
-	Producto.Id.MARRANOS: preload("res://assets/boxes/marranos.png"),
-	Producto.Id.FEEL_RICKY_FORT: preload("res://assets/boxes/feel_ricky_fort.png"),
-	Producto.Id.POETICO: preload("res://assets/boxes/poetico.png"),
+	Producto.Id.ACTRONCITO: "actroncito",
+	Producto.Id.DUREXTRA: "durextra",
+	Producto.Id.BURBALOO: "burbaloo",
+	Producto.Id.ZUCARACHAS: "zucarachas",
+	Producto.Id.LAYSNNT: "laysntt",
+	Producto.Id.JORGILLO: "jorgillo",
+	Producto.Id.FROT_LUPS: "frotlups",
+	Producto.Id.AMARGADITO: "amargadito",
+	Producto.Id.CINDOLOR: "cindolor",
+	Producto.Id.FLIM_POF: "flinpuf",
+	Producto.Id.DON_SATURADOS: "donsaturados",
+	Producto.Id.PETISAS: "petisas",
+	Producto.Id.MACUMBAS: "macumbas",
+	Producto.Id.COSA_DE_MANI: "cosa_de_mani",
+	Producto.Id.DURONGA: "duronga",
+	Producto.Id.FERNET_GOD: "fernet_god",
+	Producto.Id.MAYONCHIS: "mayonchis",
+	Producto.Id.OAAAA: "oaaaa",
+	Producto.Id.TERMINATOR: "terminator",
+	Producto.Id.MALBARDO: "malbardo",
+	Producto.Id.PROGRES: "prongles",
+	Producto.Id.ARVECOR: "arvejas",
+	Producto.Id.CHISITOS: "chisitos",
+	Producto.Id.OREMOS: "oremos",
+	Producto.Id.PEPITO: "pepitos",
+	Producto.Id.SALADICK: "saladik",
+	Producto.Id.UAKALAS: "uakas",
+	Producto.Id.PURA_COLA: "coracola",
+	Producto.Id.MAROLINI: "marolini",
+	Producto.Id.MARRANOS: "marranos",
+	Producto.Id.FEEL_RICKY_FORT: "feel_ricky_fort",
+	Producto.Id.POETICO: "poetico",
 }
+
+const RUTA_DEL_REPARTO := "res://assets/boxes/atlas_de_cajas.json"
 
 @export var producto: Producto.Id = Producto.Id.ACTRONCITO
 @export var datos: ObjetoDelAlmacen
@@ -103,8 +107,9 @@ func _notification(que: int) -> void:
 			malla.set_surface_override_material(0, null)
 
 
-## Viste la malla con la etiqueta de su producto: el material de la caja genérica con otra
-## textura. Así filtra pixelado igual, y en la web usa el mismo shader, que ya está compilado.
+## Viste la malla con la etiqueta de su producto: el material de la caja genérica, con el atlas
+## como textura y el rectángulo de su producto como escala y desplazamiento de la UV. Así filtra
+## pixelado igual, y en la web usa el mismo shader, que ya está compilado.
 ##
 ## Va como material de la superficie y no como `material_override`, que el calentamiento de
 ## shaders dibuja de a uno por cuadro. Medido: treinta cuadros más, y ningún shader nuevo.
@@ -115,8 +120,24 @@ func _ponerse_su_etiqueta() -> void:
 	var malla: MeshInstance3D = get_node("Malla")
 	var generico := malla.mesh.surface_get_material(0) as BaseMaterial3D
 	var rotulado := generico.duplicate() as BaseMaterial3D
-	rotulado.albedo_texture = ETIQUETAS.get(producto, generico.albedo_texture)
+	var reparto := _reparto()
+	var etiqueta: Dictionary = reparto.get("cajas", {}).get(ETIQUETAS.get(producto, ""), {})
+	if not etiqueta.is_empty():
+		var atlas: String = etiqueta["atlas"]
+		var tamano: Array = reparto["atlas"][atlas]
+		var rect: Array = etiqueta["rect"]
+		rotulado.albedo_texture = load("res://assets/boxes/" + atlas)
+		rotulado.uv1_scale = Vector3(rect[2] / float(tamano[0]), rect[3] / float(tamano[1]), 1.0)
+		rotulado.uv1_offset = Vector3(rect[0] / float(tamano[0]), rect[1] / float(tamano[1]), 0.0)
 	malla.set_surface_override_material(0, rotulado)
+
+
+## Dónde cae la etiqueta de cada caja. Sin el atlas armado no hay reparto, y la caja queda con la
+## textura genérica en vez de tirar el juego: `test_atlas_al_dia.py` es quien exige el atlas.
+static func _reparto() -> Dictionary:
+	if not ResourceLoader.exists(RUTA_DEL_REPARTO):
+		return {}
+	return (load(RUTA_DEL_REPARTO) as JSON).data
 
 
 func es_grande() -> bool:
