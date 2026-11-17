@@ -110,8 +110,8 @@ En Linux sin pantalla ni GPU anda con Xvfb y el Vulkan por software de Mesa; el 
 el encabezado. El error de OpenGL que obliga a hornear con Vulkan es el
 [reporte 94407 de Godot](https://github.com/godotengine/godot/issues/94407).
 
-**El horneado con luz repara sus líneas solo.** El horneado sin luz no: después de
-`--sin-luz` se reparan a mano:
+**Los dos horneados reparan sus líneas solos.** `hornear.py` llama al reparador después de cada
+horneado, sin un paso a mano. También se puede correr suelto:
 
 ```bash
 blender --background --python-exit-code 1     --python .claude/scripts/blender/reparar_lineas_del_mapa_de_luz.py -- --aplicar
@@ -194,12 +194,21 @@ las sondas de los productos.
   copia del editor, no guarda la escena y deja el `.lmbake`, el `.exr` y su `.import`. Se
   commitean. Hay que volver a correrlo cuando cambia el modelo, una luz o el `LightmapGI`, igual
   que el horneado con luz.
+- **El atlas viaja con 1024 px de lado, no con los 2048 que deja el horneador.** Es una imagen casi
+  negra: con 2048 px pesaba 16,8 MB en el export, y con 1024 px pesa 4,2 MB. Sin eso, el export web
+  pasaba el techo de 150 MiB. `hornear.py --sin-luz` lo reduce solo, **después** de reparar las
+  líneas: la huella que reconoce el reparador es de un texel, y al promediar bloques de 2 por 2 se
+  repartiría entre dos. El lado es `LADO_DEL_ATLAS_SIN_LUZ`, en `lib/horneado.py`, y el paso
+  es `blender/reducir_mapa_de_luz.py`. **El horneado con luz no se reduce.** El costo: el borde
+  entre dos piezas vecinas del atlas pierde la mitad de su margen, y una pieza que toma luz de su
+  vecina la mezcla un poco más.
 
 ## Qué lo verifica
 
 `test/escenas/apoyo_del_horneado_test.gd` y `test/escenas/mezcla_de_horneados_test.gd`: de qué
 caras salen los obstáculos y cómo se mezclan los dos atlas. `test_horneado.py` y `test_hornear.py`:
 el nivel, el orden de los pasos y que un horneado a medias deje los archivos como estaban.
+`test_reducir_mapa_de_luz.py`: que el atlas se reduzca por bloques, sin mezclar capas.
 
 `test/escenas/iluminacion_horneada_test.gd`: que el `LightmapGI` tenga datos, y que ninguna
 malla con GI estático se haya quedado afuera del horneado. También que ninguna hoja que abre

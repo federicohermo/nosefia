@@ -17,6 +17,12 @@ SALIDAS = ("src/escenas/almacen.lmbake", "src/escenas/almacen.exr")
 #: al cortarse la luz.
 SALIDAS_SIN_LUZ = ("src/escenas/almacen_sin_luz.lmbake", "src/escenas/almacen_sin_luz.exr")
 
+#: El lado, en píxeles, de cada capa del atlas de la noche del corte. El horneador lo deja en el
+#: doble, y `hornear.py` lo reduce después de reparar sus líneas. Es una imagen casi negra: con
+#: este lado pesa un cuarto, y la luz que le queda a la vista no cambia. Medido el 2026-11-17: 16,8
+#: MB contra 4,2 MB, y el export web bajó de 150,8 a 138,8 MiB. El horneado con luz no se reduce.
+LADO_DEL_ATLAS_SIN_LUZ = 1024
+
 #: Lo que el editor lee del entorno para saber qué horneado hace. Sin ella, el de siempre.
 VARIABLE_DE_LA_VARIANTE = "HORNEAR_VARIANTE"
 VARIANTE_SIN_LUZ = "sin_luz"
@@ -78,6 +84,14 @@ def comando_de_la_reparacion(blender: str, script: str, atlas: list[str]) -> lis
     return [
         blender, "--background", "--python-exit-code", "1",
         "--python", script, "--", "--aplicar", *atlas,
+    ]  # fmt: skip
+
+
+def comando_de_la_reduccion(blender: str, script: str, atlas: list[str], lado: int) -> list[str]:
+    """Cómo se lanza Blender para llevar cada atlas al lado pedido, en su lugar."""
+    return [
+        blender, "--background", "--python-exit-code", "1",
+        "--python", script, "--", "--aplicar", "--lado", str(lado), *atlas,
     ]  # fmt: skip
 
 
