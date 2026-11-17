@@ -25,6 +25,12 @@ const FILTRO_LINEAL: Array[String] = [
 	# frente se veía en franjas.
 	"bano_porcelana",
 ]
+## Vienen con una sola cara. El motor genera un shader por cada combinación de caras: con las dos
+## comparten el de los demás materiales, y ningún lado deja de verse.
+const LATERALES_DEL_EXHIBIDOR: Array[String] = ["EXHIBIDOR | Lateral", "EXHIBIDOR | Lateral Pepito"]
+## Sin detalle ni emisión, estos materiales generan sus propios programas. Con un detalle blanco y
+## una emisión negra comparten los de las paredes pintadas y el techo, y la imagen no cambia.
+const CON_LOS_PROGRAMAS_DE_LAS_PAREDES: Array[String] = ["bano_pared_clara", "bano_porcelana"]
 ## Las piezas de las jambas toman la luz de las sondas y de las luces en tiempo real, y salen más
 ## claras que la pared horneada que tienen al lado: 1,6 veces en el portón y en el cuartito de
 ## limpieza. Con este tinte tienen el mismo brillo.
@@ -62,6 +68,8 @@ func _post_import(escena: Node) -> Object:
 	var bloques_de_las_piezas: BaseMaterial3D = null
 	var madera_de_la_compuerta: BaseMaterial3D = null
 	var panel_de_las_cabinas: BaseMaterial3D = null
+	var negro := textura_de_un_texel(Color.BLACK)
+	var blanco := textura_de_un_texel(Color.WHITE)
 	for malla: MeshInstance3D in escena.find_children("*", "MeshInstance3D", true, false):
 		if str(malla.name).begins_with("puerta_heladera_"):
 			malla.gi_mode = GeometryInstance3D.GI_MODE_DYNAMIC
@@ -96,6 +104,9 @@ func _post_import(escena: Node) -> Object:
 			var material := malla.mesh.surface_get_material(i) as BaseMaterial3D
 			if material != null:
 				material.texture_filter = BaseMaterial3D.TEXTURE_FILTER_NEAREST_WITH_MIPMAPS
+				# El motor genera un shader por cada modo de repetición. Con las UV dentro de la textura,
+				# repetirla o sujetarla da el mismo dibujo.
+				material.texture_repeat = true
 				if (
 					material.resource_name
 					in [
@@ -110,6 +121,8 @@ func _post_import(escena: Node) -> Object:
 					# Un separador mide menos que un texel del mapa de luz y se horneaba negro.
 					# Toma la luz de las sondas, como los productos que tiene encima.
 					malla.gi_mode = GeometryInstance3D.GI_MODE_DYNAMIC
+				if material.resource_name in LATERALES_DEL_EXHIBIDOR:
+					material.cull_mode = BaseMaterial3D.CULL_DISABLED
 				if material.resource_name == "local_ceramica":
 					# El piso satinado recoge reflejos difusos sin convertirse en un espejo.
 					material.roughness = 0.34
@@ -160,6 +173,15 @@ func _post_import(escena: Node) -> Object:
 					material.uv2_triplanar = true
 					material.uv2_world_triplanar = true
 					material.uv2_scale = Vector3.ONE / METROS_DE_LA_VARIACION
+					apagar_la_emision(material, negro)
+				if material.resource_name in CON_LOS_PROGRAMAS_DE_LAS_PAREDES:
+					material.detail_enabled = true
+					material.detail_blend_mode = BaseMaterial3D.BLEND_MODE_MUL
+					material.detail_uv_layer = BaseMaterial3D.DETAIL_UV_2
+					material.detail_albedo = blanco
+					material.uv2_triplanar = true
+					material.uv2_world_triplanar = true
+					apagar_la_emision(material, negro)
 				if material.resource_name == TECHO:
 					material.detail_enabled = true
 					material.detail_blend_mode = BaseMaterial3D.BLEND_MODE_MUL
@@ -194,3 +216,19 @@ func _post_import(escena: Node) -> Object:
 								)
 							malla.set_surface_override_material(i, bloques_de_las_piezas)
 	return escena
+
+
+func textura_de_un_texel(color: Color) -> ImageTexture:
+	var imagen := Image.create_empty(1, 1, false, Image.FORMAT_RGBA8)
+	imagen.fill(color)
+	return ImageTexture.create_from_image(imagen)
+
+
+## El techo emite y las paredes no, y el motor genera un shader por cada combinación de emisión. Con
+## una emisión negra, multiplicada por una textura, un material comparte los programas del techo y
+## emite cero.
+func apagar_la_emision(material: BaseMaterial3D, negro: ImageTexture) -> void:
+	material.emission_enabled = true
+	material.emission_operator = BaseMaterial3D.EMISSION_OP_MULTIPLY
+	material.emission = Color.BLACK
+	material.emission_texture = negro
