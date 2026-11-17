@@ -193,6 +193,5 @@ common/physics_interpolation=true
 [rendering]
 
 renderer/rendering_method="gl_compatibility"
-anti_aliasing/quality/msaa_3d=1
 reflections/reflection_atlas/reflection_count.web=5
 web/area_lights_need_parallel_link=true

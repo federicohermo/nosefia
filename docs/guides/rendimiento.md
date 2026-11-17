@@ -253,12 +253,34 @@ actuales.
 
 ## El suavizado de bordes
 
-El 3D del juego usa MSAA 2× (`anti_aliasing/quality/msaa_3d=1`). Compatibility admite MSAA 3D y
-SSAA. No tiene FXAA, SMAA ni TAA. Los `SubViewport` del celular, del ticket y del agua del baño
-no lo heredan: cada uno declara el suyo.
+El 3D del juego no usa MSAA: `project.godot` no declara `anti_aliasing/quality/msaa_3d`. El pase del
+bloom suaviza los bordes de la imagen por brillo, al estilo de FXAA, en el mismo pase que ya lee
+la pantalla. No suma un pase, una copia de pantalla ni un shader. Compatibility no trae FXAA,
+SMAA ni TAA propios.
 
-Un shader que lee la profundidad (`hint_depth_texture`) suma un blit de profundidad por cuadro
-mientras MSAA esté prendido. Para sacar ese costo hay que apagar MSAA o quitar la lectura.
+- **El mando** es `suavizado` en `bloom_del_almacen.gdshader`, de 0 a 1. En 0 el pase no lee ni un
+  vecino más y dibuja como antes. El halo del bloom se calcula sobre la imagen sin suavizar.
+- **Por qué no MSAA.** Un shader que lee la profundidad (`hint_depth_texture`) obliga, con MSAA
+  prendido, a resolverla en cada cuadro. El pase de oclusión la lee. Medido el 2026-11-16 en la
+  web (Chrome, RTX 4050, tiempo de GPU por cuadro):
+
+  | Variante | 1280×720 | 2560×1440 |
+  |---|---|---|
+  | Sin MSAA, sin oclusión | 1,6 a 1,9 ms | 2,9 a 3,5 ms |
+  | Sólo oclusión | 1,5 a 1,9 ms | 4,1 a 5,4 ms |
+  | Sólo MSAA | 1,8 a 2,2 ms | 3,6 a 4,2 ms |
+  | MSAA 2× y oclusión | 6,1 a 6,7 ms | 16,8 a 18,5 ms |
+
+  Con las dos cosas juntas, el blit de profundidad pesa 4,0 de los 6,8 ms. Para sacar ese costo
+  hay que apagar MSAA o quitar la lectura de profundidad. La oclusión no se quita.
+- **Qué no cubre.** El suavizado vive en el pase del bloom, que es un `CanvasLayer` de
+  `ambiente_del_almacen.tscn`. Todo lo que se dibuja en la ventana principal lo recibe. Los
+  `SubViewport` del celular, del ticket y del agua del baño no dibujan 3D (`disable_3d`), así que
+  no hay nada que suavizar ahí. El menú de inicio no tiene 3D. Ninguna escena 3D del juego se
+  dibuja sin el pase del bloom.
+- **Qué no hace.** Sin profundidad, el suavizado sólo ve brillo: un borde de color con el mismo
+  brillo de los dos lados no se suaviza. Tampoco distingue un borde de geometría de uno pintado en
+  una textura.
 
 ## Medición del 2026-10-05
 
