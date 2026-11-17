@@ -33,6 +33,11 @@ guarda la escena: `almacen.tscn` queda como estaba. El juego cambia los datos de
 por éstos al cortarse la luz de la séptima noche. Qué se apaga lo dice `corte_de_luz.gd`, y es lo
 mismo que el juego apaga al cortar.
 
+El horneador deja ese atlas en 2048 px de lado por capa. Después de reparar sus líneas, el script
+lo reduce a `LADO_DEL_ATLAS_SIN_LUZ` (`blender/reducir_mapa_de_luz.py`): es una imagen casi negra y
+pesa un cuarto. El horneado con luz no se reduce. Si algo falla, el `.lmbake`, el `.exr` y su
+`.import` quedan como estaban.
+
 ## Cómo se prende el plugin
 
 Escribiendo `project.godot` con el plugin como único prendido, y devolviéndolo byte por byte al
@@ -49,7 +54,8 @@ tenía antes, salvo las salidas y el `.import` del atlas. El detalle y la medici
 
 ## Qué hace falta
 
-- `GODOT_BIN`, la misma que usa `verificar.py`. Con `--sin-luz` no hace falta Blender.
+- `GODOT_BIN`, la misma que usa `verificar.py`, y `BLENDER_BIN` o Blender en su lugar de siempre:
+  los dos horneados reparan sus atlas con él, y el de sin luz también los reduce.
 - **El editor del repo cerrado.** Dos editores sobre el mismo proyecto se pisan la caché.
 - Una sesión con pantalla: el editor abre una ventana. El horneado no anda headless.
 - Una GPU con Vulkan: el editor de horneado usa Mobile para evitar la textura nula del
@@ -79,6 +85,7 @@ from lib import blender as lib_blender  # noqa: E402
 from lib.godot import como_declararlo, resolver  # noqa: E402
 from lib.horneado import (  # noqa: E402
     INTERMEDIOS_DEL_APOYO,
+    LADO_DEL_ATLAS_SIN_LUZ,
     NIVEL_DE_APOYO,
     SALIDAS,
     SALIDAS_QUE_SE_DEVUELVEN,
@@ -86,6 +93,7 @@ from lib.horneado import (  # noqa: E402
     VARIANTE_CON_APOYO,
     VARIANTE_SIN_LUZ,
     comando_de_la_mezcla,
+    comando_de_la_reduccion,
     comando_de_la_reparacion,
     con_apoyo,
     entorno_de,
@@ -99,6 +107,7 @@ from lib.repo import RAIZ  # noqa: E402
 
 PROJECT = Path(RAIZ) / "project.godot"
 REPARADOR = Path(RAIZ) / ".claude/scripts/blender/reparar_lineas_del_mapa_de_luz.py"
+REDUCTOR = Path(RAIZ) / ".claude/scripts/blender/reducir_mapa_de_luz.py"
 
 
 class Fallo(Exception):
@@ -227,6 +236,20 @@ def reparar_lineas(blender: str, atlas: list[str]) -> None:
         raise Fallo("no pude reparar las líneas de " + ", ".join(atlas) + "\n" + corrida.stderr)
 
 
+def reducir_atlas(blender: str, atlas: list[str], lado: int) -> None:
+    """Lleva cada atlas a `lado` px por capa, en su lugar. Ver el reductor."""
+    corrida = subprocess.run(
+        comando_de_la_reduccion(blender, str(REDUCTOR), [str(Path(RAIZ) / a) for a in atlas], lado),
+        capture_output=True,
+        text=True,
+        encoding="utf-8",
+        errors="replace",
+    )
+    print(corrida.stdout.strip())
+    if corrida.returncode != 0:
+        raise Fallo("no pude reducir " + ", ".join(atlas) + "\n" + corrida.stderr)
+
+
 def mezclar_atlas(godot: str, nivel: float) -> None:
     """Mezcla el atlas del horneado con obstáculos en el de siempre, que es el resultado."""
     corrida = subprocess.run(
@@ -262,18 +285,28 @@ def hornear_con_luz(godot: str, blender: str) -> None:
     reparar_lineas(blender, [atlas])
 
 
+def hornear_sin_luz(godot: str, blender: str) -> None:
+    """El horneado de la noche del corte: el local sin luz, con sus líneas reparadas y reducido.
+
+    Se reduce después de reparar, nunca antes: el reparador reconoce una línea por su huella de un
+    texel, y al promediar bloques de 2 por 2 esa huella se reparte entre dos texeles.
+    """
+    atlas = SALIDAS_SIN_LUZ[1]
+    sesion_del_editor(godot, VARIANTE_SIN_LUZ, SALIDAS_SIN_LUZ)
+    reparar_lineas(blender, [atlas])
+    reducir_atlas(blender, [atlas], LADO_DEL_ATLAS_SIN_LUZ)
+
+
 def main(argumentos: list[str] | None = None) -> int:
     sin_luz = "--sin-luz" in (sys.argv[1:] if argumentos is None else argumentos)
     godot, _ = resolver(dict(os.environ))
     if godot is None:
         print(como_declararlo(dict(os.environ)))
         return 2
-    blender = None
-    if not sin_luz:
-        blender, _ = lib_blender.resolver(dict(os.environ))
-        if blender is None:
-            print(lib_blender.como_declararlo(dict(os.environ)))
-            return 2
+    blender, _ = lib_blender.resolver(dict(os.environ))
+    if blender is None:
+        print(lib_blender.como_declararlo(dict(os.environ)))
+        return 2
 
     if os.name == "nt":
         procesos = subprocess.run(
@@ -293,7 +326,7 @@ def main(argumentos: list[str] | None = None) -> int:
     respaldo = guardar_salidas(raiz, SALIDAS_QUE_SE_DEVUELVEN)
     try:
         if sin_luz:
-            sesion_del_editor(godot, VARIANTE_SIN_LUZ, SALIDAS_SIN_LUZ)
+            hornear_sin_luz(godot, blender)
         else:
             hornear_con_luz(godot, blender)
     except Fallo as fallo:
