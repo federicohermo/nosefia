@@ -110,7 +110,8 @@ En Linux sin pantalla ni GPU anda con Xvfb y el Vulkan por software de Mesa; el 
 el encabezado. El error de OpenGL que obliga a hornear con Vulkan es el
 [reporte 94407 de Godot](https://github.com/godotengine/godot/issues/94407).
 
-**Después de cada horneado, con luz o sin luz, se reparan sus líneas:**
+**El horneado con luz repara sus líneas solo.** El horneado sin luz no: después de
+`--sin-luz` se reparan a mano:
 
 ```bash
 blender --background --python-exit-code 1     --python .claude/scripts/blender/reparar_lineas_del_mapa_de_luz.py -- --aplicar
@@ -131,6 +132,35 @@ Los mandos:
   Evita que el filtrado del lightmap dibuje una franja verde al pie de la pared del depósito;
 - la escala del texel de una malla chica (`gi_lightmap_texel_scale`), en
   `estructura_del_almacen.tscn`.
+
+## La sombra de apoyo
+
+Las góndolas son chapas finas y sus estantes de abajo quedan abiertos al pasillo. La luz entra
+por ahí, y el piso al pie del mueble se hornea tan claro como el del pasillo: el mueble parece
+flotar. Para oscurecerlo, el horneado con luz usa **obstáculos**: volúmenes que sólo existen
+mientras se hornea. No están en `almacen.tscn`, ni en el `.lmbake`, ni en el juego.
+
+- **De dónde salen.** De las mallas de las góndolas que la escena tiene al hornear
+  (`addons/hornear/apoyo.gd`). Bajo cada estante que queda a menos de 30 cm del piso, un volumen
+  del piso hasta su cara de abajo. No hay una tabla de coordenadas: si una góndola se mueve y se
+  vuelve a hornear, su sombra la sigue. Los productos de exhibición, los portaprecios, los
+  separadores finos, las mesas y las sillas no entran.
+- **Por qué sólo durante el horneado.** Un obstáculo en la escena taparía la luz de lo que toma las
+  sondas, y los productos se verían distintos. Las sondas del `.lmbake` son las del horneado sin
+  obstáculos: la mercadería no cambia de brillo.
+- **Cómo se aplica.** `hornear.py` hornea dos veces: el local de siempre y el mismo con
+  obstáculos. Del segundo sólo se toma el atlas. `addons/hornear/mezclar_horneados.gd` lo mezcla
+  con el primero, pieza por pieza, porque cada horneado ubica las mallas en el atlas a su manera.
+  El resultado reemplaza a `almacen.exr`. El `.lmbake` es el del primero.
+- **Dónde está el nivel.** `NIVEL_DE_APOYO`, en `lib/horneado.py`: de 0 a 1. Con 0 el atlas es el
+  horneado de siempre y no hay segundo horneado. Con 1 es el horneado con obstáculos entero, que al
+  usuario le pareció demasiado oscuro. Hoy vale el nivel que eligió jugando una build de prueba.
+- **Qué no se commitea.** El segundo horneado (`almacen_con_apoyo.*`) lo borra el script al
+  terminar, también si falla. Si algo falla a mitad de camino, `almacen.lmbake` y `almacen.exr`
+  quedan como estaban.
+- **Cada atlas se repara antes de mezclarlos**, y el resultado se repara de nuevo. Una raya
+  mezclada deja de valer la mitad de sus vecinas y el reparador ya no la ve.
+- **El horneado de la noche del corte de luz no cambia:** se hornea sin obstáculos.
 
 ## El horneado de la noche del corte de luz
 
@@ -166,6 +196,10 @@ las sondas de los productos.
   que el horneado con luz.
 
 ## Qué lo verifica
+
+`test/escenas/apoyo_del_horneado_test.gd` y `test/escenas/mezcla_de_horneados_test.gd`: de qué
+caras salen los obstáculos y cómo se mezclan los dos atlas. `test_horneado.py` y `test_hornear.py`:
+el nivel, el orden de los pasos y que un horneado a medias deje los archivos como estaban.
 
 `test/escenas/iluminacion_horneada_test.gd`: que el `LightmapGI` tenga datos, y que ninguna
 malla con GI estático se haya quedado afuera del horneado. También que ninguna hoja que abre
