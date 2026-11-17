@@ -195,12 +195,12 @@ las sondas de los productos.
   commitean. Hay que volver a correrlo cuando cambia el modelo, una luz o el `LightmapGI`, igual
   que el horneado con luz.
 - **El atlas viaja con 1024 px de lado, no con los 2048 que deja el horneador.** Es una imagen casi
-  negra: con 2048 px pesaba 16,8 MB en el export, y con 1024 px pesa 4,2 MB. Sin eso, el export web
+  negra. Con 2048 px pesaba 16,8 MB en el export, y con 1024 px pesa 4,2 MB. Sin eso, el export web
   pasaba el techo de 150 MiB. `hornear.py --sin-luz` lo reduce solo, **después** de reparar las
-  líneas: la huella que reconoce el reparador es de un texel, y al promediar bloques de 2 por 2 se
-  repartiría entre dos. El lado es `LADO_DEL_ATLAS_SIN_LUZ`, en `lib/horneado.py`, y el paso
-  es `blender/reducir_mapa_de_luz.py`. **El horneado con luz no se reduce.** El costo: el borde
-  entre dos piezas vecinas del atlas pierde la mitad de su margen, y una pieza que toma luz de su
+  líneas. El reparador reconoce una línea por su huella de un texel. Al promediar bloques de 2 por 2
+  esa huella se repartiría entre dos. El lado es `LADO_DEL_ATLAS_SIN_LUZ`, en `lib/horneado.py`. El
+  paso es `blender/reducir_mapa_de_luz.py`. **El horneado con luz no se reduce.** El costo: el borde
+  entre dos piezas vecinas del atlas pierde la mitad de su margen. Una pieza que toma luz de su
   vecina la mezcla un poco más.
 
 ## Qué lo verifica
