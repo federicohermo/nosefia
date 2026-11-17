@@ -21,6 +21,24 @@ SALIDAS_SIN_LUZ = ("src/escenas/almacen_sin_luz.lmbake", "src/escenas/almacen_si
 VARIABLE_DE_LA_VARIANTE = "HORNEAR_VARIANTE"
 VARIANTE_SIN_LUZ = "sin_luz"
 
+#: Cuánto pesa en el atlas final el horneado con obstáculos, de 0 a 1. Con 0 el atlas es el
+#: horneado de siempre; con 1, el horneado con obstáculos entero. Lo eligió el usuario jugando una
+#: build de prueba el 2026-11-16: con 1 el piso le pareció demasiado oscuro.
+NIVEL_DE_APOYO = 0.75
+
+#: El horneado con obstáculos: el mismo local con volúmenes que sólo existen mientras se hornea,
+#: para que el piso se oscurezca bajo las góndolas. Su atlas se mezcla con el de siempre y no se
+#: commitea: `hornear.py` lo borra al terminar.
+VARIANTE_CON_APOYO = "con_apoyo"
+
+#: Lo que deja el horneado con obstáculos, relativo a la raíz. Son archivos de paso: no entran a
+#: `reescritos_de_mas` porque no están rastreados, y `hornear.py` los borra siempre.
+INTERMEDIOS_DEL_APOYO = (
+    "src/escenas/almacen_con_apoyo.lmbake",
+    "src/escenas/almacen_con_apoyo.exr",
+    "src/escenas/almacen_con_apoyo.exr.import",
+)
+
 # El atlas cambia de número de capas al variar la densidad o activar luz direccional.
 # Restaurar su .import deja una caché válida acá, pero otra máquina corta mal el EXR.
 METADATOS_DEL_ATLAS = tuple(
@@ -28,9 +46,57 @@ METADATOS_DEL_ATLAS = tuple(
 )
 
 
+#: Lo que el horneado con luz reescribe, y lo que `hornear.py` devuelve si falla a mitad de
+#: camino: las salidas y el `.import` del atlas, que dice en cuántas capas se corta.
+SALIDAS_QUE_SE_DEVUELVEN = (*SALIDAS, SALIDAS[1] + ".import")
+
+
 def salidas_de(sin_luz: bool) -> tuple[str, ...]:
     """Lo que deja el horneado pedido."""
     return SALIDAS_SIN_LUZ if sin_luz else SALIDAS
+
+
+def con_apoyo(nivel: float) -> bool:
+    """Si hace falta el horneado con obstáculos: con nivel 0 el atlas ya es el final."""
+    if not 0.0 <= nivel <= 1.0:
+        raise ValueError("el nivel del apoyo va de 0 a 1, y llegó %r" % nivel)
+    return nivel > 0.0
+
+
+def entorno_de(entorno: dict[str, str], variante: str) -> dict[str, str]:
+    """El entorno con el que el editor hornea la variante pedida. Sin variante, el de siempre."""
+    return {**entorno, VARIABLE_DE_LA_VARIANTE: variante} if variante else dict(entorno)
+
+
+def comando_de_la_reparacion(blender: str, script: str, atlas: list[str]) -> list[str]:
+    """Cómo se lanza Blender para reparar las líneas de media luz de unos atlas, en su lugar."""
+    return [
+        blender, "--background", "--python-exit-code", "1",
+        "--python", script, "--", "--aplicar", *atlas,
+    ]  # fmt: skip
+
+
+def comando_de_la_mezcla(godot: str, raiz: str, nivel: float) -> list[str]:
+    """Cómo se lanza Godot para mezclar el atlas del horneado con obstáculos en el de siempre."""
+    return [
+        godot, "--headless", "--path", raiz,
+        "-s", "res://addons/hornear/mezclar_horneados.gd", "--", *argumentos_de_la_mezcla(nivel),
+    ]  # fmt: skip
+
+
+def argumentos_de_la_mezcla(nivel: float) -> list[str]:
+    """Los argumentos de `addons/hornear/mezclar_horneados.gd`, que mezcla los dos atlas.
+
+    El atlas de siempre es la base y el resultado: se reescribe en su lugar, con la disposición
+    de piezas que ya tiene su `.lmbake`. Del horneado con obstáculos sólo salen las luces.
+    """
+    return [
+        "res://" + SALIDAS[0],
+        "res://" + SALIDAS[1],
+        "res://" + INTERMEDIOS_DEL_APOYO[0],
+        "res://" + INTERMEDIOS_DEL_APOYO[1],
+        repr(float(nivel)),
+    ]
 
 _LISTA = re.compile(r"^enabled=PackedStringArray\(.*\)$", re.MULTILINE)
 

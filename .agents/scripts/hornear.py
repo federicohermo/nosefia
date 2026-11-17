@@ -11,6 +11,20 @@ el botón, guarda y cierra; acá se lee el veredicto. Se corre cada vez que camb
 luz, y lo que deja —el `.lmbake`, el `.exr` y su `.import`, al lado de `almacen.tscn`— se
 commitea.
 
+## La sombra de apoyo
+
+El horneado con luz hornea dos veces. El primero es el local de siempre, y de ahí salen el
+`.lmbake` y las sondas. El segundo suma, sólo mientras se hornea, unos volúmenes bajo los
+estantes de las góndolas (`addons/hornear/apoyo.gd`), y de ahí sale sólo el atlas: el piso se
+oscurece al pie del mueble. `addons/hornear/mezclar_horneados.gd` mezcla los dos atlas con el
+nivel `NIVEL_DE_APOYO` y deja el resultado en `almacen.exr`. El segundo horneado no se commitea:
+el script lo borra, también si falla. Si algo falla a mitad de camino, `almacen.lmbake` y
+`almacen.exr` quedan como estaban y el script sale con código 1.
+
+Cada atlas se repara con Blender antes de mezclarlos
+(`blender/reparar_lineas_del_mapa_de_luz.py`), y el resultado se repara otra vez. Hace falta
+`BLENDER_BIN`, la misma que usan los otros scripts. Con el nivel en 0 no hay segundo horneado.
+
 ## El horneado sin luz
 
 `--sin-luz` hornea el mismo local con todas sus luces apagadas salvo la de emergencia del panel,
@@ -35,7 +49,7 @@ tenía antes, salvo las salidas y el `.import` del atlas. El detalle y la medici
 
 ## Qué hace falta
 
-- `GODOT_BIN`, la misma que usa `verificar.py`.
+- `GODOT_BIN`, la misma que usa `verificar.py`. Con `--sin-luz` no hace falta Blender.
 - **El editor del repo cerrado.** Dos editores sobre el mismo proyecto se pisan la caché.
 - Una sesión con pantalla: el editor abre una ventana. El horneado no anda headless.
 - Una GPU con Vulkan: el editor de horneado usa Mobile para evitar la textura nula del
@@ -61,13 +75,22 @@ from lib.consola import configurar  # noqa: E402
 
 configurar()
 
+from lib import blender as lib_blender  # noqa: E402
 from lib.godot import como_declararlo, resolver  # noqa: E402
 from lib.horneado import (  # noqa: E402
-    VARIABLE_DE_LA_VARIANTE,
+    INTERMEDIOS_DEL_APOYO,
+    NIVEL_DE_APOYO,
+    SALIDAS,
+    SALIDAS_QUE_SE_DEVUELVEN,
+    SALIDAS_SIN_LUZ,
+    VARIANTE_CON_APOYO,
     VARIANTE_SIN_LUZ,
+    comando_de_la_mezcla,
+    comando_de_la_reparacion,
+    con_apoyo,
+    entorno_de,
     project_con_el_plugin,
     reescritos_de_mas,
-    salidas_de,
     sesion_bloqueada,
     tope_en_segundos,
     veredicto,
@@ -75,6 +98,11 @@ from lib.horneado import (  # noqa: E402
 from lib.repo import RAIZ  # noqa: E402
 
 PROJECT = Path(RAIZ) / "project.godot"
+REPARADOR = Path(RAIZ) / ".claude/scripts/blender/reparar_lineas_del_mapa_de_luz.py"
+
+
+class Fallo(Exception):
+    """Un paso del horneado no salió: el motivo es el mensaje."""
 
 
 def _git(raiz: Path, *argumentos: str) -> str:
@@ -123,27 +151,37 @@ def devolver_lo_reescrito(raiz: Path, desde: float, previos: dict[str, bytes]) -
     return devueltos
 
 
-def main(argumentos: list[str] | None = None) -> int:
-    sin_luz = "--sin-luz" in (sys.argv[1:] if argumentos is None else argumentos)
-    godot, _ = resolver(dict(os.environ))
-    if godot is None:
-        print(como_declararlo(dict(os.environ)))
-        return 2
+def guardar_salidas(raiz: Path, rutas: tuple[str, ...]) -> dict[str, bytes | None]:
+    """Lo que hay en cada ruta antes de hornear, o `None` si no existía."""
+    return {r: (raiz / r).read_bytes() if (raiz / r).is_file() else None for r in rutas}
 
-    if os.name == "nt":
-        procesos = subprocess.run(
-            ["tasklist", "/fo", "csv"],
-            capture_output=True,
-            text=True,
-            encoding="utf-8",
-            errors="replace",
-        ).stdout
-        if sesion_bloqueada(procesos):
-            print("la sesión de Windows está bloqueada: el editor no hornea sin pantalla")
-            return 2
 
+def devolver_salidas(raiz: Path, respaldo: dict[str, bytes | None]) -> None:
+    """Deja cada ruta como estaba antes de hornear."""
+    for ruta, contenido in respaldo.items():
+        if contenido is None:
+            (raiz / ruta).unlink(missing_ok=True)
+        else:
+            (raiz / ruta).write_bytes(contenido)
+
+
+def borrar_intermedios(raiz: Path) -> None:
+    """Los archivos de paso del horneado con obstáculos no se quedan en `src/`."""
+    for ruta in INTERMEDIOS_DEL_APOYO:
+        (raiz / ruta).unlink(missing_ok=True)
+
+
+def _escribi(raiz: Path, rutas: tuple[str, ...], desde: float) -> dict[str, bool]:
+    return {r: (raiz / r).exists() and (raiz / r).stat().st_mtime >= desde for r in rutas}
+
+
+def sesion_del_editor(godot: str, variante: str, salidas: tuple[str, ...]) -> None:
+    """Abre el editor con el plugin, que hornea la variante pedida y cierra.
+
+    El `project.godot` vuelve a lo que tenía pase lo que pase. Falla si el editor no cerró bien o
+    no escribió cada salida.
+    """
     tope = tope_en_segundos(dict(os.environ))
-    previos = sucios(Path(RAIZ))
     desde = time.time()
     original = PROJECT.read_bytes()
     PROJECT.write_text(project_con_el_plugin(original.decode("utf-8")), encoding="utf-8")
@@ -159,25 +197,114 @@ def main(argumentos: list[str] | None = None) -> int:
             encoding="utf-8",
             errors="replace",
             timeout=tope,
-            env={**os.environ, VARIABLE_DE_LA_VARIANTE: VARIANTE_SIN_LUZ} if sin_luz else None,
+            env=entorno_de(dict(os.environ), variante),
         )
     except subprocess.TimeoutExpired:
-        print(f"el editor no cerró en {tope // 60} minutos")
-        return 1
+        raise Fallo(f"el editor no cerró en {tope // 60} minutos") from None
     finally:
         PROJECT.write_bytes(original)
-        devolver_lo_reescrito(Path(RAIZ), desde, previos)
 
     for linea in (corrida.stdout + corrida.stderr).splitlines():
         if "[hornear]" in linea:
             print(linea.strip())
-    actualizados = {
-        salida: (Path(RAIZ) / salida).exists() and (Path(RAIZ) / salida).stat().st_mtime >= desde
-        for salida in salidas_de(sin_luz)
-    }
-    ok, motivo = veredicto(corrida.returncode, actualizados)
+    ok, motivo = veredicto(corrida.returncode, _escribi(Path(RAIZ), salidas, desde))
     print(motivo)
-    return 0 if ok else 1
+    if not ok:
+        raise Fallo(motivo)
+
+
+def reparar_lineas(blender: str, atlas: list[str]) -> None:
+    """Repara las rayas de un texel de cada atlas, en su lugar. Ver el reparador."""
+    corrida = subprocess.run(
+        comando_de_la_reparacion(blender, str(REPARADOR), [str(Path(RAIZ) / a) for a in atlas]),
+        capture_output=True,
+        text=True,
+        encoding="utf-8",
+        errors="replace",
+    )
+    print(corrida.stdout.strip())
+    if corrida.returncode != 0:
+        raise Fallo("no pude reparar las líneas de " + ", ".join(atlas) + "\n" + corrida.stderr)
+
+
+def mezclar_atlas(godot: str, nivel: float) -> None:
+    """Mezcla el atlas del horneado con obstáculos en el de siempre, que es el resultado."""
+    corrida = subprocess.run(
+        comando_de_la_mezcla(godot, RAIZ, nivel),
+        capture_output=True,
+        text=True,
+        encoding="utf-8",
+        errors="replace",
+    )
+    for linea in (corrida.stdout + corrida.stderr).splitlines():
+        if "[mezclar]" in linea:
+            print(linea.strip())
+    if corrida.returncode != 0:
+        raise Fallo("la mezcla de los atlas salió con código %d" % corrida.returncode)
+
+
+def hornear_con_luz(godot: str, blender: str) -> None:
+    """El horneado que el juego carga: el local con luz y, encima, la sombra de apoyo.
+
+    Hornea el local de siempre, y la mezcla le suma la sombra de un segundo horneado con
+    obstáculos (`addons/hornear/apoyo.gd`): sólo el atlas, con el nivel de `NIVEL_DE_APOYO`. Las
+    sondas son las del primero. Las rayas de un texel se reparan en cada atlas antes de
+    mezclarlos, porque una raya mezclada deja de ser de media luz y el reparador no la ve.
+    """
+    atlas = SALIDAS[1]
+    sesion_del_editor(godot, "", SALIDAS)
+    reparar_lineas(blender, [atlas])
+    if not con_apoyo(NIVEL_DE_APOYO):
+        return
+    sesion_del_editor(godot, VARIANTE_CON_APOYO, INTERMEDIOS_DEL_APOYO[:2])
+    reparar_lineas(blender, [INTERMEDIOS_DEL_APOYO[1]])
+    mezclar_atlas(godot, NIVEL_DE_APOYO)
+    reparar_lineas(blender, [atlas])
+
+
+def main(argumentos: list[str] | None = None) -> int:
+    sin_luz = "--sin-luz" in (sys.argv[1:] if argumentos is None else argumentos)
+    godot, _ = resolver(dict(os.environ))
+    if godot is None:
+        print(como_declararlo(dict(os.environ)))
+        return 2
+    blender = None
+    if not sin_luz:
+        blender, _ = lib_blender.resolver(dict(os.environ))
+        if blender is None:
+            print(lib_blender.como_declararlo(dict(os.environ)))
+            return 2
+
+    if os.name == "nt":
+        procesos = subprocess.run(
+            ["tasklist", "/fo", "csv"],
+            capture_output=True,
+            text=True,
+            encoding="utf-8",
+            errors="replace",
+        ).stdout
+        if sesion_bloqueada(procesos):
+            print("la sesión de Windows está bloqueada: el editor no hornea sin pantalla")
+            return 2
+
+    raiz = Path(RAIZ)
+    previos = sucios(raiz)
+    desde = time.time()
+    respaldo = guardar_salidas(raiz, (*SALIDAS_QUE_SE_DEVUELVEN, *SALIDAS_SIN_LUZ))
+    try:
+        if sin_luz:
+            sesion_del_editor(godot, VARIANTE_SIN_LUZ, SALIDAS_SIN_LUZ)
+        else:
+            hornear_con_luz(godot, blender)
+    except Fallo as fallo:
+        # Un horneado a medias no se queda: los archivos vuelven a como estaban.
+        devolver_salidas(raiz, respaldo)
+        print(fallo)
+        return 1
+    finally:
+        borrar_intermedios(raiz)
+        devolver_lo_reescrito(raiz, desde, previos)
+    return 0
 
 
 if __name__ == "__main__":
