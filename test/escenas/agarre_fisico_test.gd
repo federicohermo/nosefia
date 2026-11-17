@@ -28,8 +28,10 @@ func test_soltar_hacia_la_gondola_deja_el_producto_visible_y_recuperable() -> vo
 		var distancia := DISTANCIA_A_LA_CABECERA if lado.de_cabecera else DISTANCIA_AL_COSTADO
 		var pie := LadosDelMueble.pie_junto_a(malla, lado, distancia)
 		if not LadosDelMueble.cabe_parado(almacen, pie):
+			await _cerrar(almacen)
 			continue
 		if lado.de_cabecera and probados[clase] > 0:
+			await _cerrar(almacen)
 			continue
 		probados[clase] += 1
 		var centro := LadosDelMueble.pieza(malla).get_center()
@@ -84,14 +86,21 @@ func test_soltar_hacia_la_gondola_deja_el_producto_visible_y_recuperable() -> vo
 			assert_bool(agarre.pedir_agarrar(cuerpo.datos, cuerpo)).is_true()
 			almacen.get("_reposicion_manual").pedir_colocar(producto.id)
 			camara.look_at(destino)
-		almacen.queue_free()
-		await get_tree().process_frame
+		await _cerrar(almacen)
 	# Una góndola contra la pared no tiene por qué dejar lugar junto a sus cabeceras.
 	(
 		assert_int(probados["costado"] + probados["cabecera"])
 		. override_failure_message("ninguna cara de la góndola tiene lugar para pararse")
 		. is_greater(0)
 	)
+
+
+## Saca el almacén del árbol antes de armar el de la cara siguiente. Dos almacenes vivos comparten
+## el mundo físico y se pisan: con el de una cara salteada todavía en pie, un producto soltado en la
+## cara siguiente se apoyaba en el piso y a los dos cuadros lo atravesaba.
+func _cerrar(almacen: Node3D) -> void:
+	almacen.queue_free()
+	await get_tree().process_frame
 
 
 func test_la_bolsa_sostenida_no_desplaza_al_jugador() -> void:

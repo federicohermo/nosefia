@@ -39,7 +39,7 @@ const ANIMACIONES := {
 
 ## El hueco de la pared desde el puesto, con los bordes metidos en la pared. Su cara de adentro cae
 ## donde termina el local: lo frenado no llega a apoyarse en el marco, que ya cuenta como afuera.
-const VOLUMEN_DEL_HUECO := AABB(Vector3(-0.75, -0.05, -0.1), Vector3(1.5, 1.5, 0.1))
+const VOLUMEN_DEL_HUECO := AABB(Vector3(-0.75, -0.05, -0.1), Vector3(1.5, 1.44, 0.1))
 
 @export var jugador: JugadorDelLocal
 @export var reloj: RelojDelTurno

@@ -251,6 +251,15 @@ actuales.
 - El caché de Chrome puede reducir la espera, pero no reemplaza al calentamiento. Una
   actualización del navegador o del driver puede invalidarlo.
 
+## El suavizado de bordes
+
+El 3D del juego usa MSAA 2× (`anti_aliasing/quality/msaa_3d=1`). Compatibility admite MSAA 3D y
+SSAA. No tiene FXAA, SMAA ni TAA. Los `SubViewport` del celular, del ticket y del agua del baño
+no lo heredan: cada uno declara el suyo.
+
+Un shader que lee la profundidad (`hint_depth_texture`) suma un blit de profundidad por cuadro
+mientras MSAA esté prendido. Para sacar ese costo hay que apagar MSAA o quitar la lectura.
+
 ## Medición del 2026-10-05
 
 Comparación del export anterior con el export que comparte shaders de contornos, agua y

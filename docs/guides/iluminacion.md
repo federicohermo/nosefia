@@ -110,6 +110,18 @@ En Linux sin pantalla ni GPU anda con Xvfb y el Vulkan por software de Mesa; el 
 el encabezado. El error de OpenGL que obliga a hornear con Vulkan es el
 [reporte 94407 de Godot](https://github.com/godotengine/godot/issues/94407).
 
+**Después de cada horneado, con luz o sin luz, se reparan sus líneas:**
+
+```bash
+blender --background --python-exit-code 1     --python .claude/scripts/blender/reparar_lineas_del_mapa_de_luz.py -- --aplicar
+```
+
+El horneador deja, en una fila o una columna del atlas, texeles con la mitad de la luz de sus
+vecinos. En el local es una raya oscura de 5 cm sobre una pared o cruzando el cielorraso. Cambia
+de lugar cada vez que cambia la malla del edificio, y volver a hornear no la saca. **La causa no
+está identificada**: el script corrige el resultado e imprime qué reparó. Sin `--aplicar` sólo
+informa, y si el horneado no trae líneas no escribe nada. Qué mide y cómo guarda, en su encabezado.
+
 Los mandos:
 
 - la energía de cada luz, en su escena;

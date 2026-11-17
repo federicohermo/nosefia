@@ -8,6 +8,8 @@ tanda de un producto ausente la ocupa el producto que le asigna `REEMPLAZOS`, co
 toma su frente y su piso, y copia el giro, la separación y las filas de una tanda real suya.
 
 Un estante que queda con un solo producto se reparte de punta a punta, con una separación pareja.
+Si el mueble tiene un divisor entre dos tandas, cada una se queda en su hueco: repartidas de punta
+a punta, una unidad caía sobre el divisor.
 Sigue siendo una tanda por columna: la principal conserva sus casilleros.
 """
 
@@ -19,6 +21,7 @@ from pathlib import Path
 
 import bpy  # type: ignore[import-not-found]  # sólo existe adentro de Blender
 from mathutils import Matrix, Vector  # type: ignore[import-not-found]
+from mathutils.bvhtree import BVHTree  # type: ignore[import-not-found]
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 sys.path.insert(0, str(Path(__file__).resolve().parent))
@@ -26,7 +29,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 import disponer  # noqa: E402
 from lib.consola import configurar  # noqa: E402
 from lib.gondola import AIRE, escribir_disposicion, separar_filas  # noqa: E402
-from lib.reparto import PRODUCTOS, partes, producto  # noqa: E402
+from lib.reparto import MUEBLES, PRODUCTOS, partes, producto  # noqa: E402
 from lib.reparto_de_prueba import (  # noqa: E402
     AIRE_MINIMO, CARAS, REEMPLAZOS, bases_del_contenido, cuantas_entran, paso_parejo, presentes,
     repartir_columnas, validar_identidades_de_prueba,
@@ -132,8 +135,36 @@ def _copias_en(clave, columnas):
     return salida
 
 
+def _arbol_del_mueble(letra):
+    """La malla del mueble como se ve, con sus modificadores, en coordenadas del mundo."""
+    objeto = bpy.data.objects[MUEBLES[letra]]
+    malla = objeto.evaluated_get(bpy.context.evaluated_depsgraph_get()).to_mesh()
+    return BVHTree.FromPolygons(
+        [objeto.matrix_world @ v.co for v in malla.vertices],
+        [list(p.vertices) for p in malla.polygons],
+    )
+
+
+def hay_un_divisor(arbol, tramo, de_un_lado, del_otro):
+    """Si el mueble pasa entre dos tandas vecinas, a media altura y a medio fondo de sus unidades."""
+    def caja(copias):
+        puntos = [c.matrix_world @ v.co for c in copias for v in c.data.vertices]
+        return [(min(p.dot(e) for p in puntos), max(p.dot(e) for p in puntos))
+                for e in (tramo.u, tramo.v, tramo.normal)]
+
+    (_, fin), fondo, alto = caja(de_un_lado)
+    (inicio, _), _, _ = caja(del_otro)
+    if inicio <= fin:
+        return False
+    desde = (tramo.u * fin + tramo.v * (fondo[0] + fondo[1]) / 2
+             + tramo.normal * (alto[0] + alto[1]) / 2)
+    return arbol.ray_cast(desde, tramo.u, inicio - fin)[0] is not None
+
+
 def emparejar(tandas, temporales):
-    """Un estante con el mismo producto en todas sus columnas se reparte de punta a punta."""
+    """Un estante con el mismo producto en todas sus columnas se reparte de punta a punta, salvo
+    que un divisor del mueble separe sus tandas."""
+    arboles = {}
     por_estante = {}
     for clave in tandas:
         por_estante.setdefault(clave.split("/")[0], []).append(clave)
@@ -145,6 +176,13 @@ def emparejar(tandas, temporales):
         tramo = Tramo(todas)
         claves.sort(key=lambda c: min(
             o.matrix_world.translation.dot(tramo.u) for o in tandas[c][2]))
+        letra = partes(estante)[0]
+        if letra not in arboles:
+            arboles[letra] = _arbol_del_mueble(letra)
+        if any(hay_un_divisor(arboles[letra], tramo, tandas[a][2], tandas[b][2])
+               for a, b in zip(claves, claves[1:])):
+            print(f"{estante}: {nuevo} queda en sus huecos, hay un divisor entre las tandas")
+            continue
         columnas = columnas_de(todas, tandas[claves[0]][2], parejo=True, aire=AIRE_MINIMO)
         frentes = [len(_adelante(tandas[c][2])) for c in claves]
         desde = 0

@@ -39,6 +39,7 @@ const CABLEADOS_DE_LA_RAIZ := ["_hud", "_reloj", "_ciclo", "_manija_del_balde"]
 
 ## La malla que trae la cáscara del edificio. Los rayos de acá miran sólo contra ella.
 const CASCARA_DEL_EDIFICIO := "almacen"
+const CIERRE_DE_LA_CASCARA := &"cierre_de_la_cascara"
 
 ## Dónde estaba el hueco de la ventanilla en el blockout que el modelo reemplazó. Está acá para
 ## que el caso que ejerce la regla tenga un punto que **no** es un hueco, y que sea uno real en vez
@@ -110,7 +111,11 @@ static func _descendientes(nodo: Node) -> Array[Node]:
 ## que choca contra una góndola diría que la pared está cerrada, y el caso pasaría por el motivo
 ## equivocado.
 static func _apagar_todo_menos_la_cascara(nodo: Node) -> void:
-	if nodo is StaticBody3D and nodo.get_parent().name != CASCARA_DEL_EDIFICIO:
+	# Un paño fijo cierra un hueco de la cáscara aunque no sea parte de su malla.
+	var es_de_la_cascara: bool = (
+		nodo.get_parent().name == CASCARA_DEL_EDIFICIO or nodo.is_in_group(CIERRE_DE_LA_CASCARA)
+	)
+	if nodo is StaticBody3D and not es_de_la_cascara:
 		(nodo as StaticBody3D).collision_layer = 0
 	for hijo in nodo.get_children():
 		_apagar_todo_menos_la_cascara(hijo)

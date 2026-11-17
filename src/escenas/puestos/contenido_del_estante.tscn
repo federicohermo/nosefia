@@ -244,7 +244,7 @@ metadata/frente_del_modelo = Vector3(-0.9535, 0, -0.3015)
 metadata/producto_id = 25
 
 [node name="Mayonchis" type="MeshInstance3D" parent="."]
-transform = Transform3D(0, 0, 0.842105, 0, 0.710632, 0, -0.615404, 0, 0, -0.737839, 1.18947, -7.126006)
+transform = Transform3D(0, 0, 0.842105, 0, 0.710632, 0, -0.615404, 0, 0, -0.696, 1.18947, -7.126006)
 visible = false
 mesh = ExtResource("malla26")
 gi_mode = 2
