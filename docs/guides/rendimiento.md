@@ -271,10 +271,12 @@ SMAA ni TAA propios.
   | Sólo MSAA | 1,8 a 2,2 ms | 3,6 a 4,2 ms |
   | MSAA 2× y oclusión | 6,1 a 6,7 ms | 16,8 a 18,5 ms |
 
-  Con las dos cosas juntas, el blit de profundidad pesa 4,0 de los 6,8 ms. Para sacar ese costo
-  hay que apagar MSAA o quitar la lectura de profundidad. La oclusión no se quita.
-- **Qué no cubre.** El suavizado vive en el pase del bloom, que es un `CanvasLayer` de
-  `ambiente_del_almacen.tscn`. Todo lo que se dibuja en la ventana principal lo recibe. Los
+  Con las dos cosas juntas, casi todo el sobrecosto es el blit de profundidad. Lo mide el PR #959
+  frente a su base. Para sacar ese costo hay que apagar MSAA o quitar la lectura de profundidad.
+  La oclusión no se quita.
+- **Qué no cubre.** El suavizado vive en el pase del bloom, un `CanvasLayer` con `layer = 0` que
+  declara `bloom_del_almacen.tscn`. Lo recibe todo el 3D de la ventana principal. La interfaz se
+  dibuja en capas por encima y queda fuera del pase. Los
   `SubViewport` del celular, del ticket y del agua del baño no dibujan 3D (`disable_3d`), así que
   no hay nada que suavizar ahí. El menú de inicio no tiene 3D. Ninguna escena 3D del juego se
   dibuja sin el pase del bloom.
