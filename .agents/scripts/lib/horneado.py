@@ -46,9 +46,14 @@ METADATOS_DEL_ATLAS = tuple(
 )
 
 
-#: Lo que el horneado con luz reescribe, y lo que `hornear.py` devuelve si falla a mitad de
-#: camino: las salidas y el `.import` del atlas, que dice en cuántas capas se corta.
-SALIDAS_QUE_SE_DEVUELVEN = (*SALIDAS, SALIDAS[1] + ".import")
+#: Lo que el horneado reescribe, y lo que `hornear.py` devuelve si falla a mitad de camino: las
+#: salidas de los dos horneados y el `.import` de cada atlas, que dice en cuántas capas se corta.
+SALIDAS_QUE_SE_DEVUELVEN = (
+    *SALIDAS,
+    SALIDAS[1] + ".import",
+    *SALIDAS_SIN_LUZ,
+    SALIDAS_SIN_LUZ[1] + ".import",
+)
 
 
 def salidas_de(sin_luz: bool) -> tuple[str, ...]:

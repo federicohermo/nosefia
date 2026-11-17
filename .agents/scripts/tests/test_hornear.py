@@ -14,7 +14,12 @@ from pathlib import Path
 from unittest import mock
 
 import hornear
-from lib.horneado import INTERMEDIOS_DEL_APOYO, SALIDAS, SALIDAS_QUE_SE_DEVUELVEN
+from lib.horneado import (
+    INTERMEDIOS_DEL_APOYO,
+    SALIDAS,
+    SALIDAS_QUE_SE_DEVUELVEN,
+    SALIDAS_SIN_LUZ,
+)
 
 #: Las texturas del modelo llevan acentos en el nombre, y cada una tiene su `.import` rastreado.
 CON_ACENTO = "assets/models/textura portón.png.import"
@@ -111,7 +116,7 @@ class HorneadoConLuz(unittest.TestCase):
     def setUp(self) -> None:
         self.repo = Path(tempfile.mkdtemp(prefix="hornear_")).resolve()
         self.addCleanup(shutil.rmtree, self.repo, True)
-        for ruta in (*SALIDAS_QUE_SE_DEVUELVEN, "sucio.tres"):
+        for ruta in (*SALIDAS_QUE_SE_DEVUELVEN, SALIDAS_SIN_LUZ[1] + ".import", "sucio.tres"):
             self._escribir(ruta, "de git\n")
         subprocess.run(["git", "init", "-q"], cwd=self.repo, check=True)
         subprocess.run(["git", "add", "."], cwd=self.repo, check=True)
@@ -186,6 +191,22 @@ class HorneadoConLuz(unittest.TestCase):
         self.assertNotEqual(self._main_con_un_paso_que_falla(), 0)
         for ruta in SALIDAS_QUE_SE_DEVUELVEN:
             self.assertEqual(self._leer(ruta), "de git\n")
+
+    def test_si_el_horneado_sin_luz_falla_el_import_de_su_atlas_queda_como_estaba(self) -> None:
+        importado = SALIDAS_SIN_LUZ[1] + ".import"
+
+        def sesion_a_medias(godot: str, variante: str, salidas: tuple[str, ...]) -> None:
+            self._escribir(importado, "a medias\n")
+            raise hornear.Fallo("el editor se cayó")
+
+        with (
+            mock.patch.object(hornear, "RAIZ", str(self.repo)),
+            mock.patch.object(hornear, "resolver", lambda entorno: ("godot", None)),
+            mock.patch.object(hornear, "sesion_bloqueada", lambda procesos: False),
+            mock.patch.object(hornear, "sesion_del_editor", sesion_a_medias),
+        ):
+            self.assertNotEqual(hornear.main(["--sin-luz"]), 0)
+        self.assertEqual(self._leer(importado), "de git\n")
 
     def test_si_un_paso_falla_no_quedan_archivos_intermedios(self) -> None:
         self._main_con_un_paso_que_falla()

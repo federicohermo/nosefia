@@ -290,7 +290,7 @@ def main(argumentos: list[str] | None = None) -> int:
     raiz = Path(RAIZ)
     previos = sucios(raiz)
     desde = time.time()
-    respaldo = guardar_salidas(raiz, (*SALIDAS_QUE_SE_DEVUELVEN, *SALIDAS_SIN_LUZ))
+    respaldo = guardar_salidas(raiz, SALIDAS_QUE_SE_DEVUELVEN)
     try:
         if sin_luz:
             sesion_del_editor(godot, VARIANTE_SIN_LUZ, SALIDAS_SIN_LUZ)
