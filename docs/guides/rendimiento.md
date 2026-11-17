@@ -253,13 +253,47 @@ actuales.
 
 ## El suavizado de bordes
 
-El 3D del juego no usa MSAA: `project.godot` no declara `anti_aliasing/quality/msaa_3d`. El pase del
-bloom suaviza los bordes de la imagen por brillo, al estilo de FXAA, en el mismo pase que ya lee
-la pantalla. No suma un pase, una copia de pantalla ni un shader. Compatibility no trae FXAA,
-SMAA ni TAA propios.
+El 3D del juego no usa MSAA: `project.godot` no declara `anti_aliasing/quality/msaa_3d`. El pase
+de oclusión suaviza los bordes de geometría, en el mismo pase que ya lee la profundidad y la
+pantalla. No suma un pase, una copia de pantalla ni un shader. Compatibility no trae FXAA, SMAA
+ni TAA propios.
 
-- **El mando** es `suavizado` en `bloom_del_almacen.gdshader`, de 0 a 1. En 0 el pase no lee ni un
-  vecino más y dibuja como antes. El halo del bloom se calcula sobre la imagen sin suavizar.
+- **El mando** es `suavizado` en `oclusion_de_rincones.gdshader`, de 0 a 1, por defecto 0,25.
+  Con 0 el pase sólo oscurece rincones.
+- **Dónde actúa.** Sólo donde la geometría se quiebra: un salto de profundidad (un contorno) o un
+  cambio de pendiente (una arista). El pase lo mide con la diferencia segunda de la profundidad
+  en x y en y, en tangente del giro entre un píxel y el siguiente. Sobre un plano esa diferencia
+  es nula, tenga la textura que tenga. Las juntas del piso, la veta de la madera y las
+  etiquetas no cuentan, porque no mueven la profundidad. En un borde, el píxel se mezcla con el
+  promedio de sus vecinos del eje que se quiebra, y a lo sumo con el peso del mando.
+- **Por qué no por brillo.** Un suavizado por brillo no distingue un borde de geometría de una
+  línea pintada, y ablandaba las juntas del piso, la veta y el dibujo de las etiquetas. El detalle
+  del cuadro bajaba entre 10 y 13 %, también de cerca.
+- **Por qué en el pase de oclusión.** Un shader `canvas_item` no lee la profundidad, y éste sí.
+  Para devolver el color de un vecino, el pase escribe con `blend_mix` y `ALPHA`. Un
+  `blend_mul` sólo oscurece. Con el mando en 0 la imagen sale igual que con el `blend_mul`
+  anterior, con un nivel de 8 bits de diferencia como mucho en el 0,3 % de los píxeles.
+- **Qué se mide.** La imagen con el mando en 0 contra el mando por defecto, a 1280×720 y en
+  cuadro congelado:
+  - Fuera de los bordes de geometría las dos imágenes son idénticas, y también su detalle.
+  - El detalle del cuadro entero es el desvío estándar del laplaciano 3×3 de la imagen en
+    grises. Cualquier suavizado de bordes lo baja, porque un salto duro pasa a una rampa. El
+    mando por defecto es el mayor valor que no baja más que MSAA 2× en la misma pose, con 0,02
+    de tolerancia:
+
+    | Pose | MSAA 2× | Mando 0,25 | Mando 1,0 |
+    |---|---|---|---|
+    | mostrador | 0,936 | 0,940 | 0,860 |
+    | piso | 0,962 | 0,947 | 0,889 |
+    | góndola | 0,941 | 0,932 | 0,850 |
+    | mesas | 0,936 | 0,925 | 0,836 |
+
+    Con 0,27 el piso ya queda bajo la tolerancia.
+- **Cuánto suaviza.** Poco. Contra una imagen supermuestreada 2× por lado, el error en los
+  bordes baja de 1 a 4 % con el mando por defecto, y 30 % con MSAA 2×. Con el mando en
+  1 el error sube: ensancha el borde. Un desplazamiento de la muestra a lo largo del borde, como
+  el de FXAA, dentro de la misma máscara de profundidad, no mejoró el error: sólo cambia los
+  píxeles de los extremos de un escalón largo.
 - **Por qué no MSAA.** Un shader que lee la profundidad (`hint_depth_texture`) obliga, con MSAA
   prendido, a resolverla en cada cuadro. El pase de oclusión la lee. Medido el 2026-11-16 en la
   web (Chrome, RTX 4050, tiempo de GPU por cuadro):
@@ -274,15 +308,13 @@ SMAA ni TAA propios.
   Con las dos cosas juntas, casi todo el sobrecosto es el blit de profundidad. Lo mide el PR #959
   frente a su base. Para sacar ese costo hay que apagar MSAA o quitar la lectura de profundidad.
   La oclusión no se quita.
-- **Qué no cubre.** El suavizado vive en el pase del bloom, un `CanvasLayer` con `layer = 0` que
-  declara `bloom_del_almacen.tscn`. Lo recibe todo el 3D de la ventana principal. La interfaz se
-  dibuja en capas por encima y queda fuera del pase. Los
-  `SubViewport` del celular, del ticket y del agua del baño no dibujan 3D (`disable_3d`), así que
-  no hay nada que suavizar ahí. El menú de inicio no tiene 3D. Ninguna escena 3D del juego se
-  dibuja sin el pase del bloom.
-- **Qué no hace.** Sin profundidad, el suavizado sólo ve brillo: un borde de color con el mismo
-  brillo de los dos lados no se suaviza. Tampoco distingue un borde de geometría de uno pintado en
-  una textura.
+- **Qué no cubre.** El pase de oclusión es un quad 3D de `ambiente_del_almacen.tscn`: lo recibe
+  todo el 3D de la ventana principal. La interfaz se dibuja en capas por encima y queda fuera.
+  Los `SubViewport` del celular, del ticket y del agua del baño no dibujan 3D (`disable_3d`),
+  así que no hay nada que suavizar ahí. El menú de inicio no tiene 3D. Ninguna escena 3D del
+  juego se dibuja sin el pase.
+- **Qué no hace.** Un borde pintado en la textura de una superficie plana no se suaviza. Lo
+  transparente se dibuja como sin el suavizado, también en la noche del corte.
 
 ## Medición del 2026-10-05
 

@@ -49,8 +49,8 @@ static func _clase(objeto: GeometryInstance3D, horneado: bool) -> Clase:
 		elif material is ShaderMaterial:
 			var shader := (material as ShaderMaterial).shader
 			if shader != null and shader.code.contains("unshaded"):
-				# Un sombreado que sólo multiplica la imagen oscurece y nunca alumbra.
-				if shader.code.contains("ALPHA") or shader.code.contains("blend_mul"):
+				# Un sombreado que sólo oscurece la imagen o la mezcla con la de sus vecinos no alumbra.
+				if shader.code.contains("ALPHA"):
 					return Clase.TRANSPARENTE
 				return Clase.SIN_SOMBREADO
 	if horneado:

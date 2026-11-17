@@ -1,5 +1,5 @@
 shader_type spatial;
-render_mode unshaded, fog_disabled, blend_mul, depth_test_disabled, depth_draw_never, cull_disabled;
+render_mode unshaded, fog_disabled, depth_test_disabled, depth_draw_never, cull_disabled;
 
 uniform sampler2D profundidad : hint_depth_texture, repeat_disable, filter_nearest;
 uniform sampler2D pantalla : hint_screen_texture, repeat_disable, filter_nearest;
@@ -16,8 +16,15 @@ uniform float penumbra : hint_range(0.0, 1.0) = 0.06;
 uniform float luz : hint_range(0.0, 2.0) = 0.35;
 uniform float resto_en_la_luz : hint_range(0.0, 1.0) = 0.1;
 
+// Cuánto se mezcla cada borde de geometría con sus vecinos. En 0 el pase sólo oscurece rincones.
+uniform float suavizado : hint_range(0.0, 1.0) = 0.25;
+
 const int MUESTRAS = 8;
 const vec2 GIRO_AUREO = vec2(-0.737368878, 0.675490294);
+// Cuánto tiene que quebrarse el plano de una superficie, como tangente del giro de un píxel al
+// siguiente, para contar como borde: desde `BORDE_DESDE` suaviza y entero desde `BORDE_ENTERO`.
+const float BORDE_DESDE = 0.25;
+const float BORDE_ENTERO = 0.6;
 
 // La proyección de la cámara del juego es perspectiva sin desfase: con sus cuatro números alcanza
 // para recuperar la posición, sin multiplicar una matriz entera por cada muestra.
@@ -25,6 +32,21 @@ vec3 posicion_de_vista(vec2 uv, vec4 proyeccion) {
 	float d = textureLod(profundidad, uv, 0.0).x * 2.0 - 1.0;
 	float z = -proyeccion.w / (d + proyeccion.z);
 	return vec3((uv * 2.0 - 1.0) / proyeccion.xy * -z, z);
+}
+
+float profundidad_en(vec2 uv) {
+	return textureLod(profundidad, uv, 0.0).x * 2.0 - 1.0;
+}
+
+// La profundidad normalizada es una función lineal de la inversa de la profundidad de vista, y ésta
+// es lineal en pantalla sobre un plano. Un plano da entonces una diferencia segunda nula, una
+// arista da un quiebre y un contorno da un salto. Una textura no cuenta: no mueve la profundidad.
+// El resultado es el cambio de la tangente de la pendiente entre un píxel y el siguiente.
+float quiebre(vec2 uv, vec2 paso, float centro, float escala, float z) {
+	float a = profundidad_en(uv - paso);
+	float b = profundidad_en(uv + paso);
+	float mayor = max(abs(centro + z), max(abs(a + z), abs(b + z)));
+	return abs(a + b - 2.0 * centro) / (max(mayor, 1e-5) * escala);
 }
 
 float ruido(vec2 pixel) {
@@ -39,9 +61,8 @@ void fragment() {
 	vec4 proy = vec4(PROJECTION_MATRIX[0][0], PROJECTION_MATRIX[1][1], PROJECTION_MATRIX[2][2], PROJECTION_MATRIX[3][2]);
 	vec3 p = posicion_de_vista(SCREEN_UV, proy);
 	float distancia = -p.z;
-	if (distancia > alcance || distancia < 0.01) {
-		ALBEDO = vec3(1.0);
-	} else {
+	float factor = 1.0;
+	if (distancia <= alcance && distancia >= 0.01) {
 		vec3 n = normalize(cross(dFdx(p), dFdy(p)));
 		// La normal tiene que mirar hacia la cámara.
 		n *= sign(dot(n, -p));
@@ -64,6 +85,29 @@ void fragment() {
 		float brillo = dot(textureLod(pantalla, SCREEN_UV, 0.0).rgb, vec3(0.2126, 0.7152, 0.0722));
 		suave *= mix(1.0, resto_en_la_luz, smoothstep(penumbra, luz, brillo));
 		float ao = clamp(1.0 - intensidad * oclusion / float(MUESTRAS), 0.0, 1.0);
-		ALBEDO = vec3(mix(1.0, ao, suave));
+		factor = mix(1.0, ao, suave);
 	}
+
+	// Cuánto se mezcla este píxel con sus vecinos de cada eje: sólo donde la geometría se quiebra.
+	vec2 px = 1.0 / VIEWPORT_SIZE;
+	vec2 bordes = vec2(0.0);
+	if (suavizado > 0.0) {
+		float centro = profundidad_en(SCREEN_UV);
+		bordes.x = quiebre(SCREEN_UV, vec2(px.x, 0.0), centro, 2.0 * px.x / abs(proy.x), proy.z);
+		bordes.y = quiebre(SCREEN_UV, vec2(0.0, px.y), centro, 2.0 * px.y / abs(proy.y), proy.z);
+		bordes = smoothstep(BORDE_DESDE, BORDE_ENTERO, bordes);
+	}
+	// El píxel pasa a ser `(1 - entra)` de sí mismo y `entra` del promedio de sus vecinos, y todo
+	// se oscurece por `factor`. `blend_mix` resuelve ambas cosas a la vez sobre lo ya dibujado:
+	// `ALPHA` es lo que se reemplaza, y con `ALBEDO` en cero sólo queda lo oscurecido.
+	float entra = 0.5 * suavizado * (bordes.x + bordes.y);
+	vec3 vecinos = vec3(0.0);
+	if (entra > 0.0) {
+		vec3 horizontales = textureLod(pantalla, SCREEN_UV + vec2(px.x, 0.0), 0.0).rgb + textureLod(pantalla, SCREEN_UV - vec2(px.x, 0.0), 0.0).rgb;
+		vec3 verticales = textureLod(pantalla, SCREEN_UV + vec2(0.0, px.y), 0.0).rgb + textureLod(pantalla, SCREEN_UV - vec2(0.0, px.y), 0.0).rgb;
+		vecinos = (bordes.x * horizontales + bordes.y * verticales) / (2.0 * (bordes.x + bordes.y));
+	}
+	float alfa = 1.0 - factor * (1.0 - entra);
+	ALBEDO = alfa > 1e-4 ? factor * entra * vecinos / alfa : vec3(0.0);
+	ALPHA = alfa;
 }
