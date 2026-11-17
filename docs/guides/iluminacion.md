@@ -48,6 +48,29 @@ Cómo se mide el costo de las luces, en [rendimiento](./rendimiento.md).
   adentro no se toca aunque esté negra: es la luz de un ambiente oscuro. Un horneado hecho a mano
   desde el editor no pasa por ese paso.
 
+## La oclusión ambiental en pantalla
+
+`oclusion_de_rincones.tscn` es un pase propio, instanciado en `ambiente_del_almacen.tscn`. El
+`Environment` no tiene SSAO.
+
+- **Por qué no el SSAO del motor.** Compatibility lo trae desde Godot 4.6, pero sólo oscurece los
+  bordes donde la profundidad salta: una pata de silla, el marco de una puerta. No oscurece los
+  rincones ni el encuentro de piso y pared, y subir `Radius` e `Intensity` casi no cambia la imagen.
+- **Qué hace el pase.** Un quad a pantalla completa lee la profundidad, reconstruye la normal y
+  oscurece por oclusión de hemisferio con 8 muestras. Multiplica la imagen antes del tonemap, así
+  que oscurece el horneado también. No es luz ambiente.
+- **Sigue a la luz por el brillo de la imagen.** El pase lee `hint_screen_texture`: donde la
+  superficie ya sale clara casi no actúa, y donde sale oscura actúa entero. No distingue una
+  penumbra de una superficie de color oscuro: ambas reciben el pase. El horneado no se puede leer
+  desde un pase en pantalla, así que esa es la señal más barata.
+- **Los mandos** son `radio` (metros) e `intensidad`, en el shader. `penumbra`, `luz` y
+  `resto_en_la_luz` fijan hasta qué brillo actúa. Un salto brusco de profundidad
+  se atenúa: es un contorno y no un rincón.
+- **Lo que oscurece nunca alumbra.** `luz_de_cada_objeto.gd` lo trata como transparente, y no
+  cuenta como una luz que se queda prendida en el corte.
+- **Suma un programa a la carga y una copia de pantalla por cuadro.** El costo medido en la web
+  está en el PR que lo agregó.
+
 ## Los reflejos de los metales
 
 El entorno no refleja el cielo (`reflected_light_source` apagado). Un metal sólo recibe reflejo de
