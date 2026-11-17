@@ -31,8 +31,7 @@ float brillo_en(vec2 uv) {
 // Suavizado de bordes por brillo, al estilo de FXAA. Sin profundidad ni una copia más de la
 // pantalla. Un borde largo se desplaza medio píxel hacia su lado claro; un trazo corto, como una
 // letra, casi no se mueve porque sus extremos quedan al lado.
-vec3 suavizar_bordes(vec2 uv, vec3 centro) {
-	vec2 px = SCREEN_PIXEL_SIZE;
+vec3 suavizar_bordes(vec2 uv, vec3 centro, vec2 px) {
 	float c = brillo_de(centro);
 	float norte = brillo_en(uv + vec2(0.0, -px.y));
 	float sur = brillo_en(uv + vec2(0.0, px.y));
@@ -118,7 +117,7 @@ void fragment() {
 	}
 	halo *= intensidad / 256.0;
 	if (suavizado > 0.0) {
-		base = mix(base, suavizar_bordes(SCREEN_UV, base), suavizado);
+		base = mix(base, suavizar_bordes(SCREEN_UV, base, SCREEN_PIXEL_SIZE), suavizado);
 	}
 	// Atenuar el aporte sobre el núcleo conserva su textura sin apagar el halo.
 	float brillo_base = brillo_de(base);
