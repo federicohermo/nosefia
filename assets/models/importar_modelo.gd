@@ -25,9 +25,6 @@ const FILTRO_LINEAL: Array[String] = [
 	# frente se veía en franjas.
 	"bano_porcelana",
 ]
-## Vienen con una sola cara. El motor genera un shader por cada combinación de caras: con las dos
-## comparten el de los demás materiales, y ningún lado deja de verse.
-const LATERALES_DEL_EXHIBIDOR: Array[String] = ["EXHIBIDOR | Lateral", "EXHIBIDOR | Lateral Pepito"]
 ## Sin detalle ni emisión, estos materiales generan sus propios programas. Con un detalle blanco y
 ## una emisión negra comparten los de las paredes pintadas y el techo, y la imagen no cambia.
 const CON_LOS_PROGRAMAS_DE_LAS_PAREDES: Array[String] = ["bano_pared_clara", "bano_porcelana"]
@@ -104,9 +101,10 @@ func _post_import(escena: Node) -> Object:
 			var material := malla.mesh.surface_get_material(i) as BaseMaterial3D
 			if material != null:
 				material.texture_filter = BaseMaterial3D.TEXTURE_FILTER_NEAREST_WITH_MIPMAPS
-				# El motor genera un shader por cada modo de repetición. Con las UV dentro de la textura,
-				# repetirla o sujetarla da el mismo dibujo.
-				material.texture_repeat = true
+				if material.resource_name == "LECTOR | Frente optico":
+					# Sus UV van de 0,004 a 0,996: repetirla o sujetarla da el mismo dibujo. Los
+					# laterales del exhibidor salen de 0..1 y deben seguir sujetos.
+					material.texture_repeat = true
 				if (
 					material.resource_name
 					in [
@@ -121,8 +119,6 @@ func _post_import(escena: Node) -> Object:
 					# Un separador mide menos que un texel del mapa de luz y se horneaba negro.
 					# Toma la luz de las sondas, como los productos que tiene encima.
 					malla.gi_mode = GeometryInstance3D.GI_MODE_DYNAMIC
-				if material.resource_name in LATERALES_DEL_EXHIBIDOR:
-					material.cull_mode = BaseMaterial3D.CULL_DISABLED
 				if material.resource_name == "local_ceramica":
 					# El piso satinado recoge reflejos difusos sin convertirse en un espejo.
 					material.roughness = 0.34
@@ -158,6 +154,14 @@ func _post_import(escena: Node) -> Object:
 					malla.gi_mode = GeometryInstance3D.GI_MODE_DYNAMIC
 					malla.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 					malla.set_surface_override_material(i, VIDRIO)
+				if material.normal_enabled and material.metallic_texture == null:
+					# Con relieve y sin mapa ORM, el motor genera un shader propio. Con un texel blanco
+					# en los canales que lee comparte el de los demás, y la rugosidad y lo metálico
+					# no cambian.
+					material.metallic_texture = blanco
+					material.metallic_texture_channel = BaseMaterial3D.TEXTURE_CHANNEL_BLUE
+					material.roughness_texture = blanco
+					material.roughness_texture_channel = BaseMaterial3D.TEXTURE_CHANNEL_GREEN
 				# El motor genera un shader por cada combinación de caras y de canal de rugosidad.
 				# Con una sola, los materiales con relieve del depósito comparten sus programas.
 				if material.normal_enabled and material.resource_name.begins_with("deposito_"):
