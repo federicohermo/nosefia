@@ -262,17 +262,17 @@ ni TAA propios.
   Con 0 el pase sólo oscurece rincones.
 - **Dónde actúa.** Sólo donde la geometría se quiebra: un salto de profundidad (un contorno) o un
   cambio de pendiente (una arista). El pase lo mide con la diferencia segunda de la profundidad
-  en x y en y, en tangente del giro entre un píxel y el siguiente. Sobre un plano esa diferencia
-  es nula, tenga la textura que tenga. Las juntas del piso, la veta de la madera y las
+  en x y en y. La expresa como tangente del giro entre un píxel y el siguiente. Sobre un plano esa
+  diferencia es nula, tenga la textura que tenga. Las juntas del piso, la veta de la madera y las
   etiquetas no cuentan, porque no mueven la profundidad. En un borde, el píxel se mezcla con el
-  promedio de sus vecinos del eje que se quiebra, y a lo sumo con el peso del mando.
+  promedio de sus vecinos del eje que se quiebra. El peso máximo es el del mando.
 - **Por qué no por brillo.** Un suavizado por brillo no distingue un borde de geometría de una
-  línea pintada, y ablandaba las juntas del piso, la veta y el dibujo de las etiquetas. El detalle
-  del cuadro bajaba entre 10 y 13 %, también de cerca.
+  línea pintada. Ablanda las juntas del piso, la veta y el dibujo de las etiquetas. El detalle
+  del cuadro baja entre 10 y 13 %, también de cerca.
 - **Por qué en el pase de oclusión.** Un shader `canvas_item` no lee la profundidad, y éste sí.
   Para devolver el color de un vecino, el pase escribe con `blend_mix` y `ALPHA`. Un
-  `blend_mul` sólo oscurece. Con el mando en 0 la imagen sale igual que con el `blend_mul`
-  anterior, con un nivel de 8 bits de diferencia como mucho en el 0,3 % de los píxeles.
+  `blend_mul` sólo oscurece. Con el mando en 0 la imagen sale como con un `blend_mul`. La
+  diferencia es de un nivel de 8 bits, en el 0,3 % de los píxeles.
 - **Qué se mide.** La imagen con el mando en 0 contra el mando por defecto, a 1280×720 y en
   cuadro congelado:
   - Fuera de los bordes de geometría las dos imágenes son idénticas, y también su detalle.
@@ -289,11 +289,11 @@ ni TAA propios.
     | mesas | 0,936 | 0,925 | 0,836 |
 
     Con 0,27 el piso ya queda bajo la tolerancia.
-- **Cuánto suaviza.** Poco. Contra una imagen supermuestreada 2× por lado, el error en los
-  bordes baja de 1 a 4 % con el mando por defecto, y 30 % con MSAA 2×. Con el mando en
-  1 el error sube: ensancha el borde. Un desplazamiento de la muestra a lo largo del borde, como
-  el de FXAA, dentro de la misma máscara de profundidad, no mejoró el error: sólo cambia los
-  píxeles de los extremos de un escalón largo.
+- **Cuánto suaviza.** Poco. Se compara con una imagen supermuestreada 2× por lado. El error en
+  los bordes baja de 1 a 4 % con el mando por defecto, y 30 % con MSAA 2×. Con el mando en
+  1 el error sube: ensancha el borde. Se probó desplazar la muestra a lo largo del borde, como
+  FXAA, dentro de la misma máscara. No mejoró el error. Sólo cambia los píxeles de los extremos
+  de un escalón largo.
 - **Por qué no MSAA.** Un shader que lee la profundidad (`hint_depth_texture`) obliga, con MSAA
   prendido, a resolverla en cada cuadro. El pase de oclusión la lee. Medido el 2026-11-16 en la
   web (Chrome, RTX 4050, tiempo de GPU por cuadro):
