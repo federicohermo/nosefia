@@ -27,8 +27,6 @@ const SOMBRA := preload("res://src/escenas/objetos/sombra_de_contacto.gdshader")
 ## Los valores con que arrancan las dos propiedades de abajo.
 const RADIO_POR_DEFECTO := 0.4
 const INTENSIDAD_POR_DEFECTO := 1.0
-## El ancho del borde de la mancha pegada al objeto, como parte del `radio`.
-const ANCHO_POR_RADIO := 0.15
 ## Qué tan negra queda la mancha con `intensidad` en 1, de 0 a 1.
 const OPACIDAD_MAXIMA := 0.5
 ## Cuánto más se difumina el borde de la mancha por cada metro de altura.
@@ -52,9 +50,9 @@ static var _limites_de_las_formas: Dictionary[Shape3D, AABB] = {}
 		_mostrar()
 
 ## Hasta qué altura sobre la superficie de abajo hay efecto, en metros: el de la base del objeto y
-## el de la mancha. Es también hasta dónde mira el rayo, a qué altura se apaga la mancha y, en una
-## parte fija (`ANCHO_POR_RADIO`), cuánto se difumina su borde. Cambiarlo deja todo al día en el
-## momento.
+## el de la mancha: ésta se abre hacia afuera de la huella la misma distancia que el objeto se
+## oscurece hacia arriba. Es también hasta dónde mira el rayo y a qué altura se apaga la mancha.
+## Cambiarlo deja todo al día en el momento.
 @export var radio := RADIO_POR_DEFECTO:
 	set(valor):
 		radio = valor
@@ -179,7 +177,7 @@ func _poner_la_sombra(cuerpo: CollisionObject3D, golpe: Dictionary, altura: floa
 		costado = cuerpo.global_basis.z - normal * normal.dot(cuerpo.global_basis.z)
 	costado = costado.normalized()
 	var giro := Basis(costado, normal, costado.cross(normal))
-	var suavidad := radio * ANCHO_POR_RADIO + DIFUMINADO_POR_ALTURA * altura
+	var suavidad := radio + DIFUMINADO_POR_ALTURA * altura
 	var tamano := _mitad * 2.0 + Vector2.ONE * (suavidad * 2.0)
 	sombra.global_transform = Transform3D(
 		giro.scaled_local(Vector3(tamano.x, 1.0, tamano.y)), punto + normal * ELEVACION

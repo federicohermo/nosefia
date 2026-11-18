@@ -245,16 +245,16 @@ func test_el_radio_llega_a_la_malla_al_rayo_y_a_la_mancha_y_un_movimiento_no_lo_
 	assert_bool(oclusion.sombra.visible).is_false()
 
 
-func test_el_radio_ensancha_el_borde_de_la_mancha_y_un_movimiento_no_lo_pisa() -> void:
+func test_apoyada_la_mancha_se_abre_del_objeto_tanto_como_el_radio_y_un_movimiento_no_lo_pisa(
+) -> void:
 	_piso()
 	var caja := await _caja_a(0.0)
 	var oclusion := _oclusion_de(caja)
-	var antes: float = _de_la_mancha(oclusion, &"suavidad")
+	assert_float(_de_la_mancha(oclusion, &"suavidad")).is_equal_approx(oclusion.radio, 0.002)
 	oclusion.radio = Oclusion.RADIO_POR_DEFECTO * 2.0
-	var despues: float = _de_la_mancha(oclusion, &"suavidad")
-	assert_float(despues).is_greater(antes)
+	assert_float(_de_la_mancha(oclusion, &"suavidad")).is_equal_approx(oclusion.radio, 0.002)
 	await _mover_y_esperar(caja)
-	assert_float(_de_la_mancha(oclusion, &"suavidad")).is_equal_approx(despues, 0.001)
+	assert_float(_de_la_mancha(oclusion, &"suavidad")).is_equal_approx(oclusion.radio, 0.002)
 
 
 ## En la web los uniformes por instancia llegan al shader en cero, y el efecto no se ve aunque el

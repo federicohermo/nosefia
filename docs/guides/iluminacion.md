@@ -165,7 +165,9 @@ sus propios materiales.
 Más lejos de `radio` de cualquier superficie no hay efecto. **El rayo corre mientras el objeto
 se mueve y una vez al quedar quieto**: se entera por el aviso de que cambió su transformación.
 Un objeto quieto no tira ninguno. Las dos propiedades del nodo, `radio` e `intensidad`, valen para el
-objeto y para la mancha, y dejan el efecto al día al cambiarlas.
+objeto y para la mancha, y dejan el efecto al día al cambiarlas. Con el objeto apoyado, la mancha se
+abre hacia afuera de su huella el mismo `radio` que el objeto se oscurece hacia arriba. Levantado, el
+borde suma medio metro más por cada metro de altura.
 
 ## El horneado de la noche del corte de luz
 
