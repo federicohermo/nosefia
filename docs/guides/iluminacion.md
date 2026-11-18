@@ -181,8 +181,7 @@ MSAA 2× costaba entre 3,6 y 12,6 ms de GPU por cuadro.
 Lo que se mueve no tiene lightmap, así que la sombra de apoyo horneada no le sirve. La caja de
 productos y todo `ObjetoAgarrable` (el balde, la mopa, los bidones, la bolsa de basura, la llave,
 la palanca, la colilla, los papeles y el ticket) llevan una oclusión de contacto dinámica. Nada va
-horneado en el objeto: al levantarlo el efecto se va. Es un prototipo, y el usuario decide
-jugándolo si se queda.
+horneado en el objeto: al levantarlo el efecto se va.
 
 `oclusion_de_contacto.gd` cuelga del objeto y lanza un rayo hacia abajo desde su base. Con lo que
 encuentra hace dos cosas:
@@ -190,8 +189,8 @@ encuentra hace dos cosas:
 - **El objeto oscurece lo de abajo.** Una mancha negra con alfa sobre esa superficie. Se abre
   `radio` desde lo que del objeto toca la superficie: los vértices de sus mallas a menos de un
   centímetro de los más bajos, y no la caja que envuelve su forma de colisión, que en un balde
-  es la boca (`sombra_de_contacto.gdshader`). La mancha no recibe el contorno del foco. Sigue la normal de la superficie y se corta en el
-  borde de lo que lo sostiene. En Compatibility los `Decal` no funcionan: la mancha es un plano.
+  es la boca (`sombra_de_contacto.gdshader`). La mancha no recibe el contorno del foco. Sigue la
+  normal de la superficie y se corta en el borde de lo que lo sostiene. En Compatibility los `Decal` no funcionan: la mancha es un plano.
   Se apaga con la propiedad `activa` del nodo, que está en el grupo `oclusion_de_contacto`.
 - **Lo de abajo oscurece al objeto.** Escribe en los materiales de las mallas la altura de esa
   superficie. El shader (`oclusion_de_contacto.gdshaderinc`) oscurece las caras de abajo y el pie
