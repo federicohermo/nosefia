@@ -107,6 +107,8 @@ func _extremo_mas_curvo(palanca: ObjetoAgarrable) -> Vector3:
 			largo = eje
 	var puntos: Array[Vector3] = []
 	for malla: MeshInstance3D in palanca.find_children("*", "MeshInstance3D", true, false):
+		if malla.is_in_group(ReglasDeLosObjetos.GRUPO_SIN_CONTORNO):
+			continue
 		var a_palanca := palanca.global_transform.affine_inverse() * malla.global_transform
 		var vertices: PackedVector3Array = malla.mesh.surface_get_arrays(0)[Mesh.ARRAY_VERTEX]
 		for vertice: Vector3 in vertices:

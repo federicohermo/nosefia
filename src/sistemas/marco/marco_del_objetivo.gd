@@ -54,7 +54,10 @@ func enfocar(objetivo: Node3D, _distancia: float = 0.0) -> void:
 		if objetivo is MeshInstance3D:
 			mallas.append(objetivo)
 	for malla in mallas:
-		if is_instance_valid(malla) and not _previos.has(malla):
+		var ajena := (
+			is_instance_valid(malla) and malla.is_in_group(ReglasDeLosObjetos.GRUPO_SIN_CONTORNO)
+		)
+		if is_instance_valid(malla) and not ajena and not _previos.has(malla):
 			_previos[malla] = malla.material_overlay
 			_mostrar_contorno(malla, material)
 

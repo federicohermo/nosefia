@@ -56,8 +56,9 @@ func _de_la_mancha(oclusion: Node3D, nombre: StringName) -> Variant:
 
 
 func _de_la_malla(oclusion: Node3D, nombre: StringName) -> Variant:
-	return (oclusion.malla.get_surface_override_material(0) as ShaderMaterial).get_shader_parameter(
-		nombre
+	return (
+		(oclusion.mallas[0].get_surface_override_material(0) as ShaderMaterial)
+		. get_shader_parameter(nombre)
 	)
 
 
@@ -187,8 +188,8 @@ func test_cada_caja_lleva_lo_suyo_y_una_no_pisa_a_la_otra() -> void:
 	var en_el_aire := await _caja_a(Oclusion.RADIO_POR_DEFECTO * 2.0, Vector3.RIGHT * 2.0)
 	var de_la_apoyada := _oclusion_de(apoyada)
 	var de_la_del_aire := _oclusion_de(en_el_aire)
-	assert_object(de_la_apoyada.malla.get_surface_override_material(0)).is_not_same(
-		de_la_del_aire.malla.get_surface_override_material(0)
+	assert_object(de_la_apoyada.mallas[0].get_surface_override_material(0)).is_not_same(
+		de_la_del_aire.mallas[0].get_surface_override_material(0)
 	)
 	assert_object(de_la_apoyada.sombra.material_override).is_not_same(
 		de_la_del_aire.sombra.material_override
@@ -212,11 +213,12 @@ func test_la_intensidad_se_cambia_en_vivo_en_el_objeto_y_en_la_mancha() -> void:
 	var caja := await _caja_a(0.0)
 	var oclusion := _oclusion_de(caja)
 	var maxima := _intensidad(oclusion)
-	oclusion.intensidad = 0.5
-	assert_float(_de_la_malla(oclusion, Oclusion.PARAMETRO_DE_LA_MALLA)).is_equal(0.5)
+	var mitad: float = oclusion.intensidad / 2.0
+	oclusion.intensidad = mitad
+	assert_float(_de_la_malla(oclusion, Oclusion.PARAMETRO_DE_LA_MALLA)).is_equal(mitad)
 	assert_float(_intensidad(oclusion)).is_equal_approx(maxima / 2.0, 0.001)
 	await _mover_y_esperar(caja)
-	assert_float(_de_la_malla(oclusion, Oclusion.PARAMETRO_DE_LA_MALLA)).is_equal(0.5)
+	assert_float(_de_la_malla(oclusion, Oclusion.PARAMETRO_DE_LA_MALLA)).is_equal(mitad)
 	assert_float(_intensidad(oclusion)).is_equal_approx(maxima / 2.0, 0.001)
 	oclusion.intensidad = 0.0
 	assert_float(_de_la_malla(oclusion, Oclusion.PARAMETRO_DE_LA_MALLA)).is_zero()
@@ -282,7 +284,8 @@ func _balde_a(altura: float) -> Node3D:
 	malla.set_surface_override_material(0, ShaderMaterial.new())
 	cuerpo.add_child(malla)
 	var oclusion: Node3D = Oclusion.new()
-	oclusion.configurar(malla, 1.0)
+	var mallas: Array[MeshInstance3D] = [malla]
+	oclusion.configurar(mallas, 1.0)
 	cuerpo.add_child(oclusion)
 	add_child(cuerpo)
 	cuerpo.global_position = Vector3.UP * (ALTO / 2.0 + altura)
@@ -318,6 +321,8 @@ func test_ningun_shader_del_efecto_declara_uniformes_por_instancia() -> void:
 		"res://src/escenas/objetos/oclusion_de_contacto.gdshaderinc",
 		"res://src/escenas/puestos/producto_de_la_gondola.gdshader",
 		"res://src/escenas/objetos/manija_del_balde.gdshader",
+		"res://src/escenas/objetos/fibras_de_la_mopa.gdshader",
+		"res://src/escenas/objetos/cabeza_de_la_mopa.gdshader",
 	]
 	for ruta: String in rutas:
 		(

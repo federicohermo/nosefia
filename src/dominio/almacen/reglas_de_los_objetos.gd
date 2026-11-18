@@ -100,6 +100,9 @@ const ARRASTRE_DE_LO_SUELTO := 0.7
 ## valdría una pared.
 const APOYO_HORIZONTAL := 0.7
 
+## Una malla en este grupo cuelga de un objeto, pero no es parte de él: el foco no la contornea.
+const GRUPO_SIN_CONTORNO := &"sin_contorno"
+
 ## Es la número 4, y su nombre está declarado en `project.godot`.
 const CAPA_DEL_CONTORNO := 8
 

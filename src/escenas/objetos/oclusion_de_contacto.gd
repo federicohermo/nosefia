@@ -5,11 +5,12 @@
 ## partes:
 ##
 ## 1. **El objeto oscurece lo de abajo.** Una mancha difusa sobre esa superficie, que se abre
-##    `radio` desde lo que del objeto toca la superficie: los vértices de su malla más bajos, y no
-##    la caja que envuelve su forma, que en un balde es la boca. Se apaga con `activa`.
-## 2. **Lo de abajo oscurece al objeto.** Escribe en los materiales de la malla la altura de esa
-##    superficie, y el shader oscurece sus caras de abajo. Se apaga con
-##    `intensidad`, de 0 a 1.
+##    `radio` desde lo que del objeto toca la superficie: los vértices de sus mallas más bajos, y
+##    no la caja que envuelve su forma, que en un balde es la boca. Se apaga con `activa`.
+## 2. **Lo de abajo oscurece al objeto.** Escribe en los materiales de sus mallas la altura de esa
+##    superficie, y el shader oscurece sus caras de abajo. Sólo lo hace donde el material es un
+##    `ShaderMaterial` que declara los uniformes de `oclusion_de_contacto.gdshaderinc`: un material
+##    estándar se saltea, y la mancha de abajo sigue. Se apaga con `intensidad`, de 0 a 1.
 ##
 ## **Todo va en uniformes del material, nunca por instancia:** en la web, con el renderizador
 ## Compatibility, el shader los recibe en cero. Por eso cada objeto lleva sus propios materiales.
@@ -26,8 +27,8 @@ const ALCANCE_DE_LA_MALLA := &"alcance_de_contacto"
 const SOMBRA := preload("res://src/escenas/objetos/sombra_de_contacto.gdshader")
 
 ## Los valores con que arrancan las dos propiedades de abajo.
-const RADIO_POR_DEFECTO := 0.4
-const INTENSIDAD_POR_DEFECTO := 1.0
+const RADIO_POR_DEFECTO := 0.05
+const INTENSIDAD_POR_DEFECTO := 0.25
 ## Qué tan negra queda la mancha con `intensidad` en 1, de 0 a 1.
 const OPACIDAD_MAXIMA := 0.5
 ## Cuánto más se difumina el borde de la mancha por cada metro de altura.
@@ -38,6 +39,9 @@ const ELEVACION := 0.003
 const SALIDA := 0.03
 ## Cuánto sobre el punto más bajo de la malla se cuenta como apoyo, en metros.
 const BANDA_DE_APOYO := 0.01
+## Cuánto puede diferir la pose de una malla respecto de su cuerpo para seguir contando como la
+## misma, en metros.
+const POSE_IGUAL := 0.001
 ## Una superficie más empinada que esto no sostiene nada: es una pared.
 const NORMAL_MINIMA := 0.6
 ## La altura que se le escribe a la malla cuando no hay nada abajo.
@@ -45,7 +49,7 @@ const SIN_SUELO := -1000.0
 
 static var _plano_de_la_sombra: ArrayMesh
 static var _limites_de_las_formas: Dictionary[Shape3D, AABB] = {}
-static var _apoyos_de_las_mallas: Dictionary[Mesh, AABB] = {}
+static var _vertices_de_las_mallas: Dictionary[Mesh, PackedVector3Array] = {}
 
 ## Se apaga y se prende en vivo. Apaga la mancha, y no el oscurecimiento del objeto.
 @export var activa := true:
@@ -69,8 +73,8 @@ static var _apoyos_de_las_mallas: Dictionary[Mesh, AABB] = {}
 		intensidad = valor
 		_al_dia()
 
-## La malla del objeto: en sus materiales se escribe la altura de lo que tiene debajo.
-var malla: MeshInstance3D
+## Las mallas del objeto: en sus materiales se escribe la altura de lo que tiene debajo.
+var mallas: Array[MeshInstance3D] = []
 
 ## La mancha, sólo si hay una superficie a menos de `radio`.
 var sombra: MeshInstance3D
@@ -79,6 +83,7 @@ var sombra: MeshInstance3D
 var rayos := 0
 
 var _esquinas := 0.0
+var _apoyos: Dictionary[MeshInstance3D, Array] = {}
 var _mitad := Vector2.ZERO
 var _hay_sombra := false
 var _suelo := SIN_SUELO
@@ -86,9 +91,9 @@ var _movido := true
 var _asentado := false
 
 
-## De la malla del objeto salen su huella y su base. `esquinas` va de 0 (una caja) a 1 (un balde).
-func configurar(malla_del_objeto: MeshInstance3D, esquinas: float) -> void:
-	malla = malla_del_objeto
+## De las mallas del objeto salen su huella y su base. `esquinas` va de 0 (una caja) a 1 (un balde).
+func configurar(mallas_del_objeto: Array[MeshInstance3D], esquinas: float) -> void:
+	mallas = mallas_del_objeto
 	_esquinas = esquinas
 
 
@@ -101,6 +106,7 @@ func _ready() -> void:
 	sombra.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 	sombra.gi_mode = GeometryInstance3D.GI_MODE_DYNAMIC
 	sombra.visible = false
+	sombra.add_to_group(ReglasDeLosObjetos.GRUPO_SIN_CONTORNO)
 	add_child(sombra)
 	_escribir_en_la_malla()
 	set_notify_transform(true)
@@ -133,9 +139,11 @@ func _physics_process(_delta: float) -> void:
 func actualizar() -> void:
 	rayos += 1
 	var cuerpo := get_parent() as CollisionObject3D
-	var del_objeto := (
-		cuerpo.global_transform.affine_inverse() * malla.global_transform * _apoyo_de(malla.mesh)
-	)
+	var del_objeto := _apoyo_del_objeto(cuerpo)
+	if del_objeto == AABB():
+		_hay_sombra = false
+		_mostrar()
+		return
 	var en_el_mundo := cuerpo.global_transform * del_objeto
 	_mitad = Vector2(del_objeto.size.x, del_objeto.size.z) / 2.0
 	var centro := en_el_mundo.get_center()
@@ -205,15 +213,14 @@ func _mostrar() -> void:
 
 ## Los materiales se leen cada vez: el balde viste su malla después de `_ready`.
 func _escribir_en_la_malla() -> void:
-	if malla == null:
-		return
-	for superficie in malla.get_surface_override_material_count():
-		var material := malla.get_surface_override_material(superficie) as ShaderMaterial
-		if material == null:
-			continue
-		material.set_shader_parameter(PARAMETRO_DE_LA_MALLA, intensidad)
-		material.set_shader_parameter(SUELO_DE_LA_MALLA, _suelo)
-		material.set_shader_parameter(ALCANCE_DE_LA_MALLA, radio)
+	for malla in mallas:
+		for superficie in malla.get_surface_override_material_count():
+			var material := malla.get_surface_override_material(superficie) as ShaderMaterial
+			if material == null:
+				continue
+			material.set_shader_parameter(PARAMETRO_DE_LA_MALLA, intensidad)
+			material.set_shader_parameter(SUELO_DE_LA_MALLA, _suelo)
+			material.set_shader_parameter(ALCANCE_DE_LA_MALLA, radio)
 
 
 ## Hasta dónde llega lo que sostiene al objeto, en el plano de la mancha. Sin esto, una caja
@@ -235,31 +242,68 @@ func _recorte_del_apoyo(golpe: Dictionary, giro: Basis, punto: Vector3) -> Vecto
 	return Vector4(minimo.x, minimo.y, maximo.x, maximo.y)
 
 
-## Dónde toca el objeto lo que tiene debajo, en el espacio de su malla: los vértices a menos de
-## `BANDA_DE_APOYO` del más bajo. Se lee una vez por malla.
-static func _apoyo_de(forma: Mesh) -> AABB:
-	if _apoyos_de_las_mallas.has(forma):
-		return _apoyos_de_las_mallas[forma]
-	var superficies: Array[PackedVector3Array] = []
+## Dónde toca el objeto lo que tiene debajo, en el espacio del cuerpo: lo más bajo de sus mallas,
+## hasta `BANDA_DE_APOYO` de ahí. Vacío si no tiene nada que dibujar.
+func _apoyo_del_objeto(cuerpo: Node3D) -> AABB:
+	var inversa := cuerpo.global_transform.affine_inverse()
+	var partes: Array[AABB] = []
 	var piso := INF
-	for superficie in forma.get_surface_count():
-		var vertices: PackedVector3Array = forma.surface_get_arrays(superficie)[Mesh.ARRAY_VERTEX]
-		superficies.append(vertices)
-		for vertice in vertices:
-			piso = minf(piso, vertice.y)
-	var apoyo := AABB(Vector3(0.0, piso, 0.0), Vector3.ZERO)
-	var primero := true
-	for vertices in superficies:
-		for vertice in vertices:
-			if vertice.y > piso + BANDA_DE_APOYO:
-				continue
-			if primero:
-				apoyo.position = vertice
-				primero = false
-			else:
-				apoyo = apoyo.expand(vertice)
-	_apoyos_de_las_mallas[forma] = apoyo
+	for malla in mallas:
+		if malla.mesh == null:
+			continue
+		var parte := _apoyo_de(malla, inversa * malla.global_transform)
+		if parte == AABB():
+			continue
+		partes.append(parte)
+		piso = minf(piso, parte.position.y)
+	var apoyo := AABB()
+	var primera := true
+	for parte in partes:
+		if parte.position.y > piso + BANDA_DE_APOYO:
+			continue
+		apoyo = parte if primera else apoyo.merge(parte)
+		primera = false
 	return apoyo
+
+
+## Los vértices de una malla a menos de `BANDA_DE_APOYO` de su punto más bajo, vistos desde el
+## cuerpo. Se recalcula sólo si cambia la pose de la malla respecto del cuerpo, no si el cuerpo se
+## mueve: es lo que mantiene barato el rayo de un objeto que se lleva en la mano.
+func _apoyo_de(malla: MeshInstance3D, relativa: Transform3D) -> AABB:
+	var guardado: Array = _apoyos.get(malla, [])
+	if not guardado.is_empty() and guardado[0] == malla.mesh and _misma_pose(guardado[1], relativa):
+		return guardado[2]
+	var vertices := relativa * _vertices_de(malla.mesh)
+	var piso := INF
+	for vertice in vertices:
+		piso = minf(piso, vertice.y)
+	var apoyo := AABB()
+	var primero := true
+	for vertice in vertices:
+		if vertice.y > piso + BANDA_DE_APOYO:
+			continue
+		apoyo = AABB(vertice, Vector3.ZERO) if primero else apoyo.expand(vertice)
+		primero = false
+	_apoyos[malla] = [malla.mesh, relativa, apoyo]
+	return apoyo
+
+
+static func _misma_pose(una: Transform3D, otra: Transform3D) -> bool:
+	return (
+		una.origin.distance_to(otra.origin) < POSE_IGUAL
+		and una.basis.x.distance_to(otra.basis.x) < POSE_IGUAL
+		and una.basis.y.distance_to(otra.basis.y) < POSE_IGUAL
+		and una.basis.z.distance_to(otra.basis.z) < POSE_IGUAL
+	)
+
+
+static func _vertices_de(forma: Mesh) -> PackedVector3Array:
+	if not _vertices_de_las_mallas.has(forma):
+		var todos := PackedVector3Array()
+		for superficie in forma.get_surface_count():
+			todos.append_array(forma.surface_get_arrays(superficie)[Mesh.ARRAY_VERTEX])
+		_vertices_de_las_mallas[forma] = todos
+	return _vertices_de_las_mallas[forma]
 
 
 static func _limites_de(forma: Shape3D) -> AABB:
