@@ -1,12 +1,13 @@
 // La parte de la oclusión de contacto que oscurece al objeto: sus caras de abajo y el pie de sus
 // costados, según qué tan cerca tienen la superficie de abajo.
 //
-// Los tres valores son por instancia: el mismo material lo comparten muchos objetos. Los escribe
+// Los tres valores son uniformes del material: en la web los uniformes por
+// instancia llegan en cero, así que cada objeto lleva su propio material. Los escribe
 // `oclusion_de_contacto.gd`, que es quien lanza el rayo hacia abajo. Sin él, `oclusion_de_contacto`
 // vale 0 y el material se ve igual que sin este archivo.
-instance uniform float oclusion_de_contacto : hint_range(0.0, 1.0) = 0.0;
-instance uniform float suelo_de_contacto = -1000.0;
-instance uniform float alcance_de_contacto = 0.4;
+uniform float oclusion_de_contacto : hint_range(0.0, 1.0) = 0.0;
+uniform float suelo_de_contacto = -1000.0;
+uniform float alcance_de_contacto = 0.4;
 
 const float FUERZA_DEL_CONTACTO = 0.7;
 

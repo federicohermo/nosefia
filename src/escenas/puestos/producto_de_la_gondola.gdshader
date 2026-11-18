@@ -14,7 +14,7 @@ uniform float rugosidad : hint_range(0.0, 1.0) = 0.5;
 uniform float metalico : hint_range(0.0, 1.0) = 0.0;
 uniform float especular : hint_range(0.0, 1.0) = 0.5;
 
-// Los valores por instancia de la oclusión de contacto. Sin ellos vale 0 y no cambia nada.
+// Los valores de la oclusión de contacto. Sin ellos vale 0 y no cambia nada.
 #include "res://src/escenas/objetos/oclusion_de_contacto.gdshaderinc"
 
 void vertex() {

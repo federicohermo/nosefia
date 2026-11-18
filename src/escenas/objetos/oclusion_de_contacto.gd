@@ -6,9 +6,11 @@
 ##
 ## 1. **El objeto oscurece lo de abajo.** Una mancha difusa sobre esa superficie, del tamaño de la
 ##    huella del objeto. Se apaga con `activa`.
-## 2. **Lo de abajo oscurece al objeto.** Escribe en la malla del objeto la altura de esa
-##    superficie, y el shader oscurece sus caras de abajo. Se apaga con el parámetro por instancia
-##    `oclusion_de_contacto` de la malla, de 0 a 1.
+## 2. **Lo de abajo oscurece al objeto.** Escribe en los materiales de la malla la altura de esa
+##    superficie, y el shader oscurece sus caras de abajo. Se apaga con `base`, de 0 a 1.
+##
+## **Todo va en uniformes del material, nunca por instancia:** en la web, con el renderizador
+## Compatibility, el shader los recibe en cero. Por eso cada objeto lleva sus propios materiales.
 ##
 ## **El rayo corre mientras el objeto se mueve y una vez al quedar quieto.** Uno quieto no tira
 ## ninguno: se entera por el aviso de que cambió su transformación.
@@ -37,8 +39,6 @@ const NORMAL_MINIMA := 0.6
 ## La altura que se le escribe a la malla cuando no hay nada abajo.
 const SIN_SUELO := -1000.0
 
-## Un solo material para todas las manchas: lo propio de cada una va por instancia.
-static var _material_de_la_sombra: ShaderMaterial
 static var _plano_de_la_sombra: ArrayMesh
 static var _limites_de_las_formas: Dictionary[Shape3D, AABB] = {}
 
@@ -48,8 +48,13 @@ static var _limites_de_las_formas: Dictionary[Shape3D, AABB] = {}
 		activa = valor
 		_mostrar()
 
-## La malla del objeto, donde se escribe la altura de lo que tiene debajo y donde vive el parámetro
-## por instancia `oclusion_de_contacto`.
+## Cuánto oscurece la superficie de abajo al objeto, de 0 a 1. Se apaga y se prende en vivo.
+@export_range(0.0, 1.0) var base := 1.0:
+	set(valor):
+		base = valor
+		_escribir_en_la_malla()
+
+## La malla del objeto: en sus materiales se escribe la altura de lo que tiene debajo.
 var malla: MeshInstance3D
 
 ## La mancha, sólo si hay una superficie a menos de `ALCANCE`.
@@ -63,6 +68,7 @@ var _limites_de_la_forma: AABB
 var _esquinas := 0.0
 var _mitad := Vector2.ZERO
 var _hay_sombra := false
+var _suelo := SIN_SUELO
 var _movido := true
 var _asentado := false
 
@@ -86,9 +92,7 @@ func _ready() -> void:
 	sombra.gi_mode = GeometryInstance3D.GI_MODE_DYNAMIC
 	sombra.visible = false
 	add_child(sombra)
-	malla.set_instance_shader_parameter(PARAMETRO_DE_LA_MALLA, 1.0)
-	malla.set_instance_shader_parameter(ALCANCE_DE_LA_MALLA, ALCANCE)
-	malla.set_instance_shader_parameter(SUELO_DE_LA_MALLA, SIN_SUELO)
+	_escribir_en_la_malla()
 	set_notify_transform(true)
 	set_physics_process(true)
 
@@ -133,11 +137,13 @@ func actualizar() -> void:
 	var golpe := cuerpo.get_world_3d().direct_space_state.intersect_ray(consulta)
 	if golpe.is_empty() or (golpe["normal"] as Vector3).y < NORMAL_MINIMA:
 		_hay_sombra = false
-		malla.set_instance_shader_parameter(SUELO_DE_LA_MALLA, SIN_SUELO)
+		_suelo = SIN_SUELO
+		_escribir_en_la_malla()
 		_mostrar()
 		return
 	var punto: Vector3 = golpe["position"]
-	malla.set_instance_shader_parameter(SUELO_DE_LA_MALLA, punto.y)
+	_suelo = punto.y
+	_escribir_en_la_malla()
 	_poner_la_sombra(cuerpo, golpe, maxf(en_el_mundo.position.y - punto.y, 0.0))
 
 
@@ -165,17 +171,31 @@ func _poner_la_sombra(cuerpo: CollisionObject3D, golpe: Dictionary, altura: floa
 	sombra.global_transform = Transform3D(
 		giro.scaled_local(Vector3(tamano.x, 1.0, tamano.y)), punto + normal * ELEVACION
 	)
-	sombra.set_instance_shader_parameter(&"tamano", tamano)
-	sombra.set_instance_shader_parameter(&"huella", _mitad)
-	sombra.set_instance_shader_parameter(&"esquinas", _esquinas)
-	sombra.set_instance_shader_parameter(&"suavidad", suavidad)
-	sombra.set_instance_shader_parameter(&"intensidad", intensidad)
-	sombra.set_instance_shader_parameter(&"recorte", _recorte_del_apoyo(golpe, giro, punto))
+	var material := sombra.material_override as ShaderMaterial
+	material.set_shader_parameter(&"tamano", tamano)
+	material.set_shader_parameter(&"huella", _mitad)
+	material.set_shader_parameter(&"esquinas", _esquinas)
+	material.set_shader_parameter(&"suavidad", suavidad)
+	material.set_shader_parameter(&"intensidad", intensidad)
+	material.set_shader_parameter(&"recorte", _recorte_del_apoyo(golpe, giro, punto))
 
 
 func _mostrar() -> void:
 	if sombra != null:
 		sombra.visible = activa and _hay_sombra
+
+
+## Los materiales se leen cada vez: el balde viste su malla después de `_ready`.
+func _escribir_en_la_malla() -> void:
+	if malla == null:
+		return
+	for superficie in malla.get_surface_override_material_count():
+		var material := malla.get_surface_override_material(superficie) as ShaderMaterial
+		if material == null:
+			continue
+		material.set_shader_parameter(PARAMETRO_DE_LA_MALLA, base)
+		material.set_shader_parameter(SUELO_DE_LA_MALLA, _suelo)
+		material.set_shader_parameter(ALCANCE_DE_LA_MALLA, ALCANCE)
 
 
 ## Hasta dónde llega lo que sostiene al objeto, en el plano de la mancha. Sin esto, una caja
@@ -216,7 +236,6 @@ static func _plano() -> ArrayMesh:
 
 
 static func _material() -> ShaderMaterial:
-	if _material_de_la_sombra == null:
-		_material_de_la_sombra = ShaderMaterial.new()
-		_material_de_la_sombra.shader = SOMBRA
-	return _material_de_la_sombra
+	var material := ShaderMaterial.new()
+	material.shader = SOMBRA
+	return material

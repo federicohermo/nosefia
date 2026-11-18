@@ -1,21 +1,22 @@
 // La mancha difusa que un objeto deja sobre la superficie que tiene debajo.
 //
 // Es un plano negro con alfa: oscurece lo que cae atrás y no pone luz. Sobre una imagen casi
-// negra no se ve. Todos los valores son por instancia, así que lo comparte un solo material.
+// negra no se ve. Los valores son uniformes del material, y cada mancha lleva el suyo: en la
+// web los uniformes por instancia llegan en cero.
 shader_type spatial;
 render_mode unshaded, depth_draw_never, cull_disabled, shadows_disabled, fog_disabled;
 
 // Tamaño del plano, en metros.
-instance uniform vec2 tamano = vec2(1.0);
+uniform vec2 tamano = vec2(1.0);
 // Mitad de la huella del objeto, en metros.
-instance uniform vec2 huella = vec2(0.2);
+uniform vec2 huella = vec2(0.2);
 // De 0 (esquinas vivas) a 1 (círculo).
-instance uniform float esquinas = 0.0;
+uniform float esquinas = 0.0;
 // Ancho del borde difuso, en metros.
-instance uniform float suavidad = 0.06;
-instance uniform float intensidad = 0.0;
+uniform float suavidad = 0.06;
+uniform float intensidad = 0.0;
 // Hasta dónde llega la superficie de apoyo: mínimo y máximo, en el plano.
-instance uniform vec4 recorte = vec4(-100.0, -100.0, 100.0, 100.0);
+uniform vec4 recorte = vec4(-100.0, -100.0, 100.0, 100.0);
 
 varying vec2 plano;
 
