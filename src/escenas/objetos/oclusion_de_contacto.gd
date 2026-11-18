@@ -39,7 +39,7 @@ const SIN_SUELO := -1000.0
 
 ## Un solo material para todas las manchas: lo propio de cada una va por instancia.
 static var _material_de_la_sombra: ShaderMaterial
-static var _plano_de_la_sombra: PlaneMesh
+static var _plano_de_la_sombra: ArrayMesh
 static var _limites_de_las_formas: Dictionary[Shape3D, AABB] = {}
 
 ## Se apaga y se prende en vivo. Apaga la mancha, y no el oscurecimiento del objeto.
@@ -83,6 +83,7 @@ func _ready() -> void:
 	sombra.mesh = _plano()
 	sombra.material_override = _material()
 	sombra.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+	sombra.gi_mode = GeometryInstance3D.GI_MODE_DYNAMIC
 	sombra.visible = false
 	add_child(sombra)
 	malla.set_instance_shader_parameter(PARAMETRO_DE_LA_MALLA, 1.0)
@@ -202,10 +203,15 @@ static func _limites_de(forma: Shape3D) -> AABB:
 	return _limites_de_las_formas[forma]
 
 
-static func _plano() -> PlaneMesh:
+## Un `ArrayMesh` y no un `PlaneMesh`: lo que recorre las mallas del local espera superficies.
+static func _plano() -> ArrayMesh:
 	if _plano_de_la_sombra == null:
-		_plano_de_la_sombra = PlaneMesh.new()
-		_plano_de_la_sombra.size = Vector2.ONE
+		var plano := PlaneMesh.new()
+		plano.size = Vector2.ONE
+		_plano_de_la_sombra = ArrayMesh.new()
+		_plano_de_la_sombra.add_surface_from_arrays(
+			Mesh.PRIMITIVE_TRIANGLES, plano.get_mesh_arrays()
+		)
 	return _plano_de_la_sombra
 
 
