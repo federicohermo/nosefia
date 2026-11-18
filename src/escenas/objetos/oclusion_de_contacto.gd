@@ -4,8 +4,9 @@
 ## Cuelga del objeto y lanza un rayo hacia abajo desde su base. Con lo que encuentra hace las dos
 ## partes:
 ##
-## 1. **El objeto oscurece lo de abajo.** Una mancha difusa sobre esa superficie, del tamaño de la
-##    huella del objeto. Se apaga con `activa`.
+## 1. **El objeto oscurece lo de abajo.** Una mancha difusa sobre esa superficie, que se abre
+##    `radio` desde lo que del objeto toca la superficie: los vértices de su malla más bajos, y no
+##    la caja que envuelve su forma, que en un balde es la boca. Se apaga con `activa`.
 ## 2. **Lo de abajo oscurece al objeto.** Escribe en los materiales de la malla la altura de esa
 ##    superficie, y el shader oscurece sus caras de abajo. Se apaga con
 ##    `intensidad`, de 0 a 1.
@@ -35,6 +36,8 @@ const DIFUMINADO_POR_ALTURA := 0.5
 const ELEVACION := 0.003
 ## El rayo sale un poco sobre la base: desde adentro de lo que lo sostiene no lo vería.
 const SALIDA := 0.03
+## Cuánto sobre el punto más bajo de la malla se cuenta como apoyo, en metros.
+const BANDA_DE_APOYO := 0.01
 ## Una superficie más empinada que esto no sostiene nada: es una pared.
 const NORMAL_MINIMA := 0.6
 ## La altura que se le escribe a la malla cuando no hay nada abajo.
@@ -42,6 +45,7 @@ const SIN_SUELO := -1000.0
 
 static var _plano_de_la_sombra: ArrayMesh
 static var _limites_de_las_formas: Dictionary[Shape3D, AABB] = {}
+static var _apoyos_de_las_mallas: Dictionary[Mesh, AABB] = {}
 
 ## Se apaga y se prende en vivo. Apaga la mancha, y no el oscurecimiento del objeto.
 @export var activa := true:
@@ -74,8 +78,6 @@ var sombra: MeshInstance3D
 ## Cuántos rayos lanzó. Lo mira el test de que un objeto quieto no los repite.
 var rayos := 0
 
-var _forma: CollisionShape3D
-var _limites_de_la_forma: AABB
 var _esquinas := 0.0
 var _mitad := Vector2.ZERO
 var _hay_sombra := false
@@ -84,17 +86,14 @@ var _movido := true
 var _asentado := false
 
 
-## `forma` es el volumen del objeto: de ahí salen su huella y su base. `esquinas` va de 0 (una caja)
-## a 1 (un balde).
-func configurar(malla_del_objeto: MeshInstance3D, forma: CollisionShape3D, esquinas: float) -> void:
+## De la malla del objeto salen su huella y su base. `esquinas` va de 0 (una caja) a 1 (un balde).
+func configurar(malla_del_objeto: MeshInstance3D, esquinas: float) -> void:
 	malla = malla_del_objeto
-	_forma = forma
 	_esquinas = esquinas
 
 
 func _ready() -> void:
 	add_to_group(GRUPO)
-	_limites_de_la_forma = _limites_de(_forma.shape)
 	sombra = MeshInstance3D.new()
 	sombra.top_level = true
 	sombra.mesh = _plano()
@@ -134,7 +133,9 @@ func _physics_process(_delta: float) -> void:
 func actualizar() -> void:
 	rayos += 1
 	var cuerpo := get_parent() as CollisionObject3D
-	var del_objeto := _forma.transform * _limites_de_la_forma
+	var del_objeto := (
+		cuerpo.global_transform.affine_inverse() * malla.global_transform * _apoyo_de(malla.mesh)
+	)
 	var en_el_mundo := cuerpo.global_transform * del_objeto
 	_mitad = Vector2(del_objeto.size.x, del_objeto.size.z) / 2.0
 	var centro := en_el_mundo.get_center()
@@ -232,6 +233,33 @@ func _recorte_del_apoyo(golpe: Dictionary, giro: Basis, punto: Vector3) -> Vecto
 		minimo = minimo.min(Vector2(esquina.x, esquina.z))
 		maximo = maximo.max(Vector2(esquina.x, esquina.z))
 	return Vector4(minimo.x, minimo.y, maximo.x, maximo.y)
+
+
+## Dónde toca el objeto lo que tiene debajo, en el espacio de su malla: los vértices a menos de
+## `BANDA_DE_APOYO` del más bajo. Se lee una vez por malla.
+static func _apoyo_de(forma: Mesh) -> AABB:
+	if _apoyos_de_las_mallas.has(forma):
+		return _apoyos_de_las_mallas[forma]
+	var superficies: Array[PackedVector3Array] = []
+	var piso := INF
+	for superficie in forma.get_surface_count():
+		var vertices: PackedVector3Array = forma.surface_get_arrays(superficie)[Mesh.ARRAY_VERTEX]
+		superficies.append(vertices)
+		for vertice in vertices:
+			piso = minf(piso, vertice.y)
+	var apoyo := AABB(Vector3(0.0, piso, 0.0), Vector3.ZERO)
+	var primero := true
+	for vertices in superficies:
+		for vertice in vertices:
+			if vertice.y > piso + BANDA_DE_APOYO:
+				continue
+			if primero:
+				apoyo.position = vertice
+				primero = false
+			else:
+				apoyo = apoyo.expand(vertice)
+	_apoyos_de_las_mallas[forma] = apoyo
+	return apoyo
 
 
 static func _limites_de(forma: Shape3D) -> AABB:

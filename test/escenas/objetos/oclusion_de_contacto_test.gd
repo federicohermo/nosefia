@@ -15,6 +15,11 @@ const GROSOR_DEL_PISO := 0.2
 ## sostiene.
 const CORRIDA := 0.1
 
+## El balde de prueba: el radio de su boca y el de su base, y su alto, en metros.
+const BOCA := 0.2
+const BASE := 0.12
+const ALTO := 0.4
+
 
 func _piso(inclinacion := 0.0) -> StaticBody3D:
 	var piso: StaticBody3D = auto_free(StaticBody3D.new())
@@ -255,6 +260,54 @@ func test_apoyada_la_mancha_se_abre_del_objeto_tanto_como_el_radio_y_un_movimien
 	assert_float(_de_la_mancha(oclusion, &"suavidad")).is_equal_approx(oclusion.radio, 0.002)
 	await _mover_y_esperar(caja)
 	assert_float(_de_la_mancha(oclusion, &"suavidad")).is_equal_approx(oclusion.radio, 0.002)
+
+
+## Un cuerpo que se abre hacia arriba, como un balde: su forma de colisión envuelve la boca, y lo
+## que toca el piso es la base, más angosta.
+func _balde_a(altura: float) -> Node3D:
+	var cuerpo: RigidBody3D = auto_free(RigidBody3D.new())
+	var forma := CollisionShape3D.new()
+	var cilindro := CylinderShape3D.new()
+	cilindro.radius = BOCA
+	cilindro.height = ALTO
+	forma.shape = cilindro
+	cuerpo.add_child(forma)
+	var malla := MeshInstance3D.new()
+	var tronco := CylinderMesh.new()
+	tronco.top_radius = BOCA
+	tronco.bottom_radius = BASE
+	tronco.height = ALTO
+	tronco.rings = 1
+	malla.mesh = tronco
+	malla.set_surface_override_material(0, ShaderMaterial.new())
+	cuerpo.add_child(malla)
+	var oclusion: Node3D = Oclusion.new()
+	oclusion.configurar(malla, 1.0)
+	cuerpo.add_child(oclusion)
+	add_child(cuerpo)
+	cuerpo.global_position = Vector3.UP * (ALTO / 2.0 + altura)
+	await get_tree().physics_frame
+	await get_tree().physics_frame
+	return oclusion
+
+
+func test_lo_que_se_abre_hacia_arriba_deja_la_mancha_desde_su_base_y_no_desde_su_boca() -> void:
+	_piso()
+	var oclusion := await _balde_a(0.0)
+	assert_bool(oclusion.sombra.visible).is_true()
+	assert_float(_de_la_malla(oclusion, Oclusion.SUELO_DE_LA_MALLA)).is_equal_approx(0.0, 0.001)
+	var huella: Vector2 = _de_la_mancha(oclusion, &"huella")
+	assert_float(huella.x).is_equal_approx(BASE, 0.002)
+	assert_float(huella.y).is_equal_approx(BASE, 0.002)
+	var tamano: Vector2 = _de_la_mancha(oclusion, &"tamano")
+	assert_float(tamano.x).is_equal_approx(2.0 * (BASE + oclusion.radio), 0.004)
+
+
+func test_lo_que_se_abre_hacia_arriba_lleva_la_mancha_de_la_base_aunque_lo_levanten() -> void:
+	_piso()
+	var oclusion := await _balde_a(Oclusion.RADIO_POR_DEFECTO / 2.0)
+	assert_bool(oclusion.sombra.visible).is_true()
+	assert_float((_de_la_mancha(oclusion, &"huella") as Vector2).x).is_equal_approx(BASE, 0.002)
 
 
 ## En la web los uniformes por instancia llegan al shader en cero, y el efecto no se ve aunque el

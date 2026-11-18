@@ -117,7 +117,7 @@ func _ready() -> void:
 	malla.mesh = malla_del_modelo(nodo_del_modelo)
 	if datos.id == ReglasDeLaLimpieza.ID_DEL_BALDE:
 		var oclusion := OclusionDeContacto.new()
-		oclusion.configurar(malla, get_node("Forma"), 1.0)
+		oclusion.configurar(malla, 1.0)
 		add_child(oclusion)
 	if datos.id == ReglasDeLaLimpieza.ID_DE_LA_MOPA:
 		# Un volumen rígido no acompaña la cabeza al apoyarse. La humedad ya tiñe las fibras;

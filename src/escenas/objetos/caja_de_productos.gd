@@ -97,7 +97,7 @@ func _ready() -> void:
 		parte.scale = Vector3.ONE * media()
 	_ponerse_su_etiqueta()
 	var oclusion := OclusionDeContacto.new()
-	oclusion.configurar(get_node("Malla"), get_node("Cuerpo"), 0.1)
+	oclusion.configurar(get_node("Malla"), 0.1)
 	add_child(oclusion)
 	_lugar_de_origen = transform
 	_padre_de_origen = get_parent()
