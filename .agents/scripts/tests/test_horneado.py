@@ -12,14 +12,21 @@ from lib.horneado import (
     VARIABLE_DE_LA_VARIANTE,
     VARIANTE_CON_APOYO,
     LADO_DEL_ATLAS_SIN_LUZ,
+    NIVEL_DE_OCLUSION,
+    RADIO_DE_OCLUSION,
+    RAYOS_DE_OCLUSION,
     argumentos_de_la_mezcla,
+    argumentos_de_la_oclusion,
     comando_de_la_mezcla,
+    comando_de_la_oclusion,
     comando_de_la_reduccion,
     comando_de_la_reparacion,
     con_apoyo,
+    con_oclusion,
     entorno_de,
     project_con_el_plugin,
     reescritos_de_mas,
+    ruta_para_godot,
     salidas_de,
     sesion_bloqueada,
     tope_en_segundos,
@@ -216,3 +223,49 @@ class HorneadoConApoyo(unittest.TestCase):
         self.assertEqual(comando[corte + 1 :], ["--aplicar", "a.exr", "b.exr"])
         # Sin esto, una excepción del script sale con código 0 y el horneado sigue.
         self.assertEqual(comando[comando.index("--python-exit-code") + 1], "1")
+
+
+class OclusionDeLosRincones(unittest.TestCase):
+    # El paso multiplica la luz del atlas por un factor que sólo depende de la geometría. El nivel
+    # es cuánto pesa: con 0 el paso no corre y el atlas queda como lo dejó el horneado.
+    def test_el_nivel_es_una_fraccion(self):
+        self.assertGreaterEqual(NIVEL_DE_OCLUSION, 0.0)
+        self.assertLessEqual(NIVEL_DE_OCLUSION, 1.0)
+
+    def test_el_radio_y_los_rayos_son_positivos(self):
+        self.assertGreater(RADIO_DE_OCLUSION, 0.0)
+        self.assertGreater(RAYOS_DE_OCLUSION, 0)
+
+    def test_con_nivel_cero_el_paso_no_corre(self):
+        self.assertFalse(con_oclusion(0.0))
+
+    def test_con_cualquier_otro_nivel_corre(self):
+        for nivel in (0.01, 0.5, 1.0):
+            self.assertTrue(con_oclusion(nivel))
+
+    def test_un_nivel_fuera_de_cero_a_uno_es_un_error(self):
+        for nivel in (-0.1, 1.1):
+            with self.assertRaises(ValueError):
+                con_oclusion(nivel)
+
+    def test_el_comando_pasa_el_horneado_los_dos_atlas_y_los_numeros(self):
+        atlas = ("res://a.exr", "res://b.exr", 0.8, 0.5, 32)
+        comando = comando_de_la_oclusion("godot", "/repo", *atlas)
+        corte = comando.index("--")
+        self.assertIn("--headless", comando[:corte])
+        self.assertEqual(comando[corte + 1 :], argumentos_de_la_oclusion(*atlas))
+
+    def test_los_argumentos_llevan_el_lmbake_de_la_rama_primero(self):
+        argumentos = argumentos_de_la_oclusion("res://a.exr", "res://b.exr", 0.8, 0.5, 32)
+        self.assertEqual(argumentos[:3], ["res://" + SALIDAS[0], "res://a.exr", "res://b.exr"])
+        self.assertEqual([float(a) for a in argumentos[3:5]], [0.8, 0.5])
+        self.assertEqual(int(argumentos[5]), 32)
+
+    def test_un_atlas_del_repo_se_pasa_como_ruta_del_proyecto(self):
+        self.assertEqual(
+            ruta_para_godot("/repo/" + SALIDAS[1], "/repo"), "res://" + SALIDAS[1]
+        )
+
+    def test_un_atlas_de_afuera_del_repo_se_pasa_con_su_ruta_entera(self):
+        self.assertEqual(ruta_para_godot("/otro/lado/a.exr", "/repo"), "/otro/lado/a.exr")
+
