@@ -47,8 +47,7 @@ func test_las_tres_partes_animadas_comparten_shader_con_materiales_independiente
 		var pases: Dictionary = malla.get("_segundos_pases")
 		var fijos := 0
 		for pintura: Material in pases:
-			if pintura is StandardMaterial3D:
-				assert_object((pases[pintura] as ShaderMaterial).shader).is_same(CONTORNO_FIJO)
+			if (pases[pintura] as ShaderMaterial).shader == CONTORNO_FIJO:
 				fijos += 1
 		assert_int(fijos).is_greater(0)
 

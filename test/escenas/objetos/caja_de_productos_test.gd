@@ -169,7 +169,7 @@ func test_reparentar_conserva_las_etiquetas_y_destruir_no_da_error() -> void:
 	var materiales: Array[int] = []
 	var fuente: Mesh
 	var material_generico: BaseMaterial3D
-	var etiqueta_retenida: BaseMaterial3D
+	var etiqueta_retenida: ShaderMaterial
 	var generica := ""
 	var esperado := _rectangulo_esperado(_reparto(), Producto.Id.ACTRONCITO)
 	for _indice in 2:
@@ -184,7 +184,7 @@ func test_reparentar_conserva_las_etiquetas_y_destruir_no_da_error() -> void:
 		var material := _material(caja)
 		etiqueta_retenida = material
 		var identidad := material.get_instance_id()
-		var textura := material.albedo_texture
+		var textura: Texture2D = material.get_shader_parameter("textura")
 		assert_object(textura).is_not_null()
 		assert_bool(_rectangulo_que_muestra(material).is_equal_approx(esperado)).is_true()
 		materiales.append(identidad)
@@ -195,7 +195,7 @@ func test_reparentar_conserva_las_etiquetas_y_destruir_no_da_error() -> void:
 		caja.reparent(destino, true)
 		assert_object(caja.get_parent()).is_same(destino)
 		assert_int(_material(caja).get_instance_id()).is_equal(identidad)
-		assert_object(_material(caja).albedo_texture).is_same(textura)
+		assert_object(_material(caja).get_shader_parameter("textura")).is_same(textura)
 		assert_int(caja.get("producto")).is_equal(Producto.Id.ACTRONCITO)
 		assert_object(caja.get("datos")).is_same(datos)
 	assert_int(materiales[0]).is_not_equal(materiales[1])
@@ -327,13 +327,13 @@ static func _nombres_de_las_cajas() -> Array[String]:
 	return nombres
 
 
-## Filtra pixelado como el resto del arte: el material es el de la caja genérica con otra
-## textura, y la textura se importa comprimida y con mipmaps. El mismo material es también el
-## mismo shader: en la web un shader nuevo se compila en la pantalla de carga.
+## La etiqueta se ve como la caja genérica: lo único propio de cada caja es la textura y el
+## rectángulo del atlas. El material es el shader de los productos de la góndola, el mismo que ya
+## está compilado: en la web un shader nuevo se compila en la pantalla de carga.
 ##
 ## Y no va como `material_override`: el calentamiento de shaders dibuja uno por cuadro, y con
 ## las 31 cajas pasaba de 129 cuadros a 159 sin compilar nada nuevo.
-func test_la_etiqueta_filtra_pixelado_como_la_caja_generica() -> void:
+func test_la_etiqueta_se_ve_como_la_caja_generica() -> void:
 	for id: Producto.Id in ORIGEN_DE_CADA_ETIQUETA:
 		var caja := _caja_armada(id)
 		var material := _material(caja)
@@ -342,25 +342,18 @@ func test_la_etiqueta_filtra_pixelado_como_la_caja_generica() -> void:
 			. override_failure_message("%s suma un cuadro al calentamiento" % _nombre(id))
 			. is_null()
 		)
-		(
-			assert_int(material.texture_filter)
-			. override_failure_message("la etiqueta de %s no filtra pixelado" % _nombre(id))
-			. is_equal(BaseMaterial3D.TEXTURE_FILTER_NEAREST_WITH_MIPMAPS)
-		)
 		var propio := (caja.get_node("Malla") as MeshInstance3D).mesh.surface_get_material(0)
-		for propiedad: Dictionary in propio.get_property_list():
-			var nombre: String = propiedad["name"]
-			var uso: int = propiedad["usage"]
-			var propia_de_la_copia := (
-				nombre in ["albedo_texture", "uv1_scale", "uv1_offset"]
-				or nombre.begins_with("resource_")
-			)
-			if uso & PROPERTY_USAGE_STORAGE == 0 or propia_de_la_copia:
-				continue
+		var iguales := {
+			"color": "albedo_color",
+			"rugosidad": "roughness",
+			"metalico": "metallic",
+			"especular": "metallic_specular",
+		}
+		for uniforme: String in iguales:
 			(
-				assert_that(material.get(nombre))
-				. override_failure_message("%s cambia `%s`" % [_nombre(id), nombre])
-				. is_equal(propio.get(nombre))
+				assert_that(material.get_shader_parameter(uniforme))
+				. override_failure_message("%s cambia `%s`" % [_nombre(id), uniforme])
+				. is_equal(propio.get(iguales[uniforme]))
 			)
 
 
@@ -419,8 +412,8 @@ func _caja_armada(id: Producto.Id) -> CajaQueSeLleva:
 	return caja
 
 
-func _material(caja: Node) -> BaseMaterial3D:
-	return (caja.get_node("Malla") as MeshInstance3D).get_active_material(0) as BaseMaterial3D
+func _material(caja: Node) -> ShaderMaterial:
+	return (caja.get_node("Malla") as MeshInstance3D).get_active_material(0) as ShaderMaterial
 
 
 func _nombre(id: Producto.Id) -> String:
@@ -450,10 +443,13 @@ func _rectangulo_esperado(reparto: Dictionary, id: Producto.Id) -> Rect2:
 
 
 ## Lo que muestra un material de caja, en píxeles de su textura: dónde empieza y cuánto abarca.
-func _rectangulo_que_muestra(material: BaseMaterial3D) -> Rect2:
-	var tamano := Vector2(material.albedo_texture.get_size())
-	var desplazamiento := Vector2(material.uv1_offset.x, material.uv1_offset.y)
-	var escala := Vector2(material.uv1_scale.x, material.uv1_scale.y)
+func _rectangulo_que_muestra(material: ShaderMaterial) -> Rect2:
+	var textura: Texture2D = material.get_shader_parameter("textura")
+	var tamano := Vector2(textura.get_size())
+	var origen: Vector3 = material.get_shader_parameter("desplazamiento_uv")
+	var cuanto: Vector3 = material.get_shader_parameter("escala_uv")
+	var desplazamiento := Vector2(origen.x, origen.y)
+	var escala := Vector2(cuanto.x, cuanto.y)
 	return Rect2(desplazamiento * tamano, escala * tamano)
 
 

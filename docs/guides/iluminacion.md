@@ -139,6 +139,29 @@ mientras se hornea. No están en `almacen.tscn`, ni en el `.lmbake`, ni en el ju
   mezclada deja de valer la mitad de sus vecinas y el reparador ya no la ve.
 - **El horneado de la noche del corte de luz no cambia:** se hornea sin obstáculos.
 
+## La oclusión de contacto de lo que se levanta
+
+Lo que se mueve no tiene lightmap, así que la sombra de apoyo horneada no le sirve. La caja de
+productos y el balde llevan una oclusión de contacto dinámica. Nada va horneado en el objeto: al
+levantarlo el efecto se va. Es un prototipo, y el usuario decide jugándolo si se extiende.
+
+`oclusion_de_contacto.gd` cuelga del objeto y lanza un rayo hacia abajo desde su base. Con lo que
+encuentra hace dos cosas:
+
+- **El objeto oscurece lo de abajo.** Una mancha negra con alfa sobre esa superficie, del tamaño
+  de su huella (`sombra_de_contacto.gdshader`). Sigue la normal de la superficie y se corta en el
+  borde de lo que lo sostiene. En Compatibility los `Decal` no funcionan: la mancha es un plano.
+  Se apaga con la propiedad `activa` del nodo, que está en el grupo `oclusion_de_contacto`.
+- **Lo de abajo oscurece al objeto.** Escribe en la malla la altura de esa superficie. El shader
+  (`oclusion_de_contacto.gdshaderinc`) oscurece las caras de abajo y el pie de los costados. Se
+  apaga con el parámetro por instancia `oclusion_de_contacto` de la malla, de 0 a 1. Lo comparten
+  el shader de los productos de la góndola y el de la manija del balde, y por eso va por
+  instancia y no en el material.
+
+Más lejos de `ALCANCE` de cualquier superficie no hay efecto. **El rayo corre mientras el objeto
+se mueve y una vez al quedar quieto**: se entera por el aviso de que cambió su transformación.
+Un objeto quieto no tira ninguno.
+
 ## El horneado de la noche del corte de luz
 
 La séptima noche se corta la luz. La oscuridad **no** apaga el `LightmapGI`: el local tiene un

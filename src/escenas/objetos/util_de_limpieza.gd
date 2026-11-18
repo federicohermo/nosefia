@@ -15,6 +15,7 @@ const MODELO := preload("res://assets/models/SEPT_JUEGOS_PROTOTIPO.glb")
 const SuperficieLiquida := preload("res://src/escenas/objetos/superficie_liquida.gd")
 const FibrasDeLaMopa := preload("res://src/escenas/objetos/fibras_de_la_mopa.gd")
 const Gotas := preload("res://src/escenas/objetos/gotas_del_balde.gd")
+const OclusionDeContacto := preload("res://src/escenas/objetos/oclusion_de_contacto.gd")
 
 ## El nodo del modelo que lo dibujaba fijo: su malla es la de este útil.
 @export var nodo_del_modelo: StringName
@@ -114,6 +115,10 @@ func _ready() -> void:
 	if datos.id == ReglasDeLaLimpieza.ID_DEL_BALDE:
 		sonoridad_vigente = EntradaSonora.sonoridad_del_balde(false)
 	malla.mesh = malla_del_modelo(nodo_del_modelo)
+	if datos.id == ReglasDeLaLimpieza.ID_DEL_BALDE:
+		var oclusion := OclusionDeContacto.new()
+		oclusion.configurar(malla, get_node("Forma"), 1.0)
+		add_child(oclusion)
 	if datos.id == ReglasDeLaLimpieza.ID_DE_LA_MOPA:
 		# Un volumen rígido no acompaña la cabeza al apoyarse. La humedad ya tiñe las fibras;
 		# conservar este nodo como anclaje mantiene la mojada, el goteo y el color de la carga.

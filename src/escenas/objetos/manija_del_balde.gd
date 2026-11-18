@@ -55,7 +55,15 @@ func _preparar() -> void:
 			borde.set_shader_parameter("deformacion", 2)
 			_contornos.append(borde)
 		else:
-			pintura = original.duplicate() as StandardMaterial3D
+			# El cuerpo usa el mismo shader sin girar: así también se oscurece cerca del piso.
+			var fija := ShaderMaterial.new()
+			fija.shader = PINTURA
+			fija.set_shader_parameter("color", original.albedo_color)
+			fija.set_shader_parameter("textura", original.albedo_texture)
+			fija.set_shader_parameter("rugosidad", original.roughness)
+			fija.set_shader_parameter("metal", original.metallic)
+			fija.set_shader_parameter("gira", 0.0)
+			pintura = fija
 			borde.shader = CONTORNO
 		_segundos_pases[pintura] = borde
 		set_surface_override_material(superficie, pintura)

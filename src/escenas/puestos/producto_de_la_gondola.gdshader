@@ -14,8 +14,16 @@ uniform float rugosidad : hint_range(0.0, 1.0) = 0.5;
 uniform float metalico : hint_range(0.0, 1.0) = 0.0;
 uniform float especular : hint_range(0.0, 1.0) = 0.5;
 
+// Los valores por instancia de la oclusión de contacto. Sin ellos vale 0 y no cambia nada.
+#include "res://src/escenas/objetos/oclusion_de_contacto.gdshaderinc"
+
+void vertex() {
+	contacto = contacto_del_vertice(MODEL_MATRIX, VERTEX, NORMAL);
+}
+
 void fragment() {
-	ALBEDO = color.rgb * texture(textura, UV * escala_uv.xy + desplazamiento_uv.xy).rgb;
+	ALBEDO = oscurecer_por_contacto(
+			color.rgb * texture(textura, UV * escala_uv.xy + desplazamiento_uv.xy).rgb);
 	METALLIC = metalico;
 	ROUGHNESS = rugosidad;
 	SPECULAR = especular;
