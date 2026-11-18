@@ -258,7 +258,8 @@ SSAA. No tiene FXAA, SMAA ni TAA. Los `SubViewport` del celular, del ticket y de
 no lo heredan: cada uno declara el suyo.
 
 Un shader que lee la profundidad (`hint_depth_texture`) suma un blit de profundidad por cuadro
-mientras MSAA esté prendido. Para sacar ese costo hay que apagar MSAA o quitar la lectura.
+mientras MSAA esté prendido. Ningún shader de `src/` la lee. Para sacar ese costo hay que apagar
+MSAA o quitar la lectura.
 
 ## Medición del 2026-10-05
 
