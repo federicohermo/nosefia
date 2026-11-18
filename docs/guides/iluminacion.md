@@ -139,6 +139,41 @@ mientras se hornea. No están en `almacen.tscn`, ni en el `.lmbake`, ni en el ju
   mezclada deja de valer la mitad de sus vecinas y el reparador ya no la ve.
 - **El horneado de la noche del corte de luz no cambia:** se hornea sin obstáculos.
 
+## La oclusión de los rincones
+
+El horneador de Godot no da oclusión local: el piso al pie de una pared se hornea tan claro como el
+del pasillo. Un paso propio la calcula y la deja adentro de `almacen.exr`. El juego no suma ningún
+pase, shader, textura ni programa. Un pase en pantalla que hacía lo mismo salió del juego porque con
+MSAA 2× costaba entre 3,6 y 12,6 ms de GPU por cuadro.
+
+- **Qué hace.** Para cada texel de cada pieza del atlas, mide cuánto lo tapan las mallas fijas a
+  menos de un radio, y multiplica la luz de ese texel por un factor (`addons/hornear/oclusion.gd`).
+  Cada pieza se rasteriza en la UV2 que usa el atlas, y de cada texel salen rayos al hemisferio.
+  Un rayo que pega cerca cuenta más que uno que pega lejos. Los tres canales de color de las
+  cuatro capas del atlas reciben el mismo factor: la luz y su dirección. El alfa no cambia.
+- **Qué lo define.** El factor depende sólo de la geometría. Un lugar abierto vale 1 y el factor
+  nunca aclara un texel. El paso no mira las luces.
+- **Dónde están los mandos.** `RADIO_DE_OCLUSION`, `NIVEL_DE_OCLUSION` y `RAYOS_DE_OCLUSION`, en
+  `lib/horneado.py`. Con el nivel en 0 el paso no corre y el atlas queda como lo dejó el horneado.
+- **En qué orden corre.** Al final de `hornear.py`, después de reparar las líneas y de mezclar la
+  sombra de apoyo. Si corriera antes de la mezcla, ésta lo diluiría. El horneado de la noche del
+  corte no lo recibe.
+- **Sin hornear de nuevo.** `python .claude/scripts/hornear.py --oclusion` lo aplica sobre el atlas
+  que ya está en la rama. `--nivel`, `--radio`, `--rayos` y `--salida` cambian lo que usa y adónde
+  escribe. **Sin `--salida` multiplica el atlas de la rama en su lugar: correrlo dos veces lo
+  oscurece dos veces.** Para probar niveles se escribe a otro archivo con `--salida`.
+- **Cómo se ubica cada pieza.** El `.lmbake` dice, por pieza, la ruta de su malla, su rectángulo y
+  su rebanada. La malla y su lugar en el mundo salen de `almacen.tscn`, que se instancia sin entrar
+  al árbol. Una pieza con UV2 fuera de su rectángulo frena el paso y se nombra.
+- **El borde de cada pieza.** El margen de un texel que lee el filtrado, y los huecos entre las
+  islas de una pieza, reciben el factor de su vecino de adentro. Sin eso, el borde dejaba una costura.
+- **Si falla.** `almacen.exr` queda como estaba.
+- **Cuánto tarda y cuánto grano deja.** Tarda lo que los rayos: unos 4 µs cada uno. El local tiene
+  del orden de un millón de texeles con luz. Pocos rayos se ven como grano; cada texel gira su
+  reparto para que el grano no forme bandas.
+- **Qué no cubre.** Lo que no tiene lightmap no recibe nada: los productos, las cajas y lo que se
+  mueve. Un obstáculo que no es una malla fija, como una puerta que abre, no oscurece a nadie.
+
 ## El horneado de la noche del corte de luz
 
 La séptima noche se corta la luz. La oscuridad **no** apaga el `LightmapGI`: el local tiene un
@@ -186,6 +221,9 @@ las sondas de los productos.
 caras salen los obstáculos y cómo se mezclan los dos atlas. `test_horneado.py` y `test_hornear.py`:
 el nivel, el orden de los pasos y que un horneado a medias deje los archivos como estaban.
 `test_reducir_mapa_de_luz.py`: que el atlas se reduzca por bloques, sin mezclar capas.
+`test/escenas/oclusion_del_horneado_test.gd`: que un piso abierto valga 1, que un rincón valga menos
+que una pared lisa, que una chapa de dos caras no se tape a sí misma y que el borde de la pieza no
+deje una costura. `test_horneado.py` y `test_hornear.py` suman el nivel y el lugar del paso.
 
 `test/escenas/iluminacion_horneada_test.gd`: que el `LightmapGI` tenga datos, y que ninguna
 malla con GI estático se haya quedado afuera del horneado. También que ninguna hoja que abre

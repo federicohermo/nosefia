@@ -144,12 +144,25 @@ class HorneadoConLuz(unittest.TestCase):
     def _mezclar(self, godot: str, nivel: float) -> None:
         self.pasos.append("mezclar")
 
-    def _correr(self, nivel: float) -> None:
+    def _oclusionar(
+        self,
+        godot: str,
+        entrada: str,
+        salida: str,
+        nivel: float,
+        radio: float = 0.0,
+        rayos: int = 0,
+    ) -> None:
+        self.pasos.append(f"oclusion:{Path(entrada).name}:{Path(salida).name}:{nivel}")
+
+    def _correr(self, nivel: float, oclusion: float = 0.0) -> None:
         with (
             mock.patch.object(hornear, "sesion_del_editor", self._sesion),
             mock.patch.object(hornear, "reparar_lineas", self._reparar),
             mock.patch.object(hornear, "mezclar_atlas", self._mezclar),
+            mock.patch.object(hornear, "oclusionar_atlas", self._oclusionar),
             mock.patch.object(hornear, "NIVEL_DE_APOYO", nivel),
+            mock.patch.object(hornear, "NIVEL_DE_OCLUSION", oclusion),
         ):
             hornear.hornear_con_luz("godot", "blender")
 
@@ -172,6 +185,80 @@ class HorneadoConLuz(unittest.TestCase):
     def test_con_nivel_cero_el_atlas_de_siempre_es_el_final(self) -> None:
         self._correr(0.0)
         self.assertEqual(self.pasos, ["editor:siempre", "reparar:" + Path(SALIDAS[1]).name])
+
+    def test_la_oclusion_corre_al_final_sobre_el_atlas_ya_mezclado_y_reparado(self) -> None:
+        self._correr(0.5, 0.25)
+        atlas = Path(SALIDAS[1]).name
+        apoyo = Path(INTERMEDIOS_DEL_APOYO[1]).name
+        self.assertEqual(
+            self.pasos,
+            [
+                "editor:siempre",
+                f"reparar:{atlas}",
+                "editor:con_apoyo",
+                f"reparar:{apoyo}",
+                "mezclar",
+                f"reparar:{atlas}",
+                f"oclusion:{atlas}:{atlas}:0.25",
+            ],
+        )
+
+    def test_sin_sombra_de_apoyo_la_oclusion_igual_corre_despues_de_reparar(self) -> None:
+        self._correr(0.0, 1.0)
+        atlas = Path(SALIDAS[1]).name
+        self.assertEqual(
+            self.pasos, ["editor:siempre", f"reparar:{atlas}", f"oclusion:{atlas}:{atlas}:1.0"]
+        )
+
+    def test_con_nivel_de_oclusion_cero_el_paso_no_corre(self) -> None:
+        self._correr(0.5, 0.0)
+        self.assertFalse([paso for paso in self.pasos if paso.startswith("oclusion")])
+
+    def test_el_horneado_sin_luz_no_recibe_oclusion(self) -> None:
+        with (
+            mock.patch.object(hornear, "sesion_del_editor", self._sesion),
+            mock.patch.object(hornear, "reparar_lineas", self._reparar),
+            mock.patch.object(hornear, "reducir_atlas", self._reducir),
+            mock.patch.object(hornear, "oclusionar_atlas", self._oclusionar),
+            mock.patch.object(hornear, "NIVEL_DE_OCLUSION", 1.0),
+        ):
+            hornear.hornear_sin_luz("godot", "blender")
+        self.assertFalse([paso for paso in self.pasos if paso.startswith("oclusion")])
+
+    def _solo_la_oclusion(self, argumentos: list[str], oclusionar=None) -> int:
+        with (
+            mock.patch.object(hornear, "RAIZ", str(self.repo)),
+            mock.patch.object(hornear, "resolver", lambda entorno: ("godot", None)),
+            mock.patch.object(hornear.lib_blender, "resolver", lambda entorno: (None, None)),
+            mock.patch.object(hornear, "oclusionar_atlas", oclusionar or self._oclusionar),
+        ):
+            return hornear.main(argumentos)
+
+    def test_el_comando_suelto_aplica_la_oclusion_al_atlas_de_la_rama_sin_hornear(self) -> None:
+        self.assertEqual(self._solo_la_oclusion(["--oclusion"]), 0)
+        atlas = Path(SALIDAS[1]).name
+        self.assertEqual(self.pasos, [f"oclusion:{atlas}:{atlas}:{hornear.NIVEL_DE_OCLUSION}"])
+
+    def test_el_comando_suelto_acepta_otro_nivel_y_otro_destino(self) -> None:
+        destino = str(self.repo / "afuera" / "prueba.exr")
+        self.assertEqual(
+            self._solo_la_oclusion(["--oclusion", "--nivel", "0.25", "--salida", destino]), 0
+        )
+        self.assertEqual(self.pasos, [f"oclusion:{Path(SALIDAS[1]).name}:prueba.exr:0.25"])
+
+    def test_el_comando_suelto_con_nivel_cero_no_hace_nada(self) -> None:
+        self.assertEqual(self._solo_la_oclusion(["--oclusion", "--nivel", "0"]), 0)
+        self.assertEqual(self.pasos, [])
+
+    def test_si_la_oclusion_falla_el_atlas_queda_como_estaba(self) -> None:
+        def a_medias(
+            godot: str, entrada: str, salida: str, nivel: float, radio: float, rayos: int
+        ) -> None:
+            self._escribir(SALIDAS[1], "a medias\n")
+            raise hornear.Fallo("la oclusión se cayó")
+
+        self.assertNotEqual(self._solo_la_oclusion(["--oclusion"], a_medias), 0)
+        self.assertEqual(self._leer(SALIDAS[1]), "de git\n")
 
     def _main_con_un_paso_que_falla(self) -> int:
         def hornear_a_medias(godot: str, blender: str) -> None:

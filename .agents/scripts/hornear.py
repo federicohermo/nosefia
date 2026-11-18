@@ -2,6 +2,7 @@
 
     python .claude/scripts/hornear.py             # el local con todas sus luces
     python .claude/scripts/hornear.py --sin-luz   # el mismo local en la noche del corte de luz
+    python .claude/scripts/hornear.py --oclusion  # sólo la oclusión, sobre el atlas de la rama
 
 ## Por qué existe
 
@@ -24,6 +25,17 @@ el script lo borra, también si falla. Si algo falla a mitad de camino, `almacen
 Cada atlas se repara con Blender antes de mezclarlos
 (`blender/reparar_lineas_del_mapa_de_luz.py`), y el resultado se repara otra vez. Hace falta
 `BLENDER_BIN`, la misma que usan los otros scripts. Con el nivel en 0 no hay segundo horneado.
+
+## La oclusión de los rincones
+
+Después de la sombra de apoyo, y como último paso del horneado con luz,
+`addons/hornear/aplicar_oclusion.gd` multiplica la luz de cada texel del atlas por cuánto lo tapan
+las mallas fijas a menos de `RADIO_DE_OCLUSION` (`addons/hornear/oclusion.gd`). Con
+`NIVEL_DE_OCLUSION` en 0 el paso no corre. No hay nada que hornear de nuevo: `--oclusion` lo aplica
+sobre el atlas que ya está en la rama, y `--nivel`, `--radio`, `--rayos` y `--salida` cambian lo
+que usa y adónde escribe. Con `--salida` el atlas de la rama no se toca. **Sin `--salida` se
+multiplica el atlas de la rama en su lugar: correrlo dos veces lo oscurece dos veces.** Un horneado
+entero parte de un atlas nuevo y no tiene ese problema.
 
 ## El horneado sin luz
 
@@ -69,6 +81,7 @@ Con lavapipe declarado, el tope de espera se estira: ver `lib/horneado.tope_en_s
         -s "-screen 0 1600x900x24" python .claude/scripts/hornear.py
 """
 
+import argparse
 import os
 import subprocess
 import sys
@@ -87,18 +100,24 @@ from lib.horneado import (  # noqa: E402
     INTERMEDIOS_DEL_APOYO,
     LADO_DEL_ATLAS_SIN_LUZ,
     NIVEL_DE_APOYO,
+    NIVEL_DE_OCLUSION,
+    RADIO_DE_OCLUSION,
+    RAYOS_DE_OCLUSION,
     SALIDAS,
     SALIDAS_QUE_SE_DEVUELVEN,
     SALIDAS_SIN_LUZ,
     VARIANTE_CON_APOYO,
     VARIANTE_SIN_LUZ,
     comando_de_la_mezcla,
+    comando_de_la_oclusion,
     comando_de_la_reduccion,
     comando_de_la_reparacion,
     con_apoyo,
+    con_oclusion,
     entorno_de,
     project_con_el_plugin,
     reescritos_de_mas,
+    ruta_para_godot,
     sesion_bloqueada,
     tope_en_segundos,
     veredicto,
@@ -266,23 +285,58 @@ def mezclar_atlas(godot: str, nivel: float) -> None:
         raise Fallo("la mezcla de los atlas salió con código %d" % corrida.returncode)
 
 
+def oclusionar_atlas(
+    godot: str,
+    entrada: str,
+    salida: str,
+    nivel: float,
+    radio: float = RADIO_DE_OCLUSION,
+    rayos: int = RAYOS_DE_OCLUSION,
+) -> None:
+    """Multiplica la luz del atlas `entrada` por la oclusión de los rincones y escribe `salida`.
+
+    Las rutas son relativas a la raíz, o enteras. Pueden ser el mismo atlas: se reescribe en su
+    lugar. Ver `addons/hornear/oclusion.gd`.
+    """
+
+    def para_godot(ruta: str) -> str:
+        return ruta_para_godot(str(Path(RAIZ) / ruta), RAIZ)
+
+    corrida = subprocess.run(
+        comando_de_la_oclusion(
+            godot, RAIZ, para_godot(entrada), para_godot(salida), radio, nivel, rayos
+        ),
+        capture_output=True,
+        text=True,
+        encoding="utf-8",
+        errors="replace",
+    )
+    for linea in (corrida.stdout + corrida.stderr).splitlines():
+        if "[oclusion]" in linea:
+            print(linea.strip())
+    if corrida.returncode != 0:
+        raise Fallo("la oclusión salió con código %d" % corrida.returncode)
+
+
 def hornear_con_luz(godot: str, blender: str) -> None:
     """El horneado que el juego carga: el local con luz y, encima, la sombra de apoyo.
 
     Hornea el local de siempre, y la mezcla le suma la sombra de un segundo horneado con
     obstáculos (`addons/hornear/apoyo.gd`): sólo el atlas, con el nivel de `NIVEL_DE_APOYO`. Las
     sondas son las del primero. Las rayas de un texel se reparan en cada atlas antes de
-    mezclarlos, porque una raya mezclada deja de ser de media luz y el reparador no la ve.
+    mezclarlos, porque una raya mezclada deja de ser de media luz y el reparador no la ve. La
+    oclusión va al final: si fuera antes, la mezcla la diluiría.
     """
     atlas = SALIDAS[1]
     sesion_del_editor(godot, "", SALIDAS)
     reparar_lineas(blender, [atlas])
-    if not con_apoyo(NIVEL_DE_APOYO):
-        return
-    sesion_del_editor(godot, VARIANTE_CON_APOYO, INTERMEDIOS_DEL_APOYO[:2])
-    reparar_lineas(blender, [INTERMEDIOS_DEL_APOYO[1]])
-    mezclar_atlas(godot, NIVEL_DE_APOYO)
-    reparar_lineas(blender, [atlas])
+    if con_apoyo(NIVEL_DE_APOYO):
+        sesion_del_editor(godot, VARIANTE_CON_APOYO, INTERMEDIOS_DEL_APOYO[:2])
+        reparar_lineas(blender, [INTERMEDIOS_DEL_APOYO[1]])
+        mezclar_atlas(godot, NIVEL_DE_APOYO)
+        reparar_lineas(blender, [atlas])
+    if con_oclusion(NIVEL_DE_OCLUSION):
+        oclusionar_atlas(godot, atlas, atlas, NIVEL_DE_OCLUSION)
 
 
 def hornear_sin_luz(godot: str, blender: str) -> None:
@@ -297,12 +351,46 @@ def hornear_sin_luz(godot: str, blender: str) -> None:
     reducir_atlas(blender, [atlas], LADO_DEL_ATLAS_SIN_LUZ)
 
 
+def _argumentos(argumentos: list[str] | None) -> argparse.Namespace:
+    parser = argparse.ArgumentParser(description="Hornear la luz del local.")
+    parser.add_argument("--sin-luz", action="store_true", help="el horneado de la noche del corte")
+    parser.add_argument(
+        "--oclusion", action="store_true", help="sólo la oclusión, sobre el atlas de la rama"
+    )
+    parser.add_argument("--nivel", type=float, default=NIVEL_DE_OCLUSION)
+    parser.add_argument("--radio", type=float, default=RADIO_DE_OCLUSION)
+    parser.add_argument("--rayos", type=int, default=RAYOS_DE_OCLUSION)
+    parser.add_argument("--salida", default=SALIDAS[1], help="adónde escribe la oclusión")
+    return parser.parse_args(sys.argv[1:] if argumentos is None else argumentos)
+
+
+def solo_la_oclusion(godot: str, opciones: argparse.Namespace) -> int:
+    """Aplica la oclusión al atlas de la rama, sin hornear. Si falla, el atlas queda igual."""
+    if not con_oclusion(opciones.nivel):
+        print("el nivel es 0: no hay nada que aplicar")
+        return 0
+    raiz = Path(RAIZ)
+    respaldo = guardar_salidas(raiz, (SALIDAS[1],))
+    try:
+        oclusionar_atlas(
+            godot, SALIDAS[1], opciones.salida, opciones.nivel, opciones.radio, opciones.rayos
+        )
+    except Fallo as fallo:
+        devolver_salidas(raiz, respaldo)
+        print(fallo)
+        return 1
+    return 0
+
+
 def main(argumentos: list[str] | None = None) -> int:
-    sin_luz = "--sin-luz" in (sys.argv[1:] if argumentos is None else argumentos)
+    opciones = _argumentos(argumentos)
+    sin_luz = opciones.sin_luz
     godot, _ = resolver(dict(os.environ))
     if godot is None:
         print(como_declararlo(dict(os.environ)))
         return 2
+    if opciones.oclusion:
+        return solo_la_oclusion(godot, opciones)
     blender, _ = lib_blender.resolver(dict(os.environ))
     if blender is None:
         print(lib_blender.como_declararlo(dict(os.environ)))
