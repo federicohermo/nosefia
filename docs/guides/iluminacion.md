@@ -147,7 +147,7 @@ pase, shader, textura ni programa. Un pase en pantalla que hacía lo mismo sali�
 MSAA 2× costaba entre 3,6 y 12,6 ms de GPU por cuadro.
 
 - **Qué hace.** Para cada texel de cada pieza del atlas, mide cuánto lo tapan las mallas fijas a
-  menos de un radio, y multiplica la luz de ese texel por un factor (`addons/hornear/oclusion.gd`).
+  menos de un radio. Multiplica la luz de ese texel por un factor (`addons/hornear/oclusion.gd`).
   Cada pieza se rasteriza en la UV2 que usa el atlas, y de cada texel salen rayos al hemisferio.
   Un rayo que pega cerca cuenta más que uno que pega lejos. Los tres canales de color de las
   cuatro capas del atlas reciben el mismo factor: la luz y su dirección. El alfa no cambia.
@@ -165,8 +165,8 @@ MSAA 2× costaba entre 3,6 y 12,6 ms de GPU por cuadro.
 - **Cómo se ubica cada pieza.** El `.lmbake` dice, por pieza, la ruta de su malla, su rectángulo y
   su rebanada. La malla y su lugar en el mundo salen de `almacen.tscn`, que se instancia sin entrar
   al árbol. Una pieza con UV2 fuera de su rectángulo frena el paso y se nombra.
-- **El borde de cada pieza.** El margen de un texel que lee el filtrado, y los huecos entre las
-  islas de una pieza, reciben el factor de su vecino de adentro. Sin eso, el borde dejaba una costura.
+- **El borde de cada pieza.** El filtrado lee un texel de margen, y la pieza tiene huecos entre sus
+  islas. Los dos reciben el factor de su vecino de adentro. Sin eso, el borde dejaba una costura.
 - **Cómo se guarda.** La luz sale redondeada a media precisión, que es la del motor. Sin eso, un
   factor cualquiera llenaba los 23 bits de la mantisa y el EXR pesaba el doble (60 MB contra 32 MB).
 - **Si falla.** `almacen.exr` queda como estaba.
@@ -223,9 +223,10 @@ las sondas de los productos.
 caras salen los obstáculos y cómo se mezclan los dos atlas. `test_horneado.py` y `test_hornear.py`:
 el nivel, el orden de los pasos y que un horneado a medias deje los archivos como estaban.
 `test_reducir_mapa_de_luz.py`: que el atlas se reduzca por bloques, sin mezclar capas.
-`test/escenas/oclusion_del_horneado_test.gd`: que un piso abierto valga 1, que un rincón valga menos
-que una pared lisa, que una chapa de dos caras no se tape a sí misma y que el borde de la pieza no
-deje una costura. `test_horneado.py` y `test_hornear.py` suman el nivel y el lugar del paso.
+`test/escenas/oclusion_del_horneado_test.gd`: que un piso abierto valga 1 y que un rincón valga
+menos que una pared lisa. También que una chapa de dos caras no se tape a sí misma, y que el borde
+de la pieza no deje una costura. `test_horneado.py` y `test_hornear.py` suman el nivel y el lugar
+del paso.
 
 `test/escenas/iluminacion_horneada_test.gd`: que el `LightmapGI` tenga datos, y que ninguna
 malla con GI estático se haya quedado afuera del horneado. También que ninguna hoja que abre
