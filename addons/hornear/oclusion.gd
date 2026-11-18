@@ -328,6 +328,9 @@ static func _multiplicar(atlas: Image, mapa: _Mapa, capas_por_rebanada: int, niv
 	var salida := Image.create_from_data(
 		ancho, atlas.get_height(), false, Image.FORMAT_RGBAF, luz.to_byte_array()
 	)
+	# Un factor cualquiera llena los 23 bits de la mantisa, y el EXR casi no comprime: pesaba el doble.
+	# La luz del motor es de media precisión, así que se redondea a ella antes de guardar.
+	salida.convert(Image.FORMAT_RGBAH)
 	salida.convert(formato)
 	return salida
 

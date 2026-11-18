@@ -98,6 +98,13 @@ func test_un_nivel_menor_oscurece_menos() -> void:
 	assert_float(medio).is_less(1.0)
 
 
+func test_la_luz_oscurecida_es_de_media_precision_para_que_el_exr_comprima() -> void:
+	var resultado := _aplicar(0.37)
+	var luz := _luz(resultado.imagen, Vector2i(4, 8), 0)
+	assert_float(luz).is_less(1.0)
+	assert_float(luz).is_equal(_a_media_precision(luz))
+
+
 func test_el_atlas_nunca_se_aclara() -> void:
 	var resultado := _aplicar(1.0)
 	for y: int in ANCHO * CAPAS:
@@ -162,6 +169,14 @@ func _factor(oclusores: TriangleMesh, punto: Vector3, normal: Vector3) -> float:
 func _aplicar(nivel: float) -> Oclusion.Resultado:
 	var oclusores := Oclusion.oclusores_de(_piso() + _pared())
 	return Oclusion.aplicar(_atlas(), [_pieza_del_piso()], oclusores, RADIO, nivel, RAYOS)
+
+
+func _a_media_precision(valor: float) -> float:
+	var imagen := Image.create(1, 1, false, Image.FORMAT_RGBAF)
+	imagen.set_pixel(0, 0, Color(valor, 0.0, 0.0, 1.0))
+	imagen.convert(Image.FORMAT_RGBAH)
+	imagen.convert(Image.FORMAT_RGBAF)
+	return imagen.get_pixel(0, 0).r
 
 
 func _atlas() -> Image:
