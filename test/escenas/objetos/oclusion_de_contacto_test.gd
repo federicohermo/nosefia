@@ -66,7 +66,7 @@ func test_apoyada_deja_su_mancha_y_oscurece_su_base() -> void:
 	var oclusion := _oclusion_de(caja)
 	assert_object(oclusion).is_not_null()
 	assert_bool(oclusion.sombra.visible).is_true()
-	assert_float(_intensidad(oclusion)).is_equal(Oclusion.intensidad_a(0.0))
+	assert_float(_intensidad(oclusion)).is_equal(oclusion.intensidad_a(0.0))
 	var suelo: float = _de_la_malla(oclusion, Oclusion.SUELO_DE_LA_MALLA)
 	assert_float(suelo).is_equal_approx(0.0, 0.001)
 	var activo: float = _de_la_malla(oclusion, Oclusion.PARAMETRO_DE_LA_MALLA)
@@ -78,12 +78,12 @@ func test_la_mancha_se_aclara_al_levantarla_y_se_apaga_pasado_el_alcance() -> vo
 	var caja := await _caja_a(0.0)
 	var oclusion := _oclusion_de(caja)
 	var apoyada := _intensidad(oclusion)
-	caja.global_position += Vector3.UP * Oclusion.ALCANCE / 2.0
+	caja.global_position += Vector3.UP * Oclusion.RADIO_POR_DEFECTO / 2.0
 	await get_tree().physics_frame
 	await get_tree().physics_frame
 	assert_bool(oclusion.sombra.visible).is_true()
 	assert_float(_intensidad(oclusion)).is_less(apoyada)
-	caja.global_position += Vector3.UP * Oclusion.ALCANCE
+	caja.global_position += Vector3.UP * Oclusion.RADIO_POR_DEFECTO
 	await get_tree().physics_frame
 	await get_tree().physics_frame
 	assert_bool(oclusion.sombra.visible).is_false()
@@ -91,7 +91,7 @@ func test_la_mancha_se_aclara_al_levantarla_y_se_apaga_pasado_el_alcance() -> vo
 
 func test_lejos_de_toda_superficie_la_malla_no_se_entera_de_ningun_suelo() -> void:
 	_piso()
-	var caja := await _caja_a(Oclusion.ALCANCE * 2.0)
+	var caja := await _caja_a(Oclusion.RADIO_POR_DEFECTO * 2.0)
 	var oclusion := _oclusion_de(caja)
 	assert_bool(oclusion.sombra.visible).is_false()
 	var suelo: float = _de_la_malla(oclusion, Oclusion.SUELO_DE_LA_MALLA)
@@ -114,7 +114,7 @@ func test_una_superficie_inclinada_lleva_la_mancha_pegada_a_ella() -> void:
 	_piso(inclinacion)
 	var caja: RigidBody3D = auto_free(CAJA.instantiate())
 	add_child(caja)
-	caja.global_position = Vector3(0.0, caja.call("media") + Oclusion.ALCANCE / 4.0, 0.0)
+	caja.global_position = Vector3(0.0, caja.call("media") + Oclusion.RADIO_POR_DEFECTO / 4.0, 0.0)
 	await get_tree().physics_frame
 	await get_tree().physics_frame
 	var sombra: MeshInstance3D = _oclusion_de(caja).sombra
@@ -179,7 +179,7 @@ func test_la_mancha_se_va_con_la_caja_y_reparentarla_no_la_deja_atras() -> void:
 func test_cada_caja_lleva_lo_suyo_y_una_no_pisa_a_la_otra() -> void:
 	_piso()
 	var apoyada := await _caja_a(0.0)
-	var en_el_aire := await _caja_a(Oclusion.ALCANCE * 2.0, Vector3.RIGHT * 2.0)
+	var en_el_aire := await _caja_a(Oclusion.RADIO_POR_DEFECTO * 2.0, Vector3.RIGHT * 2.0)
 	var de_la_apoyada := _oclusion_de(apoyada)
 	var de_la_del_aire := _oclusion_de(en_el_aire)
 	assert_object(de_la_apoyada.malla.get_surface_override_material(0)).is_not_same(
@@ -196,13 +196,65 @@ func test_cada_caja_lleva_lo_suyo_y_una_no_pisa_a_la_otra() -> void:
 	)
 
 
-func test_la_base_se_apaga_y_se_prende_con_la_propiedad_del_nodo() -> void:
+func _mover_y_esperar(caja: RigidBody3D) -> void:
+	caja.global_position += Vector3.RIGHT * 0.01
+	await get_tree().physics_frame
+	await get_tree().physics_frame
+
+
+func test_la_intensidad_se_cambia_en_vivo_en_el_objeto_y_en_la_mancha() -> void:
+	_piso()
+	var caja := await _caja_a(0.0)
+	var oclusion := _oclusion_de(caja)
+	var maxima := _intensidad(oclusion)
+	oclusion.intensidad = 0.5
+	assert_float(_de_la_malla(oclusion, Oclusion.PARAMETRO_DE_LA_MALLA)).is_equal(0.5)
+	assert_float(_intensidad(oclusion)).is_equal_approx(maxima / 2.0, 0.001)
+	await _mover_y_esperar(caja)
+	assert_float(_de_la_malla(oclusion, Oclusion.PARAMETRO_DE_LA_MALLA)).is_equal(0.5)
+	assert_float(_intensidad(oclusion)).is_equal_approx(maxima / 2.0, 0.001)
+	oclusion.intensidad = 0.0
+	assert_float(_de_la_malla(oclusion, Oclusion.PARAMETRO_DE_LA_MALLA)).is_zero()
+	assert_bool(oclusion.sombra.visible).is_false()
+
+
+func test_con_la_intensidad_al_maximo_cada_efecto_llega_a_su_maximo() -> void:
 	_piso()
 	var oclusion := _oclusion_de(await _caja_a(0.0))
-	oclusion.base = 0.0
-	assert_float(_de_la_malla(oclusion, Oclusion.PARAMETRO_DE_LA_MALLA)).is_zero()
-	oclusion.base = 1.0
+	oclusion.intensidad = 1.0
 	assert_float(_de_la_malla(oclusion, Oclusion.PARAMETRO_DE_LA_MALLA)).is_equal(1.0)
+	assert_float(_intensidad(oclusion)).is_equal_approx(Oclusion.OPACIDAD_MAXIMA, 0.001)
+
+
+func test_el_radio_llega_a_la_malla_al_rayo_y_a_la_mancha_y_un_movimiento_no_lo_pisa() -> void:
+	_piso()
+	var caja := await _caja_a(Oclusion.RADIO_POR_DEFECTO * 2.0)
+	var oclusion := _oclusion_de(caja)
+	assert_bool(oclusion.sombra.visible).is_false()
+	oclusion.radio = Oclusion.RADIO_POR_DEFECTO * 4.0
+	assert_float(_de_la_malla(oclusion, Oclusion.ALCANCE_DE_LA_MALLA)).is_equal(
+		Oclusion.RADIO_POR_DEFECTO * 4.0
+	)
+	assert_bool(oclusion.sombra.visible).is_true()
+	await _mover_y_esperar(caja)
+	assert_float(_de_la_malla(oclusion, Oclusion.ALCANCE_DE_LA_MALLA)).is_equal(
+		Oclusion.RADIO_POR_DEFECTO * 4.0
+	)
+	assert_bool(oclusion.sombra.visible).is_true()
+	oclusion.radio = Oclusion.RADIO_POR_DEFECTO / 2.0
+	assert_bool(oclusion.sombra.visible).is_false()
+
+
+func test_el_radio_ensancha_el_borde_de_la_mancha_y_un_movimiento_no_lo_pisa() -> void:
+	_piso()
+	var caja := await _caja_a(0.0)
+	var oclusion := _oclusion_de(caja)
+	var antes: float = _de_la_mancha(oclusion, &"suavidad")
+	oclusion.radio = Oclusion.RADIO_POR_DEFECTO * 2.0
+	var despues: float = _de_la_mancha(oclusion, &"suavidad")
+	assert_float(despues).is_greater(antes)
+	await _mover_y_esperar(caja)
+	assert_float(_de_la_mancha(oclusion, &"suavidad")).is_equal_approx(despues, 0.001)
 
 
 ## En la web los uniformes por instancia llegan al shader en cero, y el efecto no se ve aunque el

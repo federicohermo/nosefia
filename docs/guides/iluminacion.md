@@ -154,7 +154,7 @@ encuentra hace dos cosas:
   Se apaga con la propiedad `activa` del nodo, que está en el grupo `oclusion_de_contacto`.
 - **Lo de abajo oscurece al objeto.** Escribe en los materiales de la malla la altura de esa
   superficie. El shader (`oclusion_de_contacto.gdshaderinc`) oscurece las caras de abajo y el pie
-  de los costados. Se apaga con la propiedad `base` del nodo, de 0 a 1. Lo comparten el shader de
+  de los costados. Se apaga con `intensidad` en 0. Lo comparten el shader de
   los productos de la góndola y el de la manija del balde.
 
 **Todo va en uniformes del material, nunca en `instance uniform`.** En la web (Compatibility)
@@ -162,9 +162,10 @@ el shader los recibe en cero: el efecto no se ve y ningún test de GDScript lo n
 `get_instance_shader_parameter` devuelve lo que se escribió. Por eso cada caja y cada balde lleva
 sus propios materiales.
 
-Más lejos de `ALCANCE` de cualquier superficie no hay efecto. **El rayo corre mientras el objeto
+Más lejos de `radio` de cualquier superficie no hay efecto. **El rayo corre mientras el objeto
 se mueve y una vez al quedar quieto**: se entera por el aviso de que cambió su transformación.
-Un objeto quieto no tira ninguno.
+Un objeto quieto no tira ninguno. Las dos propiedades del nodo, `radio` e `intensidad`, valen para el
+objeto y para la mancha, y dejan el efecto al día al cambiarlas.
 
 ## El horneado de la noche del corte de luz
 

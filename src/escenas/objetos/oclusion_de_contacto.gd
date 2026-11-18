@@ -7,7 +7,8 @@
 ## 1. **El objeto oscurece lo de abajo.** Una mancha difusa sobre esa superficie, del tamaño de la
 ##    huella del objeto. Se apaga con `activa`.
 ## 2. **Lo de abajo oscurece al objeto.** Escribe en los materiales de la malla la altura de esa
-##    superficie, y el shader oscurece sus caras de abajo. Se apaga con `base`, de 0 a 1.
+##    superficie, y el shader oscurece sus caras de abajo. Se apaga con
+##    `intensidad`, de 0 a 1.
 ##
 ## **Todo va en uniformes del material, nunca por instancia:** en la web, con el renderizador
 ## Compatibility, el shader los recibe en cero. Por eso cada objeto lleva sus propios materiales.
@@ -23,12 +24,14 @@ const SUELO_DE_LA_MALLA := &"suelo_de_contacto"
 const ALCANCE_DE_LA_MALLA := &"alcance_de_contacto"
 const SOMBRA := preload("res://src/escenas/objetos/sombra_de_contacto.gdshader")
 
-## Más arriba que esto de la superficie de abajo no hay efecto, en metros.
-const ALCANCE := 0.4
-## Qué tan negra queda la mancha pegada al objeto, de 0 a 1.
-const OPACIDAD := 0.5
-## Cuánto se difumina el borde de la mancha, en metros: pegado, y por cada metro de altura.
-const SUAVIDAD := 0.06
+## Los valores con que arrancan las dos propiedades de abajo.
+const RADIO_POR_DEFECTO := 0.4
+const INTENSIDAD_POR_DEFECTO := 1.0
+## El ancho del borde de la mancha pegada al objeto, como parte del `radio`.
+const ANCHO_POR_RADIO := 0.15
+## Qué tan negra queda la mancha con `intensidad` en 1, de 0 a 1.
+const OPACIDAD_MAXIMA := 0.5
+## Cuánto más se difumina el borde de la mancha por cada metro de altura.
 const DIFUMINADO_POR_ALTURA := 0.5
 ## Sobre la superficie, para que la mancha no pelee con ella por la profundidad.
 const ELEVACION := 0.003
@@ -48,16 +51,26 @@ static var _limites_de_las_formas: Dictionary[Shape3D, AABB] = {}
 		activa = valor
 		_mostrar()
 
-## Cuánto oscurece la superficie de abajo al objeto, de 0 a 1. Se apaga y se prende en vivo.
-@export_range(0.0, 1.0) var base := 1.0:
+## Hasta qué altura sobre la superficie de abajo hay efecto, en metros: el de la base del objeto y
+## el de la mancha. Es también hasta dónde mira el rayo, a qué altura se apaga la mancha y, en una
+## parte fija (`ANCHO_POR_RADIO`), cuánto se difumina su borde. Cambiarlo deja todo al día en el
+## momento.
+@export var radio := RADIO_POR_DEFECTO:
 	set(valor):
-		base = valor
-		_escribir_en_la_malla()
+		radio = valor
+		_al_dia()
+
+## Cuánto se oscurecen el objeto y la mancha, de 0 a 1, con la misma escala: en 1, cada uno llega a
+## su máximo. Se apaga y se prende en vivo, y cambiarla deja todo al día en el momento.
+@export_range(0.0, 1.0) var intensidad := INTENSIDAD_POR_DEFECTO:
+	set(valor):
+		intensidad = valor
+		_al_dia()
 
 ## La malla del objeto: en sus materiales se escribe la altura de lo que tiene debajo.
 var malla: MeshInstance3D
 
-## La mancha, sólo si hay una superficie a menos de `ALCANCE`.
+## La mancha, sólo si hay una superficie a menos de `radio`.
 var sombra: MeshInstance3D
 
 ## Cuántos rayos lanzó. Lo mira el test de que un objeto quieto no los repite.
@@ -130,7 +143,7 @@ func actualizar() -> void:
 	var origen := Vector3(centro.x, en_el_mundo.position.y + SALIDA, centro.z)
 	var consulta := PhysicsRayQueryParameters3D.create(
 		origen,
-		origen + Vector3.DOWN * (SALIDA + ALCANCE),
+		origen + Vector3.DOWN * (SALIDA + radio),
 		ReglasDeLosObjetos.MASCARA_DEL_PRODUCTO & ~ReglasDeLosObjetos.CAPA_DEL_HUECO
 	)
 	consulta.exclude = [cuerpo.get_rid()]
@@ -147,9 +160,9 @@ func actualizar() -> void:
 	_poner_la_sombra(cuerpo, golpe, maxf(en_el_mundo.position.y - punto.y, 0.0))
 
 
-## Qué tan oscura queda la mancha a esa altura de la superficie, de 0 a `OPACIDAD`.
-static func intensidad_a(altura: float) -> float:
-	return OPACIDAD * (1.0 - smoothstep(0.0, ALCANCE, altura))
+## Qué tan oscura queda la mancha a esa altura de la superficie, de 0 a `OPACIDAD_MAXIMA`.
+func intensidad_a(altura: float) -> float:
+	return intensidad * OPACIDAD_MAXIMA * (1.0 - smoothstep(0.0, radio, altura))
 
 
 func _poner_la_sombra(cuerpo: CollisionObject3D, golpe: Dictionary, altura: float) -> void:
@@ -166,7 +179,7 @@ func _poner_la_sombra(cuerpo: CollisionObject3D, golpe: Dictionary, altura: floa
 		costado = cuerpo.global_basis.z - normal * normal.dot(cuerpo.global_basis.z)
 	costado = costado.normalized()
 	var giro := Basis(costado, normal, costado.cross(normal))
-	var suavidad := SUAVIDAD + DIFUMINADO_POR_ALTURA * altura
+	var suavidad := radio * ANCHO_POR_RADIO + DIFUMINADO_POR_ALTURA * altura
 	var tamano := _mitad * 2.0 + Vector2.ONE * (suavidad * 2.0)
 	sombra.global_transform = Transform3D(
 		giro.scaled_local(Vector3(tamano.x, 1.0, tamano.y)), punto + normal * ELEVACION
@@ -178,6 +191,12 @@ func _poner_la_sombra(cuerpo: CollisionObject3D, golpe: Dictionary, altura: floa
 	material.set_shader_parameter(&"suavidad", suavidad)
 	material.set_shader_parameter(&"intensidad", intensidad)
 	material.set_shader_parameter(&"recorte", _recorte_del_apoyo(golpe, giro, punto))
+
+
+## Vuelve a lanzar el rayo, para que un cambio se vea sin esperar a que el objeto se mueva.
+func _al_dia() -> void:
+	if is_node_ready() and is_inside_tree():
+		actualizar()
 
 
 func _mostrar() -> void:
@@ -193,9 +212,9 @@ func _escribir_en_la_malla() -> void:
 		var material := malla.get_surface_override_material(superficie) as ShaderMaterial
 		if material == null:
 			continue
-		material.set_shader_parameter(PARAMETRO_DE_LA_MALLA, base)
+		material.set_shader_parameter(PARAMETRO_DE_LA_MALLA, intensidad)
 		material.set_shader_parameter(SUELO_DE_LA_MALLA, _suelo)
-		material.set_shader_parameter(ALCANCE_DE_LA_MALLA, ALCANCE)
+		material.set_shader_parameter(ALCANCE_DE_LA_MALLA, radio)
 
 
 ## Hasta dónde llega lo que sostiene al objeto, en el plano de la mancha. Sin esto, una caja
