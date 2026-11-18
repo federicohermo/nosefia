@@ -152,7 +152,6 @@ class HorneadoConLuz(unittest.TestCase):
         nivel: float,
         radio: float = 0.0,
         rayos: int = 0,
-        proporcion: float = 0.0,
     ) -> None:
         self.pasos.append(f"oclusion:{Path(entrada).name}:{Path(salida).name}:{nivel}")
 
@@ -253,13 +252,7 @@ class HorneadoConLuz(unittest.TestCase):
 
     def test_si_la_oclusion_falla_el_atlas_queda_como_estaba(self) -> None:
         def a_medias(
-            godot: str,
-            entrada: str,
-            salida: str,
-            nivel: float,
-            radio: float,
-            rayos: int,
-            proporcion: float,
+            godot: str, entrada: str, salida: str, nivel: float, radio: float, rayos: int
         ) -> None:
             self._escribir(SALIDAS[1], "a medias\n")
             raise hornear.Fallo("la oclusión se cayó")

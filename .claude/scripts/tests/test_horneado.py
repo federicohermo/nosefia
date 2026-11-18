@@ -13,7 +13,6 @@ from lib.horneado import (
     VARIANTE_CON_APOYO,
     LADO_DEL_ATLAS_SIN_LUZ,
     NIVEL_DE_OCLUSION,
-    PROPORCION_DE_OCLUSION,
     RADIO_DE_OCLUSION,
     RAYOS_DE_OCLUSION,
     argumentos_de_la_mezcla,
@@ -235,7 +234,6 @@ class OclusionDeLosRincones(unittest.TestCase):
 
     def test_el_radio_y_los_rayos_son_positivos(self):
         self.assertGreater(RADIO_DE_OCLUSION, 0.0)
-        self.assertGreater(PROPORCION_DE_OCLUSION, 0.0)
         self.assertGreater(RAYOS_DE_OCLUSION, 0)
 
     def test_con_nivel_cero_el_paso_no_corre(self):
@@ -251,7 +249,7 @@ class OclusionDeLosRincones(unittest.TestCase):
                 con_oclusion(nivel)
 
     def test_el_comando_pasa_el_horneado_los_dos_atlas_y_los_numeros(self):
-        atlas = ("res://a.exr", "res://b.exr", 0.8, 0.5, 32, 0.4)
+        atlas = ("res://a.exr", "res://b.exr", 0.8, 0.5, 32)
         comando = comando_de_la_oclusion("godot", "/repo", *atlas)
         corte = comando.index("--")
         self.assertIn("--headless", comando[:corte])
@@ -262,7 +260,6 @@ class OclusionDeLosRincones(unittest.TestCase):
         self.assertEqual(argumentos[:3], ["res://" + SALIDAS[0], "res://a.exr", "res://b.exr"])
         self.assertEqual([float(a) for a in argumentos[3:5]], [0.8, 0.5])
         self.assertEqual(int(argumentos[5]), 32)
-        self.assertEqual(float(argumentos[6]), PROPORCION_DE_OCLUSION)
 
     def test_un_atlas_del_repo_se_pasa_como_ruta_del_proyecto(self):
         self.assertEqual(
