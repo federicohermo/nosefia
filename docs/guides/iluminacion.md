@@ -146,22 +146,29 @@ del pasillo. Un paso propio la calcula y la deja adentro de `almacen.exr`. El ju
 pase, shader, textura ni programa. Un pase en pantalla que hacía lo mismo salió del juego porque con
 MSAA 2× costaba entre 3,6 y 12,6 ms de GPU por cuadro.
 
-- **Qué hace.** Para cada texel de cada pieza del atlas, mide cuánto lo tapan las mallas fijas a
-  menos de un radio, y multiplica la luz de ese texel por un factor (`addons/hornear/oclusion.gd`).
-  Cada pieza se rasteriza en la UV2 que usa el atlas, y de cada texel salen rayos al hemisferio.
-  Un rayo que pega cerca cuenta más que uno que pega lejos. Los tres canales de color de las
-  cuatro capas del atlas reciben el mismo factor: la luz y su dirección. El alfa no cambia.
+- **Qué hace.** Para cada texel de cada pieza del atlas, mide cuánto lo tapan las mallas fijas
+  cerca, y multiplica la luz de ese texel por un factor (`addons/hornear/oclusion.gd`). Cada pieza
+  se rasteriza en la UV2 que usa el atlas, y de cada texel salen rayos al hemisferio. Un rayo que
+  pega cerca cuenta más que uno que pega lejos. Los tres canales de color de las cuatro capas del
+  atlas reciben el mismo factor: la luz y su dirección. El alfa no cambia.
+- **El radio depende de lo que tapa.** Un choque cuenta sólo si cae dentro del radio de la parte
+  chocada. Ese radio es `PROPORCION_DE_OCLUSION` por el tamaño de la parte, y no pasa de
+  `RADIO_DE_OCLUSION`. El tamaño es la medida del medio de la caja de la parte conexa de la malla,
+  no de la malla entera: una silla es una sola malla, pero su pata (3 cm) y su asiento (25 cm o
+  más) no tiran la misma sombra. Una parte conexa son los triángulos que comparten vértices por
+  posición, y se mide cada malla por separado aunque se toquen. Una pared o el piso llegan al
+  tope. Un choque fuera del radio no tapa: el rayo sigue y cuenta lo que tenga detrás.
 - **Qué lo define.** El factor depende sólo de la geometría. Un lugar abierto vale 1 y el factor
   nunca aclara un texel. El paso no mira las luces.
-- **Dónde están los mandos.** `RADIO_DE_OCLUSION`, `NIVEL_DE_OCLUSION` y `RAYOS_DE_OCLUSION`, en
-  `lib/horneado.py`. Con el nivel en 0 el paso no corre y el atlas queda como lo dejó el horneado.
+- **Dónde están los mandos.** `RADIO_DE_OCLUSION` (el tope), `PROPORCION_DE_OCLUSION`,
+  `NIVEL_DE_OCLUSION` y `RAYOS_DE_OCLUSION`, en `lib/horneado.py`. Con el nivel en 0 el paso no corre y el atlas queda como lo dejó el horneado.
 - **En qué orden corre.** Al final de `hornear.py`, después de reparar las líneas y de mezclar la
   sombra de apoyo. Si corriera antes de la mezcla, ésta lo diluiría. El horneado de la noche del
   corte no lo recibe.
 - **Sin hornear de nuevo.** `python .claude/scripts/hornear.py --oclusion` lo aplica sobre el atlas
-  que ya está en la rama. `--nivel`, `--radio`, `--rayos` y `--salida` cambian lo que usa y adónde
-  escribe. **Sin `--salida` multiplica el atlas de la rama en su lugar: correrlo dos veces lo
-  oscurece dos veces.** Para probar niveles se escribe a otro archivo con `--salida`.
+  que ya está en la rama. `--nivel`, `--radio`, `--proporcion`, `--rayos` y `--salida` cambian lo
+  que usa y adónde escribe. **Sin `--salida` multiplica el atlas de la rama en su lugar: correrlo
+  dos veces lo oscurece dos veces.** Para probar niveles se escribe a otro archivo con `--salida`.
 - **Cómo se ubica cada pieza.** El `.lmbake` dice, por pieza, la ruta de su malla, su rectángulo y
   su rebanada. La malla y su lugar en el mundo salen de `almacen.tscn`, que se instancia sin entrar
   al árbol. Una pieza con UV2 fuera de su rectángulo frena el paso y se nombra.

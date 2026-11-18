@@ -30,11 +30,12 @@ Cada atlas se repara con Blender antes de mezclarlos
 
 Después de la sombra de apoyo, y como último paso del horneado con luz,
 `addons/hornear/aplicar_oclusion.gd` multiplica la luz de cada texel del atlas por cuánto lo tapan
-las mallas fijas a menos de `RADIO_DE_OCLUSION` (`addons/hornear/oclusion.gd`). Con
-`NIVEL_DE_OCLUSION` en 0 el paso no corre. No hay nada que hornear de nuevo: `--oclusion` lo aplica
-sobre el atlas que ya está en la rama, y `--nivel`, `--radio`, `--rayos` y `--salida` cambian lo
-que usa y adónde escribe. Con `--salida` el atlas de la rama no se toca. **Sin `--salida` se
-multiplica el atlas de la rama en su lugar: correrlo dos veces lo oscurece dos veces.** Un horneado
+las mallas fijas cerca (`addons/hornear/oclusion.gd`): cada choque cuenta dentro de un radio que
+depende del tamaño de la parte chocada, con tope `RADIO_DE_OCLUSION`. Con `NIVEL_DE_OCLUSION` en 0
+el paso no corre. No hay nada que hornear de nuevo: `--oclusion` lo aplica sobre el atlas que ya
+está en la rama, y `--nivel`, `--radio`, `--proporcion`, `--rayos` y `--salida` cambian lo que usa
+y adónde escribe. Con `--salida` el atlas de la rama no se toca. **Sin `--salida` se multiplica el
+atlas de la rama en su lugar: correrlo dos veces lo oscurece dos veces.** Un horneado
 entero parte de un atlas nuevo y no tiene ese problema.
 
 ## El horneado sin luz
@@ -101,6 +102,7 @@ from lib.horneado import (  # noqa: E402
     LADO_DEL_ATLAS_SIN_LUZ,
     NIVEL_DE_APOYO,
     NIVEL_DE_OCLUSION,
+    PROPORCION_DE_OCLUSION,
     RADIO_DE_OCLUSION,
     RAYOS_DE_OCLUSION,
     SALIDAS,
@@ -292,6 +294,7 @@ def oclusionar_atlas(
     nivel: float,
     radio: float = RADIO_DE_OCLUSION,
     rayos: int = RAYOS_DE_OCLUSION,
+    proporcion: float = PROPORCION_DE_OCLUSION,
 ) -> None:
     """Multiplica la luz del atlas `entrada` por la oclusión de los rincones y escribe `salida`.
 
@@ -304,7 +307,7 @@ def oclusionar_atlas(
 
     corrida = subprocess.run(
         comando_de_la_oclusion(
-            godot, RAIZ, para_godot(entrada), para_godot(salida), radio, nivel, rayos
+            godot, RAIZ, para_godot(entrada), para_godot(salida), radio, nivel, rayos, proporcion
         ),
         capture_output=True,
         text=True,
@@ -358,7 +361,8 @@ def _argumentos(argumentos: list[str] | None) -> argparse.Namespace:
         "--oclusion", action="store_true", help="sólo la oclusión, sobre el atlas de la rama"
     )
     parser.add_argument("--nivel", type=float, default=NIVEL_DE_OCLUSION)
-    parser.add_argument("--radio", type=float, default=RADIO_DE_OCLUSION)
+    parser.add_argument("--radio", type=float, default=RADIO_DE_OCLUSION, help="el tope del radio")
+    parser.add_argument("--proporcion", type=float, default=PROPORCION_DE_OCLUSION)
     parser.add_argument("--rayos", type=int, default=RAYOS_DE_OCLUSION)
     parser.add_argument("--salida", default=SALIDAS[1], help="adónde escribe la oclusión")
     return parser.parse_args(sys.argv[1:] if argumentos is None else argumentos)
@@ -373,7 +377,13 @@ def solo_la_oclusion(godot: str, opciones: argparse.Namespace) -> int:
     respaldo = guardar_salidas(raiz, (SALIDAS[1],))
     try:
         oclusionar_atlas(
-            godot, SALIDAS[1], opciones.salida, opciones.nivel, opciones.radio, opciones.rayos
+            godot,
+            SALIDAS[1],
+            opciones.salida,
+            opciones.nivel,
+            opciones.radio,
+            opciones.rayos,
+            opciones.proporcion,
         )
     except Fallo as fallo:
         devolver_salidas(raiz, respaldo)

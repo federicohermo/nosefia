@@ -2,13 +2,15 @@
 ##
 ## **Qué hace.** El horneador de Godot no da oclusión local: el piso al pie de una pared se hornea
 ## tan claro como el del pasillo. Este paso calcula, para cada texel de cada pieza del atlas, cuánto
-## lo tapan las mallas fijas a menos de un radio, y multiplica la luz de ese texel por un factor.
-## El juego no suma nada: el factor queda adentro del atlas.
+## lo tapan las mallas fijas cerca, y multiplica la luz de ese texel por un factor. El juego no suma
+## nada: el factor queda adentro del atlas.
 ##
 ## **Cómo.** La pieza se rasteriza en su UV2, la que usa el atlas: cada texel recibe su posición y
 ## su normal en el mundo. Desde ahí salen `rayos` rayos al hemisferio, con coseno, contra las mallas
-## fijas. Un rayo que pega a menos de `radio` cuenta tanto más cuanto más cerca pegó. El factor
-## depende sólo de la geometría: un lugar abierto vale 1, y el factor nunca aclara un texel.
+## fijas. Un rayo cuenta si pega a menos del radio de lo que chocó, y tanto más cuanto más cerca
+## pegó. Ese radio depende del tamaño de la parte conexa chocada, con un tope: una pared llega al
+## tope y una pata fina casi no tira sombra. Un choque fuera del radio no tapa: el rayo sigue. El
+## factor depende sólo de la geometría: un lugar abierto vale 1, y el factor nunca aclara un texel.
 ##
 ## **Lo que no cubre.** Lo que no tiene lightmap no recibe nada: los productos, las cajas, lo que
 ## se mueve. Y no mira las luces: oscurece una pared tanto de día como de noche.
@@ -27,6 +29,12 @@ const TOLERANCIA := 0.001
 const TOLERANCIA_DE_UV2 := 0.001
 ## Cada cuántas piezas se avisa cómo va: el paso tarda minutos y sin avisos parece colgado.
 const PIEZAS_POR_AVISO := 20
+## Cuántos choques fuera de su radio se saltea un rayo antes de rendirse: una pata atravesada
+## tiene dos caras, y la pared de atrás tiene que seguir contando.
+const CHOQUES_POR_RAYO := 4
+## Cuánto se separan en la grilla dos vértices para contar como el mismo: la UV2 parte un vértice
+## en dos con la misma posición.
+const SOLDADURA := 10000.0
 const SIN_DUENO := -1
 const VACIO := 0
 const DILATADO := 1
@@ -54,14 +62,96 @@ class Resultado:
 	var rayos: int = 0
 
 
-## Los triángulos de `caras` (de a tres vértices) como una sola malla para tirarle rayos.
-static func oclusores_de(caras: PackedVector3Array) -> TriangleMesh:
+## Los triángulos de las mallas fijas, para tirarles rayos, y hasta dónde oscurece cada uno.
+class Oclusores:
+	var malla: TriangleMesh
+	## Por triángulo, en el mismo orden que la malla: el radio de la parte conexa a la que pertenece.
+	var radios: PackedFloat32Array
+	## El rayo más largo que se tira.
+	var tope: float = 0.0
+
+
+## Los triángulos de `mallas`, una por malla, como una sola escena para tirarle rayos. Cada elemento
+## es un `PackedVector3Array` de a tres vértices por triángulo. `tope` es el radio de lo grande, y
+## `proporcion` cuánto del tamaño de una parte conexa es su radio.
+static func oclusores_de(mallas: Array, tope: float, proporcion: float) -> Oclusores:
+	var caras := PackedVector3Array()
+	var oclusores := Oclusores.new()
+	oclusores.tope = tope
+	for malla: PackedVector3Array in mallas:
+		caras.append_array(malla)
+		oclusores.radios.append_array(radios_de(malla, tope, proporcion))
 	var arreglos: Array = []
 	arreglos.resize(Mesh.ARRAY_MAX)
 	arreglos[Mesh.ARRAY_VERTEX] = caras
-	var malla := ArrayMesh.new()
-	malla.add_surface_from_arrays(Mesh.PRIMITIVE_TRIANGLES, arreglos)
-	return malla.generate_triangle_mesh()
+	var geometria := ArrayMesh.new()
+	geometria.add_surface_from_arrays(Mesh.PRIMITIVE_TRIANGLES, arreglos)
+	oclusores.malla = geometria.generate_triangle_mesh()
+	return oclusores
+
+
+## El radio de cada triángulo de una malla: `proporcion` por el tamaño de su parte conexa, y a lo
+## sumo `tope`. Una parte conexa son los triángulos que comparten vértices, por posición. Su tamaño
+## es la medida del medio de su caja: una barra de 3 × 3 × 45 cm mide 3 cm, una chapa de
+## 40 × 40 × 2 cm mide 40 cm. Mide la caja, no el volumen: una pared y el piso llegan al tope.
+static func radios_de(
+	caras: PackedVector3Array, tope: float, proporcion: float
+) -> PackedFloat32Array:
+	@warning_ignore("integer_division")
+	var triangulos: int = caras.size() / 3
+	var padres := PackedInt32Array()
+	padres.resize(caras.size())
+	for i: int in caras.size():
+		padres[i] = i
+	var primero_en := {}
+	for i: int in caras.size():
+		var clave := Vector3i(
+			roundi(caras[i].x * SOLDADURA),
+			roundi(caras[i].y * SOLDADURA),
+			roundi(caras[i].z * SOLDADURA)
+		)
+		if primero_en.has(clave):
+			_unir(padres, primero_en[clave] as int, i)
+		else:
+			primero_en[clave] = i
+	for t: int in triangulos:
+		_unir(padres, 3 * t, 3 * t + 1)
+		_unir(padres, 3 * t, 3 * t + 2)
+	var cajas := {}
+	for i: int in caras.size():
+		var raiz := _raiz(padres, i)
+		if not cajas.has(raiz):
+			cajas[raiz] = AABB(caras[i], Vector3.ZERO)
+		else:
+			cajas[raiz] = (cajas[raiz] as AABB).expand(caras[i])
+	var radios := PackedFloat32Array()
+	radios.resize(triangulos)
+	for t: int in triangulos:
+		var medida := medio_de((cajas[_raiz(padres, 3 * t)] as AABB).size)
+		radios[t] = minf(tope, proporcion * medida)
+	return radios
+
+
+## La medida del medio de las tres: ni la mayor ni la menor.
+static func medio_de(tamano: Vector3) -> float:
+	var mayor := maxf(tamano.x, maxf(tamano.y, tamano.z))
+	var menor := minf(tamano.x, minf(tamano.y, tamano.z))
+	return tamano.x + tamano.y + tamano.z - mayor - menor
+
+
+static func _raiz(padres: PackedInt32Array, i: int) -> int:
+	var actual := i
+	while padres[actual] != actual:
+		padres[actual] = padres[padres[actual]]
+		actual = padres[actual]
+	return actual
+
+
+static func _unir(padres: PackedInt32Array, a: int, b: int) -> void:
+	var ra := _raiz(padres, a)
+	var rb := _raiz(padres, b)
+	if ra != rb:
+		padres[rb] = ra
 
 
 ## La pieza de una malla puesta en `mundo`, o `null` si la malla no trae UV2: sin ella no hay
@@ -111,16 +201,11 @@ static func direcciones(rayos: int) -> PackedVector3Array:
 	return salida
 
 
-## El factor de un punto: 1 si nada lo tapa a menos de `radio`, y menos mientras más cerca lo tapan.
-## `normal` dice hacia dónde mira la cara; `giro` rota el reparto de los rayos, en radianes, para
-## que texeles vecinos no repitan el mismo patrón.
+## El factor de un punto: 1 si nada lo tapa dentro del radio de lo que tiene cerca, y menos mientras
+## más cerca lo tapan. `normal` dice hacia dónde mira la cara; `giro` rota el reparto de los rayos,
+## en radianes, para que texeles vecinos no repitan el mismo patrón.
 static func factor_en(
-	oclusores: TriangleMesh,
-	origen: Vector3,
-	normal: Vector3,
-	radio: float,
-	reparto: PackedVector3Array,
-	giro: float
+	oclusores: Oclusores, origen: Vector3, normal: Vector3, reparto: PackedVector3Array, giro: float
 ) -> float:
 	var ayuda := Vector3.RIGHT if absf(normal.x) < 0.9 else Vector3.UP
 	var tangente := normal.cross(ayuda).normalized()
@@ -132,17 +217,35 @@ static func factor_en(
 		var x := local.x * coseno - local.y * seno
 		var y := local.x * seno + local.y * coseno
 		var direccion := tangente * x + bitangente * y + normal * local.z
-		var choque := oclusores.intersect_segment(origen, origen + direccion * radio)
-		if not choque.is_empty():
-			tapado += 1.0 - origen.distance_to(choque["position"] as Vector3) / radio
+		tapado += _tapado_por(oclusores, origen, direccion)
 	return clampf(1.0 - tapado / reparto.size(), 0.0, 1.0)
+
+
+## Cuánto tapa un rayo: 0 si nada lo frena a menos del radio de lo que choca. Un choque fuera de
+## ese radio no cuenta ni frena el rayo, que sigue con lo que tenga detrás.
+static func _tapado_por(oclusores: Oclusores, origen: Vector3, direccion: Vector3) -> float:
+	var desde := origen
+	for intento: int in CHOQUES_POR_RAYO:
+		var largo := oclusores.tope - origen.distance_to(desde)
+		if largo <= 0.0:
+			return 0.0
+		var choque := oclusores.malla.intersect_segment(desde, desde + direccion * largo)
+		if choque.is_empty():
+			return 0.0
+		var punto := choque["position"] as Vector3
+		var distancia := origen.distance_to(punto)
+		var radio := oclusores.radios[choque["face_index"] as int]
+		if distancia < radio:
+			return 1.0 - distancia / radio
+		desde = punto + direccion * SALIDA
+	return 0.0
 
 
 ## Multiplica la luz de cada pieza por su factor. `atlas` es una pila de capas cuadradas: la luz y,
 ## de a tres, su dirección. Con `nivel` 0 el resultado es el atlas, y con 1 el factor entero.
 ## Una pieza con UV2 fuera de su rectángulo frena todo y se nombra en `error`.
 static func aplicar(
-	atlas: Image, piezas: Array, oclusores: TriangleMesh, radio: float, nivel: float, rayos: int
+	atlas: Image, piezas: Array, oclusores: Oclusores, nivel: float, rayos: int
 ) -> Resultado:
 	var resultado := Resultado.new()
 	resultado.imagen = atlas
@@ -166,7 +269,7 @@ static func aplicar(
 	for i: int in piezas.size():
 		if i > 0 and i % PIEZAS_POR_AVISO == 0:
 			print("[oclusion] %d de %d piezas" % [i, piezas.size()])
-		_rasterizar(piezas[i] as Pieza, i, mapa, oclusores, radio, reparto, resultado)
+		_rasterizar(piezas[i] as Pieza, i, mapa, oclusores, reparto, resultado)
 	for i: int in piezas.size():
 		_dilatar(piezas[i] as Pieza, i, mapa)
 	resultado.imagen = _multiplicar(atlas, mapa, capas_por_rebanada, nivel)
@@ -194,8 +297,7 @@ static func _rasterizar(
 	pieza: Pieza,
 	indice: int,
 	mapa: _Mapa,
-	oclusores: TriangleMesh,
-	radio: float,
+	oclusores: Oclusores,
 	reparto: PackedVector3Array,
 	resultado: Resultado
 ) -> void:
@@ -245,7 +347,7 @@ static func _rasterizar(
 				if cara.dot(normal) < 0.0:
 					cara = -cara
 				var factor := factor_en(
-					oclusores, punto + cara * SALIDA, normal, radio, reparto, _giro_de(x, y)
+					oclusores, punto + cara * SALIDA, normal, reparto, _giro_de(x, y)
 				)
 				var lugar := (pieza.rebanada * ancho + y) * ancho + x
 				mapa.factor[lugar] = factor

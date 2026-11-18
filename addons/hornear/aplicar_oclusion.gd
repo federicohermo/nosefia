@@ -1,7 +1,7 @@
 ## Aplica la oclusión de los rincones al atlas del local. Lo lanza `hornear.py`.
 ##
 ##     godot --headless --path . -s res://addons/hornear/aplicar_oclusion.gd -- \
-##         BASE.lmbake ATLAS_DE_ENTRADA.exr ATLAS_DE_SALIDA.exr RADIO NIVEL RAYOS
+##         BASE.lmbake ATLAS_DE_ENTRADA.exr ATLAS_DE_SALIDA.exr TOPE NIVEL RAYOS PROPORCION
 ##
 ## Lee del atlas de entrada y escribe el de salida: pueden ser el mismo archivo. El `.lmbake` dice,
 ## por pieza, la ruta de su malla —relativa al `LightmapGI` de `almacen.tscn`—, su rectángulo y su
@@ -29,23 +29,25 @@ func _initialize() -> void:
 
 
 func _aplicar(argumentos: PackedStringArray) -> int:
-	if argumentos.size() != 6 or not argumentos[3].is_valid_float():
+	if argumentos.size() != 7 or not argumentos[3].is_valid_float():
 		printerr(
-			"[oclusion] error: se esperan BASE.lmbake ENTRADA.exr SALIDA.exr RADIO NIVEL RAYOS"
+			(
+				"[oclusion] error: se esperan BASE.lmbake ENTRADA.exr SALIDA.exr"
+				+ " TOPE NIVEL RAYOS PROPORCION"
+			)
 		)
 		return 2
 	var entrada := _leer(argumentos[0], argumentos[1])
 	if entrada == null:
 		return 1
-	var caras := PackedVector3Array()
+	var mallas: Array = []
 	for pieza: Oclusion.Pieza in entrada.piezas:
-		caras.append_array(pieza.posiciones)
+		mallas.append(pieza.posiciones)
 	var desde := Time.get_ticks_msec()
 	var resultado := Oclusion.aplicar(
 		entrada.atlas,
 		entrada.piezas,
-		Oclusion.oclusores_de(caras),
-		argumentos[3].to_float(),
+		Oclusion.oclusores_de(mallas, argumentos[3].to_float(), argumentos[6].to_float()),
 		argumentos[4].to_float(),
 		argumentos[5].to_int()
 	)
@@ -58,13 +60,14 @@ func _aplicar(argumentos: PackedStringArray) -> int:
 		return 1
 	print(
 		(
-			"[oclusion] %d piezas, %d texeles, %d rayos en %.1f s, radio %s, nivel %s"
+			"[oclusion] %d piezas, %d texeles, %d rayos en %.1f s, tope %s, proporción %s, nivel %s"
 			% [
 				entrada.piezas.size(),
 				resultado.texeles,
 				resultado.rayos,
 				(Time.get_ticks_msec() - desde) / 1000.0,
 				argumentos[3],
+				argumentos[6],
 				argumentos[4],
 			]
 		)

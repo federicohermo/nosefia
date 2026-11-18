@@ -34,12 +34,20 @@ VARIANTE_SIN_LUZ = "sin_luz"
 NIVEL_DE_APOYO = 0.75
 
 #: Cuánto pesa en el atlas final la oclusión de los rincones, de 0 a 1. Con 0 el paso no corre y el
-#: atlas queda como lo dejó el horneado. Lo elige el usuario jugando una build de prueba.
-NIVEL_DE_OCLUSION = 0.5
+#: atlas queda como lo dejó el horneado. Lo eligió el usuario jugando una build de prueba el
+#: 2026-11-18, junto con el radio.
+NIVEL_DE_OCLUSION = 0.25
 
-#: A cuántos metros de un texel cuenta una malla como tapándolo. Una pared que pasa de este radio
-#: no lo oscurece: entre el piso y el techo de un estante bajo hay menos.
-RADIO_DE_OCLUSION = 0.8
+#: El tope, en metros, del radio con que una malla oscurece lo que tiene cerca. Una pared o el piso
+#: llegan a él. Lo que es más chico oscurece a menos distancia: ver `PROPORCION_DE_OCLUSION`.
+RADIO_DE_OCLUSION = 0.2
+
+#: Cuánto del tamaño de una parte conexa de una malla es su radio de oclusión. El tamaño es la
+#: medida del medio de la caja de la parte: una pata de 3 × 3 × 45 cm mide 3 cm y oscurece hasta
+#: 3 cm; un asiento de 40 cm llega al tope. Medido el 2026-11-18 sobre las piezas del local: las
+#: patas de las sillas miden de 3 a 15 cm, las de las mesas 8 cm, y los asientos, los respaldos, los
+#: tableros y las paredes pasan de 25 cm. Con 1 sólo lo fino queda por debajo del tope.
+PROPORCION_DE_OCLUSION = 1.0
 
 #: Rayos por texel. Pocos se ven como grano; muchos alargan el paso, que tarda lo mismo que los
 #: rayos: ~4 µs cada uno.
@@ -148,7 +156,12 @@ def ruta_para_godot(ruta: str, raiz: str) -> str:
 
 
 def argumentos_de_la_oclusion(
-    entrada: str, salida: str, radio: float, nivel: float, rayos: int
+    entrada: str,
+    salida: str,
+    radio: float,
+    nivel: float,
+    rayos: int,
+    proporcion: float = PROPORCION_DE_OCLUSION,
 ) -> list[str]:
     """Los argumentos de `addons/hornear/aplicar_oclusion.gd`.
 
@@ -162,17 +175,25 @@ def argumentos_de_la_oclusion(
         repr(float(radio)),
         repr(float(nivel)),
         str(int(rayos)),
+        repr(float(proporcion)),
     ]
 
 
 def comando_de_la_oclusion(
-    godot: str, raiz: str, entrada: str, salida: str, radio: float, nivel: float, rayos: int
+    godot: str,
+    raiz: str,
+    entrada: str,
+    salida: str,
+    radio: float,
+    nivel: float,
+    rayos: int,
+    proporcion: float = PROPORCION_DE_OCLUSION,
 ) -> list[str]:
     """Cómo se lanza Godot para aplicar la oclusión de los rincones sobre un atlas."""
     return [
         godot, "--headless", "--path", raiz,
         "-s", "res://addons/hornear/aplicar_oclusion.gd", "--",
-        *argumentos_de_la_oclusion(entrada, salida, radio, nivel, rayos),
+        *argumentos_de_la_oclusion(entrada, salida, radio, nivel, rayos, proporcion),
     ]  # fmt: skip
 
 

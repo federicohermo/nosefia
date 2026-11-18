@@ -3,6 +3,7 @@ extends GdUnitTestSuite
 const Oclusion := preload("res://addons/hornear/oclusion.gd")
 
 const RADIO := 1.0
+const PROPORCION := 0.5
 const RAYOS := 64
 const ANCHO := 16
 const CAPAS := 4
@@ -12,27 +13,27 @@ const PIEZA := Rect2(4, 4, 8, 8)
 
 
 func test_un_piso_abierto_no_se_oscurece() -> void:
-	var oclusores := Oclusion.oclusores_de(_piso())
+	var oclusores := _oclusores([_piso()])
 	var factor := _factor(oclusores, Vector3(2, 0, 2), Vector3.UP)
 	assert_float(factor).is_equal(1.0)
 
 
 func test_un_rincon_se_oscurece_mas_que_un_piso_abierto() -> void:
-	var oclusores := Oclusion.oclusores_de(_piso() + _pared())
+	var oclusores := _oclusores([_piso(), _pared()])
 	var abierto := _factor(oclusores, Vector3(3, 0, 2), Vector3.UP)
 	var rincon := _factor(oclusores, Vector3(0.05, 0, 2), Vector3.UP)
 	assert_float(rincon).is_less(abierto)
 
 
 func test_un_rincon_se_oscurece_mas_que_una_pared_lisa() -> void:
-	var oclusores := Oclusion.oclusores_de(_piso() + _pared())
+	var oclusores := _oclusores([_piso(), _pared()])
 	var lisa := _factor(oclusores, Vector3(0, 2.5, 2), Vector3.RIGHT)
 	var rincon := _factor(oclusores, Vector3(0.05, 0, 2), Vector3.UP)
 	assert_float(rincon).is_less(lisa)
 
 
 func test_el_factor_sale_entre_cero_y_uno() -> void:
-	var oclusores := Oclusion.oclusores_de(_piso() + _pared())
+	var oclusores := _oclusores([_piso(), _pared()])
 	for x: float in [0.01, 0.2, 0.7, 2.0]:
 		var factor := _factor(oclusores, Vector3(x, 0, 2), Vector3.UP)
 		assert_float(factor).is_between(0.0, 1.0)
@@ -40,7 +41,7 @@ func test_el_factor_sale_entre_cero_y_uno() -> void:
 
 func test_una_chapa_fina_de_dos_caras_no_se_tapa_a_si_misma() -> void:
 	# Dos caras a un milímetro, con las normales hacia afuera: el techo y el piso de un estante.
-	var oclusores := Oclusion.oclusores_de(_chapa(1.0, 0.001))
+	var oclusores := _oclusores([_chapa(1.0, 0.001)])
 	var arriba := _factor(oclusores, Vector3(2, 1.001, 2), Vector3.UP)
 	var abajo := _factor(oclusores, Vector3(2, 1.0, 2), Vector3.DOWN)
 	assert_float(arriba).is_equal(1.0)
@@ -48,25 +49,23 @@ func test_una_chapa_fina_de_dos_caras_no_se_tapa_a_si_misma() -> void:
 
 
 func test_dos_caras_en_el_mismo_plano_tampoco_se_tapan() -> void:
-	var oclusores := Oclusion.oclusores_de(_chapa(1.0, 0.0))
+	var oclusores := _oclusores([_chapa(1.0, 0.0)])
 	assert_float(_factor(oclusores, Vector3(2, 1.0, 2), Vector3.UP)).is_equal(1.0)
 	assert_float(_factor(oclusores, Vector3(2, 1.0, 2), Vector3.DOWN)).is_equal(1.0)
 
 
 func test_el_pie_de_una_chapa_se_oscurece_al_estar_debajo_de_ella() -> void:
-	var oclusores := Oclusion.oclusores_de(_piso() + _chapa(0.3, 0.001))
+	var oclusores := _oclusores([_piso(), _chapa(0.3, 0.001)])
 	var bajo := _factor(oclusores, Vector3(2, 0, 2), Vector3.UP)
 	var libre := _factor(oclusores, Vector3(2, 0, 3.9), Vector3.UP)
 	assert_float(bajo).is_less(libre)
 
 
 func test_el_giro_no_cambia_el_resultado_de_un_lugar_abierto() -> void:
-	var oclusores := Oclusion.oclusores_de(_piso())
+	var oclusores := _oclusores([_piso()])
 	var direcciones := Oclusion.direcciones(RAYOS)
 	for giro: float in [0.0, 1.3, 4.0]:
-		var factor := Oclusion.factor_en(
-			oclusores, Vector3(2, 0, 2), Vector3.UP, RADIO, direcciones, giro
-		)
+		var factor := Oclusion.factor_en(oclusores, Vector3(2, 0, 2), Vector3.UP, direcciones, giro)
 		assert_float(factor).is_equal(1.0)
 
 
@@ -137,9 +136,7 @@ func test_el_atlas_conserva_sus_dimensiones_y_su_formato() -> void:
 func test_una_pieza_con_uv2_fuera_de_su_rectangulo_frena_el_paso_y_se_nombra() -> void:
 	var pieza := _pieza_del_piso()
 	pieza.uv2[1] = Vector2(1.5, 0.0)
-	var resultado := Oclusion.aplicar(
-		_atlas(), [pieza], Oclusion.oclusores_de(_piso()), RADIO, 1.0, RAYOS
-	)
+	var resultado := Oclusion.aplicar(_atlas(), [pieza], _oclusores([_piso()]), 1.0, RAYOS)
 	assert_str(resultado.error).contains(pieza.clave)
 	assert_float(_luz(resultado.imagen, Vector2i(4, 8), 0)).is_equal(1.0)
 
@@ -162,13 +159,13 @@ func test_una_malla_sin_uv2_no_es_una_pieza() -> void:
 	assert_object(Oclusion.pieza_de(caja, Transform3D.IDENTITY, "caja", PIEZA, 0)).is_null()
 
 
-func _factor(oclusores: TriangleMesh, punto: Vector3, normal: Vector3) -> float:
-	return Oclusion.factor_en(oclusores, punto, normal, RADIO, Oclusion.direcciones(RAYOS), 0.0)
+func _factor(oclusores: Oclusion.Oclusores, punto: Vector3, normal: Vector3) -> float:
+	return Oclusion.factor_en(oclusores, punto, normal, Oclusion.direcciones(RAYOS), 0.0)
 
 
 func _aplicar(nivel: float) -> Oclusion.Resultado:
-	var oclusores := Oclusion.oclusores_de(_piso() + _pared())
-	return Oclusion.aplicar(_atlas(), [_pieza_del_piso()], oclusores, RADIO, nivel, RAYOS)
+	var oclusores := _oclusores([_piso(), _pared()])
+	return Oclusion.aplicar(_atlas(), [_pieza_del_piso()], oclusores, nivel, RAYOS)
 
 
 func _a_media_precision(valor: float) -> float:
@@ -177,6 +174,10 @@ func _a_media_precision(valor: float) -> float:
 	imagen.convert(Image.FORMAT_RGBAH)
 	imagen.convert(Image.FORMAT_RGBAF)
 	return imagen.get_pixel(0, 0).r
+
+
+func _oclusores(mallas: Array) -> Oclusion.Oclusores:
+	return Oclusion.oclusores_de(mallas, RADIO, PROPORCION)
 
 
 func _atlas() -> Image:
