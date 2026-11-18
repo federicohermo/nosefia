@@ -14,8 +14,6 @@ const HORNO_CON_LUZ := "res://src/escenas/almacen.lmbake"
 const HORNO_SIN_LUZ := "res://src/escenas/almacen_sin_luz.lmbake"
 const LIGHTMAP_CON_LUZ := "res://src/escenas/almacen.exr"
 const LIGHTMAP_SIN_LUZ := "res://src/escenas/almacen_sin_luz.exr"
-## Lado de la primera capa del atlas, la de la luz: las otras guardan la dirección.
-const LADO_DEL_ATLAS := 2048
 const PASO_DEL_MUESTREO := 4
 const LUZ_VISIBLE := 0.01
 ## Qué parte, como mínimo, del local con luz queda visible en la penumbra: el piso, las góndolas y
@@ -314,12 +312,16 @@ func test_durante_el_corte_la_emergencia_es_la_del_horneado() -> void:  # AC-AMB
 	assert_bool(emergencia.shadow_enabled).is_equal(sombra)
 
 
+## Las cuatro capas del atlas viajan apiladas: la primera, la de la luz, es un cuadrado del ancho
+## de la imagen. Las otras guardan la dirección.
 func _texeles_con_luz(ruta: String) -> float:
-	var capa := Image.load_from_file(ruta).get_region(Rect2i(0, 0, LADO_DEL_ATLAS, LADO_DEL_ATLAS))
+	var imagen := Image.load_from_file(ruta)
+	var lado := imagen.get_width()
+	var capa := imagen.get_region(Rect2i(0, 0, lado, lado))
 	var con_luz := 0
 	var total := 0
-	for y: int in range(0, LADO_DEL_ATLAS, PASO_DEL_MUESTREO):
-		for x: int in range(0, LADO_DEL_ATLAS, PASO_DEL_MUESTREO):
+	for y: int in range(0, lado, PASO_DEL_MUESTREO):
+		for x: int in range(0, lado, PASO_DEL_MUESTREO):
 			var color := capa.get_pixel(x, y)
 			total += 1
 			if (color.r + color.g + color.b) / 3.0 > LUZ_VISIBLE:

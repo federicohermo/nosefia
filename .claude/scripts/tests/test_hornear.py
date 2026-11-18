@@ -16,6 +16,7 @@ from unittest import mock
 import hornear
 from lib.horneado import (
     INTERMEDIOS_DEL_APOYO,
+    LADO_DEL_ATLAS_SIN_LUZ,
     SALIDAS,
     SALIDAS_QUE_SE_DEVUELVEN,
     SALIDAS_SIN_LUZ,
@@ -202,11 +203,55 @@ class HorneadoConLuz(unittest.TestCase):
         with (
             mock.patch.object(hornear, "RAIZ", str(self.repo)),
             mock.patch.object(hornear, "resolver", lambda entorno: ("godot", None)),
+            mock.patch.object(hornear.lib_blender, "resolver", lambda entorno: ("blender", None)),
             mock.patch.object(hornear, "sesion_bloqueada", lambda procesos: False),
             mock.patch.object(hornear, "sesion_del_editor", sesion_a_medias),
         ):
             self.assertNotEqual(hornear.main(["--sin-luz"]), 0)
         self.assertEqual(self._leer(importado), "de git\n")
+
+    def _reducir(self, blender: str, atlas: list[str], lado: int) -> None:
+        self.pasos.append(f"reducir:{Path(atlas[0]).name}:{lado}")
+
+    def test_el_horneado_sin_luz_hornea_repara_y_recien_despues_reduce(self) -> None:
+        with (
+            mock.patch.object(hornear, "sesion_del_editor", self._sesion),
+            mock.patch.object(hornear, "reparar_lineas", self._reparar),
+            mock.patch.object(hornear, "reducir_atlas", self._reducir),
+        ):
+            hornear.hornear_sin_luz("godot", "blender")
+        atlas = Path(SALIDAS_SIN_LUZ[1]).name
+        self.assertEqual(
+            self.pasos,
+            ["editor:sin_luz", f"reparar:{atlas}", f"reducir:{atlas}:{LADO_DEL_ATLAS_SIN_LUZ}"],
+        )
+
+    def test_el_horneado_con_luz_nunca_se_reduce(self) -> None:
+        with mock.patch.object(hornear, "reducir_atlas", self._reducir):
+            self._correr(0.5)
+        self.assertFalse([paso for paso in self.pasos if paso.startswith("reducir")])
+
+    def test_si_la_reduccion_falla_el_atlas_y_el_horneado_sin_luz_quedan_como_estaban(self) -> None:
+        def sesion_que_escribe(godot: str, variante: str, salidas: tuple[str, ...]) -> None:
+            for ruta in SALIDAS_SIN_LUZ:
+                self._escribir(ruta, "recien horneado\n")
+
+        def reduccion_que_falla(blender: str, atlas: list[str], lado: int) -> None:
+            self._escribir(atlas[0].removeprefix(str(self.repo) + os.sep), "a medias\n")
+            raise hornear.Fallo("no pude reducir")
+
+        with (
+            mock.patch.object(hornear, "RAIZ", str(self.repo)),
+            mock.patch.object(hornear, "resolver", lambda entorno: ("godot", None)),
+            mock.patch.object(hornear.lib_blender, "resolver", lambda entorno: ("blender", None)),
+            mock.patch.object(hornear, "sesion_bloqueada", lambda procesos: False),
+            mock.patch.object(hornear, "sesion_del_editor", sesion_que_escribe),
+            mock.patch.object(hornear, "reparar_lineas", self._reparar),
+            mock.patch.object(hornear, "reducir_atlas", reduccion_que_falla),
+        ):
+            self.assertNotEqual(hornear.main(["--sin-luz"]), 0)
+        for ruta in SALIDAS_SIN_LUZ:
+            self.assertEqual(self._leer(ruta), "de git\n")
 
     def test_si_un_paso_falla_no_quedan_archivos_intermedios(self) -> None:
         self._main_con_un_paso_que_falla()

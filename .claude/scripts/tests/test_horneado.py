@@ -11,8 +11,10 @@ from lib.horneado import (
     SALIDAS_SIN_LUZ,
     VARIABLE_DE_LA_VARIANTE,
     VARIANTE_CON_APOYO,
+    LADO_DEL_ATLAS_SIN_LUZ,
     argumentos_de_la_mezcla,
     comando_de_la_mezcla,
+    comando_de_la_reduccion,
     comando_de_la_reparacion,
     con_apoyo,
     entorno_de,
@@ -79,6 +81,21 @@ class HorneadoSinLuz(unittest.TestCase):
         ok, motivo = veredicto(0, actualizados)
         self.assertFalse(ok)
         self.assertIn("almacen_sin_luz.exr", motivo)
+
+
+class ReduccionDelAtlasSinLuz(unittest.TestCase):
+    # La noche del corte es una imagen casi negra: 2048 px de lado pesan cuatro veces más y no
+    # se ven. El lado sale de una constante, y llega al script de Blender como argumento.
+    def test_el_lado_final_es_una_potencia_de_dos_menor_que_la_del_horneado(self):
+        self.assertGreater(LADO_DEL_ATLAS_SIN_LUZ, 0)
+        self.assertEqual(LADO_DEL_ATLAS_SIN_LUZ & (LADO_DEL_ATLAS_SIN_LUZ - 1), 0)
+
+    def test_el_comando_pasa_el_lado_y_los_atlas_despues_de_los_de_blender(self):
+        comando = comando_de_la_reduccion("blender", "reducir.py", ["a.exr"], 512)
+        corte = comando.index("--")
+        self.assertEqual(comando[corte + 1 :], ["--aplicar", "--lado", "512", "a.exr"])
+        # Sin esto, una excepción del script sale con código 0 y el horneado sigue.
+        self.assertEqual(comando[comando.index("--python-exit-code") + 1], "1")
 
 
 class SesionBloqueada(unittest.TestCase):
