@@ -43,7 +43,7 @@ NIVEL_DE_OCLUSION = 0.25
 RADIO_DE_OCLUSION = 0.2
 
 #: Rayos por texel. Pocos se ven como grano; muchos alargan el paso, que tarda lo mismo que los
-#: rayos: ~4 µs cada uno.
+#: rayos: ~2,5 µs cada uno.
 RAYOS_DE_OCLUSION = 64
 
 #: El horneado con obstáculos: el mismo local con volúmenes que sólo existen mientras se hornea,

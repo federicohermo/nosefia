@@ -357,11 +357,23 @@ def _argumentos(argumentos: list[str] | None) -> argparse.Namespace:
     parser.add_argument(
         "--oclusion", action="store_true", help="sólo la oclusión, sobre el atlas de la rama"
     )
-    parser.add_argument("--nivel", type=float, default=NIVEL_DE_OCLUSION)
-    parser.add_argument("--radio", type=float, default=RADIO_DE_OCLUSION)
-    parser.add_argument("--rayos", type=int, default=RAYOS_DE_OCLUSION)
-    parser.add_argument("--salida", default=SALIDAS[1], help="adónde escribe la oclusión")
-    return parser.parse_args(sys.argv[1:] if argumentos is None else argumentos)
+    parser.add_argument("--nivel", type=float, help="sólo con --oclusion")
+    parser.add_argument("--radio", type=float, help="sólo con --oclusion")
+    parser.add_argument("--rayos", type=int, help="sólo con --oclusion")
+    parser.add_argument("--salida", help="adónde escribe la oclusión; sólo con --oclusion")
+    opciones = parser.parse_args(sys.argv[1:] if argumentos is None else argumentos)
+    nombres = ("nivel", "radio", "rayos", "salida")
+    dadas = [f"--{n}" for n in nombres if getattr(opciones, n) is not None]
+    if dadas and not opciones.oclusion:
+        # Un horneado completo usa las constantes: aceptarlas y callarlas engaña.
+        parser.error(f"{', '.join(dadas)} sólo valen con --oclusion")
+    if opciones.oclusion and opciones.sin_luz:
+        parser.error("--sin-luz no se combina con --oclusion: la oclusión es del atlas con luz")
+    opciones.nivel = NIVEL_DE_OCLUSION if opciones.nivel is None else opciones.nivel
+    opciones.radio = RADIO_DE_OCLUSION if opciones.radio is None else opciones.radio
+    opciones.rayos = RAYOS_DE_OCLUSION if opciones.rayos is None else opciones.rayos
+    opciones.salida = opciones.salida or SALIDAS[1]
+    return opciones
 
 
 def solo_la_oclusion(godot: str, opciones: argparse.Namespace) -> int:

@@ -170,7 +170,7 @@ MSAA 2× costaba entre 3,6 y 12,6 ms de GPU por cuadro.
 - **Cómo se guarda.** La luz sale redondeada a media precisión, que es la del motor. Sin eso, un
   factor cualquiera llenaba los 23 bits de la mantisa y el EXR pesaba el doble (60 MB contra 32 MB).
 - **Si falla.** `almacen.exr` queda como estaba.
-- **Cuánto tarda y cuánto grano deja.** Tarda lo que los rayos: unos 4 µs cada uno. El local tiene
+- **Cuánto tarda y cuánto grano deja.** Tarda lo que los rayos: unos 2,5 µs cada uno. El local tiene
   del orden de un millón de texeles con luz. Pocos rayos se ven como grano; cada texel gira su
   reparto para que el grano no forme bandas.
 - **Qué no cubre.** Lo que no tiene lightmap no recibe nada: los productos, las cajas y lo que se

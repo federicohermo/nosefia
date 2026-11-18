@@ -5,6 +5,8 @@ lo limpio a lo de git, lo que ya tenía cambios a esos cambios, y las salidas de
 No hace falta Godot: el «editor» son escrituras con la fecha corrida.
 """
 
+import contextlib
+import io
 import os
 import shutil
 import subprocess
@@ -248,6 +250,36 @@ class HorneadoConLuz(unittest.TestCase):
 
     def test_el_comando_suelto_con_nivel_cero_no_hace_nada(self) -> None:
         self.assertEqual(self._solo_la_oclusion(["--oclusion", "--nivel", "0"]), 0)
+        self.assertEqual(self.pasos, [])
+
+    def test_las_opciones_de_la_oclusion_sin_oclusion_se_rechazan_y_no_hornean(self) -> None:
+        for argumentos in (
+            ["--nivel", "0.5"],
+            ["--radio", "0.3"],
+            ["--rayos", "8"],
+            ["--salida", "prueba.exr"],
+        ):
+            with self.subTest(argumentos=argumentos):
+                horneos: list[str] = []
+                with (
+                    mock.patch.object(hornear, "hornear_con_luz", lambda *_: horneos.append("luz")),
+                    contextlib.redirect_stderr(io.StringIO()) as error,
+                    self.assertRaises(SystemExit) as salida,
+                ):
+                    self._solo_la_oclusion(argumentos)
+                self.assertNotEqual(salida.exception.code, 0)
+                self.assertIn(argumentos[0], error.getvalue())
+                self.assertEqual(horneos, [])
+                self.assertEqual(self.pasos, [])
+
+    def test_sin_luz_junto_con_oclusion_se_rechaza_y_no_aplica_nada(self) -> None:
+        with (
+            contextlib.redirect_stderr(io.StringIO()) as error,
+            self.assertRaises(SystemExit) as salida,
+        ):
+            self._solo_la_oclusion(["--oclusion", "--sin-luz"])
+        self.assertNotEqual(salida.exception.code, 0)
+        self.assertIn("--sin-luz", error.getvalue())
         self.assertEqual(self.pasos, [])
 
     def test_si_la_oclusion_falla_el_atlas_queda_como_estaba(self) -> None:
