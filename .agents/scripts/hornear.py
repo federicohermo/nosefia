@@ -366,7 +366,7 @@ def _argumentos(argumentos: list[str] | None) -> argparse.Namespace:
     dadas = [f"--{n}" for n in nombres if getattr(opciones, n) is not None]
     if dadas and not opciones.oclusion:
         # Un horneado completo usa las constantes: aceptarlas y callarlas engaña.
-        parser.error(f"{', '.join(dadas)} sólo valen con --oclusion")
+        parser.error(f"{', '.join(dadas)}: sólo con --oclusion")
     if opciones.oclusion and opciones.sin_luz:
         parser.error("--sin-luz no se combina con --oclusion: la oclusión es del atlas con luz")
     opciones.nivel = NIVEL_DE_OCLUSION if opciones.nivel is None else opciones.nivel
