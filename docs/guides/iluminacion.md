@@ -200,8 +200,8 @@ encuentra hace dos cosas:
 a menos de `BANDA_DE_APOYO` de los más bajos, y lo más bajo se mide hacia abajo del mundo. Así
 un objeto de costado o boca abajo deja la mancha de la cara que apoya. No es la caja que envuelve
 su forma de colisión, que en un balde es la boca. La mancha se corta en el borde de lo que lo
-sostiene, medido en el espacio de la forma de ese apoyo: una caja girada sobre otra no deja la
-mancha colgando en el aire.
+sostiene. Ese borde se mide en el espacio de la forma del apoyo: una caja girada sobre otra no deja
+la mancha colgando en el aire.
 
 **Todo va en uniformes del material, nunca en `instance uniform`.** En la web (Compatibility)
 el shader los recibe en cero. El efecto no se ve y ningún test de GDScript lo nota, porque
