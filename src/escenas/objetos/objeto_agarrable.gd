@@ -10,15 +10,15 @@
 class_name ObjetoAgarrable
 extends RigidBody3D
 
+## Cada vez que toca algo. La rapidez es la de antes del contacto: la de después ya la frenó el
+## choque. Cuál contacto suena lo decide el audio.
+signal contacto_recibido(nodo: Node3D, rapidez: float)
+
 const OclusionDeContacto := preload("res://src/escenas/objetos/oclusion_de_contacto.gd")
 
 ## Cuánto se redondea la huella de lo que no dice otra cosa: lo que se levanta tiene los cantos
 ## gastados.
 const ESQUINAS_POR_DEFECTO := 0.1
-
-## Cada vez que toca algo. La rapidez es la de antes del contacto: la de después ya la frenó el
-## choque. Cuál contacto suena lo decide el audio.
-signal contacto_recibido(nodo: Node3D, rapidez: float)
 
 ## Los datos entran por el `.tres`, así que agregar un objeto nuevo al almacén es duplicar la
 ## escena y cambiarle este campo: no se toca código.
