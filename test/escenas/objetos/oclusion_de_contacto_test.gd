@@ -15,6 +15,9 @@ const GROSOR_DEL_PISO := 0.2
 ## sostiene.
 const CORRIDA := 0.1
 
+## A cuánto del borde de lo que sostiene se prueba si la mancha llega, en metros.
+const BORDE := 0.03
+
 ## El balde de prueba: el radio de su boca y el de su base, y su alto, en metros.
 const BOCA := 0.2
 const BASE := 0.12
@@ -129,6 +132,25 @@ func test_una_superficie_inclinada_lleva_la_mancha_pegada_a_ella() -> void:
 	assert_vector(sombra.global_basis.y.normalized()).is_equal_approx(normal, Vector3.ONE * 0.001)
 
 
+## Si la mancha llega hasta ese punto del mundo, o lo que la sostiene ya terminó.
+func _lo_sostiene(oclusion: Node3D, punto: Vector3) -> bool:
+	var en_la_mancha: Vector3 = oclusion.sombra.global_transform.affine_inverse() * punto
+	var tamano: Vector2 = _de_la_mancha(oclusion, &"tamano")
+	var plano := Vector3(en_la_mancha.x * tamano.x, 0.0, en_la_mancha.z * tamano.y)
+	var al_apoyo: Transform3D = _de_la_mancha(oclusion, &"al_apoyo")
+	var en_el_apoyo := al_apoyo * plano
+	var minimo: Vector3 = _de_la_mancha(oclusion, &"apoyo_minimo")
+	var maximo: Vector3 = _de_la_mancha(oclusion, &"apoyo_maximo")
+	return (
+		en_el_apoyo.x >= minimo.x
+		and en_el_apoyo.y >= minimo.y
+		and en_el_apoyo.z >= minimo.z
+		and en_el_apoyo.x <= maximo.x
+		and en_el_apoyo.y <= maximo.y
+		and en_el_apoyo.z <= maximo.z
+	)
+
+
 func test_sobre_otra_caja_la_mancha_se_corta_en_el_borde_de_la_de_abajo() -> void:
 	_piso()
 	var abajo := await _caja_a(0.0)
@@ -136,10 +158,26 @@ func test_sobre_otra_caja_la_mancha_se_corta_en_el_borde_de_la_de_abajo() -> voi
 	var arriba := await _caja_a(2.0 * media, Vector3.RIGHT * CORRIDA)
 	var oclusion := _oclusion_de(arriba)
 	assert_bool(oclusion.sombra.visible).is_true()
-	var recorte: Vector4 = _de_la_mancha(oclusion, &"recorte")
-	# Hacia donde se corrió, la caja de abajo termina a su mitad menos lo corrido del punto.
-	assert_float(recorte.z).is_equal_approx(media - CORRIDA, 0.001)
-	assert_float(recorte.x).is_equal_approx(-(media + CORRIDA), 0.001)
+	assert_bool(_lo_sostiene(oclusion, Vector3.RIGHT * (media - BORDE))).is_true()
+	assert_bool(_lo_sostiene(oclusion, Vector3.RIGHT * (media + BORDE))).is_false()
+	assert_bool(_lo_sostiene(oclusion, Vector3.LEFT * (media + BORDE))).is_false()
+
+
+func test_girada_sobre_otra_la_mancha_se_corta_en_su_borde_y_no_en_el_de_su_envolvente() -> void:
+	_piso()
+	var abajo := await _caja_a(0.0)
+	var media: float = abajo.call("media")
+	var arriba: RigidBody3D = auto_free(CAJA.instantiate())
+	add_child(arriba)
+	arriba.global_transform = Transform3D(Basis(Vector3.UP, PI / 4.0), Vector3.UP * (3.0 * media))
+	await get_tree().physics_frame
+	await get_tree().physics_frame
+	var oclusion := _oclusion_de(arriba)
+	assert_bool(oclusion.sombra.visible).is_true()
+	# La esquina de la de arriba cuelga sobre el borde recto de la de abajo: ahí no hay apoyo.
+	assert_bool(_lo_sostiene(oclusion, Vector3.RIGHT * (media - BORDE))).is_true()
+	assert_bool(_lo_sostiene(oclusion, Vector3.RIGHT * (media + BORDE))).is_false()
+	assert_bool(_lo_sostiene(oclusion, Vector3.BACK * (media + BORDE))).is_false()
 
 
 func test_apagarla_oculta_la_mancha_y_prenderla_la_devuelve() -> void:

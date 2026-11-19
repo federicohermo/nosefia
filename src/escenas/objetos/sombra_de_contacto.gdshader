@@ -15,13 +15,18 @@ uniform float esquinas = 0.0;
 // Ancho del borde difuso, en metros.
 uniform float suavidad = 0.06;
 uniform float intensidad = 0.0;
-// Hasta dónde llega la superficie de apoyo: mínimo y máximo, en el plano.
-uniform vec4 recorte = vec4(-100.0, -100.0, 100.0, 100.0);
+// Del plano de la mancha, en metros, al espacio de la forma que la sostiene.
+uniform mat4 al_apoyo = mat4(1.0);
+// Hasta dónde llega esa forma: mínimo y máximo, en su espacio.
+uniform vec3 apoyo_minimo = vec3(-1000.0);
+uniform vec3 apoyo_maximo = vec3(1000.0);
 
 varying vec2 plano;
+varying vec3 en_el_apoyo;
 
 void vertex() {
 	plano = VERTEX.xz * tamano;
+	en_el_apoyo = (al_apoyo * vec4(plano.x, 0.0, plano.y, 1.0)).xyz;
 }
 
 float distancia_al_rectangulo(vec2 punto, vec2 mitad, float radio) {
@@ -33,8 +38,8 @@ void fragment() {
 	float radio = esquinas * min(huella.x, huella.y);
 	float borde = 1.0 - smoothstep(0.0, suavidad, distancia_al_rectangulo(plano, huella, radio));
 	// Sin esto la mancha sigue en el aire más allá del borde de lo que la sostiene.
-	vec2 desde = smoothstep(recorte.xy, recorte.xy + 0.01, plano);
-	vec2 hasta = 1.0 - smoothstep(recorte.zw - 0.01, recorte.zw, plano);
+	vec3 desde = smoothstep(apoyo_minimo, apoyo_minimo + 0.01, en_el_apoyo);
+	vec3 hasta = 1.0 - smoothstep(apoyo_maximo - 0.01, apoyo_maximo, en_el_apoyo);
 	ALBEDO = vec3(0.0);
-	ALPHA = intensidad * borde * desde.x * desde.y * hasta.x * hasta.y;
+	ALPHA = intensidad * borde * desde.x * desde.y * desde.z * hasta.x * hasta.y * hasta.z;
 }

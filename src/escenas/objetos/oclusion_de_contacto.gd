@@ -39,6 +39,9 @@ const ELEVACION := 0.003
 const SALIDA := 0.03
 ## Cuánto sobre el punto más bajo de la malla se cuenta como apoyo, en metros.
 const BANDA_DE_APOYO := 0.01
+## Cuánto puede diferir hacia dónde queda abajo, visto desde el cuerpo, para seguir contando como el
+## mismo: con una malla de medio metro, menos que la banda de apoyo.
+const ABAJO_IGUAL := 0.01
 ## Cuánto puede diferir la pose de una malla respecto de su cuerpo para seguir contando como la
 ## misma, en metros.
 const POSE_IGUAL := 0.001
@@ -46,9 +49,10 @@ const POSE_IGUAL := 0.001
 const NORMAL_MINIMA := 0.6
 ## La altura que se le escribe a la malla cuando no hay nada abajo.
 const SIN_SUELO := -1000.0
+## Hasta dónde llega el apoyo en un eje donde no hay borde que cortar, en metros.
+const LIMITE_ABIERTO := 1000.0
 
 static var _plano_de_la_sombra: ArrayMesh
-static var _limites_de_las_formas: Dictionary[Shape3D, AABB] = {}
 static var _vertices_de_las_mallas: Dictionary[Mesh, PackedVector3Array] = {}
 
 ## Se apaga y se prende en vivo. Apaga la mancha, y no el oscurecimiento del objeto.
@@ -84,7 +88,6 @@ var rayos := 0
 
 var _esquinas := 0.0
 var _apoyos: Dictionary[MeshInstance3D, Array] = {}
-var _mitad := Vector2.ZERO
 var _hay_sombra := false
 var _suelo := SIN_SUELO
 var _movido := true
@@ -139,15 +142,18 @@ func _physics_process(_delta: float) -> void:
 func actualizar() -> void:
 	rayos += 1
 	var cuerpo := get_parent() as CollisionObject3D
-	var del_objeto := _apoyo_del_objeto(cuerpo)
-	if del_objeto == AABB():
+	var apoyo := cuerpo.global_transform * _apoyo_del_objeto(cuerpo)
+	if apoyo.is_empty():
 		_hay_sombra = false
 		_mostrar()
 		return
-	var en_el_mundo := cuerpo.global_transform * del_objeto
-	_mitad = Vector2(del_objeto.size.x, del_objeto.size.z) / 2.0
-	var centro := en_el_mundo.get_center()
-	var origen := Vector3(centro.x, en_el_mundo.position.y + SALIDA, centro.z)
+	var minimo := Vector3.INF
+	var maximo := -Vector3.INF
+	for punto: Vector3 in apoyo:
+		minimo = minimo.min(punto)
+		maximo = maximo.max(punto)
+	var centro := (minimo + maximo) / 2.0
+	var origen := Vector3(centro.x, minimo.y + SALIDA, centro.z)
 	var consulta := PhysicsRayQueryParameters3D.create(
 		origen,
 		origen + Vector3.DOWN * (SALIDA + radio),
@@ -164,7 +170,7 @@ func actualizar() -> void:
 	var punto: Vector3 = golpe["position"]
 	_suelo = punto.y
 	_escribir_en_la_malla()
-	_poner_la_sombra(cuerpo, golpe, maxf(en_el_mundo.position.y - punto.y, 0.0))
+	_poner_la_sombra(cuerpo, golpe, maxf(minimo.y - punto.y, 0.0), apoyo)
 
 
 ## Qué tan oscura queda la mancha a esa altura de la superficie, de 0 a `OPACIDAD_MAXIMA`.
@@ -172,7 +178,9 @@ func intensidad_a(altura: float) -> float:
 	return intensidad * OPACIDAD_MAXIMA * (1.0 - smoothstep(0.0, radio, altura))
 
 
-func _poner_la_sombra(cuerpo: CollisionObject3D, golpe: Dictionary, altura: float) -> void:
+func _poner_la_sombra(
+	cuerpo: CollisionObject3D, golpe: Dictionary, altura: float, apoyo: PackedVector3Array
+) -> void:
 	var intensidad := intensidad_a(altura)
 	_hay_sombra = intensidad > 0.0
 	_mostrar()
@@ -186,18 +194,19 @@ func _poner_la_sombra(cuerpo: CollisionObject3D, golpe: Dictionary, altura: floa
 		costado = cuerpo.global_basis.z - normal * normal.dot(cuerpo.global_basis.z)
 	costado = costado.normalized()
 	var giro := Basis(costado, normal, costado.cross(normal))
+	var mitad := _mitad_de(apoyo, giro)
 	var suavidad := radio + DIFUMINADO_POR_ALTURA * altura
-	var tamano := _mitad * 2.0 + Vector2.ONE * (suavidad * 2.0)
+	var tamano := mitad * 2.0 + Vector2.ONE * (suavidad * 2.0)
 	sombra.global_transform = Transform3D(
 		giro.scaled_local(Vector3(tamano.x, 1.0, tamano.y)), punto + normal * ELEVACION
 	)
 	var material := sombra.material_override as ShaderMaterial
 	material.set_shader_parameter(&"tamano", tamano)
-	material.set_shader_parameter(&"huella", _mitad)
+	material.set_shader_parameter(&"huella", mitad)
 	material.set_shader_parameter(&"esquinas", _esquinas)
 	material.set_shader_parameter(&"suavidad", suavidad)
 	material.set_shader_parameter(&"intensidad", intensidad)
-	material.set_shader_parameter(&"recorte", _recorte_del_apoyo(golpe, giro, punto))
+	_recortar_en_el_apoyo(material, golpe, Transform3D(giro, punto))
 
 
 ## Vuelve a lanzar el rayo, para que un cambio se vea sin esperar a que el objeto se mueva.
@@ -223,68 +232,92 @@ func _escribir_en_la_malla() -> void:
 			material.set_shader_parameter(ALCANCE_DE_LA_MALLA, radio)
 
 
-## Hasta dónde llega lo que sostiene al objeto, en el plano de la mancha. Sin esto, una caja
-## corrida sobre otra dejaría la mancha colgando en el aire.
-func _recorte_del_apoyo(golpe: Dictionary, giro: Basis, punto: Vector3) -> Vector4:
-	var apoyo := golpe["collider"] as CollisionObject3D
-	if apoyo == null:
-		return Vector4(-100.0, -100.0, 100.0, 100.0)
-	var dueno := apoyo.shape_find_owner(golpe["shape"])
-	var forma := apoyo.shape_owner_get_shape(dueno, 0)
-	var de_la_forma := apoyo.global_transform * apoyo.shape_owner_get_transform(dueno)
-	var limites := _limites_de(forma)
+## La mitad de lo que mide el apoyo sobre los dos ejes de la mancha. Se mide sobre el plano y no en
+## el cuerpo, que puede estar de costado.
+func _mitad_de(apoyo: PackedVector3Array, giro: Basis) -> Vector2:
 	var minimo := Vector2(INF, INF)
 	var maximo := Vector2(-INF, -INF)
-	for indice in 8:
-		var esquina := giro.inverse() * (de_la_forma * limites.get_endpoint(indice) - punto)
-		minimo = minimo.min(Vector2(esquina.x, esquina.z))
-		maximo = maximo.max(Vector2(esquina.x, esquina.z))
-	return Vector4(minimo.x, minimo.y, maximo.x, maximo.y)
+	for punto: Vector3 in apoyo:
+		var en_el_plano := Vector2(punto.dot(giro.x), punto.dot(giro.z))
+		minimo = minimo.min(en_el_plano)
+		maximo = maximo.max(en_el_plano)
+	return (maximo - minimo) / 2.0
+
+
+## Hasta dónde llega lo que sostiene al objeto, medido en el espacio de su forma: así la mancha se
+## corta en el borde de lo de abajo aunque éste esté girado respecto del objeto. Sin esto, una caja
+## corrida sobre otra dejaría la mancha colgando en el aire.
+func _recortar_en_el_apoyo(
+	material: ShaderMaterial, golpe: Dictionary, de_la_mancha: Transform3D
+) -> void:
+	var minimo := Vector3.ONE * -LIMITE_ABIERTO
+	var maximo := Vector3.ONE * LIMITE_ABIERTO
+	var al_apoyo := Transform3D.IDENTITY
+	var apoyo := golpe["collider"] as CollisionObject3D
+	if apoyo != null:
+		var dueno := apoyo.shape_find_owner(golpe["shape"])
+		var forma := apoyo.shape_owner_get_shape(dueno, 0)
+		var de_la_forma := apoyo.global_transform * apoyo.shape_owner_get_transform(dueno)
+		var limites := LimitesDeForma.de(forma)
+		var escala := de_la_forma.basis.get_scale().abs()
+		minimo = limites.position * escala
+		maximo = limites.end * escala
+		al_apoyo = de_la_forma.orthonormalized().affine_inverse() * de_la_mancha
+		# La mancha está sobre una cara de la forma: en ese eje no hay borde que cortar.
+		var cara := al_apoyo.basis.y.abs().max_axis_index()
+		minimo[cara] = -LIMITE_ABIERTO
+		maximo[cara] = LIMITE_ABIERTO
+	material.set_shader_parameter(&"al_apoyo", al_apoyo)
+	material.set_shader_parameter(&"apoyo_minimo", minimo)
+	material.set_shader_parameter(&"apoyo_maximo", maximo)
 
 
 ## Dónde toca el objeto lo que tiene debajo, en el espacio del cuerpo: lo más bajo de sus mallas,
-## hasta `BANDA_DE_APOYO` de ahí. Vacío si no tiene nada que dibujar.
-func _apoyo_del_objeto(cuerpo: Node3D) -> AABB:
+## hasta `BANDA_DE_APOYO` de ahí, midiendo hacia abajo del mundo. Vacío si no tiene nada que
+## dibujar.
+func _apoyo_del_objeto(cuerpo: Node3D) -> PackedVector3Array:
 	var inversa := cuerpo.global_transform.affine_inverse()
-	var partes: Array[AABB] = []
-	var piso := INF
+	var abajo := (cuerpo.global_basis.inverse() * Vector3.DOWN).normalized()
+	var partes: Array[Array] = []
+	var hondo := -INF
 	for malla in mallas:
 		if malla.mesh == null:
 			continue
-		var parte := _apoyo_de(malla, inversa * malla.global_transform)
-		if parte == AABB():
+		var parte := _apoyo_de(malla, inversa * malla.global_transform, abajo)
+		if (parte[1] as PackedVector3Array).is_empty():
 			continue
 		partes.append(parte)
-		piso = minf(piso, parte.position.y)
-	var apoyo := AABB()
-	var primera := true
+		hondo = maxf(hondo, parte[0])
+	var apoyo := PackedVector3Array()
 	for parte in partes:
-		if parte.position.y > piso + BANDA_DE_APOYO:
-			continue
-		apoyo = parte if primera else apoyo.merge(parte)
-		primera = false
+		if parte[0] >= hondo - BANDA_DE_APOYO:
+			apoyo.append_array(parte[1])
 	return apoyo
 
 
-## Los vértices de una malla a menos de `BANDA_DE_APOYO` de su punto más bajo, vistos desde el
-## cuerpo. Se recalcula sólo si cambia la pose de la malla respecto del cuerpo, no si el cuerpo se
-## mueve: es lo que mantiene barato el rayo de un objeto que se lleva en la mano.
-func _apoyo_de(malla: MeshInstance3D, relativa: Transform3D) -> AABB:
+## De una malla, qué tan hondo llega su punto más bajo y los vértices a menos de `BANDA_DE_APOYO` de
+## él, vistos desde el cuerpo. Se recalcula sólo si cambia la pose de la malla respecto del cuerpo o
+## hacia dónde queda abajo, no si el cuerpo se mueve: es lo que mantiene barato el rayo de un objeto
+## que se lleva en la mano.
+func _apoyo_de(malla: MeshInstance3D, relativa: Transform3D, abajo: Vector3) -> Array:
 	var guardado: Array = _apoyos.get(malla, [])
-	if not guardado.is_empty() and guardado[0] == malla.mesh and _misma_pose(guardado[1], relativa):
-		return guardado[2]
+	if (
+		not guardado.is_empty()
+		and guardado[0] == malla.mesh
+		and _misma_pose(guardado[1], relativa)
+		and (guardado[2] as Vector3).distance_to(abajo) < ABAJO_IGUAL
+	):
+		return guardado[3]
 	var vertices := relativa * _vertices_de(malla.mesh)
-	var piso := INF
-	for vertice in vertices:
-		piso = minf(piso, vertice.y)
-	var apoyo := AABB()
-	var primero := true
-	for vertice in vertices:
-		if vertice.y > piso + BANDA_DE_APOYO:
-			continue
-		apoyo = AABB(vertice, Vector3.ZERO) if primero else apoyo.expand(vertice)
-		primero = false
-	_apoyos[malla] = [malla.mesh, relativa, apoyo]
+	var hondo := -INF
+	for vertice: Vector3 in vertices:
+		hondo = maxf(hondo, vertice.dot(abajo))
+	var puntos := PackedVector3Array()
+	for vertice: Vector3 in vertices:
+		if vertice.dot(abajo) >= hondo - BANDA_DE_APOYO:
+			puntos.append(vertice)
+	var apoyo := [hondo, puntos]
+	_apoyos[malla] = [malla.mesh, relativa, abajo, apoyo]
 	return apoyo
 
 
@@ -297,19 +330,21 @@ static func _misma_pose(una: Transform3D, otra: Transform3D) -> bool:
 	)
 
 
-static func _vertices_de(forma: Mesh) -> PackedVector3Array:
-	if not _vertices_de_las_mallas.has(forma):
-		var todos := PackedVector3Array()
-		for superficie in forma.get_surface_count():
-			todos.append_array(forma.surface_get_arrays(superficie)[Mesh.ARRAY_VERTEX])
-		_vertices_de_las_mallas[forma] = todos
-	return _vertices_de_las_mallas[forma]
+## Una malla armada en juego, como la de un ticket o las que el balde y la mopa se arman al
+## prepararse, no se guarda acá: se quedaría viva toda la sesión.
+static func _vertices_de(malla: Mesh) -> PackedVector3Array:
+	if malla.resource_path.is_empty():
+		return _leer_los_vertices(malla)
+	if not _vertices_de_las_mallas.has(malla):
+		_vertices_de_las_mallas[malla] = _leer_los_vertices(malla)
+	return _vertices_de_las_mallas[malla]
 
 
-static func _limites_de(forma: Shape3D) -> AABB:
-	if not _limites_de_las_formas.has(forma):
-		_limites_de_las_formas[forma] = forma.get_debug_mesh().get_aabb()
-	return _limites_de_las_formas[forma]
+static func _leer_los_vertices(malla: Mesh) -> PackedVector3Array:
+	var todos := PackedVector3Array()
+	for superficie in malla.get_surface_count():
+		todos.append_array(malla.surface_get_arrays(superficie)[Mesh.ARRAY_VERTEX])
+	return todos
 
 
 ## Un `ArrayMesh` y no un `PlaneMesh`: lo que recorre las mallas del local espera superficies.

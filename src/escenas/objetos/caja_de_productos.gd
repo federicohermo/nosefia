@@ -69,7 +69,7 @@ const ETIQUETAS := {
 const RUTA_DEL_REPARTO := "res://assets/boxes/atlas_de_cajas.json"
 
 ## El shader de los productos de la góndola: reproduce el material de la caja genérica y sabe
-## oscurecerse cerca de lo que tiene debajo, con valores por instancia.
+## oscurecerse cerca de lo que tiene debajo, con uniformes del material de cada caja.
 const PINTURA := preload("res://src/escenas/puestos/producto_de_la_gondola.gdshader")
 const OclusionDeContacto := preload("res://src/escenas/objetos/oclusion_de_contacto.gd")
 
@@ -117,10 +117,11 @@ func _notification(que: int) -> void:
 
 ## Viste la malla con la etiqueta de su producto: lo que dice el material de la caja genérica, con
 ## el atlas como textura y el rectángulo de su producto como escala y desplazamiento de la UV. Es
-## el shader de los productos de la góndola, que ya está compilado, y filtra pixelado igual.
+## el shader de los productos de la góndola, y filtra pixelado igual. Sobre un `MeshInstance3D`
+## compila variantes que el `MultiMesh` de la góndola no usa.
 ##
 ## Va como material de la superficie y no como `material_override`, que el calentamiento de
-## shaders dibuja de a uno por cuadro. Medido: treinta cuadros más, y ningún shader nuevo.
+## shaders dibuja de a uno por cuadro. Medido: treinta cuadros más.
 ##
 ## La malla es la del modelo, y lleva la etiqueta en sus caras ±X. Cuál ve el cuarto lo decide
 ## el giro de cada caja en `objetos_del_almacen.tscn`.
