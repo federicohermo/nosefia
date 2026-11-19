@@ -24,6 +24,8 @@ const GRUPO := &"oclusion_de_contacto"
 const PARAMETRO_DE_LA_MALLA := &"oclusion_de_contacto"
 const SUELO_DE_LA_MALLA := &"suelo_de_contacto"
 const ALCANCE_DE_LA_MALLA := &"alcance_de_contacto"
+const LOCAL_DE_LA_MALLA := &"contacto_en_base_local"
+const EJE_DE_LA_MALLA := &"eje_de_contacto"
 const SOMBRA := preload("res://src/escenas/objetos/sombra_de_contacto.gdshader")
 
 ## Los valores con que arrancan las dos propiedades de abajo.
@@ -104,7 +106,7 @@ func _ready() -> void:
 	add_to_group(GRUPO)
 	sombra = MeshInstance3D.new()
 	sombra.top_level = true
-	sombra.mesh = _plano()
+	sombra.mesh = plano()
 	sombra.material_override = _material()
 	sombra.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 	sombra.gi_mode = GeometryInstance3D.GI_MODE_DYNAMIC
@@ -308,7 +310,7 @@ func _apoyo_de(malla: MeshInstance3D, relativa: Transform3D, abajo: Vector3) -> 
 		and (guardado[2] as Vector3).distance_to(abajo) < ABAJO_IGUAL
 	):
 		return guardado[3]
-	var vertices := relativa * _vertices_de(malla.mesh)
+	var vertices := relativa * vertices_de(malla.mesh)
 	var hondo := -INF
 	for vertice: Vector3 in vertices:
 		hondo = maxf(hondo, vertice.dot(abajo))
@@ -332,7 +334,7 @@ static func _misma_pose(una: Transform3D, otra: Transform3D) -> bool:
 
 ## Una malla armada en juego, como la de un ticket o las que el balde y la mopa se arman al
 ## prepararse, no se guarda acá: se quedaría viva toda la sesión.
-static func _vertices_de(malla: Mesh) -> PackedVector3Array:
+static func vertices_de(malla: Mesh) -> PackedVector3Array:
 	if malla.resource_path.is_empty():
 		return _leer_los_vertices(malla)
 	if not _vertices_de_las_mallas.has(malla):
@@ -348,13 +350,13 @@ static func _leer_los_vertices(malla: Mesh) -> PackedVector3Array:
 
 
 ## Un `ArrayMesh` y no un `PlaneMesh`: lo que recorre las mallas del local espera superficies.
-static func _plano() -> ArrayMesh:
+static func plano() -> ArrayMesh:
 	if _plano_de_la_sombra == null:
-		var plano := PlaneMesh.new()
-		plano.size = Vector2.ONE
+		var cuadricula := PlaneMesh.new()
+		cuadricula.size = Vector2.ONE
 		_plano_de_la_sombra = ArrayMesh.new()
 		_plano_de_la_sombra.add_surface_from_arrays(
-			Mesh.PRIMITIVE_TRIANGLES, plano.get_mesh_arrays()
+			Mesh.PRIMITIVE_TRIANGLES, cuadricula.get_mesh_arrays()
 		)
 	return _plano_de_la_sombra
 

@@ -215,6 +215,28 @@ objeto y para la mancha, y dejan el efecto al día al cambiarlas. Con el objeto 
 abre hacia afuera de su huella el mismo `radio` que el objeto se oscurece hacia arriba. Levantado, el
 borde suma `DIFUMINADO_POR_ALTURA` por cada metro de altura.
 
+## La oclusión de contacto en la góndola
+
+Los productos acomodados en la góndola y en las heladeras no son cuerpos sueltos: cada producto se
+dibuja en un `MultiMeshInstance3D` (`reposicion_manual.gd`). `oclusion_de_la_gondola.gd` les da el
+mismo efecto que llevan las unidades sueltas, sin costo por unidad y con los mismos valores por
+defecto de `radio` e `intensidad`.
+
+- **Base oscurecida (`base_activa`).** Cada unidad de la góndola está siempre apoyada en su estante.
+  El material del bloque (`producto_de_la_gondola.gdshader`) prende `contacto_en_base_local` en
+  `oclusion_de_contacto.gdshaderinc` y mide la altura de cada vértice sobre el eje local de apoyo.
+  No lanza rayos ni suma dibujos ni programas. Cubre también `VencidosDeCindolor`.
+- **Mancha por bloque (`manchas_activas`).** Un `MultiMeshInstance3D` (`SombrasDe<Producto>`) por
+  bloque, con `sombra_de_contacto.gdshader`, la huella medida en la misma `BANDA_DE_APOYO` y el
+  recorte del estante en `INSTANCE_CUSTOM`. Sigue la normal real del estante (también en una rampa),
+  no desborda el canto ni atraviesa paneles, y dibuja con `render_priority = -2` para quedar detrás
+  del vidrio de las heladeras. Al sacar o reponer una unidad se compacta con el mismo orden del
+  bloque: los huecos no llevan mancha y los vencidos sí.
+
+El nodo vive en el grupo `oclusion_de_la_gondola` y expone `base_activa`, `manchas_activas`, `radio`
+e `intensidad` en vivo. En la build web también expone `window.oclusion_gondola(base, manchas,
+radio, intensidad)`. Lo verifica `test/escenas/oclusion_de_la_gondola_test.gd`.
+
 ## El horneado de la noche del corte de luz
 
 La séptima noche se corta la luz. La oscuridad **no** apaga el `LightmapGI`: el local tiene un
