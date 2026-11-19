@@ -71,7 +71,7 @@ func test_la_vista_previa_aparece_solo_en_el_hueco_enfocado() -> void:  # AC-PLY
 	assert_int(huecos.multimesh.visible_instance_count).is_equal(vacios.size())
 	var uno: Node3D = puesto.call("casillero", actroncito.id, vacios[0])
 	var otro: Node3D = puesto.call("casillero", actroncito.id, vacios[1])
-	var mallas := almacen.find_children("*", "MeshInstance3D", true, false)
+	var mallas := _sin_manchas(almacen.find_children("*", "MeshInstance3D", true, false))
 	var previos := _overlays(mallas)
 	var materiales := _overrides(mallas)
 	var dibujadas := _dibujadas(mallas)
@@ -107,6 +107,15 @@ func _ojo_frente_a(puesto: Node3D, casillero: Node3D) -> Vector3:
 		disposicion.principales[id], disposicion.filas_de_adelante[id]
 	)
 	return casillero.global_position + frente * 1.2 + Vector3.UP * 0.3
+
+
+## La mancha de contacto de cada objeto cuelga de él, pero cambia de visibilidad sola.
+func _sin_manchas(mallas: Array[Node]) -> Array[Node]:
+	var propias: Array[Node] = []
+	for malla in mallas:
+		if not malla.is_in_group(ReglasDeLosObjetos.GRUPO_SIN_CONTORNO):
+			propias.append(malla)
+	return propias
 
 
 func _dibujadas(mallas: Array[Node]) -> Dictionary[MeshInstance3D, bool]:

@@ -731,6 +731,9 @@ func test_las_dos_cajas_se_examinan_enteras_y_vuelven_a_la_cintura() -> void:
 func _radio(caja: Node3D) -> float:
 	var radio := 0.0
 	for malla: MeshInstance3D in caja.find_children("*", "MeshInstance3D", true, false):
+		# La mancha de contacto tiene coordenadas mundiales, aunque cuelgue de la caja.
+		if malla.top_level:
+			continue
 		var limites := malla.get_aabb()
 		for indice in 8:
 			radio = maxf(radio, (malla.transform * limites.get_endpoint(indice)).length())

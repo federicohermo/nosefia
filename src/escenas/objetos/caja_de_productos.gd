@@ -68,6 +68,11 @@ const ETIQUETAS := {
 
 const RUTA_DEL_REPARTO := "res://assets/boxes/atlas_de_cajas.json"
 
+## El shader de los productos de la góndola: reproduce el material de la caja genérica y sabe
+## oscurecerse cerca de lo que tiene debajo, con uniformes del material de cada caja.
+const PINTURA := preload("res://src/escenas/puestos/producto_de_la_gondola.gdshader")
+const OclusionDeContacto := preload("res://src/escenas/objetos/oclusion_de_contacto.gd")
+
 @export var producto: Producto.Id = Producto.Id.ACTRONCITO
 @export var datos: ObjetoDelAlmacen
 @export var mallas: Array[MeshInstance3D] = []
@@ -91,6 +96,9 @@ func _ready() -> void:
 	for parte: Node3D in [get_node("Cuerpo"), get_node("Malla")]:
 		parte.scale = Vector3.ONE * media()
 	_ponerse_su_etiqueta()
+	var oclusion := OclusionDeContacto.new()
+	oclusion.configurar([get_node("Malla")], 0.1)
+	add_child(oclusion)
 	_lugar_de_origen = transform
 	_padre_de_origen = get_parent()
 	_origen_en_el_mundo = global_transform
@@ -107,28 +115,40 @@ func _notification(que: int) -> void:
 			malla.set_surface_override_material(0, null)
 
 
-## Viste la malla con la etiqueta de su producto: el material de la caja genérica, con el atlas
-## como textura y el rectángulo de su producto como escala y desplazamiento de la UV. Así filtra
-## pixelado igual, y en la web usa el mismo shader, que ya está compilado.
+## Viste la malla con la etiqueta de su producto: lo que dice el material de la caja genérica, con
+## el atlas como textura y el rectángulo de su producto como escala y desplazamiento de la UV. Es
+## el shader de los productos de la góndola, y filtra pixelado igual. Sobre un `MeshInstance3D`
+## compila variantes que el `MultiMesh` de la góndola no usa.
 ##
 ## Va como material de la superficie y no como `material_override`, que el calentamiento de
-## shaders dibuja de a uno por cuadro. Medido: treinta cuadros más, y ningún shader nuevo.
+## shaders dibuja de a uno por cuadro. Medido: treinta cuadros más.
 ##
 ## La malla es la del modelo, y lleva la etiqueta en sus caras ±X. Cuál ve el cuarto lo decide
 ## el giro de cada caja en `objetos_del_almacen.tscn`.
 func _ponerse_su_etiqueta() -> void:
 	var malla: MeshInstance3D = get_node("Malla")
 	var generico := malla.mesh.surface_get_material(0) as BaseMaterial3D
-	var rotulado := generico.duplicate() as BaseMaterial3D
+	var rotulado := ShaderMaterial.new()
+	rotulado.shader = PINTURA
+	rotulado.set_shader_parameter("color", generico.albedo_color)
+	rotulado.set_shader_parameter("textura", generico.albedo_texture)
+	rotulado.set_shader_parameter("rugosidad", generico.roughness)
+	rotulado.set_shader_parameter("metalico", generico.metallic)
+	rotulado.set_shader_parameter("especular", generico.metallic_specular)
 	var reparto := _reparto()
 	var etiqueta: Dictionary = reparto.get("cajas", {}).get(ETIQUETAS.get(producto, ""), {})
 	if not etiqueta.is_empty():
 		var atlas: String = etiqueta["atlas"]
 		var tamano: Array = reparto["atlas"][atlas]
 		var rect: Array = etiqueta["rect"]
-		rotulado.albedo_texture = load("res://assets/boxes/" + atlas)
-		rotulado.uv1_scale = Vector3(rect[2] / float(tamano[0]), rect[3] / float(tamano[1]), 1.0)
-		rotulado.uv1_offset = Vector3(rect[0] / float(tamano[0]), rect[1] / float(tamano[1]), 0.0)
+		rotulado.set_shader_parameter("textura", load("res://assets/boxes/" + atlas))
+		rotulado.set_shader_parameter(
+			"escala_uv", Vector3(rect[2] / float(tamano[0]), rect[3] / float(tamano[1]), 1.0)
+		)
+		rotulado.set_shader_parameter(
+			"desplazamiento_uv",
+			Vector3(rect[0] / float(tamano[0]), rect[1] / float(tamano[1]), 0.0)
+		)
 	malla.set_surface_override_material(0, rotulado)
 
 

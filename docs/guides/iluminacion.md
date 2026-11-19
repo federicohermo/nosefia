@@ -176,6 +176,45 @@ MSAA 2× costaba entre 3,6 y 12,6 ms de GPU por cuadro.
 - **Qué no cubre.** Lo que no tiene lightmap no recibe nada: los productos, las cajas y lo que se
   mueve. Un obstáculo que no es una malla fija, como una puerta que abre, no oscurece a nadie.
 
+## La oclusión de contacto de lo que se levanta
+
+Lo que se mueve no tiene lightmap, así que la sombra de apoyo horneada no le sirve. Por eso la caja de
+productos y todo `ObjetoAgarrable` llevan una oclusión de contacto dinámica. Son el balde, la mopa,
+los bidones, la bolsa de basura, la llave, la palanca, la colilla, los papeles y el ticket. Nada va
+horneado en el objeto: al levantarlo el efecto se va.
+
+`oclusion_de_contacto.gd` cuelga del objeto y lanza un rayo hacia abajo desde su base. Con lo que
+encuentra hace dos cosas:
+
+- **El objeto oscurece lo de abajo.** Una mancha negra con alfa sobre esa superficie
+  (`sombra_de_contacto.gdshader`). Sigue la normal de la superficie y no recibe el contorno del
+  foco. En Compatibility los `Decal` no funcionan: la mancha es un plano. Se apaga con la propiedad
+  `activa` del nodo, que está en el grupo `oclusion_de_contacto`.
+- **Lo de abajo oscurece al objeto.** Escribe en los materiales de las mallas la altura de esa
+  superficie. El shader (`oclusion_de_contacto.gdshaderinc`) oscurece las caras de abajo y el pie
+  de los costados. Se apaga con `intensidad` en 0. Lo comparten los shaders que el objeto ya tenía.
+  Son el de los productos de la góndola (la caja), el de la manija del balde y los dos de la mopa. Un
+  objeto de material estándar lleva sólo la mancha: pasarlo a un shader suma programas.
+
+**La huella de la mancha es lo que del objeto toca la superficie.** Son los vértices de sus mallas
+a menos de `BANDA_DE_APOYO` de los más bajos, y lo más bajo se mide hacia abajo del mundo. Así
+un objeto de costado o boca abajo deja la mancha de la cara que apoya. No es la caja que envuelve
+su forma de colisión, que en un balde es la boca. La mancha se corta en el borde de lo que lo
+sostiene. Ese borde se mide en el espacio de la forma del apoyo: una caja girada sobre otra no deja
+la mancha colgando en el aire.
+
+**Todo va en uniformes del material, nunca en `instance uniform`.** En la web (Compatibility)
+el shader los recibe en cero. El efecto no se ve y ningún test de GDScript lo nota, porque
+`get_instance_shader_parameter` devuelve lo que se escribió. Por eso cada caja y cada balde lleva
+sus propios materiales.
+
+Más lejos de `radio` de cualquier superficie no hay efecto. **El rayo corre mientras el objeto
+se mueve y una vez al quedar quieto**: se entera por el aviso de que cambió su transformación.
+Un objeto quieto no tira ninguno. Las dos propiedades del nodo, `radio` e `intensidad`, valen para el
+objeto y para la mancha, y dejan el efecto al día al cambiarlas. Con el objeto apoyado, la mancha se
+abre hacia afuera de su huella el mismo `radio` que el objeto se oscurece hacia arriba. Levantado, el
+borde suma `DIFUMINADO_POR_ALTURA` por cada metro de altura.
+
 ## El horneado de la noche del corte de luz
 
 La séptima noche se corta la luz. La oscuridad **no** apaga el `LightmapGI`: el local tiene un

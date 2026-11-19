@@ -45,6 +45,20 @@ func test_el_objetivo_con_material_propio_lo_recibe_y_conserva_su_superficie() -
 	assert_object(malla.material_overlay).is_null()
 
 
+func test_una_malla_que_cuelga_pero_no_es_del_objeto_no_recibe_el_contorno() -> void:
+	var marco: MarcoDelObjetivo = auto_free(MarcoDelObjetivo.new())
+	var objetivo: ConFoco = auto_free(ConFoco.new())
+	var propia := _malla()
+	var sombra := _malla()
+	sombra.add_to_group(ReglasDeLosObjetos.GRUPO_SIN_CONTORNO)
+	objetivo.add_child(propia)
+	objetivo.add_child(sombra)
+	marco.enfocar(objetivo)
+	assert_object(propia.material_overlay).is_not_null()
+	assert_object(sombra.material_overlay).is_null()
+	marco.apagar()
+
+
 func test_el_material_propio_vacio_deja_el_contorno_comun() -> void:
 	var marco: MarcoDelObjetivo = auto_free(MarcoDelObjetivo.new())
 	var objetivo: ConFoco = auto_free(ConFoco.new())
