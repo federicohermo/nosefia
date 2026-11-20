@@ -50,10 +50,11 @@ paths:
    binario, y `--aplicar` escribe sobre la fuente. Entraron en este orden: `renovar_bano.py`
    —que ya llama a `refinar_artefactos.py` y `ajustar_marco_bano.py`—,
    `colisiones_de_artefactos.py`, `texturizar_piso_bano.py`, `zocalos_del_bano.py`,
-   `ajustar_umbral_bano.py`, `reparar_cabinas_bano.py`, `terminar_cabinas_bano.py` y
-   `texturizar_rejilla_bano.py`. Después hubo ajustes a mano del riel y las cabinas que ningún
-   script reproduce. Un `.blend` del artista que entre como base nueva pide repetirlos en ese
-   orden y rehacer esos ajustes.
+   `ajustar_umbral_bano.py`, `reparar_cabinas_bano.py`, `terminar_cabinas_bano.py`,
+   `texturizar_rejilla_bano.py` y `aplanar_hoja_del_bano.py`. Ese último va después de la rejilla
+   porque extrapola las UV de `bano_rejilla_texturizada` sobre la cara plana. Después hubo ajustes
+   a mano del riel y las cabinas que ningún script reproduce. Un `.blend` del artista que entre como
+   base nueva pide repetirlos en ese orden y rehacer esos ajustes.
 
 9. **Los metales llevan detalle pintado desde su malla.** `blender/metal_con_detalle.py` pinta
    satinado corto, huellas, rayones finos y suciedad de encuentros en el baño, las mesas, el
@@ -74,3 +75,9 @@ paths:
     pie sólo en el mueble de las heladeras, y franja lisa para los cantos. También pone la UV en
     metros de cada cara. Va antes de `armar_atlas.py`, `exportar_modelo.py` y `hornear.py`. Un
     `.blend` nuevo del artista pide repetirla.
+
+11. **El exhibidor y los bloques del depósito llevan su paso sobre el `.blend`.**
+    `blender/engrosar_lateral_exhibidor.py` restaura los 20 mm del lateral izquierdo de
+    `exhibidor_golosinas-col`. `blender/ladrillos_del_deposito.py` reconstruye los bloques de
+    relieve en esquinas y jambas del depósito sin juntas internas ni aristas sueltas. Van antes
+    de `exportar_modelo.py` y `hornear.py`. Un `.blend` nuevo del artista pide repetirlos.

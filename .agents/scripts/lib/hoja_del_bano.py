@@ -121,3 +121,24 @@ def esquinas_exteriores(
     # Ángulo alrededor del centro en (x, z): abajo_izq (-3pi/4), abajo_der (-pi/4), arriba_der, arriba_izq.
     ordenados = sorted(en_plano, key=lambda i: math.atan2(vertices[i][2] - cz, vertices[i][0] - cx))
     return ordenados if lado < 0 else list(reversed(ordenados))
+
+
+def hoja_ya_plana(
+    materiales_frente: Sequence[str],
+    materiales_dorso: Sequence[str],
+    desviacion_grados: float,
+    extensiones_rejilla: Iterable[str],
+    material_frente: str = "bano_rejilla_texturizada",
+    material_dorso: str = "bano_entrada_blanca",
+) -> bool:
+    """Indica si la hoja ya cumple el estado final plano y de un solo material por cara."""
+    extensiones = list(extensiones_rejilla)
+    return (
+        len(materiales_frente) == 1
+        and len(materiales_dorso) == 1
+        and materiales_frente[0] == material_frente
+        and materiales_dorso[0] == material_dorso
+        and desviacion_grados < 1e-4
+        and bool(extensiones)
+        and all(ext == "EXTEND" for ext in extensiones)
+    )

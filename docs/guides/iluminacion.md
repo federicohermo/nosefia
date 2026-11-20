@@ -193,15 +193,18 @@ encuentra hace dos cosas:
 - **Lo de abajo oscurece al objeto.** Escribe en los materiales de las mallas la altura de esa
   superficie. El shader (`oclusion_de_contacto.gdshaderinc`) oscurece las caras de abajo y el pie
   de los costados. Se apaga con `intensidad` en 0. Lo comparten los shaders que el objeto ya tenía.
-  Son el de los productos de la góndola (la caja), el de la manija del balde y los dos de la mopa. Un
-  objeto de material estándar lleva sólo la mancha: pasarlo a un shader suma programas.
+  Son el de los productos de la góndola (la caja), el de la manija del balde y los dos de la mopa.
+  El tubo metálico comparte `cabeza_de_la_mopa.gdshader` sin sumar programas. Un objeto de material
+  estándar lleva sólo la mancha: pasarlo a un shader suma programas.
 
-**La huella de la mancha es lo que del objeto toca la superficie.** Son los vértices de sus mallas
-a menos de `BANDA_DE_APOYO` de los más bajos, y lo más bajo se mide hacia abajo del mundo. Así
-un objeto de costado o boca abajo deja la mancha de la cara que apoya. No es la caja que envuelve
-su forma de colisión, que en un balde es la boca. La mancha se corta en el borde de lo que lo
-sostiene. Ese borde se mide en el espacio de la forma del apoyo: una caja girada sobre otra no deja
-la mancha colgando en el aire.
+**La huella de la mancha es lo que del objeto está cerca de la superficie.** Son los vértices de
+sus mallas a menos de `radio` del punto más bajo, medido hacia abajo del mundo. Si esos vértices se
+parten en zonas separadas, cada zona lanza su propio rayo. Cada una lleva su propia mancha, con su
+forma e intensidad según su altura. Así una mopa tirada en el piso no mancha debajo del tramo alto
+del palo y una bolsa acostada oscurece alrededor de todo su contorno. Un objeto con una sola zona
+queda con una sola mancha, y las extra se crean bajo demanda y se reusan. Cada mancha se corta en
+el borde de lo que la sostiene. Ese borde se mide en el espacio de la forma del apoyo: una caja
+girada sobre otra no deja la mancha colgando en el aire.
 
 **Todo va en uniformes del material, nunca en `instance uniform`.** En la web (Compatibility)
 el shader los recibe en cero. El efecto no se ve y ningún test de GDScript lo nota, porque
@@ -219,10 +222,12 @@ borde suma `DIFUMINADO_POR_ALTURA` por cada metro de altura.
 
 Los productos acomodados en la góndola no son cuerpos sueltos. Cada producto se dibuja en un
 `MultiMeshInstance3D` (`reposicion_manual.gd`). `oclusion_de_la_gondola.gd` les da el mismo tipo de
-efecto que llevan las unidades sueltas, sin costo por unidad. Lleva sus propios valores por defecto
-(`RADIO_POR_DEFECTO` e `INTENSIDAD_POR_DEFECTO`), distintos de los de `OclusionDeContacto`. Los
-envases son más chicos que una caja y van apretados sobre el estante. Por eso necesitan un alcance
-más corto y más contraste para leerse de cerca.
+efecto que llevan las unidades sueltas, sin costo por unidad. Los envases son más chicos que una
+caja y van apretados sobre el estante. Por eso necesitan un alcance más corto y más contraste para
+leerse de cerca. Esos valores viven en `oclusion_de_contacto.gd` (`RADIO_DEL_PRODUCTO` e
+`INTENSIDAD_DEL_PRODUCTO`). Los comparten la góndola y las unidades de producto sueltas
+(`ObjetoAgarrable` con `UnidadDeProducto`). Así una unidad suelta y una acomodada se ven iguales.
+Cajas y demás objetos conservan `RADIO_POR_DEFECTO` e `INTENSIDAD_POR_DEFECTO`.
 
 - **Base oscurecida (`base_activa`).** Cada unidad de la góndola está siempre apoyada en su estante.
   El componente prende `contacto_en_base_local` en el material del bloque

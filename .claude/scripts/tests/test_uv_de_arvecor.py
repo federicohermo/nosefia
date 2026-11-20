@@ -5,6 +5,9 @@ import unittest
 
 from lib.uv_de_arvecor import (
     Cara,
+    U_PLATEADO,
+    V_PLATEADO,
+    V_SUPERIOR_ETIQUETA,
     alinear_banda_superior,
     corregir_franja_metalica,
     es_cara_del_cuerpo_cilindrico,
@@ -75,7 +78,9 @@ class ParticionDeMateriales(unittest.TestCase):
 class ContinuidadDeLaBandaSuperior(unittest.TestCase):
     def test_cada_cara_superior_continua_u_y_v_desde_su_vecina_inferior(self):
         vertices, inferiores, superiores = _cilindro_en_dos_bandas()
-        corregidas = alinear_banda_superior(vertices, inferiores, superiores, v_superior=0.515)
+        corregidas = alinear_banda_superior(
+            vertices, inferiores, superiores, v_superior=V_SUPERIOR_ETIQUETA
+        )
 
         por_arista = {
             frozenset((cara.vertices[2], cara.vertices[3])): cara for cara in inferiores
@@ -90,11 +95,13 @@ class ContinuidadDeLaBandaSuperior(unittest.TestCase):
                 self.assertAlmostEqual(uv_sup[vertice][1], uv_inf[vertice][1], places=6)
             for vertice, (_, v) in zip(cara.vertices, cara.uvs):
                 if vertice not in arista:
-                    self.assertAlmostEqual(v, 0.515, places=6)
+                    self.assertAlmostEqual(v, V_SUPERIOR_ETIQUETA, places=6)
 
     def test_las_caras_vecinas_de_la_banda_superior_no_saltan_salvo_en_la_costura(self):
         vertices, inferiores, superiores = _cilindro_en_dos_bandas(lados=12)
-        corregidas = alinear_banda_superior(vertices, inferiores, superiores, v_superior=0.515)
+        corregidas = alinear_banda_superior(
+            vertices, inferiores, superiores, v_superior=V_SUPERIOR_ETIQUETA
+        )
 
         saltos = 0
         for indice, actual in enumerate(corregidas):
@@ -107,8 +114,12 @@ class ContinuidadDeLaBandaSuperior(unittest.TestCase):
 
     def test_es_idempotente(self):
         vertices, inferiores, superiores = _cilindro_en_dos_bandas()
-        primera = alinear_banda_superior(vertices, inferiores, superiores, v_superior=0.515)
-        segunda = alinear_banda_superior(vertices, inferiores, primera, v_superior=0.515)
+        primera = alinear_banda_superior(
+            vertices, inferiores, superiores, v_superior=V_SUPERIOR_ETIQUETA
+        )
+        segunda = alinear_banda_superior(
+            vertices, inferiores, primera, v_superior=V_SUPERIOR_ETIQUETA
+        )
         self.assertEqual(primera, segunda)
 
     def test_falla_si_una_cara_superior_no_comparte_arista_con_la_banda_inferior(self):
@@ -117,7 +128,9 @@ class ContinuidadDeLaBandaSuperior(unittest.TestCase):
         vertices.append((0.06, 0.01, 0.105))
         desconectada = Cara(999, (len(vertices) - 2, len(vertices) - 1, 17, 16), ((0, 0),) * 4)
         with self.assertRaises(ValueError):
-            alinear_banda_superior(vertices, inferiores, superiores + [desconectada], 0.515)
+            alinear_banda_superior(
+                vertices, inferiores, superiores + [desconectada], V_SUPERIOR_ETIQUETA
+            )
 
 
 class FranjaMetalicaSuperior(unittest.TestCase):
@@ -132,14 +145,15 @@ class FranjaMetalicaSuperior(unittest.TestCase):
         cuello: list[Cara] = []
         for i in range(lados):
             j = (i + 1) % lados
-            # Primera cara se sale un poco a la izquierda (como p95 del modelo real).
-            u0 = 0.013 if i == 0 else 0.02 + 0.96 * i / lados
-            u1 = 0.02 + 0.96 * (i + 1) / lados
+            # Primera cara se sale en U y V (como p95 y el borde bajo del hombro real).
+            u0 = 0.013 if i == 0 else U_PLATEADO[0] + (U_PLATEADO[1] - U_PLATEADO[0]) * i / lados
+            u1 = U_PLATEADO[0] + (U_PLATEADO[1] - U_PLATEADO[0]) * (i + 1) / lados
+            v_sup = 0.548 if i == 1 else 0.540
             hombro.append(
                 Cara(
                     i,
                     (i, j, lados + j, lados + i),
-                    ((u0, 0.517), (u1, 0.517), (u1, 0.540), (u0, 0.540)),
+                    ((u0, 0.517), (u1, 0.517), (u1, v_sup), (u0, v_sup)),
                 )
             )
             # Cuello degenerado: los vertices de arriba y abajo tienen la misma UV (area cero).
@@ -152,15 +166,15 @@ class FranjaMetalicaSuperior(unittest.TestCase):
             )
 
         hombro_ok, cuello_ok = corregir_franja_metalica(
-            vertices, hombro, cuello, u_rango=(0.02, 0.979), v_rango=(0.520, 0.542)
+            vertices, hombro, cuello, u_rango=U_PLATEADO, v_rango=V_PLATEADO
         )
 
         for cara in hombro_ok + cuello_ok:
             for u, v in cara.uvs:
-                self.assertGreaterEqual(u, 0.02 - 1e-6)
-                self.assertLessEqual(u, 0.979 + 1e-6)
-                self.assertGreaterEqual(v, 0.517 - 1e-6)
-                self.assertLessEqual(v, 0.542 + 1e-6)
+                self.assertGreaterEqual(u, U_PLATEADO[0] - 1e-6)
+                self.assertLessEqual(u, U_PLATEADO[1] + 1e-6)
+                self.assertGreaterEqual(v, V_PLATEADO[0] - 1e-6)
+                self.assertLessEqual(v, V_PLATEADO[1] + 1e-6)
 
         for cara in cuello_ok:
             us = [p[0] for p in cara.uvs]
@@ -169,7 +183,7 @@ class FranjaMetalicaSuperior(unittest.TestCase):
             self.assertGreater(area, 1e-4)
 
         hombro_2, cuello_2 = corregir_franja_metalica(
-            vertices, hombro_ok, cuello_ok, u_rango=(0.02, 0.979), v_rango=(0.520, 0.542)
+            vertices, hombro_ok, cuello_ok, u_rango=U_PLATEADO, v_rango=V_PLATEADO
         )
         self.assertEqual((hombro_ok, cuello_ok), (hombro_2, cuello_2))
 
