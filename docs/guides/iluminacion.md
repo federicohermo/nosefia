@@ -217,22 +217,24 @@ borde suma `DIFUMINADO_POR_ALTURA` por cada metro de altura.
 
 ## La oclusión de contacto en la góndola
 
-Los productos acomodados en la góndola y en las heladeras no son cuerpos sueltos. Cada producto se
-dibuja en un `MultiMeshInstance3D` (`reposicion_manual.gd`). `oclusion_de_la_gondola.gd` les da el
-mismo tipo de efecto que llevan las unidades sueltas, sin costo por unidad. Lleva sus propios valores por defecto (`RADIO_POR_DEFECTO` e `INTENSIDAD_POR_DEFECTO`), distintos
-de los de `OclusionDeContacto`. Los envases son más chicos que una caja y van apretados sobre el
-estante. Por eso necesitan un alcance más corto y más contraste para leerse de cerca.
+Los productos acomodados en la góndola no son cuerpos sueltos. Cada producto se dibuja en un
+`MultiMeshInstance3D` (`reposicion_manual.gd`). `oclusion_de_la_gondola.gd` les da el mismo tipo de
+efecto que llevan las unidades sueltas, sin costo por unidad. Lleva sus propios valores por defecto
+(`RADIO_POR_DEFECTO` e `INTENSIDAD_POR_DEFECTO`), distintos de los de `OclusionDeContacto`. Los
+envases son más chicos que una caja y van apretados sobre el estante. Por eso necesitan un alcance
+más corto y más contraste para leerse de cerca.
 
 - **Base oscurecida (`base_activa`).** Cada unidad de la góndola está siempre apoyada en su estante.
-  El material del bloque (`producto_de_la_gondola.gdshader`) prende `contacto_en_base_local` en
-  `oclusion_de_contacto.gdshaderinc` y mide la altura de cada vértice sobre el eje local de apoyo.
-  No lanza rayos ni suma dibujos ni programas. Cubre también `VencidosDeCindolor`.
+  El componente prende `contacto_en_base_local` en el material del bloque
+  (`producto_de_la_gondola.gdshader`). El shader (`oclusion_de_contacto.gdshaderinc`) mide la altura
+  de cada vértice sobre el eje local de apoyo. No lanza rayos ni suma dibujos ni programas. Cubre
+  también `VencidosDeCindolor`.
 - **Mancha por bloque (`manchas_activas`).** Un `MultiMeshInstance3D` (`SombrasDe<Producto>`) por
   bloque, con `sombra_de_contacto.gdshader`, la huella medida en la misma `BANDA_DE_APOYO` y el
   recorte del estante en `INSTANCE_CUSTOM`. Sigue la normal real del estante, también en una rampa.
-  No desborda el canto ni atraviesa paneles, y dibuja con `render_priority = -2` para quedar detrás
-  del vidrio de las heladeras. Al sacar o reponer una unidad se compacta con el mismo orden del
-  bloque. Los huecos no llevan mancha y los vencidos sí.
+  No desborda el canto ni atraviesa paneles, y dibuja con `render_priority = -2`, detrás de otros
+  planos transparentes. Al sacar o reponer una unidad se compacta con el mismo orden del bloque.
+  Los huecos no llevan mancha y los vencidos sí.
 
 El nodo vive en el grupo `oclusion_de_la_gondola` y expone `base_activa`, `manchas_activas`, `radio`
 e `intensidad` en vivo. Lo verifica `test/escenas/oclusion_de_la_gondola_test.gd`.
