@@ -408,6 +408,12 @@ Lo que más se rompe:
   Buscar el nombre en `src/` y `test/`, también en `call()` y `Callable`; no sólo la declaración
   o sus lectores directos. En el #294, los casos del gesto nuevo pasaban, pero dos helpers de
   `jornada_integrada_test.gd` seguían llamando a `interactuar` y fallaron al correr el flujo.
+- **Si el issue retira lo que trajo otro issue, los límites salen de todos los commits de ese
+  issue.** Correr `git log --no-merges --grep '#N' --name-only`, no sólo los commits principales.
+  Cada archivo de esa lista entra en «Se escribe», «Sólo lectura» o «No se toca», con su motivo.
+  En el #855, los límites salieron de dos de los trece commits de #691. `ccb3416d`, un arreglo
+  del mismo issue, hacía que dos tests del cierre llamaran por `call()` a una función que se
+  borraba. La partición 5 de la CI salió roja.
 - **Un barrido de una regla retirada distingue usos ajenos de la misma palabra.** Si el patrón
   da un falso positivo, acotarlo al enunciado que se retira y comprobar que todavía lo detecta.
   No cambiar el código ajeno para satisfacer el patrón. En el #295, `recuperarse` nombraba tanto

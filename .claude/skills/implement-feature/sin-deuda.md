@@ -141,6 +141,7 @@ entregable más caro y el único que hace que el hallazgo no vuelva.
 | un producto sin exhibición que su extractor todavía busca por la tanda | `to-issue` — seguir también generadores de fuentes, miniaturas y validadores antes de cerrar límites |
 | un comando focal que sólo funciona desde otro directorio o con entorno omitido | `to-issue` — ejecutar literalmente cada verificación desde la raíz declarada |
 | un recurso repartido en otra unidad, leído por posición en un archivo de «Sólo lectura» | `to-issue` — seguir a cada lector del recurso y a los fixtures que atraviesan el flujo antes de cerrar límites |
+| una feature retirada cuyos límites salieron de sus commits principales y no de todos | `to-issue` — listar los archivos de todos los commits del issue que se retira |
 | un criterio que no se puede ver fallar | `to-spec` |
 | una entrega física sin destino de productos o ticket al vencer | `to-issue` y `to-spec` — distinguir venta de vencimiento y resolver cada objeto con el usuario |
 | una animación que confunde tasa del video con duración de los dibujos | `to-issue` y `to-spec` — verificar los PNG disponibles y registrar el ritmo decidido |
