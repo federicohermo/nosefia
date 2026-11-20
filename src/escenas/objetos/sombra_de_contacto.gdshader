@@ -20,13 +20,18 @@ uniform mat4 al_apoyo = mat4(1.0);
 // Hasta dónde llega esa forma: mínimo y máximo, en su espacio.
 uniform vec3 apoyo_minimo = vec3(-1000.0);
 uniform vec3 apoyo_maximo = vec3(1000.0);
+// Si es cierto, cada instancia del `MultiMesh` trae su recorte en `INSTANCE_CUSTOM`:
+// `(min_x, min_z, max_x, max_z)` en metros sobre el plano de la mancha.
+uniform bool recorte_por_instancia = false;
 
 varying vec2 plano;
 varying vec3 en_el_apoyo;
+varying vec4 recorte_instancia;
 
 void vertex() {
 	plano = VERTEX.xz * tamano;
 	en_el_apoyo = (al_apoyo * vec4(plano.x, 0.0, plano.y, 1.0)).xyz;
+	recorte_instancia = INSTANCE_CUSTOM;
 }
 
 float distancia_al_rectangulo(vec2 punto, vec2 mitad, float radio) {
@@ -38,8 +43,16 @@ void fragment() {
 	float radio = esquinas * min(huella.x, huella.y);
 	float borde = 1.0 - smoothstep(0.0, suavidad, distancia_al_rectangulo(plano, huella, radio));
 	// Sin esto la mancha sigue en el aire más allá del borde de lo que la sostiene.
-	vec3 desde = smoothstep(apoyo_minimo, apoyo_minimo + 0.01, en_el_apoyo);
-	vec3 hasta = 1.0 - smoothstep(apoyo_maximo - 0.01, apoyo_maximo, en_el_apoyo);
+	float dentro = 1.0;
+	if (recorte_por_instancia) {
+		vec2 desde = smoothstep(recorte_instancia.xy, recorte_instancia.xy + 0.01, plano);
+		vec2 hasta = 1.0 - smoothstep(recorte_instancia.zw - 0.01, recorte_instancia.zw, plano);
+		dentro = desde.x * desde.y * hasta.x * hasta.y;
+	} else {
+		vec3 desde = smoothstep(apoyo_minimo, apoyo_minimo + 0.01, en_el_apoyo);
+		vec3 hasta = 1.0 - smoothstep(apoyo_maximo - 0.01, apoyo_maximo, en_el_apoyo);
+		dentro = desde.x * desde.y * desde.z * hasta.x * hasta.y * hasta.z;
+	}
 	ALBEDO = vec3(0.0);
-	ALPHA = intensidad * borde * desde.x * desde.y * desde.z * hasta.x * hasta.y * hasta.z;
+	ALPHA = intensidad * borde * dentro;
 }
