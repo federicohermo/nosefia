@@ -1,75 +1,39 @@
-# Entrega I. Hoja de entrada al baño
+# Entrega J (consulta antes del horneado). Bloques de la jamba y exhibidor de golosinas
 
-- Rama. `improvement/hoja-del-bano`
-- Commit del arreglo. `827b4252c9e1dea6b3c6748906d83851de654518`
-
-## Qué causaba las franjas y las diagonales
-
-Se comprobaron dos causas sobre `puerta2-col` (`Hoja del baño con panel integrado.001`) en `assets/models/SEPT_JUEGOS_PROTOTIPO.blend`, en `assets/models/SEPT_JUEGOS_PROTOTIPO.glb` y en la build web.
-
-1. **Panel central hundido con cuatro trapecios inclinados por cara.** `renovar_bano.py` construyó cada cara grande con el perímetro en `y = ±0.0375` y el panel central en `y = ±0.0285` (tras el escalado del local, `±0.034277` y `±0.026050`, un hundimiento de `8.23 mm`). Los cuatro trapecios que unen borde y panel quedaron inclinados `2.41°` abajo, `2.71°` arriba y `4.29°` a los costados (`(±0.0748, ±0.9972, 0)`, `(0, ±0.9991, +0.0420)` y `(0, ±0.9989, -0.0473)`). Cada trapecio recibía la luz con otro ángulo y dibujaba franjas y diagonales en las esquinas.
-2. **Costura de material y tramado S3TC en la cara exterior (`-Y`).** Aún con los vértices llevados al mismo plano (`0.0°` de desviación), en la primera verificación web siguió visible un marco rectangular. Los cuatro trapecios usaban `bano_entrada_blanca` sin textura (`sRGB (239, 239, 234)`), mientras el panel central usaba `bano_rejilla_texturizada` (`SEPT_JUEGOS_PROTOTIPO_rejilla_bano.png` con `compress/mode=2`, DXT1/BC1). La compresión RGB565 tramaba el fondo plano en `(239, 239, 230)`, `(244, 242, 236)`, `(241, 240, 233)` y `(247, 243, 239)`, aclarando el panel interior y marcando el borde con `Closest`.
+- Rama. `improvement/bloques-de-la-jamba`
+- Estado. Cambios de geometría, UV y tests aplicados y exportados al `.glb`. Pendiente de confirmación antes de ejecutar el único horneado de luz.
 
 ## Qué cambió
 
-- `.claude/scripts/lib/hoja_del_bano.py` y `.agents/scripts/lib/hoja_del_bano.py`. Lógica pura para identificar el plano exterior de cada lado, ordenar las cuatro esquinas exteriores, extrapolar las UV del panel en forma afín y medir la desviación angular de las caras grandes.
-- `.claude/scripts/blender/aplanar_hoja_del_bano.py` y `.agents/scripts/blender/aplanar_hoja_del_bano.py`. Script de Blender idempotente sobre `puerta2-col`. Reemplaza los cinco cuadriláteros de cada cara grande por un único cuadrilátero plano sobre el perímetro exterior (pasa de `32` vértices y `26` caras a `24` vértices y `18` caras, desviación de `4.2897°` a `0.0°`). La cara exterior (`-Y`) usa `bano_rejilla_texturizada` con `extension = 'EXTEND'` (`CLAMP_TO_EDGE`) y UV extrapoladas linealmente desde el panel original para mantener las cuatro ranuras en su posición física exacta. La cara interior (`+Y`) usa `bano_entrada_blanca`. Conserva intactos los cuatro cantos, las dos manijas, la matriz, el pivote, las dimensiones, el encuentro con `bano_marco_entrada` y los `832` vecinos del `.blend`. En la segunda corrida reporta `ya_plana: true`, `caras_eliminadas: 0` y `vertices_eliminados: 0`.
-- `assets/models/SEPT_JUEGOS_PROTOTIPO_rejilla_bano.png.import`. Cambia `compress/mode=2` a `compress/mode=0` (sin pérdida) para eliminar el tramado RGB565 de la cara exterior sin tocar `assets/source/`.
-- `assets/models/SEPT_JUEGOS_PROTOTIPO.blend`, `assets/models/SEPT_JUEGOS_PROTOTIPO.glb` y `assets/models/SEPT_JUEGOS_PROTOTIPO.glb.fuente`. Modelo reexportado con `.claude/scripts/exportar_modelo.py` y reimportado tras borrar la caché del `.glb`.
-- `.claude/scripts/tests/test_hoja_del_bano.py` y `.agents/scripts/tests/test_hoja_del_bano.py`. Cuatro tests unitarios sobre la construcción plana, la extrapolación UV y el cálculo de desviación angular.
-- `test/escenas/objetos/hoja_del_bano_test.gd`. Test de comportamiento sobre `puerta2` en `SEPT_JUEGOS_PROTOTIPO.glb`. Verifica que ambas caras grandes son coplanares, sin inclinación y de un solo material. Falló antes del arreglo (`8` triángulos inclinados y rango `Z = 0.00823 m` por cara) y pasa después.
+### 1. Exhibidor de golosinas (`exhibidor_golosinas-col`)
 
-No se tocaron `src/escenas/almacen.exr`, `src/escenas/almacen.lmbake`, `project.godot`, `.github/performance/topes-de-carga.json`, `addons/hornear/` ni la malla o las UV de Arvecor. `puerta2` usa `gi_mode = 2` (GI dinámico) y no entra en el horneado.
+- **Causa comprobada.** El panel lateral izquierdo (`+X`, lado del freezer) estaba colapsado a espesor `0 mm` en `x_local = 0.432`. Su cara exterior (`f=40`, normal `+X`), su cara interior (`f=41`, normal `-X`), las cuatro caras de canto (`f=42..45`, todas con área `0.00000`) y las cinco tapas de los escalones (`f=10, 16, 22, 28, 33`, normal `+X`) compartían el mismo plano `x_local = 0.432`. El panel derecho (`-X`) tiene `20 mm` de espesor (`x_local = -1.094 .. -1.074`). Esa superposición causaba autooclusión negra en el horneado y rayas negras a lo largo de los escalones del costado izquierdo (captura base `C:/Users/fede_/.cache/nosefia/capturas-jamba-exhibidor/antes2-exhibidor-lado-izq-interior.png`).
+- **Corrección.** `.claude/scripts/lib/exhibidor_de_golosinas.py` y `.claude/scripts/blender/engrosar_lateral_exhibidor.py` (con espejo en `.agents/scripts/`). Mueve los cuatro vértices de la cara exterior (`f=40`) a `x_local = 0.452` (`+20 mm`, espesor espejo del panel derecho). Las cuatro caras de canto recuperan su área y sus normales hacia afuera (`zero_area_faces: 4 -> 0`). El exhibidor conserva `30 mm` de aire contra `freezer_helados-col` (`x = 0.3469` frente a `0.3769`) sin mover las golosinas hijas (`exhibido_golosinas`). La segunda corrida reporta `ya_engrosado: true` y `vertices_movidos: 0`.
+- **Tests.** `.claude/scripts/tests/test_exhibidor_de_golosinas.py` (`4/4 OK`) y `test/escenas/objetos/exhibidor_golosinas_test.gd` (falló antes con `espesor izquierdo = 0.00000 m` y pasa ahora `1/1 PASSED`).
 
-## Auditoría 3D y comparación del `.glb`
+### 2. Bloques junto a las jambas del depósito (`deposito_esquinas_piezas`)
 
-- `audit_mesh.py` sobre `puerta2-col` y `bano_marco_entrada` (`C:/Users/fede_/.cache/nosefia/hoja-bano-audit-antes.json` y `C:/Users/fede_/.cache/nosefia/hoja-bano-audit-despues.json`). Cero fallas (`failures: []`), `world_bounds` y `transform` idénticos en ambos objetos, `bano_marco_entrada` sin cambios (`32` vértices, `30` caras) y `puerta2-col` cerrada y con UV válidas (`24` vértices, `18` caras).
-- Cierre y barrido de `0°` a `90°` comprobados en `aplanar_hoja_del_bano.py`. `rayos_sin_bloqueo: 0`, `holgura_minima_mm: 5.223`, `intersecciones_en_barrido: 0`.
-- Comparación de las `209` mallas y `101` imágenes de `SEPT_JUEGOS_PROTOTIPO.glb` contra la base (`HEAD`).
-  - `Hoja del baño con panel integrado.001`. Única malla con cambio real (`bano_entrada_blanca` pasa de `52` a `20` vértices; `bano_rejilla_texturizada` conserva `4` vértices cubriendo toda la cara `-Y`; `bano_acero` idéntico).
-  - `bano_lavatorio_2-convcol porcelana.001` y `vanitory-convcol porcelana.001`. Diferencia máxima de `1.192e-07` (`1 ULP` de `float32`) sólo en `TEXCOORD_0` por redondeo del exportador glTF de Blender, sin cambios de vértices ni normales.
-  - Las otras `206` mallas y las `101` imágenes embebidas son idénticas byte a byte.
+- **Causas comprobadas.**
+  1. En las jambas proyectadas desde la pared (`puerta_sur` jamba derecha `x = 5.933` en hiladas `2, 5, 8, 11`, `puerta_este` jamba sur `y = 13.14` en hiladas `0, 3, 6, 9, 12` y `porton` jamba norte `y = 13.654` en hiladas `2, 5, 8, 11, 14`), el frente de la pieza cruzaba una junta vertical interna cerca del borde del vano y dejaba una tira angosta partida contra el marco (`2.4 cm` en `puerta_sur`, visible en `antes2-esquina-der-cerca.png` y `antes2-jamba-der-cerca.png`). Además, en las caras `es_jamba` junto a un rincón, el espejado de UV cruzaba el `quiebre` en hiladas de dos bloques.
+  2. En `puerta_sur` jamba izquierda (`x = 7.555`, hilada `6`, cara `101`), la cara vertical del escalón tenía la normal invertida (`4` aristas con orientación contradictoria) porque la orientación se calculaba con el centroide de un perfil no convexo.
+  3. Borrar las caras ocultas con `FACES_ONLY` dejaba `294` aristas sueltas (`wire_edges`).
+- **Corrección.** `.claude/scripts/lib/bloques_de_la_jamba.py` y `.claude/scripts/blender/ladrillos_del_deposito.py` (con espejo en `.agents/scripts/`). Cuando una junta vertical cae dentro del frente de una jamba, estira ese mismo bloque de la pared sobre el frente conservando el encuentro exacto con la junta en `brazo`. Orienta cada perfil 2D en sentido antihorario para garantizar normales hacia afuera en perfiles no convexos, acota el espejado de `es_jamba` al primer bloque y elimina las aristas sueltas (`wire_edges: 294 -> 0`, `inconsistent_winding_edges: 4 -> 0`). La pared `almacen-col` queda idéntica byte a byte (`geo_eq=True`, `uv_eq=True`). La segunda corrida devuelve el mismo conteo (`2340` triángulos).
+- **Tests.** `.claude/scripts/tests/test_bloques_de_la_jamba.py` (`3/3 OK`) y `test/escenas/objetos/bloques_del_deposito_test.gd` (falló antes con `4` aristas contradictorias y `38` triángulos con junta interna, y pasa ahora `2/2 PASSED`).
 
-## Mediciones en web
+## Por qué hace falta hornear la luz
 
-- **Programas de shader.** Medidos con `node C:/Users/fede_/.cache/nosefia/medir_con_firmas.mjs http://127.0.0.1:<puerto>/ <json> --sin-ventana --software --corridas=1 --sin-enlace-en-paralelo`.
-  - Antes (`C:/Users/fede_/.cache/nosefia/hoja-bano-programas-antes.json`). `97` programas, `84` fuentes distintas.
-  - Después (`C:/Users/fede_/.cache/nosefia/hoja-bano-programas-despues.json`). `97` programas, `84` fuentes distintas (tope `98`).
-- **Tamaño del export web.** Verificado con `python .claude/scripts/verificar_export.py`.
-  - Antes (`export/web-antes`). `138.7 MB` (`9` archivos).
-  - Después (`export/web-despues`). `138.7 MB` (`9` archivos, tope `150 MiB`, salida `0`).
+- `exhibidor_golosinas-col` usa `GI_MODE_STATIC` y está horneado en `src/escenas/almacen.lmbake`, `src/escenas/almacen.exr`, `src/escenas/almacen_sin_luz.lmbake` y `src/escenas/almacen_sin_luz.exr`.
+- Al restaurar el espesor de `20 mm` del panel izquierdo, cambió su geometría y Godot regeneró `assets/models/SEPT_JUEGOS_PROTOTIPO.glb.unwrap_cache` con nuevas UV2. El atlas actual todavía conserva la oclusión negra horneada sobre la cara interior izquierda del exhibidor.
+- `deposito_esquinas_piezas` lleva `GI_MODE_DYNAMIC` y no entra al horneado. `almacen-col` no cambió geometría ni UV.
+- Con un único horneado (`python .claude/scripts/hornear.py` y `python .claude/scripts/hornear.py --sin-luz`) se actualiza el mapa de luz para toda la rama.
 
-## Capturas web (antes y después)
+## Preguntas antes de hornear
 
-Carpeta `C:/Users/fede_/.cache/nosefia/capturas-hoja-bano/`.
+1. **Confirmación de horneado.** ¿Confirmás correr `python .claude/scripts/hornear.py` y `python .claude/scripts/hornear.py --sin-luz` ahora sobre estos cambios?
+2. **Esquina superior izquierda de `puerta_sur` (`jamba_m1.png`, hiladas `13..17`).** Medimos `jamba_m1.png`, nuestra build web base (`antes2-puerta-cerrada-entera.png`, `antes2-esquina-izq-cerca.png`), el `.blend`, el `.glb` y los píxeles de `deposito_bloques_color.png`. Encima de esa esquina (`x = 7.555, z > 2.72`), `almacen-col` (cara `245`) es un único plano con UV lineales continuas (`max_uv_err = 1.59e-7`) y las cinco piezas de rincón (`f=905, 909, 913, 917, 919`) ya terminan sobre juntas verticales reales de la pared (`5.2 mm` del centro de la junta, luminancia `0.15` en el PNG). No encontramos ningún bloque partido sin junta encima de esa esquina. ¿El corte que veía el usuario era la tira angosta de `2.4 cm` de la jamba derecha (`x = 5.933`) y la normal invertida de `h=6` en la jamba izquierda (ambos ya corregidos), o querés también algún cambio de diseño sobre las piezas de rincón encima del dintel (`h=13..17`, por ejemplo igualar su tono al de la pared o terminar el relieve en el dintel) antes de hornear?
 
-- `C:/Users/fede_/.cache/nosefia/capturas-hoja-bano/antes-cerrada-frente.png`
-- `C:/Users/fede_/.cache/nosefia/capturas-hoja-bano/despues-cerrada-frente.png`
-- `C:/Users/fede_/.cache/nosefia/capturas-hoja-bano/antes-cerrada-cerca.png`
-- `C:/Users/fede_/.cache/nosefia/capturas-hoja-bano/despues-cerrada-cerca.png`
-- `C:/Users/fede_/.cache/nosefia/capturas-hoja-bano/antes-abierta-umbral.png`
-- `C:/Users/fede_/.cache/nosefia/capturas-hoja-bano/despues-abierta-umbral.png`
-- `C:/Users/fede_/.cache/nosefia/capturas-hoja-bano/antes-abierta-cara-exterior.png`
-- `C:/Users/fede_/.cache/nosefia/capturas-hoja-bano/despues-abierta-cara-exterior.png`
-- `C:/Users/fede_/.cache/nosefia/capturas-hoja-bano/antes-abierta-desde-abajo.png`
-- `C:/Users/fede_/.cache/nosefia/capturas-hoja-bano/despues-abierta-desde-abajo.png`
-- `C:/Users/fede_/.cache/nosefia/capturas-hoja-bano/antes-abierta-rejilla.png`
-- `C:/Users/fede_/.cache/nosefia/capturas-hoja-bano/despues-abierta-rejilla.png`
-- `C:/Users/fede_/.cache/nosefia/capturas-hoja-bano/antes-abierta-esquina-superior.png`
-- `C:/Users/fede_/.cache/nosefia/capturas-hoja-bano/despues-abierta-esquina-superior.png`
+## Comparación del `.glb` y mediciones base
 
-## Verificación automática
-
-- `gdformat --check test/escenas/objetos/hoja_del_bano_test.gd` y `gdlint test/escenas/objetos/hoja_del_bano_test.gd`. Sin errores.
-- `test/escenas/objetos/hoja_del_bano_test.gd`. `1/1 PASSED`.
-- `test/escenas/objetos/rejilla_del_bano_test.gd`. `1/1 PASSED`.
-- `test/escenas/puestos/bano_publico_test.gd`. `18/18 PASSED`.
-- `test/escenas/puestos/puerta_del_local_test.gd`. `20/20 PASSED`.
-- `test/escenas/modelo_exportado_test.gd`. `4/4 PASSED`.
-- `test/escenas/etiqueta_de_arvecor_test.gd`. `3/3 PASSED`.
-- `.claude/scripts/tests/test_hoja_del_bano.py`. `4/4 OK`.
-- `.claude/scripts/tests/test_rejilla_bano.py`. `2/2 OK`.
-- `.claude/scripts/tests/test_copias_de_skills.py`. `4/4 OK`.
-- `.claude/scripts/tests/test_modelo_actualizado.py`. `6/6 OK`.
-- `.claude/scripts/tests/test_atlas_al_dia.py`. `6/6 OK`.
-- `.claude/scripts/tests/test_texturas_del_modelo.py`. `9/9 OK`.
+- Mallas del `.glb` (`209` totales). Sólo cambiaron de verdad `deposito_esquinas_piezas` y `exhibidor_golosinas` (más el redondeo habitual de `5.96e-08` en `TEXCOORD_0` de las dos mallas de porcelana). Imágenes embebidas (`101` totales): `0` cambiadas.
+- Medición web base (`export/web-antes`). `97` programas (`84` fuentes distintas, `C:/Users/fede_/.cache/nosefia/jamba-programas-antes.json`) y `138.7 MB` (`9` archivos).
+- Capturas web base en `C:/Users/fede_/.cache/nosefia/capturas-jamba-exhibidor/` (`antes2-exhibidor-lado-izq-interior.png`, `antes2-exhibidor-lado-izq-exterior.png`, `antes2-exhibidor-lado-der-interior.png`, `antes2-exhibidor-lado-der-exterior.png`, `antes2-puerta-cerrada-entera.png`, `antes2-esquina-izq-cerca.png`, `antes2-jamba-izq-cerca.png`, `antes2-esquina-der-cerca.png`, `antes2-jamba-der-cerca.png`, `antes2-puerta-limpieza-arriba.png`).
