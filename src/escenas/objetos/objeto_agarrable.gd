@@ -16,10 +16,6 @@ signal contacto_recibido(nodo: Node3D, rapidez: float)
 
 const OclusionDeContacto := preload("res://src/escenas/objetos/oclusion_de_contacto.gd")
 
-## Cuánto se redondea la huella de lo que no dice otra cosa: lo que se levanta tiene los cantos
-## gastados.
-const ESQUINAS_POR_DEFECTO := 0.1
-
 ## Los datos entran por el `.tres`, así que agregar un objeto nuevo al almacén es duplicar la
 ## escena y cambiarle este campo: no se toca código.
 @export var datos: ObjetoDelAlmacen:
@@ -59,7 +55,7 @@ func _ready() -> void:
 	var mallas := _mallas_de_contacto()
 	if not mallas.is_empty():
 		oclusion = OclusionDeContacto.new()
-		oclusion.configurar(mallas, _esquinas_de_contacto())
+		oclusion.configurar(mallas)
 		_aplicar_oclusion()
 		add_child(oclusion)
 	body_entered.connect(
@@ -92,11 +88,6 @@ func _mallas_de_contacto() -> Array[MeshInstance3D]:
 	var mallas: Array[MeshInstance3D] = []
 	mallas.assign(find_children("*", "MeshInstance3D", true, false))
 	return mallas
-
-
-## Cuánto se redondea la huella, de 0 (una caja) a 1 (un cilindro).
-func _esquinas_de_contacto() -> float:
-	return ESQUINAS_POR_DEFECTO
 
 
 ## El motor llama a esto con la velocidad ya frenada por el choque del paso, y recién después

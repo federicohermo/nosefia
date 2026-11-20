@@ -325,3 +325,42 @@ func test_cambiar_de_jornada_rearma_las_manchas_sin_dejar_nodos_viejos() -> void
 		assert_int(sombras.multimesh.visible_instance_count).is_equal(
 			estante.casilleros_ocupados(producto).size()
 		)
+
+
+func test_en_la_gondola_una_lata_deja_una_mancha_mas_redonda_que_una_caja_y_coincide_con_la_suelta(
+) -> void:
+	var almacen := _almacen_completo()
+	var puesto: Node3D = almacen.get("_reposicion_manual")
+	var agarre: Agarre = almacen.get("_agarre")
+	var estante: Estante = almacen.get("_repositor").estante()
+	var oclusion := _oclusion_gondola(almacen)
+	var mat_lata := oclusion.sombras_de(Producto.Id.ARVECOR).material_override as ShaderMaterial
+	var mat_caja := oclusion.sombras_de(Producto.Id.ZUCARACHAS).material_override as ShaderMaterial
+	var esquinas_gondola_lata: float = mat_lata.get_shader_parameter(&"esquinas")
+	var esquinas_gondola_caja: float = mat_caja.get_shader_parameter(&"esquinas")
+	assert_float(esquinas_gondola_lata).is_greater(esquinas_gondola_caja)
+	var id := Producto.Id.ARVECOR
+	var casillero: int = estante.casilleros_ocupados(Catalogo.de(id))[0]
+	var copia: Transform3D = (
+		puesto.global_transform * puesto.call("_copia_del_casillero", id, casillero)
+	)
+	var pie: Vector3 = puesto.call("_apoyo", id, casillero)
+	puesto.agarrar_de_la_gondola(id, casillero)
+	var suelta: RigidBody3D = agarre.soltar(true)
+	await get_tree().physics_frame
+	suelta.freeze = true
+	var malla_suelta: MeshInstance3D = suelta.get_node("Malla")
+	var aabb_suelta := malla_suelta.mesh.get_aabb()
+	var centro_en_cuerpo: Vector3 = malla_suelta.position + aabb_suelta.get_center()
+	var base_en_cuerpo: float = malla_suelta.position.y + aabb_suelta.position.y
+	suelta.global_transform = Transform3D(
+		copia.basis,
+		pie - copia.basis * Vector3(centro_en_cuerpo.x, base_en_cuerpo, centro_en_cuerpo.z)
+	)
+	var oclusion_suelta: Node3D = suelta.get("oclusion")
+	oclusion_suelta.actualizar()
+	assert_bool(oclusion_suelta.sombra.visible).is_true()
+	var mat_suelta := oclusion_suelta.sombra.material_override as ShaderMaterial
+	assert_float(esquinas_gondola_lata).is_equal_approx(
+		mat_suelta.get_shader_parameter(&"esquinas"), 0.001
+	)

@@ -136,11 +136,6 @@ func _mallas_de_contacto() -> Array[MeshInstance3D]:
 	return [malla]
 
 
-## Un balde, un bidón y la cabeza de la mopa son redondos.
-func _esquinas_de_contacto() -> float:
-	return 1.0
-
-
 ## El balde y los bidones acompañan la mira sin inclinarse con ella.
 func _se_lleva_vertical() -> bool:
 	return datos.se_apoya_derecho or ReglasDeLaLimpieza.JABONES.has(datos.id)

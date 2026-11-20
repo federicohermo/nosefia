@@ -60,6 +60,8 @@ const SIN_SUELO := -1000.0
 const LIMITE_ABIERTO := 1000.0
 ## Resolución para unir vértices duplicados en costuras UV o normales partidas, en 1/m.
 const RESOLUCION_DE_VERTICES := 1000.0
+## Mitad mínima de huella para distinguir su forma sin ruido numérico, en metros.
+const LADO_MINIMO_PARA_FORMA := 0.001
 
 static var _plano_de_la_sombra: ArrayMesh
 static var _vertices_de_las_mallas: Dictionary[Mesh, PackedVector3Array] = {}
@@ -102,7 +104,6 @@ var rayos := 0
 ## Cuántas veces recalculó los grupos de apoyo. Lo mira el test del ahorro en mano.
 var calculos_de_apoyo := 0
 
-var _esquinas := 0.0
 var _sombras_activas := 0
 var _suelo := SIN_SUELO
 var _movido := true
@@ -115,10 +116,9 @@ var _cache_radio := -1.0
 var _cache_grupos: Array[PackedVector3Array] = []
 
 
-## De las mallas del objeto salen su huella y su base. `esquinas` va de 0 (una caja) a 1 (un balde).
-func configurar(mallas_del_objeto: Array[MeshInstance3D], esquinas: float) -> void:
+## De las mallas del objeto salen su huella, su forma y su base.
+func configurar(mallas_del_objeto: Array[MeshInstance3D]) -> void:
 	mallas = mallas_del_objeto
-	_esquinas = esquinas
 	_cache_valido = false
 
 
@@ -239,9 +239,10 @@ func _poner_la_sombra(
 	var normal: Vector3 = golpe["normal"]
 	var punto: Vector3 = golpe["position"]
 	var giro := _orientacion_en_la_superficie(cuerpo, normal)
-	var limites := _limites_en_el_plano(apoyo, giro)
-	var centro_plano: Vector2 = limites[0]
-	var mitad: Vector2 = limites[1]
+	var medida := medir_huella_en_el_plano(apoyo, giro)
+	var centro_plano: Vector2 = medida[0]
+	var mitad: Vector2 = medida[1]
+	var esquinas: float = medida[2]
 	var punto_plano := Vector2(punto.dot(giro.x), punto.dot(giro.z))
 	var desfase := centro_plano - punto_plano
 	var origen := punto + giro.x * desfase.x + giro.z * desfase.y
@@ -253,7 +254,7 @@ func _poner_la_sombra(
 	var material := mancha.material_override as ShaderMaterial
 	material.set_shader_parameter(&"tamano", tamano)
 	material.set_shader_parameter(&"huella", mitad)
-	material.set_shader_parameter(&"esquinas", _esquinas)
+	material.set_shader_parameter(&"esquinas", esquinas)
 	material.set_shader_parameter(&"suavidad", suavidad)
 	material.set_shader_parameter(&"intensidad", intensidad_mancha)
 	_recortar_en_el_apoyo(material, golpe, Transform3D(giro, origen))
@@ -297,15 +298,83 @@ func _escribir_en_la_malla() -> void:
 			material.set_shader_parameter(ALCANCE_DE_LA_MALLA, radio)
 
 
-## Centro y mitad de la huella sobre los dos ejes de la mancha.
-static func _limites_en_el_plano(apoyo: PackedVector3Array, giro: Basis) -> Array:
+## Centro, mitad y redondez (`esquinas`) de la huella sobre los dos ejes de la mancha.
+static func medir_huella_en_el_plano(apoyo: PackedVector3Array, giro: Basis) -> Array:
+	var puntos := PackedVector2Array()
+	puntos.resize(apoyo.size())
+	for indice in apoyo.size():
+		var punto := apoyo[indice]
+		puntos[indice] = Vector2(punto.dot(giro.x), punto.dot(giro.z))
+	return medir_huella_2d(puntos)
+
+
+## Centro, mitad y redondez (`esquinas`, de 0 a 1) de una nube de puntos 2D.
+##
+## `sombra_de_contacto.gdshader` dibuja un rectángulo con radio de esquina
+## `r = esquinas * min(hx, hz)`, cuya área es `4 * hx * hz - (4 - PI) * r^2`. Invertir esa relación
+## contra el área del casco convexo devuelve 0 en un rectángulo y 1 en un círculo o una cápsula.
+static func medir_huella_2d(puntos: PackedVector2Array) -> Array:
 	var minimo := Vector2(INF, INF)
 	var maximo := Vector2(-INF, -INF)
-	for punto: Vector3 in apoyo:
-		var en_el_plano := Vector2(punto.dot(giro.x), punto.dot(giro.z))
-		minimo = minimo.min(en_el_plano)
-		maximo = maximo.max(en_el_plano)
-	return [(minimo + maximo) / 2.0, (maximo - minimo) / 2.0]
+	for punto: Vector2 in puntos:
+		minimo = minimo.min(punto)
+		maximo = maximo.max(punto)
+	if not is_finite(minimo.x):
+		return [Vector2.ZERO, Vector2.ZERO, 0.0]
+	var centro := (minimo + maximo) / 2.0
+	var mitad := (maximo - minimo) / 2.0
+	return [centro, mitad, _esquinas_de_la_huella(puntos, mitad)]
+
+
+static func _esquinas_de_la_huella(puntos: PackedVector2Array, mitad: Vector2) -> float:
+	var menor := minf(mitad.x, mitad.y)
+	if puntos.size() < 3 or menor <= LADO_MINIMO_PARA_FORMA:
+		return 0.0
+	var area_casco := _area_del_casco_convexo(puntos)
+	if area_casco <= 0.0:
+		return 0.0
+	var area_caja := 4.0 * mitad.x * mitad.y
+	var faltante := maxf(0.0, area_caja - area_casco)
+	var fraccion := faltante / ((4.0 - PI) * menor * menor)
+	if fraccion <= 0.0001:
+		return 0.0
+	return clampf(sqrt(fraccion), 0.0, 1.0)
+
+
+static func _area_del_casco_convexo(puntos: PackedVector2Array) -> float:
+	var ordenados: Array[Vector2] = []
+	ordenados.resize(puntos.size())
+	for indice in puntos.size():
+		ordenados[indice] = puntos[indice]
+	ordenados.sort_custom(
+		func(a: Vector2, b: Vector2) -> bool: return a.x < b.x if a.x != b.x else a.y < b.y
+	)
+	var inferior: Array[Vector2] = []
+	for punto in ordenados:
+		while inferior.size() >= 2 and _giro_2d(inferior[-2], inferior[-1], punto) <= 0.0:
+			inferior.pop_back()
+		inferior.append(punto)
+	var superior: Array[Vector2] = []
+	for indice in range(ordenados.size() - 1, -1, -1):
+		var punto := ordenados[indice]
+		while superior.size() >= 2 and _giro_2d(superior[-2], superior[-1], punto) <= 0.0:
+			superior.pop_back()
+		superior.append(punto)
+	inferior.pop_back()
+	superior.pop_back()
+	var casco: Array[Vector2] = inferior + superior
+	if casco.size() < 3:
+		return 0.0
+	var doble_area := 0.0
+	for indice in casco.size():
+		var a := casco[indice]
+		var b := casco[(indice + 1) % casco.size()]
+		doble_area += a.x * b.y - b.x * a.y
+	return absf(doble_area) * 0.5
+
+
+static func _giro_2d(origen: Vector2, a: Vector2, b: Vector2) -> float:
+	return (a.x - origen.x) * (b.y - origen.y) - (a.y - origen.y) * (b.x - origen.x)
 
 
 ## Hasta dónde llega lo que sostiene al objeto, medido en el espacio de su forma: así la mancha se

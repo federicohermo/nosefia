@@ -323,7 +323,7 @@ func _balde_a(altura: float) -> Node3D:
 	cuerpo.add_child(malla)
 	var oclusion: Node3D = Oclusion.new()
 	var mallas: Array[MeshInstance3D] = [malla]
-	oclusion.configurar(mallas, 1.0)
+	oclusion.configurar(mallas)
 	cuerpo.add_child(oclusion)
 	add_child(cuerpo)
 	cuerpo.global_position = Vector3.UP * (ALTO / 2.0 + altura)
@@ -349,6 +349,53 @@ func test_lo_que_se_abre_hacia_arriba_lleva_la_mancha_de_la_base_aunque_lo_levan
 	var oclusion := await _balde_a(Oclusion.RADIO_POR_DEFECTO / 2.0)
 	assert_bool(oclusion.sombra.visible).is_true()
 	assert_float((_de_la_mancha(oclusion, &"huella") as Vector2).x).is_equal_approx(BASE, 0.002)
+
+
+func _cuerpo_con_malla(malla_del_cuerpo: Mesh, pose: Transform3D) -> Node3D:
+	var cuerpo: RigidBody3D = auto_free(RigidBody3D.new())
+	cuerpo.freeze = true
+	var forma := CollisionShape3D.new()
+	var caja := BoxShape3D.new()
+	caja.size = Vector3.ONE * 0.1
+	forma.shape = caja
+	cuerpo.add_child(forma)
+	var malla := MeshInstance3D.new()
+	malla.mesh = malla_del_cuerpo
+	malla.set_surface_override_material(0, ShaderMaterial.new())
+	cuerpo.add_child(malla)
+	var oclusion: Node3D = Oclusion.new()
+	var mallas: Array[MeshInstance3D] = [malla]
+	oclusion.configurar(mallas)
+	cuerpo.add_child(oclusion)
+	add_child(cuerpo)
+	cuerpo.global_transform = pose
+	return oclusion
+
+
+func test_una_base_redonda_deja_una_mancha_mas_redonda_que_una_cuadrada() -> void:
+	_piso()
+	var cilindro := CylinderMesh.new()
+	cilindro.top_radius = BASE
+	cilindro.bottom_radius = BASE
+	cilindro.height = ALTO
+	var cubo := BoxMesh.new()
+	cubo.size = Vector3(BASE * 2.0, ALTO, BASE * 2.0)
+	var parado := Transform3D(Basis.IDENTITY, Vector3.UP * (ALTO / 2.0))
+	var oclusion_redonda := _cuerpo_con_malla(cilindro, parado)
+	var oclusion_cuadrada := _cuerpo_con_malla(
+		cubo, Transform3D(Basis.IDENTITY, Vector3(1.0, ALTO / 2.0, 0.0))
+	)
+	await get_tree().physics_frame
+	await get_tree().physics_frame
+	var esquinas_redonda: float = _de_la_mancha(oclusion_redonda, &"esquinas")
+	var esquinas_cuadrada: float = _de_la_mancha(oclusion_cuadrada, &"esquinas")
+	assert_float(esquinas_redonda).is_greater(esquinas_cuadrada)
+	var cuerpo_cilindro := oclusion_redonda.get_parent() as Node3D
+	cuerpo_cilindro.global_transform = Transform3D(Basis(Vector3.BACK, PI / 2.0), Vector3.UP * BASE)
+	await get_tree().physics_frame
+	await get_tree().physics_frame
+	var esquinas_acostado: float = _de_la_mancha(oclusion_redonda, &"esquinas")
+	assert_float(esquinas_acostado).is_less(esquinas_redonda)
 
 
 ## En la web los uniformes por instancia llegan al shader en cero, y el efecto no se ve aunque el

@@ -227,3 +227,73 @@ func test_una_unidad_de_producto_suelta_toma_los_valores_de_la_gondola_y_los_dem
 		var oclusion_otro := _oclusion_de(otro)
 		assert_float(oclusion_otro.radio).is_equal(Oclusion.RADIO_POR_DEFECTO)
 		assert_float(oclusion_otro.intensidad).is_equal(Oclusion.INTENSIDAD_POR_DEFECTO)
+
+
+func _esquinas_de_mancha(objeto: Node) -> float:
+	var oclusion := _oclusion_de(objeto)
+	assert_object(oclusion).is_not_null()
+	assert_bool(oclusion.sombra.visible).is_true()
+	return (oclusion.sombra.material_override as ShaderMaterial).get_shader_parameter(&"esquinas")
+
+
+func test_una_lata_suelta_deja_una_mancha_mas_redonda_que_una_caja_suelta() -> void:
+	_piso()
+	await get_tree().physics_frame
+	var almacen: Node3D = auto_free(ALMACEN.instantiate())
+	almacen.set(
+		"_partida",
+		Partida.desde({"jornada": ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA + 1, "medios": 0})
+	)
+	add_child(almacen)
+	almacen.get("_jugador").set_physics_process(false)
+	var puesto: Node3D = almacen.get("_reposicion_manual")
+	var agarre: Agarre = almacen.get("_agarre")
+	var estante: Estante = almacen.get("_repositor").estante()
+	var sueltas: Dictionary[int, RigidBody3D] = {}
+	var desp := 0.0
+	for id: int in [Producto.Id.ARVECOR, Producto.Id.ZUCARACHAS]:
+		var casillero: int = estante.casilleros_ocupados(Catalogo.de(id))[0]
+		puesto.agarrar_de_la_gondola(id, casillero)
+		var unidad: RigidBody3D = agarre.soltar(true)
+		unidad.freeze = true
+		var malla: MeshInstance3D = unidad.get_node("Malla")
+		var derecho: Basis = puesto.call("_derecho", id)
+		var aabb := malla.mesh.get_aabb()
+		var min_y: float = (
+			(Transform3D(derecho, Vector3.ZERO) * (malla.transform * aabb)).position.y
+		)
+		unidad.global_transform = Transform3D(derecho, Vector3(desp, -min_y, 0.0))
+		desp += 1.0
+		var ocl := _oclusion_de(unidad)
+		ocl.actualizar()
+		sueltas[id] = unidad
+	var esquinas_lata := _esquinas_de_mancha(sueltas[Producto.Id.ARVECOR])
+	var esquinas_caja := _esquinas_de_mancha(sueltas[Producto.Id.ZUCARACHAS])
+	assert_float(esquinas_lata).is_greater(esquinas_caja)
+
+
+func test_el_balde_y_la_bolsa_dejan_una_mancha_mas_redonda_que_una_caja_de_productos() -> void:
+	_piso()
+	var objetos: Node3D = auto_free(UTILES.instantiate())
+	add_child(objetos)
+	var balde := objetos.get_node("Balde") as RigidBody3D
+	balde.freeze = false
+	balde.global_position = Vector3(-1.5, ALTURA_DE_CAIDA, 0.0)
+	var bolsa: RigidBody3D = auto_free(
+		(load("res://src/escenas/objetos/bolsa_de_basura.tscn") as PackedScene).instantiate()
+	)
+	add_child(bolsa)
+	bolsa.call("en_el_tacho", false)
+	bolsa.freeze = false
+	bolsa.global_position = Vector3(0.0, ALTURA_DE_CAIDA, 0.0)
+	var caja: RigidBody3D = auto_free(
+		(load("res://src/escenas/objetos/caja_de_productos.tscn") as PackedScene).instantiate()
+	)
+	add_child(caja)
+	caja.freeze = false
+	caja.global_position = Vector3(1.5, ALTURA_DE_CAIDA, 0.0)
+	for _paso in PASOS_PARA_ASENTARSE:
+		await get_tree().physics_frame
+	var esquinas_caja := _esquinas_de_mancha(caja)
+	assert_float(_esquinas_de_mancha(balde)).is_greater(esquinas_caja)
+	assert_float(_esquinas_de_mancha(bolsa)).is_greater(esquinas_caja)

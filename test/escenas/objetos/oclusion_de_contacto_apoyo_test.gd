@@ -38,7 +38,7 @@ func _tablon(pose: Transform3D) -> Node3D:
 	cuerpo.add_child(malla)
 	var oclusion: Node3D = Oclusion.new()
 	var mallas: Array[MeshInstance3D] = [malla]
-	oclusion.configurar(mallas, 0.0)
+	oclusion.configurar(mallas)
 	cuerpo.add_child(oclusion)
 	add_child(cuerpo)
 	cuerpo.global_transform = pose
@@ -122,7 +122,7 @@ func _cuerpo_con_mallas(mallas_cfg: Array[Array], pose: Transform3D) -> Node3D:
 		cuerpo.add_child(malla)
 		mallas.append(malla)
 	var oclusion: Node3D = Oclusion.new()
-	oclusion.configurar(mallas, 0.0)
+	oclusion.configurar(mallas)
 	cuerpo.add_child(oclusion)
 	add_child(cuerpo)
 	cuerpo.global_transform = pose

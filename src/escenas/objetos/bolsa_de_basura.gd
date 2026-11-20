@@ -23,10 +23,6 @@ func _mallas_de_contacto() -> Array[MeshInstance3D]:
 	return [$Cerrada/Bulto]
 
 
-func _esquinas_de_contacto() -> float:
-	return 0.5
-
-
 ## El jugador la empuja al caminar contra ella.
 func empujar(desplazamiento: Vector3) -> void:
 	_correrse(desplazamiento)
