@@ -193,15 +193,18 @@ encuentra hace dos cosas:
 - **Lo de abajo oscurece al objeto.** Escribe en los materiales de las mallas la altura de esa
   superficie. El shader (`oclusion_de_contacto.gdshaderinc`) oscurece las caras de abajo y el pie
   de los costados. Se apaga con `intensidad` en 0. Lo comparten los shaders que el objeto ya tenía.
-  Son el de los productos de la góndola (la caja), el de la manija del balde y los dos de la mopa. Un
-  objeto de material estándar lleva sólo la mancha: pasarlo a un shader suma programas.
+  Son el de los productos de la góndola (la caja), el de la manija del balde y los dos de la mopa
+  (el tubo metálico comparte `cabeza_de_la_mopa.gdshader` sin sumar programas). Un objeto de
+  material estándar lleva sólo la mancha: pasarlo a un shader suma programas.
 
-**La huella de la mancha es lo que del objeto toca la superficie.** Son los vértices de sus mallas
-a menos de `BANDA_DE_APOYO` de los más bajos, y lo más bajo se mide hacia abajo del mundo. Así
-un objeto de costado o boca abajo deja la mancha de la cara que apoya. No es la caja que envuelve
-su forma de colisión, que en un balde es la boca. La mancha se corta en el borde de lo que lo
-sostiene. Ese borde se mide en el espacio de la forma del apoyo: una caja girada sobre otra no deja
-la mancha colgando en el aire.
+**La huella de la mancha es lo que del objeto está cerca de la superficie.** Son los vértices de
+sus mallas a menos de `radio` del punto más bajo, medido hacia abajo del mundo. Si esos vértices se
+parten en zonas separadas, cada zona lanza su propio rayo y lleva su propia mancha con su forma e
+intensidad según su altura. Así una mopa tirada en el piso no mancha debajo del tramo alto del palo
+y una bolsa acostada oscurece alrededor de todo su contorno. Un objeto con una sola zona queda con
+una sola mancha, y las extra se crean bajo demanda y se reusan. Cada mancha se corta en el borde de
+lo que la sostiene. Ese borde se mide en el espacio de la forma del apoyo: una caja girada sobre
+otra no deja la mancha colgando en el aire.
 
 **Todo va en uniformes del material, nunca en `instance uniform`.** En la web (Compatibility)
 el shader los recibe en cero. El efecto no se ve y ningún test de GDScript lo nota, porque
