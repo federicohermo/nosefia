@@ -222,10 +222,12 @@ borde suma `DIFUMINADO_POR_ALTURA` por cada metro de altura.
 
 Los productos acomodados en la góndola no son cuerpos sueltos. Cada producto se dibuja en un
 `MultiMeshInstance3D` (`reposicion_manual.gd`). `oclusion_de_la_gondola.gd` les da el mismo tipo de
-efecto que llevan las unidades sueltas, sin costo por unidad. Lleva sus propios valores por defecto
-(`RADIO_POR_DEFECTO` e `INTENSIDAD_POR_DEFECTO`), distintos de los de `OclusionDeContacto`. Los
-envases son más chicos que una caja y van apretados sobre el estante. Por eso necesitan un alcance
-más corto y más contraste para leerse de cerca.
+efecto que llevan las unidades sueltas, sin costo por unidad. Los envases son más chicos que una
+caja y van apretados sobre el estante, así que necesitan un alcance más corto y más contraste para
+leerse de cerca. Esos valores viven en `oclusion_de_contacto.gd` (`RADIO_DEL_PRODUCTO` e
+`INTENSIDAD_DEL_PRODUCTO`) y los comparten tanto la góndola como las unidades de producto sueltas
+(`ObjetoAgarrable` con `UnidadDeProducto`), para que una unidad suelta y una acomodada se vean
+iguales. Cajas y demás objetos conservan `RADIO_POR_DEFECTO` e `INTENSIDAD_POR_DEFECTO`.
 
 - **Base oscurecida (`base_activa`).** Cada unidad de la góndola está siempre apoyada en su estante.
   El componente prende `contacto_en_base_local` en el material del bloque

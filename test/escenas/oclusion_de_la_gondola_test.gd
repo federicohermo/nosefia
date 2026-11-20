@@ -250,9 +250,15 @@ func test_una_unidad_suelta_y_una_acomodada_comparten_forma_y_la_gondola_usa_sus
 	var intensidad_gondola: float = oclusion.intensidad
 	assert_float(radio_gondola).is_equal(OclusionDeLaGondola.RADIO_POR_DEFECTO)
 	assert_float(intensidad_gondola).is_equal(OclusionDeLaGondola.INTENSIDAD_POR_DEFECTO)
+	assert_float(oclusion_suelta.radio).is_equal(radio_gondola)
+	assert_float(oclusion_suelta.intensidad).is_equal(intensidad_gondola)
 	assert_float(mat_gondola.get_shader_parameter(&"suavidad")).is_equal(radio_gondola)
+	assert_float(mat_suelta.get_shader_parameter(&"suavidad")).is_equal_approx(radio_gondola, 0.002)
 	assert_float(mat_gondola.get_shader_parameter(&"intensidad")).is_equal_approx(
 		intensidad_gondola * OclusionDeContacto.OPACIDAD_MAXIMA, 0.001
+	)
+	assert_float(mat_suelta.get_shader_parameter(&"intensidad")).is_equal_approx(
+		mat_gondola.get_shader_parameter(&"intensidad"), 0.005
 	)
 	var tamano_esperado: Vector2 = huella_gondola * 2.0 + Vector2.ONE * (radio_gondola * 2.0)
 	var tamano_gondola: Vector2 = mat_gondola.get_shader_parameter(&"tamano")

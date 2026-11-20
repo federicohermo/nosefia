@@ -3,7 +3,9 @@
 extends GdUnitTestSuite
 
 const ALMACEN := preload("res://src/escenas/almacen.tscn")
+const OBJETO := preload("res://src/escenas/objetos/objeto_agarrable.tscn")
 const Oclusion := preload("res://src/escenas/objetos/oclusion_de_contacto.gd")
+const OclusionDeLaGondola := preload("res://src/escenas/puestos/oclusion_de_la_gondola.gd")
 const UTILES := preload("res://src/escenas/puestos/objetos_del_almacen.tscn")
 
 ## Cada escena de lo que se levanta y no vive cableado en el almacén.
@@ -197,3 +199,31 @@ func test_en_el_almacen_todo_lo_interactuable_que_es_un_cuerpo_lleva_la_oclusion
 			. is_not_null()
 		)
 	assert_int(cuerpos).is_greater(5)
+
+
+func test_una_unidad_de_producto_suelta_toma_los_valores_de_la_gondola_y_los_demas_los_por_defecto(
+) -> void:
+	var unidad_previa: ObjetoAgarrable = auto_free(OBJETO.instantiate())
+	unidad_previa.datos = UnidadDeProducto.new(Catalogo.de(Producto.Id.ACTRONCITO))
+	add_child(unidad_previa)
+	var oclusion_previa := _oclusion_de(unidad_previa)
+	assert_float(oclusion_previa.radio).is_equal(OclusionDeLaGondola.RADIO_POR_DEFECTO)
+	assert_float(oclusion_previa.intensidad).is_equal(OclusionDeLaGondola.INTENSIDAD_POR_DEFECTO)
+
+	var unidad_posterior: ObjetoAgarrable = auto_free(OBJETO.instantiate())
+	add_child(unidad_posterior)
+	unidad_posterior.datos = UnidadDeProducto.new(Catalogo.de(Producto.Id.CHISITOS))
+	var oclusion_posterior := _oclusion_de(unidad_posterior)
+	assert_float(oclusion_posterior.radio).is_equal(OclusionDeLaGondola.RADIO_POR_DEFECTO)
+	assert_float(oclusion_posterior.intensidad).is_equal(OclusionDeLaGondola.INTENSIDAD_POR_DEFECTO)
+
+	for ruta: String in [
+		"res://src/escenas/objetos/caja_de_productos.tscn",
+		"res://src/escenas/objetos/bolsa_de_basura.tscn",
+		"res://src/escenas/objetos/llave.tscn",
+	]:
+		var otro: Node3D = auto_free((load(ruta) as PackedScene).instantiate())
+		add_child(otro)
+		var oclusion_otro := _oclusion_de(otro)
+		assert_float(oclusion_otro.radio).is_equal(Oclusion.RADIO_POR_DEFECTO)
+		assert_float(oclusion_otro.intensidad).is_equal(Oclusion.INTENSIDAD_POR_DEFECTO)
