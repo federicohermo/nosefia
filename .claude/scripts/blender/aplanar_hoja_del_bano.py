@@ -45,6 +45,7 @@ from lib.consola import configurar  # noqa: E402
 from lib.hoja_del_bano import (  # noqa: E402
     desviacion_maxima_de_caras_grandes,
     esquinas_exteriores,
+    hoja_ya_plana,
     plano_exterior_por_lado,
     proyectar_uv_afin,
 )
@@ -198,13 +199,13 @@ def aplicar() -> dict:
     slot_rejilla = [m.name for m in malla.materials].index(MAT_REJILLA)
     mat_rejilla = malla.materials[slot_rejilla]
 
-    ya_plana = (
-        len(caras_frente) == 1
-        and len(caras_dorso) == 1
-        and caras_frente[0].material_index == slot_rejilla
-        and caras_dorso[0].material_index == slot_blanco
-        and desviacion_antes < 1e-4
-        and all(n.extension == "EXTEND" for n in mat_rejilla.node_tree.nodes if n.type == "TEX_IMAGE")
+    ya_plana = hoja_ya_plana(
+        [malla.materials[p.material_index].name for p in caras_frente],
+        [malla.materials[p.material_index].name for p in caras_dorso],
+        desviacion_antes,
+        [n.extension for n in mat_rejilla.node_tree.nodes if n.type == "TEX_IMAGE"],
+        material_frente=MAT_REJILLA,
+        material_dorso=MAT_BLANCO,
     )
     if ya_plana:
         cierre = _verificar_cierre_y_barrido(hoja, marco, edificio, cuerpo)
