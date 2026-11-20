@@ -191,8 +191,8 @@ func test_cada_parte_se_prende_y_se_apaga_en_vivo_sin_afectar_a_la_otra() -> voi
 	)
 	oclusion.manchas_activas = true
 	assert_bool(sombras.visible).is_true()
-	var nuevo_radio := OclusionDeContacto.RADIO_POR_DEFECTO * 2.0
-	var nueva_intensidad := OclusionDeContacto.INTENSIDAD_POR_DEFECTO * 2.0
+	var nuevo_radio := OclusionDeLaGondola.RADIO_POR_DEFECTO * 2.0
+	var nueva_intensidad := OclusionDeLaGondola.INTENSIDAD_POR_DEFECTO / 2.0
 	oclusion.radio = nuevo_radio
 	oclusion.intensidad = nueva_intensidad
 	(
@@ -209,8 +209,7 @@ func test_cada_parte_se_prende_y_se_apaga_en_vivo_sin_afectar_a_la_otra() -> voi
 	)
 
 
-func test_una_unidad_suelta_sobre_el_mismo_estante_recibe_la_misma_mancha_que_la_acomodada(
-) -> void:
+func test_una_unidad_suelta_y_una_acomodada_comparten_forma_y_la_gondola_usa_sus_valores() -> void:
 	var almacen := _almacen_completo()
 	var puesto: Node3D = almacen.get("_reposicion_manual")
 	var agarre: Agarre = almacen.get("_agarre")
@@ -241,21 +240,23 @@ func test_una_unidad_suelta_sobre_el_mismo_estante_recibe_la_misma_mancha_que_la
 	assert_bool(oclusion_suelta.sombra.visible).is_true()
 	var mat_suelta := oclusion_suelta.sombra.material_override as ShaderMaterial
 	var mat_gondola := oclusion.sombras_de(id).material_override as ShaderMaterial
-	assert_float(mat_gondola.get_shader_parameter(&"intensidad")).is_equal_approx(
-		mat_suelta.get_shader_parameter(&"intensidad"), 0.002
-	)
-	assert_float(mat_gondola.get_shader_parameter(&"suavidad")).is_equal_approx(
-		mat_suelta.get_shader_parameter(&"suavidad"), 0.002
-	)
 	assert_float(mat_gondola.get_shader_parameter(&"esquinas")).is_equal_approx(
 		mat_suelta.get_shader_parameter(&"esquinas"), 0.001
 	)
 	var huella_suelta: Vector2 = mat_suelta.get_shader_parameter(&"huella")
 	var huella_gondola: Vector2 = mat_gondola.get_shader_parameter(&"huella")
 	assert_vector(huella_gondola).is_equal_approx(huella_suelta, Vector2.ONE * 0.002)
-	var tamano_suelta: Vector2 = mat_suelta.get_shader_parameter(&"tamano")
+	var radio_gondola: float = oclusion.radio
+	var intensidad_gondola: float = oclusion.intensidad
+	assert_float(radio_gondola).is_equal(OclusionDeLaGondola.RADIO_POR_DEFECTO)
+	assert_float(intensidad_gondola).is_equal(OclusionDeLaGondola.INTENSIDAD_POR_DEFECTO)
+	assert_float(mat_gondola.get_shader_parameter(&"suavidad")).is_equal(radio_gondola)
+	assert_float(mat_gondola.get_shader_parameter(&"intensidad")).is_equal_approx(
+		intensidad_gondola * OclusionDeContacto.OPACIDAD_MAXIMA, 0.001
+	)
+	var tamano_esperado: Vector2 = huella_gondola * 2.0 + Vector2.ONE * (radio_gondola * 2.0)
 	var tamano_gondola: Vector2 = mat_gondola.get_shader_parameter(&"tamano")
-	assert_vector(tamano_gondola).is_equal_approx(tamano_suelta, Vector2.ONE * 0.004)
+	assert_vector(tamano_gondola).is_equal_approx(tamano_esperado, Vector2.ONE * 0.001)
 
 
 func test_en_una_rampa_inclinada_la_mancha_sigue_la_pendiente_y_se_corta_en_el_borde() -> void:

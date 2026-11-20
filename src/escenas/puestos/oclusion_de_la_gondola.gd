@@ -9,14 +9,18 @@
 ##    inclinación real del estante —también en una rampa— y se sincroniza cuando se saca o repone
 ##    una unidad.
 ##
-## Reusa los valores por defecto (`radio` e `intensidad`), la banda de apoyo y el shader de
-## `oclusion_de_contacto.gd` para que una unidad acomodada y una suelta se vean iguales.
+## Reusa la banda de apoyo y el shader de `oclusion_de_contacto.gd` para conservar la forma de la
+## mancha de las unidades sueltas, con su propio alcance e intensidad por defecto para envases
+## chicos apoyados en fila.
 extends Node3D
 
 const OclusionDeContacto := preload("res://src/escenas/objetos/oclusion_de_contacto.gd")
 
 ## Grupo desde el cual se prende o apaga cada parte en vivo.
 const GRUPO := &"oclusion_de_la_gondola"
+## Valores por defecto de la góndola, elegidos mirando los estantes de cerca.
+const RADIO_POR_DEFECTO := 0.03
+const INTENSIDAD_POR_DEFECTO := 0.5
 ## Flotantes por copia en un `MultiMesh` 3D con `use_custom_data`: 12 de la pose y 4 del recorte.
 const FLOTANTES_POR_MANCHA := 16
 ## Prioridad menor que el vidrio (0) y que el pre-pase del foco (-1): la mancha nunca se dibuja
@@ -45,15 +49,15 @@ const ALCANCE_MINIMO_DE_RECORTE := 0.15
 		manchas_activas = valor
 		_aplicar_visibilidad_a_todos()
 
-## Alcance compartido de las dos partes, en metros. Mismo valor inicial que `OclusionDeContacto`.
-@export var radio := OclusionDeContacto.RADIO_POR_DEFECTO:
+## Alcance compartido de las dos partes, en metros.
+@export var radio := RADIO_POR_DEFECTO:
 	set(valor):
 		radio = maxf(valor, 0.001)
 		_aplicar_base_a_todos()
 		_actualizar_tamano_de_manchas()
 
-## Intensidad compartida de las dos partes, de 0 a 1. Mismo valor inicial que `OclusionDeContacto`.
-@export_range(0.0, 1.0) var intensidad := OclusionDeContacto.INTENSIDAD_POR_DEFECTO:
+## Intensidad compartida de las dos partes, de 0 a 1.
+@export_range(0.0, 1.0) var intensidad := INTENSIDAD_POR_DEFECTO:
 	set(valor):
 		intensidad = clampf(valor, 0.0, 1.0)
 		_aplicar_base_a_todos()
@@ -61,21 +65,10 @@ const ALCANCE_MINIMO_DE_RECORTE := 0.15
 		_aplicar_visibilidad_a_todos()
 
 var _bloques: Dictionary[int, Dictionary] = {}
-var _puente_web: JavaScriptObject = null
 
 
 func _ready() -> void:
 	add_to_group(GRUPO)
-	if OS.has_feature("web"):
-		_instalar_puente_web()
-
-
-func _exit_tree() -> void:
-	if _puente_web != null and OS.has_feature("web"):
-		var ventana: Variant = JavaScriptBridge.get_interface("window")
-		if ventana != null:
-			ventana.oclusion_gondola = null
-		_puente_web = null
 
 
 ## Borra todos los bloques de manchas armados para la disposición anterior.
@@ -181,25 +174,6 @@ func sombras_de(id: int) -> MultiMeshInstance3D:
 	if not _bloques.has(id):
 		return null
 	return _bloques[id]["sombras"] as MultiMeshInstance3D
-
-
-func _instalar_puente_web() -> void:
-	var ventana: Variant = JavaScriptBridge.get_interface("window")
-	if ventana == null:
-		return
-	_puente_web = JavaScriptBridge.create_callback(_atender_web)
-	ventana.oclusion_gondola = _puente_web
-
-
-func _atender_web(args: Array) -> void:
-	if args.size() >= 1 and args[0] != null:
-		base_activa = bool(args[0])
-	if args.size() >= 2 and args[1] != null:
-		manchas_activas = bool(args[1])
-	if args.size() >= 3 and args[2] != null:
-		radio = float(args[2])
-	if args.size() >= 4 and args[3] != null:
-		intensidad = float(args[3])
 
 
 func _crear_lote_de_sombras(nombre: String, huella: Vector2, copias: int) -> MultiMeshInstance3D:
@@ -415,7 +389,7 @@ static func _rayo_al_estante(
 	espacio: PhysicsDirectSpaceState3D, pie: Vector3, arriba: Vector3
 ) -> Dictionary:
 	var origen := pie + arriba * OclusionDeContacto.SALIDA
-	var destino := pie - arriba * (OclusionDeContacto.SALIDA + OclusionDeContacto.RADIO_POR_DEFECTO)
+	var destino := pie - arriba * (OclusionDeContacto.SALIDA + RADIO_POR_DEFECTO)
 	return espacio.intersect_ray(
 		PhysicsRayQueryParameters3D.create(origen, destino, _mascara_del_estante())
 	)
