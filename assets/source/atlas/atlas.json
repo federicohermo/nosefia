@@ -7,7 +7,7 @@
    "ancho": 3264,
    "alto": 3456,
    "formato": "bc1",
-   "huella": "7a4cab8d19f6c2af33a4c129d27b1549d061ebc57e4ee60e19f33197ef8e58f4",
+   "huella": "00554d72910f7eb76ff41b00208869839b3dfe27eb879bfb1c40ae594066dc32",
    "entradas": [
     {
      "ruta": "source/textures/props/jabón liquido amarillo.png",
@@ -53,7 +53,7 @@
      "ruta": "source/products-textured/Arvejas/arvecor.png",
      "ancho": 512,
      "alto": 512,
-     "huella": "3d807d157e270d690bfbd200efe2524c6aed3d68ba7272d766e1e955bd4a7780",
+     "huella": "19e708d3a8d1f29d598d79ae7523dabc1590e2cd40829e5a8063800961407f31",
      "x": 1104,
      "y": 1072
     },
