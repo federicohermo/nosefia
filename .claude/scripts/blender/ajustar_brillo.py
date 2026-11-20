@@ -55,7 +55,10 @@ SUPERFICIES = {
         'geometria': (224, 194),
         'base': 'Material.001',
         'etiqueta': (.50, .0),
-        'grupos': (('arvejas_acero', (.30, .55), tuple(range(33)) + tuple(range(65, 194))),),
+        'grupos': (
+            ('arvejas_acero', (.30, .55),
+             tuple(range(33)) + tuple(range(65, 98)) + tuple(range(130, 194))),
+        ),
     },
     'pringles3-convcol.001': {
         'geometria': (64, 34),
