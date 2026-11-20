@@ -3,10 +3,15 @@ extends GdUnitTestSuite
 ## cortes de material ni saltos de UV, y el cuello superior mapea una franja con área real.
 
 const CONTENIDO := preload("res://src/escenas/puestos/contenido_del_estante.tscn")
+const REGLAS_UV_ARVECOR := "res://.claude/scripts/lib/uv_de_arvecor.py"
+const MANIFIESTO_ATLAS := "res://assets/source/atlas/atlas.json"
+const CLAVE_ARVECOR := "source/products-textured/Arvejas/arvecor.png"
 const TOLERANCIA_RADIO := 0.002
 const TOLERANCIA_NORMAL_VERTICAL := 0.15
 const TOLERANCIA_POSICION := 0.0005
 const TOLERANCIA_UV := 0.005
+const SALTO_RADIO_HOMBRO := 0.005
+const TOLERANCIA_FRANJA := 0.0002
 
 
 func _malla_de_arvecor() -> Mesh:
@@ -163,3 +168,102 @@ func test_el_cuello_superior_de_arvecor_tiene_uv_con_area() -> void:
 		. override_failure_message("%d triángulos del cuello tienen UV de área cero" % degenerados)
 		. is_equal(0)
 	)
+
+
+func _leer_rango_por_nombre(texto: String, nombre: String) -> Vector2:
+	var expresion := RegEx.new()
+	expresion.compile("%s\\s*=\\s*\\(\\s*([0-9.]+)\\s*,\\s*([0-9.]+)\\s*\\)" % nombre)
+	var coincidencia := expresion.search(texto)
+	(
+		assert_object(coincidencia)
+		. override_failure_message("falta %s en %s" % [nombre, REGLAS_UV_ARVECOR])
+		. is_not_null()
+	)
+	return Vector2(float(coincidencia.get_string(1)), float(coincidencia.get_string(2)))
+
+
+func _celda_de_arvecor_en_el_atlas() -> Dictionary:
+	var manifiesto: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(MANIFIESTO_ATLAS))
+	for hoja: Dictionary in manifiesto["atlas"]:
+		for entrada: Dictionary in hoja["entradas"]:
+			if entrada["ruta"] == CLAVE_ARVECOR:
+				return {
+					"atlas_ancho": float(hoja["ancho"]),
+					"atlas_alto": float(hoja["alto"]),
+					"x": float(entrada["x"]),
+					"y": float(entrada["y"]),
+					"ancho": float(entrada["ancho"]),
+					"alto": float(entrada["alto"]),
+				}
+	return {}
+
+
+func test_el_hombro_de_arvecor_cae_dentro_de_la_franja_plateada_limpia() -> void:
+	var texto_reglas := FileAccess.get_file_as_string(REGLAS_UV_ARVECOR)
+	var u_plateado := _leer_rango_por_nombre(texto_reglas, "U_PLATEADO")
+	var v_plateado := _leer_rango_por_nombre(texto_reglas, "V_PLATEADO")
+	var celda := _celda_de_arvecor_en_el_atlas()
+	assert_bool(celda.is_empty()).is_false()
+
+	var malla := _malla_de_arvecor()
+	var med := _centro_y_radio_exterior(malla)
+	var centro: Vector2 = med["centro"]
+	var vistos := 0
+	var fuera := 0
+	var peor_u := Vector2(INF, -INF)
+	var peor_v := Vector2(INF, -INF)
+	for s: int in malla.get_surface_count():
+		var arreglos: Array = malla.surface_get_arrays(s)
+		var verts: PackedVector3Array = arreglos[Mesh.ARRAY_VERTEX]
+		var uvs: PackedVector2Array = arreglos[Mesh.ARRAY_TEX_UV]
+		var indices: PackedInt32Array = arreglos[Mesh.ARRAY_INDEX]
+		var paso := indices.size() if not indices.is_empty() else verts.size()
+		for i: int in range(0, paso, 3):
+			var ia := indices[i] if not indices.is_empty() else i
+			var ib := indices[i + 1] if not indices.is_empty() else i + 1
+			var ic := indices[i + 2] if not indices.is_empty() else i + 2
+			var p0 := verts[ia]
+			var p1 := verts[ib]
+			var p2 := verts[ic]
+			var y_min := minf(p0.y, minf(p1.y, p2.y))
+			var y_max := maxf(p0.y, maxf(p1.y, p2.y))
+			if y_min <= 0.0 or y_max - y_min <= TOLERANCIA_POSICION:
+				continue
+			var r0 := Vector2(p0.x, p0.z).distance_to(centro)
+			var r1 := Vector2(p1.x, p1.z).distance_to(centro)
+			var r2 := Vector2(p2.x, p2.z).distance_to(centro)
+			if maxf(r0, maxf(r1, r2)) - minf(r0, minf(r1, r2)) <= SALTO_RADIO_HOMBRO:
+				continue
+			vistos += 1
+			for idx: int in [ia, ib, ic]:
+				var uv := uvs[idx]
+				var u_local: float = (uv.x * celda["atlas_ancho"] - celda["x"]) / celda["ancho"]
+				var v_local: float = 1.0 - (uv.y * celda["atlas_alto"] - celda["y"]) / celda["alto"]
+				peor_u = Vector2(minf(peor_u.x, u_local), maxf(peor_u.y, u_local))
+				peor_v = Vector2(minf(peor_v.x, v_local), maxf(peor_v.y, v_local))
+				if (
+					u_local < u_plateado.x - TOLERANCIA_FRANJA
+					or u_local > u_plateado.y + TOLERANCIA_FRANJA
+					or v_local < v_plateado.x - TOLERANCIA_FRANJA
+					or v_local > v_plateado.y + TOLERANCIA_FRANJA
+				):
+					fuera += 1
+	assert_int(vistos).is_greater(0)
+	var mensaje := (
+		(
+			"%d vértices del hombro salen de la franja plateada "
+			+ "(U=%.4f..%.4f vs %.4f..%.4f, V=%.4f..%.4f vs %.4f..%.4f)"
+		)
+		% [
+			fuera,
+			peor_u.x,
+			peor_u.y,
+			u_plateado.x,
+			u_plateado.y,
+			peor_v.x,
+			peor_v.y,
+			v_plateado.x,
+			v_plateado.y,
+		]
+	)
+	assert_int(fuera).override_failure_message(mensaje).is_equal(0)

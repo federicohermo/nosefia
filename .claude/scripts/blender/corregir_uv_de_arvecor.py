@@ -42,6 +42,9 @@ sys.path.insert(0, str(RAIZ / ".claude/scripts"))
 from lib.consola import configurar  # noqa: E402
 from lib.uv_de_arvecor import (  # noqa: E402
     Cara,
+    U_PLATEADO,
+    V_PLATEADO,
+    V_SUPERIOR_ETIQUETA,
     alinear_banda_superior,
     centro_xy,
     corregir_franja_metalica,
@@ -54,12 +57,6 @@ OBJETO = "lataarvejas-convcol.002"
 DIMENSIONES = (224, 194)
 MATERIAL_ETIQUETA = "Material.001"
 MATERIAL_ACERO = "arvejas_acero"
-
-#: Borde superior del verde de la etiqueta en `arvecor.png`, medido en el atlas 512x512.
-V_SUPERIOR_ETIQUETA = 0.515
-#: Franja plateada limpia arriba de la etiqueta en `arvecor.png`, medida en el atlas 512x512.
-U_PLATEADO = (0.020, 0.979)
-V_PLATEADO = (0.520, 0.542)
 
 
 def _a_cara(malla, capa, poligono) -> Cara:

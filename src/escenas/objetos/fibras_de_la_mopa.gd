@@ -59,16 +59,20 @@ func _preparar() -> void:
 			pintura.set_shader_parameter("color_plastico", original.albedo_color)
 			pintura.set_shader_parameter("textura", original.albedo_texture)
 			pintura.set_shader_parameter("rugosidad", original.roughness)
+			pintura.set_shader_parameter("metal", original.metallic)
 			_rigidas.append(pintura)
 			contorno.shader = CONTORNO_DEL_UTIL
 			contorno.set_shader_parameter("deformacion", 1)
 			_contornos_rigidos.append(contorno)
 		else:
-			var copia := original.duplicate() as StandardMaterial3D
+			# El mango metálico comparte el shader rígido sin articulación para recibir la
+			# oclusión de contacto sin sumar programas nuevos.
+			pintura.shader = CABEZA
+			pintura.set_shader_parameter("color_plastico", original.albedo_color)
+			pintura.set_shader_parameter("textura", original.albedo_texture)
+			pintura.set_shader_parameter("rugosidad", original.roughness)
+			pintura.set_shader_parameter("metal", original.metallic)
 			contorno.shader = CONTORNO
-			_segundos_pases[copia] = contorno
-			set_surface_override_material(superficie, copia)
-			continue
 		_segundos_pases[pintura] = contorno
 		set_surface_override_material(superficie, pintura)
 	set_physics_process(not _pinturas.is_empty())

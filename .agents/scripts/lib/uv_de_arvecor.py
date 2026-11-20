@@ -10,6 +10,12 @@ import math
 Punto = tuple[float, float, float]
 Uv = tuple[float, float]
 
+#: Borde superior del verde de la etiqueta en `arvecor.png`, medido en el atlas 512x512.
+V_SUPERIOR_ETIQUETA = 0.515
+#: Franja plateada limpia arriba de la etiqueta en `arvecor.png`, medida en el atlas 512x512.
+U_PLATEADO = (0.020, 0.979)
+V_PLATEADO = (0.520, 0.542)
+
 
 @dataclass(frozen=True)
 class Cara:
@@ -122,10 +128,11 @@ def corregir_franja_metalica(
     u_rango: tuple[float, float],
     v_rango: tuple[float, float],
 ) -> tuple[list[Cara], list[Cara]]:
-    """Mantiene el hombro dentro de la franja plateada y despliega el cuello sobre ella.
+    """Recorta U y V del hombro dentro de la franja plateada limpia y despliega el cuello sobre ella.
 
     En el modelo original el cuello colapsaba sus cuatro esquinas sobre el borde circular de la
-    tapa, cayendo en el fondo negro de la textura.
+    tapa, cayendo en el fondo negro de la textura, y el hombro bajaba hasta la fila de transición
+    verde-plateado (V < V_PLATEADO[0]) y el borde izquierdo negro (U < U_PLATEADO[0]).
     """
     u_min, u_max = u_rango
     v_min, v_max = v_rango
@@ -135,7 +142,10 @@ def corregir_franja_metalica(
     hombro_corregido: list[Cara] = []
     por_arista: dict[frozenset[int], dict[int, float]] = {}
     for cara in hombro:
-        uvs = tuple((min(u_max, max(u_min, u)), v) for u, v in cara.uvs)
+        uvs = tuple(
+            (min(u_max, max(u_min, u)), min(v_max, max(v_min, v)))
+            for u, v in cara.uvs
+        )
         ajustada = Cara(cara.indice, cara.vertices, uvs)
         hombro_corregido.append(ajustada)
         _, altos = _separar_abajo_y_arriba(vertices, cara.vertices)
