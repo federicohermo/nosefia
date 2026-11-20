@@ -120,3 +120,129 @@ func test_ningun_frente_de_pieza_cruza_una_junta_vertical_interna() -> void:
 		)
 		. is_equal(0)
 	)
+
+
+func _componentes_conexas(malla: Mesh) -> int:
+	var adyacencia := {}
+	for superficie in malla.get_surface_count():
+		var arrays := malla.surface_get_arrays(superficie)
+		var vertices: PackedVector3Array = arrays[Mesh.ARRAY_VERTEX]
+		var indices: PackedInt32Array = arrays[Mesh.ARRAY_INDEX]
+		var total := indices.size() if not indices.is_empty() else vertices.size()
+		for inicio in range(0, total, 3):
+			var tri: Array[Vector3i] = [
+				_clave_vertice(vertices[indices[inicio]]),
+				_clave_vertice(vertices[indices[inicio + 1]]),
+				_clave_vertice(vertices[indices[inicio + 2]]),
+			]
+			for paso in 3:
+				var a: Vector3i = tri[paso]
+				var b: Vector3i = tri[(paso + 1) % 3]
+				if not adyacencia.has(a):
+					adyacencia[a] = {}
+				if not adyacencia.has(b):
+					adyacencia[b] = {}
+				adyacencia[a][b] = true
+				adyacencia[b][a] = true
+	var visitados := {}
+	var componentes := 0
+	for inicio: Vector3i in adyacencia.keys():
+		if visitados.has(inicio):
+			continue
+		componentes += 1
+		var pila: Array[Vector3i] = [inicio]
+		while not pila.is_empty():
+			var actual: Vector3i = pila.pop_back()
+			if visitados.has(actual):
+				continue
+			visitados[actual] = true
+			for vecino: Vector3i in adyacencia[actual].keys():
+				if not visitados.has(vecino):
+					pila.append(vecino)
+	return componentes
+
+
+func _saltos_de_uv2_en_vertices_compartidos(malla: Mesh) -> int:
+	var uv2_por_vertice := {}
+	var saltos := 0
+	for superficie in malla.get_surface_count():
+		var arrays := malla.surface_get_arrays(superficie)
+		var vertices: PackedVector3Array = arrays[Mesh.ARRAY_VERTEX]
+		var uv2_raw: Variant = arrays[Mesh.ARRAY_TEX_UV2]
+		if not (uv2_raw is PackedVector2Array):
+			return -1
+		var uv2: PackedVector2Array = uv2_raw
+		for i in vertices.size():
+			var clave := _clave_vertice(vertices[i])
+			if uv2_por_vertice.has(clave):
+				var previa: Vector2 = uv2_por_vertice[clave]
+				if previa.distance_to(uv2[i]) > 1e-4:
+					saltos += 1
+			else:
+				uv2_por_vertice[clave] = uv2[i]
+	return saltos
+
+
+func test_el_revestimiento_del_cuartito_es_una_sola_isla_de_mapa_de_luz() -> void:
+	var modelo: Node3D = auto_free(MODELO.instantiate())
+	var rev := modelo.find_child("cuartito_revestimiento", true, false) as MeshInstance3D
+	assert_object(rev).is_not_null()
+	if rev == null:
+		return
+	var componentes := _componentes_conexas(rev.mesh)
+	(
+		assert_int(componentes)
+		. override_failure_message(
+			"cuartito_revestimiento tiene %d componentes desconectadas" % componentes
+		)
+		. is_equal(1)
+	)
+	var saltos := _saltos_de_uv2_en_vertices_compartidos(rev.mesh)
+	(
+		assert_int(saltos)
+		. override_failure_message(
+			"cuartito_revestimiento tiene %d saltos de UV2 en vértices compartidos" % saltos
+		)
+		. is_equal(0)
+	)
+
+
+func test_las_piezas_del_cuartito_cubren_jambas_y_rincones_sin_juntas_internas() -> void:
+	var modelo: Node3D = auto_free(MODELO.instantiate())
+	var piezas := modelo.find_child("deposito_esquinas_cuartito", true, false) as MeshInstance3D
+	assert_object(piezas).is_not_null()
+	if piezas == null:
+		return
+	assert_int(piezas.gi_mode).is_equal(GeometryInstance3D.GI_MODE_DYNAMIC)
+	var inconsistentes := _aristas_con_orientacion_opuesta(piezas.mesh)
+	(
+		assert_int(inconsistentes)
+		. override_failure_message(
+			(
+				"deposito_esquinas_cuartito tiene %d aristas con orientación contradictoria"
+				% inconsistentes
+			)
+		)
+		. is_equal(0)
+	)
+	var partidos := _triangulos_con_junta_interna(piezas.mesh)
+	(
+		assert_int(partidos)
+		. override_failure_message(
+			(
+				"deposito_esquinas_cuartito tiene %d triángulos de frente con junta vertical interna"
+				% partidos
+			)
+		)
+		. is_equal(0)
+	)
+	var caja := piezas.mesh.get_aabb()
+	var rev := modelo.find_child("cuartito_revestimiento", true, false) as MeshInstance3D
+	assert_object(rev).is_not_null()
+	if rev == null:
+		return
+	var caja_rev := rev.mesh.get_aabb()
+	assert_float(caja.position.z).is_less_equal(caja_rev.position.z + 0.05)
+	assert_float(caja.end.z).is_greater_equal(caja_rev.end.z - 0.05)
+	assert_float(caja.position.x).is_less_equal(caja_rev.position.x + 0.05)
+	assert_float(caja.size.x).is_greater(2.5)
