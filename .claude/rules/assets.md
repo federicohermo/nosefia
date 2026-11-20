@@ -75,3 +75,9 @@ paths:
     pie sólo en el mueble de las heladeras, y franja lisa para los cantos. También pone la UV en
     metros de cada cara. Va antes de `armar_atlas.py`, `exportar_modelo.py` y `hornear.py`. Un
     `.blend` nuevo del artista pide repetirla.
+
+11. **El exhibidor y los bloques del depósito llevan su paso sobre el `.blend`.**
+    `blender/engrosar_lateral_exhibidor.py` restaura los 20 mm del lateral izquierdo de
+    `exhibidor_golosinas-col`. `blender/ladrillos_del_deposito.py` reconstruye los bloques de
+    relieve en esquinas y jambas del depósito sin juntas internas ni aristas sueltas. Van antes
+    de `exportar_modelo.py` y `hornear.py`. Un `.blend` nuevo del artista pide repetirlos.

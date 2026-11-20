@@ -71,6 +71,11 @@ import numpy as np
 from mathutils import Vector
 
 RAIZ = Path(__file__).resolve().parents[3]
+sys.path.insert(0, str(RAIZ / ".claude/scripts"))
+from lib.bloques_de_la_jamba import (  # noqa: E402
+    frente_sin_junta_interna,
+    orientar_perfil_ccw,
+)
 FINAL = RAIZ / "assets/source/textures/warehouse/final"
 MAPAS = {"color": "deposito_bloques_color.png", "normal": "deposito_bloques_normal.png",
          "rough": "deposito_bloques_rough.png"}
@@ -345,6 +350,13 @@ def _pieza(nombre, borde, a_w, n_w, profundidad, z_tope, limites, material, cole
                 quiebre = rincon - (desde + reparto * (hasta - desde))
             def u_de(s, frente=frente):
                 return frente(rincon - s)
+        else:
+            inicio_frente = -saliente if profundidad > 0 else 0.0
+            sin_junta = frente_sin_junta_interna(
+                u_borde, sentido, junta, inicio_frente, ANCHO_BLOQUE, JUNTA_H
+            )
+            if sin_junta is not None:
+                u_de = sin_junta
         # El extremo del brazo queda contra la otra pared o contra su pieza.
         extremo_tapado = rincon is not None
         fondo = 0.0
@@ -362,20 +374,18 @@ def _pieza(nombre, borde, a_w, n_w, profundidad, z_tope, limites, material, cole
             perfil.insert(-1, (quiebre, saliente))
             if del_fondo is not None:
                 perfil[-1:] = [(quiebre, del_fondo), (brazo, del_fondo)]
-        puntos = [Vector((borde[0] + a_w[0] * s + n_w[0] * t,
-                          borde[1] + a_w[1] * s + n_w[1] * t)) for s, t in perfil]
+        puntos_2d = orientar_perfil_ccw([
+            (borde[0] + a_w[0] * s + n_w[0] * t, borde[1] + a_w[1] * s + n_w[1] * t)
+            for s, t in perfil
+        ])
+        puntos = [Vector(p) for p in puntos_2d]
         abajo = [forma.verts.new((p.x, p.y, z0)) for p in puntos]
         arriba = [forma.verts.new((p.x, p.y, z1)) for p in puntos]
-        caras = [forma.faces.new(arriba[::-1]), forma.faces.new(abajo)]
+        caras = [forma.faces.new(arriba), forma.faces.new(abajo[::-1])]
         for i in range(len(puntos)):
             j = (i + 1) % len(puntos)
             caras.append(forma.faces.new((abajo[i], abajo[j], arriba[j], arriba[i])))
         forma.normal_update()
-        # Se calcula hacia afuera por el centro: las caras ocultas en la pared se descartan.
-        centro_pieza = sum((v.co for v in abajo + arriba), Vector()) / (2 * len(puntos))
-        for cara in caras:
-            if (cara.calc_center_median() - centro_pieza).dot(cara.normal) < 0:
-                cara.normal_flip()
         ocultas = []
         for cara in caras:
             st = [((v.co.x - borde[0]) * a_w[0] + (v.co.y - borde[1]) * a_w[1],
@@ -402,8 +412,16 @@ def _pieza(nombre, borde, a_w, n_w, profundidad, z_tope, limites, material, cole
                 p = bucle.vert.co
                 v_uv = (p.z - PISO) / COBERTURA[1]
                 if es_jamba and rincon is not None:
-                    # El costado repite, espejado, el final del bloque del frente.
-                    bucle[capa_uv].uv = (u_de(-st[bucle.vert][1]) / COBERTURA[0], v_uv)
+                    # El costado repite, espejado, el bloque del frente sin cruzar la junta del
+                    # quiebre.
+                    t_v = st[bucle.vert][1]
+                    if quiebre is not None:
+                        s_max = quiebre - (-saliente)
+                        escala = min(1.0, (s_max - JUNTA_H / 2) / (fondo + saliente))
+                        s_espejo = -saliente + (saliente - t_v) * escala
+                    else:
+                        s_espejo = -t_v
+                    bucle[capa_uv].uv = (u_de(s_espejo) / COBERTURA[0], v_uv)
                 elif es_jamba:
                     # La jamba: el bloque de esquina da la vuelta y su costado termina en una junta.
                     t_v = st[bucle.vert][1]
@@ -422,6 +440,10 @@ def _pieza(nombre, borde, a_w, n_w, profundidad, z_tope, limites, material, cole
                     bucle[capa_uv].uv = (u_de(st[bucle.vert][0]) / COBERTURA[0], v_uv)
         forma.faces.ensure_lookup_table()
         bmesh.ops.delete(forma, geom=ocultas, context="FACES_ONLY")
+        forma.edges.ensure_lookup_table()
+        sueltas = [arista for arista in forma.edges if not arista.link_faces]
+        if sueltas:
+            bmesh.ops.delete(forma, geom=sueltas, context="EDGES")
         cuenta["piezas"] += 1
     forma.verts.ensure_lookup_table()
     bmesh.ops.delete(forma, geom=[v for v in forma.verts if not v.link_faces], context="VERTS")
