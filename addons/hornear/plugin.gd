@@ -10,6 +10,7 @@
 ## guardar durante el horneado puede usar datos viejos, y cerrar interrumpe el trabajo del editor.
 extends EditorPlugin
 
+const Apoyo := preload("res://addons/hornear/apoyo.gd")
 const Sondas := preload("res://addons/hornear/sondas.gd")
 const CorteDeLuz := preload("res://src/escenas/puestos/corte_de_luz.gd")
 
@@ -21,6 +22,13 @@ const ESTRUCTURA := "Estructura"
 ## archivo, sin guardar la escena.
 const VARIABLE_DE_LA_VARIANTE := "HORNEAR_VARIANTE"
 const VARIANTE_SIN_LUZ := "sin_luz"
+## `hornear.py` la declara para el segundo horneado del local con luz: el mismo, con los
+## obstáculos de `apoyo.gd`. No guarda la escena, y su atlas va a `HORNEADO_CON_APOYO`, de donde
+## `mezclar_horneados.gd` lo toma y `hornear.py` lo borra.
+const VARIANTE_CON_APOYO := "con_apoyo"
+const HORNEADO_CON_APOYO := "res://src/escenas/almacen_con_apoyo.lmbake"
+## Las mallas de las góndolas se reconocen por su nombre.
+const GONDOLAS := "gondolanueva*"
 ## El texto del botón en inglés: el script lanza el editor con `-l en` para que sea este.
 const BOTON := "Bake Lightmaps"
 const PAUSA := 2.0
@@ -84,6 +92,8 @@ func _seleccionar() -> void:
 		_apagar_el_local(raiz, horno)
 	else:
 		_vidrios = CorteDeLuz.emitir_por_los_vidrios(raiz)
+	if _con_apoyo():
+		_agregar_los_obstaculos(raiz, horno)
 	EditorInterface.get_selection().clear()
 	EditorInterface.get_selection().add_node(horno)
 	EditorInterface.edit_node(horno)
@@ -92,6 +102,62 @@ func _seleccionar() -> void:
 
 func _sin_luz() -> bool:
 	return OS.get_environment(VARIABLE_DE_LA_VARIANTE) == VARIANTE_SIN_LUZ
+
+
+func _con_apoyo() -> bool:
+	return OS.get_environment(VARIABLE_DE_LA_VARIANTE) == VARIANTE_CON_APOYO
+
+
+## Suma en la copia del editor los volúmenes de `apoyo.gd` bajo cada góndola. **Nada de esto se
+## guarda**: la escena queda como estaba. Sin datos previos, el horneado pide dónde guardarse y
+## deja un archivo nuevo, que no es el de siempre.
+func _agregar_los_obstaculos(raiz: Node, horno: LightmapGI) -> void:
+	horno.light_data = null
+	var obstaculos := Node3D.new()
+	obstaculos.name = "ObstaculosDelHorneado"
+	raiz.get_node(ESTRUCTURA).add_child(obstaculos)
+	obstaculos.owner = raiz
+	var negro := StandardMaterial3D.new()
+	negro.albedo_color = Color.BLACK
+	negro.roughness = 1.0
+	negro.metallic_specular = 0.0
+	for nodo: Node in raiz.get_node(ESTRUCTURA).find_children(
+		GONDOLAS, "MeshInstance3D", true, false
+	):
+		var malla := nodo as MeshInstance3D
+		# Lo dinámico toma la luz de las sondas y no se hornea: sus obstáculos no tendrían sentido.
+		if malla.mesh == null or not malla.is_visible_in_tree():
+			continue
+		if malla.gi_mode != GeometryInstance3D.GI_MODE_STATIC:
+			continue
+		var caras: PackedVector3Array = malla.global_transform * malla.mesh.get_faces()
+		for volumen: AABB in Apoyo.volumenes(caras, _suelo_de(caras)):
+			_agregar_caja(obstaculos, volumen, negro)
+	print("[hornear] con apoyo: %d obstaculos" % obstaculos.get_child_count())
+
+
+## El piso donde apoya una malla es lo más bajo que tiene.
+func _suelo_de(caras: PackedVector3Array) -> float:
+	var suelo := INF
+	for punto: Vector3 in caras:
+		suelo = minf(suelo, punto.y)
+	return suelo
+
+
+## Un `LightmapGI` sólo cuenta una malla con dueño, segundo juego de UV y tamaño de atlas. El
+## tamaño mínimo es el que menos lugar ocupa en el atlas.
+func _agregar_caja(padre: Node3D, volumen: AABB, material: Material) -> void:
+	var caja := BoxMesh.new()
+	caja.size = volumen.size
+	caja.add_uv2 = true
+	caja.lightmap_size_hint = Vector2i(2, 2)
+	var instancia := MeshInstance3D.new()
+	instancia.mesh = caja
+	instancia.material_override = material
+	instancia.gi_mode = GeometryInstance3D.GI_MODE_STATIC
+	padre.add_child(instancia)
+	instancia.owner = padre.owner
+	instancia.global_position = volumen.get_center()
 
 
 ## Deja encendida la luz de emergencia y la de afuera, que emiten los vidrios a la calle: las
@@ -133,7 +199,11 @@ func _hornear() -> void:
 			_fallar("no encuentro el diálogo de guardado")
 			return
 		dialogo.hide()
-		var ruta := CorteDeLuz.HORNEADO_SIN_LUZ if _sin_luz() else ESCENA.get_basename() + ".lmbake"
+		var ruta := ESCENA.get_basename() + ".lmbake"
+		if _sin_luz():
+			ruta = CorteDeLuz.HORNEADO_SIN_LUZ
+		elif _con_apoyo():
+			ruta = HORNEADO_CON_APOYO
 		dialogo.file_selected.emit(ruta)
 	print("[hornear] horneado en %d ms" % (Time.get_ticks_msec() - desde))
 
@@ -150,6 +220,10 @@ func _guardar() -> void:
 		return
 	_avanzar(4)
 	CorteDeLuz.cerrar_los_vidrios(_vidrios)
+	if _con_apoyo():
+		# Sólo se necesita su atlas y la disposición de sus piezas: las sondas son las del otro.
+		ResourceSaver.save(datos, datos.resource_path)
+		return
 	var cuenta := Sondas.rellenar(datos, _cascara)
 	print("[hornear] sondas de afuera rellenadas: %d de %d" % [cuenta.rellenadas, cuenta.total])
 	# La noche del corte las luces están apagadas: no hay luz que devolverle a la mercadería.

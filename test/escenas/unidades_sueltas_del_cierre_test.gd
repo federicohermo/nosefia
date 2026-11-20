@@ -586,8 +586,11 @@ func _afirmar_apoyos_libres(
 		else:
 			assert_bool(_es_el_apoyo(firme, apoyo)).is_equal(sobre_el_apoyo)
 			assert_bool(firme == suelo).is_equal(not sobre_el_apoyo)
-		var limites := forma.global_transform * forma.shape.get_debug_mesh().get_aabb()
-		assert_float(limites.position.y).is_equal_approx((golpe["position"] as Vector3).y, 0.03)
+		# El vértice más bajo: la caja envolvente de un cuerpo inclinado rebasa su base real.
+		var base := INF
+		for vertice in forma.shape.get_debug_mesh().get_faces():
+			base = minf(base, (forma.global_transform * vertice).y)
+		assert_float(base).is_equal_approx((golpe["position"] as Vector3).y, 0.03)
 
 
 func test_dos_vencimientos_en_un_avance_separan_cinco_cuerpos() -> void:  # AC-CTR-040, AC-CTR-046

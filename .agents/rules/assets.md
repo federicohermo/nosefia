@@ -50,7 +50,35 @@ paths:
    binario, y `--aplicar` escribe sobre la fuente. Entraron en este orden: `renovar_bano.py`
    —que ya llama a `refinar_artefactos.py` y `ajustar_marco_bano.py`—,
    `colisiones_de_artefactos.py`, `texturizar_piso_bano.py`, `zocalos_del_bano.py`,
-   `ajustar_umbral_bano.py`, `reparar_cabinas_bano.py`, `terminar_cabinas_bano.py` y
-   `texturizar_rejilla_bano.py`. Después hubo ajustes a mano del riel y las cabinas que ningún
-   script reproduce. Un `.blend` del artista que entre como base nueva pide repetirlos en ese
-   orden y rehacer esos ajustes.
+   `ajustar_umbral_bano.py`, `reparar_cabinas_bano.py`, `terminar_cabinas_bano.py`,
+   `texturizar_rejilla_bano.py` y `aplanar_hoja_del_bano.py`. Ese último va después de la rejilla
+   porque extrapola las UV de `bano_rejilla_texturizada` sobre la cara plana. Después hubo ajustes
+   a mano del riel y las cabinas que ningún script reproduce. Un `.blend` del artista que entre como
+   base nueva pide repetirlos en ese orden y rehacer esos ajustes.
+
+9. **Los metales llevan detalle pintado desde su malla.** `blender/metal_con_detalle.py` pinta
+   satinado corto, huellas, rayones finos y suciedad de encuentros en el baño, las mesas, el
+   mostrador y `local_aluminio`. Esos trazos cambian tanto el color como la rugosidad. Sólo el
+   acero del baño suma marcas chicas de agua cerca del piso. Escribe cuatro pares color + ORM en
+   `source/textures/metal/`, sin materiales ni triángulos nuevos. Va antes de `armar_atlas.py`,
+   `exportar_modelo.py` y `assets/models/extraer_mallas.gd`. Un `.blend` nuevo del artista pide
+   repetirla.
+
+10. **El frente del mostrador, su compuerta y el friso son listones de roble pintados en la
+    textura.** La malla es la del artista, con el zócalo de acero.
+    `blender/restaurar_madera_del_artista.py` la devuelve si una corrida vieja la cambió.
+    `blender/ajustar_compuerta_mostrador.py` alinea el alto de la compuerta con el frente y quita
+    el listón saliente y las placas fijas.
+    `blender/listonar_frente_de_madera.py` escribe `madera_lambrin.png` con la chapa CC0 de
+    `source/textures/third-party/oak_veneer_01/`. Arma una grilla por cara con listones enteros
+    de 9 a 13 cm y una buña en cada borde y cada esquina. Lleva banda lisa arriba, y al
+    pie sólo en el mueble de las heladeras, y franja lisa para los cantos. También pone la UV en
+    metros de cada cara. Va antes de `armar_atlas.py`, `exportar_modelo.py` y `hornear.py`. Un
+    `.blend` nuevo del artista pide repetirla.
+
+11. **El exhibidor y los bloques del depósito llevan su paso sobre el `.blend`.**
+    `blender/engrosar_lateral_exhibidor.py` restaura los 20 mm del lateral izquierdo de
+    `exhibidor_golosinas-col`. `blender/ladrillos_del_deposito.py` reconstruye los bloques de
+    relieve en esquinas y jambas del depósito y del cuartito de limpieza, y une
+    `cuartito_revestimiento` en una sola malla conexa. Van antes de `exportar_modelo.py` y
+    `hornear.py`. Un `.blend` nuevo del artista pide repetirlos.

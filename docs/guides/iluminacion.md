@@ -87,6 +87,19 @@ En Linux sin pantalla ni GPU anda con Xvfb y el Vulkan por software de Mesa; el 
 el encabezado. El error de OpenGL que obliga a hornear con Vulkan es el
 [reporte 94407 de Godot](https://github.com/godotengine/godot/issues/94407).
 
+**Los dos horneados reparan sus líneas solos.** `hornear.py` llama al reparador después de cada
+horneado, sin un paso a mano. También se puede correr suelto:
+
+```bash
+blender --background --python-exit-code 1     --python .claude/scripts/blender/reparar_lineas_del_mapa_de_luz.py -- --aplicar
+```
+
+El horneador deja, en una fila o una columna del atlas, texeles con la mitad de la luz de sus
+vecinos. En el local es una raya oscura de 5 cm sobre una pared o cruzando el cielorraso. Cambia
+de lugar cada vez que cambia la malla del edificio, y volver a hornear no la saca. **La causa no
+está identificada**: el script corrige el resultado e imprime qué reparó. Sin `--aplicar` sólo
+informa, y si el horneado no trae líneas no escribe nada. Qué mide y cómo guarda, en su encabezado.
+
 Los mandos:
 
 - la energía de cada luz, en su escena;
@@ -96,6 +109,140 @@ Los mandos:
   Evita que el filtrado del lightmap dibuje una franja verde al pie de la pared del depósito;
 - la escala del texel de una malla chica (`gi_lightmap_texel_scale`), en
   `estructura_del_almacen.tscn`.
+
+## La sombra de apoyo
+
+Las góndolas son chapas finas y sus estantes de abajo quedan abiertos al pasillo. La luz entra
+por ahí, y el piso al pie del mueble se hornea tan claro como el del pasillo: el mueble parece
+flotar. Para oscurecerlo, el horneado con luz usa **obstáculos**: volúmenes que sólo existen
+mientras se hornea. No están en `almacen.tscn`, ni en el `.lmbake`, ni en el juego.
+
+- **De dónde salen.** De las mallas de las góndolas que la escena tiene al hornear
+  (`addons/hornear/apoyo.gd`). Bajo cada estante que queda a menos de 30 cm del piso, un volumen
+  del piso hasta su cara de abajo. No hay una tabla de coordenadas: si una góndola se mueve y se
+  vuelve a hornear, su sombra la sigue. Los productos de exhibición, los portaprecios, los
+  separadores finos, las mesas y las sillas no entran.
+- **Por qué sólo durante el horneado.** Un obstáculo en la escena taparía la luz de lo que toma las
+  sondas, y los productos se verían distintos. Las sondas del `.lmbake` son las del horneado sin
+  obstáculos: la mercadería no cambia de brillo.
+- **Cómo se aplica.** `hornear.py` hornea dos veces: el local de siempre y el mismo con
+  obstáculos. Del segundo sólo se toma el atlas. `addons/hornear/mezclar_horneados.gd` lo mezcla
+  con el primero, pieza por pieza, porque cada horneado ubica las mallas en el atlas a su manera.
+  El resultado reemplaza a `almacen.exr`. El `.lmbake` es el del primero.
+- **Dónde está el nivel.** `NIVEL_DE_APOYO`, en `lib/horneado.py`: de 0 a 1. Con 0 el atlas es el
+  horneado de siempre y no hay segundo horneado. Con 1 es el horneado con obstáculos entero, que al
+  usuario le pareció demasiado oscuro. Hoy vale el nivel que eligió jugando una build de prueba.
+- **Qué no se commitea.** El segundo horneado (`almacen_con_apoyo.*`) lo borra el script al
+  terminar, también si falla. Si algo falla a mitad de camino, `almacen.lmbake` y `almacen.exr`
+  quedan como estaban.
+- **Cada atlas se repara antes de mezclarlos**, y el resultado se repara de nuevo. Una raya
+  mezclada deja de valer la mitad de sus vecinas y el reparador ya no la ve.
+- **El horneado de la noche del corte de luz no cambia:** se hornea sin obstáculos.
+
+## La oclusión de los rincones
+
+El horneador de Godot no da oclusión local: el piso al pie de una pared se hornea tan claro como el
+del pasillo. Un paso propio la calcula y la deja adentro de `almacen.exr`. El juego no suma ningún
+pase, shader, textura ni programa. Un pase en pantalla que hacía lo mismo salió del juego porque con
+MSAA 2× costaba entre 3,6 y 12,6 ms de GPU por cuadro.
+
+- **Qué hace.** Para cada texel de cada pieza del atlas, mide cuánto lo tapan las mallas fijas a
+  menos de un radio. Multiplica la luz de ese texel por un factor (`addons/hornear/oclusion.gd`).
+  Cada pieza se rasteriza en la UV2 que usa el atlas, y de cada texel salen rayos al hemisferio.
+  Un rayo que pega cerca cuenta más que uno que pega lejos. Los tres canales de color de las
+  cuatro capas del atlas reciben el mismo factor: la luz y su dirección. El alfa no cambia.
+- **Qué lo define.** El factor depende sólo de la geometría. Un lugar abierto vale 1 y el factor
+  nunca aclara un texel. El paso no mira las luces.
+- **Dónde están los mandos.** `RADIO_DE_OCLUSION`, `NIVEL_DE_OCLUSION` y `RAYOS_DE_OCLUSION`, en
+  `lib/horneado.py`. Con el nivel en 0 el paso no corre y el atlas queda como lo dejó el horneado.
+- **En qué orden corre.** Al final de `hornear.py`, después de reparar las líneas y de mezclar la
+  sombra de apoyo. Si corriera antes de la mezcla, ésta lo diluiría. El horneado de la noche del
+  corte no lo recibe.
+- **Sin hornear de nuevo.** `python .claude/scripts/hornear.py --oclusion` lo aplica sobre el atlas
+  que ya está en la rama. `--nivel`, `--radio`, `--rayos` y `--salida` cambian lo que usa y adónde
+  escribe. **Sin `--salida` multiplica el atlas de la rama en su lugar: correrlo dos veces lo
+  oscurece dos veces.** Para probar niveles se escribe a otro archivo con `--salida`.
+- **Cómo se ubica cada pieza.** El `.lmbake` dice, por pieza, la ruta de su malla, su rectángulo y
+  su rebanada. La malla y su lugar en el mundo salen de `almacen.tscn`, que se instancia sin entrar
+  al árbol. Una pieza con UV2 fuera de su rectángulo frena el paso y se nombra.
+- **El borde de cada pieza.** El filtrado lee un texel de margen, y la pieza tiene huecos entre sus
+  islas. Los dos reciben el factor de su vecino de adentro. Sin eso, el borde dejaba una costura.
+- **Cómo se guarda.** La luz sale redondeada a media precisión, que es la del motor. Sin eso, un
+  factor cualquiera llenaba los 23 bits de la mantisa y el EXR pesaba el doble (60 MB contra 32 MB).
+- **Si falla.** `almacen.exr` queda como estaba.
+- **Cuánto tarda y cuánto grano deja.** Tarda lo que los rayos: unos 2,5 µs cada uno. El local tiene
+  del orden de un millón de texeles con luz. Pocos rayos se ven como grano; cada texel gira su
+  reparto para que el grano no forme bandas.
+- **Qué no cubre.** Lo que no tiene lightmap no recibe nada: los productos, las cajas y lo que se
+  mueve. Un obstáculo que no es una malla fija, como una puerta que abre, no oscurece a nadie.
+
+## La oclusión de contacto de lo que se levanta
+
+Lo que se mueve no tiene lightmap, así que la sombra de apoyo horneada no le sirve. Por eso la caja de
+productos y todo `ObjetoAgarrable` llevan una oclusión de contacto dinámica. Son el balde, la mopa,
+los bidones, la bolsa de basura, la llave, la palanca, la colilla, los papeles y el ticket. Nada va
+horneado en el objeto: al levantarlo el efecto se va.
+
+`oclusion_de_contacto.gd` cuelga del objeto y lanza un rayo hacia abajo desde su base. Con lo que
+encuentra hace dos cosas:
+
+- **El objeto oscurece lo de abajo.** Una mancha negra con alfa sobre esa superficie
+  (`sombra_de_contacto.gdshader`). Sigue la normal de la superficie y no recibe el contorno del
+  foco. En Compatibility los `Decal` no funcionan: la mancha es un plano. Se apaga con la propiedad
+  `activa` del nodo, que está en el grupo `oclusion_de_contacto`.
+- **Lo de abajo oscurece al objeto.** Escribe en los materiales de las mallas la altura de esa
+  superficie. El shader (`oclusion_de_contacto.gdshaderinc`) oscurece las caras de abajo y el pie
+  de los costados. Se apaga con `intensidad` en 0. Lo comparten los shaders que el objeto ya tenía.
+  Son el de los productos de la góndola (la caja), el de la manija del balde y los dos de la mopa.
+  El tubo metálico comparte `cabeza_de_la_mopa.gdshader` sin sumar programas. Un objeto de material
+  estándar lleva sólo la mancha: pasarlo a un shader suma programas.
+
+**La huella de la mancha es lo que del objeto está cerca de la superficie.** Son los vértices de
+sus mallas a menos de `radio` del punto más bajo, medido hacia abajo del mundo. Si esos vértices se
+parten en zonas separadas, cada zona lanza su propio rayo. Cada una lleva su propia mancha, con su
+forma e intensidad según su altura. Así una mopa tirada en el piso no mancha debajo del tramo alto
+del palo y una bolsa acostada oscurece alrededor de todo su contorno. Un objeto con una sola zona
+queda con una sola mancha, y las extra se crean bajo demanda y se reusan. Cada mancha se corta en
+el borde de lo que la sostiene. Ese borde se mide en el espacio de la forma del apoyo: una caja
+girada sobre otra no deja la mancha colgando en el aire.
+
+**Todo va en uniformes del material, nunca en `instance uniform`.** En la web (Compatibility)
+el shader los recibe en cero. El efecto no se ve y ningún test de GDScript lo nota, porque
+`get_instance_shader_parameter` devuelve lo que se escribió. Por eso cada caja y cada balde lleva
+sus propios materiales.
+
+Más lejos de `radio` de cualquier superficie no hay efecto. **El rayo corre mientras el objeto
+se mueve y una vez al quedar quieto**: se entera por el aviso de que cambió su transformación.
+Un objeto quieto no tira ninguno. Las dos propiedades del nodo, `radio` e `intensidad`, valen para el
+objeto y para la mancha, y dejan el efecto al día al cambiarlas. Con el objeto apoyado, la mancha se
+abre hacia afuera de su huella el mismo `radio` que el objeto se oscurece hacia arriba. Levantado, el
+borde suma `DIFUMINADO_POR_ALTURA` por cada metro de altura.
+
+## La oclusión de contacto en la góndola
+
+Los productos acomodados en la góndola no son cuerpos sueltos. Cada producto se dibuja en un
+`MultiMeshInstance3D` (`reposicion_manual.gd`). `oclusion_de_la_gondola.gd` les da el mismo tipo de
+efecto que llevan las unidades sueltas, sin costo por unidad. Los envases son más chicos que una
+caja y van apretados sobre el estante. Por eso necesitan un alcance más corto y más contraste para
+leerse de cerca. Esos valores viven en `oclusion_de_contacto.gd` (`RADIO_DEL_PRODUCTO` e
+`INTENSIDAD_DEL_PRODUCTO`). Los comparten la góndola y las unidades de producto sueltas
+(`ObjetoAgarrable` con `UnidadDeProducto`). Así una unidad suelta y una acomodada se ven iguales.
+Cajas y demás objetos conservan `RADIO_POR_DEFECTO` e `INTENSIDAD_POR_DEFECTO`.
+
+- **Base oscurecida (`base_activa`).** Cada unidad de la góndola está siempre apoyada en su estante.
+  El componente prende `contacto_en_base_local` en el material del bloque
+  (`producto_de_la_gondola.gdshader`). El shader (`oclusion_de_contacto.gdshaderinc`) mide la altura
+  de cada vértice sobre el eje local de apoyo. No lanza rayos ni suma dibujos ni programas. Cubre
+  también `VencidosDeCindolor`.
+- **Mancha por bloque (`manchas_activas`).** Un `MultiMeshInstance3D` (`SombrasDe<Producto>`) por
+  bloque, con `sombra_de_contacto.gdshader`, la huella medida en la misma `BANDA_DE_APOYO` y el
+  recorte del estante en `INSTANCE_CUSTOM`. Sigue la normal real del estante, también en una rampa.
+  No desborda el canto ni atraviesa paneles, y dibuja con `render_priority = -2`, detrás de otros
+  planos transparentes. Al sacar o reponer una unidad se compacta con el mismo orden del bloque.
+  Los huecos no llevan mancha y los vencidos sí.
+
+El nodo vive en el grupo `oclusion_de_la_gondola` y expone `base_activa`, `manchas_activas`, `radio`
+e `intensidad` en vivo. Lo verifica `test/escenas/oclusion_de_la_gondola_test.gd`.
 
 ## El horneado de la noche del corte de luz
 
@@ -129,8 +276,25 @@ las sondas de los productos.
   copia del editor, no guarda la escena y deja el `.lmbake`, el `.exr` y su `.import`. Se
   commitean. Hay que volver a correrlo cuando cambia el modelo, una luz o el `LightmapGI`, igual
   que el horneado con luz.
+- **El atlas viaja con 1024 px de lado, no con los 2048 que deja el horneador.** Es una imagen casi
+  negra. Con 2048 px pesaba 16,8 MB en el export, y con 1024 px pesa 4,2 MB. Sin eso, el export web
+  pasaba el techo de 150 MiB. `hornear.py --sin-luz` lo reduce solo, **después** de reparar las
+  líneas. El reparador reconoce una línea por su huella de un texel. Al promediar bloques de 2 por 2
+  esa huella se repartiría entre dos. El lado es `LADO_DEL_ATLAS_SIN_LUZ`, en `lib/horneado.py`. El
+  paso es `blender/reducir_mapa_de_luz.py`. **El horneado con luz no se reduce.** El costo: el borde
+  entre dos piezas vecinas del atlas pierde la mitad de su margen. Una pieza que toma luz de su
+  vecina la mezcla un poco más.
 
 ## Qué lo verifica
+
+`test/escenas/apoyo_del_horneado_test.gd` y `test/escenas/mezcla_de_horneados_test.gd`: de qué
+caras salen los obstáculos y cómo se mezclan los dos atlas. `test_horneado.py` y `test_hornear.py`:
+el nivel, el orden de los pasos y que un horneado a medias deje los archivos como estaban.
+`test_reducir_mapa_de_luz.py`: que el atlas se reduzca por bloques, sin mezclar capas.
+`test/escenas/oclusion_del_horneado_test.gd`: que un piso abierto valga 1 y que un rincón valga
+menos que una pared lisa. También que una chapa de dos caras no se tape a sí misma, y que el borde
+de la pieza no deje una costura. `test_horneado.py` y `test_hornear.py` suman el nivel y el lugar
+del paso.
 
 `test/escenas/iluminacion_horneada_test.gd`: que el `LightmapGI` tenga datos, y que ninguna
 malla con GI estático se haya quedado afuera del horneado. También que ninguna hoja que abre

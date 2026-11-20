@@ -53,6 +53,7 @@ from lib.reparto import (  # noqa: E402
     MUEBLES,
     PRODUCTOS,
     cara_de_isla,
+    mira,
     partes,
     producto,
     validar_reparto,
@@ -64,14 +65,6 @@ from lib.reparto import (  # noqa: E402
 #: da para tanto, la fila lleva lo que entra y el resumen lo
 #: dice.
 FILA_DE_ADELANTE_PEDIDA = 8
-
-#: Hacia dónde mira cada cara, en el mundo de Blender.
-MIRA = {
-    "oeste": Vector((-1.0, 0.0, 0.0)),
-    "este": Vector((1.0, 0.0, 0.0)),
-    "sur": Vector((0.0, -1.0, 0.0)),
-    "norte": Vector((0.0, 1.0, 0.0)),
-}
 
 #: Cuánto detrás del frente de la bandeja más corta empieza la mercadería de una heladera, en
 #: metros. Es lo que dejaba el artista: medido el 2026-10-16 en el `.blend` de staging.
@@ -106,8 +99,7 @@ class Estante:
         self.isla = isla
         self.caras = {c.index for c in isla}
         self.normal = cara_de_arriba.normal.copy()
-        _, cara, _ = partes(clave)
-        self.mira = MIRA[cara]
+        self.mira = Vector(mira(clave))
         adentro = -self.mira
         self.v = (adentro - self.normal * adentro.dot(self.normal)).normalized()
         self.u = (-self.mira).cross(Vector((0.0, 0.0, 1.0))).normalized()
