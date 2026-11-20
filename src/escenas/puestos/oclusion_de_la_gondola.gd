@@ -18,9 +18,9 @@ const OclusionDeContacto := preload("res://src/escenas/objetos/oclusion_de_conta
 
 ## Grupo desde el cual se prende o apaga cada parte en vivo.
 const GRUPO := &"oclusion_de_la_gondola"
-## Valores por defecto de la góndola, elegidos mirando los estantes de cerca.
-const RADIO_POR_DEFECTO := 0.03
-const INTENSIDAD_POR_DEFECTO := 0.5
+## Valores por defecto de la góndola, compartidos con las unidades de producto sueltas.
+const RADIO_POR_DEFECTO := OclusionDeContacto.RADIO_DEL_PRODUCTO
+const INTENSIDAD_POR_DEFECTO := OclusionDeContacto.INTENSIDAD_DEL_PRODUCTO
 ## Flotantes por copia en un `MultiMesh` 3D con `use_custom_data`: 12 de la pose y 4 del recorte.
 const FLOTANTES_POR_MANCHA := 16
 ## Prioridad menor que el vidrio (0) y que el pre-pase del foco (-1): la mancha nunca se dibuja

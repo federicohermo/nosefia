@@ -22,7 +22,10 @@ const ESQUINAS_POR_DEFECTO := 0.1
 
 ## Los datos entran por el `.tres`, así que agregar un objeto nuevo al almacén es duplicar la
 ## escena y cambiarle este campo: no se toca código.
-@export var datos: ObjetoDelAlmacen
+@export var datos: ObjetoDelAlmacen:
+	set(valor):
+		datos = valor
+		_aplicar_oclusion()
 @export var orientacion_en_mano := Basis.IDENTITY
 ## La mancha que deja donde se apoya, y el oscurecimiento de su base si su material lo admite.
 var oclusion: Node3D
@@ -57,10 +60,31 @@ func _ready() -> void:
 	if not mallas.is_empty():
 		oclusion = OclusionDeContacto.new()
 		oclusion.configurar(mallas, _esquinas_de_contacto())
+		_aplicar_oclusion()
 		add_child(oclusion)
 	body_entered.connect(
 		func(_otro: Node) -> void: contacto_recibido.emit(self, maxf(_rapidez, _rapidez_previa))
 	)
+
+
+func _aplicar_oclusion() -> void:
+	if oclusion == null:
+		return
+	var es_producto := datos is UnidadDeProducto
+	var radio := (
+		OclusionDeContacto.RADIO_DEL_PRODUCTO
+		if es_producto
+		else OclusionDeContacto.RADIO_POR_DEFECTO
+	)
+	var intensidad := (
+		OclusionDeContacto.INTENSIDAD_DEL_PRODUCTO
+		if es_producto
+		else OclusionDeContacto.INTENSIDAD_POR_DEFECTO
+	)
+	if oclusion.radio != radio:
+		oclusion.radio = radio
+	if oclusion.intensidad != intensidad:
+		oclusion.intensidad = intensidad
 
 
 ## Las mallas que apoyan en el piso: de ellas sale dónde toca. Por defecto, todas las del objeto.
