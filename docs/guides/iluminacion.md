@@ -219,10 +219,9 @@ borde suma `DIFUMINADO_POR_ALTURA` por cada metro de altura.
 
 Los productos acomodados en la góndola y en las heladeras no son cuerpos sueltos. Cada producto se
 dibuja en un `MultiMeshInstance3D` (`reposicion_manual.gd`). `oclusion_de_la_gondola.gd` les da el
-mismo tipo de efecto que llevan las unidades sueltas, sin costo por unidad. Lleva sus propios
-valores por defecto (`RADIO_POR_DEFECTO` e `INTENSIDAD_POR_DEFECTO`) en lugar de compartir los de
-`OclusionDeContacto`: los envases son más chicos que una caja y van apretados sobre el estante, así
-que necesitan un alcance más corto y más contraste para leerse de cerca.
+mismo tipo de efecto que llevan las unidades sueltas, sin costo por unidad. Lleva sus propios valores por defecto (`RADIO_POR_DEFECTO` e `INTENSIDAD_POR_DEFECTO`), distintos
+de los de `OclusionDeContacto`. Los envases son más chicos que una caja y van apretados sobre el
+estante. Por eso necesitan un alcance más corto y más contraste para leerse de cerca.
 
 - **Base oscurecida (`base_activa`).** Cada unidad de la góndola está siempre apoyada en su estante.
   El material del bloque (`producto_de_la_gondola.gdshader`) prende `contacto_en_base_local` en
