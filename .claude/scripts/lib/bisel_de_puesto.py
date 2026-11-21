@@ -48,19 +48,19 @@ class PiezaSuavizada:
 
 
 PIEZAS_DEL_LOCAL: tuple[PiezaDeBisel, ...] = (
-    PiezaDeBisel("base compu-col", 0.0035),
+    PiezaDeBisel("base compu-col", 0.001634),
     PiezaDeBisel(
         "monitor pantalla-col",
         0.0035,
-        longitud_minima_arista_metros=0.006,
-        excluir_adyacentes_menores_metros=0.006,
+        longitud_minima_arista_metros=0.008,
+        excluir_adyacentes_menores_metros=0.008,
     ),
     PiezaDeBisel("monitor soporte-col", 0.0035),
-    PiezaDeBisel("teclado-col", 0.0035, aplicar_escala=True),
-    PiezaDeBisel("cajaregistradora-col", 0.0045, soldar_vertices_metros=0.001),
+    PiezaDeBisel("teclado-col", 0.0025, aplicar_escala=True),
+    PiezaDeBisel("cajaregistradora-col", 0.0055, soldar_vertices_metros=0.001),
     PiezaDeBisel(
         "lector de productos-col",
-        0.0035,
+        0.001657,
         angulo_minimo_grados=40.0,
         longitud_minima_arista_metros=0.006,
         excluir_adyacentes_menores_metros=0.006,
