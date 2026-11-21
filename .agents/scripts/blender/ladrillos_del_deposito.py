@@ -75,6 +75,8 @@ sys.path.insert(0, str(RAIZ / ".claude/scripts"))
 from lib.bloques_de_la_jamba import (  # noqa: E402
     frente_sin_junta_interna,
     orientar_perfil_ccw,
+    revestimiento_conectado,
+    techo_lineal,
 )
 FINAL = RAIZ / "assets/source/textures/warehouse/final"
 MAPAS = {"color": "deposito_bloques_color.png", "normal": "deposito_bloques_normal.png",
@@ -256,9 +258,9 @@ def _le_toca(n_w, hilada):
     return (abs(n_w[0]) > 0.5) == (hilada % 2 == 0)
 
 
-def _rincon_de(borde, a_w):
+def _rincon_de(borde, a_w, sala=SALA):
     """El rincón al que lleva `a_w` desde `borde`, sobre su pared, y cuánto falta para llegar."""
-    (x0, y0), (x1, y1) = SALA
+    (x0, y0), (x1, y1) = sala
     if a_w[0]:
         x = x1 if a_w[0] > 0 else x0
         return (x, borde[1]), abs(x - borde[0])
@@ -266,9 +268,9 @@ def _rincon_de(borde, a_w):
     return (borde[0], y), abs(y - borde[1])
 
 
-def _rincones():
+def _rincones(sala=SALA):
     """Las dos paredes de cada rincón: el punto, hacia dónde corre la pared y su normal."""
-    (x0, y0), (x1, y1) = SALA
+    (x0, y0), (x1, y1) = sala
     for x, hacia_x in ((x0, 1), (x1, -1)):
         for y, hacia_y in ((y0, 1), (y1, -1)):
             yield (x, y), (0, hacia_y), (hacia_x, 0)
@@ -276,7 +278,8 @@ def _rincones():
 
 
 def _pieza(nombre, borde, a_w, n_w, profundidad, z_tope, limites, material, coleccion,
-           rincon=None, de_rincon=False, borde_tapado=False, desde_hilada=0, tonos=None):
+           rincon=None, de_rincon=False, borde_tapado=False, desde_hilada=0, tonos=None,
+           z_techo=None):
     """Las piezas de una jamba. `borde` es el punto del borde en el plano de la pared (x, y).
 
     `rincon` es la distancia a un rincón que la pieza comparte con la otra pared.
@@ -379,8 +382,15 @@ def _pieza(nombre, borde, a_w, n_w, profundidad, z_tope, limites, material, cole
             for s, t in perfil
         ])
         puntos = [Vector(p) for p in puntos_2d]
+        if z_techo is not None:
+            techo_min = min(z_techo(p.x) for p in puntos)
+            if techo_min - (PISO + hilada * ALTO_HILADA) < MINIMO_DE_LA_PIEZA:
+                continue
         abajo = [forma.verts.new((p.x, p.y, z0)) for p in puntos]
-        arriba = [forma.verts.new((p.x, p.y, z1)) for p in puntos]
+        if z_techo is not None:
+            arriba = [forma.verts.new((p.x, p.y, min(z1, z_techo(p.x)))) for p in puntos]
+        else:
+            arriba = [forma.verts.new((p.x, p.y, z1)) for p in puntos]
         caras = [forma.faces.new(arriba), forma.faces.new(abajo[::-1])]
         for i in range(len(puntos)):
             j = (i + 1) % len(puntos)
@@ -500,12 +510,146 @@ def _unir(formas, nombre):
     unida.name = unida.data.name = PREFIJO_PIEZAS + nombre
 
 
+def _cuartito_geometria():
+    """Los cuatro planos interiores del cuartito, el hueco de su puerta y su techo inclinado."""
+    revestimiento = bpy.data.objects["cuartito_revestimiento"]
+    cuerpo = bpy.data.objects["cuartito_cuerpo-col"]
+    marco = bpy.data.objects["cuartito_marco_puerta"]
+    normales = cuerpo.matrix_world.to_3x3().inverted().transposed()
+    x0 = (revestimiento.matrix_world @ revestimiento.data.vertices[0].co).x
+    x1 = y0 = y1 = None
+    techo_puntos = []
+    for cara in cuerpo.data.polygons:
+        mat = cuerpo.data.materials[cara.material_index].name
+        normal = (normales @ cara.normal).normalized()
+        pts = [cuerpo.matrix_world @ cuerpo.data.vertices[i].co for i in cara.vertices]
+        if mat == RECETA.PREFIJO + "bloques":
+            if normal.x < -0.9:
+                x1 = pts[0].x
+            elif normal.y > 0.9:
+                y0 = pts[0].y
+            elif normal.y < -0.9:
+                y1 = pts[0].y
+        elif mat == "cuartito_cubierta_corrugada_cc0" and normal.z < -0.5:
+            techo_puntos.extend(pts)
+    assert x1 is not None and y0 is not None and y1 is not None and techo_puntos
+    tx0 = min(p.x for p in techo_puntos)
+    tx1 = max(p.x for p in techo_puntos)
+    tz0 = sum(p.z for p in techo_puntos if abs(p.x - tx0) < 1e-4) / sum(
+        1 for p in techo_puntos if abs(p.x - tx0) < 1e-4
+    )
+    tz1 = sum(p.z for p in techo_puntos if abs(p.x - tx1) < 1e-4) / sum(
+        1 for p in techo_puntos if abs(p.x - tx1) < 1e-4
+    )
+    z_techo = techo_lineal(tx0, tz0, tx1, tz1)
+    caja_marco = [marco.matrix_world @ Vector(c) for c in marco.bound_box]
+    hy0 = min(p.y for p in caja_marco)
+    hy1 = max(p.y for p in caja_marco)
+    z_dintel = max(p.z for p in caja_marco)
+    z_piso = min((revestimiento.matrix_world @ v.co).z for v in revestimiento.data.vertices)
+    return {
+        "sala": ((x0, y0), (x1, y1)),
+        "hueco_y": (hy0, hy1),
+        "z_piso": z_piso,
+        "z_dintel": z_dintel,
+        "z_techo": z_techo,
+    }
+
+
+def _unificar_revestimiento_del_cuartito(geometria):
+    """Rehace `cuartito_revestimiento` como una sola malla conexa sin uniones en T."""
+    objeto = bpy.data.objects["cuartito_revestimiento"]
+    (x0, y0), (_, y1) = geometria["sala"]
+    hy0, hy1 = geometria["hueco_y"]
+    z_techo = geometria["z_techo"](x0)
+    vertices, caras = revestimiento_conectado(
+        x0, y0, hy0, hy1, y1, geometria["z_piso"], geometria["z_dintel"], z_techo
+    )
+    inversa = objeto.matrix_world.inverted()
+    locales = [tuple(inversa @ Vector(v)) for v in vertices]
+    vieja = objeto.data
+    nombre_malla = vieja.name
+    capa_uv = vieja.uv_layers.active.name if vieja.uv_layers.active else "UVMap"
+    materiales = list(vieja.materials)
+    nueva = bpy.data.meshes.new(nombre_malla + "_conectada")
+    nueva.from_pydata(locales, [], caras)
+    for material in materiales:
+        nueva.materials.append(material)
+    nueva.uv_layers.new(name=capa_uv)
+    for cara in nueva.polygons:
+        cara.use_smooth = False
+    nueva.update()
+    objeto.data = nueva
+    if vieja.users == 0:
+        bpy.data.meshes.remove(vieja)
+    nueva.name = nombre_malla
+
+
+def _aplicar_cuartito(geometria, limites, material, tonos):
+    """Construye los bloques de esquina de las jambas y los cuatro rincones del cuartito."""
+    cuerpo = bpy.data.objects["cuartito_cuerpo-col"]
+    coleccion = cuerpo.users_collection[0]
+    sala = geometria["sala"]
+    (x0, _), _ = sala
+    hy0, hy1 = geometria["hueco_y"]
+    z_techo = geometria["z_techo"]
+    vanos = {
+        "puerta_cuartito": {
+            "bordes": [((x0, hy0), (0, -1)), ((x0, hy1), (0, 1))],
+            "normal": (1, 0),
+            "profundidad": 0,
+            "z": geometria["z_dintel"],
+        },
+    }
+    cubiertos = {}
+    formas = []
+    informe = {"vanos": {}, "rincones": {"piezas": 0, "triangulos": 0}}
+    for nombre, vano in vanos.items():
+        suma = {"piezas": 0, "triangulos": 0}
+        for indice, (borde, a_w) in enumerate(vano["bordes"]):
+            punto, rincon = _rincon_de(borde, a_w, sala)
+            cubre = rincon < CERCA_DEL_RINCON
+            pieza, cuenta = _pieza(
+                f"__tmp_cuartito_{nombre}_{indice}", borde, a_w, vano["normal"],
+                vano["profundidad"], vano["z"], limites, material, coleccion,
+                rincon=rincon if cubre else None,
+                borde_tapado=vano.get("borde_tapado", False),
+            )
+            if cubre:
+                cubiertos[punto, vano["normal"]] = cuenta["hiladas"]
+            formas.append(pieza)
+            suma["piezas"] += cuenta["piezas"]
+            suma["triangulos"] += cuenta["triangulos"]
+        informe["vanos"][nombre] = {**suma, "bordes": [list(b) for b, _ in vano["bordes"]]}
+    for indice, (punto, a_w, n_w) in enumerate(_rincones(sala)):
+        z_max = max(z_techo(sala[0][0]), z_techo(sala[1][0]))
+        pieza, cuenta = _pieza(
+            f"__tmp_cuartito_rincon_{indice}", punto, a_w, n_w, 0,
+            z_max, limites, material, coleccion,
+            de_rincon=True, borde_tapado=True,
+            desde_hilada=cubiertos.pop((punto, n_w), 0), tonos=tonos,
+            z_techo=z_techo,
+        )
+        formas.append(pieza)
+        informe["rincones"]["piezas"] += cuenta["piezas"]
+        informe["rincones"]["triangulos"] += cuenta["triangulos"]
+    assert not cubiertos, f"Un vano del cuartito cubre un rincón que no existe: {cubiertos}"
+    _unir(formas, "cuartito")
+    informe["triangulos_agregados"] = (
+        sum(v["triangulos"] for v in informe["vanos"].values())
+        + informe["rincones"]["triangulos"]
+    )
+    return informe
+
+
 def aplicar():
     objeto = bpy.data.objects["almacen-col"]
     caras_bloques, limites = _caras_de_bloques(objeto)
     antes = RECETA._huellas(set(caras_bloques))
     material = _material(objeto)
     _reproyectar(objeto, caras_bloques, limites)
+    geometria_cuartito = _cuartito_geometria()
+    _unificar_revestimiento_del_cuartito(geometria_cuartito)
     for nombre in CUARTITO:
         cuartito = bpy.data.objects[nombre]
         propias = [c.index for c in cuartito.data.polygons
@@ -515,7 +659,7 @@ def aplicar():
         _reproyectar(cuartito, propias, limites)
         assert vertices_del_cuartito == [tuple(v.co) for v in cuartito.data.vertices]
     despues = RECETA._huellas(set(caras_bloques))
-    # El cuartito cambia a propósito, sólo en su UV: se compara todo lo demás.
+    # El cuartito cambia a propósito: se compara todo lo demás.
     for huellas in (antes, despues):
         for nombre in CUARTITO:
             huellas.pop(nombre)
@@ -558,10 +702,12 @@ def aplicar():
         suma["triangulos"] += cuenta["triangulos"]
     assert not cubiertos, f"Un vano cubre un rincón que no existe: {cubiertos}"
     _unir(todas + formas, "piezas")
-    total += suma["triangulos"]
+    cuartito_info = _aplicar_cuartito(geometria_cuartito, limites, material, tonos)
+    total += suma["triangulos"] + cuartito_info["triangulos_agregados"]
     informe["rincones"] = suma
+    informe["cuartito"] = cuartito_info
     informe["triangulos_agregados"] = total
-    informe["objetos_agregados"] = 1
+    informe["objetos_agregados"] = 2
     return informe
 
 

@@ -79,5 +79,6 @@ paths:
 11. **El exhibidor y los bloques del depósito llevan su paso sobre el `.blend`.**
     `blender/engrosar_lateral_exhibidor.py` restaura los 20 mm del lateral izquierdo de
     `exhibidor_golosinas-col`. `blender/ladrillos_del_deposito.py` reconstruye los bloques de
-    relieve en esquinas y jambas del depósito sin juntas internas ni aristas sueltas. Van antes
-    de `exportar_modelo.py` y `hornear.py`. Un `.blend` nuevo del artista pide repetirlos.
+    relieve en esquinas y jambas del depósito y del cuartito de limpieza, y une
+    `cuartito_revestimiento` en una sola malla conexa. Van antes de `exportar_modelo.py` y
+    `hornear.py`. Un `.blend` nuevo del artista pide repetirlos.
