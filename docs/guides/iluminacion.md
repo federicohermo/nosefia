@@ -204,7 +204,9 @@ forma e intensidad según su altura. Así una mopa tirada en el piso no mancha d
 del palo y una bolsa acostada oscurece alrededor de todo su contorno. Un objeto con una sola zona
 queda con una sola mancha, y las extra se crean bajo demanda y se reusan. Cada mancha se corta en
 el borde de lo que la sostiene. Ese borde se mide en el espacio de la forma del apoyo: una caja
-girada sobre otra no deja la mancha colgando en el aire.
+girada sobre otra no deja la mancha colgando en el aire. La redondez de cada mancha sale del casco
+convexo de esos vértices sobre el plano de apoyo. Así una lata o un balde deja una mancha redonda,
+y una caja deja una rectangular, sin listas por objeto.
 
 **Todo va en uniformes del material, nunca en `instance uniform`.** En la web (Compatibility)
 el shader los recibe en cero. El efecto no se ve y ningún test de GDScript lo nota, porque
@@ -236,7 +238,8 @@ Cajas y demás objetos conservan `RADIO_POR_DEFECTO` e `INTENSIDAD_POR_DEFECTO`.
   también `VencidosDeCindolor`.
 - **Mancha por bloque (`manchas_activas`).** Un `MultiMeshInstance3D` (`SombrasDe<Producto>`) por
   bloque, con `sombra_de_contacto.gdshader`, la huella medida en la misma `BANDA_DE_APOYO` y el
-  recorte del estante en `INSTANCE_CUSTOM`. Sigue la normal real del estante, también en una rampa.
+  recorte del estante en `INSTANCE_CUSTOM`. La redondez (`esquinas`) sale del mismo casco convexo
+  que usan las unidades sueltas. Sigue la normal real del estante, también en una rampa.
   No desborda el canto ni atraviesa paneles, y dibuja con `render_priority = -2`, detrás de otros
   planos transparentes. Al sacar o reponer una unidad se compacta con el mismo orden del bloque.
   Los huecos no llevan mancha y los vencidos sí.
