@@ -5,6 +5,7 @@ from lib.bloques_de_la_jamba import (
     orientar_perfil_ccw,
     revestimiento_conectado,
     techo_lineal,
+    u_del_canto,
 )
 
 
@@ -107,6 +108,24 @@ class BloquesDeLaJamba(unittest.TestCase):
         self.assertAlmostEqual(z_en(8.08), 3.118)
         self.assertAlmostEqual(z_en(10.80), 2.868)
         self.assertAlmostEqual(z_en(9.44), 2.993)
+
+    def test_u_del_canto_recorre_el_bloque_en_escala_real_desde_la_pared(self):
+        u_borde = 1.2
+        saliente = 0.03
+        self.assertAlmostEqual(u_del_canto(u_borde, 1, 1.0, 0.0, 0.0), u_borde)
+        self.assertAlmostEqual(
+            u_del_canto(u_borde, 1, 1.0, saliente, 0.0), u_borde - saliente
+        )
+        self.assertAlmostEqual(
+            u_del_canto(u_borde, 1, -1.0, saliente, 0.0), u_borde + saliente
+        )
+        self.assertAlmostEqual(
+            u_del_canto(u_borde, -1, 1.0, saliente, 0.0), u_borde + saliente
+        )
+        self.assertAlmostEqual(u_del_canto(u_borde, 1, 1.0, 0.01, 0.01), u_borde)
+        self.assertAlmostEqual(
+            u_del_canto(u_borde, 1, 1.0, 0.03, 0.01), u_borde - 0.02
+        )
 
 
 if __name__ == "__main__":

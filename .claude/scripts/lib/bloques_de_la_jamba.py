@@ -103,3 +103,21 @@ def techo_lineal(x0: float, z0: float, x1: float, z1: float) -> Callable[[float]
         return z0 + dz * (x - x0) / dx
 
     return altura
+
+
+def u_del_canto(
+    u_en_el_borde: float,
+    sentido_u: int,
+    normal_en_s: float,
+    t: float,
+    t_min: float,
+) -> float:
+    """Coordenada U en metros sobre un canto, en escala real 1:1 desde el plano de la pared.
+
+    En `t = t_min` (encuentro con la pared plana o el escalón) apoya en `u_en_el_borde`, y al
+    avanzar hacia el frente (`t > t_min`) recorre el interior del mismo bloque en el sentido
+    opuesto a `normal_en_s`. Evita UV colapsadas (`du = 0`) que degeneran la tangente de
+    MikkTSpace y dejan negros los cantos con normal en ±X.
+    """
+    dir_interior = -sentido_u if normal_en_s > 0.0 else sentido_u
+    return u_en_el_borde + dir_interior * (t - t_min)

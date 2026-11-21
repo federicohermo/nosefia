@@ -77,6 +77,7 @@ from lib.bloques_de_la_jamba import (  # noqa: E402
     orientar_perfil_ccw,
     revestimiento_conectado,
     techo_lineal,
+    u_del_canto,
 )
 FINAL = RAIZ / "assets/source/textures/warehouse/final"
 MAPAS = {"color": "deposito_bloques_color.png", "normal": "deposito_bloques_normal.png",
@@ -418,6 +419,10 @@ def _pieza(nombre, borde, a_w, n_w, profundidad, z_tope, limites, material, cole
                             if all(abs(s - s0) < 1e-6 for s, _ in st.values())), None)
             canto = costado is not None and abs(cara.normal.z) < 0.5
             es_jamba = canto and fondo > 0 and abs(costado + saliente) < 1e-6
+            if canto and not es_jamba:
+                t_min_canto = min(t for _, t in st.values())
+                normal_en_s = cara.normal.x * a_w[0] + cara.normal.y * a_w[1]
+                u_borde_canto = u_de(costado)
             for bucle in cara.loops:
                 p = bucle.vert.co
                 v_uv = (p.z - PISO) / COBERTURA[1]
@@ -438,9 +443,10 @@ def _pieza(nombre, borde, a_w, n_w, profundidad, z_tope, limites, material, cole
                     u_m = _desfase(hilada) + derecha * (JUNTA_H / 2 + t_v + fondo)
                     bucle[capa_uv].uv = (u_m / COBERTURA[0], v_uv)
                 elif canto:
-                    # El canto de una pieza toma una columna de su cara, adentro del bloque.
-                    s_ref = costado - CANTO_ADENTRO if costado > 1e-6 else CANTO_ADENTRO
-                    bucle[capa_uv].uv = (u_de(s_ref) / COBERTURA[0], v_uv)
+                    # El canto recorre la cara del mismo bloque en escala real 1:1 desde la pared.
+                    t_v = st[bucle.vert][1]
+                    u_m = u_del_canto(u_borde_canto, sentido, normal_en_s, t_v, t_min_canto)
+                    bucle[capa_uv].uv = (u_m / COBERTURA[0], v_uv)
                 elif abs(cara.normal.z) > 0.5:
                     # La cara de arriba y la de abajo toman la fila del medio del bloque.
                     v_medio = (hilada + 0.5) * ALTO_HILADA / COBERTURA[1]
