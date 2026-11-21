@@ -34,7 +34,7 @@ const RADIO_POR_DEFECTO := 0.05
 const INTENSIDAD_POR_DEFECTO := 0.25
 ## Valores de los envases de producto, compartidos con la góndola para que una unidad suelta y una
 ## acomodada se vean iguales.
-const RADIO_DEL_PRODUCTO := 0.03
+const RADIO_DEL_PRODUCTO := 0.015
 const INTENSIDAD_DEL_PRODUCTO := 0.5
 ## Qué tan negra queda la mancha con `intensidad` en 1, de 0 a 1.
 const OPACIDAD_MAXIMA := 0.5
