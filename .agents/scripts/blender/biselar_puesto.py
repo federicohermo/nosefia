@@ -44,9 +44,14 @@ RAIZ = Path(__file__).resolve().parents[3]
 sys.path.insert(0, str(RAIZ / ".claude/scripts"))
 
 from lib.bisel_de_puesto import (  # noqa: E402
+    ANCHO_BISEL_BASE_MOUSE,
+    CORTE_CHAIKIN_MOUSE,
+    CURVATURA_HOMBRO_MOUSE,
     LADOS_BASE_LECTOR,
+    LADOS_CONTORNO_MOUSE,
     MODO_DE_NORMALES,
     NOMBRE_BISEL,
+    NOMBRE_MOUSE,
     NOMBRE_NORMALES,
     NOMBRE_TRIANGULOS,
     PESO_DE_NORMALES,
@@ -55,6 +60,7 @@ from lib.bisel_de_puesto import (  # noqa: E402
     PIEZAS_SUAVIZADAS_DEL_ROUTER,
     PiezaDeBisel,
     PiezaSuavizada,
+    SEGMENTOS_BISEL_BASE_MOUSE,
     ancho_local,
     anillos_circulares,
     peso_de_arista,
@@ -455,6 +461,197 @@ def _configurar_modificadores(objeto, pieza: PiezaDeBisel, ancho_en_local: float
     normales.keep_sharp = True
 
 
+def _chaikin_anillo(puntos: list, t: float = CORTE_CHAIKIN_MOUSE) -> list:
+    n = len(puntos)
+    salida = []
+    for i in range(n):
+        a, b = puntos[i], puntos[(i + 1) % n]
+        salida.append(a.lerp(b, t))
+        salida.append(a.lerp(b, 1.0 - t))
+    return salida
+
+
+def _pieza_base_mouse() -> PiezaDeBisel:
+    return PiezaDeBisel(
+        NOMBRE_MOUSE,
+        ANCHO_BISEL_BASE_MOUSE,
+        segmentos=SEGMENTOS_BISEL_BASE_MOUSE,
+    )
+
+
+def _mouse_coincide(objeto) -> bool:
+    escala_mundo = _escala_mundo_uniforme(objeto)
+    pieza = _pieza_base_mouse()
+    ancho_en_local = ancho_local(pieza.ancho_en_metros, escala_mundo)
+    if not _modificadores_coinciden(objeto, pieza, ancho_en_local):
+        return False
+    bm = bmesh.new()
+    try:
+        bm.from_mesh(objeto.data)
+        if len(bm.verts) < LADOS_CONTORNO_MOUSE * 5:
+            return False
+        pesos = bm.edges.layers.float.get(CAPA_PESO_BISEL)
+        if pesos is None or not all(cara.smooth for cara in bm.faces):
+            return False
+        z0 = min(v.co.z for v in bm.verts)
+        for arista in bm.edges:
+            if not arista.smooth:
+                return False
+            es_base = all(abs(v.co.z - z0) < 1e-4 for v in arista.verts)
+            esperado = 1.0 if es_base else 0.0
+            if not math.isclose(arista[pesos], esperado, abs_tol=TOLERANCIA_FLOTANTE):
+                return False
+        return True
+    finally:
+        bm.free()
+
+
+def _redondear_mouse(objeto) -> None:
+    """Corta las 8 esquinas de `mouse-col` a 16 lados, curva el hombro y bisela el aro inferior."""
+    bm = bmesh.new()
+    necesita_reconstruir = False
+    try:
+        bm.from_mesh(objeto.data)
+        necesita_reconstruir = len(bm.verts) < LADOS_CONTORNO_MOUSE * 5
+        if necesita_reconstruir:
+            bm.normal_update()
+            uv_in = bm.loops.layers.uv.active
+            tapa_inf = next(f for f in bm.faces if len(f.verts) == 8 and f.normal.z < -0.5)
+            tapa_sup = next(f for f in bm.faces if len(f.verts) == 8 and f.normal.z > 0.5)
+
+            anillos = [[lazo.vert for lazo in tapa_inf.loops]]
+            vistos = set(anillos[0])
+            for _ in range(3):
+                siguiente = [
+                    next(e.other_vert(v) for e in v.link_edges if e.other_vert(v) not in vistos)
+                    for v in anillos[-1]
+                ]
+                anillos.append(siguiente)
+                vistos.update(siguiente)
+
+            coords8 = [[v.co.copy() for v in anillo] for anillo in anillos]
+            uv_inf8 = [lazo[uv_in].uv.copy() for lazo in tapa_inf.loops]
+            mapa_sup = {lazo.vert: lazo[uv_in].uv.copy() for lazo in tapa_sup.loops}
+            uv_sup8 = [mapa_sup[v] for v in anillos[3]]
+
+            uv_bandas = []
+            for banda in range(3):
+                a, b = anillos[banda], anillos[banda + 1]
+                quads = []
+                for i in range(8):
+                    j = (i + 1) % 8
+                    cara = next(
+                        iter(
+                            set(a[i].link_faces)
+                            & set(a[j].link_faces)
+                            & set(b[i].link_faces)
+                            & set(b[j].link_faces)
+                        )
+                    )
+                    mapa = {lazo.vert: lazo[uv_in].uv.copy() for lazo in cara.loops}
+                    quads.append((mapa[a[i]], mapa[a[j]], mapa[b[j]], mapa[b[i]]))
+                uv_bandas.append(quads)
+    finally:
+        bm.free()
+
+    if necesita_reconstruir:
+        t = CORTE_CHAIKIN_MOUSE
+        coords16 = [_chaikin_anillo(anillo, t) for anillo in coords8]
+        hombro = []
+        for k in range(LADOS_CONTORNO_MOUSE):
+            r1, r2, r3 = coords16[1][k], coords16[2][k], coords16[3][k]
+            medio = r2.lerp(r3, 0.5)
+            d_in = (r2 - r1).normalized()
+            d_out = (r3 - r2).normalized()
+            empuje = d_in - d_out
+            if empuje.length > 1e-6:
+                medio = medio + empuje.normalized() * ((r3 - r2).length * CURVATURA_HOMBRO_MOUSE)
+            hombro.append(medio)
+        todos_anillos = [coords16[0], coords16[1], coords16[2], hombro, coords16[3]]
+
+        bm2 = bmesh.new()
+        try:
+            uv2 = bm2.loops.layers.uv.new("UVMap")
+            v_anillos = [[bm2.verts.new(p) for p in anillo] for anillo in todos_anillos]
+
+            def agregar_banda(va, vb, quads_uv, v0: float = 0.0, v1: float = 1.0) -> None:
+                for i in range(8):
+                    ua0, ua1, ub1, ub0 = quads_uv[i]
+                    na0, na1, nb1, nb0 = quads_uv[(i + 1) % 8]
+                    la0, la1 = ua0.lerp(ub0, v0), ua1.lerp(ub1, v0)
+                    lb0, lb1 = ua0.lerp(ub0, v1), ua1.lerp(ub1, v1)
+                    nla0, nla1 = na0.lerp(nb0, v0), na1.lerp(nb1, v0)
+                    nlb0, nlb1 = na0.lerp(nb0, v1), na1.lerp(nb1, v1)
+                    k0, k1, k2 = 2 * i, 2 * i + 1, (2 * i + 2) % LADOS_CONTORNO_MOUSE
+
+                    cara_p = bm2.faces.new((va[k0], vb[k0], vb[k1], va[k1]))
+                    for lazo, u in zip(
+                        cara_p.loops,
+                        (
+                            la0.lerp(la1, t),
+                            lb0.lerp(lb1, t),
+                            lb0.lerp(lb1, 1.0 - t),
+                            la0.lerp(la1, 1.0 - t),
+                        ),
+                    ):
+                        lazo[uv2].uv = u
+
+                    costura = (la1 - nla0).length > 1e-3 or (lb1 - nlb0).length > 1e-3
+                    cara_e = bm2.faces.new((va[k1], vb[k1], vb[k2], va[k2]))
+                    uvs_e = (
+                        (la0.lerp(la1, 1.0 - t), lb0.lerp(lb1, 1.0 - t), lb1, la1)
+                        if costura
+                        else (
+                            la0.lerp(la1, 1.0 - t),
+                            lb0.lerp(lb1, 1.0 - t),
+                            nlb0.lerp(nlb1, t),
+                            nla0.lerp(nla1, t),
+                        )
+                    )
+                    for lazo, u in zip(cara_e.loops, uvs_e):
+                        lazo[uv2].uv = u
+
+            agregar_banda(v_anillos[0], v_anillos[1], uv_bandas[0])
+            agregar_banda(v_anillos[1], v_anillos[2], uv_bandas[1])
+            agregar_banda(v_anillos[2], v_anillos[3], uv_bandas[2], 0.0, 0.5)
+            agregar_banda(v_anillos[3], v_anillos[4], uv_bandas[2], 0.5, 1.0)
+
+            fb = bm2.faces.new(v_anillos[0])
+            for lazo, u in zip(fb.loops, _chaikin_anillo(uv_inf8, t)):
+                lazo[uv2].uv = u
+            ft = bm2.faces.new(list(reversed(v_anillos[-1])))
+            for lazo, u in zip(ft.loops, reversed(_chaikin_anillo(uv_sup8, t))):
+                lazo[uv2].uv = u
+
+            bmesh.ops.recalc_face_normals(bm2, faces=bm2.faces)
+            bm2.to_mesh(objeto.data)
+            objeto.data.update()
+        finally:
+            bm2.free()
+
+    bm3 = bmesh.new()
+    try:
+        bm3.from_mesh(objeto.data)
+        pesos = bm3.edges.layers.float.get(CAPA_PESO_BISEL)
+        if pesos is None:
+            pesos = bm3.edges.layers.float.new(CAPA_PESO_BISEL)
+        z0 = min(v.co.z for v in bm3.verts)
+        for cara in bm3.faces:
+            cara.smooth = True
+        for arista in bm3.edges:
+            arista.smooth = True
+            es_base = all(abs(v.co.z - z0) < 1e-4 for v in arista.verts)
+            arista[pesos] = 1.0 if es_base else 0.0
+        bm3.to_mesh(objeto.data)
+        objeto.data.update()
+    finally:
+        bm3.free()
+
+    pieza = _pieza_base_mouse()
+    escala_mundo = _escala_mundo_uniforme(objeto)
+    _configurar_modificadores(objeto, pieza, ancho_local(pieza.ancho_en_metros, escala_mundo))
+
+
 def _evaluar(objeto) -> tuple[int, int]:
     bpy.context.view_layer.update()
     depsgraph = bpy.context.evaluated_depsgraph_get()
@@ -472,6 +669,7 @@ def _evaluar(objeto) -> tuple[int, int]:
 def aplicar_lote(
     piezas: tuple[PiezaDeBisel, ...],
     suavizadas: tuple[PiezaSuavizada, ...] = (),
+    redondear_mouse: bool = False,
 ) -> dict:
     for pieza in piezas:
         validar_pieza(pieza)
@@ -487,8 +685,15 @@ def aplicar_lote(
         if objeto is None or objeto.type != "MESH":
             raise SystemExit(f"falta el objeto de malla {pieza_s.nombre}")
         objetos_suavizados.append((pieza_s, objeto))
+    objeto_mouse = None
+    if redondear_mouse:
+        objeto_mouse = bpy.data.objects.get(NOMBRE_MOUSE)
+        if objeto_mouse is None or objeto_mouse.type != "MESH":
+            raise SystemExit(f"falta el objeto de malla {NOMBRE_MOUSE}")
 
     excluidos = {pieza.nombre for pieza in piezas} | {p.nombre for p in suavizadas}
+    if objeto_mouse is not None:
+        excluidos.add(NOMBRE_MOUSE)
     antes = _huellas_ajenas(excluidos)
 
     resumen: list[dict] = []
@@ -538,6 +743,23 @@ def aplicar_lote(
             }
         )
 
+    if objeto_mouse is not None:
+        ya_mouse = _mouse_coincide(objeto_mouse)
+        if not ya_mouse:
+            _redondear_mouse(objeto_mouse)
+        triangulos, caras_area_cero = _evaluar(objeto_mouse)
+        assert (
+            caras_area_cero == 0
+        ), f"Quedaron {caras_area_cero} caras con área nula en {objeto_mouse.name}"
+        resumen.append(
+            {
+                "objeto": objeto_mouse.name,
+                "ya_biselado": ya_mouse,
+                "triangulos": triangulos,
+                "caras_area_cero": caras_area_cero,
+            }
+        )
+
     despues = _huellas_ajenas(excluidos)
     assert antes == despues, "Se modificó otro objeto del .blend"
     return {"archivo": bpy.data.filepath, "objetos": resumen}
@@ -549,9 +771,10 @@ def procesar(
     piezas: tuple[PiezaDeBisel, ...],
     aplicar: bool,
     suavizadas: tuple[PiezaSuavizada, ...] = (),
+    redondear_mouse: bool = False,
 ) -> dict:
     bpy.ops.wm.open_mainfile(filepath=str(fuente), load_ui=False)
-    resultado = aplicar_lote(piezas, suavizadas)
+    resultado = aplicar_lote(piezas, suavizadas, redondear_mouse)
     salida = fuente if aplicar else destino
     salida.parent.mkdir(parents=True, exist_ok=True)
     bpy.ops.wm.save_as_mainfile(filepath=str(salida), check_existing=False)
@@ -568,7 +791,15 @@ def main() -> None:
 
     salidas = []
     if opciones.objetivo in ("local", "todos"):
-        salidas.append(procesar(FUENTE_LOCAL, DESTINO_LOCAL, PIEZAS_DEL_LOCAL, opciones.aplicar))
+        salidas.append(
+            procesar(
+                FUENTE_LOCAL,
+                DESTINO_LOCAL,
+                PIEZAS_DEL_LOCAL,
+                opciones.aplicar,
+                redondear_mouse=True,
+            )
+        )
     if opciones.objetivo in ("router", "todos"):
         salidas.append(
             procesar(

@@ -16,6 +16,11 @@ NOMBRE_NORMALES = "Normales de caras y biseles"
 MODO_DE_NORMALES = "FACE_AREA"
 PESO_DE_NORMALES = 100
 LADOS_BASE_LECTOR = 48
+LADOS_CONTORNO_MOUSE = 16
+CORTE_CHAIKIN_MOUSE = 0.25
+CURVATURA_HOMBRO_MOUSE = 0.08
+ANCHO_BISEL_BASE_MOUSE = 0.002
+SEGMENTOS_BISEL_BASE_MOUSE = 2
 
 
 @dataclass(frozen=True)
@@ -52,7 +57,6 @@ PIEZAS_DEL_LOCAL: tuple[PiezaDeBisel, ...] = (
     ),
     PiezaDeBisel("monitor soporte-col", 0.0035),
     PiezaDeBisel("teclado-col", 0.0035, aplicar_escala=True),
-    PiezaDeBisel("mouse-col", 0.0035),
     PiezaDeBisel("cajaregistradora-col", 0.0045, soldar_vertices_metros=0.001),
     PiezaDeBisel(
         "lector de productos-col",
@@ -62,6 +66,8 @@ PIEZAS_DEL_LOCAL: tuple[PiezaDeBisel, ...] = (
         excluir_adyacentes_menores_metros=0.006,
     ),
 )
+
+NOMBRE_MOUSE = "mouse-col"
 
 PIEZAS_DEL_ROUTER: tuple[PiezaDeBisel, ...] = (
     PiezaDeBisel("router-col", 0.0025, angulo_minimo_grados=40.0),
