@@ -28,22 +28,49 @@ class PiezaDeBisel:
     perfil: float = 0.5
     angulo_minimo_grados: float = 30.0
     aplicar_escala: bool = False
+    soldar_vertices_metros: float = 0.0
+    longitud_minima_arista_metros: float = 0.0
+    excluir_adyacentes_menores_metros: float = 0.0
+
+
+@dataclass(frozen=True)
+class PiezaSuavizada:
+    """Limpieza de vértices duplicados y normales pesadas sin bisel para geometría fina."""
+
+    nombre: str
+    soldar_vertices_metros: float = 0.0005
+    angulo_filo_grados: float = 60.0
 
 
 PIEZAS_DEL_LOCAL: tuple[PiezaDeBisel, ...] = (
-    PiezaDeBisel("base compu-col", 0.002),
-    PiezaDeBisel("monitor pantalla-col", 0.002),
-    PiezaDeBisel("monitor soporte-col", 0.002),
-    PiezaDeBisel("teclado-col", 0.002, aplicar_escala=True),
-    PiezaDeBisel("mouse-col", 0.002),
-    PiezaDeBisel("cajaregistradora-col", 0.0025),
-    PiezaDeBisel("lector de productos-col", 0.0015),
+    PiezaDeBisel("base compu-col", 0.0035),
+    PiezaDeBisel(
+        "monitor pantalla-col",
+        0.0035,
+        longitud_minima_arista_metros=0.006,
+        excluir_adyacentes_menores_metros=0.006,
+    ),
+    PiezaDeBisel("monitor soporte-col", 0.0035),
+    PiezaDeBisel("teclado-col", 0.0035, aplicar_escala=True),
+    PiezaDeBisel("mouse-col", 0.0035),
+    PiezaDeBisel("cajaregistradora-col", 0.0045, soldar_vertices_metros=0.001),
+    PiezaDeBisel(
+        "lector de productos-col",
+        0.0035,
+        angulo_minimo_grados=40.0,
+        longitud_minima_arista_metros=0.006,
+        excluir_adyacentes_menores_metros=0.006,
+    ),
 )
 
 PIEZAS_DEL_ROUTER: tuple[PiezaDeBisel, ...] = (
-    PiezaDeBisel("router-col", 0.001),
-    PiezaDeBisel("luces_botones-col", 0.001, aplicar_escala=True),
-    PiezaDeBisel("powerrouter_col", 0.001),
+    PiezaDeBisel("router-col", 0.0025, angulo_minimo_grados=40.0),
+    PiezaDeBisel("luces_botones-col", 0.0015, aplicar_escala=True),
+    PiezaDeBisel("powerrouter_col", 0.0012),
+)
+
+PIEZAS_SUAVIZADAS_DEL_ROUTER: tuple[PiezaSuavizada, ...] = (
+    PiezaSuavizada("antenas-col", soldar_vertices_metros=0.0005, angulo_filo_grados=60.0),
 )
 
 
@@ -88,6 +115,14 @@ def pila_esperada() -> tuple[tuple[str, str], ...]:
     """Tuplas (nombre, tipo) en el orden exacto de la pila de modificadores."""
     return (
         (NOMBRE_BISEL, "BEVEL"),
+        (NOMBRE_TRIANGULOS, "TRIANGULATE"),
+        (NOMBRE_NORMALES, "WEIGHTED_NORMAL"),
+    )
+
+
+def pila_suavizada_esperada() -> tuple[tuple[str, str], ...]:
+    """Tuplas (nombre, tipo) para mallas suavizadas sin modificador de bisel."""
+    return (
         (NOMBRE_TRIANGULOS, "TRIANGULATE"),
         (NOMBRE_NORMALES, "WEIGHTED_NORMAL"),
     )

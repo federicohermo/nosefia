@@ -89,7 +89,9 @@ paths:
     artista pide repetirlo.
 
 13. **La computadora, la registradora, el lector y el router llevan bisel no destructivo.**
-    `blender/biselar_puesto.py` redondea a 48 lados la base del lector y aplica 2 segmentos con
-    triangulación y normales pesadas en `SEPT_JUEGOS_PROTOTIPO.blend` y en
-    `source/puestos/router.blend`. Después van `exportar_router.py`, `exportar_modelo.py`,
-    `assets/models/extraer_lector.gd` y `hornear.py`. Un `.blend` nuevo del artista pide repetirlo.
+    `blender/biselar_puesto.py` suelda la tapa suelta de `cajaregistradora-col`, redondea a 48
+    lados la base del lector, excluye micro-aristas que activan `clamp_overlap` en monitor y
+    lector, limpia duplicados y normales de `antenas-col`, y aplica biseles de 2 segmentos con
+    triangulación y normales pesadas en `SEPT_JUEGOS_PROTOTIPO.blend` y `source/puestos/router.blend`.
+    Después van `exportar_router.py`, `exportar_modelo.py`, `assets/models/extraer_lector.gd` y
+    `hornear.py`. Un `.blend` nuevo del artista pide repetirlo.

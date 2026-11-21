@@ -52,11 +52,14 @@ from lib.bisel_de_puesto import (  # noqa: E402
     PESO_DE_NORMALES,
     PIEZAS_DEL_LOCAL,
     PIEZAS_DEL_ROUTER,
+    PIEZAS_SUAVIZADAS_DEL_ROUTER,
     PiezaDeBisel,
+    PiezaSuavizada,
     ancho_local,
     anillos_circulares,
     peso_de_arista,
     pila_coincide,
+    pila_suavizada_esperada,
     validar_pieza,
 )
 from lib.consola import configurar  # noqa: E402
@@ -121,11 +124,34 @@ def _escala_mundo_uniforme(objeto) -> float:
     return (sx + sy + sz) / 3.0
 
 
-def _peso_esperado(arista, pieza: PiezaDeBisel) -> float:
+def _peso_esperado(arista, pieza: PiezaDeBisel, escala_mundo: float) -> float:
     if len(arista.link_faces) != 2:
         return 0.0
+    largo_mundo = arista.calc_length() * escala_mundo
+    if pieza.longitud_minima_arista_metros > 0.0 and largo_mundo < pieza.longitud_minima_arista_metros:
+        return 0.0
+    if pieza.excluir_adyacentes_menores_metros > 0.0:
+        for vertice in arista.verts:
+            for vecina in vertice.link_edges:
+                if (
+                    vecina is not arista
+                    and vecina.calc_length() * escala_mundo < pieza.excluir_adyacentes_menores_metros
+                ):
+                    return 0.0
     angulo = math.degrees(arista.calc_face_angle(0.0))
     return peso_de_arista(angulo, pieza.angulo_minimo_grados)
+
+
+def _tiene_duplicados(bm, distancia_local: float) -> bool:
+    if distancia_local <= 0.0 or len(bm.verts) < 2:
+        return False
+    copia = bm.copy()
+    try:
+        antes = len(copia.verts)
+        bmesh.ops.remove_doubles(copia, verts=copia.verts, dist=distancia_local)
+        return len(copia.verts) < antes
+    finally:
+        copia.free()
 
 
 def _componentes_conexas(bm) -> list[set]:
@@ -257,16 +283,21 @@ def _malla_coincide(objeto, pieza: PiezaDeBisel) -> tuple[bool, int]:
         return False, 0
     if _base_lector_pendiente(objeto):
         return False, 0
+    escala_mundo = _escala_mundo_uniforme(objeto)
     bm = bmesh.new()
     try:
         bm.from_mesh(objeto.data)
+        if pieza.soldar_vertices_metros > 0.0 and _tiene_duplicados(
+            bm, pieza.soldar_vertices_metros / escala_mundo
+        ):
+            return False, 0
         pesos = bm.edges.layers.float.get(CAPA_PESO_BISEL)
         aristas_biseladas = 0
         coincide = pesos is not None
         if coincide and not all(cara.smooth for cara in bm.faces):
             coincide = False
         for arista in bm.edges:
-            esperado = _peso_esperado(arista, pieza)
+            esperado = _peso_esperado(arista, pieza, escala_mundo)
             if esperado > 0.0:
                 aristas_biseladas += 1
             if not coincide:
@@ -307,9 +338,15 @@ def _escribir_malla(objeto, pieza: PiezaDeBisel) -> int:
     if pieza.aplicar_escala:
         _hornear_escala_local(objeto)
     _redondear_base_lector(objeto)
+    escala_mundo = _escala_mundo_uniforme(objeto)
     bm = bmesh.new()
     try:
         bm.from_mesh(objeto.data)
+        if pieza.soldar_vertices_metros > 0.0:
+            bmesh.ops.remove_doubles(
+                bm, verts=bm.verts, dist=pieza.soldar_vertices_metros / escala_mundo
+            )
+            bm.normal_update()
         pesos = bm.edges.layers.float.get(CAPA_PESO_BISEL)
         if pesos is None:
             pesos = bm.edges.layers.float.new(CAPA_PESO_BISEL)
@@ -318,7 +355,7 @@ def _escribir_malla(objeto, pieza: PiezaDeBisel) -> int:
         aristas_biseladas = 0
         for arista in bm.edges:
             arista.smooth = True
-            peso = _peso_esperado(arista, pieza)
+            peso = _peso_esperado(arista, pieza, escala_mundo)
             arista[pesos] = peso
             if peso > 0.0:
                 aristas_biseladas += 1
@@ -327,6 +364,73 @@ def _escribir_malla(objeto, pieza: PiezaDeBisel) -> int:
         return aristas_biseladas
     finally:
         bm.free()
+
+
+def _suavizado_coincide(objeto, pieza: PiezaSuavizada) -> bool:
+    actual = [(m.name, m.type) for m in objeto.modifiers]
+    if tuple(actual) != pila_suavizada_esperada():
+        return False
+    triangulos = objeto.modifiers[NOMBRE_TRIANGULOS]
+    normales = objeto.modifiers[NOMBRE_NORMALES]
+    if not (
+        triangulos.quad_method == "SHORTEST_DIAGONAL"
+        and triangulos.keep_custom_normals is True
+        and normales.mode == MODO_DE_NORMALES
+        and normales.weight == PESO_DE_NORMALES
+        and normales.keep_sharp is True
+    ):
+        return False
+    escala_mundo = _escala_mundo_uniforme(objeto)
+    bm = bmesh.new()
+    try:
+        bm.from_mesh(objeto.data)
+        if _tiene_duplicados(bm, pieza.soldar_vertices_metros / escala_mundo):
+            return False
+        if not all(cara.smooth for cara in bm.faces):
+            return False
+        for arista in bm.edges:
+            if len(arista.link_faces) != 2:
+                continue
+            esperado_suave = math.degrees(arista.calc_face_angle(0.0)) < pieza.angulo_filo_grados
+            if arista.smooth != esperado_suave:
+                return False
+        return True
+    finally:
+        bm.free()
+
+
+def _aplicar_suavizado(objeto, pieza: PiezaSuavizada) -> None:
+    escala_mundo = _escala_mundo_uniforme(objeto)
+    bm = bmesh.new()
+    try:
+        bm.from_mesh(objeto.data)
+        if pieza.soldar_vertices_metros > 0.0:
+            bmesh.ops.remove_doubles(
+                bm, verts=bm.verts, dist=pieza.soldar_vertices_metros / escala_mundo
+            )
+            bm.normal_update()
+        for cara in bm.faces:
+            cara.smooth = True
+        for arista in bm.edges:
+            if len(arista.link_faces) != 2:
+                arista.smooth = False
+            else:
+                arista.smooth = (
+                    math.degrees(arista.calc_face_angle(0.0)) < pieza.angulo_filo_grados
+                )
+        bm.to_mesh(objeto.data)
+        objeto.data.update()
+    finally:
+        bm.free()
+    objeto.modifiers.clear()
+    triangulos = objeto.modifiers.new(NOMBRE_TRIANGULOS, "TRIANGULATE")
+    triangulos.quad_method = "SHORTEST_DIAGONAL"
+    triangulos.keep_custom_normals = True
+    triangulos.show_in_editmode = False
+    normales = objeto.modifiers.new(NOMBRE_NORMALES, "WEIGHTED_NORMAL")
+    normales.mode = MODO_DE_NORMALES
+    normales.weight = PESO_DE_NORMALES
+    normales.keep_sharp = True
 
 
 def _configurar_modificadores(objeto, pieza: PiezaDeBisel, ancho_en_local: float) -> None:
@@ -365,7 +469,10 @@ def _evaluar(objeto) -> tuple[int, int]:
         evaluado.to_mesh_clear()
 
 
-def aplicar_lote(piezas: tuple[PiezaDeBisel, ...]) -> dict:
+def aplicar_lote(
+    piezas: tuple[PiezaDeBisel, ...],
+    suavizadas: tuple[PiezaSuavizada, ...] = (),
+) -> dict:
     for pieza in piezas:
         validar_pieza(pieza)
     objetos = []
@@ -374,8 +481,14 @@ def aplicar_lote(piezas: tuple[PiezaDeBisel, ...]) -> dict:
         if objeto is None or objeto.type != "MESH":
             raise SystemExit(f"falta el objeto de malla {pieza.nombre}")
         objetos.append((pieza, objeto))
+    objetos_suavizados = []
+    for pieza_s in suavizadas:
+        objeto = bpy.data.objects.get(pieza_s.nombre)
+        if objeto is None or objeto.type != "MESH":
+            raise SystemExit(f"falta el objeto de malla {pieza_s.nombre}")
+        objetos_suavizados.append((pieza_s, objeto))
 
-    excluidos = {pieza.nombre for pieza in piezas}
+    excluidos = {pieza.nombre for pieza in piezas} | {p.nombre for p in suavizadas}
     antes = _huellas_ajenas(excluidos)
 
     resumen: list[dict] = []
@@ -408,14 +521,37 @@ def aplicar_lote(piezas: tuple[PiezaDeBisel, ...]) -> dict:
             }
         )
 
+    for pieza_s, objeto in objetos_suavizados:
+        ya_limpio = _suavizado_coincide(objeto, pieza_s)
+        if not ya_limpio:
+            _aplicar_suavizado(objeto, pieza_s)
+        triangulos, caras_area_cero = _evaluar(objeto)
+        assert (
+            caras_area_cero == 0
+        ), f"Quedaron {caras_area_cero} caras con área nula en {objeto.name}"
+        resumen.append(
+            {
+                "objeto": objeto.name,
+                "ya_biselado": ya_limpio,
+                "triangulos": triangulos,
+                "caras_area_cero": caras_area_cero,
+            }
+        )
+
     despues = _huellas_ajenas(excluidos)
     assert antes == despues, "Se modificó otro objeto del .blend"
     return {"archivo": bpy.data.filepath, "objetos": resumen}
 
 
-def procesar(fuente: Path, destino: Path, piezas: tuple[PiezaDeBisel, ...], aplicar: bool) -> dict:
+def procesar(
+    fuente: Path,
+    destino: Path,
+    piezas: tuple[PiezaDeBisel, ...],
+    aplicar: bool,
+    suavizadas: tuple[PiezaSuavizada, ...] = (),
+) -> dict:
     bpy.ops.wm.open_mainfile(filepath=str(fuente), load_ui=False)
-    resultado = aplicar_lote(piezas)
+    resultado = aplicar_lote(piezas, suavizadas)
     salida = fuente if aplicar else destino
     salida.parent.mkdir(parents=True, exist_ok=True)
     bpy.ops.wm.save_as_mainfile(filepath=str(salida), check_existing=False)
@@ -434,7 +570,15 @@ def main() -> None:
     if opciones.objetivo in ("local", "todos"):
         salidas.append(procesar(FUENTE_LOCAL, DESTINO_LOCAL, PIEZAS_DEL_LOCAL, opciones.aplicar))
     if opciones.objetivo in ("router", "todos"):
-        salidas.append(procesar(FUENTE_ROUTER, DESTINO_ROUTER, PIEZAS_DEL_ROUTER, opciones.aplicar))
+        salidas.append(
+            procesar(
+                FUENTE_ROUTER,
+                DESTINO_ROUTER,
+                PIEZAS_DEL_ROUTER,
+                opciones.aplicar,
+                PIEZAS_SUAVIZADAS_DEL_ROUTER,
+            )
+        )
     print(json.dumps(salidas, ensure_ascii=False, indent=2))
 
 
