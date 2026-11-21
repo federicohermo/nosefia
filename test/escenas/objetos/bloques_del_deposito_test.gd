@@ -246,3 +246,60 @@ func test_las_piezas_del_cuartito_cubren_jambas_y_rincones_sin_juntas_internas()
 	assert_float(caja.end.z).is_greater_equal(caja_rev.end.z - 0.05)
 	assert_float(caja.position.x).is_less_equal(caja_rev.position.x + 0.05)
 	assert_float(caja.size.x).is_greater(2.5)
+
+
+func _triangulos_verticales_con_uv_o_tangente_degenerada(malla: Mesh) -> Dictionary:
+	var uv_colapsada := 0
+	var tangente_colineal := 0
+	for superficie in malla.get_surface_count():
+		var arrays := malla.surface_get_arrays(superficie)
+		var normales: PackedVector3Array = arrays[Mesh.ARRAY_NORMAL]
+		var tangentes: PackedFloat32Array = arrays[Mesh.ARRAY_TANGENT]
+		var uvs: PackedVector2Array = arrays[Mesh.ARRAY_TEX_UV]
+		var indices: PackedInt32Array = arrays[Mesh.ARRAY_INDEX]
+		var total := indices.size() if not indices.is_empty() else normales.size()
+		for inicio in range(0, total, 3):
+			var ia := indices[inicio]
+			var ib := indices[inicio + 1]
+			var ic := indices[inicio + 2]
+			var normal := normales[ia].normalized()
+			if absf(normal.y) > 0.5:
+				continue
+			var u_min := minf(uvs[ia].x, minf(uvs[ib].x, uvs[ic].x))
+			var u_max := maxf(uvs[ia].x, maxf(uvs[ib].x, uvs[ic].x))
+			if u_max - u_min < 1e-5:
+				uv_colapsada += 1
+			var tangente := Vector3(tangentes[ia * 4], tangentes[ia * 4 + 1], tangentes[ia * 4 + 2])
+			if tangente.length_squared() < 0.01 or absf(normal.dot(tangente.normalized())) > 0.5:
+				tangente_colineal += 1
+	return {"uv_colapsada": uv_colapsada, "tangente_colineal": tangente_colineal}
+
+
+func test_los_cantos_de_las_piezas_tienen_uv_sin_colapsar_y_tangente_ortogonal() -> void:
+	var modelo: Node3D = auto_free(MODELO.instantiate())
+	for nombre: String in ["deposito_esquinas_piezas", "deposito_esquinas_cuartito"]:
+		var piezas := modelo.find_child(nombre, true, false) as MeshInstance3D
+		assert_object(piezas).is_not_null()
+		if piezas == null:
+			continue
+		var resultado := _triangulos_verticales_con_uv_o_tangente_degenerada(piezas.mesh)
+		(
+			assert_int(resultado["uv_colapsada"])
+			. override_failure_message(
+				(
+					"%s tiene %d triángulos verticales con UV horizontal colapsada"
+					% [nombre, resultado["uv_colapsada"]]
+				)
+			)
+			. is_equal(0)
+		)
+		(
+			assert_int(resultado["tangente_colineal"])
+			. override_failure_message(
+				(
+					"%s tiene %d triángulos verticales con tangente colineal a la normal"
+					% [nombre, resultado["tangente_colineal"]]
+				)
+			)
+			. is_equal(0)
+		)
