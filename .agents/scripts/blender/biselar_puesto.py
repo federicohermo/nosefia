@@ -44,6 +44,7 @@ RAIZ = Path(__file__).resolve().parents[3]
 sys.path.insert(0, str(RAIZ / ".claude/scripts"))
 
 from lib.bisel_de_puesto import (  # noqa: E402
+    LADOS_BASE_LECTOR,
     MODO_DE_NORMALES,
     NOMBRE_BISEL,
     NOMBRE_NORMALES,
@@ -53,6 +54,7 @@ from lib.bisel_de_puesto import (  # noqa: E402
     PIEZAS_DEL_ROUTER,
     PiezaDeBisel,
     ancho_local,
+    anillos_circulares,
     peso_de_arista,
     pila_coincide,
     validar_pieza,
@@ -126,8 +128,134 @@ def _peso_esperado(arista, pieza: PiezaDeBisel) -> float:
     return peso_de_arista(angulo, pieza.angulo_minimo_grados)
 
 
+def _componentes_conexas(bm) -> list[set]:
+    vistas: set = set()
+    grupos: list[set] = []
+    for inicio in bm.verts:
+        if inicio in vistas:
+            continue
+        pendientes = [inicio]
+        grupo: set = set()
+        while pendientes:
+            actual = pendientes.pop()
+            if actual in grupo:
+                continue
+            grupo.add(actual)
+            vistas.add(actual)
+            for arista in actual.link_edges:
+                pendientes.append(arista.other_vert(actual))
+        grupos.append(grupo)
+    return grupos
+
+
+def _componente_base_lector(bm) -> tuple[set, list[tuple[float, float]], tuple[float, float]] | None:
+    """Localiza el pedestal circular del lector y extrae sus estaciones `(z, radio)` y centro XY."""
+    for grupo in _componentes_conexas(bm):
+        por_z: dict[float, list] = {}
+        for v in grupo:
+            por_z.setdefault(round(v.co.z, 3), []).append(v)
+        if len(por_z) != 4:
+            continue
+        cantidades = {len(vs) for vs in por_z.values()}
+        if len(cantidades) != 1:
+            continue
+        cantidad = next(iter(cantidades))
+        if cantidad < 8:
+            continue
+        cx = sum(v.co.x for v in grupo) / len(grupo)
+        cy = sum(v.co.y for v in grupo) / len(grupo)
+        estaciones: list[tuple[float, float]] = []
+        es_circular = True
+        for _, vs in sorted(por_z.items()):
+            z_medio = sum(v.co.z for v in vs) / len(vs)
+            radios = [math.hypot(v.co.x - cx, v.co.y - cy) for v in vs]
+            if max(radios) - min(radios) > 0.01 or min(radios) <= 0.01:
+                es_circular = False
+                break
+            estaciones.append((z_medio, sum(radios) / len(radios)))
+        if es_circular:
+            return grupo, estaciones, (cx, cy)
+    return None
+
+
+def _base_lector_pendiente(objeto) -> bool:
+    if objeto.name != "lector de productos-col":
+        return False
+    bm = bmesh.new()
+    try:
+        bm.from_mesh(objeto.data)
+        hallada = _componente_base_lector(bm)
+        if hallada is None:
+            return False
+        grupo, estaciones, _ = hallada
+        return len(grupo) // len(estaciones) < LADOS_BASE_LECTOR
+    finally:
+        bm.free()
+
+
+def _redondear_base_lector(objeto) -> bool:
+    """Reemplaza el pedestal de 12 lados del lector por uno circular de `LADOS_BASE_LECTOR`."""
+    if objeto.name != "lector de productos-col":
+        return False
+    bm = bmesh.new()
+    try:
+        bm.from_mesh(objeto.data)
+        hallada = _componente_base_lector(bm)
+        if hallada is None:
+            return False
+        grupo, estaciones, centro_xy = hallada
+        if len(grupo) // len(estaciones) >= LADOS_BASE_LECTOR:
+            return False
+        uv = bm.loops.layers.uv.verify()
+        bmesh.ops.delete(bm, geom=list(grupo), context="VERTS")
+        coordenadas = anillos_circulares(centro_xy, estaciones, LADOS_BASE_LECTOR)
+        anillos = [[bm.verts.new(p) for p in anillo] for anillo in coordenadas]
+        nuevas_caras = []
+        # Acumular distancia sobre el perfil para UV cilíndrica uniforme sin estiramiento.
+        distancias = [0.0]
+        for i in range(1, len(estaciones)):
+            dz = estaciones[i][0] - estaciones[i - 1][0]
+            dr = estaciones[i][1] - estaciones[i - 1][1]
+            distancias.append(distancias[-1] + math.hypot(dz, dr))
+        perimetro_ref = math.tau * max(r for _, r in estaciones)
+        escala_uv = 0.65
+        for nivel in range(len(anillos) - 1):
+            a0, a1 = anillos[nivel], anillos[nivel + 1]
+            v0, v1 = distancias[nivel] * escala_uv, distancias[nivel + 1] * escala_uv
+            for i in range(LADOS_BASE_LECTOR):
+                j = (i + 1) % LADOS_BASE_LECTOR
+                cara = bm.faces.new((a0[i], a0[j], a1[j], a1[i]))
+                cara.material_index = 0
+                cara.smooth = True
+                u0 = (i / LADOS_BASE_LECTOR) * perimetro_ref * escala_uv
+                u1 = ((i + 1) / LADOS_BASE_LECTOR) * perimetro_ref * escala_uv
+                for lazo, coords in zip(cara.loops, ((u0, v0), (u1, v0), (u1, v1), (u0, v1))):
+                    lazo[uv].uv = coords
+                nuevas_caras.append(cara)
+        cx, cy = centro_xy
+        for anillo, invertir in ((anillos[0], True), (anillos[-1], False)):
+            verts_tapa = list(reversed(anillo)) if invertir else anillo
+            tapa = bm.faces.new(verts_tapa)
+            tapa.material_index = 0
+            tapa.smooth = True
+            for lazo in tapa.loops:
+                lazo[uv].uv = (
+                    (lazo.vert.co.x - cx) * escala_uv,
+                    (lazo.vert.co.y - cy) * escala_uv,
+                )
+            nuevas_caras.append(tapa)
+        bmesh.ops.recalc_face_normals(bm, faces=nuevas_caras)
+        bm.to_mesh(objeto.data)
+        objeto.data.update()
+        return True
+    finally:
+        bm.free()
+
+
 def _malla_coincide(objeto, pieza: PiezaDeBisel) -> tuple[bool, int]:
     if pieza.aplicar_escala and not _escala_local_unitaria(objeto):
+        return False, 0
+    if _base_lector_pendiente(objeto):
         return False, 0
     bm = bmesh.new()
     try:
@@ -178,6 +306,7 @@ def _modificadores_coinciden(objeto, pieza: PiezaDeBisel, ancho_en_local: float)
 def _escribir_malla(objeto, pieza: PiezaDeBisel) -> int:
     if pieza.aplicar_escala:
         _hornear_escala_local(objeto)
+    _redondear_base_lector(objeto)
     bm = bmesh.new()
     try:
         bm.from_mesh(objeto.data)

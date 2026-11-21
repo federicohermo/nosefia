@@ -15,6 +15,7 @@ NOMBRE_TRIANGULOS = "Triángulos para exportación"
 NOMBRE_NORMALES = "Normales de caras y biseles"
 MODO_DE_NORMALES = "FACE_AREA"
 PESO_DE_NORMALES = 100
+LADOS_BASE_LECTOR = 48
 
 
 @dataclass(frozen=True)
@@ -95,3 +96,31 @@ def pila_esperada() -> tuple[tuple[str, str], ...]:
 def pila_coincide(actual: Sequence[tuple[str, str]]) -> bool:
     """Indica si la pila de modificadores actual coincide en nombres, tipos y orden."""
     return tuple(actual) == pila_esperada()
+
+
+def anillos_circulares(
+    centro_xy: tuple[float, float],
+    estaciones_zr: Sequence[tuple[float, float]],
+    lados: int = LADOS_BASE_LECTOR,
+) -> list[list[tuple[float, float, float]]]:
+    """Devuelve anillos de `lados` vértices sobre el círculo exacto de cada estación `(z, radio)`."""
+    if lados < 3:
+        raise ValueError(f"lados debe ser al menos 3: {lados}")
+    if len(estaciones_zr) < 2:
+        raise ValueError("estaciones_zr requiere al menos dos anillos")
+    cx, cy = centro_xy
+    anillos: list[list[tuple[float, float, float]]] = []
+    for z, radio in estaciones_zr:
+        if not (math.isfinite(radio) and radio > 0.0):
+            raise ValueError(f"radio inválido: {radio}")
+        anillo = [
+            (
+                cx + radio * math.cos(indice * math.tau / lados),
+                cy + radio * math.sin(indice * math.tau / lados),
+                z,
+            )
+            for indice in range(lados)
+        ]
+        anillos.append(anillo)
+    return anillos
+
