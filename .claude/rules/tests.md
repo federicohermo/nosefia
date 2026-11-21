@@ -10,7 +10,9 @@ paths:
 Probar funcionalidades, flujos completos y rendimiento medible. Una prueba debe detectar una
 falla que afecte al jugador o al funcionamiento del proyecto. Las decisiones visuales se revisan
 jugando: no fijar coordenadas de manchas, distancias decorativas, tamaños de alfombras ni valores
-de materiales. Reubicar un elemento por diseño no debe obligar a cambiar una prueba.
+de materiales. Tampoco escribir tests que inspeccionen la geometría de una malla, como triángulos,
+caras, normales o medidas. Reubicar o modelar un elemento por diseño no debe obligar a cambiar una
+prueba.
 
 Comprobar colisiones o alcance cuando afectan una función. Por ejemplo: limpiar una mancha,
 abrir una puerta o recoger un producto sin atravesar sólidos. Derivar sus
