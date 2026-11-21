@@ -1,0 +1,97 @@
+"""Perfiles y reglas puras para el bisel no destructivo de puestos: PC, caja, lector y router."""
+
+from __future__ import annotations
+
+from collections.abc import Sequence
+from dataclasses import dataclass
+import math
+
+MODOS_DE_NORMALES: frozenset[str] = frozenset(
+    {"FACE_AREA", "CORNER_ANGLE", "FACE_AREA_WITH_ANGLE"}
+)
+
+NOMBRE_BISEL = "Bisel de puesto"
+NOMBRE_TRIANGULOS = "Triángulos para exportación"
+NOMBRE_NORMALES = "Normales de caras y biseles"
+MODO_DE_NORMALES = "FACE_AREA"
+PESO_DE_NORMALES = 100
+
+
+@dataclass(frozen=True)
+class PiezaDeBisel:
+    """Parámetros de biselado para una malla individual de superficie dura."""
+
+    nombre: str
+    ancho_en_metros: float
+    segmentos: int = 2
+    perfil: float = 0.5
+    angulo_minimo_grados: float = 30.0
+    aplicar_escala: bool = False
+
+
+PIEZAS_DEL_LOCAL: tuple[PiezaDeBisel, ...] = (
+    PiezaDeBisel("base compu-col", 0.002),
+    PiezaDeBisel("monitor pantalla-col", 0.002),
+    PiezaDeBisel("monitor soporte-col", 0.002),
+    PiezaDeBisel("teclado-col", 0.002, aplicar_escala=True),
+    PiezaDeBisel("mouse-col", 0.002),
+    PiezaDeBisel("cajaregistradora-col", 0.0025),
+    PiezaDeBisel("lector de productos-col", 0.0015),
+)
+
+PIEZAS_DEL_ROUTER: tuple[PiezaDeBisel, ...] = (
+    PiezaDeBisel("router-col", 0.001),
+    PiezaDeBisel("luces_botones-col", 0.001, aplicar_escala=True),
+    PiezaDeBisel("powerrouter_col", 0.001),
+)
+
+
+def validar_pieza(pieza: PiezaDeBisel) -> None:
+    """Valida que los parámetros de biselado estén en rangos válidos para Blender."""
+    if not pieza.nombre.strip():
+        raise ValueError("nombre no puede estar vacío")
+    if not (math.isfinite(pieza.ancho_en_metros) and pieza.ancho_en_metros > 0.0):
+        raise ValueError(f"ancho_en_metros debe ser positivo: {pieza.ancho_en_metros}")
+    if pieza.segmentos < 1:
+        raise ValueError(f"segmentos debe ser al menos 1: {pieza.segmentos}")
+    if not (math.isfinite(pieza.perfil) and 0.0 <= pieza.perfil <= 1.0):
+        raise ValueError(f"perfil debe estar entre 0 y 1: {pieza.perfil}")
+    if not (
+        math.isfinite(pieza.angulo_minimo_grados) and 0.0 < pieza.angulo_minimo_grados < 180.0
+    ):
+        raise ValueError(
+            f"angulo_minimo_grados debe estar en (0, 180): {pieza.angulo_minimo_grados}"
+        )
+
+
+def ancho_local(ancho_en_metros: float, escala_mundo: float) -> float:
+    """Convierte el ancho de bisel en metros al espacio local de una malla con escala uniforme."""
+    escala = abs(escala_mundo)
+    if not (math.isfinite(escala) and escala > 1e-6):
+        raise ValueError(f"escala_mundo inválida: {escala_mundo}")
+    if not (math.isfinite(ancho_en_metros) and ancho_en_metros > 0.0):
+        raise ValueError(f"ancho_en_metros debe ser positivo: {ancho_en_metros}")
+    return ancho_en_metros / escala
+
+
+def peso_de_arista(angulo_en_grados: float, angulo_minimo: float) -> float:
+    """Devuelve 1.0 si el ángulo entre caras alcanza el umbral de bisel y 0.0 si no."""
+    if not (math.isfinite(angulo_minimo) and angulo_minimo > 0.0):
+        raise ValueError(f"angulo_minimo debe ser positivo: {angulo_minimo}")
+    if not (math.isfinite(angulo_en_grados) and 0.0 <= angulo_en_grados <= 180.0):
+        raise ValueError(f"angulo_en_grados debe estar en [0, 180]: {angulo_en_grados}")
+    return 1.0 if angulo_en_grados >= angulo_minimo else 0.0
+
+
+def pila_esperada() -> tuple[tuple[str, str], ...]:
+    """Tuplas (nombre, tipo) en el orden exacto de la pila de modificadores."""
+    return (
+        (NOMBRE_BISEL, "BEVEL"),
+        (NOMBRE_TRIANGULOS, "TRIANGULATE"),
+        (NOMBRE_NORMALES, "WEIGHTED_NORMAL"),
+    )
+
+
+def pila_coincide(actual: Sequence[tuple[str, str]]) -> bool:
+    """Indica si la pila de modificadores actual coincide en nombres, tipos y orden."""
+    return tuple(actual) == pila_esperada()
