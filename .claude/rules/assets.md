@@ -81,3 +81,9 @@ paths:
     `exhibidor_golosinas-col`. `blender/ladrillos_del_deposito.py` reconstruye los bloques de
     relieve en esquinas y jambas del depósito sin juntas internas ni aristas sueltas. Van antes
     de `exportar_modelo.py` y `hornear.py`. Un `.blend` nuevo del artista pide repetirlos.
+
+12. **Los tres bidones de limpieza llevan bisel no destructivo en sus quiebres.**
+    `blender/biselar_bidones.py` suaviza caras y aristas y marca pesos de bisel desde 30°.
+    Arma una pila de 2 segmentos a 6 mm con triangulación y normales pesadas. Va antes de
+    `texturizar_bidones.py`, `armar_atlas.py` y `exportar_modelo.py`. Un `.blend` nuevo del
+    artista pide repetirlo.
