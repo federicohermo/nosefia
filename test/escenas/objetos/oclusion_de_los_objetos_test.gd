@@ -272,28 +272,33 @@ func test_una_lata_suelta_deja_una_mancha_mas_redonda_que_una_caja_suelta() -> v
 	assert_float(esquinas_lata).is_greater(esquinas_caja)
 
 
-func test_el_balde_y_la_bolsa_dejan_una_mancha_mas_redonda_que_una_caja_de_productos() -> void:
+func test_el_balde_la_mopa_y_la_bolsa_dejan_una_mancha_mas_redonda_que_una_caja_de_productos(
+) -> void:
 	_piso()
 	var objetos: Node3D = auto_free(UTILES.instantiate())
 	add_child(objetos)
 	var balde := objetos.get_node("Balde") as RigidBody3D
 	balde.freeze = false
-	balde.global_position = Vector3(-1.5, ALTURA_DE_CAIDA, 0.0)
+	balde.global_position = Vector3(-3.0, ALTURA_DE_CAIDA, 0.0)
+	var mopa := objetos.get_node("Mopa") as RigidBody3D
+	mopa.freeze = false
+	mopa.global_position = Vector3(-1.0, ALTURA_DE_CAIDA, 0.0)
 	var bolsa: RigidBody3D = auto_free(
 		(load("res://src/escenas/objetos/bolsa_de_basura.tscn") as PackedScene).instantiate()
 	)
 	add_child(bolsa)
 	bolsa.call("en_el_tacho", false)
 	bolsa.freeze = false
-	bolsa.global_position = Vector3(0.0, ALTURA_DE_CAIDA, 0.0)
+	bolsa.global_position = Vector3(1.0, ALTURA_DE_CAIDA, 0.0)
 	var caja: RigidBody3D = auto_free(
 		(load("res://src/escenas/objetos/caja_de_productos.tscn") as PackedScene).instantiate()
 	)
 	add_child(caja)
 	caja.freeze = false
-	caja.global_position = Vector3(1.5, ALTURA_DE_CAIDA, 0.0)
+	caja.global_position = Vector3(3.0, ALTURA_DE_CAIDA, 0.0)
 	for _paso in PASOS_PARA_ASENTARSE:
 		await get_tree().physics_frame
 	var esquinas_caja := _esquinas_de_mancha(caja)
 	assert_float(_esquinas_de_mancha(balde)).is_greater(esquinas_caja)
+	assert_float(_esquinas_de_mancha(mopa)).is_greater(esquinas_caja)
 	assert_float(_esquinas_de_mancha(bolsa)).is_greater(esquinas_caja)

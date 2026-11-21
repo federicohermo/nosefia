@@ -104,6 +104,9 @@ var rayos := 0
 ## Cuántas veces recalculó los grupos de apoyo. Lo mira el test del ahorro en mano.
 var calculos_de_apoyo := 0
 
+## Cuántas veces midió la huella y su forma (casco convexo). Lo mira el test del ahorro al moverse.
+var calculos_de_forma := 0
+
 var _sombras_activas := 0
 var _suelo := SIN_SUELO
 var _movido := true
@@ -114,12 +117,16 @@ var _cache_relativas: Array[Transform3D] = []
 var _cache_abajo := Vector3.ZERO
 var _cache_radio := -1.0
 var _cache_grupos: Array[PackedVector3Array] = []
+var _cache_ejes_x: Array[Vector3] = []
+var _cache_ejes_z: Array[Vector3] = []
+var _cache_medidas: Array[Array] = []
 
 
 ## De las mallas del objeto salen su huella, su forma y su base.
 func configurar(mallas_del_objeto: Array[MeshInstance3D]) -> void:
 	mallas = mallas_del_objeto
 	_cache_valido = false
+	_invalidar_medidas()
 
 
 func _ready() -> void:
@@ -169,7 +176,8 @@ func actualizar() -> void:
 	var usadas := 0
 	var suelo_encontrado := SIN_SUELO
 	var hay_suelo := false
-	for grupo in grupos:
+	for indice_grupo in grupos.size():
+		var grupo := grupos[indice_grupo]
 		var apoyo := cuerpo.global_transform * grupo
 		var minimo := Vector3.INF
 		var maximo := -Vector3.INF
@@ -196,7 +204,7 @@ func actualizar() -> void:
 		var valor := intensidad_a(altura)
 		if valor <= 0.0:
 			continue
-		_poner_la_sombra(_sombra(usadas), cuerpo, golpe, altura, apoyo, valor)
+		_poner_la_sombra(_sombra(usadas), cuerpo, golpe, altura, grupo, indice_grupo, valor)
 		usadas += 1
 	_sombras_activas = usadas
 	_suelo = suelo_encontrado if hay_suelo else SIN_SUELO
@@ -233,16 +241,21 @@ func _poner_la_sombra(
 	cuerpo: CollisionObject3D,
 	golpe: Dictionary,
 	altura: float,
-	apoyo: PackedVector3Array,
+	grupo: PackedVector3Array,
+	indice_grupo: int,
 	intensidad_mancha: float
 ) -> void:
 	var normal: Vector3 = golpe["normal"]
 	var punto: Vector3 = golpe["position"]
 	var giro := _orientacion_en_la_superficie(cuerpo, normal)
-	var medida := medir_huella_en_el_plano(apoyo, giro)
-	var centro_plano: Vector2 = medida[0]
+	var medida := _medida_del_grupo(indice_grupo, grupo, cuerpo.global_basis, giro)
+	var centro_en_cuerpo: Vector2 = medida[0]
 	var mitad: Vector2 = medida[1]
 	var esquinas: float = medida[2]
+	var origen_cuerpo := cuerpo.global_position
+	var centro_plano := (
+		centro_en_cuerpo + Vector2(origen_cuerpo.dot(giro.x), origen_cuerpo.dot(giro.z))
+	)
 	var punto_plano := Vector2(punto.dot(giro.x), punto.dot(giro.z))
 	var desfase := centro_plano - punto_plano
 	var origen := punto + giro.x * desfase.x + giro.z * desfase.y
@@ -258,6 +271,37 @@ func _poner_la_sombra(
 	material.set_shader_parameter(&"suavidad", suavidad)
 	material.set_shader_parameter(&"intensidad", intensidad_mancha)
 	_recortar_en_el_apoyo(material, golpe, Transform3D(giro, origen))
+
+
+## Reusa `[centro, mitad, esquinas]` del grupo en espacio del cuerpo mientras la orientación del
+## plano de apoyo no cambie más que `ABAJO_IGUAL`: trasladar o girar en plano no recalcula el casco.
+func _medida_del_grupo(indice: int, grupo: PackedVector3Array, base: Basis, giro: Basis) -> Array:
+	var traspuesta := base.transposed()
+	var eje_x := traspuesta * giro.x
+	var eje_z := traspuesta * giro.z
+	if (
+		indice < _cache_medidas.size()
+		and not _cache_medidas[indice].is_empty()
+		and _cache_ejes_x[indice].distance_to(eje_x) < ABAJO_IGUAL
+		and _cache_ejes_z[indice].distance_to(eje_z) < ABAJO_IGUAL
+	):
+		return _cache_medidas[indice]
+	while _cache_medidas.size() <= indice:
+		_cache_ejes_x.append(Vector3.ZERO)
+		_cache_ejes_z.append(Vector3.ZERO)
+		_cache_medidas.append([])
+	calculos_de_forma += 1
+	var medida := _medir_huella_en_ejes(grupo, eje_x, eje_z)
+	_cache_ejes_x[indice] = eje_x
+	_cache_ejes_z[indice] = eje_z
+	_cache_medidas[indice] = medida
+	return medida
+
+
+func _invalidar_medidas() -> void:
+	_cache_ejes_x.clear()
+	_cache_ejes_z.clear()
+	_cache_medidas.clear()
 
 
 ## Elige el eje del cuerpo más paralelo a la superficie: un objeto alargado girado sobre su eje
@@ -300,11 +344,17 @@ func _escribir_en_la_malla() -> void:
 
 ## Centro, mitad y redondez (`esquinas`) de la huella sobre los dos ejes de la mancha.
 static func medir_huella_en_el_plano(apoyo: PackedVector3Array, giro: Basis) -> Array:
+	return _medir_huella_en_ejes(apoyo, giro.x, giro.z)
+
+
+static func _medir_huella_en_ejes(
+	puntos_3d: PackedVector3Array, eje_x: Vector3, eje_z: Vector3
+) -> Array:
 	var puntos := PackedVector2Array()
-	puntos.resize(apoyo.size())
-	for indice in apoyo.size():
-		var punto := apoyo[indice]
-		puntos[indice] = Vector2(punto.dot(giro.x), punto.dot(giro.z))
+	puntos.resize(puntos_3d.size())
+	for indice in puntos_3d.size():
+		var punto := puntos_3d[indice]
+		puntos[indice] = Vector2(punto.dot(eje_x), punto.dot(eje_z))
 	return medir_huella_2d(puntos)
 
 
@@ -424,6 +474,7 @@ func _grupos_del_objeto(cuerpo: Node3D) -> Array[PackedVector3Array]:
 	_cache_abajo = abajo
 	_cache_radio = radio
 	_cache_grupos = _calcular_grupos(actuales, relativas, abajo)
+	_invalidar_medidas()
 	_cache_valido = true
 	return _cache_grupos
 
