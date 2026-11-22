@@ -61,11 +61,13 @@ MAT_ACERO = "bano_acero"
 # Caras internas (+X) de las mamparas izquierdas de cada cabina:
 # - Cabina 1: `bano_mampara_lateral-convcol` X=[10.172, 10.227]
 # - Cabina 2: `bano_mampara_lateral-convcol.001` X=[11.783, 11.838]
-# Las puertas abren hacia adentro sobre el lado derecho (+X) con bisagra en X=11.455 y X=13.065.
-# Montados en la mampara izquierda a Y=-5.50, Z=0.72 quedan despejados del barrido y visibles.
+# El baño del juego escala ~1.4x respecto de medidas reales (asiento de 51 cm a 53 cm del piso,
+# cabinas de 1.56 m de ancho): el portarrollos usa ESCALA = 1.45 a Z = 0.84 m (21 cm sobre el
+# asiento) para conservar proporción visual con el inodoro y despejar el barrido de la puerta.
+ESCALA_PORTARROLLO = 1.45
 PORTARROLLOS = (
-    ("bano_portarrollo_1", 10.227, -5.50, 0.72),
-    ("bano_portarrollo_2", 11.838, -5.50, 0.72),
+    ("bano_portarrollo_1", 10.227, -5.48, 0.84),
+    ("bano_portarrollo_2", 11.838, -5.48, 0.84),
 )
 
 
@@ -330,6 +332,11 @@ def _construir_malla_portarrollo(nombre_malla: str, materiales: list) -> bpy.typ
         ]
         _agregar_cinta_xz(bm, hoja_xz, 0.0020, -0.0495, 0.0495, 1)
 
+        bmesh.ops.scale(
+            bm,
+            vec=(ESCALA_PORTARROLLO, ESCALA_PORTARROLLO, ESCALA_PORTARROLLO),
+            verts=list(bm.verts),
+        )
         bmesh.ops.recalc_face_normals(bm, faces=list(bm.faces))
         bm.normal_update()
 
