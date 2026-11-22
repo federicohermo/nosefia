@@ -25,6 +25,8 @@ datos = ExtResource("datos")
 orientacion_en_mano = Basis(1, 0, 0, 0, -0.173648, 0.984808, 0, -0.984808, -0.173648)
 radio_de_oclusion = 0.02
 intensidad_de_oclusion = 0.4
+capsulas_de_oclusion = PackedVector3Array(-0.118, 0.0407, -0.392, -0.02, 0.0407, -0.358, -0.02, 0.0407, -0.358, 0, 0.0407, -0.31, 0, 0.0407, -0.31, 0, 0.0407, 0.285, 0, 0.0407, 0.285, 0.048, 0.0407, 0.365, 0.048, 0.0407, 0.365, 0.13, 0.0407, 0.372, 0.13, 0.0407, 0.372, 0.185, 0.0407, 0.305, 0.185, 0.0407, 0.305, 0.194, 0.0407, 0.205)
+radios_de_oclusion = PackedFloat32Array(0.012, 0.013, 0.013, 0.013, 0.013, 0.013, 0.012)
 
 [node name="Forma" type="CollisionShape3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.0405, 0)

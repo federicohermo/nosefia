@@ -23,11 +23,12 @@ uniform vec3 apoyo_maximo = vec3(1000.0);
 // Si es cierto, cada instancia del `MultiMesh` trae su recorte en `INSTANCE_CUSTOM`:
 // `(min_x, min_z, max_x, max_z)` en metros sobre el plano de la mancha.
 uniform bool recorte_por_instancia = false;
-// Si es cierto, `mapa_huella` trae el campo de distancia 2D a la base real (formas cóncavas).
-uniform bool usar_mapa = false;
-uniform sampler2D mapa_huella : filter_linear, repeat_disable;
-uniform vec2 mitad_mapa = vec2(0.2);
-uniform float alcance_mapa = 0.05;
+// Silueta analítica 2D para objetos cóncavos (palanca, llave): hasta 8 cápsulas y 1 aro opcional.
+uniform int cantidad_capsulas = 0;
+uniform vec4 capsulas[8];
+uniform float radios_capsulas[8];
+// `(centro_x, centro_z, radio_mayor, radio_tubo)`. Con `radio_mayor <= 0.0` no se dibuja aro.
+uniform vec4 aro_silueta = vec4(0.0);
 
 varying vec2 plano;
 varying vec3 en_el_apoyo;
@@ -44,11 +45,30 @@ float distancia_al_rectangulo(vec2 punto, vec2 mitad, float radio) {
 	return length(max(q, 0.0)) + min(max(q.x, q.y), 0.0) - radio;
 }
 
+float distancia_a_la_capsula(vec2 punto, vec2 a, vec2 b, float radio) {
+	vec2 pa = punto - a;
+	vec2 ba = b - a;
+	float h = clamp(dot(pa, ba) / max(dot(ba, ba), 0.000001), 0.0, 1.0);
+	return length(pa - ba * h) - radio;
+}
+
 void fragment() {
 	float distancia = 0.0;
-	if (usar_mapa) {
-		vec2 uv_mapa = plano / (mitad_mapa * 2.0) + 0.5;
-		distancia = texture(mapa_huella, uv_mapa).r * alcance_mapa;
+	if (cantidad_capsulas > 0 || aro_silueta.z > 0.0) {
+		distancia = 1000.0;
+		for (int i = 0; i < 8; i++) {
+			if (i >= cantidad_capsulas) {
+				break;
+			}
+			distancia = min(
+				distancia,
+				distancia_a_la_capsula(plano, capsulas[i].xy, capsulas[i].zw, radios_capsulas[i])
+			);
+		}
+		if (aro_silueta.z > 0.0) {
+			float d_aro = abs(length(plano - aro_silueta.xy) - aro_silueta.z) - aro_silueta.w;
+			distancia = min(distancia, d_aro);
+		}
 	} else {
 		float radio = esquinas * min(huella.x, huella.y);
 		distancia = distancia_al_rectangulo(plano, huella, radio);

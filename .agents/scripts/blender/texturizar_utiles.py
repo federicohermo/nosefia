@@ -42,10 +42,10 @@ MARGEN = 8
 
 #: El color liso que tenía cada material, en lineal. Es la base de lo que se hornea.
 COLORES = {
-    "util_plastico_azul": (0.035, 0.165, 0.335),
-    "util_plastico_claro": (0.058, 0.225, 0.415),
-    "util_borde_crema": (0.69, 0.72, 0.68),
-    "util_asa_grafito": (0.082, 0.105, 0.122),
+    "util_plastico_azul": (0.036, 0.165, 0.34),
+    "util_plastico_claro": (0.06, 0.23, 0.42),
+    "util_borde_crema": (0.72, 0.73, 0.69),
+    "util_asa_grafito": (0.085, 0.105, 0.12),
     "util_mango_acero": (0.36, 0.42, 0.45),
     "util_fibra_cruda": (0.72, 0.7, 0.62),
     "util_fibra_sombra": (0.58, 0.57, 0.5),
@@ -62,7 +62,26 @@ OBJETOS = {
 }
 
 
-def pintar(base, forma, uso, altura, limpio: bool = False) -> np.ndarray:
+def desplegar_por_costuras(objeto, columna: int, columnas: int, lado: int, margen: int) -> None:
+    """Despliega `balde-col` respetando sus costuras limpias de material y cilindro."""
+    malla = objeto.data
+    while malla.uv_layers:
+        malla.uv_layers.remove(malla.uv_layers[0])
+    malla.uv_layers.new(name="UVMap")
+    bpy.ops.object.select_all(action="DESELECT")
+    objeto.select_set(True)
+    bpy.context.view_layer.objects.active = objeto
+    bpy.ops.object.mode_set(mode="EDIT")
+    bpy.ops.mesh.select_all(action="SELECT")
+    bpy.ops.uv.unwrap(method="ANGLE_BASED", margin=0.025)
+    bpy.ops.object.mode_set(mode="OBJECT")
+    borde = margen / lado
+    for dato in malla.uv_layers[0].data:
+        dato.uv.x = (columna + borde + dato.uv.x * (1 - 2 * borde)) / columnas
+        dato.uv.y = borde + dato.uv.y * (1 - 2 * borde)
+
+
+def pintar(base, forma, uso, altura, es_balde: bool = False) -> np.ndarray:
     """El color final, en lineal, desde las capas horneadas."""
     oclusion, arista, grano = forma[..., 0:1], forma[..., 1:2], forma[..., 2:3]
     manchas, hebras, rayones = uso[..., 0:1], uso[..., 1:2], uso[..., 2:3]
@@ -71,17 +90,65 @@ def pintar(base, forma, uso, altura, limpio: bool = False) -> np.ndarray:
     for nombre in FIBRAS:
         es_fibra |= np.abs(base - np.array(COLORES[nombre])).sum(axis=2, keepdims=True) < 0.02
 
-    if limpio:
-        # Plástico usado de comercio: pátina, roce y agua marcados sin llegar al barrial original.
-        luz = 0.55 + 0.45 * np.clip(oclusion, 0, 1) ** 1.25
-        plastico = base * luz * (0.93 + 0.14 * grano)
-        suciedad = np.clip((manchas - 0.49) * 4.0, 0, 1) * np.clip(1 - alto * 2.5, 0, 1)
-        velo = np.clip((manchas - 0.56) * 4.8, 0, 1) * 0.34
-        plastico = plastico * (1 - 0.46 * np.maximum(suciedad, velo))
-        raya = np.clip((np.abs(rayones - 0.5) - 0.20) * 24, 0, 1) * np.clip((manchas - 0.42) * 4, 0, 1)
-        plastico = plastico + (0.54 - plastico) * raya * 0.28
-        canto = np.clip(arista * 4.6, 0, 1)
-        plastico = plastico + (np.minimum(plastico * 1.55 + 0.045, 1) - plastico) * canto * 0.55
+    if es_balde:
+        # Desgaste físicamente motivado de balde de comercio: sin ruido pixelado tipo estática;
+        # marca de agua interior, roce de piso en el pie, escurridos desde el aro y uso en el agarre.
+        dx = (altura[..., 0:1] - 0.5) * 0.421
+        dy = (altura[..., 1:2] - 0.5) * 0.390
+        radio_xy = np.hypot(dx, dy)
+        en_interior = (radio_xy < 0.1755) & (alto < 0.62)
+        en_exterior = (~en_interior) & (alto < 0.61)
+        en_aro = (alto >= 0.60) & (alto <= 0.68)
+        en_agarre = alto > 0.88
+
+        # Base plástica lisa con AO en pliegues y variación tonal suave (sin grano 1-px).
+        ao = np.clip(oclusion, 0, 1)
+        luz = 0.54 + 0.46 * (ao ** 1.35)
+        plastico = base * luz * (0.96 + 0.07 * manchas) * (0.985 + 0.03 * grano)
+
+        # Mugre atrapada en recovecos profundos (bajo el labio del aro y junto a bisagras).
+        rincon = np.clip((1.0 - ao - 0.18) * 1.9, 0, 1) ** 1.5
+        tinte_rincon = np.array([0.048, 0.048, 0.042], dtype=np.float32)
+        plastico = plastico * (1.0 - 0.45 * rincon) + tinte_rincon * (0.45 * rincon)
+
+        # Interior: línea de agua turbia + sedimento mineral abajo + aureola seca de jabón.
+        nivel_agua = 0.35 + 0.045 * (manchas - 0.5)
+        bajo_agua = np.clip((nivel_agua - alto) * 9.0, 0, 1) * en_interior
+        fondo_int = np.clip(1.0 - alto * 3.8, 0, 1) * en_interior
+        tinte_agua = np.array([0.042, 0.058, 0.068], dtype=np.float32)
+        peso_agua = np.clip(bajo_agua * (0.24 + 0.20 * manchas) + fondo_int * 0.25, 0, 0.55)
+        plastico = plastico * (1.0 - peso_agua) + tinte_agua * peso_agua
+        anillo_jabon = np.exp(-(((alto - nivel_agua) / 0.026) ** 2)) * en_interior
+        anillo_jabon = anillo_jabon * np.clip((manchas - 0.32) * 1.8, 0.25, 1.0)
+        tinte_jabon = np.array([0.34, 0.38, 0.38], dtype=np.float32)
+        plastico = plastico * (1.0 - 0.24 * anillo_jabon) + tinte_jabon * (0.24 * anillo_jabon)
+
+        # Exterior bajo: polvo y arrastre sobre concreto + cantos gastados en el aro inferior.
+        zona_piso = np.clip((0.26 - alto) / 0.26, 0, 1) ** 1.3 * en_exterior
+        mugre_piso = zona_piso * np.clip(0.40 + 0.85 * manchas, 0, 1)
+        tinte_piso = np.array([0.042, 0.048, 0.048], dtype=np.float32)
+        plastico = plastico * (1.0 - 0.48 * mugre_piso) + tinte_piso * (0.48 * mugre_piso)
+        roce_bajo = np.clip(arista * 4.2, 0, 1) * np.clip((0.26 - alto) / 0.26, 0, 1)
+        tinte_roce = np.array([0.28, 0.36, 0.42], dtype=np.float32)
+        plastico = plastico * (1.0 - 0.38 * roce_bajo) + tinte_roce * (0.38 * roce_bajo)
+
+        # Escurridos verticales sutiles bajo el aro blanco sobre la pared exterior.
+        zona_escurrido = np.clip((alto - 0.24) / 0.36, 0, 1) * en_exterior
+        gotas = np.clip((hebras - 0.58) * 5.2, 0, 1) * np.clip((manchas - 0.43) * 3.2, 0, 1)
+        plastico = plastico * (1.0 - 0.28 * gotas * zona_escurrido)
+
+        # Aro blanco y agarre superior: roce de mopa en el labio y oscurecimiento por mano en el centro.
+        roce_aro = np.clip((manchas - 0.46) * 2.6, 0, 1) * en_aro
+        tinte_roce_aro = np.array([0.40, 0.41, 0.38], dtype=np.float32)
+        plastico = plastico * (1.0 - 0.26 * roce_aro) + tinte_roce_aro * (0.26 * roce_aro)
+        centro_mano = np.exp(-((dx / 0.042) ** 2)) * en_agarre
+        mano_uso = centro_mano * (0.65 + 0.35 * manchas)
+        tinte_mano = np.array([0.42, 0.42, 0.38], dtype=np.float32)
+        plastico = plastico * (1.0 - 0.32 * mano_uso) + tinte_mano * (0.32 * mano_uso)
+
+        # Cantos vivos generales con leve brillo de desgaste plástico.
+        canto = np.clip(arista * 3.5, 0, 1)
+        plastico = plastico + (np.minimum(plastico * 1.32 + 0.025, 1) - plastico) * canto * 0.28
     else:
         luz = 0.5 + 0.5 * np.clip(oclusion, 0, 1) ** 1.3
         plastico = base * luz * (0.93 + 0.14 * grano)
@@ -105,12 +172,15 @@ def main() -> None:
     for nombre, datos in OBJETOS.items():
         objeto = bpy.data.objects[nombre]
         originales = detalle.guardar_ranuras(objeto.data, COLORES)
-        detalle.desplegar(objeto, datos["columna"], len(OBJETOS), LADO, MARGEN)
+        if nombre == "balde-col":
+            desplegar_por_costuras(objeto, datos["columna"], len(OBJETOS), LADO, MARGEN)
+        else:
+            detalle.desplegar(objeto, datos["columna"], len(OBJETOS), LADO, MARGEN)
         copia = detalle.copia_con_color(objeto, [COLORES[nombre_] for nombre_ in originales])
         capas = detalle.capas(copia, LADO, MARGEN)
         detalle.descartar(copia)
         mitad = slice(datos["columna"] * LADO // 2, (datos["columna"] + 1) * LADO // 2)
-        color[:, mitad] = pintar(*capas, limpio=(nombre == "balde-col"))[:, mitad]
+        color[:, mitad] = pintar(*capas, es_balde=(nombre == "balde-col"))[:, mitad]
         detalle.unir_ranuras(objeto, originales, datos["une"])
         print(f"{nombre}: {len(originales)} caras horneadas")
     detalle.restaurar(antes)

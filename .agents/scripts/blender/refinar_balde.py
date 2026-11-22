@@ -65,11 +65,11 @@ MATERIALES_ORDENADOS = sorted(
     )
 )
 
-LADOS_CUERPO = 48
-TRAMOS_ARCO = 40
-LADOS_ARCO = 16
-TRAMOS_AGARRE = 16
-LADOS_AGARRE = 18
+LADOS_CUERPO = 32
+TRAMOS_ARCO = 20
+LADOS_ARCO = 8
+LADOS_BISAGRA = 8
+LADOS_AGARRE = 10
 
 # Arco de la manija alineado al pivote exacto del shader (`bisagra.y = 0.134` en Godot):
 # Sube recto por fuera del labio (`r = 0.195`) hasta `Z = 0.176` en `X = ±0.2035` y luego curva
@@ -166,14 +166,26 @@ def _agregar_revolucion(
             f = bm.faces.new((a[i], a[j], b[j], b[i]))
             f.smooth = True
             etiquetas[f] = mat_nombre
+        e_costura = bm.edges.get((a[0], b[0]))
+        if e_costura is not None:
+            e_costura.seam = True
+        if k > 0 and perfil[k][2] != perfil[k - 1][2]:
+            for i in range(lados):
+                e_borde = bm.edges.get((a[i], a[(i + 1) % lados]))
+                if e_borde is not None:
+                    e_borde.seam = True
     if cerrar_fondo_exterior:
         f = bm.faces.new(list(reversed(anillos[0])))
         f.smooth = False
         etiquetas[f] = perfil[0][2]
+        for e in f.edges:
+            e.seam = True
     if cerrar_fondo_interior:
         f = bm.faces.new(anillos[-1])
         f.smooth = False
         etiquetas[f] = perfil[-1][2]
+        for e in f.edges:
+            e.seam = True
 
 
 def _punto_arco(theta: float) -> Vector:
@@ -213,13 +225,20 @@ def _agregar_tubo_en_puntos(
             f = bm.faces.new((a[i], a[j], b[j], b[i]))
             f.smooth = True
             etiquetas[f] = mat_nombre
+        e_costura = bm.edges.get((a[0], b[0]))
+        if e_costura is not None:
+            e_costura.seam = True
 
     tapa0 = bm.faces.new(list(reversed(anillos[0])))
     tapa0.smooth = False
     etiquetas[tapa0] = mat_nombre
+    for e in tapa0.edges:
+        e.seam = True
     tapa1 = bm.faces.new(anillos[-1])
     tapa1.smooth = False
     etiquetas[tapa1] = mat_nombre
+    for e in tapa1.edges:
+        e.seam = True
 
 
 def _agregar_tubo_en_arco(
@@ -235,25 +254,19 @@ def _agregar_tubo_en_arco(
 
 
 def _reconstruir_cuerpo_y_aros(bm, etiquetas: dict) -> None:
-    # Perfil continuo del cuerpo + aro superior enrollado suave (exactamente dentro de las medidas
-    # originales: fondo en z=-0.156, pared interior r=0.164..0.178, aro exterior r=0.195, z=0.1755).
+    # Perfil limpio de baja densidad (24 lados, 11 estaciones): conserva exactamente el radio
+    # interior (`0,164..0,178 m`), el exterior (`0,195 m`) y la altura (`-0,156..+0,1755 m`).
     perfil_cuerpo = [
         (0.1470, -0.1560, "util_plastico_azul"),
-        (0.1545, -0.1545, "util_plastico_azul"),
-        (0.1755, -0.1335, "util_plastico_azul"),
-        (0.1780, -0.1280, "util_plastico_azul"),
-        (0.1848, 0.1488, "util_borde_crema"),
-        # Labio superior enrollado con 7 estaciones suaves en vez de 3 esquinas vivas.
-        (0.1920, 0.1545, "util_borde_crema"),
-        (0.1950, 0.1605, "util_borde_crema"),
-        (0.1950, 0.1710, "util_borde_crema"),
-        (0.1922, 0.1748, "util_borde_crema"),
+        (0.1560, -0.1520, "util_plastico_azul"),
+        (0.1765, -0.1320, "util_plastico_azul"),
+        (0.1848, 0.1490, "util_borde_crema"),
+        (0.1945, 0.1585, "util_borde_crema"),
+        (0.1945, 0.1720, "util_borde_crema"),
         (0.1865, 0.1755, "util_borde_crema"),
-        (0.1805, 0.1748, "util_borde_crema"),
         (0.1778, 0.1715, "util_borde_crema"),
-        (0.1752, 0.1447, "util_plastico_azul"),
-        (0.1640, -0.1226, "util_plastico_azul"),
-        (0.1615, -0.1325, "util_plastico_azul"),
+        (0.1752, 0.1450, "util_plastico_azul"),
+        (0.1640, -0.1230, "util_plastico_azul"),
         (0.1580, -0.1381, "util_plastico_azul"),
     ]
     _agregar_revolucion(
@@ -266,13 +279,11 @@ def _reconstruir_cuerpo_y_aros(bm, etiquetas: dict) -> None:
         etiquetas=etiquetas,
     )
 
-    # Aro inferior de refuerzo (48 lados, sección suavizada en z = -0.121..-0.103).
+    # Aro inferior de refuerzo (24 lados, 4 estaciones limpias en z = -0,121..-0,103).
     perfil_aro_inf = [
-        (0.1768, -0.1210, "util_plastico_azul"),
-        (0.1812, -0.1195, "util_plastico_azul"),
-        (0.1826, -0.1155, "util_plastico_azul"),
-        (0.1826, -0.1065, "util_plastico_azul"),
-        (0.1810, -0.1035, "util_plastico_azul"),
+        (0.1770, -0.1210, "util_plastico_azul"),
+        (0.1824, -0.1180, "util_plastico_azul"),
+        (0.1824, -0.1050, "util_plastico_azul"),
         (0.1772, -0.1030, "util_plastico_azul"),
     ]
     _agregar_revolucion(
@@ -302,66 +313,66 @@ def _agregar_cilindro_x(
         f = bm.faces.new((a0[i], a0[j], a1[j], a1[i]))
         f.smooth = True
         etiquetas[f] = mat_nombre
+    e_costura = bm.edges.get((a0[0], a1[0]))
+    if e_costura is not None:
+        e_costura.seam = True
     f0 = bm.faces.new(list(reversed(a0)))
     f0.smooth = False
     etiquetas[f0] = mat_nombre
+    for e in f0.edges:
+        e.seam = True
     f1 = bm.faces.new(a1)
     f1.smooth = False
     etiquetas[f1] = mat_nombre
+    for e in f1.edges:
+        e.seam = True
 
 
 def _reconstruir_bisagras(bm, etiquetas: dict) -> None:
     """Orejas exteriores limpias sobre el canto del balde (sin atravesar la pared interior)."""
     for signo in (-1.0, 1.0):
-        # Oreja exterior apoyada sobre la pared azul (`r = 0.184` a `z = 0.134`), siempre por
-        # fuera de la pared interior (`r = 0.175`).
         x_in = signo * 0.1805
         x_out = signo * 0.2005
         if x_in > x_out:
             x_in, x_out = x_out, x_in
-        _agregar_cilindro_x(bm, x_in, x_out, 0.0, ARCO_Z_BISAGRA, 0.0145, 16, "util_asa_grafito", etiquetas)
-        # Perno exterior que recibe el extremo del arco (`x = ±0.2035, z = 0.134`).
+        _agregar_cilindro_x(
+            bm, x_in, x_out, 0.0, ARCO_Z_BISAGRA, 0.0145, LADOS_BISAGRA, "util_asa_grafito", etiquetas
+        )
         xp0 = signo * 0.1970
         xp1 = signo * 0.2105
         if xp0 > xp1:
             xp0, xp1 = xp1, xp0
-        _agregar_cilindro_x(bm, xp0, xp1, 0.0, ARCO_Z_BISAGRA, 0.0085, 16, "util_borde_crema", etiquetas)
+        _agregar_cilindro_x(
+            bm, xp0, xp1, 0.0, ARCO_Z_BISAGRA, 0.0085, LADOS_BISAGRA, "util_borde_crema", etiquetas
+        )
 
 
 def _reconstruir_manija(bm, etiquetas: dict) -> None:
-    # 1. Arco cilíndrico suave: tramo recto vertical en ambos pivotes (`Z = 0.134..0.176`) para
-    # librar por fuera el aro blanco (`r = 0.195`) + 40 tramos en elipse hasta `Z = 0.338`.
+    # 1. Arco cilíndrico limpio: sube por fuera del labio blanco (`r = 0,195`) + 18 tramos en elipse.
     estaciones: list[tuple[Vector, Vector, float]] = []
     estaciones.append((Vector((-ARCO_RX, 0.0, ARCO_Z_BISAGRA)), Vector((0.0, 0.0, 1.0)), ARCO_RADIO_TUBO))
-    estaciones.append((Vector((-ARCO_RX, 0.0, (ARCO_Z_BISAGRA + ARCO_Z0) / 2.0)), Vector((0.0, 0.0, 1.0)), ARCO_RADIO_TUBO))
     for k in range(TRAMOS_ARCO + 1):
         theta = math.pi - math.pi * k / TRAMOS_ARCO
         estaciones.append((_punto_arco(theta), _tangente_arco(theta), ARCO_RADIO_TUBO))
-    estaciones.append((Vector((ARCO_RX, 0.0, (ARCO_Z_BISAGRA + ARCO_Z0) / 2.0)), Vector((0.0, 0.0, -1.0)), ARCO_RADIO_TUBO))
     estaciones.append((Vector((ARCO_RX, 0.0, ARCO_Z_BISAGRA)), Vector((0.0, 0.0, -1.0)), ARCO_RADIO_TUBO))
     _agregar_tubo_en_puntos(bm, estaciones, LADOS_ARCO, "util_asa_grafito", etiquetas)
 
-    # 2. Agarre superior de plástico rígido moldeado (`util_borde_crema`):
-    # extremos con hombro firme y 3 rebajes ergonómicos amplios (sin caras angostas sub-texel).
+    # 2. Agarre superior de plástico rígido (`util_borde_crema`): cilindro recto limpio con hombros
+    # biselados firmes en los extremos (sin anillos ondulados ni microcaras).
     theta_ini = math.radians(108.5)
     theta_fin = math.radians(71.5)
     perfil_agarre = [
-        (0.000, 0.0080),
-        (0.035, 0.0144),
-        (0.140, 0.0148),
-        (0.260, 0.0137),
-        (0.380, 0.0149),
-        (0.500, 0.0138),
-        (0.620, 0.0149),
-        (0.740, 0.0137),
-        (0.860, 0.0148),
-        (0.965, 0.0144),
-        (1.000, 0.0080),
+        (0.000, 0.0078),
+        (0.050, 0.0142),
+        (0.140, 0.0146),
+        (0.860, 0.0146),
+        (0.950, 0.0142),
+        (1.000, 0.0078),
     ]
     estaciones_agarre = [
         (theta_ini + (theta_fin - theta_ini) * t, radio) for t, radio in perfil_agarre
     ]
-    _agregar_tubo_en_arco(bm, estaciones_agarre, 12, "util_borde_crema", etiquetas)
+    _agregar_tubo_en_arco(bm, estaciones_agarre, LADOS_AGARRE, "util_borde_crema", etiquetas)
 
 
 def aplicar() -> dict[str, object]:
@@ -406,14 +417,15 @@ def aplicar() -> dict[str, object]:
         assert all(len(e.link_faces) == 2 for e in bm.edges), "Arista no-manifold en balde-col"
         assert all(f.calc_area() > 1e-8 for f in bm.faces), "Cara degenerada en balde-col"
 
-        # Marcar aristas de quiebre duro (>34°) como sharp para conservar hombros firmes en el
-        # agarre y tapas planas limpias sin perder suavidad en cuerpo, aro y arco.
-        limite = math.radians(34.0)
+        # Marcar aristas de quiebre duro (>42°) como sharp y costuras UV en ángulos fuertes (>65°)
+        # para conservar tapas planas y hombros firmes del agarre sin facetar cuerpo, aro ni arco.
+        limite = math.radians(42.0)
+        limite_costura = math.radians(65.0)
         for arista in bm.edges:
-            if len(arista.link_faces) == 2 and arista.calc_face_angle(0.0) > limite:
-                arista.smooth = False
-            else:
-                arista.smooth = True
+            ang = arista.calc_face_angle(0.0) if len(arista.link_faces) == 2 else 0.0
+            arista.smooth = ang <= limite
+            if ang > limite_costura:
+                arista.seam = True
 
         # Asignar material_index provisional y guardar lista ordenada de ranura_original.
         bm.faces.index_update()
@@ -426,6 +438,13 @@ def aplicar() -> dict[str, object]:
         bm.to_mesh(malla)
     finally:
         bm.free()
+
+    # Limpiar normales personalizadas viejas para que dominen las normales limpias de la malla.
+    if malla.has_custom_normals:
+        bpy.ops.object.select_all(action="DESELECT")
+        objeto.select_set(True)
+        bpy.context.view_layer.objects.active = objeto
+        bpy.ops.mesh.customdata_custom_splitnormals_clear()
 
     # Reescribir atributo de cara `ranura_original` sincronizado con la nueva topología.
     if RANURA in malla.attributes:

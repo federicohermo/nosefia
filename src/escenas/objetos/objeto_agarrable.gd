@@ -33,6 +33,12 @@ const OclusionDeContacto := preload("res://src/escenas/objetos/oclusion_de_conta
 	set(valor):
 		intensidad_de_oclusion = valor
 		_aplicar_oclusion()
+## Pares `[a, b]` en espacio local para silueta analítica de contacto (formas cóncavas).
+@export var capsulas_de_oclusion := PackedVector3Array()
+## Un radio en metros por cada par en `capsulas_de_oclusion`.
+@export var radios_de_oclusion := PackedFloat32Array()
+## Aro opcional `[cx, cy, cz, ex, ey, ez, radio_mayor, radio_tubo]` en espacio local.
+@export var aro_de_oclusion := PackedFloat32Array()
 ## La mancha que deja donde se apoya, y el oscurecimiento de su base si su material lo admite.
 var oclusion: Node3D
 
@@ -66,6 +72,8 @@ func _ready() -> void:
 	if not mallas.is_empty():
 		oclusion = OclusionDeContacto.new()
 		oclusion.configurar(mallas)
+		if not capsulas_de_oclusion.is_empty() or not aro_de_oclusion.is_empty():
+			oclusion.configurar_silueta(capsulas_de_oclusion, radios_de_oclusion, aro_de_oclusion)
 		_aplicar_oclusion()
 		add_child(oclusion)
 	body_entered.connect(
