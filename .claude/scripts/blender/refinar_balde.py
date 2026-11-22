@@ -193,7 +193,8 @@ def _punto_arco(theta: float) -> Vector:
 
 
 def _tangente_arco(theta: float) -> Vector:
-    return Vector((-ARCO_RX * math.sin(theta), 0.0, ARCO_RZ * math.cos(theta))).normalized()
+    # `theta` recorre de `pi` a `0` (izquierda -> arriba -> derecha): la tangente de avance es -dP/dtheta.
+    return Vector((ARCO_RX * math.sin(theta), 0.0, -ARCO_RZ * math.cos(theta))).normalized()
 
 
 def _agregar_tubo_en_puntos(
