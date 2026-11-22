@@ -95,8 +95,10 @@ paths:
     superior curvo y bisel de 2 segmentos (2 mm) en su aro inferior (`220` triángulos), excluye micro-aristas que activan
     `clamp_overlap` en monitor y lector, limpia duplicados y normales de `antenas-col`, y aplica
     biseles de 2 segmentos con triangulación y normales pesadas en `SEPT_JUEGOS_PROTOTIPO.blend`
-    y `source/puestos/router.blend`. Después van `exportar_router.py`, `exportar_modelo.py`,
-    `assets/models/extraer_lector.gd` y `hornear.py`. Un `.blend` nuevo del artista pide repetirlo.
+    y `source/puestos/router.blend`. `blender/enderezar_uv_mouse.py` alinea la isla superior de
+    `mouse-col` con la rueda y la costura de botones de `Mouse_Normal.png`. Después van
+    `exportar_router.py`, `exportar_modelo.py`, `assets/models/extraer_lector.gd` y `hornear.py`.
+    Un `.blend` nuevo del artista pide repetirlo.
 
 14. **El cielorraso del baño es parte de `almacen-col` y no una placa separada.**
     `blender/techo_del_bano.py` baja la cara `bano_cielorraso_blanco` de `almacen-col` a `Z = 3,14 m`,
