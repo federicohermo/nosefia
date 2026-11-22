@@ -23,6 +23,16 @@ const OclusionDeContacto := preload("res://src/escenas/objetos/oclusion_de_conta
 		datos = valor
 		_aplicar_oclusion()
 @export var orientacion_en_mano := Basis.IDENTITY
+## Si es mayor que cero, pisa el radio por defecto de la mancha de contacto (objetos finos).
+@export var radio_de_oclusion := 0.0:
+	set(valor):
+		radio_de_oclusion = valor
+		_aplicar_oclusion()
+## Si es mayor que cero, pisa la intensidad por defecto de la mancha de contacto.
+@export var intensidad_de_oclusion := 0.0:
+	set(valor):
+		intensidad_de_oclusion = valor
+		_aplicar_oclusion()
 ## La mancha que deja donde se apoya, y el oscurecimiento de su base si su material lo admite.
 var oclusion: Node3D
 
@@ -68,14 +78,22 @@ func _aplicar_oclusion() -> void:
 		return
 	var es_producto := datos is UnidadDeProducto
 	var radio := (
-		OclusionDeContacto.RADIO_DEL_PRODUCTO
-		if es_producto
-		else OclusionDeContacto.RADIO_POR_DEFECTO
+		radio_de_oclusion
+		if radio_de_oclusion > 0.0
+		else (
+			OclusionDeContacto.RADIO_DEL_PRODUCTO
+			if es_producto
+			else OclusionDeContacto.RADIO_POR_DEFECTO
+		)
 	)
 	var intensidad := (
-		OclusionDeContacto.INTENSIDAD_DEL_PRODUCTO
-		if es_producto
-		else OclusionDeContacto.INTENSIDAD_POR_DEFECTO
+		intensidad_de_oclusion
+		if intensidad_de_oclusion > 0.0
+		else (
+			OclusionDeContacto.INTENSIDAD_DEL_PRODUCTO
+			if es_producto
+			else OclusionDeContacto.INTENSIDAD_POR_DEFECTO
+		)
 	)
 	if oclusion.radio != radio:
 		oclusion.radio = radio

@@ -62,6 +62,11 @@ const LIMITE_ABIERTO := 1000.0
 const RESOLUCION_DE_VERTICES := 1000.0
 ## Mitad mínima de huella para distinguir su forma sin ruido numérico, en metros.
 const LADO_MINIMO_PARA_FORMA := 0.001
+## Ocupación bajo la cual una huella conectada es cóncava (ej. palanca en J o llave) y se parte.
+const OCUPACION_CONCAVA := 0.48
+const LADO_MINIMO_CONCAVO := 0.045
+const FAJAS_CONCAVAS := 10
+const HUECO_TRANSVERSAL := 0.045
 
 static var _plano_de_la_sombra: ArrayMesh
 static var _vertices_de_las_mallas: Dictionary[Mesh, PackedVector3Array] = {}
@@ -515,9 +520,134 @@ func _calcular_grupos(
 	if not is_finite(hondo):
 		return []
 	var componentes := _componentes_conectados(por_malla, hondo - radio, abajo)
-	if componentes.size() <= 1:
-		return componentes
-	return _unir_componentes_cercanos(componentes, abajo, radio)
+	if componentes.size() > 1:
+		componentes = _unir_componentes_cercanos(componentes, abajo, radio)
+	var resultado: Array[PackedVector3Array] = []
+	for grupo: PackedVector3Array in componentes:
+		resultado.append_array(_dividir_si_concavo(grupo, abajo))
+	return resultado
+
+
+## Si una huella conectada deja más de la mitad de su caja vacía (como una palanca curva en J o una
+## llave), la parte en fajas angostas a lo largo de su eje largo y separa huecos transversales para
+## que la mancha siga el trazo del objeto en vez de tapar el piso vacío del medio.
+static func _dividir_si_concavo(
+	grupo: PackedVector3Array, abajo: Vector3
+) -> Array[PackedVector3Array]:
+	if grupo.size() < 8:
+		return [grupo]
+	var mejor := Vector3.RIGHT
+	var mejor_dot := absf(mejor.dot(abajo))
+	for candidato: Vector3 in [Vector3.UP, Vector3.BACK]:
+		var proyeccion := absf(candidato.dot(abajo))
+		if proyeccion < mejor_dot:
+			mejor_dot = proyeccion
+			mejor = candidato
+	var eje_x := (mejor - abajo * abajo.dot(mejor)).normalized()
+	var eje_z := eje_x.cross(abajo).normalized()
+	var u_min := INF
+	var u_max := -INF
+	var v_min := INF
+	var v_max := -INF
+	var coords: Array[Vector2] = []
+	coords.resize(grupo.size())
+	for i in grupo.size():
+		var p := Vector2(grupo[i].dot(eje_x), grupo[i].dot(eje_z))
+		coords[i] = p
+		u_min = minf(u_min, p.x)
+		u_max = maxf(u_max, p.x)
+		v_min = minf(v_min, p.y)
+		v_max = maxf(v_max, p.y)
+	var du := u_max - u_min
+	var dv := v_max - v_min
+	if du < LADO_MINIMO_CONCAVO or dv < LADO_MINIMO_CONCAVO:
+		return [grupo]
+	var largo_en_u := du >= dv
+	var l_min := u_min if largo_en_u else v_min
+	var l_span := du if largo_en_u else dv
+	var c_span := dv if largo_en_u else du
+	var fajas: Array[Array] = []
+	var c_mins: Array[float] = []
+	var c_maxs: Array[float] = []
+	for _k in FAJAS_CONCAVAS:
+		fajas.append([])
+		c_mins.append(INF)
+		c_maxs.append(-INF)
+	for i in grupo.size():
+		var l_val := coords[i].x if largo_en_u else coords[i].y
+		var c_val := coords[i].y if largo_en_u else coords[i].x
+		var idx := clampi(int(((l_val - l_min) / l_span) * FAJAS_CONCAVAS), 0, FAJAS_CONCAVAS - 1)
+		fajas[idx].append(i)
+		c_mins[idx] = minf(c_mins[idx], c_val)
+		c_maxs[idx] = maxf(c_maxs[idx], c_val)
+	var area_fajas := 0.0
+	var ancho_faja := l_span / float(FAJAS_CONCAVAS)
+	for k in FAJAS_CONCAVAS:
+		if not fajas[k].is_empty():
+			area_fajas += maxf(c_maxs[k] - c_mins[k], 0.015) * ancho_faja
+	if area_fajas / (du * dv) >= OCUPACION_CONCAVA:
+		return [grupo]
+	# Unir fajas consecutivas que mantienen un ancho transversal angosto (tramo recto continuo).
+	var tope_ancho := maxf(0.06, c_span * 0.28)
+	var tramos: Array[Array] = []
+	var actual_indices: Array = []
+	var actual_cmin := INF
+	var actual_cmax := -INF
+	for k in FAJAS_CONCAVAS:
+		if fajas[k].is_empty():
+			if not actual_indices.is_empty():
+				tramos.append(actual_indices)
+				actual_indices = []
+				actual_cmin = INF
+				actual_cmax = -INF
+			continue
+		var nuevo_cmin := minf(actual_cmin, c_mins[k])
+		var nuevo_cmax := maxf(actual_cmax, c_maxs[k])
+		if not actual_indices.is_empty() and (nuevo_cmax - nuevo_cmin) > tope_ancho:
+			tramos.append(actual_indices)
+			actual_indices = fajas[k].duplicate()
+			actual_cmin = c_mins[k]
+			actual_cmax = c_maxs[k]
+		else:
+			actual_indices.append_array(fajas[k])
+			actual_cmin = nuevo_cmin
+			actual_cmax = nuevo_cmax
+	if not actual_indices.is_empty():
+		tramos.append(actual_indices)
+	# Si algún tramo (como la U del gancho) tiene un hueco transversal vacío, separarlo en dos.
+	var salida: Array[PackedVector3Array] = []
+	for tramo in tramos:
+		var orden: Array[Array] = []
+		for idx: int in tramo:
+			var c_val := coords[idx].y if largo_en_u else coords[idx].x
+			orden.append([c_val, idx])
+		orden.sort_custom(func(a: Array, b: Array) -> bool: return a[0] < b[0])
+		var corte := -1
+		var mayor_hueco := HUECO_TRANSVERSAL
+		for j in range(1, orden.size()):
+			var hueco: float = orden[j][0] - orden[j - 1][0]
+			if hueco > mayor_hueco:
+				mayor_hueco = hueco
+				corte = j
+		if corte > 0:
+			var parte_a := PackedVector3Array()
+			var parte_b := PackedVector3Array()
+			for j in orden.size():
+				if j < corte:
+					parte_a.append(grupo[orden[j][1]])
+				else:
+					parte_b.append(grupo[orden[j][1]])
+			if not parte_a.is_empty():
+				salida.append(parte_a)
+			if not parte_b.is_empty():
+				salida.append(parte_b)
+		else:
+			var sub := PackedVector3Array()
+			for idx: int in tramo:
+				sub.append(grupo[idx])
+			if not sub.is_empty():
+				salida.append(sub)
+	return salida if not salida.is_empty() else [grupo]
 
 
 ## Une los vértices dentro de la banda que comparten triángulos o coinciden en posición.

@@ -42,10 +42,10 @@ MARGEN = 8
 
 #: El color liso que tenía cada material, en lineal. Es la base de lo que se hornea.
 COLORES = {
-    "util_plastico_azul": (0.035, 0.16, 0.32),
-    "util_plastico_claro": (0.06, 0.23, 0.42),
-    "util_borde_crema": (0.68, 0.72, 0.7),
-    "util_asa_grafito": (0.08, 0.105, 0.12),
+    "util_plastico_azul": (0.042, 0.19, 0.39),
+    "util_plastico_claro": (0.065, 0.24, 0.44),
+    "util_borde_crema": (0.78, 0.80, 0.78),
+    "util_asa_grafito": (0.085, 0.105, 0.125),
     "util_mango_acero": (0.36, 0.42, 0.45),
     "util_fibra_cruda": (0.72, 0.7, 0.62),
     "util_fibra_sombra": (0.58, 0.57, 0.5),
@@ -62,7 +62,7 @@ OBJETOS = {
 }
 
 
-def pintar(base, forma, uso, altura) -> np.ndarray:
+def pintar(base, forma, uso, altura, limpio: bool = False) -> np.ndarray:
     """El color final, en lineal, desde las capas horneadas."""
     oclusion, arista, grano = forma[..., 0:1], forma[..., 1:2], forma[..., 2:3]
     manchas, hebras, rayones = uso[..., 0:1], uso[..., 1:2], uso[..., 2:3]
@@ -71,15 +71,27 @@ def pintar(base, forma, uso, altura) -> np.ndarray:
     for nombre in FIBRAS:
         es_fibra |= np.abs(base - np.array(COLORES[nombre])).sum(axis=2, keepdims=True) < 0.02
 
-    luz = 0.5 + 0.5 * np.clip(oclusion, 0, 1) ** 1.3
-    plastico = base * luz * (0.93 + 0.14 * grano)
-    suciedad = np.clip((manchas - 0.48) * 4, 0, 1) * np.clip(1 - alto * 3.2, 0, 1)
-    velo = np.clip((manchas - 0.58) * 5, 0, 1) * 0.35
-    plastico = plastico * (1 - 0.55 * np.maximum(suciedad, velo))
-    raya = np.clip((np.abs(rayones - 0.5) - 0.2) * 25, 0, 1) * np.clip((manchas - 0.4) * 4, 0, 1)
-    plastico = plastico + (0.55 - plastico) * raya * 0.35
-    canto = np.clip(arista * 5, 0, 1)
-    plastico = plastico + (np.minimum(plastico * 1.7 + 0.05, 1) - plastico) * canto * 0.7
+    if limpio:
+        # Plástico limpio con uso leve: oclusión suave, micrograno sutil y desgaste contenido.
+        luz = 0.76 + 0.24 * np.clip(oclusion, 0, 1) ** 1.05
+        plastico = base * luz * (0.97 + 0.06 * grano)
+        suciedad = np.clip((manchas - 0.56) * 3.5, 0, 1) * np.clip(1 - alto * 3.8, 0, 1)
+        velo = np.clip((manchas - 0.64) * 4, 0, 1) * 0.12
+        plastico = plastico * (1 - 0.18 * np.maximum(suciedad, velo))
+        raya = np.clip((np.abs(rayones - 0.5) - 0.24) * 20, 0, 1) * np.clip((manchas - 0.52) * 4, 0, 1)
+        plastico = plastico + (0.48 - plastico) * raya * 0.08
+        canto = np.clip(arista * 3.5, 0, 1)
+        plastico = plastico + (np.minimum(plastico * 1.25 + 0.03, 1) - plastico) * canto * 0.22
+    else:
+        luz = 0.5 + 0.5 * np.clip(oclusion, 0, 1) ** 1.3
+        plastico = base * luz * (0.93 + 0.14 * grano)
+        suciedad = np.clip((manchas - 0.48) * 4, 0, 1) * np.clip(1 - alto * 3.2, 0, 1)
+        velo = np.clip((manchas - 0.58) * 5, 0, 1) * 0.35
+        plastico = plastico * (1 - 0.55 * np.maximum(suciedad, velo))
+        raya = np.clip((np.abs(rayones - 0.5) - 0.2) * 25, 0, 1) * np.clip((manchas - 0.4) * 4, 0, 1)
+        plastico = plastico + (0.55 - plastico) * raya * 0.35
+        canto = np.clip(arista * 5, 0, 1)
+        plastico = plastico + (np.minimum(plastico * 1.7 + 0.05, 1) - plastico) * canto * 0.7
 
     fibra = base * (0.45 + 0.55 * np.clip(oclusion, 0, 1)) * (0.62 + 0.76 * hebras)
     return np.clip(np.where(es_fibra, fibra, plastico), 0, 1)
@@ -98,7 +110,7 @@ def main() -> None:
         capas = detalle.capas(copia, LADO, MARGEN)
         detalle.descartar(copia)
         mitad = slice(datos["columna"] * LADO // 2, (datos["columna"] + 1) * LADO // 2)
-        color[:, mitad] = pintar(*capas)[:, mitad]
+        color[:, mitad] = pintar(*capas, limpio=(nombre == "balde-col"))[:, mitad]
         detalle.unir_ranuras(objeto, originales, datos["une"])
         print(f"{nombre}: {len(originales)} caras horneadas")
     detalle.restaurar(antes)

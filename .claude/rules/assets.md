@@ -112,3 +112,22 @@ paths:
     `bano_portarrollo_2` (acero, tubo de cartón y rollo con hoja colgante) en la mampara izquierda
     de cada cabina. Va antes de `exportar_modelo.py` y `hornear.py`. Un `.blend` nuevo del artista
     pide repetirlo.
+
+16. **El piso del depósito queda libre sin el pallet suelto.**
+    `blender/quitar_pallet_piso.py` elimina `deposito_pallet_piso` de `SEPT_JUEGOS_PROTOTIPO.blend`
+    (los pallets temporales de entrega toman la malla desde `deposito_pallet_fondo_0_0` escalada a
+    `1,38 × 0,92 m`). Va antes de `exportar_modelo.py` y `hornear.py`. Un `.blend` nuevo del
+    artista pide repetirlo.
+
+17. **El balde lleva cuerpo y aro de 48 lados, manija curva suave y textura limpia.**
+    `blender/refinar_balde.py` reconstruye el cuerpo y ambos aros de `balde-col` a 48 lados con
+    labio superior redondeado, el arco de la manija a 40 tramos × 16 lados y el agarre a 16 × 18
+    lados conservando pivotes, bisagras y logotipo. Luego `blender/texturizar_utiles.py --aplicar`
+    rehornea `utiles_de_limpieza.png` con plástico limpio y desgaste leve. Va antes de
+    `exportar_modelo.py`. Un `.blend` nuevo del artista pide repetirlo.
+
+16. **El piso del depósito queda libre sin el pallet suelto.**
+    `blender/quitar_pallet_piso.py` elimina `deposito_pallet_piso` de `SEPT_JUEGOS_PROTOTIPO.blend`
+    (los pallets temporales de entrega toman la malla desde `deposito_pallet_fondo_0_0` escalada a
+    `1,38 × 0,92 m`). Va antes de `exportar_modelo.py` y `hornear.py`. Un `.blend` nuevo del
+    artista pide repetirlo.

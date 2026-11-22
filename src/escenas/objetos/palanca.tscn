@@ -23,6 +23,8 @@ continuous_cd = true
 script = ExtResource("objeto")
 datos = ExtResource("datos")
 orientacion_en_mano = Basis(1, 0, 0, 0, -0.173648, 0.984808, 0, -0.984808, -0.173648)
+radio_de_oclusion = 0.02
+intensidad_de_oclusion = 0.4
 
 [node name="Forma" type="CollisionShape3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.0405, 0)

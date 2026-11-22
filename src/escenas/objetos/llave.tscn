@@ -24,6 +24,8 @@ collision_mask = 9
 script = ExtResource("objeto")
 datos = ExtResource("datos")
 orientacion_en_mano = Basis(0, 0, 1, 1, 0, 0, 0, 1, 0)
+radio_de_oclusion = 0.015
+intensidad_de_oclusion = 0.45
 
 [node name="Forma" type="CollisionShape3D" parent="."]
 shape = SubResource("cuerpo")
