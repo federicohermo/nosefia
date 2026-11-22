@@ -237,6 +237,7 @@ func intensidad_a(altura: float) -> float:
 func _crear_sombra() -> MeshInstance3D:
 	var nueva := MeshInstance3D.new()
 	nueva.top_level = true
+	nueva.physics_interpolation_mode = Node.PHYSICS_INTERPOLATION_MODE_OFF
 	nueva.mesh = plano()
 	nueva.material_override = _material()
 	nueva.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
@@ -301,6 +302,7 @@ func _escribir_silueta(
 	centro_en_cuerpo: Vector2
 ) -> void:
 	if _silueta_capsulas.is_empty() and _silueta_aro.size() < 8:
+		material.set_shader_parameter(&"usar_silueta", false)
 		material.set_shader_parameter(&"cantidad_capsulas", 0)
 		material.set_shader_parameter(&"aro_silueta", Vector4.ZERO)
 		return
@@ -346,6 +348,7 @@ func _escribir_silueta(
 	while caps.size() < MAX_CAPSULAS:
 		caps.append(Vector4.ZERO)
 		rads.append(0.0)
+	material.set_shader_parameter(&"usar_silueta", true)
 	material.set_shader_parameter(&"cantidad_capsulas", cantidad)
 	material.set_shader_parameter(&"capsulas", caps)
 	material.set_shader_parameter(&"radios_capsulas", rads)
@@ -391,7 +394,7 @@ static func _orientacion_en_la_superficie(cuerpo: CollisionObject3D, normal: Vec
 	for eje_bruto: Vector3 in [cuerpo.global_basis.y, cuerpo.global_basis.z]:
 		var eje := eje_bruto.normalized()
 		var proyeccion := absf(eje.dot(normal))
-		if proyeccion < mejor_dot:
+		if proyeccion + 0.05 < mejor_dot:
 			mejor_dot = proyeccion
 			mejor = eje
 	var costado := (mejor - normal * normal.dot(mejor)).normalized()

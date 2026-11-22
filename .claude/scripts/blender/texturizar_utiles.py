@@ -37,8 +37,8 @@ sys.path.insert(0, str(RAIZ / ".claude/scripts"))
 from lib.consola import configurar  # noqa: E402
 
 TEXTURA = RAIZ / "assets/source/textures/props/utiles_de_limpieza.png"
-LADO = 512
-MARGEN = 8
+LADO = 1024
+MARGEN = 6
 
 #: El color liso que tenía cada material, en lineal. Es la base de lo que se hornea.
 COLORES = {
@@ -73,7 +73,7 @@ def desplegar_por_costuras(objeto, columna: int, columnas: int, lado: int, marge
     bpy.context.view_layer.objects.active = objeto
     bpy.ops.object.mode_set(mode="EDIT")
     bpy.ops.mesh.select_all(action="SELECT")
-    bpy.ops.uv.unwrap(method="ANGLE_BASED", margin=0.025)
+    bpy.ops.uv.unwrap(method="ANGLE_BASED", margin=0.045)
     bpy.ops.object.mode_set(mode="OBJECT")
     borde = margen / lado
     for dato in malla.uv_layers[0].data:
@@ -103,39 +103,44 @@ def pintar(base, forma, uso, altura, es_balde: bool = False) -> np.ndarray:
 
         # Base plástica lisa con AO en pliegues y variación tonal suave (sin grano 1-px).
         ao = np.clip(oclusion, 0, 1)
-        luz = 0.54 + 0.46 * (ao ** 1.35)
-        plastico = base * luz * (0.96 + 0.07 * manchas) * (0.985 + 0.03 * grano)
+        luz = 0.56 + 0.44 * (ao ** 1.3)
+        plastico = base * luz * (0.95 + 0.09 * manchas)
 
         # Mugre atrapada en recovecos profundos (bajo el labio del aro y junto a bisagras).
-        rincon = np.clip((1.0 - ao - 0.18) * 1.9, 0, 1) ** 1.5
-        tinte_rincon = np.array([0.048, 0.048, 0.042], dtype=np.float32)
-        plastico = plastico * (1.0 - 0.45 * rincon) + tinte_rincon * (0.45 * rincon)
+        rincon = np.clip((1.0 - ao - 0.16) * 2.0, 0, 1) ** 1.4
+        tinte_rincon = np.array([0.045, 0.046, 0.040], dtype=np.float32)
+        plastico = plastico * (1.0 - 0.50 * rincon) + tinte_rincon * (0.50 * rincon)
 
         # Interior: línea de agua turbia + sedimento mineral abajo + aureola seca de jabón.
-        nivel_agua = 0.35 + 0.045 * (manchas - 0.5)
+        nivel_agua = 0.36 + 0.045 * (manchas - 0.5)
         bajo_agua = np.clip((nivel_agua - alto) * 9.0, 0, 1) * en_interior
-        fondo_int = np.clip(1.0 - alto * 3.8, 0, 1) * en_interior
-        tinte_agua = np.array([0.042, 0.058, 0.068], dtype=np.float32)
-        peso_agua = np.clip(bajo_agua * (0.24 + 0.20 * manchas) + fondo_int * 0.25, 0, 0.55)
+        fondo_int = np.clip(1.0 - alto * 3.6, 0, 1) * en_interior
+        tinte_agua = np.array([0.040, 0.056, 0.064], dtype=np.float32)
+        peso_agua = np.clip(bajo_agua * (0.28 + 0.22 * manchas) + fondo_int * 0.28, 0, 0.60)
         plastico = plastico * (1.0 - peso_agua) + tinte_agua * peso_agua
-        anillo_jabon = np.exp(-(((alto - nivel_agua) / 0.026) ** 2)) * en_interior
-        anillo_jabon = anillo_jabon * np.clip((manchas - 0.32) * 1.8, 0.25, 1.0)
-        tinte_jabon = np.array([0.34, 0.38, 0.38], dtype=np.float32)
-        plastico = plastico * (1.0 - 0.24 * anillo_jabon) + tinte_jabon * (0.24 * anillo_jabon)
+        anillo_jabon = np.exp(-(((alto - nivel_agua) / 0.024) ** 2)) * en_interior
+        anillo_jabon = anillo_jabon * np.clip((manchas - 0.28) * 1.8, 0.30, 1.0)
+        tinte_jabon = np.array([0.36, 0.40, 0.40], dtype=np.float32)
+        plastico = plastico * (1.0 - 0.30 * anillo_jabon) + tinte_jabon * (0.30 * anillo_jabon)
 
         # Exterior bajo: polvo y arrastre sobre concreto + cantos gastados en el aro inferior.
-        zona_piso = np.clip((0.26 - alto) / 0.26, 0, 1) ** 1.3 * en_exterior
-        mugre_piso = zona_piso * np.clip(0.40 + 0.85 * manchas, 0, 1)
-        tinte_piso = np.array([0.042, 0.048, 0.048], dtype=np.float32)
-        plastico = plastico * (1.0 - 0.48 * mugre_piso) + tinte_piso * (0.48 * mugre_piso)
-        roce_bajo = np.clip(arista * 4.2, 0, 1) * np.clip((0.26 - alto) / 0.26, 0, 1)
-        tinte_roce = np.array([0.28, 0.36, 0.42], dtype=np.float32)
-        plastico = plastico * (1.0 - 0.38 * roce_bajo) + tinte_roce * (0.38 * roce_bajo)
+        zona_piso = np.clip((0.28 - alto) / 0.28, 0, 1) ** 1.25 * en_exterior
+        mugre_piso = zona_piso * np.clip(0.42 + 0.85 * manchas, 0, 1)
+        tinte_piso = np.array([0.042, 0.048, 0.046], dtype=np.float32)
+        plastico = plastico * (1.0 - 0.52 * mugre_piso) + tinte_piso * (0.52 * mugre_piso)
+        roce_bajo = np.clip(arista * 4.4, 0, 1) * np.clip((0.28 - alto) / 0.28, 0, 1)
+        tinte_roce = np.array([0.30, 0.38, 0.44], dtype=np.float32)
+        plastico = plastico * (1.0 - 0.42 * roce_bajo) + tinte_roce * (0.42 * roce_bajo)
 
-        # Escurridos verticales sutiles bajo el aro blanco sobre la pared exterior.
-        zona_escurrido = np.clip((alto - 0.24) / 0.36, 0, 1) * en_exterior
-        gotas = np.clip((hebras - 0.58) * 5.2, 0, 1) * np.clip((manchas - 0.43) * 3.2, 0, 1)
-        plastico = plastico * (1.0 - 0.28 * gotas * zona_escurrido)
+        # Escurridos verticales y roces suaves en la pared exterior.
+        zona_escurrido = np.clip((alto - 0.22) / 0.38, 0, 1) * en_exterior
+        gotas = np.clip((hebras - 0.56) * 5.0, 0, 1) * np.clip((manchas - 0.42) * 3.0, 0, 1)
+        plastico = plastico * (1.0 - 0.30 * gotas * zona_escurrido)
+        roces_ext = np.clip((np.abs(rayones - 0.5) - 0.24) * 18.0, 0, 1) * np.clip(
+            (manchas - 0.46) * 3.5, 0, 1
+        ) * en_exterior
+        tinte_roce_ext = np.array([0.24, 0.34, 0.42], dtype=np.float32)
+        plastico = plastico * (1.0 - 0.22 * roces_ext) + tinte_roce_ext * (0.22 * roces_ext)
 
         # Aro blanco y agarre superior: roce de mopa en el labio y oscurecimiento por mano en el centro.
         roce_aro = np.clip((manchas - 0.46) * 2.6, 0, 1) * en_aro

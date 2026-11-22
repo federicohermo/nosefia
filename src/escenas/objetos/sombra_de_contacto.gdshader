@@ -24,6 +24,7 @@ uniform vec3 apoyo_maximo = vec3(1000.0);
 // `(min_x, min_z, max_x, max_z)` en metros sobre el plano de la mancha.
 uniform bool recorte_por_instancia = false;
 // Silueta analítica 2D para objetos cóncavos (palanca, llave): hasta 8 cápsulas y 1 aro opcional.
+uniform bool usar_silueta = false;
 uniform int cantidad_capsulas = 0;
 uniform vec4 capsulas[8];
 uniform float radios_capsulas[8];
@@ -54,7 +55,7 @@ float distancia_a_la_capsula(vec2 punto, vec2 a, vec2 b, float radio) {
 
 void fragment() {
 	float distancia = 0.0;
-	if (cantidad_capsulas > 0 || aro_silueta.z > 0.0) {
+	if (usar_silueta) {
 		distancia = 1000.0;
 		for (int i = 0; i < 8; i++) {
 			if (i >= cantidad_capsulas) {

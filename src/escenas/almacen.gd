@@ -592,7 +592,9 @@ func _al_abrir_la_jornada(jornada: int) -> void:
 		_pallets_de_entrega = null
 	var llegadas := Apertura.productos_con_cajas_apiladas(jornada)
 	if not llegadas.is_empty():
-		var madera: MeshInstance3D = $Estructura/deposito_pallet_fondo_0_0
+		var madera := (
+			$Estructura.find_child("deposito_pallet_fondo_0_0", true, false) as MeshInstance3D
+		)
 		_pallets_de_entrega = PALLETS_DE_ENTREGA.instantiate()
 		add_child(_pallets_de_entrega)
 		var pallets: Array[MeshInstance3D] = _pallets_de_entrega.call(
