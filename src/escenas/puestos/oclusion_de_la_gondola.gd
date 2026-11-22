@@ -103,7 +103,9 @@ func preparar_bloque(
 		var medido := _pose_y_recorte(copia, apoyo, inversa, espacio, alcance_recorte)
 		poses.append(medido[0] as Transform3D)
 		recortes.append(medido[1] as Color)
-	var sombras := _crear_lote_de_sombras(nombre, apoyo["huella"] as Vector2, copias)
+	var sombras := _crear_lote_de_sombras(
+		nombre, apoyo["huella"] as Vector2, apoyo["esquinas"] as float, copias
+	)
 	var datos := {
 		"materiales": materiales_del_bloque.duplicate(),
 		"eje": apoyo["eje"] as Vector3,
@@ -176,7 +178,9 @@ func sombras_de(id: int) -> MultiMeshInstance3D:
 	return _bloques[id]["sombras"] as MultiMeshInstance3D
 
 
-func _crear_lote_de_sombras(nombre: String, huella: Vector2, copias: int) -> MultiMeshInstance3D:
+func _crear_lote_de_sombras(
+	nombre: String, huella: Vector2, esquinas: float, copias: int
+) -> MultiMeshInstance3D:
 	var lote := MultiMeshInstance3D.new()
 	lote.name = "SombrasDe" + nombre
 	lote.physics_interpolation_mode = Node.PHYSICS_INTERPOLATION_MODE_OFF
@@ -187,7 +191,7 @@ func _crear_lote_de_sombras(nombre: String, huella: Vector2, copias: int) -> Mul
 	material.shader = OclusionDeContacto.SOMBRA
 	material.render_priority = PRIORIDAD_DE_LA_MANCHA
 	material.set_shader_parameter(&"huella", huella)
-	material.set_shader_parameter(&"esquinas", ObjetoAgarrable.ESQUINAS_POR_DEFECTO)
+	material.set_shader_parameter(&"esquinas", esquinas)
 	material.set_shader_parameter(&"recorte_por_instancia", true)
 	lote.material_override = material
 	var mm := MultiMesh.new()
@@ -305,29 +309,29 @@ static func _medir_apoyo_local(malla: Mesh, derecho: Basis) -> Dictionary:
 	var base := INF
 	for vertice: Vector3 in vertices:
 		base = minf(base, vertice.dot(eje))
-	var minimo := Vector2(INF, INF)
-	var maximo := Vector2(-INF, -INF)
+	var puntos := PackedVector2Array()
 	for vertice: Vector3 in vertices:
 		if vertice.dot(eje) <= base + OclusionDeContacto.BANDA_DE_APOYO:
-			var plano := Vector2(vertice.dot(x_local), vertice.dot(z_local))
-			minimo = minimo.min(plano)
-			maximo = maximo.max(plano)
-	if not is_finite(base) or not is_finite(minimo.x):
+			puntos.append(Vector2(vertice.dot(x_local), vertice.dot(z_local)))
+	if not is_finite(base) or puntos.is_empty():
 		return {
 			"eje": eje,
 			"x": x_local,
 			"z": z_local,
 			"base": 0.0,
 			"huella": Vector2.ZERO,
+			"esquinas": 0.0,
 			"centro_base": Vector3.ZERO,
 		}
-	var centro_xz := (minimo + maximo) / 2.0
+	var medida := OclusionDeContacto.medir_huella_2d(puntos)
+	var centro_xz: Vector2 = medida[0]
 	return {
 		"eje": eje,
 		"x": x_local,
 		"z": z_local,
 		"base": base,
-		"huella": (maximo - minimo) / 2.0,
+		"huella": medida[1] as Vector2,
+		"esquinas": medida[2] as float,
 		"centro_base": x_local * centro_xz.x + eje * base + z_local * centro_xz.y,
 	}
 

@@ -79,8 +79,9 @@ paths:
 11. **El exhibidor y los bloques del depósito llevan su paso sobre el `.blend`.**
     `blender/engrosar_lateral_exhibidor.py` restaura los 20 mm del lateral izquierdo de
     `exhibidor_golosinas-col`. `blender/ladrillos_del_deposito.py` reconstruye los bloques de
-    relieve en esquinas y jambas del depósito sin juntas internas ni aristas sueltas. Van antes
-    de `exportar_modelo.py` y `hornear.py`. Un `.blend` nuevo del artista pide repetirlos.
+    relieve en esquinas y jambas del depósito y del cuartito de limpieza, y une
+    `cuartito_revestimiento` en una sola malla conexa. Van antes de `exportar_modelo.py` y
+    `hornear.py`. Un `.blend` nuevo del artista pide repetirlos.
 
 12. **Los tres bidones de limpieza llevan bisel no destructivo en sus quiebres.**
     `blender/biselar_bidones.py` suaviza caras y aristas y marca pesos de bisel desde 30°.
@@ -102,3 +103,10 @@ paths:
     ajusta la escala V de las paredes del baño y elimina `bano_cielorraso-convcol` para evitar
     caras coplanares y sombras de oclusión en el encuentro con las paredes. Va antes de
     `exportar_modelo.py` y `hornear.py`. Un `.blend` nuevo del artista pide repetirlo.
+
+15. **La porcelana del baño va lisa y ambas cabinas llevan portarrollos con papel higiénico.**
+    `blender/detalles_del_bano.py` desconecta `porcelana_atlas.png` de `bano_porcelana` y
+    `bano_asiento_marfil` para eliminar el pixelado del inodoro y coloca `bano_portarrollo_1` y
+    `bano_portarrollo_2` (acero, tubo de cartón y rollo con hoja colgante) en la mampara izquierda
+    de cada cabina. Va antes de `exportar_modelo.py` y `hornear.py`. Un `.blend` nuevo del artista
+    pide repetirlo.

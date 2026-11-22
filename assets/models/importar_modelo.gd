@@ -21,13 +21,10 @@ const FILTRO_LINEAL: Array[String] = [
 	"local_aluminio",
 	# El mapa de suciedad es una máscara suave: pixelado, se leería en cuadrados.
 	"local_cielorraso",
-	# Cada cara del lavatorio toma uno o dos texeles de su atlas, apenas distintos: pixelado, el
-	# frente se veía en franjas.
-	"bano_porcelana",
 ]
 ## Sin detalle ni emisión, estos materiales generan sus propios programas. Con un detalle blanco y
 ## una emisión negra comparten los de las paredes pintadas y el techo, y la imagen no cambia.
-const CON_LOS_PROGRAMAS_DE_LAS_PAREDES: Array[String] = ["bano_pared_clara", "bano_porcelana"]
+const CON_LOS_PROGRAMAS_DE_LAS_PAREDES: Array[String] = ["bano_pared_clara"]
 ## Las piezas de las jambas toman la luz de las sondas y de las luces en tiempo real, y salen más
 ## claras que la pared horneada que tienen al lado: 1,6 veces en el portón y en el cuartito de
 ## limpieza. Con este tinte tienen el mismo brillo.
@@ -42,7 +39,13 @@ const TINTE_DE_LAS_CABINAS := Color(0.66, 0.66, 0.66, 1.0)
 ## curvos: a 20 cm por texel, el asiento de una silla eran dos texeles y dejaba manchas claras donde
 ## lo tocan las patas, y el frente del lavatorio se veía en franjas.
 const DETALLE_DE_LUZ := 8.0
-const CON_DETALLE_DE_LUZ: Array[String] = ["salon_silla", "vanitory", "bano_lavatorio"]
+const CON_DETALLE_DE_LUZ: Array[String] = [
+	"salon_silla",
+	"vanitory",
+	"bano_lavatorio",
+	"inodoro",
+	"bano_inodoro",
+]
 ## La variación grande de las paredes pintadas, horneada por `hornear_paredes.py`: los retoques y
 ## manchas de la pintura, sin repetirse. Su color lleva sólo el grano fino, que se repite cada
 ## pocos metros sin que se note.
@@ -73,10 +76,12 @@ func _post_import(escena: Node) -> Object:
 		if (
 			str(malla.name).begins_with("exhibido_")
 			or str(malla.name).begins_with("estanteria_precios")
+			or str(malla.name).begins_with("bano_portarrollo_")
+			or malla.name == &"mouse"
 		):
-			# Los productos de exhibición y los portaprecios de la estantería son más finos que un
-			# texel del mapa de luz y se horneaban negros: toman la luz de las sondas, como la
-			# góndola.
+			# Los productos de exhibición, los portaprecios, el mouse y los portarrollos miden
+			# menos que un texel del mapa de luz (20 cm) y se horneaban con cortes o manchas:
+			# toman la luz de las sondas.
 			malla.gi_mode = GeometryInstance3D.GI_MODE_DYNAMIC
 		for prefijo: String in CON_DETALLE_DE_LUZ:
 			if str(malla.name).begins_with(prefijo):

@@ -38,7 +38,7 @@ func _tablon(pose: Transform3D) -> Node3D:
 	cuerpo.add_child(malla)
 	var oclusion: Node3D = Oclusion.new()
 	var mallas: Array[MeshInstance3D] = [malla]
-	oclusion.configurar(mallas, 0.0)
+	oclusion.configurar(mallas)
 	cuerpo.add_child(oclusion)
 	add_child(cuerpo)
 	cuerpo.global_transform = pose
@@ -122,7 +122,7 @@ func _cuerpo_con_mallas(mallas_cfg: Array[Array], pose: Transform3D) -> Node3D:
 		cuerpo.add_child(malla)
 		mallas.append(malla)
 	var oclusion: Node3D = Oclusion.new()
-	oclusion.configurar(mallas, 0.0)
+	oclusion.configurar(mallas)
 	cuerpo.add_child(oclusion)
 	add_child(cuerpo)
 	cuerpo.global_transform = pose
@@ -345,6 +345,38 @@ func test_trasladar_en_la_mano_sin_girar_no_recalcula_los_grupos() -> void:
 	cuerpo.global_basis = Basis(Vector3.RIGHT, PI / 2.0)
 	await _esperar()
 	assert_int(oclusion.get("calculos_de_apoyo")).is_greater(calculos_iniciales)
+
+
+func test_mover_apoyado_sin_girar_no_recalcula_la_forma() -> void:
+	_piso()
+	var cilindro := CylinderMesh.new()
+	cilindro.top_radius = 0.1
+	cilindro.bottom_radius = 0.1
+	cilindro.height = 0.3
+	var mallas_cfg: Array[Array] = [[cilindro, Transform3D.IDENTITY]]
+	var oclusion := _cuerpo_con_mallas(mallas_cfg, Transform3D(Basis.IDENTITY, Vector3.UP * 0.15))
+	await _esperar()
+	assert_bool(oclusion.sombra.visible).is_true()
+	var formas_iniciales: int = oclusion.get("calculos_de_forma")
+	assert_int(formas_iniciales).is_equal(1)
+	var esquinas_parado: float = (
+		(oclusion.sombra.material_override as ShaderMaterial).get_shader_parameter(&"esquinas")
+	)
+	var cuerpo := oclusion.get_parent() as Node3D
+	for paso in 5:
+		cuerpo.global_position += Vector3(0.2, 0.0, 0.1)
+		await _esperar()
+	assert_int(oclusion.get("calculos_de_forma")).is_equal(formas_iniciales)
+	assert_float(oclusion.sombra.global_position.x).is_equal_approx(cuerpo.global_position.x, 0.01)
+	cuerpo.global_transform = Transform3D(
+		Basis(Vector3.BACK, PI / 2.0), Vector3(cuerpo.global_position.x, 0.1, 0.0)
+	)
+	await _esperar()
+	assert_int(oclusion.get("calculos_de_forma")).is_greater(formas_iniciales)
+	var esquinas_acostado: float = (
+		(oclusion.sombra.material_override as ShaderMaterial).get_shader_parameter(&"esquinas")
+	)
+	assert_float(esquinas_acostado).is_less(esquinas_parado)
 
 
 func test_un_objeto_alargado_girado_sobre_su_eje_mantiene_huellas_ajustadas() -> void:

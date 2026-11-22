@@ -198,8 +198,8 @@ class Malla:
 
 
 def refinar_artefactos(solo=None):
-    porcelana = material("bano_porcelana", (.95, .95, .93), .38, ceramica=True)
-    asiento = material("bano_asiento_marfil", (.88, .89, .86), .38, ceramica=True)
+    porcelana = material("bano_porcelana", (.86, .87, .85), .30, ceramica=False)
+    asiento = material("bano_asiento_marfil", (.80, .80, .76), .32, ceramica=False)
     acero = material("bano_griferia", (.16, .18, .19), .34, .65)
     desague = material("bano_desague", (.08, .10, .10), .5)
     caliente = material("bano_grifo_caliente", (.38, .025, .018), .45)
