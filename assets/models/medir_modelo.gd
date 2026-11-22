@@ -113,7 +113,6 @@ func _inventariar() -> void:
 	var techos: Array[Vector3] = []
 	for nombre: String in [
 		"almacen",
-		"bano_cielorraso",
 		"deposito_techo_industrial/deposito_techo_chapa",
 		"cuartito_cuerpo",
 	]:

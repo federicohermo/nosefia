@@ -96,3 +96,9 @@ paths:
     biseles de 2 segmentos con triangulación y normales pesadas en `SEPT_JUEGOS_PROTOTIPO.blend`
     y `source/puestos/router.blend`. Después van `exportar_router.py`, `exportar_modelo.py`,
     `assets/models/extraer_lector.gd` y `hornear.py`. Un `.blend` nuevo del artista pide repetirlo.
+
+14. **El cielorraso del baño es parte de `almacen-col` y no una placa separada.**
+    `blender/techo_del_bano.py` baja la cara `bano_cielorraso_blanco` de `almacen-col` a `Z = 3,14 m`,
+    ajusta la escala V de las paredes del baño y elimina `bano_cielorraso-convcol` para evitar
+    caras coplanares y sombras de oclusión en el encuentro con las paredes. Va antes de
+    `exportar_modelo.py` y `hornear.py`. Un `.blend` nuevo del artista pide repetirlo.
