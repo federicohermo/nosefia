@@ -22,8 +22,8 @@ func _ready() -> void:
 	if mallas.is_empty():
 		return
 	var oclusion := OclusionDeContacto.new()
-	oclusion.radio = 0.09
-	oclusion.intensidad = 0.75
+	oclusion.radio = 0.075
+	oclusion.intensidad = 0.65
 	oclusion.configurar(mallas)
 	add_child(oclusion)
 

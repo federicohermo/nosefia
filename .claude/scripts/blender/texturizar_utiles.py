@@ -42,10 +42,10 @@ MARGEN = 8
 
 #: El color liso que tenía cada material, en lineal. Es la base de lo que se hornea.
 COLORES = {
-    "util_plastico_azul": (0.042, 0.19, 0.39),
-    "util_plastico_claro": (0.065, 0.24, 0.44),
-    "util_borde_crema": (0.78, 0.80, 0.78),
-    "util_asa_grafito": (0.085, 0.105, 0.125),
+    "util_plastico_azul": (0.035, 0.165, 0.335),
+    "util_plastico_claro": (0.058, 0.225, 0.415),
+    "util_borde_crema": (0.69, 0.72, 0.68),
+    "util_asa_grafito": (0.082, 0.105, 0.122),
     "util_mango_acero": (0.36, 0.42, 0.45),
     "util_fibra_cruda": (0.72, 0.7, 0.62),
     "util_fibra_sombra": (0.58, 0.57, 0.5),
@@ -72,16 +72,16 @@ def pintar(base, forma, uso, altura, limpio: bool = False) -> np.ndarray:
         es_fibra |= np.abs(base - np.array(COLORES[nombre])).sum(axis=2, keepdims=True) < 0.02
 
     if limpio:
-        # Plástico limpio con uso leve: oclusión suave, micrograno sutil y desgaste contenido.
-        luz = 0.76 + 0.24 * np.clip(oclusion, 0, 1) ** 1.05
-        plastico = base * luz * (0.97 + 0.06 * grano)
-        suciedad = np.clip((manchas - 0.56) * 3.5, 0, 1) * np.clip(1 - alto * 3.8, 0, 1)
-        velo = np.clip((manchas - 0.64) * 4, 0, 1) * 0.12
-        plastico = plastico * (1 - 0.18 * np.maximum(suciedad, velo))
-        raya = np.clip((np.abs(rayones - 0.5) - 0.24) * 20, 0, 1) * np.clip((manchas - 0.52) * 4, 0, 1)
-        plastico = plastico + (0.48 - plastico) * raya * 0.08
-        canto = np.clip(arista * 3.5, 0, 1)
-        plastico = plastico + (np.minimum(plastico * 1.25 + 0.03, 1) - plastico) * canto * 0.22
+        # Plástico usado de comercio: pátina, roce y agua marcados sin llegar al barrial original.
+        luz = 0.55 + 0.45 * np.clip(oclusion, 0, 1) ** 1.25
+        plastico = base * luz * (0.93 + 0.14 * grano)
+        suciedad = np.clip((manchas - 0.49) * 4.0, 0, 1) * np.clip(1 - alto * 2.5, 0, 1)
+        velo = np.clip((manchas - 0.56) * 4.8, 0, 1) * 0.34
+        plastico = plastico * (1 - 0.46 * np.maximum(suciedad, velo))
+        raya = np.clip((np.abs(rayones - 0.5) - 0.20) * 24, 0, 1) * np.clip((manchas - 0.42) * 4, 0, 1)
+        plastico = plastico + (0.54 - plastico) * raya * 0.28
+        canto = np.clip(arista * 4.6, 0, 1)
+        plastico = plastico + (np.minimum(plastico * 1.55 + 0.045, 1) - plastico) * canto * 0.55
     else:
         luz = 0.5 + 0.5 * np.clip(oclusion, 0, 1) ** 1.3
         plastico = base * luz * (0.93 + 0.14 * grano)

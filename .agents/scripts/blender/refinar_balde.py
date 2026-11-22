@@ -341,22 +341,27 @@ def _reconstruir_manija(bm, etiquetas: dict) -> None:
     estaciones.append((Vector((ARCO_RX, 0.0, ARCO_Z_BISAGRA)), Vector((0.0, 0.0, -1.0)), ARCO_RADIO_TUBO))
     _agregar_tubo_en_puntos(bm, estaciones, LADOS_ARCO, "util_asa_grafito", etiquetas)
 
-    # 2. Agarre superior ergonómico (`util_borde_crema`) con extremos redondeados.
+    # 2. Agarre superior de plástico rígido moldeado (`util_borde_crema`):
+    # extremos con hombro firme y 3 rebajes ergonómicos amplios (sin caras angostas sub-texel).
     theta_ini = math.radians(108.5)
     theta_fin = math.radians(71.5)
-    estaciones_agarre = []
-    for k in range(TRAMOS_AGARRE + 1):
-        t = k / TRAMOS_AGARRE
-        theta = theta_ini + (theta_fin - theta_ini) * t
-        extremo = math.sin(math.pi * t)
-        if k in (0, TRAMOS_AGARRE):
-            radio = 0.0088
-        elif k in (1, TRAMOS_AGARRE - 1):
-            radio = 0.0126
-        else:
-            radio = 0.0142 + 0.0016 * (extremo ** 0.7)
-        estaciones_agarre.append((theta, radio))
-    _agregar_tubo_en_arco(bm, estaciones_agarre, LADOS_AGARRE, "util_borde_crema", etiquetas)
+    perfil_agarre = [
+        (0.000, 0.0080),
+        (0.035, 0.0144),
+        (0.140, 0.0148),
+        (0.260, 0.0137),
+        (0.380, 0.0149),
+        (0.500, 0.0138),
+        (0.620, 0.0149),
+        (0.740, 0.0137),
+        (0.860, 0.0148),
+        (0.965, 0.0144),
+        (1.000, 0.0080),
+    ]
+    estaciones_agarre = [
+        (theta_ini + (theta_fin - theta_ini) * t, radio) for t, radio in perfil_agarre
+    ]
+    _agregar_tubo_en_arco(bm, estaciones_agarre, 12, "util_borde_crema", etiquetas)
 
 
 def aplicar() -> dict[str, object]:
@@ -401,8 +406,9 @@ def aplicar() -> dict[str, object]:
         assert all(len(e.link_faces) == 2 for e in bm.edges), "Arista no-manifold en balde-col"
         assert all(f.calc_area() > 1e-8 for f in bm.faces), "Cara degenerada en balde-col"
 
-        # Marcar aristas de quiebre duro (>42°) como sharp para mantener tapas planas limpias.
-        limite = math.radians(42.0)
+        # Marcar aristas de quiebre duro (>34°) como sharp para conservar hombros firmes en el
+        # agarre y tapas planas limpias sin perder suavidad en cuerpo, aro y arco.
+        limite = math.radians(34.0)
         for arista in bm.edges:
             if len(arista.link_faces) == 2 and arista.calc_face_angle(0.0) > limite:
                 arista.smooth = False

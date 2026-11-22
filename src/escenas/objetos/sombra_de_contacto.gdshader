@@ -23,6 +23,11 @@ uniform vec3 apoyo_maximo = vec3(1000.0);
 // Si es cierto, cada instancia del `MultiMesh` trae su recorte en `INSTANCE_CUSTOM`:
 // `(min_x, min_z, max_x, max_z)` en metros sobre el plano de la mancha.
 uniform bool recorte_por_instancia = false;
+// Si es cierto, `mapa_huella` trae el campo de distancia 2D a la base real (formas cóncavas).
+uniform bool usar_mapa = false;
+uniform sampler2D mapa_huella : filter_linear, repeat_disable;
+uniform vec2 mitad_mapa = vec2(0.2);
+uniform float alcance_mapa = 0.05;
 
 varying vec2 plano;
 varying vec3 en_el_apoyo;
@@ -40,8 +45,15 @@ float distancia_al_rectangulo(vec2 punto, vec2 mitad, float radio) {
 }
 
 void fragment() {
-	float radio = esquinas * min(huella.x, huella.y);
-	float borde = 1.0 - smoothstep(0.0, suavidad, distancia_al_rectangulo(plano, huella, radio));
+	float distancia = 0.0;
+	if (usar_mapa) {
+		vec2 uv_mapa = plano / (mitad_mapa * 2.0) + 0.5;
+		distancia = texture(mapa_huella, uv_mapa).r * alcance_mapa;
+	} else {
+		float radio = esquinas * min(huella.x, huella.y);
+		distancia = distancia_al_rectangulo(plano, huella, radio);
+	}
+	float borde = 1.0 - smoothstep(0.0, suavidad, distancia);
 	// Sin esto la mancha sigue en el aire más allá del borde de lo que la sostiene.
 	float dentro = 1.0;
 	if (recorte_por_instancia) {

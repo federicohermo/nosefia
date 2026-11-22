@@ -62,11 +62,12 @@ const LIMITE_ABIERTO := 1000.0
 const RESOLUCION_DE_VERTICES := 1000.0
 ## Mitad mínima de huella para distinguir su forma sin ruido numérico, en metros.
 const LADO_MINIMO_PARA_FORMA := 0.001
-## Ocupación bajo la cual una huella conectada es cóncava (ej. palanca en J o llave) y se parte.
-const OCUPACION_CONCAVA := 0.48
-const LADO_MINIMO_CONCAVO := 0.045
-const FAJAS_CONCAVAS := 10
-const HUECO_TRANSVERSAL := 0.045
+## Ocupación bajo la cual una huella es cóncava (ej. palanca en J o llave) y usa mapa de distancia.
+const OCUPACION_PARA_MAPA := 0.72
+const LADO_MINIMO_MAPA := 0.015
+const GRILLA_OCUPACION := 24
+const RESOLUCION_MAPA := 96
+const DISTANCIA_INFINITA := 1e20
 
 static var _plano_de_la_sombra: ArrayMesh
 static var _vertices_de_las_mallas: Dictionary[Mesh, PackedVector3Array] = {}
@@ -122,6 +123,7 @@ var _cache_relativas: Array[Transform3D] = []
 var _cache_abajo := Vector3.ZERO
 var _cache_radio := -1.0
 var _cache_grupos: Array[PackedVector3Array] = []
+var _cache_triangulos: Array[PackedVector3Array] = []
 var _cache_ejes_x: Array[Vector3] = []
 var _cache_ejes_z: Array[Vector3] = []
 var _cache_medidas: Array[Array] = []
@@ -257,6 +259,9 @@ func _poner_la_sombra(
 	var centro_en_cuerpo: Vector2 = medida[0]
 	var mitad: Vector2 = medida[1]
 	var esquinas: float = medida[2]
+	var mapa_huella: Texture2D = medida[3]
+	var mitad_mapa: Vector2 = medida[4]
+	var alcance_mapa: float = medida[5]
 	var origen_cuerpo := cuerpo.global_position
 	var centro_plano := (
 		centro_en_cuerpo + Vector2(origen_cuerpo.dot(giro.x), origen_cuerpo.dot(giro.z))
@@ -275,11 +280,17 @@ func _poner_la_sombra(
 	material.set_shader_parameter(&"esquinas", esquinas)
 	material.set_shader_parameter(&"suavidad", suavidad)
 	material.set_shader_parameter(&"intensidad", intensidad_mancha)
+	material.set_shader_parameter(&"usar_mapa", mapa_huella != null)
+	if mapa_huella != null:
+		material.set_shader_parameter(&"mapa_huella", mapa_huella)
+		material.set_shader_parameter(&"mitad_mapa", mitad_mapa)
+		material.set_shader_parameter(&"alcance_mapa", alcance_mapa)
 	_recortar_en_el_apoyo(material, golpe, Transform3D(giro, origen))
 
 
-## Reusa `[centro, mitad, esquinas]` del grupo en espacio del cuerpo mientras la orientación del
-## plano de apoyo no cambie más que `ABAJO_IGUAL`: trasladar o girar en plano no recalcula el casco.
+## Reusa `[centro, mitad, esquinas, mapa, mitad_mapa, alcance_mapa]` del grupo en espacio del cuerpo
+## mientras la orientación del plano de apoyo no cambie más que `ABAJO_IGUAL`: trasladar o girar en
+## plano no recalcula el casco ni el campo de distancia.
 func _medida_del_grupo(indice: int, grupo: PackedVector3Array, base: Basis, giro: Basis) -> Array:
 	var traspuesta := base.transposed()
 	var eje_x := traspuesta * giro.x
@@ -296,7 +307,11 @@ func _medida_del_grupo(indice: int, grupo: PackedVector3Array, base: Basis, giro
 		_cache_ejes_z.append(Vector3.ZERO)
 		_cache_medidas.append([])
 	calculos_de_forma += 1
-	var medida := _medir_huella_en_ejes(grupo, eje_x, eje_z)
+	var triangulos := (
+		_cache_triangulos[indice] if indice < _cache_triangulos.size() else PackedVector3Array()
+	)
+	var alcance := radio * (1.0 + DIFUMINADO_POR_ALTURA) * 1.05
+	var medida := _medir_huella_con_mapa(grupo, triangulos, eje_x, eje_z, alcance)
 	_cache_ejes_x[indice] = eje_x
 	_cache_ejes_z[indice] = eje_z
 	_cache_medidas[indice] = medida
@@ -478,7 +493,9 @@ func _grupos_del_objeto(cuerpo: Node3D) -> Array[PackedVector3Array]:
 	_cache_relativas = relativas
 	_cache_abajo = abajo
 	_cache_radio = radio
-	_cache_grupos = _calcular_grupos(actuales, relativas, abajo)
+	var calculado := _calcular_grupos(actuales, relativas, abajo)
+	_cache_grupos = calculado[0]
+	_cache_triangulos = calculado[1]
 	_invalidar_medidas()
 	_cache_valido = true
 	return _cache_grupos
@@ -503,7 +520,7 @@ func _cache_coincide(actuales: Array[Mesh], relativas: Array[Transform3D], abajo
 
 func _calcular_grupos(
 	actuales: Array[Mesh], relativas: Array[Transform3D], abajo: Vector3
-) -> Array[PackedVector3Array]:
+) -> Array:
 	var por_malla: Array[Array] = []
 	var hondo := -INF
 	for indice in actuales.size():
@@ -518,153 +535,239 @@ func _calcular_grupos(
 			hondo = maxf(hondo, vertice.dot(abajo))
 		por_malla.append([vertices, geometria[1]])
 	if not is_finite(hondo):
-		return []
-	var componentes := _componentes_conectados(por_malla, hondo - radio, abajo)
+		var vacio_g: Array[PackedVector3Array] = []
+		var vacio_t: Array[PackedVector3Array] = []
+		return [vacio_g, vacio_t]
+	var resultado := _componentes_conectados(por_malla, hondo - radio, abajo)
+	var componentes: Array[PackedVector3Array] = resultado[0]
+	var triangulos: Array[PackedVector3Array] = resultado[1]
 	if componentes.size() > 1:
-		componentes = _unir_componentes_cercanos(componentes, abajo, radio)
-	var resultado: Array[PackedVector3Array] = []
-	for grupo: PackedVector3Array in componentes:
-		resultado.append_array(_dividir_si_concavo(grupo, abajo))
+		resultado = _unir_componentes_cercanos(componentes, triangulos, abajo, radio)
 	return resultado
 
 
-## Si una huella conectada deja más de la mitad de su caja vacía (como una palanca curva en J o una
-## llave), la parte en fajas angostas a lo largo de su eje largo y separa huecos transversales para
-## que la mancha siga el trazo del objeto en vez de tapar el piso vacío del medio.
-static func _dividir_si_concavo(
-	grupo: PackedVector3Array, abajo: Vector3
-) -> Array[PackedVector3Array]:
-	if grupo.size() < 8:
-		return [grupo]
-	var mejor := Vector3.RIGHT
-	var mejor_dot := absf(mejor.dot(abajo))
-	for candidato: Vector3 in [Vector3.UP, Vector3.BACK]:
-		var proyeccion := absf(candidato.dot(abajo))
-		if proyeccion < mejor_dot:
-			mejor_dot = proyeccion
-			mejor = candidato
-	var eje_x := (mejor - abajo * abajo.dot(mejor)).normalized()
-	var eje_z := eje_x.cross(abajo).normalized()
-	var u_min := INF
-	var u_max := -INF
-	var v_min := INF
-	var v_max := -INF
-	var coords: Array[Vector2] = []
-	coords.resize(grupo.size())
-	for i in grupo.size():
-		var p := Vector2(grupo[i].dot(eje_x), grupo[i].dot(eje_z))
-		coords[i] = p
-		u_min = minf(u_min, p.x)
-		u_max = maxf(u_max, p.x)
-		v_min = minf(v_min, p.y)
-		v_max = maxf(v_max, p.y)
-	var du := u_max - u_min
-	var dv := v_max - v_min
-	if du < LADO_MINIMO_CONCAVO or dv < LADO_MINIMO_CONCAVO:
-		return [grupo]
-	var largo_en_u := du >= dv
-	var l_min := u_min if largo_en_u else v_min
-	var l_span := du if largo_en_u else dv
-	var c_span := dv if largo_en_u else du
-	var fajas: Array[Array] = []
-	var c_mins: Array[float] = []
-	var c_maxs: Array[float] = []
-	for _k in FAJAS_CONCAVAS:
-		fajas.append([])
-		c_mins.append(INF)
-		c_maxs.append(-INF)
-	for i in grupo.size():
-		var l_val := coords[i].x if largo_en_u else coords[i].y
-		var c_val := coords[i].y if largo_en_u else coords[i].x
-		var idx := clampi(int(((l_val - l_min) / l_span) * FAJAS_CONCAVAS), 0, FAJAS_CONCAVAS - 1)
-		fajas[idx].append(i)
-		c_mins[idx] = minf(c_mins[idx], c_val)
-		c_maxs[idx] = maxf(c_maxs[idx], c_val)
-	var area_fajas := 0.0
-	var ancho_faja := l_span / float(FAJAS_CONCAVAS)
-	for k in FAJAS_CONCAVAS:
-		if not fajas[k].is_empty():
-			area_fajas += maxf(c_maxs[k] - c_mins[k], 0.015) * ancho_faja
-	if area_fajas / (du * dv) >= OCUPACION_CONCAVA:
-		return [grupo]
-	# Unir fajas consecutivas que mantienen un ancho transversal angosto (tramo recto continuo).
-	var tope_ancho := maxf(0.06, c_span * 0.28)
-	var tramos: Array[Array] = []
-	var actual_indices: Array = []
-	var actual_cmin := INF
-	var actual_cmax := -INF
-	for k in FAJAS_CONCAVAS:
-		if fajas[k].is_empty():
-			if not actual_indices.is_empty():
-				tramos.append(actual_indices)
-				actual_indices = []
-				actual_cmin = INF
-				actual_cmax = -INF
+## Mide la huella y, si los triángulos de apoyo dejan huecos grandes dentro del rectángulo
+## redondeado (formas cóncavas como la palanca o la llave), genera un mapa de distancia 2D exacto.
+static func _medir_huella_con_mapa(
+	grupo: PackedVector3Array,
+	triangulos: PackedVector3Array,
+	eje_x: Vector3,
+	eje_z: Vector3,
+	alcance_mapa: float
+) -> Array:
+	var base := _medir_huella_en_ejes(grupo, eje_x, eje_z)
+	var centro: Vector2 = base[0]
+	var mitad: Vector2 = base[1]
+	var esquinas: float = base[2]
+	if (
+		triangulos.size() < 3
+		or mitad.x < LADO_MINIMO_MAPA
+		or mitad.y < LADO_MINIMO_MAPA
+		or alcance_mapa <= 0.0
+	):
+		return [centro, mitad, esquinas, null, Vector2.ZERO, 0.0]
+	var tris_2d := PackedVector2Array()
+	tris_2d.resize(triangulos.size())
+	for i in triangulos.size():
+		var p := triangulos[i]
+		tris_2d[i] = Vector2(p.dot(eje_x), p.dot(eje_z)) - centro
+	var ocupacion := _ocupacion_de_triangulos(tris_2d, mitad, esquinas)
+	if ocupacion >= OCUPACION_PARA_MAPA:
+		return [centro, mitad, esquinas, null, Vector2.ZERO, 0.0]
+	var mitad_mapa := mitad + Vector2.ONE * alcance_mapa
+	var textura := _crear_mapa_de_distancia(tris_2d, mitad_mapa, alcance_mapa)
+	return [centro, mitad, esquinas, textura, mitad_mapa, alcance_mapa]
+
+
+static func _ocupacion_de_triangulos(
+	tris_2d: PackedVector2Array, mitad: Vector2, esquinas: float
+) -> float:
+	var w := GRILLA_OCUPACION
+	var h := GRILLA_OCUPACION
+	var grilla := PackedByteArray()
+	grilla.resize(w * h)
+	_rasterizar_triangulos(tris_2d, mitad, w, h, 0.2, grilla)
+	var cubiertas := 0
+	for valor: int in grilla:
+		if valor != 0:
+			cubiertas += 1
+	var area_caja := 4.0 * mitad.x * mitad.y
+	var r := esquinas * minf(mitad.x, mitad.y)
+	var area_forma := maxf(area_caja - (4.0 - PI) * r * r, 1e-6)
+	var area_cubierta := (float(cubiertas) / float(w * h)) * area_caja
+	return area_cubierta / area_forma
+
+
+static func _crear_mapa_de_distancia(
+	tris_2d: PackedVector2Array, mitad_mapa: Vector2, alcance_mapa: float
+) -> ImageTexture:
+	var ancho := mitad_mapa.x * 2.0
+	var alto := mitad_mapa.y * 2.0
+	var mayor := maxf(ancho, alto)
+	var w := clampi(roundi(RESOLUCION_MAPA * ancho / mayor), 24, RESOLUCION_MAPA)
+	var h := clampi(roundi(RESOLUCION_MAPA * alto / mayor), 24, RESOLUCION_MAPA)
+	var grilla := PackedByteArray()
+	grilla.resize(w * h)
+	_rasterizar_triangulos(tris_2d, mitad_mapa, w, h, 0.55, grilla)
+	var paso_x := ancho / float(w)
+	var paso_y := alto / float(h)
+	var fila_in := PackedFloat32Array()
+	fila_in.resize(w)
+	var fila_out := PackedFloat32Array()
+	fila_out.resize(w)
+	var paso1 := PackedFloat32Array()
+	paso1.resize(w * h)
+	for iy in h:
+		var base := iy * w
+		for ix in w:
+			fila_in[ix] = 0.0 if grilla[base + ix] != 0 else DISTANCIA_INFINITA
+		_dt_1d(fila_in, w, paso_x, fila_out)
+		for ix in w:
+			paso1[base + ix] = fila_out[ix]
+	var col_in := PackedFloat32Array()
+	col_in.resize(h)
+	var col_out := PackedFloat32Array()
+	col_out.resize(h)
+	var bytes := PackedByteArray()
+	bytes.resize(w * h)
+	var inv_alcance := 1.0 / alcance_mapa
+	for ix in w:
+		for iy in h:
+			col_in[iy] = paso1[iy * w + ix]
+		_dt_1d(col_in, h, paso_y, col_out)
+		for iy in h:
+			var dist := sqrt(maxf(col_out[iy], 0.0))
+			var norm := clampf(dist * inv_alcance, 0.0, 1.0)
+			bytes[iy * w + ix] = roundi(norm * 255.0)
+	var imagen := Image.create_from_data(w, h, false, Image.FORMAT_R8, bytes)
+	return ImageTexture.create_from_image(imagen)
+
+
+static func _rasterizar_triangulos(
+	tris_2d: PackedVector2Array,
+	mitad: Vector2,
+	w: int,
+	h: int,
+	margen_px: float,
+	grilla: PackedByteArray
+) -> void:
+	var sx := float(w) / (mitad.x * 2.0)
+	var sy := float(h) / (mitad.y * 2.0)
+	var m2 := margen_px * margen_px
+	for k in range(0, tris_2d.size(), 3):
+		var a := Vector2((tris_2d[k].x + mitad.x) * sx, (tris_2d[k].y + mitad.y) * sy)
+		var b := Vector2((tris_2d[k + 1].x + mitad.x) * sx, (tris_2d[k + 1].y + mitad.y) * sy)
+		var c := Vector2((tris_2d[k + 2].x + mitad.x) * sx, (tris_2d[k + 2].y + mitad.y) * sy)
+		var min_x := minf(a.x, minf(b.x, c.x))
+		var max_x := maxf(a.x, maxf(b.x, c.x))
+		var min_y := minf(a.y, minf(b.y, c.y))
+		var max_y := maxf(a.y, maxf(b.y, c.y))
+		var x0 := clampi(floori(min_x - margen_px), 0, w - 1)
+		var x1 := clampi(ceili(max_x + margen_px), 0, w - 1)
+		var y0 := clampi(floori(min_y - margen_px), 0, h - 1)
+		var y1 := clampi(ceili(max_y + margen_px), 0, h - 1)
+		for iy in range(y0, y1 + 1):
+			var py := float(iy) + 0.5
+			var base := iy * w
+			for ix in range(x0, x1 + 1):
+				if grilla[base + ix] != 0:
+					continue
+				var p := Vector2(float(ix) + 0.5, py)
+				if _en_triangulo_o_borde(p, a, b, c, m2):
+					grilla[base + ix] = 255
+
+
+static func _en_triangulo_o_borde(
+	p: Vector2, a: Vector2, b: Vector2, c: Vector2, m2: float
+) -> bool:
+	var c1 := (b.x - a.x) * (p.y - a.y) - (b.y - a.y) * (p.x - a.x)
+	var c2 := (c.x - b.x) * (p.y - b.y) - (c.y - b.y) * (p.x - b.x)
+	var c3 := (a.x - c.x) * (p.y - c.y) - (a.y - c.y) * (p.x - c.x)
+	var neg := (c1 < 0.0) or (c2 < 0.0) or (c3 < 0.0)
+	var pos := (c1 > 0.0) or (c2 > 0.0) or (c3 > 0.0)
+	if not (neg and pos):
+		return true
+	return (
+		_dist_sq_segmento(p, a, b) <= m2
+		or _dist_sq_segmento(p, b, c) <= m2
+		or _dist_sq_segmento(p, c, a) <= m2
+	)
+
+
+static func _dist_sq_segmento(p: Vector2, a: Vector2, b: Vector2) -> float:
+	var ab := b - a
+	var l2 := ab.length_squared()
+	if l2 <= 1e-8:
+		return p.distance_squared_to(a)
+	var t := clampf((p - a).dot(ab) / l2, 0.0, 1.0)
+	return p.distance_squared_to(a + ab * t)
+
+
+## Transformada de distancia euclidiana 1D al cuadrado en O(n) (Felzenszwalb-Huttenlocher).
+static func _dt_1d(f: PackedFloat32Array, n: int, paso: float, destino: PackedFloat32Array) -> void:
+	var v := PackedInt32Array()
+	v.resize(n)
+	var z := PackedFloat32Array()
+	z.resize(n + 1)
+	var k := 0
+	v[0] = 0
+	z[0] = -INF
+	z[1] = INF
+	var paso2 := paso * paso
+	var inv_paso2 := 1.0 / paso2
+	for q in range(1, n):
+		var fq := f[q]
+		if fq >= 1e18:
 			continue
-		var nuevo_cmin := minf(actual_cmin, c_mins[k])
-		var nuevo_cmax := maxf(actual_cmax, c_maxs[k])
-		if not actual_indices.is_empty() and (nuevo_cmax - nuevo_cmin) > tope_ancho:
-			tramos.append(actual_indices)
-			actual_indices = fajas[k].duplicate()
-			actual_cmin = c_mins[k]
-			actual_cmax = c_maxs[k]
-		else:
-			actual_indices.append_array(fajas[k])
-			actual_cmin = nuevo_cmin
-			actual_cmax = nuevo_cmax
-	if not actual_indices.is_empty():
-		tramos.append(actual_indices)
-	# Si algún tramo (como la U del gancho) tiene un hueco transversal vacío, separarlo en dos.
-	var salida: Array[PackedVector3Array] = []
-	for tramo in tramos:
-		var orden: Array[Array] = []
-		for idx: int in tramo:
-			var c_val := coords[idx].y if largo_en_u else coords[idx].x
-			orden.append([c_val, idx])
-		orden.sort_custom(func(a: Array, b: Array) -> bool: return a[0] < b[0])
-		var corte := -1
-		var mayor_hueco := HUECO_TRANSVERSAL
-		for j in range(1, orden.size()):
-			var hueco: float = orden[j][0] - orden[j - 1][0]
-			if hueco > mayor_hueco:
-				mayor_hueco = hueco
-				corte = j
-		if corte > 0:
-			var parte_a := PackedVector3Array()
-			var parte_b := PackedVector3Array()
-			for j in orden.size():
-				if j < corte:
-					parte_a.append(grupo[orden[j][1]])
-				else:
-					parte_b.append(grupo[orden[j][1]])
-			if not parte_a.is_empty():
-				salida.append(parte_a)
-			if not parte_b.is_empty():
-				salida.append(parte_b)
-		else:
-			var sub := PackedVector3Array()
-			for idx: int in tramo:
-				sub.append(grupo[idx])
-			if not sub.is_empty():
-				salida.append(sub)
-	return salida if not salida.is_empty() else [grupo]
+		while true:
+			var r := v[k]
+			var fr := f[r]
+			if fr >= 1e18:
+				if k == 0:
+					v[0] = q
+					z[0] = -INF
+					z[1] = INF
+					break
+				k -= 1
+				continue
+			var s := ((fq - fr) * inv_paso2 + float(q * q - r * r)) / (2.0 * float(q - r))
+			if s <= z[k]:
+				k -= 1
+			else:
+				k += 1
+				v[k] = q
+				z[k] = s
+				z[k + 1] = INF
+				break
+	k = 0
+	for q in n:
+		while z[k + 1] < float(q):
+			k += 1
+		var d := float(q - v[k])
+		destino[q] = paso2 * d * d + f[v[k]]
 
 
-## Une los vértices dentro de la banda que comparten triángulos o coinciden en posición.
+## Une los vértices dentro de la banda que comparten triángulos o coinciden en posición, y junta
+## los triángulos recortados a la banda de apoyo para cada componente.
 static func _componentes_conectados(
 	por_malla: Array[Array], umbral: float, abajo: Vector3
-) -> Array[PackedVector3Array]:
+) -> Array:
 	var puntos := PackedVector3Array()
 	var padres: Array[int] = []
 	var repetidos: Dictionary[Vector3i, int] = {}
+	var tris_registrados: Array[Array] = []
 	for entrada in por_malla:
 		var vertices: PackedVector3Array = entrada[0]
 		var triangulos: PackedInt32Array = entrada[1]
 		var mapa := PackedInt32Array()
 		mapa.resize(vertices.size())
+		var profs := PackedFloat32Array()
+		profs.resize(vertices.size())
 		for indice in vertices.size():
 			var vertice := vertices[indice]
-			if vertice.dot(abajo) < umbral:
+			var prof := vertice.dot(abajo)
+			profs[indice] = prof
+			if prof < umbral:
 				mapa[indice] = -1
 				continue
 			var clave := Vector3i(
@@ -681,34 +784,111 @@ static func _componentes_conectados(
 				repetidos[clave] = id
 				mapa[indice] = id
 		for paso in range(0, triangulos.size(), 3):
-			var a := mapa[triangulos[paso]]
-			var b := mapa[triangulos[paso + 1]]
-			var c := mapa[triangulos[paso + 2]]
+			var ia := triangulos[paso]
+			var ib := triangulos[paso + 1]
+			var ic := triangulos[paso + 2]
+			var a := mapa[ia]
+			var b := mapa[ib]
+			var c := mapa[ic]
+			if a < 0 and b < 0 and c < 0:
+				continue
 			if a >= 0 and b >= 0:
 				_unir(padres, a, b)
 			if b >= 0 and c >= 0:
 				_unir(padres, b, c)
 			if c >= 0 and a >= 0:
 				_unir(padres, c, a)
+			var dueno := a if a >= 0 else (b if b >= 0 else c)
+			_recortar_triangulo_a_banda(
+				vertices[ia],
+				vertices[ib],
+				vertices[ic],
+				profs[ia],
+				profs[ib],
+				profs[ic],
+				umbral,
+				dueno,
+				tris_registrados
+			)
 	if puntos.is_empty():
-		return []
+		var vacio_g: Array[PackedVector3Array] = []
+		var vacio_t: Array[PackedVector3Array] = []
+		return [vacio_g, vacio_t]
 	var agrupados: Dictionary[int, PackedVector3Array] = {}
+	var tris_por_grupo: Dictionary[int, PackedVector3Array] = {}
 	for indice in puntos.size():
 		var raiz := _raiz(padres, indice)
 		if not agrupados.has(raiz):
 			agrupados[raiz] = PackedVector3Array()
+			tris_por_grupo[raiz] = PackedVector3Array()
 		agrupados[raiz].append(puntos[indice])
-	var salida: Array[PackedVector3Array] = []
-	for lista: PackedVector3Array in agrupados.values():
-		salida.append(lista)
-	return salida
+	for reg: Array in tris_registrados:
+		var raiz := _raiz(padres, reg[0] as int)
+		var destino: PackedVector3Array = tris_por_grupo[raiz]
+		destino.append(reg[1] as Vector3)
+		destino.append(reg[2] as Vector3)
+		destino.append(reg[3] as Vector3)
+	var salida_g: Array[PackedVector3Array] = []
+	var salida_t: Array[PackedVector3Array] = []
+	for raiz: int in agrupados.keys():
+		salida_g.append(agrupados[raiz])
+		salida_t.append(tris_por_grupo[raiz])
+	return [salida_g, salida_t]
+
+
+static func _recortar_triangulo_a_banda(
+	va: Vector3,
+	vb: Vector3,
+	vc: Vector3,
+	da: float,
+	db: float,
+	dc: float,
+	umbral: float,
+	dueno: int,
+	salida: Array[Array]
+) -> void:
+	var in_a := da >= umbral
+	var in_b := db >= umbral
+	var in_c := dc >= umbral
+	if in_a and in_b and in_c:
+		salida.append([dueno, va, vb, vc])
+		return
+	var dentro_v: Array[Vector3] = []
+	var dentro_d: Array[float] = []
+	var fuera_v: Array[Vector3] = []
+	var fuera_d: Array[float] = []
+	for par: Array in [[va, da, in_a], [vb, db, in_b], [vc, dc, in_c]]:
+		if par[2]:
+			dentro_v.append(par[0] as Vector3)
+			dentro_d.append(par[1] as float)
+		else:
+			fuera_v.append(par[0] as Vector3)
+			fuera_d.append(par[1] as float)
+	if dentro_v.size() == 1:
+		var v0 := dentro_v[0]
+		var d0 := dentro_d[0]
+		var p1 := v0.lerp(fuera_v[0], (umbral - d0) / (fuera_d[0] - d0))
+		var p2 := v0.lerp(fuera_v[1], (umbral - d0) / (fuera_d[1] - d0))
+		salida.append([dueno, v0, p1, p2])
+	elif dentro_v.size() == 2:
+		var v0 := dentro_v[0]
+		var v1 := dentro_v[1]
+		var vf := fuera_v[0]
+		var df := fuera_d[0]
+		var p0 := v0.lerp(vf, (umbral - dentro_d[0]) / (df - dentro_d[0]))
+		var p1 := v1.lerp(vf, (umbral - dentro_d[1]) / (df - dentro_d[1]))
+		salida.append([dueno, v0, v1, p1])
+		salida.append([dueno, v0, p1, p0])
 
 
 ## Junta piezas separadas de la malla (como las hebras del cepillo) si sus cajas horizontales se
 ## acercan a menos de `margen`. Los ejes siguen al cuerpo para no inflar cajas en diagonal.
 static func _unir_componentes_cercanos(
-	componentes: Array[PackedVector3Array], abajo: Vector3, margen: float
-) -> Array[PackedVector3Array]:
+	componentes: Array[PackedVector3Array],
+	triangulos: Array[PackedVector3Array],
+	abajo: Vector3,
+	margen: float
+) -> Array:
 	var mejor := Vector3.RIGHT
 	var mejor_dot := absf(mejor.dot(abajo))
 	for candidato: Vector3 in [Vector3.UP, Vector3.BACK]:
@@ -740,16 +920,21 @@ static func _unir_componentes_cercanos(
 			var dz := maxf(0.0, maxf(minimos[i].y - maximos[j].y, minimos[j].y - maximos[i].y))
 			if dx * dx + dz * dz <= margen_sq:
 				_unir(padres, i, j)
-	var unidos: Dictionary[int, PackedVector3Array] = {}
+	var unidos_g: Dictionary[int, PackedVector3Array] = {}
+	var unidos_t: Dictionary[int, PackedVector3Array] = {}
 	for indice in componentes.size():
 		var raiz := _raiz(padres, indice)
-		if not unidos.has(raiz):
-			unidos[raiz] = PackedVector3Array()
-		unidos[raiz].append_array(componentes[indice])
-	var salida: Array[PackedVector3Array] = []
-	for lista: PackedVector3Array in unidos.values():
-		salida.append(lista)
-	return salida
+		if not unidos_g.has(raiz):
+			unidos_g[raiz] = PackedVector3Array()
+			unidos_t[raiz] = PackedVector3Array()
+		unidos_g[raiz].append_array(componentes[indice])
+		unidos_t[raiz].append_array(triangulos[indice])
+	var salida_g: Array[PackedVector3Array] = []
+	var salida_t: Array[PackedVector3Array] = []
+	for raiz: int in unidos_g.keys():
+		salida_g.append(unidos_g[raiz])
+		salida_t.append(unidos_t[raiz])
+	return [salida_g, salida_t]
 
 
 static func _raiz(padres: Array[int], indice: int) -> int:

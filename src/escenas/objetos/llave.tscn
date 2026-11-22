@@ -8,7 +8,7 @@
 
 [sub_resource type="BoxShape3D" id="cuerpo"]
 margin = 0.001
-size = Vector3(0.192, 0.06, 0.06)
+size = Vector3(0.192, 0.02, 0.06)
 
 [sub_resource type="StandardMaterial3D" id="metal"]
 albedo_texture = ExtResource("color")
@@ -24,8 +24,8 @@ collision_mask = 9
 script = ExtResource("objeto")
 datos = ExtResource("datos")
 orientacion_en_mano = Basis(0, 0, 1, 1, 0, 0, 0, 1, 0)
-radio_de_oclusion = 0.015
-intensidad_de_oclusion = 0.45
+radio_de_oclusion = 0.018
+intensidad_de_oclusion = 0.48
 
 [node name="Forma" type="CollisionShape3D" parent="."]
 shape = SubResource("cuerpo")
