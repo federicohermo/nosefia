@@ -127,7 +127,7 @@ def hornear(copia, armar, lado: int, margen: int) -> np.ndarray:
     bpy.ops.object.select_all(action="DESELECT")
     copia.select_set(True)
     bpy.context.view_layer.objects.active = copia
-    bpy.ops.object.bake(type="EMIT", margin=margen, use_clear=True)
+    bpy.ops.object.bake(type="EMIT", margin=margen, margin_type="EXTEND", use_clear=True)
     pixeles = np.empty(lado * lado * 4, dtype=np.float32)
     imagen.pixels.foreach_get(pixeles)
     bpy.data.images.remove(imagen)

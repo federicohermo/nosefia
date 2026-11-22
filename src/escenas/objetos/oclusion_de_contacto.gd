@@ -62,6 +62,8 @@ const LIMITE_ABIERTO := 1000.0
 const RESOLUCION_DE_VERTICES := 1000.0
 ## Mitad mínima de huella para distinguir su forma sin ruido numérico, en metros.
 const LADO_MINIMO_PARA_FORMA := 0.001
+## Máximo de cápsulas que admite `sombra_de_contacto.gdshader` en una silueta analítica.
+const MAX_CAPSULAS := 8
 
 static var _plano_de_la_sombra: ArrayMesh
 static var _vertices_de_las_mallas: Dictionary[Mesh, PackedVector3Array] = {}
@@ -120,11 +122,26 @@ var _cache_grupos: Array[PackedVector3Array] = []
 var _cache_ejes_x: Array[Vector3] = []
 var _cache_ejes_z: Array[Vector3] = []
 var _cache_medidas: Array[Array] = []
+var _silueta_capsulas := PackedVector3Array()
+var _silueta_radios := PackedFloat32Array()
+var _silueta_aro := PackedFloat32Array()
 
 
 ## De las mallas del objeto salen su huella, su forma y su base.
 func configurar(mallas_del_objeto: Array[MeshInstance3D]) -> void:
 	mallas = mallas_del_objeto
+	_cache_valido = false
+	_invalidar_medidas()
+
+
+## Silueta analítica opcional en espacio local del cuerpo (cápsulas + aro) para formas cóncavas:
+## se evalúa directo en GPU sin recorrer triángulos ni generar texturas al apoyarse.
+func configurar_silueta(
+	capsulas: PackedVector3Array, radios: PackedFloat32Array, aro := PackedFloat32Array()
+) -> void:
+	_silueta_capsulas = capsulas
+	_silueta_radios = radios
+	_silueta_aro = aro
 	_cache_valido = false
 	_invalidar_medidas()
 
@@ -220,6 +237,7 @@ func intensidad_a(altura: float) -> float:
 func _crear_sombra() -> MeshInstance3D:
 	var nueva := MeshInstance3D.new()
 	nueva.top_level = true
+	nueva.physics_interpolation_mode = Node.PHYSICS_INTERPOLATION_MODE_OFF
 	nueva.mesh = plano()
 	nueva.material_override = _material()
 	nueva.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
@@ -270,7 +288,71 @@ func _poner_la_sombra(
 	material.set_shader_parameter(&"esquinas", esquinas)
 	material.set_shader_parameter(&"suavidad", suavidad)
 	material.set_shader_parameter(&"intensidad", intensidad_mancha)
+	_escribir_silueta(material, cuerpo, giro, normal, punto, centro_en_cuerpo)
 	_recortar_en_el_apoyo(material, golpe, Transform3D(giro, origen))
+
+
+## Proyecta las cápsulas y el aro de una forma cóncava al plano de apoyo en O(1).
+func _escribir_silueta(
+	material: ShaderMaterial,
+	cuerpo: CollisionObject3D,
+	giro: Basis,
+	normal: Vector3,
+	punto: Vector3,
+	centro_en_cuerpo: Vector2
+) -> void:
+	if _silueta_capsulas.is_empty() and _silueta_aro.size() < 8:
+		material.set_shader_parameter(&"usar_silueta", false)
+		material.set_shader_parameter(&"cantidad_capsulas", 0)
+		material.set_shader_parameter(&"aro_silueta", Vector4.ZERO)
+		return
+	var traspuesta := cuerpo.global_basis.transposed()
+	var eje_x := traspuesta * giro.x
+	var eje_z := traspuesta * giro.z
+	var caps: Array[Vector4] = []
+	var rads: Array[float] = []
+	var pares := mini(_silueta_capsulas.size() / 2, _silueta_radios.size())
+	for i in pares:
+		if caps.size() >= MAX_CAPSULAS:
+			break
+		var a := _silueta_capsulas[i * 2]
+		var b := _silueta_capsulas[i * 2 + 1]
+		var r := _silueta_radios[i]
+		var ha := maxf(((cuerpo.global_transform * a) - punto).dot(normal) - r, 0.0)
+		var hb := maxf(((cuerpo.global_transform * b) - punto).dot(normal) - r, 0.0)
+		var h_seg := minf(ha, hb)
+		if h_seg >= radio:
+			continue
+		var a2 := Vector2(a.dot(eje_x), a.dot(eje_z)) - centro_en_cuerpo
+		var b2 := Vector2(b.dot(eje_x), b.dot(eje_z)) - centro_en_cuerpo
+		caps.append(Vector4(a2.x, a2.y, b2.x, b2.y))
+		rads.append(maxf(r - h_seg * 0.35, 0.002))
+	var aro_param := Vector4.ZERO
+	if _silueta_aro.size() >= 8:
+		var c := Vector3(_silueta_aro[0], _silueta_aro[1], _silueta_aro[2])
+		var eje := Vector3(_silueta_aro[3], _silueta_aro[4], _silueta_aro[5]).normalized()
+		var rm := _silueta_aro[6]
+		var rt := _silueta_aro[7]
+		var h_aro := maxf(((cuerpo.global_transform * c) - punto).dot(normal) - rt, 0.0)
+		if h_aro < radio + rm:
+			var eje_m := (cuerpo.global_basis * eje).normalized()
+			var c2 := Vector2(c.dot(eje_x), c.dot(eje_z)) - centro_en_cuerpo
+			if absf(eje_m.dot(normal)) >= 0.55:
+				aro_param = Vector4(c2.x, c2.y, rm, maxf(rt - h_aro * 0.35, 0.002))
+			elif caps.size() < MAX_CAPSULAS:
+				var tang := eje_m.cross(normal).normalized()
+				var d2 := Vector2(tang.dot(giro.x), tang.dot(giro.z)) * rm
+				caps.append(Vector4(c2.x - d2.x, c2.y - d2.y, c2.x + d2.x, c2.y + d2.y))
+				rads.append(rt)
+	var cantidad := caps.size()
+	while caps.size() < MAX_CAPSULAS:
+		caps.append(Vector4.ZERO)
+		rads.append(0.0)
+	material.set_shader_parameter(&"usar_silueta", true)
+	material.set_shader_parameter(&"cantidad_capsulas", cantidad)
+	material.set_shader_parameter(&"capsulas", caps)
+	material.set_shader_parameter(&"radios_capsulas", rads)
+	material.set_shader_parameter(&"aro_silueta", aro_param)
 
 
 ## Reusa `[centro, mitad, esquinas]` del grupo en espacio del cuerpo mientras la orientación del
@@ -312,7 +394,7 @@ static func _orientacion_en_la_superficie(cuerpo: CollisionObject3D, normal: Vec
 	for eje_bruto: Vector3 in [cuerpo.global_basis.y, cuerpo.global_basis.z]:
 		var eje := eje_bruto.normalized()
 		var proyeccion := absf(eje.dot(normal))
-		if proyeccion < mejor_dot:
+		if proyeccion + 0.05 < mejor_dot:
 			mejor_dot = proyeccion
 			mejor = eje
 	var costado := (mejor - normal * normal.dot(mejor)).normalized()
@@ -459,8 +541,22 @@ func _recortar_en_el_apoyo(
 ## Se recalcula sólo si cambia alguna malla, su pose respecto del cuerpo, `radio` o hacia dónde
 ## queda abajo: llevar un objeto en la mano sin girarlo conserva el caché.
 func _grupos_del_objeto(cuerpo: Node3D) -> Array[PackedVector3Array]:
-	var inversa := cuerpo.global_transform.affine_inverse()
 	var abajo := (cuerpo.global_basis.inverse() * Vector3.DOWN).normalized()
+	if not _silueta_capsulas.is_empty() or _silueta_aro.size() >= 8:
+		if (
+			_cache_valido
+			and absf(_cache_radio - radio) < 0.0001
+			and _cache_abajo.distance_to(abajo) < ABAJO_IGUAL
+		):
+			return _cache_grupos
+		calculos_de_apoyo += 1
+		_cache_abajo = abajo
+		_cache_radio = radio
+		_cache_grupos = [_puntos_de_silueta(abajo)]
+		_invalidar_medidas()
+		_cache_valido = true
+		return _cache_grupos
+	var inversa := cuerpo.global_transform.affine_inverse()
 	var actuales: Array[Mesh] = []
 	var relativas: Array[Transform3D] = []
 	for malla in mallas:
@@ -477,6 +573,35 @@ func _grupos_del_objeto(cuerpo: Node3D) -> Array[PackedVector3Array]:
 	_invalidar_medidas()
 	_cache_valido = true
 	return _cache_grupos
+
+
+func _puntos_de_silueta(abajo: Vector3) -> PackedVector3Array:
+	var puntos := PackedVector3Array()
+	var pares := mini(_silueta_capsulas.size() / 2, _silueta_radios.size())
+	var u := Vector3.RIGHT if absf(abajo.x) < 0.9 else Vector3.UP
+	var tx := (u - abajo * abajo.dot(u)).normalized()
+	var tz := tx.cross(abajo).normalized()
+	for i in pares:
+		var r := _silueta_radios[i]
+		for p: Vector3 in [_silueta_capsulas[i * 2], _silueta_capsulas[i * 2 + 1]]:
+			var base := p + abajo * r
+			puntos.append(base + tx * r)
+			puntos.append(base - tx * r)
+			puntos.append(base + tz * r)
+			puntos.append(base - tz * r)
+	if _silueta_aro.size() >= 8:
+		var c := Vector3(_silueta_aro[0], _silueta_aro[1], _silueta_aro[2])
+		var eje := Vector3(_silueta_aro[3], _silueta_aro[4], _silueta_aro[5]).normalized()
+		var rm := _silueta_aro[6]
+		var rt := _silueta_aro[7]
+		var ref := Vector3.RIGHT if absf(eje.x) < 0.9 else Vector3.FORWARD
+		var e1 := (ref - eje * eje.dot(ref)).normalized()
+		var e2 := eje.cross(e1).normalized()
+		for k in 8:
+			var ang := k * TAU / 8.0
+			var borde := c + (e1 * cos(ang) + e2 * sin(ang)) * (rm + rt)
+			puntos.append(borde + abajo * rt)
+	return puntos
 
 
 func _cache_coincide(actuales: Array[Mesh], relativas: Array[Transform3D], abajo: Vector3) -> bool:
@@ -515,9 +640,9 @@ func _calcular_grupos(
 	if not is_finite(hondo):
 		return []
 	var componentes := _componentes_conectados(por_malla, hondo - radio, abajo)
-	if componentes.size() <= 1:
-		return componentes
-	return _unir_componentes_cercanos(componentes, abajo, radio)
+	if componentes.size() > 1:
+		componentes = _unir_componentes_cercanos(componentes, abajo, radio)
+	return componentes
 
 
 ## Une los vértices dentro de la banda que comparten triángulos o coinciden en posición.

@@ -112,7 +112,7 @@ func test_el_cielorraso_sobre_la_cabeza_no_es_el_apoyo_de_las_fibras() -> void:
 			BAJO_EL_CIELORRASO, BAJO_EL_CIELORRASO + Vector3.UP * 3.0
 		)
 	)
-	assert_str(str((techo.collider as Node).get_parent().name)).is_equal("bano_cielorraso")
+	assert_str(str((techo.collider as Node).get_parent().name)).is_equal("almacen")
 	var cielorraso: float = (techo.position as Vector3).y
 	assert_float(cielorraso).is_equal_approx(3.14, 0.001)
 	for grados: float in [105.0, 135.0, 180.0]:

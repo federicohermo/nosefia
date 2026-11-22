@@ -472,9 +472,6 @@ size = Vector3(0.421, 4.244, 6.9586)
 [sub_resource type="BoxShape3D" id="deposito_pallet_rack"]
 size = Vector3(1.64, 0.12, 0.82)
 
-[sub_resource type="BoxShape3D" id="deposito_pallet_piso"]
-size = Vector3(1.2, 0.12, 0.8)
-
 [sub_resource type="BoxShape3D" id="deposito_acero_o03_2_0"]
 size = Vector3(3.061469436, 0.035534441, 0.029686987)
 
@@ -1525,9 +1522,6 @@ points = PackedVector3Array(0.444444478,1.123022079,0.572222233,0.952331245,1.18
 margin = 0.002
 points = PackedVector3Array(-0.909413576,1.122044921,0.571736753,0.444444537,1.186501741,0.603965163,0.444444537,1.186501741,0.572225332,-0.918456018,1.187909365,0.571521521,-0.888888955,1.186501741,0.603965163,0.444444537,1.123022079,0.603965163,0.444444537,1.123022079,0.572225332,-0.888888955,1.123022079,0.603965163)
 
-[sub_resource type="BoxShape3D" id="tabla_deposito_pallet_piso"]
-size = Vector3(1.200000000, 0.120000000, 0.800000000)
-
 [sub_resource type="BoxShape3D" id="tabla_gondola_deposito03_deposito_pallet_central_derecho_0_0"]
 size = Vector3(1.640000000, 0.120000000, 0.820000000)
 
@@ -1712,7 +1706,7 @@ points = PackedVector3Array(8.271450000,-0.000000000,6.262860000,8.271450000,-0.
 
 [sub_resource type="ConvexPolygonShape3D" id="actual_almacen_52"]
 margin = 0.002
-points = PackedVector3Array(8.271450000,3.361490000,-0.329230000,8.271450000,3.361490000,0.876040000,8.271450000,3.646530000,-0.329230000,8.271450000,3.646530000,0.876040000,13.609570000,3.361490000,-0.329230000,13.609570000,3.361490000,0.876040000,13.609570000,3.646530000,-0.329230000,13.609570000,3.646530000,0.876040000)
+points = PackedVector3Array(8.271450000,3.030280000,-0.329230000,8.271450000,3.030280000,0.876040000,8.271450000,3.646530000,-0.329230000,8.271450000,3.646530000,0.876040000,13.609570000,3.030280000,-0.329230000,13.609570000,3.030280000,0.876040000,13.609570000,3.646530000,-0.329230000,13.609570000,3.646530000,0.876040000)
 
 [sub_resource type="ConvexPolygonShape3D" id="modelo_hoja_heladera_fuera_de_servicio_puerta_heladera_2"]
 margin = 0.002
@@ -2108,7 +2102,7 @@ points = PackedVector3Array(-0.340999991, 0.011000000, 0.024999999, -0.287000000
 
 [sub_resource type="ConvexPolygonShape3D" id="actual_almacen_53"]
 margin = 0.002
-points = PackedVector3Array(8.271450000,3.361490000,0.876040000,8.271450000,3.361490000,6.262860000,8.271450000,3.389400000,0.876040000,8.271450000,3.389400000,6.262860000,13.609570000,3.361490000,0.876040000,13.609570000,3.361490000,6.262860000,13.609570000,3.389400000,0.876040000,13.609570000,3.389400000,6.262860000)
+points = PackedVector3Array(8.271450000,3.030280000,0.876040000,8.271450000,3.030280000,6.262860000,8.271450000,3.389400000,0.876040000,8.271450000,3.389400000,6.262860000,13.609570000,3.030280000,0.876040000,13.609570000,3.030280000,6.262860000,13.609570000,3.389400000,0.876040000,13.609570000,3.389400000,6.262860000)
 
 [sub_resource type="ConvexPolygonShape3D" id="actual_almacen_54"]
 margin = 0.002
@@ -4400,9 +4394,6 @@ editor_description = "La luminaria que la textura ya dibuja arriba del vidrio. E
 [node name="bano_marco_entrada" parent="."]
 gi_lightmap_texel_scale = 4.0
 
-[node name="deposito_pallet_piso" parent="."]
-gi_lightmap_texel_scale = 4.0
-
 [node name="puerta" parent="."]
 gi_mode = 2
 
@@ -4654,14 +4645,6 @@ shape = SubResource("volumen_91")
 
 [node name="Volumen3" type="CollisionShape3D" parent="bano_inodoro_2/StaticBody3D"]
 shape = SubResource("volumen_92")
-
-[node name="StaticBody3D" type="StaticBody3D" parent="deposito_pallet_piso"]
-collision_layer = 8
-collision_mask = 0
-
-[node name="Volumen" type="CollisionShape3D" parent="deposito_pallet_piso/StaticBody3D"]
-position = Vector3(0.000000000, 0.060000000, 0.000000000)
-shape = SubResource("tabla_deposito_pallet_piso")
 
 [node name="puerta_heladera_0" parent="heladeranueva"]
 gi_mode = 2

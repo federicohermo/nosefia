@@ -82,3 +82,52 @@ paths:
     relieve en esquinas y jambas del depósito y del cuartito de limpieza, y une
     `cuartito_revestimiento` en una sola malla conexa. Van antes de `exportar_modelo.py` y
     `hornear.py`. Un `.blend` nuevo del artista pide repetirlos.
+
+12. **Los tres bidones de limpieza llevan bisel no destructivo en sus quiebres.**
+    `blender/biselar_bidones.py` suaviza caras y aristas y marca pesos de bisel desde 30°.
+    Arma una pila de 2 segmentos a 6 mm con triangulación y normales pesadas. Va antes de
+    `texturizar_bidones.py`, `armar_atlas.py` y `exportar_modelo.py`. Un `.blend` nuevo del
+    artista pide repetirlo.
+
+13. **La computadora, la registradora, el lector y el router llevan bisel no destructivo.**
+    `blender/biselar_puesto.py` suelda la tapa suelta de `cajaregistradora-col`, redondea a 48
+    lados la base del lector, redondea el contorno de `mouse-col` de 8 a 16 lados con hombro
+    superior curvo y bisel de 2 segmentos (2 mm) en su aro inferior (`220` triángulos), excluye micro-aristas que activan
+    `clamp_overlap` en monitor y lector, limpia duplicados y normales de `antenas-col`, y aplica
+    biseles de 2 segmentos con triangulación y normales pesadas en `SEPT_JUEGOS_PROTOTIPO.blend`
+    y `source/puestos/router.blend`. `blender/enderezar_uv_mouse.py` alinea la isla superior de
+    `mouse-col` con la rueda y la costura de botones de `Mouse_Normal.png`. Después van
+    `exportar_router.py`, `exportar_modelo.py`, `assets/models/extraer_lector.gd` y `hornear.py`.
+    Un `.blend` nuevo del artista pide repetirlo.
+
+14. **El cielorraso del baño es parte de `almacen-col` y no una placa separada.**
+    `blender/techo_del_bano.py` baja la cara `bano_cielorraso_blanco` de `almacen-col` a `Z = 3,14 m`,
+    ajusta la escala V de las paredes del baño y elimina `bano_cielorraso-convcol` para evitar
+    caras coplanares y sombras de oclusión en el encuentro con las paredes. Va antes de
+    `exportar_modelo.py` y `hornear.py`. Un `.blend` nuevo del artista pide repetirlo.
+
+15. **La porcelana del baño va lisa y ambas cabinas llevan portarrollos con papel higiénico.**
+    `blender/detalles_del_bano.py` desconecta `porcelana_atlas.png` de `bano_porcelana` y
+    `bano_asiento_marfil` para eliminar el pixelado del inodoro y coloca `bano_portarrollo_1` y
+    `bano_portarrollo_2` (acero, tubo de cartón y rollo con hoja colgante) en la mampara izquierda
+    de cada cabina. Va antes de `exportar_modelo.py` y `hornear.py`. Un `.blend` nuevo del artista
+    pide repetirlo.
+
+16. **El piso del depósito queda libre sin el pallet suelto.**
+    `blender/quitar_pallet_piso.py` elimina `deposito_pallet_piso` de `SEPT_JUEGOS_PROTOTIPO.blend`
+    (los pallets temporales de entrega toman la malla desde `deposito_pallet_fondo_0_0` escalada a
+    `1,38 × 0,92 m`). Va antes de `exportar_modelo.py` y `hornear.py`. Un `.blend` nuevo del
+    artista pide repetirlo.
+
+17. **El balde lleva cuerpo y aro de 48 lados, manija curva suave y textura limpia.**
+    `blender/refinar_balde.py` reconstruye el cuerpo y ambos aros de `balde-col` a 48 lados con
+    labio superior redondeado, el arco de la manija a 40 tramos × 16 lados y el agarre a 16 × 18
+    lados conservando pivotes, bisagras y logotipo. Luego `blender/texturizar_utiles.py --aplicar`
+    rehornea `utiles_de_limpieza.png` con plástico limpio y desgaste leve. Va antes de
+    `exportar_modelo.py`. Un `.blend` nuevo del artista pide repetirlo.
+
+16. **El piso del depósito queda libre sin el pallet suelto.**
+    `blender/quitar_pallet_piso.py` elimina `deposito_pallet_piso` de `SEPT_JUEGOS_PROTOTIPO.blend`
+    (los pallets temporales de entrega toman la malla desde `deposito_pallet_fondo_0_0` escalada a
+    `1,38 × 0,92 m`). Va antes de `exportar_modelo.py` y `hornear.py`. Un `.blend` nuevo del
+    artista pide repetirlo.

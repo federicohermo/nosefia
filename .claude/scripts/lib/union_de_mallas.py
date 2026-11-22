@@ -35,6 +35,7 @@ PREFIJOS_DE_LUZ_DINAMICA = (
     "puerta_heladera_",
     "exhibido_",
     "estanteria_precios",
+    "bano_portarrollo_",
     "board",
 )
 

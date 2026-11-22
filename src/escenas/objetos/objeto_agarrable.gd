@@ -23,6 +23,22 @@ const OclusionDeContacto := preload("res://src/escenas/objetos/oclusion_de_conta
 		datos = valor
 		_aplicar_oclusion()
 @export var orientacion_en_mano := Basis.IDENTITY
+## Si es mayor que cero, pisa el radio por defecto de la mancha de contacto (objetos finos).
+@export var radio_de_oclusion := 0.0:
+	set(valor):
+		radio_de_oclusion = valor
+		_aplicar_oclusion()
+## Si es mayor que cero, pisa la intensidad por defecto de la mancha de contacto.
+@export var intensidad_de_oclusion := 0.0:
+	set(valor):
+		intensidad_de_oclusion = valor
+		_aplicar_oclusion()
+## Pares `[a, b]` en espacio local para silueta analítica de contacto (formas cóncavas).
+@export var capsulas_de_oclusion := PackedVector3Array()
+## Un radio en metros por cada par en `capsulas_de_oclusion`.
+@export var radios_de_oclusion := PackedFloat32Array()
+## Aro opcional `[cx, cy, cz, ex, ey, ez, radio_mayor, radio_tubo]` en espacio local.
+@export var aro_de_oclusion := PackedFloat32Array()
 ## La mancha que deja donde se apoya, y el oscurecimiento de su base si su material lo admite.
 var oclusion: Node3D
 
@@ -56,6 +72,8 @@ func _ready() -> void:
 	if not mallas.is_empty():
 		oclusion = OclusionDeContacto.new()
 		oclusion.configurar(mallas)
+		if not capsulas_de_oclusion.is_empty() or not aro_de_oclusion.is_empty():
+			oclusion.configurar_silueta(capsulas_de_oclusion, radios_de_oclusion, aro_de_oclusion)
 		_aplicar_oclusion()
 		add_child(oclusion)
 	body_entered.connect(
@@ -68,14 +86,22 @@ func _aplicar_oclusion() -> void:
 		return
 	var es_producto := datos is UnidadDeProducto
 	var radio := (
-		OclusionDeContacto.RADIO_DEL_PRODUCTO
-		if es_producto
-		else OclusionDeContacto.RADIO_POR_DEFECTO
+		radio_de_oclusion
+		if radio_de_oclusion > 0.0
+		else (
+			OclusionDeContacto.RADIO_DEL_PRODUCTO
+			if es_producto
+			else OclusionDeContacto.RADIO_POR_DEFECTO
+		)
 	)
 	var intensidad := (
-		OclusionDeContacto.INTENSIDAD_DEL_PRODUCTO
-		if es_producto
-		else OclusionDeContacto.INTENSIDAD_POR_DEFECTO
+		intensidad_de_oclusion
+		if intensidad_de_oclusion > 0.0
+		else (
+			OclusionDeContacto.INTENSIDAD_DEL_PRODUCTO
+			if es_producto
+			else OclusionDeContacto.INTENSIDAD_POR_DEFECTO
+		)
 	)
 	if oclusion.radio != radio:
 		oclusion.radio = radio
