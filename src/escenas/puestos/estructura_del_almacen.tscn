@@ -27,6 +27,8 @@
 [ext_resource type="PackedScene" path="res://src/escenas/puestos/router_del_wifi.tscn" id="router"]
 [ext_resource type="ArrayMesh" path="res://assets/models/caja_registradora.res" id="modelo_caja_nueva"]
 [ext_resource type="ConvexPolygonShape3D" path="res://assets/models/caja_registradora_colision.res" id="colision_caja_nueva"]
+[ext_resource type="Script" path="res://src/escenas/puestos/oclusion_de_exhibido.gd" id="oclusion_exhibido"]
+[ext_resource type="Script" path="res://src/escenas/puestos/oclusion_de_apoyo_fijo.gd" id="oclusion_apoyo_fijo"]
 
 [sub_resource type="BoxShape3D" id="losa_del_techo_continuo"]
 size = Vector3(10.35, 0.03, 14.15)
@@ -4547,6 +4549,11 @@ editor_description = "Lo dibuja la mopa que se levanta, en los objetos del almac
 disabled = true
 
 [node name="cajaregistradora" parent="."]
+script = ExtResource("oclusion_apoyo_fijo")
+radio = 0.014
+intensidad = 0.72
+esquinas = 0.08
+altura_de_apoyo = 1.15
 
 [node name="Volumen" type="CollisionShape3D" parent="cajaregistradora/StaticBody3D"]
 shape = SubResource("modelo_caja")
@@ -4771,6 +4778,37 @@ ancho_del_papel = 0.0881286098957062
 [node name="StaticBody3D" parent="tableroluz" node_paths=PackedStringArray("mallas") groups=["interactuable"]]
 script = ExtResource("tablero_electrico")
 mallas = [NodePath("..")]
+
+[node name="estante_mesada" parent="."]
+script = ExtResource("oclusion_apoyo_fijo")
+radio = 0.014
+intensidad = 0.68
+esquinas = 0.04
+altura_de_apoyo = 1.15
+
+[node name="exhibido_facturas" parent="estante_mesada"]
+script = ExtResource("oclusion_exhibido")
+
+[node name="base compu" parent="."]
+script = ExtResource("oclusion_apoyo_fijo")
+radio = 0.013
+intensidad = 0.68
+esquinas = 0.08
+altura_de_apoyo = 1.15
+
+[node name="teclado" parent="."]
+script = ExtResource("oclusion_apoyo_fijo")
+radio = 0.01
+intensidad = 0.62
+esquinas = 0.08
+altura_de_apoyo = 1.15
+
+[node name="mouse" parent="."]
+script = ExtResource("oclusion_apoyo_fijo")
+radio = 0.009
+intensidad = 0.62
+esquinas = 0.85
+altura_de_apoyo = 1.15
 
 [node name="Ranura" type="Marker3D" parent="cajaregistradora"]
 transform = Transform3D(5.4831953, 0.31038418, 5.684342e-14, -0.31038418, 5.4831953, -1.4210855e-14, 0, -4.4302192e-07, 5.4919734, 0.6655464, 0.6157274, -0.40700006)
