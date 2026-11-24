@@ -436,8 +436,6 @@ func test_alrededor_de_un_estante_con_lugar_la_caja_siempre_sube_a_el() -> void:
 	# altura, o pegado a la caja vecina. Antes había tres agujeros que la mandaban al piso: la
 	# franja junto a la vecina, la pared a más de una caja de altura, y la punta de la tabla.
 	var almacen: Node3D = await _almacen_con_jugador_quieto()
-	# El pallet suelto del arte nuevo ocupa este paso; el caso necesita todo el frente libre.
-	almacen.get_node("Estructura/deposito_pallet_piso").position.x += 100
 	var jugador: CharacterBody3D = almacen.get("_jugador")
 	var mano: Node3D = jugador.get_node("Giro/PuntoDeCaja")
 	var caja: Node3D = almacen.get("_cajas_de_productos")[Producto.Id.PROGRES]
@@ -826,7 +824,6 @@ func test_la_caja_va_donde_apunta_la_mira() -> void:
 	almacen.set("_partida", Partida.desde({"jornada": ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA}))
 	add_child(almacen)
 	AperturaConLugar.abrir_con_semilla(almacen)
-	almacen.get_node("Estructura/deposito_pallet_piso").position.x += 100
 	await get_tree().physics_frame
 	var jugador: CharacterBody3D = almacen.get("_jugador")
 	var estante: Node3D = almacen.get_node(ESTANTE_DEL_DEPOSITO)

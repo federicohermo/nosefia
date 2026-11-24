@@ -3,11 +3,30 @@
 import unittest
 
 from lib.horneado import (
+    INTERMEDIOS_DEL_APOYO,
+    NIVEL_DE_APOYO,
     PLUGIN,
     SALIDAS,
+    SALIDAS_QUE_SE_DEVUELVEN,
     SALIDAS_SIN_LUZ,
+    VARIABLE_DE_LA_VARIANTE,
+    VARIANTE_CON_APOYO,
+    LADO_DEL_ATLAS_SIN_LUZ,
+    NIVEL_DE_OCLUSION,
+    RADIO_DE_OCLUSION,
+    RAYOS_DE_OCLUSION,
+    argumentos_de_la_mezcla,
+    argumentos_de_la_oclusion,
+    comando_de_la_mezcla,
+    comando_de_la_oclusion,
+    comando_de_la_reduccion,
+    comando_de_la_reparacion,
+    con_apoyo,
+    con_oclusion,
+    entorno_de,
     project_con_el_plugin,
     reescritos_de_mas,
+    ruta_para_godot,
     salidas_de,
     sesion_bloqueada,
     tope_en_segundos,
@@ -71,6 +90,21 @@ class HorneadoSinLuz(unittest.TestCase):
         self.assertIn("almacen_sin_luz.exr", motivo)
 
 
+class ReduccionDelAtlasSinLuz(unittest.TestCase):
+    # La noche del corte es una imagen casi negra: 2048 px de lado pesan cuatro veces más y no
+    # se ven. El lado sale de una constante, y llega al script de Blender como argumento.
+    def test_el_lado_final_es_una_potencia_de_dos_menor_que_la_del_horneado(self):
+        self.assertGreater(LADO_DEL_ATLAS_SIN_LUZ, 0)
+        self.assertEqual(LADO_DEL_ATLAS_SIN_LUZ & (LADO_DEL_ATLAS_SIN_LUZ - 1), 0)
+
+    def test_el_comando_pasa_el_lado_y_los_atlas_despues_de_los_de_blender(self):
+        comando = comando_de_la_reduccion("blender", "reducir.py", ["a.exr"], 512)
+        corte = comando.index("--")
+        self.assertEqual(comando[corte + 1 :], ["--aplicar", "--lado", "512", "a.exr"])
+        # Sin esto, una excepción del script sale con código 0 y el horneado sigue.
+        self.assertEqual(comando[comando.index("--python-exit-code") + 1], "1")
+
+
 class SesionBloqueada(unittest.TestCase):
     # Con la sesión de Windows bloqueada el editor no dibuja, no aprieta el botón y el horneado
     # espera el tope entero sin decir por qué.
@@ -126,3 +160,112 @@ class TopeDelHorneado(unittest.TestCase):
     def test_otro_driver_declarado_no_es_software(self):
         entorno = {"VK_ICD_FILENAMES": "/usr/share/vulkan/icd.d/radeon_icd.json"}
         self.assertEqual(tope_en_segundos(entorno), 20 * 60)
+
+
+class NivelDeLaSombraDeApoyo(unittest.TestCase):
+    # El horneado con luz mezcla el atlas con obstáculos en el de siempre. El nivel es cuánto pesa
+    # el segundo: con 0 el atlas es el de siempre, con 1 es el de los obstáculos entero.
+    def test_el_nivel_es_una_fraccion(self):
+        self.assertGreaterEqual(NIVEL_DE_APOYO, 0.0)
+        self.assertLessEqual(NIVEL_DE_APOYO, 1.0)
+
+    def test_con_nivel_cero_no_hace_falta_el_segundo_horneado(self):
+        self.assertFalse(con_apoyo(0.0))
+
+    def test_con_cualquier_otro_nivel_hace_falta(self):
+        self.assertTrue(con_apoyo(NIVEL_DE_APOYO))
+        self.assertTrue(con_apoyo(1.0))
+        self.assertTrue(con_apoyo(0.01))
+
+    def test_un_nivel_fuera_de_cero_a_uno_es_un_error(self):
+        for nivel in (-0.1, 1.1):
+            with self.assertRaises(ValueError):
+                con_apoyo(nivel)
+
+
+class HorneadoConApoyo(unittest.TestCase):
+    def test_el_editor_recibe_la_variante_y_el_resto_del_entorno(self):
+        entorno = entorno_de({"GODOT_BIN": "godot"}, VARIANTE_CON_APOYO)
+        self.assertEqual(entorno[VARIABLE_DE_LA_VARIANTE], VARIANTE_CON_APOYO)
+        self.assertEqual(entorno["GODOT_BIN"], "godot")
+
+    def test_sin_variante_el_entorno_no_declara_ninguna(self):
+        # El horneado de siempre no la declara: si el entorno de quien corre el script ya traía
+        # una, la hereda y hornea otra cosa.
+        original = {"GODOT_BIN": "godot"}
+        self.assertNotIn(VARIABLE_DE_LA_VARIANTE, entorno_de(original, ""))
+        self.assertEqual(original, {"GODOT_BIN": "godot"})
+
+    def test_lo_que_deja_el_horneado_con_obstaculos_no_es_una_salida(self):
+        # Son archivos de paso: `hornear.py` los borra y nadie los commitea.
+        propias = {*SALIDAS, *SALIDAS_SIN_LUZ, *(r + ".import" for r in SALIDAS)}
+        self.assertFalse(set(INTERMEDIOS_DEL_APOYO) & propias)
+
+    def test_si_falla_se_devuelven_las_salidas_y_el_import_de_su_atlas(self):
+        self.assertTrue(set(SALIDAS) <= set(SALIDAS_QUE_SE_DEVUELVEN))
+        self.assertIn(SALIDAS[1] + ".import", SALIDAS_QUE_SE_DEVUELVEN)
+
+    def test_la_mezcla_escribe_sobre_el_atlas_de_siempre_y_lee_el_de_los_obstaculos(self):
+        argumentos = argumentos_de_la_mezcla(NIVEL_DE_APOYO)
+        self.assertEqual(argumentos[:2], ["res://" + r for r in SALIDAS])
+        self.assertEqual(argumentos[2:4], ["res://" + r for r in INTERMEDIOS_DEL_APOYO[:2]])
+        self.assertEqual(float(argumentos[4]), NIVEL_DE_APOYO)
+
+    def test_el_comando_de_la_mezcla_pasa_los_argumentos_despues_de_los_del_motor(self):
+        comando = comando_de_la_mezcla("godot", "/repo", NIVEL_DE_APOYO)
+        corte = comando.index("--")
+        self.assertIn("--headless", comando[:corte])
+        self.assertEqual(comando[corte + 1 :], argumentos_de_la_mezcla(NIVEL_DE_APOYO))
+
+    def test_el_comando_de_la_reparacion_aplica_sobre_cada_atlas(self):
+        comando = comando_de_la_reparacion("blender", "reparar.py", ["a.exr", "b.exr"])
+        corte = comando.index("--")
+        self.assertEqual(comando[corte + 1 :], ["--aplicar", "a.exr", "b.exr"])
+        # Sin esto, una excepción del script sale con código 0 y el horneado sigue.
+        self.assertEqual(comando[comando.index("--python-exit-code") + 1], "1")
+
+
+class OclusionDeLosRincones(unittest.TestCase):
+    # El paso multiplica la luz del atlas por un factor que sólo depende de la geometría. El nivel
+    # es cuánto pesa: con 0 el paso no corre y el atlas queda como lo dejó el horneado.
+    def test_el_nivel_es_una_fraccion(self):
+        self.assertGreaterEqual(NIVEL_DE_OCLUSION, 0.0)
+        self.assertLessEqual(NIVEL_DE_OCLUSION, 1.0)
+
+    def test_el_radio_y_los_rayos_son_positivos(self):
+        self.assertGreater(RADIO_DE_OCLUSION, 0.0)
+        self.assertGreater(RAYOS_DE_OCLUSION, 0)
+
+    def test_con_nivel_cero_el_paso_no_corre(self):
+        self.assertFalse(con_oclusion(0.0))
+
+    def test_con_cualquier_otro_nivel_corre(self):
+        for nivel in (0.01, 0.5, 1.0):
+            self.assertTrue(con_oclusion(nivel))
+
+    def test_un_nivel_fuera_de_cero_a_uno_es_un_error(self):
+        for nivel in (-0.1, 1.1):
+            with self.assertRaises(ValueError):
+                con_oclusion(nivel)
+
+    def test_el_comando_pasa_el_horneado_los_dos_atlas_y_los_numeros(self):
+        atlas = ("res://a.exr", "res://b.exr", 0.8, 0.5, 32)
+        comando = comando_de_la_oclusion("godot", "/repo", *atlas)
+        corte = comando.index("--")
+        self.assertIn("--headless", comando[:corte])
+        self.assertEqual(comando[corte + 1 :], argumentos_de_la_oclusion(*atlas))
+
+    def test_los_argumentos_llevan_el_lmbake_de_la_rama_primero(self):
+        argumentos = argumentos_de_la_oclusion("res://a.exr", "res://b.exr", 0.8, 0.5, 32)
+        self.assertEqual(argumentos[:3], ["res://" + SALIDAS[0], "res://a.exr", "res://b.exr"])
+        self.assertEqual([float(a) for a in argumentos[3:5]], [0.8, 0.5])
+        self.assertEqual(int(argumentos[5]), 32)
+
+    def test_un_atlas_del_repo_se_pasa_como_ruta_del_proyecto(self):
+        self.assertEqual(
+            ruta_para_godot("/repo/" + SALIDAS[1], "/repo"), "res://" + SALIDAS[1]
+        )
+
+    def test_un_atlas_de_afuera_del_repo_se_pasa_con_su_ruta_entera(self):
+        self.assertEqual(ruta_para_godot("/otro/lado/a.exr", "/repo"), "/otro/lado/a.exr")
+

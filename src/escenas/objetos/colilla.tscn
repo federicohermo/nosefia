@@ -14,6 +14,8 @@ collision_mask = 9
 continuous_cd = true
 script = ExtResource("colilla")
 datos = ExtResource("datos")
+radio_de_oclusion = 0.01
+intensidad_de_oclusion = 0.5
 
 [node name="Forma" type="CollisionShape3D" parent="."]
 shape = SubResource("cuerpo")

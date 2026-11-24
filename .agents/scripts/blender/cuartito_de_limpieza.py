@@ -318,13 +318,31 @@ def _ejes_de(normal):
     return tuple(i for i in range(3) if normal[i] == 0)
 
 
+def _altura_cielorraso_bano():
+    placa = bpy.data.objects.get(CIELORRASO_DEL_BANO)
+    if placa is not None:
+        return _caja_mundial(placa)[0].z
+    edificio = bpy.data.objects[EDIFICIO]
+    indice = next(
+        i for i, r in enumerate(edificio.material_slots)
+        if r.material and r.material.name == "bano_cielorraso_blanco"
+    )
+    matriz = edificio.matrix_world
+    return min(
+        (matriz @ edificio.data.vertices[vi].co).z
+        for p in edificio.data.polygons
+        if p.material_index == indice and p.normal.z < -0.9
+        for vi in p.vertices
+    )
+
+
 def _cuarto(pared, coleccion):
     m = bpy.data.materials
     bloques = m["deposito_revestimiento_bloques"]
     afuera, chapa, techo = m["paredes"], m["deposito_techo_galvanizado"], m["techo afuera"]
     x0 = pared["x_afuera"]
     z0 = pared["z_piso"]
-    alto = _caja_mundial(bpy.data.objects[CIELORRASO_DEL_BANO])[0].z
+    alto = _altura_cielorraso_bano()
     hy0, hy1 = pared["y_hueco"]
     centro = (hy0 + hy1) / 2
     y0, y1 = centro - ANCHO / 2, centro + ANCHO / 2

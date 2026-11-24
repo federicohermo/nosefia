@@ -9,11 +9,21 @@
 ## rechaza por no levantable, y con algo en la mano lo suelta.
 extends StaticBody3D
 
+const OclusionDeContacto := preload("res://src/escenas/objetos/oclusion_de_contacto.gd")
+
 ## Cuál de las dos es: el `id` con que la nombra `SubtitulosAlExaminar`.
 @export var identidad: StringName
 
 ## Lo que se marca al enfocarla.
 @export var mallas: Array[MeshInstance3D] = []
+
+
+func _ready() -> void:
+	if mallas.is_empty():
+		return
+	var oclusion := OclusionDeContacto.new()
+	oclusion.configurar(mallas)
+	add_child(oclusion)
 
 
 func texto_al_examinar() -> String:

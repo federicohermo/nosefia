@@ -28,6 +28,11 @@ Una receta escrita es una receta que alguien va a seguir de memoria. Acá es un 
    no del `.glb`: dos exportaciones del mismo `.blend` no dan los mismos bytes.
 5. **Borra la caché del `.glb` y reimporta con Godot.** Sin esto, los tests comparan contra la
    malla anterior y pasan. Godot vuelve a extraer al lado del `.glb` cada textura que cambió.
+6. **Le pone su límite a cada textura que nació sin uno.** Godot crea el `.import` de una textura
+   extraída con `process/size_limit=0`, que es «sin límite», y `test_texturas_del_modelo.py` lo
+   exige entre 1 y el tope de su grupo. Antes lo corregía alguien a mano, en un commit aparte; si
+   cambia alguno, se reimporta otra vez para que la caché quede con el límite nuevo. Un límite que
+   alguien ya decidió no se pisa (`lib/limite_de_importacion.py`).
 
 ## Lo que NO hace
 
@@ -38,6 +43,7 @@ no dejar pasar.
 """
 
 import hashlib
+import json
 import os
 import subprocess
 import sys
@@ -50,8 +56,15 @@ from lib.consola import configurar  # noqa: E402
 configurar()
 
 from lib.blender import como_declararlo, recomprimir_las_imagenes, resolver  # noqa: E402
+from lib import atlas  # noqa: E402
 from lib.godot import como_declararlo as como_declarar_godot  # noqa: E402
 from lib.godot import resolver as resolver_godot  # noqa: E402
+from lib.limite_de_importacion import (  # noqa: E402
+    con_el_limite,
+    es_una_textura,
+    limite_declarado,
+    limite_de,
+)
 from lib.repo import RAIZ  # noqa: E402
 
 FUENTE = RAIZ / "assets/models/SEPT_JUEGOS_PROTOTIPO.blend"
@@ -62,6 +75,22 @@ EXPORTADOR = Path(__file__).resolve().parent / "blender" / "exportar.py"
 #: La caché que Godot escribe por cada recurso importado. Se borra la del modelo y nada más:
 #: borrar `.godot/` entero obliga a reimportar el proyecto completo, que son minutos.
 CACHE = RAIZ / ".godot" / "imported"
+
+
+def fijar_los_limites() -> list[Path]:
+    """Le pone su límite a cada textura extraída que nació sin uno. Devuelve las que cambió."""
+    manifiesto = json.loads(atlas.MANIFIESTO.read_text(encoding="utf-8"))
+    los_atlas = {Path(uno["archivo"]).stem for uno in manifiesto["atlas"]}
+    cambiadas = []
+    for ruta in sorted(DESTINO.parent.glob("*.import")):
+        texto = ruta.read_text(encoding="utf-8")
+        if not es_una_textura(texto) or limite_declarado(texto) != 0:
+            continue
+        nombre = Path(ruta.name.removesuffix(".import")).stem.removeprefix(DESTINO.stem + "_")
+        nuevo = con_el_limite(texto, limite_de(nombre, los_atlas))
+        ruta.write_text(nuevo, encoding="utf-8", newline="")
+        cambiadas.append(ruta)
+    return cambiadas
 
 
 def cache_del_modelo() -> list[Path]:
@@ -137,6 +166,22 @@ def reimportar() -> int:
         archivo.unlink()
     print(f"caché borrada: {len(borrados)} archivos")
 
+    codigo = _importar(godot)
+    if codigo != 0:
+        return codigo
+    print("reimportado")
+    cambiadas = fijar_los_limites()
+    if cambiadas:
+        for ruta in cambiadas:
+            print(f"límite de importación fijado: {ruta.name}")
+        codigo = _importar(godot)
+        if codigo != 0:
+            return codigo
+        print("reimportado con los límites")
+    return 0
+
+
+def _importar(godot: str) -> int:
     proceso = subprocess.run(
         [godot, "--headless", "--path", str(RAIZ), "--import", "--quit"],
         capture_output=True,
@@ -146,9 +191,7 @@ def reimportar() -> int:
     )
     if proceso.returncode != 0:
         print(proceso.stdout + proceso.stderr, file=sys.stderr)
-        return proceso.returncode
-    print("reimportado")
-    return 0
+    return proceso.returncode
 
 
 def main() -> int:

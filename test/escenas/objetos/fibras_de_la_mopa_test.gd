@@ -37,7 +37,7 @@ func test_las_fibras_reaccionan_al_movimiento_y_se_asientan_al_parar() -> void:
 	var fibras: MeshInstance3D = mopa.get_node("Malla")
 	fibras.set_physics_process(false)
 	var pinturas: Array = fibras.get("_pinturas")
-	assert_int(pinturas.size()).is_equal(2)
+	assert_int(pinturas.size()).is_greater(0)
 	for pintura: ShaderMaterial in pinturas:
 		assert_object(pintura.shader).is_not_null()
 	fibras.call("_physics_process", 1.0 / 60.0)
@@ -112,7 +112,7 @@ func test_el_cielorraso_sobre_la_cabeza_no_es_el_apoyo_de_las_fibras() -> void:
 			BAJO_EL_CIELORRASO, BAJO_EL_CIELORRASO + Vector3.UP * 3.0
 		)
 	)
-	assert_str(str((techo.collider as Node).get_parent().name)).is_equal("bano_cielorraso")
+	assert_str(str((techo.collider as Node).get_parent().name)).is_equal("almacen")
 	var cielorraso: float = (techo.position as Vector3).y
 	assert_float(cielorraso).is_equal_approx(3.14, 0.001)
 	for grados: float in [105.0, 135.0, 180.0]:

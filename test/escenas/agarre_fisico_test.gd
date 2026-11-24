@@ -3,32 +3,45 @@ extends GdUnitTestSuite
 const ALMACEN := preload("res://src/escenas/almacen.tscn")
 const BolsaEnLaMano := preload("res://test/escenas/bolsa_en_la_mano.gd")
 const AperturaConLugar := preload("res://test/escenas/apertura_con_lugar.gd")
+const LadosDelMueble := preload("res://test/escenas/lados_del_mueble.gd")
+## Los lados horizontales de un mueble.
+const CARAS_DE_UN_MUEBLE := 4
+## A cuánto de la cara se para quien suelta hacia el costado, y hacia la cabecera.
+const DISTANCIA_AL_COSTADO := 0.6
+const DISTANCIA_A_LA_CABECERA := 1.0
 
 
 func test_soltar_hacia_la_gondola_deja_el_producto_visible_y_recuperable() -> void:
-	var referencia: Node3D = auto_free(ALMACEN.instantiate())
-	var malla := referencia.get_node("Estructura/gondolanueva") as MeshInstance3D
-	var limites := malla.transform * malla.get_aabb()
-	var centro := limites.get_center()
-	var destino := Vector3(centro.x, 1.7, centro.z)
-	var ojos: Array[Vector3] = [
-		Vector3(limites.end.x + 0.6, 1.7, centro.z),
-		Vector3(limites.position.x - 0.6, 1.7, centro.z),
-		Vector3(centro.x, 1.7, limites.end.z + 1.0),
-	]
-	for ojo: Vector3 in ojos:
+	var probados := {"costado": 0, "cabecera": 0}
+	for indice in CARAS_DE_UN_MUEBLE:
 		var almacen: Node3D = auto_free(ALMACEN.instantiate())
 		almacen.set(
 			"_partida",
 			Partida.desde({"jornada": ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA + 1, "medios": 0})
 		)
 		add_child(almacen)
+		await get_tree().physics_frame
+		# Cada cara con lugar para pararse: los costados, y una cabecera.
+		var malla := almacen.get_node("Estructura/gondolanueva") as MeshInstance3D
+		var lado := LadosDelMueble.lados(malla)[indice]
+		var clase := "cabecera" if lado.de_cabecera else "costado"
+		var distancia := DISTANCIA_A_LA_CABECERA if lado.de_cabecera else DISTANCIA_AL_COSTADO
+		var pie := LadosDelMueble.pie_junto_a(malla, lado, distancia)
+		if not LadosDelMueble.cabe_parado(almacen, pie):
+			await _cerrar(almacen)
+			continue
+		if lado.de_cabecera and probados[clase] > 0:
+			await _cerrar(almacen)
+			continue
+		probados[clase] += 1
+		var centro := LadosDelMueble.pieza(malla).get_center()
+		var destino := Vector3(centro.x, 1.7, centro.z)
 		AperturaConLugar.abrir_con_todo_el_lugar(almacen)
 		var jugador: CharacterBody3D = almacen.get_node("Jugador")
 		jugador.set_physics_process(false)
 		var camara: Camera3D = jugador.get_node("Giro/Camara")
 		var agarre: Agarre = jugador.get("agarre")
-		jugador.global_position = ojo - Vector3.UP * 1.7
+		jugador.global_position = Vector3(pie.x, 0.0, pie.z)
 		camara.look_at(destino)
 		await get_tree().physics_frame
 		for producto in Catalogo.todos():
@@ -64,7 +77,7 @@ func test_soltar_hacia_la_gondola_deja_el_producto_visible_y_recuperable() -> vo
 				. override_failure_message(
 					(
 						"%s soltado desde %s quedó en %s, fuera de alcance"
-						% [producto.nombre, ojo, cuerpo.global_position]
+						% [producto.nombre, pie, cuerpo.global_position]
 					)
 				)
 				. is_less(ReglasDelJugador.ALCANCE_DE_LA_MIRA)
@@ -73,8 +86,21 @@ func test_soltar_hacia_la_gondola_deja_el_producto_visible_y_recuperable() -> vo
 			assert_bool(agarre.pedir_agarrar(cuerpo.datos, cuerpo)).is_true()
 			almacen.get("_reposicion_manual").pedir_colocar(producto.id)
 			camara.look_at(destino)
-		almacen.queue_free()
-		await get_tree().process_frame
+		await _cerrar(almacen)
+	# Una góndola contra la pared no tiene por qué dejar lugar junto a sus cabeceras.
+	(
+		assert_int(probados["costado"] + probados["cabecera"])
+		. override_failure_message("ninguna cara de la góndola tiene lugar para pararse")
+		. is_greater(0)
+	)
+
+
+## Saca el almacén del árbol antes de armar el de la cara siguiente. Dos almacenes vivos comparten
+## el mundo físico y se pisan: con el de una cara salteada todavía en pie, un producto soltado en la
+## cara siguiente se apoyaba en el piso y a los dos cuadros lo atravesaba.
+func _cerrar(almacen: Node3D) -> void:
+	almacen.queue_free()
+	await get_tree().process_frame
 
 
 func test_la_bolsa_sostenida_no_desplaza_al_jugador() -> void:

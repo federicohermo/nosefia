@@ -84,6 +84,7 @@ func _al_mojar_la_mopa() -> void:
 		mopa.mostrar_la_mojada(artefacto, artefacto.punto_para_la_mopa(), Basis.IDENTITY)
 	else:
 		mopa.mostrar_la_mojada(balde)
+		(balde.carga as SuperficieLiquida).sacudir(0.55)
 	jugador.preparar_el_uso_en_la_mano()
 
 

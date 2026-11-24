@@ -5,7 +5,8 @@ extends RefCounted
 
 const MODOS := 8
 const PASO := 1.0 / 60.0
-const AMORTIGUACION := 2.8
+# Los modos anchos mecen más tiempo; las ondas cortas se disipan antes por viscosidad.
+const AMORTIGUACIONES: Array[float] = [1.8, 2.9, 2.9, 1.9, 1.9, 2.7, 2.7, 3.8]
 # Con la velocidad de la onda en 2,5 radios por segundo, cada forma vibra a 2,5 por su número de
 # onda. El orden es el de `forma_en`.
 const FRECUENCIAS: Array[float] = [7.9, 11.8, 11.8, 7.6, 7.6, 10.5, 10.5, 15.7]
@@ -56,7 +57,6 @@ func avanzar(delta: float, aceleracion: Vector2) -> void:
 	var restante := minf(delta, 0.1)
 	while restante > 0.0:
 		var paso := minf(PASO, restante)
-		var amortiguacion := exp(-paso * AMORTIGUACION)
 		for modo: int in MODOS:
 			var omega: float = FRECUENCIAS[modo]
 			var fuerza := -omega * omega * _amplitudes[modo]
@@ -64,6 +64,7 @@ func avanzar(delta: float, aceleracion: Vector2) -> void:
 				fuerza += aceleracion.x * EMPUJE
 			elif modo == 2:
 				fuerza += aceleracion.y * EMPUJE
+			var amortiguacion := exp(-paso * AMORTIGUACIONES[modo])
 			_velocidades[modo] = (_velocidades[modo] + fuerza * paso) * amortiguacion
 			_amplitudes[modo] += _velocidades[modo] * paso
 		restante -= paso
