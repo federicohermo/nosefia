@@ -34,13 +34,13 @@ VARIANTE_SIN_LUZ = "sin_luz"
 NIVEL_DE_APOYO = 0.75
 
 #: Cuánto pesa en el atlas final la oclusión de los rincones, de 0 a 1. Con 0 el paso no corre y el
-#: atlas queda como lo dejó el horneado. Lo eligió el usuario jugando una build de prueba el
-#: 2026-11-18, junto con el radio.
-NIVEL_DE_OCLUSION = 0.25
+#: atlas queda como lo dejó el horneado. Lo ajustó el usuario probando en vivo el 2026-11-24, junto
+#: con el radio.
+NIVEL_DE_OCLUSION = 0.2
 
 #: A cuántos metros de un texel cuenta una malla como tapándolo. Una pared que pasa de este radio
 #: no lo oscurece: entre el piso y el techo de un estante bajo hay menos.
-RADIO_DE_OCLUSION = 0.2
+RADIO_DE_OCLUSION = 0.1
 
 #: Rayos por texel. Pocos se ven como grano; muchos alargan el paso, que tarda lo mismo que los
 #: rayos: ~2,5 µs cada uno.

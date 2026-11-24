@@ -46,6 +46,10 @@ const ELEVACION := 0.003
 const SALIDA := 0.03
 ## Banda usada por `oclusion_de_la_gondola.gd` para medir la base de envases parados en fila.
 const BANDA_DE_APOYO := 0.01
+## Altura mínima sobre el punto más bajo desde la que se mide la silueta apoyada. Un radio chico
+## (como `RADIO_DEL_PRODUCTO = 0.015`) corta por debajo del borde sellado de bolsas acostadas
+## (galletitas, snacks) y deja toda la mancha escondida bajo la panza del envase.
+const BANDA_MINIMA_DE_HUELLA := 0.04
 ## Cuánto puede diferir hacia dónde queda abajo, visto desde el cuerpo, para seguir contando como el
 ## mismo: con una malla de medio metro, menos que un centímetro.
 const ABAJO_IGUAL := 0.01
@@ -639,7 +643,8 @@ func _calcular_grupos(
 		por_malla.append([vertices, geometria[1]])
 	if not is_finite(hondo):
 		return []
-	var componentes := _componentes_conectados(por_malla, hondo - radio, abajo)
+	var banda := maxf(radio, BANDA_MINIMA_DE_HUELLA)
+	var componentes := _componentes_conectados(por_malla, hondo - banda, abajo)
 	if componentes.size() > 1:
 		componentes = _unir_componentes_cercanos(componentes, abajo, radio)
 	return componentes

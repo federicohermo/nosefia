@@ -25,6 +25,8 @@
 [ext_resource type="Script" path="res://src/escenas/puestos/tablero_electrico.gd" id="tablero_electrico"]
 [ext_resource type="PackedScene" path="res://src/escenas/puestos/lector.tscn" id="lector"]
 [ext_resource type="PackedScene" path="res://src/escenas/puestos/router_del_wifi.tscn" id="router"]
+[ext_resource type="PackedScene" path="res://src/escenas/puestos/mesita_del_router.tscn" id="mesita_router"]
+[ext_resource type="PackedScene" path="res://src/escenas/puestos/cafetera.tscn" id="cafetera"]
 [ext_resource type="ArrayMesh" path="res://assets/models/caja_registradora.res" id="modelo_caja_nueva"]
 [ext_resource type="ConvexPolygonShape3D" path="res://assets/models/caja_registradora_colision.res" id="colision_caja_nueva"]
 [ext_resource type="Script" path="res://src/escenas/puestos/oclusion_de_exhibido.gd" id="oclusion_exhibido"]
@@ -4085,6 +4087,11 @@ disabled = true
 disabled = true
 
 [node name="gondolanueva" parent="."]
+script = ExtResource("oclusion_apoyo_fijo")
+radio = 0.018
+intensidad = 0.36
+esquinas = 0.15
+altura_de_apoyo = 0.1032
 
 [node name="StaticBody3D" parent="gondolanueva" node_paths=PackedStringArray("_huecos", "mallas") groups=["interactuable"]]
 script = ExtResource("estante")
@@ -4719,6 +4726,9 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.44599998, 0.67561865, 0.00
 [node name="Volumen" type="CollisionShape3D" parent="compuerta_mostrador/CuerpoDeLaHoja"]
 shape = SubResource("modelo_hoja_compuerta_mostrador")
 
+[node name="board tareas" parent="."]
+transform = Transform3D(0, 1.513471, 0, 0, 0, -0.556108, -0.791883, 0, 0, -2.417298, 1.682598, 4.7325)
+
 [node name="board de tareas_002" parent="board tareas"]
 
 [node name="board de tareas_001" parent="board tareas"]
@@ -4780,6 +4790,7 @@ script = ExtResource("tablero_electrico")
 mallas = [NodePath("..")]
 
 [node name="estante_mesada" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.65)
 script = ExtResource("oclusion_apoyo_fijo")
 radio = 0.014
 intensidad = 0.68
@@ -4810,14 +4821,219 @@ intensidad = 0.62
 esquinas = 0.85
 altura_de_apoyo = 1.15
 
+[node name="salon_mesa_1" parent="."]
+script = ExtResource("oclusion_apoyo_fijo")
+radio = 0.022
+intensidad = 0.38
+esquinas = 1.0
+altura_de_apoyo = 0.1032
+
+[node name="salon_mesa_2" parent="."]
+script = ExtResource("oclusion_apoyo_fijo")
+radio = 0.022
+intensidad = 0.38
+esquinas = 1.0
+altura_de_apoyo = 0.1032
+
+[node name="salon_mesa_3" parent="."]
+script = ExtResource("oclusion_apoyo_fijo")
+radio = 0.022
+intensidad = 0.38
+esquinas = 1.0
+altura_de_apoyo = 0.1032
+
+[node name="salon_silla_1a" parent="."]
+script = ExtResource("oclusion_apoyo_fijo")
+radio = 0.016
+intensidad = 0.34
+esquinas = 1.0
+altura_de_apoyo = 0.1032
+
+[node name="salon_silla_1b" parent="."]
+script = ExtResource("oclusion_apoyo_fijo")
+radio = 0.016
+intensidad = 0.34
+esquinas = 1.0
+altura_de_apoyo = 0.1032
+
+[node name="salon_silla_2a" parent="."]
+script = ExtResource("oclusion_apoyo_fijo")
+radio = 0.016
+intensidad = 0.34
+esquinas = 1.0
+altura_de_apoyo = 0.1032
+
+[node name="salon_silla_2b" parent="."]
+script = ExtResource("oclusion_apoyo_fijo")
+radio = 0.016
+intensidad = 0.34
+esquinas = 1.0
+altura_de_apoyo = 0.1032
+
+[node name="salon_silla_3a" parent="."]
+script = ExtResource("oclusion_apoyo_fijo")
+radio = 0.016
+intensidad = 0.34
+esquinas = 1.0
+altura_de_apoyo = 0.1032
+
+[node name="salon_silla_3b" parent="."]
+script = ExtResource("oclusion_apoyo_fijo")
+radio = 0.016
+intensidad = 0.34
+esquinas = 1.0
+altura_de_apoyo = 0.1032
+
+[node name="tachitobasura" parent="."]
+script = ExtResource("oclusion_apoyo_fijo")
+radio = 0.02
+intensidad = 0.4
+esquinas = 0.25
+altura_de_apoyo = 0.1032
+
+[node name="tachitobasura_001" parent="."]
+script = ExtResource("oclusion_apoyo_fijo")
+radio = 0.02
+intensidad = 0.4
+esquinas = 0.25
+altura_de_apoyo = 0.1032
+
+[node name="tachitobasura_002" parent="."]
+script = ExtResource("oclusion_apoyo_fijo")
+radio = 0.02
+intensidad = 0.4
+esquinas = 0.25
+altura_de_apoyo = 0.1032
+
+[node name="freezer_helados" parent="."]
+script = ExtResource("oclusion_apoyo_fijo")
+radio = 0.024
+intensidad = 0.42
+esquinas = 0.08
+altura_de_apoyo = 0.1032
+banda_de_apoyo = 0.08
+
+[node name="exhibidor_golosinas" parent="."]
+script = ExtResource("oclusion_apoyo_fijo")
+radio = 0.02
+intensidad = 0.42
+esquinas = 0.08
+altura_de_apoyo = 0.1032
+
+[node name="EscritorioComputadora" parent="."]
+script = ExtResource("oclusion_apoyo_fijo")
+radio = 0.022
+intensidad = 0.4
+esquinas = 0.04
+altura_de_apoyo = 0.1032
+cajas_manuales = Array[Rect2]([Rect2(-1.14, 2.9, 2.8, 0.9), Rect2(0.98, 2.9, 0.68, 3.3)])
+
+[node name="mostrador_isla" parent="."]
+script = ExtResource("oclusion_apoyo_fijo")
+radio = 0.02
+intensidad = 0.4
+esquinas = 0.05
+altura_de_apoyo = 0.1032
+
+[node name="heladeranueva" parent="."]
+script = ExtResource("oclusion_apoyo_fijo")
+radio = 0.022
+intensidad = 0.4
+esquinas = 0.04
+altura_de_apoyo = 0.1032
+
+[node name="heladeranueva_001" parent="."]
+script = ExtResource("oclusion_apoyo_fijo")
+radio = 0.022
+intensidad = 0.4
+esquinas = 0.04
+altura_de_apoyo = 0.1032
+
+[node name="heladera_fuera_de_servicio" parent="."]
+script = ExtResource("oclusion_apoyo_fijo")
+radio = 0.022
+intensidad = 0.4
+esquinas = 0.04
+altura_de_apoyo = 0.1032
+
+[node name="mueble_continuo" parent="."]
+script = ExtResource("oclusion_apoyo_fijo")
+radio = 0.022
+intensidad = 0.4
+esquinas = 0.04
+altura_de_apoyo = 0.1032
+
+[node name="inodoro" parent="."]
+script = ExtResource("oclusion_apoyo_fijo")
+radio = 0.02
+intensidad = 0.4
+esquinas = 0.85
+altura_de_apoyo = 0.1032
+
+[node name="bano_inodoro_2" parent="."]
+script = ExtResource("oclusion_apoyo_fijo")
+radio = 0.02
+intensidad = 0.4
+esquinas = 0.85
+altura_de_apoyo = 0.1032
+
+[node name="unido_bano_bano_acero" parent="."]
+script = ExtResource("oclusion_apoyo_fijo")
+radio = 0.014
+intensidad = 0.36
+esquinas = 0.1
+altura_de_apoyo = 0.1032
+cajas_manuales = Array[Rect2]([Rect2(10.1647, 4.1707, 0.1253, 0.008), Rect2(10.1647, 4.1707, 0.008, 0.1253), Rect2(11.72, 4.1707, 0.18, 0.008), Rect2(11.7747, 4.1707, 0.008, 0.1253), Rect2(11.8373, 4.1707, 0.008, 0.1253)])
+
+[node name="gondolanueva2" parent="."]
+script = ExtResource("oclusion_apoyo_fijo")
+radio = 0.018
+intensidad = 0.36
+esquinas = 0.15
+altura_de_apoyo = 0.1032
+
+[node name="gondola_deposito03" parent="."]
+script = ExtResource("oclusion_apoyo_fijo")
+radio = 0.024
+intensidad = 0.38
+esquinas = 0.15
+altura_de_apoyo = 0.1032
+
+[node name="gondola_deposito03_001" parent="."]
+script = ExtResource("oclusion_apoyo_fijo")
+radio = 0.024
+intensidad = 0.38
+esquinas = 0.15
+altura_de_apoyo = 0.1032
+
+[node name="gondola_deposito_central_izquierda" parent="."]
+script = ExtResource("oclusion_apoyo_fijo")
+radio = 0.024
+intensidad = 0.38
+esquinas = 0.15
+altura_de_apoyo = 0.1032
+
+[node name="unido_deposito_CONTENEDOR_Ruedas_con_atlas_de_tacho" parent="."]
+script = ExtResource("oclusion_apoyo_fijo")
+radio = 0.024
+intensidad = 0.38
+esquinas = 0.8
+altura_de_apoyo = 0.1032
+
 [node name="Ranura" type="Marker3D" parent="cajaregistradora"]
 transform = Transform3D(5.4831953, 0.31038418, 5.684342e-14, -0.31038418, 5.4831953, -1.4210855e-14, 0, -4.4302192e-07, 5.4919734, 0.6655464, 0.6157274, -0.40700006)
 
 [node name="Lector" parent="." instance=ExtResource("lector")]
 transform = Transform3D(1,0,0,0,1,0,0,0,1,-0.43887115,1.1732118,3.656856)
 
+[node name="MesitaDelRouter" parent="." instance=ExtResource("mesita_router")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.11, 0.1032, 5.95)
+
 [node name="Router" parent="." instance=ExtResource("router")]
-transform = Transform3D(1,0,0,0,1,0,0,0,1,1.4774,1.2071,5.0256)
+transform = Transform3D(0, 0, -1, 0, 1, 0, 1, 0, 0, -2.11, 1.202, 5.96)
+
+[node name="Cafetera" parent="." instance=ExtResource("cafetera")]
+transform = Transform3D(0, 0, -1, 0, 1, 0, 1, 0, 0, 1.35, 1.15, 4.67)
 
 [node name="HabitacionesDelAlmacen" type="Node3D" parent="."]
 script = ExtResource("habitaciones")

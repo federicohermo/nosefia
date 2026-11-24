@@ -30,6 +30,11 @@ uniform vec4 capsulas[8];
 uniform float radios_capsulas[8];
 // `(centro_x, centro_z, radio_mayor, radio_tubo)`. Con `radio_mayor <= 0.0` no se dibuja aro.
 uniform vec4 aro_silueta = vec4(0.0);
+// Unión de hasta 8 rectángulos en el plano de la mancha para bases compuestas o en L.
+uniform bool usar_cajas = false;
+uniform int cantidad_cajas = 0;
+// `(centro_x, centro_z, mitad_x, mitad_z)` en metros respecto del centro del plano.
+uniform vec4 cajas[8];
 
 varying vec2 plano;
 varying vec3 en_el_apoyo;
@@ -69,6 +74,19 @@ void fragment() {
 		if (aro_silueta.z > 0.0) {
 			float d_aro = abs(length(plano - aro_silueta.xy) - aro_silueta.z) - aro_silueta.w;
 			distancia = min(distancia, d_aro);
+		}
+	} else if (usar_cajas) {
+		distancia = 1000.0;
+		for (int i = 0; i < 8; i++) {
+			if (i >= cantidad_cajas) {
+				break;
+			}
+			vec2 mitad_caja = cajas[i].zw;
+			float radio_caja = esquinas * min(mitad_caja.x, mitad_caja.y);
+			distancia = min(
+				distancia,
+				distancia_al_rectangulo(plano - cajas[i].xy, mitad_caja, radio_caja)
+			);
 		}
 	} else {
 		float radio = esquinas * min(huella.x, huella.y);

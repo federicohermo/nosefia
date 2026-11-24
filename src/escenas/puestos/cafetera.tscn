@@ -1,0 +1,22 @@
+[gd_scene format=3]
+
+[ext_resource type="ArrayMesh" path="res://assets/models/cafetera.res" id="modelo"]
+[ext_resource type="Script" path="res://src/escenas/puestos/oclusion_de_apoyo_fijo.gd" id="oclusion"]
+
+[sub_resource type="BoxShape3D" id="forma_cafetera"]
+size = Vector3(0.79, 0.46, 0.48)
+
+[node name="Cafetera" type="StaticBody3D"]
+
+[node name="Forma" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.085, 0.23, 0.01)
+shape = SubResource("forma_cafetera")
+
+[node name="Malla" type="MeshInstance3D" parent="."]
+mesh = ExtResource("modelo")
+gi_mode = 2
+script = ExtResource("oclusion")
+radio = 0.015
+intensidad = 0.72
+esquinas = 0.06
+altura_de_apoyo = 1.15

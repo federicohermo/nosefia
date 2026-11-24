@@ -26,4 +26,4 @@ script = ExtResource("oclusion")
 radio = 0.015
 intensidad = 0.85
 esquinas = 0.1
-altura_de_apoyo = 1.15
+altura_de_apoyo = -1000.0

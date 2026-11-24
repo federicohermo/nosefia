@@ -1,8 +1,13 @@
 ## Cuatro pallets con medidas propias: madera visible, pequeñas holguras y paso alrededor.
 extends Node3D
 
+const OclusionDeApoyoFijo := preload("res://src/escenas/puestos/oclusion_de_apoyo_fijo.gd")
+
 const LARGO_ENTREGA := 1.2 * 1.15
 const ANCHO_ENTREGA := 0.8 * 1.15
+const RADIO_DE_OCLUSION := 0.028
+const INTENSIDAD_DE_OCLUSION := 0.42
+const ESQUINAS_DE_OCLUSION := 0.08
 
 
 func disponer(
@@ -34,17 +39,20 @@ func _crear(
 	plantilla: MeshInstance3D, centro: Vector3, escala_x: float, escala_z: float, giro: float
 ) -> MeshInstance3D:
 	var limites := plantilla.get_aabb()
-	var pallet := MeshInstance3D.new()
+	var pallet: MeshInstance3D = OclusionDeApoyoFijo.new()
 	pallet.name = "PalletDeEntrega%d" % get_child_count()
 	pallet.mesh = plantilla.mesh
 	pallet.gi_mode = GeometryInstance3D.GI_MODE_DYNAMIC
 	pallet.rotation.y = PI / 2.0 + giro
 	pallet.scale = Vector3(escala_x, 1.0, escala_z)
-	add_child(pallet)
-	pallet.global_position = (
-		centro
+	pallet.set(&"radio", RADIO_DE_OCLUSION)
+	pallet.set(&"intensidad", INTENSIDAD_DE_OCLUSION)
+	pallet.set(&"esquinas", ESQUINAS_DE_OCLUSION)
+	pallet.position = (
+		to_local(centro)
 		- pallet.basis * Vector3(limites.get_center().x, limites.position.y, limites.get_center().z)
 	)
+	add_child(pallet)
 	var cuerpo := StaticBody3D.new()
 	cuerpo.collision_layer = 8
 	cuerpo.collision_mask = 0
