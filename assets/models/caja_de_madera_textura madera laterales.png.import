@@ -3,9 +3,10 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://bykbleg5jxunh"
-path="res://.godot/imported/caja_de_madera_textura madera laterales.png-eadf2f2ddc6a8a8c2171e710fd6dbb19.ctex"
+path.s3tc="res://.godot/imported/caja_de_madera_textura madera laterales.png-eadf2f2ddc6a8a8c2171e710fd6dbb19.s3tc.ctex"
 metadata={
-"vram_texture": false
+"imported_formats": ["s3tc_bptc"],
+"vram_texture": true
 }
 generator_parameters={
 "md5": "12a0508dd8a8504b10a8ea43cfc107f0"
@@ -14,11 +15,11 @@ generator_parameters={
 [deps]
 
 source_file="res://assets/models/caja_de_madera_textura madera laterales.png"
-dest_files=["res://.godot/imported/caja_de_madera_textura madera laterales.png-eadf2f2ddc6a8a8c2171e710fd6dbb19.ctex"]
+dest_files=["res://.godot/imported/caja_de_madera_textura madera laterales.png-eadf2f2ddc6a8a8c2171e710fd6dbb19.s3tc.ctex"]
 
 [params]
 
-compress/mode=1
+compress/mode=2
 compress/high_quality=false
 compress/lossy_quality=0.9
 compress/uastc_level=0
@@ -40,4 +41,4 @@ process/normal_map_invert_y=false
 process/hdr_as_srgb=false
 process/hdr_clamp_exposure=false
 process/size_limit=1024
-detect_3d/compress_to=1
+detect_3d/compress_to=0

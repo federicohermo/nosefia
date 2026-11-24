@@ -63,7 +63,7 @@ func _agregar_lote(
 	lote.name = nombre
 	lote.physics_interpolation_mode = Node.PHYSICS_INTERPOLATION_MODE_OFF
 	lote.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
-	lote.gi_mode = GeometryInstance3D.GI_MODE_DYNAMIC
+	lote.gi_mode = GeometryInstance3D.GI_MODE_DISABLED
 	lote.add_to_group(ReglasDeLosObjetos.GRUPO_SIN_CONTORNO)
 
 	var cantidad := capsulas.size()
@@ -125,12 +125,15 @@ func _clasificar_islas(
 				roundi(p.y * OclusionDeContacto.RESOLUCION_DE_VERTICES),
 				roundi(p.z * OclusionDeContacto.RESOLUCION_DE_VERTICES)
 			)
-			if not claves.has(clave):
+			var id_existente: int = claves.get(clave, -1)
+			if id_existente < 0:
 				var nuevo_id := posiciones.size()
 				claves[clave] = nuevo_id
 				posiciones.append(p)
 				padres.append(nuevo_id)
-			mapa_local[i] = claves[clave] as int
+				mapa_local[i] = nuevo_id
+			else:
+				mapa_local[i] = id_existente
 
 		if indices != null:
 			var idx: PackedInt32Array = indices

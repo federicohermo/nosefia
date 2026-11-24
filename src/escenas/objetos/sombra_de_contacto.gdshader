@@ -35,15 +35,32 @@ uniform bool usar_cajas = false;
 uniform int cantidad_cajas = 0;
 // `(centro_x, centro_z, mitad_x, mitad_z)` en metros respecto del centro del plano.
 uniform vec4 cajas[8];
+// Si es cierto, cada instancia del `MultiMesh` define su propia mancha rectangular:
+// `INSTANCE_CUSTOM` trae `(suavidad, esquinas, intensidad, 0)` y el tamaño sale de `MODEL_MATRIX`.
+uniform bool parametros_por_instancia = false;
 
 varying vec2 plano;
 varying vec3 en_el_apoyo;
 varying vec4 recorte_instancia;
+varying vec4 datos_instancia;
 
 void vertex() {
-	plano = VERTEX.xz * tamano;
-	en_el_apoyo = (al_apoyo * vec4(plano.x, 0.0, plano.y, 1.0)).xyz;
-	recorte_instancia = INSTANCE_CUSTOM;
+	if (parametros_por_instancia) {
+		vec2 tamano_inst = vec2(length(MODEL_MATRIX[0].xyz), length(MODEL_MATRIX[2].xyz));
+		plano = VERTEX.xz * tamano_inst;
+		en_el_apoyo = vec3(0.0);
+		recorte_instancia = INSTANCE_CUSTOM;
+		datos_instancia = vec4(
+			max(vec2(0.001), 0.5 * tamano_inst - vec2(INSTANCE_CUSTOM.x)),
+			INSTANCE_CUSTOM.y,
+			INSTANCE_CUSTOM.z
+		);
+	} else {
+		plano = VERTEX.xz * tamano;
+		en_el_apoyo = (al_apoyo * vec4(plano.x, 0.0, plano.y, 1.0)).xyz;
+		recorte_instancia = INSTANCE_CUSTOM;
+		datos_instancia = vec4(0.0);
+	}
 }
 
 float distancia_al_rectangulo(vec2 punto, vec2 mitad, float radio) {
@@ -59,51 +76,60 @@ float distancia_a_la_capsula(vec2 punto, vec2 a, vec2 b, float radio) {
 }
 
 void fragment() {
-	float distancia = 0.0;
-	if (usar_silueta) {
-		distancia = 1000.0;
-		for (int i = 0; i < 8; i++) {
-			if (i >= cantidad_capsulas) {
-				break;
-			}
-			distancia = min(
-				distancia,
-				distancia_a_la_capsula(plano, capsulas[i].xy, capsulas[i].zw, radios_capsulas[i])
-			);
-		}
-		if (aro_silueta.z > 0.0) {
-			float d_aro = abs(length(plano - aro_silueta.xy) - aro_silueta.z) - aro_silueta.w;
-			distancia = min(distancia, d_aro);
-		}
-	} else if (usar_cajas) {
-		distancia = 1000.0;
-		for (int i = 0; i < 8; i++) {
-			if (i >= cantidad_cajas) {
-				break;
-			}
-			vec2 mitad_caja = cajas[i].zw;
-			float radio_caja = esquinas * min(mitad_caja.x, mitad_caja.y);
-			distancia = min(
-				distancia,
-				distancia_al_rectangulo(plano - cajas[i].xy, mitad_caja, radio_caja)
-			);
-		}
+	if (parametros_por_instancia) {
+		vec2 huella_inst = datos_instancia.xy;
+		float radio_inst = datos_instancia.z * min(huella_inst.x, huella_inst.y);
+		float dist_inst = distancia_al_rectangulo(plano, huella_inst, radio_inst);
+		float borde_inst = 1.0 - smoothstep(0.0, recorte_instancia.x, dist_inst);
+		ALBEDO = vec3(0.0);
+		ALPHA = datos_instancia.w * borde_inst;
 	} else {
-		float radio = esquinas * min(huella.x, huella.y);
-		distancia = distancia_al_rectangulo(plano, huella, radio);
+		float distancia = 0.0;
+		if (usar_silueta) {
+			distancia = 1000.0;
+			for (int i = 0; i < 8; i++) {
+				if (i >= cantidad_capsulas) {
+					break;
+				}
+				distancia = min(
+					distancia,
+					distancia_a_la_capsula(plano, capsulas[i].xy, capsulas[i].zw, radios_capsulas[i])
+				);
+			}
+			if (aro_silueta.z > 0.0) {
+				float d_aro = abs(length(plano - aro_silueta.xy) - aro_silueta.z) - aro_silueta.w;
+				distancia = min(distancia, d_aro);
+			}
+		} else if (usar_cajas) {
+			distancia = 1000.0;
+			for (int i = 0; i < 8; i++) {
+				if (i >= cantidad_cajas) {
+					break;
+				}
+				vec2 mitad_caja = cajas[i].zw;
+				float radio_caja = esquinas * min(mitad_caja.x, mitad_caja.y);
+				distancia = min(
+					distancia,
+					distancia_al_rectangulo(plano - cajas[i].xy, mitad_caja, radio_caja)
+				);
+			}
+		} else {
+			float radio = esquinas * min(huella.x, huella.y);
+			distancia = distancia_al_rectangulo(plano, huella, radio);
+		}
+		float borde = 1.0 - smoothstep(0.0, suavidad, distancia);
+		// Sin esto la mancha sigue en el aire más allá del borde de lo que la sostiene.
+		float dentro = 1.0;
+		if (recorte_por_instancia) {
+			vec2 desde = smoothstep(recorte_instancia.xy, recorte_instancia.xy + 0.01, plano);
+			vec2 hasta = 1.0 - smoothstep(recorte_instancia.zw - 0.01, recorte_instancia.zw, plano);
+			dentro = desde.x * desde.y * hasta.x * hasta.y;
+		} else {
+			vec3 desde = smoothstep(apoyo_minimo, apoyo_minimo + 0.01, en_el_apoyo);
+			vec3 hasta = 1.0 - smoothstep(apoyo_maximo - 0.01, apoyo_maximo, en_el_apoyo);
+			dentro = desde.x * desde.y * desde.z * hasta.x * hasta.y * hasta.z;
+		}
+		ALBEDO = vec3(0.0);
+		ALPHA = intensidad * borde * dentro;
 	}
-	float borde = 1.0 - smoothstep(0.0, suavidad, distancia);
-	// Sin esto la mancha sigue en el aire más allá del borde de lo que la sostiene.
-	float dentro = 1.0;
-	if (recorte_por_instancia) {
-		vec2 desde = smoothstep(recorte_instancia.xy, recorte_instancia.xy + 0.01, plano);
-		vec2 hasta = 1.0 - smoothstep(recorte_instancia.zw - 0.01, recorte_instancia.zw, plano);
-		dentro = desde.x * desde.y * hasta.x * hasta.y;
-	} else {
-		vec3 desde = smoothstep(apoyo_minimo, apoyo_minimo + 0.01, en_el_apoyo);
-		vec3 hasta = 1.0 - smoothstep(apoyo_maximo - 0.01, apoyo_maximo, en_el_apoyo);
-		dentro = desde.x * desde.y * desde.z * hasta.x * hasta.y * hasta.z;
-	}
-	ALBEDO = vec3(0.0);
-	ALPHA = intensidad * borde * dentro;
 }

@@ -27,7 +27,7 @@ const FLOTANTES_POR_MANCHA := 16
 ## delante de las puertas de las heladeras.
 const PRIORIDAD_DE_LA_MANCHA := -2
 ## Pasos de bisección para encontrar el canto de un estante cuando la mancha lo desborda.
-const PASOS_DEL_BORDE := 8
+const PASOS_DEL_BORDE := 6
 ## Altura sobre el estante para detectar un panel trasero o divisor que corta la mancha.
 const ALTURA_DEL_OBSTACULO := 0.015
 ## Diferencia máxima de altura sobre el plano del estante para seguir contando como el mismo apoyo.
@@ -97,10 +97,12 @@ func preparar_bloque(
 	var recortes: Array[Color] = []
 	var inversa := global_transform.affine_inverse() if is_inside_tree() else Transform3D.IDENTITY
 	var espacio := get_world_3d().direct_space_state if is_inside_tree() else null
+	var consulta := PhysicsRayQueryParameters3D.new()
+	consulta.collision_mask = _mascara_del_estante()
 	var alcance_recorte := maxf(radio, ALCANCE_MINIMO_DE_RECORTE)
 	for indice in copias:
 		var copia := DisposicionDeLaGondola.copia(bloque, indice)
-		var medido := _pose_y_recorte(copia, apoyo, inversa, espacio, alcance_recorte)
+		var medido := _pose_y_recorte(copia, apoyo, inversa, espacio, consulta, alcance_recorte)
 		poses.append(medido[0] as Transform3D)
 		recortes.append(medido[1] as Color)
 	var sombras := _crear_lote_de_sombras(
@@ -185,7 +187,7 @@ func _crear_lote_de_sombras(
 	lote.name = "SombrasDe" + nombre
 	lote.physics_interpolation_mode = Node.PHYSICS_INTERPOLATION_MODE_OFF
 	lote.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
-	lote.gi_mode = GeometryInstance3D.GI_MODE_DYNAMIC
+	lote.gi_mode = GeometryInstance3D.GI_MODE_DISABLED
 	lote.add_to_group(ReglasDeLosObjetos.GRUPO_SIN_CONTORNO)
 	var material := ShaderMaterial.new()
 	material.shader = OclusionDeContacto.SOMBRA
@@ -342,6 +344,7 @@ func _pose_y_recorte(
 	apoyo: Dictionary,
 	inversa: Transform3D,
 	espacio: PhysicsDirectSpaceState3D,
+	consulta: PhysicsRayQueryParameters3D,
 	alcance_recorte: float
 ) -> Array:
 	var copia_mundo := (global_transform * copia) if is_inside_tree() else copia
@@ -356,7 +359,7 @@ func _pose_y_recorte(
 	var punto := pie_mundo
 	var con_estante := false
 	if espacio != null:
-		var golpe := _rayo_al_estante(espacio, pie_mundo, arriba)
+		var golpe := _rayo_al_estante(espacio, consulta, pie_mundo, arriba)
 		if (
 			not golpe.is_empty()
 			and (golpe["normal"] as Vector3).y >= OclusionDeContacto.NORMAL_MINIMA
@@ -377,10 +380,10 @@ func _pose_y_recorte(
 		var max_x := huella.x + alcance_recorte
 		var max_z := huella.y + alcance_recorte
 		recorte = Color(
-			-_borde_del_estante(espacio, punto, normal, -giro.x, max_x),
-			-_borde_del_estante(espacio, punto, normal, -giro.z, max_z),
-			_borde_del_estante(espacio, punto, normal, giro.x, max_x),
-			_borde_del_estante(espacio, punto, normal, giro.z, max_z)
+			-_borde_del_estante(espacio, consulta, punto, normal, -giro.x, max_x),
+			-_borde_del_estante(espacio, consulta, punto, normal, -giro.z, max_z),
+			_borde_del_estante(espacio, consulta, punto, normal, giro.x, max_x),
+			_borde_del_estante(espacio, consulta, punto, normal, giro.z, max_z)
 		)
 	return [pose, recorte]
 
@@ -390,23 +393,26 @@ static func _mascara_del_estante() -> int:
 
 
 static func _rayo_al_estante(
-	espacio: PhysicsDirectSpaceState3D, pie: Vector3, arriba: Vector3
+	espacio: PhysicsDirectSpaceState3D,
+	consulta: PhysicsRayQueryParameters3D,
+	pie: Vector3,
+	arriba: Vector3
 ) -> Dictionary:
-	var origen := pie + arriba * OclusionDeContacto.SALIDA
-	var destino := pie - arriba * (OclusionDeContacto.SALIDA + RADIO_POR_DEFECTO)
-	return espacio.intersect_ray(
-		PhysicsRayQueryParameters3D.create(origen, destino, _mascara_del_estante())
-	)
+	consulta.from = pie + arriba * OclusionDeContacto.SALIDA
+	consulta.to = pie - arriba * (OclusionDeContacto.SALIDA + RADIO_POR_DEFECTO)
+	return espacio.intersect_ray(consulta)
 
 
 static func _hay_estante(
-	espacio: PhysicsDirectSpaceState3D, base: Vector3, normal: Vector3, prueba: Vector3
+	espacio: PhysicsDirectSpaceState3D,
+	consulta: PhysicsRayQueryParameters3D,
+	base: Vector3,
+	normal: Vector3,
+	prueba: Vector3
 ) -> bool:
-	var origen := prueba + normal * OclusionDeContacto.SALIDA
-	var destino := prueba - normal * OclusionDeContacto.SALIDA
-	var golpe := espacio.intersect_ray(
-		PhysicsRayQueryParameters3D.create(origen, destino, _mascara_del_estante())
-	)
+	consulta.from = prueba + normal * OclusionDeContacto.SALIDA
+	consulta.to = prueba - normal * OclusionDeContacto.SALIDA
+	var golpe := espacio.intersect_ray(consulta)
 	if golpe.is_empty():
 		return false
 	var desnivel := absf(((golpe["position"] as Vector3) - base).dot(normal))
@@ -418,6 +424,7 @@ static func _hay_estante(
 
 static func _borde_del_estante(
 	espacio: PhysicsDirectSpaceState3D,
+	consulta: PhysicsRayQueryParameters3D,
 	base: Vector3,
 	normal: Vector3,
 	direccion: Vector3,
@@ -426,21 +433,23 @@ static func _borde_del_estante(
 	var tope := hasta
 	var cortado := false
 	var sobre := base + normal * ALTURA_DEL_OBSTACULO
-	var pared := espacio.intersect_ray(
-		PhysicsRayQueryParameters3D.create(sobre, sobre + direccion * hasta, _mascara_del_estante())
-	)
+	consulta.from = sobre
+	consulta.to = sobre + direccion * hasta
+	var pared := espacio.intersect_ray(consulta)
 	if not pared.is_empty():
 		var distancia := ((pared["position"] as Vector3) - sobre).dot(direccion)
 		if distancia < tope:
 			tope = maxf(distancia, 0.0)
 			cortado = true
-	if _hay_estante(espacio, base, normal, base + direccion * tope):
+			if tope <= 0.0:
+				return 0.0
+	if _hay_estante(espacio, consulta, base, normal, base + direccion * tope):
 		return tope if cortado else OclusionDeContacto.LIMITE_ABIERTO
 	var cerca := 0.0
 	var lejos := tope
 	for _paso in PASOS_DEL_BORDE:
 		var medio := (cerca + lejos) / 2.0
-		if _hay_estante(espacio, base, normal, base + direccion * medio):
+		if _hay_estante(espacio, consulta, base, normal, base + direccion * medio):
 			cerca = medio
 		else:
 			lejos = medio

@@ -19,6 +19,7 @@ func _ready() -> void:
 	(testigo.material_override as ShaderMaterial).set_shader_parameter("opacidad", 0.0)
 	testigo.hide()
 	add_child(testigo)
+	set_process(false)
 
 
 func _crear_malla() -> MeshInstance3D:
@@ -53,6 +54,7 @@ func dejar_en(posicion: Vector3, normal: Vector3 = Vector3.UP) -> void:
 	_fase = (_fase + 1) % ReglasDeLaLimpieza.MAXIMO_DE_CHARCOS
 	(malla.material_override as ShaderMaterial).set_shader_parameter("fase", _fase * 1.7)
 	_pintar(malla, 0.0)
+	set_process(true)
 
 
 func _retirar_cercano(destino: Vector3) -> MeshInstance3D:
@@ -75,6 +77,7 @@ func limpiar() -> void:
 		malla.queue_free()
 	_mallas.clear()
 	_edades.clear()
+	set_process(false)
 
 
 func cantidad() -> int:
@@ -93,6 +96,8 @@ func _process(delta: float) -> void:
 			_edades.remove_at(indice)
 		else:
 			_pintar(malla, _edades[indice])
+	if _mallas.is_empty():
+		set_process(false)
 
 
 func _pintar(malla: MeshInstance3D, edad: float) -> void:

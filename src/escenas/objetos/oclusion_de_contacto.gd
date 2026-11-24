@@ -245,7 +245,7 @@ func _crear_sombra() -> MeshInstance3D:
 	nueva.mesh = plano()
 	nueva.material_override = _material()
 	nueva.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
-	nueva.gi_mode = GeometryInstance3D.GI_MODE_DYNAMIC
+	nueva.gi_mode = GeometryInstance3D.GI_MODE_DISABLED
 	nueva.visible = false
 	nueva.add_to_group(ReglasDeLosObjetos.GRUPO_SIN_CONTORNO)
 	add_child(nueva)
@@ -306,9 +306,10 @@ func _escribir_silueta(
 	centro_en_cuerpo: Vector2
 ) -> void:
 	if _silueta_capsulas.is_empty() and _silueta_aro.size() < 8:
-		material.set_shader_parameter(&"usar_silueta", false)
-		material.set_shader_parameter(&"cantidad_capsulas", 0)
-		material.set_shader_parameter(&"aro_silueta", Vector4.ZERO)
+		if material.get_shader_parameter(&"usar_silueta"):
+			material.set_shader_parameter(&"usar_silueta", false)
+			material.set_shader_parameter(&"cantidad_capsulas", 0)
+			material.set_shader_parameter(&"aro_silueta", Vector4.ZERO)
 		return
 	var traspuesta := cuerpo.global_basis.transposed()
 	var eje_x := traspuesta * giro.x
