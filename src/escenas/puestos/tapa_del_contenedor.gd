@@ -30,8 +30,9 @@ func _ready() -> void:
 	_desde_la_bisagra = bisagra.global_transform.affine_inverse() * pose_global
 	top_level = true
 	global_transform = pose_global
+	_dibujar()
 	reset_physics_interpolation()
-	set_physics_process(not _en_destino())
+	set_physics_process(not _tapa.en_destino())
 
 
 func accionar() -> void:
@@ -60,14 +61,8 @@ func _physics_process(delta: float) -> void:
 	var siguiente := _tapa.angulo_siguiente(delta)
 	_tapa.avanzar(delta, _paso_libre(siguiente))
 	_dibujar()
-	if _en_destino():
+	if _tapa.en_destino():
 		set_physics_process(false)
-
-
-func _en_destino() -> bool:
-	return is_equal_approx(
-		_tapa.angulo(), TapaDelContenedor.ANGULO_ABIERTA if _tapa.abierta() else 0.0
-	)
 
 
 func _dibujar() -> void:

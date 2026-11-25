@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://3qfm4q86w8da"
-path="res://.godot/imported/puntos_de_carga.svg-800474211bb95a59af15cade369729bc.ctex"
+uid="uid://oepld1l3wy17"
+path="res://.godot/imported/puntos_de_carga_derecha.svg-44bc03fa4600455aab7a8219c2118d70.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/ui/manada/puntos_de_carga.svg"
-dest_files=["res://.godot/imported/puntos_de_carga.svg-800474211bb95a59af15cade369729bc.ctex"]
+source_file="res://assets/ui/manada/puntos_de_carga_derecha.svg"
+dest_files=["res://.godot/imported/puntos_de_carga_derecha.svg-44bc03fa4600455aab7a8219c2118d70.ctex"]
 
 [params]
 
@@ -38,6 +38,6 @@ process/hdr_as_srgb=false
 process/hdr_clamp_exposure=false
 process/size_limit=0
 detect_3d/compress_to=1
-svg/scale=0.25
+svg/scale=1.0
 editor/scale_with_editor_scale=false
 editor/convert_colors_with_editor_theme=false

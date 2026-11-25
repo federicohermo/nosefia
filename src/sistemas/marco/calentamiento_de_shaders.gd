@@ -40,9 +40,6 @@ var ahora: Callable = Time.get_ticks_usec
 
 var _pendientes: Array[GeometryInstance3D] = []
 var _objetos: Array[GeometryInstance3D] = []
-## Oclusores desactivados temporalmente durante el calentamiento para que la cámara cenital vea
-## todos los objetos y compile cada variante sin recortes.
-var _oclusores: Array[OccluderInstance3D] = []
 ## Lo que estaba oculto también se dibuja, porque aparece después en medio del juego. Al terminar
 ## vuelve a quedar oculto.
 var _ocultos: Array[GeometryInstance3D] = []
@@ -88,7 +85,7 @@ var _vistas: Array[Transform3D] = []
 ## un `SubViewport`, como el agua del baño, que no se actualiza mientras la escena está detenida.
 var _capa_2d: CanvasLayer
 ## Cambia el local entre la luz de siempre y la del corte: el `bool` dice si queda a oscuras. La
-## oscuridad apaga luces y niebla, y con eso cambia el programa de casi todos los materiales. Sin
+## oscuridad apaga luces, y con eso cambia el programa de casi todos los materiales. Sin
 ## prepararla, los programas se enlazan al cortarse la luz y hasta entonces lo suyo no se dibuja.
 var _oscuridad := Callable()
 var _a_oscuras := false
@@ -139,10 +136,6 @@ func _calentar_la_pasada(escena: Node3D) -> void:
 		if not is_inside_tree():
 			return
 	var caja := AABB()
-	for oclusor: OccluderInstance3D in escena.find_children("*", "OccluderInstance3D", true, false):
-		if oclusor.visible:
-			oclusor.visible = false
-			_oclusores.append(oclusor)
 	for objeto: GeometryInstance3D in escena.find_children("*", "GeometryInstance3D", true, false):
 		# El modelo de referencia queda en el GLB para editarlo, pero tiene un reemplazo en
 		# producción. Dibujarlo acá compilaría variantes que nunca aparecen en la partida.
@@ -1035,10 +1028,6 @@ func _restaurar_escena() -> void:
 	for objeto: GeometryInstance3D in _objetos:
 		if is_instance_valid(objeto):
 			objeto.visible = not _ocultos.has(objeto)
-	for oclusor: OccluderInstance3D in _oclusores:
-		if is_instance_valid(oclusor):
-			oclusor.visible = true
-	_oclusores.clear()
 	for sprite: AnimatedSprite3D in _sin_cuadros:
 		if is_instance_valid(sprite):
 			sprite.sprite_frames = null

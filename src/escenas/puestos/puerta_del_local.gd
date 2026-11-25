@@ -109,7 +109,7 @@ func _ready() -> void:
 	reset_physics_interpolation()
 	if se_abre_al_empujar:
 		_armar_el_empuje()
-	set_physics_process(not _en_destino())
+	set_physics_process(not _puerta.en_destino())
 
 
 ## Un sensor del tamaño de la hoja y más grueso que ella: el cuerpo lo toca antes que a la hoja,
@@ -243,12 +243,8 @@ func _physics_process(delta: float) -> void:
 	elif _girando:
 		_girando = false
 		hoja_quieta.emit(self)
-	if _en_destino() and not _girando:
+	if _puerta.en_destino() and not _girando:
 		set_physics_process(false)
-
-
-func _en_destino() -> bool:
-	return is_equal_approx(_puerta.angulo(), Puerta.ANGULO_ABIERTA if _puerta.abierta() else 0.0)
 
 
 func _pose_de_la_hoja(angulo: float) -> Transform3D:

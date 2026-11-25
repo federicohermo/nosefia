@@ -61,6 +61,7 @@ var _retiradas: Array[CompradorEnRetirada] = []
 var _entrada: Tween
 var _posicion_de_espera: Vector3
 var _hueco: StaticBody3D
+var _animaciones: Dictionary[DialogosDeCompradores.Personaje, SpriteFrames] = {}
 
 
 func _ready() -> void:
@@ -123,7 +124,12 @@ func _al_preparar() -> void:
 	comprador_visible.hide()
 	comprador_visible.stop()
 	comprador_visible.sprite_frames = null
+	_animaciones.clear()
 	objetivo.limpiar()
+	for personaje: DialogosDeCompradores.Personaje in atenciones.tarea().personajes():
+		if RUTAS_DE_ANIMACIONES.has(personaje):
+			_animaciones[personaje] = load(RUTAS_DE_ANIMACIONES[personaje]) as SpriteFrames
+	objetivo.precargar(_animaciones.values())
 	cerrar()
 
 
@@ -203,15 +209,11 @@ func _mostrar_personaje(atendida: Atencion) -> void:
 		comprador_visible.position = _posicion_de_espera
 		comprador_visible.hide()
 		comprador_visible.stop()
-		comprador_visible.sprite_frames = null
-		objetivo.limpiar()
 		return
 	var cuadros := _animacion_de(atendida.comprador().personaje)
 	if comprador_visible.sprite_frames != cuadros:
-		objetivo.limpiar()
 		comprador_visible.sprite_frames = cuadros
 		comprador_visible.set_frame_and_progress(0, 0.0)
-		objetivo.precargar([cuadros])
 	comprador_visible.show()
 	comprador_visible.play(&"idle")
 	if _imagen_de != atendida:
@@ -219,8 +221,12 @@ func _mostrar_personaje(atendida: Atencion) -> void:
 	_imagen_de = atendida
 
 
-static func _animacion_de(personaje: DialogosDeCompradores.Personaje) -> SpriteFrames:
-	return load(RUTAS_DE_ANIMACIONES[personaje]) as SpriteFrames
+func _animacion_de(personaje: DialogosDeCompradores.Personaje) -> SpriteFrames:
+	if not _animaciones.has(personaje):
+		var cargada := load(RUTAS_DE_ANIMACIONES[personaje]) as SpriteFrames
+		_animaciones[personaje] = cargada
+		objetivo.precargar([cargada])
+	return _animaciones[personaje]
 
 
 func _iniciar_entrada() -> void:
@@ -371,5 +377,6 @@ func _al_cerrar_el_turno(_cumplidas: int) -> void:
 	comprador_visible.hide()
 	comprador_visible.stop()
 	comprador_visible.sprite_frames = null
+	_animaciones.clear()
 	objetivo.limpiar()
 	cerrar()

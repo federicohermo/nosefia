@@ -49,7 +49,7 @@ func _ready() -> void:
 	_mira.offset_bottom = mitad
 	ocultar_foco()
 	_pintar_el_subtitulo()
-	set_process(false)
+	set_process(not _linea.texto().is_empty())
 
 
 ## El pensamiento corre con el cuadro. Con la pausa abierta el árbol no procesa, y el tiempo
