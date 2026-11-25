@@ -432,7 +432,7 @@ theme_override_styles/panel = SubResource("sillon")
 
 [node name="Enrique" type="AnimatedSprite2D" parent="Marco/Retrato/Oficina"]
 position = Vector2(24, 156)
-scale = Vector2(0.41897, 0.41897)
+scale = Vector2(0.83794, 0.83794)
 sprite_frames = ExtResource("8")
 animation = &"idle"
 centered = false

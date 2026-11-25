@@ -7,24 +7,30 @@ uniform float intensidad : hint_range(0.0, 3.0) = 0.65;
 uniform float umbral : hint_range(0.0, 1.0) = 0.9;
 uniform float suavidad : hint_range(0.01, 0.3) = 0.06;
 
-float peso(int desplazamiento) {
-	int distancia = abs(desplazamiento);
-	return distancia == 0 ? 6.0 : (distancia == 1 ? 4.0 : 1.0);
+vec3 aporte_de_brillo(vec3 muestra) {
+	float brillo = dot(muestra, vec3(0.2126, 0.7152, 0.0722));
+	return muestra * smoothstep(umbral, umbral + suavidad, brillo);
 }
 
 void fragment() {
 	vec3 base = textureLod(pantalla, SCREEN_UV, 0.0).rgb;
-	vec3 halo = vec3(0.0);
-	vec2 paso = SCREEN_PIXEL_SIZE * radio * 0.5;
-	// Extraer los brillos antes de difuminar evita levantar las zonas oscuras.
-	for (int y = -2; y <= 2; y++) {
-		for (int x = -2; x <= 2; x++) {
-			vec3 muestra = textureLod(pantalla, SCREEN_UV + vec2(float(x), float(y)) * paso, 0.0).rgb;
-			float brillo = dot(muestra, vec3(0.2126, 0.7152, 0.0722));
-			float seleccion = smoothstep(umbral, umbral + suavidad, brillo);
-			halo += muestra * seleccion * peso(x) * peso(y);
-		}
-	}
+	// Aproximación de 9 muestras (pesos [5, 6, 5], suma 16^2 = 256) al núcleo binomial 5x5,
+	// con desplazamiento entero en píxeles de igual varianza (sqrt(1.6) ≈ 1.265) para muestrear
+	// centros de texel antes del umbral y reutilizar `base` en el centro.
+	vec2 d = SCREEN_PIXEL_SIZE * max(1.0, round(radio * 0.5 * 1.265));
+	vec3 halo = aporte_de_brillo(base) * 36.0;
+	halo += (
+		aporte_de_brillo(textureLod(pantalla, SCREEN_UV + vec2(-d.x, 0.0), 0.0).rgb)
+		+ aporte_de_brillo(textureLod(pantalla, SCREEN_UV + vec2(d.x, 0.0), 0.0).rgb)
+		+ aporte_de_brillo(textureLod(pantalla, SCREEN_UV + vec2(0.0, -d.y), 0.0).rgb)
+		+ aporte_de_brillo(textureLod(pantalla, SCREEN_UV + vec2(0.0, d.y), 0.0).rgb)
+	) * 30.0;
+	halo += (
+		aporte_de_brillo(textureLod(pantalla, SCREEN_UV + vec2(-d.x, -d.y), 0.0).rgb)
+		+ aporte_de_brillo(textureLod(pantalla, SCREEN_UV + vec2(d.x, -d.y), 0.0).rgb)
+		+ aporte_de_brillo(textureLod(pantalla, SCREEN_UV + vec2(-d.x, d.y), 0.0).rgb)
+		+ aporte_de_brillo(textureLod(pantalla, SCREEN_UV + vec2(d.x, d.y), 0.0).rgb)
+	) * 25.0;
 	halo *= intensidad / 256.0;
 	// Atenuar el aporte sobre el núcleo conserva su textura sin apagar el halo.
 	float brillo_base = dot(base, vec3(0.2126, 0.7152, 0.0722));

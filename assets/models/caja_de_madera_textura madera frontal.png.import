@@ -3,22 +3,23 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://62scwb3gk8ah"
-path="res://.godot/imported/caja_de_madera_textura madera frontal.png-dc6179d72a3d369edfe768fef265e73c.ctex"
+path.s3tc="res://.godot/imported/caja_de_madera_textura madera frontal.png-dc6179d72a3d369edfe768fef265e73c.s3tc.ctex"
 metadata={
-"vram_texture": false
+"imported_formats": ["s3tc_bptc"],
+"vram_texture": true
 }
 generator_parameters={
-"md5": "fb2f77a825c774a2c47b36b2b0d4edc0"
+"md5": "edc55bf9b258a609f20a60a35420517e"
 }
 
 [deps]
 
 source_file="res://assets/models/caja_de_madera_textura madera frontal.png"
-dest_files=["res://.godot/imported/caja_de_madera_textura madera frontal.png-dc6179d72a3d369edfe768fef265e73c.ctex"]
+dest_files=["res://.godot/imported/caja_de_madera_textura madera frontal.png-dc6179d72a3d369edfe768fef265e73c.s3tc.ctex"]
 
 [params]
 
-compress/mode=1
+compress/mode=2
 compress/high_quality=false
 compress/lossy_quality=0.9
 compress/uastc_level=0
@@ -40,4 +41,4 @@ process/normal_map_invert_y=false
 process/hdr_as_srgb=false
 process/hdr_clamp_exposure=false
 process/size_limit=1024
-detect_3d/compress_to=1
+detect_3d/compress_to=0

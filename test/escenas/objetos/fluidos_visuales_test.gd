@@ -311,3 +311,47 @@ func test_recuperar_la_fisica_no_cambia_el_dibujo_hasta_dibujar() -> void:
 	assert_bool(antes == agua.vertices_dibujados()).is_true()
 	agua._process(1.0 / 60.0)
 	assert_bool(antes == agua.vertices_dibujados()).is_false()
+
+
+func test_una_mancha_asentada_se_duerme_y_se_despierta_al_tocarla_o_presentarla() -> void:
+	var mancha: Node3D = auto_free(MANCHA.instantiate())
+	add_child(mancha)
+	var superficie := mancha.get_node("Malla") as Superficie
+	for paso: int in 80:
+		_avanzar(superficie, 0.1)
+	assert_bool(superficie.is_physics_processing()).is_false()
+	assert_bool(superficie.is_processing()).is_false()
+	superficie.tocar_en(mancha.global_position + Vector3(0.2, 0.0, 0.0))
+	assert_bool(superficie.is_physics_processing()).is_true()
+	assert_bool(superficie.is_processing()).is_true()
+	superficie.presentar(false)
+	assert_bool(superficie.is_physics_processing()).is_false()
+	assert_bool(superficie.is_processing()).is_false()
+	superficie.presentar(true)
+	assert_bool(superficie.is_physics_processing()).is_true()
+	assert_bool(superficie.is_processing()).is_true()
+
+
+func test_una_mancha_oculta_por_un_ancestro_se_duerme_plana() -> void:
+	var padre: Node3D = auto_free(Node3D.new())
+	padre.visible = false
+	var mancha: Node3D = MANCHA.instantiate()
+	padre.add_child(mancha)
+	add_child(padre)
+	var superficie := mancha.get_node("Malla") as Superficie
+	assert_bool(superficie.is_physics_processing()).is_false()
+	var radio_esperado: float = superficie.get("_radio")
+	var borde_inicial: PackedVector3Array = superficie.mesh.surface_get_arrays(0)[Mesh.ARRAY_VERTEX]
+	assert_float(Vector2(borde_inicial[-1].x, borde_inicial[-1].z).length()).is_equal_approx(
+		radio_esperado, 0.001
+	)
+	padre.visible = true
+	superficie.perturbar()
+	_avanzar(superficie, 0.05)
+	padre.visible = false
+	_avanzar(superficie, 0.05)
+	assert_bool(superficie.is_physics_processing()).is_false()
+	var borde_dormido: PackedVector3Array = superficie.mesh.surface_get_arrays(0)[Mesh.ARRAY_VERTEX]
+	assert_float(Vector2(borde_dormido[-1].x, borde_dormido[-1].z).length()).is_equal_approx(
+		radio_esperado, 0.001
+	)

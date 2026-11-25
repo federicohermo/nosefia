@@ -38,7 +38,7 @@ func test_ambas_animaciones_conservan_ocho_png_ordenados_y_exposiciones() -> voi
 		for indice in 8:
 			var textura := frames.get_frame_texture(&"idle", indice)
 			assert_str(textura.resource_path).ends_with("/%02d.png" % (indice + 1))
-			assert_that(textura.get_size()).is_equal(Vector2(1086, 1448))
+			assert_that(textura.get_size()).is_equal(Vector2(543, 724))
 			assert_bool(textura.get_image().detect_alpha() != Image.ALPHA_NONE).is_true()
 			assert_float(frames.get_frame_duration(&"idle", indice)).is_equal(1.0)
 

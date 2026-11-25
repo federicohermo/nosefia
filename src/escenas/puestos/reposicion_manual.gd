@@ -2,6 +2,7 @@
 extends Node3D
 
 const ZonaDeReposicion := preload("res://src/escenas/puestos/zona_de_reposicion.gd")
+const OclusionDeLaGondola := preload("res://src/escenas/puestos/oclusion_de_la_gondola.gd")
 const GrupoDelPiso := preload("res://src/escenas/objetos/grupo_del_piso.gd")
 const CajaDelDeposito := preload("res://src/escenas/objetos/caja_de_productos.gd")
 const JugadorDelLocal := preload("res://src/escenas/jugador.gd")
@@ -113,6 +114,7 @@ var _laterales := ShaderMaterial.new()
 var _disposicion_completa: DisposicionDeLaGondola
 var _disposicion_preparada: DisposicionDeLaGondola
 var _generados: Array[Node] = []
+var _oclusion: OclusionDeLaGondola = null
 
 
 func unidades_sueltas() -> Array[Node3D]:
@@ -189,7 +191,9 @@ func preparar() -> void:
 		_rehacer_disposicion()
 	else:
 		for id in _grupos.size():
-			_mostrar_lo_puesto(id)
+			_mostrar_lo_puesto(id, false)
+		if _oclusion != null:
+			_oclusion.subir()
 	_actualizar_zonas()
 
 
@@ -258,7 +262,9 @@ func _rehacer_disposicion() -> void:
 	_radios_de_las_filas.clear()
 	_preparar_grupos()
 	for id in _grupos.size():
-		_mostrar_lo_puesto(id)
+		_mostrar_lo_puesto(id, false)
+	if _oclusion != null:
+		_oclusion.subir()
 	_preparar_los_casilleros()
 	_disposicion_preparada = disposicion
 
@@ -321,17 +327,19 @@ func _desatascar_lo_soltado(nodo: Node3D) -> void:
 		unidad.global_position += atras * paso
 
 
-## Conserva orientación y escala de la unidad, sin añadir formas a la simulación.
+## Conserva orientación y escala de la unidad, sin añadir formas a la simulación. La reserva es la
+## de cada pieza del mueble, no la caja que las envuelve a todas.
 func _ocupa_una_reserva(forma: CollisionShape3D) -> bool:
 	var volumen := LimitesDeForma.de(forma.shape)
 	for cuerpo: PhysicsBody3D in muebles_con_reserva:
 		var malla := cuerpo.get_parent() as MeshInstance3D
 		if malla == null or malla.mesh == null:
 			continue
-		if ReservaDeLaGondola.se_superponen(
-			volumen, forma.global_transform, malla.get_aabb(), malla.global_transform
-		):
-			return true
+		for pieza: AABB in PiezasDeUnMueble.de_la_malla(malla.mesh):
+			if ReservaDeLaGondola.se_superponen(
+				volumen, forma.global_transform, pieza, malla.global_transform
+			):
+				return true
 	return false
 
 
@@ -1348,12 +1356,25 @@ func _preparar_modelos() -> void:
 
 func _preparar_grupos() -> void:
 	_armar_los_bloques()
+	if _oclusion == null:
+		_oclusion = OclusionDeLaGondola.new()
+		_oclusion.name = "OclusionDeLaGondola"
+		add_child(_oclusion)
+	else:
+		_oclusion.limpiar()
 	for producto in Catalogo.todos():
 		var malla := _modelos[producto.id]
-		var grupo := _dibujar(
-			"ProductosDe" + producto.nombre, _malla_de_la_gondola(malla), _bloques[producto.id]
-		)
+		var malla_gondola := _malla_de_la_gondola(malla)
+		var grupo := _dibujar("ProductosDe" + producto.nombre, malla_gondola, _bloques[producto.id])
 		_grupos.append(grupo)
+		var materiales: Array[ShaderMaterial] = []
+		for superficie in malla_gondola.get_surface_count():
+			var mat := malla_gondola.surface_get_material(superficie) as ShaderMaterial
+			if mat != null:
+				materiales.append(mat)
+		_oclusion.preparar_bloque(
+			producto.id, malla, materiales, _derecho(producto.id), _bloques[producto.id], false
+		)
 		var faltantes := _dibujar("HuecosDe" + producto.nombre, malla, _bloques[producto.id])
 		faltantes.visible = false
 		faltantes.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
@@ -1426,10 +1447,11 @@ func _mostrar_la_mercaderia_a_las_manos(llevando: bool) -> void:
 ## el de las sanas, y el del piso, con lugar para todos los vencidos de la noche.
 func _preparar_los_vencidos() -> void:
 	var id := Producto.Id.CINDOLOR
-	_vencidos_puestos = _dibujar(
-		"VencidosDeCindolor", _malla_de_la_gondola(_modelo_vencido), _bloques[id]
-	)
+	var malla_vencido := _malla_de_la_gondola(_modelo_vencido)
+	_vencidos_puestos = _dibujar("VencidosDeCindolor", malla_vencido, _bloques[id])
 	_vencidos_puestos.visible = false
+	if _oclusion != null:
+		_oclusion.agregar_materiales(id, malla_vencido)
 	_vencidos_sueltos = GrupoDelPiso.new()
 	_vencidos_sueltos.name = "CindolorVencidoSuelto"
 	_vencidos_sueltos.preparar(_modelo_vencido, ReglasDelEstante.CINDOLOR_VENCIDOS)
@@ -1455,6 +1477,8 @@ func _material_de_la_gondola(original: BaseMaterial3D) -> ShaderMaterial:
 	material.shader = PRODUCTO
 	material.set_shader_parameter("color", original.albedo_color)
 	material.set_shader_parameter("textura", original.albedo_texture)
+	material.set_shader_parameter("escala_uv", original.uv1_scale)
+	material.set_shader_parameter("desplazamiento_uv", original.uv1_offset)
 	material.set_shader_parameter("rugosidad", original.roughness)
 	material.set_shader_parameter("metalico", original.metallic)
 	material.set_shader_parameter("especular", original.metallic_specular)
@@ -1629,7 +1653,7 @@ func _rebasar(bloque: PackedFloat32Array, desde: Basis, hacia: Basis) -> PackedF
 ## corte. Cada copia
 ## lleva su lugar, así que reordenarlas no mueve ninguna: la que se agarró del medio deja un hueco
 ## en el medio.
-func _mostrar_lo_puesto(id: Producto.Id) -> void:
+func _mostrar_lo_puesto(id: Producto.Id, subir_oclusion: bool = true) -> void:
 	if _bloques[id].is_empty():
 		return
 	var producto := Catalogo.de(id)
@@ -1668,6 +1692,8 @@ func _mostrar_lo_puesto(id: Producto.Id) -> void:
 		_vencidos_puestos.multimesh.buffer = del_lote
 		_vencidos_puestos.multimesh.visible_instance_count = vencidos.size()
 		_vencidos_puestos.visible = not vencidos.is_empty()
+	if _oclusion != null:
+		_oclusion.sincronizar(id, orden, ocupados.size(), subir_oclusion)
 
 
 ## Un `MultiMeshInstance3D` con todas las copias de un bloque, prendidas.
@@ -1814,7 +1840,9 @@ func limpiar() -> void:
 	# por `id` mata el primer cuadro con un `Out of bounds` que no nombra ni a la jornada ni a
 	# este puesto.
 	for id in _grupos.size():
-		_mostrar_lo_puesto(id)
+		_mostrar_lo_puesto(id, false)
+	if _oclusion != null:
+		_oclusion.subir()
 	_actualizar_zonas()
 
 

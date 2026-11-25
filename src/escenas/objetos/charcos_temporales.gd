@@ -19,6 +19,7 @@ func _ready() -> void:
 	(testigo.material_override as ShaderMaterial).set_shader_parameter("opacidad", 0.0)
 	testigo.hide()
 	add_child(testigo)
+	set_process(false)
 
 
 func _crear_malla() -> MeshInstance3D:
@@ -36,23 +37,37 @@ func _crear_malla() -> MeshInstance3D:
 
 
 func dejar_en(posicion: Vector3, normal: Vector3 = Vector3.UP) -> void:
-	var malla: MeshInstance3D
-	if _mallas.size() < ReglasDeLaLimpieza.MAXIMO_DE_CHARCOS:
-		malla = _crear_malla()
-		add_child(malla)
-	else:
-		# Se reutiliza el más viejo; el número de dibujos no crece con cada pasada.
-		malla = _mallas.pop_front()
-		_edades.pop_front()
+	var arriba := normal.normalized()
+	var destino := posicion + arriba * 0.003
+	var malla := _retirar_cercano(destino)
+	if malla == null:
+		if _mallas.size() < ReglasDeLaLimpieza.MAXIMO_DE_CHARCOS:
+			malla = _crear_malla()
+			add_child(malla)
+		else:
+			# Se reutiliza el más viejo; el número de dibujos no crece con cada pasada.
+			malla = _mallas.pop_front()
+			_edades.pop_front()
 	_mallas.append(malla)
 	_edades.append(0.0)
-	var arriba := normal.normalized()
-	malla.global_transform = Transform3D(
-		Basis(Quaternion(Vector3.UP, arriba)), posicion + arriba * 0.003
-	)
+	malla.global_transform = Transform3D(Basis(Quaternion(Vector3.UP, arriba)), destino)
 	_fase = (_fase + 1) % ReglasDeLaLimpieza.MAXIMO_DE_CHARCOS
 	(malla.material_override as ShaderMaterial).set_shader_parameter("fase", _fase * 1.7)
 	_pintar(malla, 0.0)
+	set_process(true)
+
+
+func _retirar_cercano(destino: Vector3) -> MeshInstance3D:
+	# Repasar el mismo punto refresca el charco en vez de apilar planos coplanares.
+	var radio_de_fusion := ReglasDeLaLimpieza.RADIO_DEL_CHARCO * 0.55
+	var umbral := radio_de_fusion * radio_de_fusion
+	for indice in range(_mallas.size() - 1, -1, -1):
+		if _mallas[indice].global_position.distance_squared_to(destino) <= umbral:
+			var malla := _mallas[indice]
+			_mallas.remove_at(indice)
+			_edades.remove_at(indice)
+			return malla
+	return null
 
 
 func limpiar() -> void:
@@ -62,6 +77,7 @@ func limpiar() -> void:
 		malla.queue_free()
 	_mallas.clear()
 	_edades.clear()
+	set_process(false)
 
 
 func cantidad() -> int:
@@ -80,6 +96,8 @@ func _process(delta: float) -> void:
 			_edades.remove_at(indice)
 		else:
 			_pintar(malla, _edades[indice])
+	if _mallas.is_empty():
+		set_process(false)
 
 
 func _pintar(malla: MeshInstance3D, edad: float) -> void:

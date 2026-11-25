@@ -11,21 +11,36 @@ uniform sampler2D previo : filter_nearest, repeat_disable;
 uniform vec3 gota = vec3(0.5, 0.5, 0.0);
 uniform float radio_de_la_gota = 2.0;
 uniform float amortiguacion = 0.985;
+// Velocidad al cuadrado del esquema de 9 puntos (estable hasta 0,625), desacoplada del freno.
+uniform float velocidad = 0.45;
 // El primer paso lee una textura sin escribir, que vale cero y no 0,5: ahí el agua arranca quieta.
 uniform bool reiniciar = false;
 
 void fragment() {
-	vec2 texel = 1.0 / vec2(textureSize(previo, 0));
-	vec2 actual = texture(previo, UV).rg - 0.5;
-	float vecinos = texture(previo, UV + vec2(texel.x, 0.0)).r
-			+ texture(previo, UV - vec2(texel.x, 0.0)).r
-			+ texture(previo, UV + vec2(0.0, texel.y)).r
-			+ texture(previo, UV - vec2(0.0, texel.y)).r
-			- 2.0;
-	float altura = (vecinos * 0.5 - actual.g) * amortiguacion;
-	vec2 distancia = (UV - gota.xy) / texel;
-	altura += gota.z * exp(-dot(distancia, distancia) / (radio_de_la_gota * radio_de_la_gota));
-	// La amortiguación ya lleva todo a cero. El tope es para muchas gotas en el mismo punto.
-	altura = clamp(altura, -0.5, 0.5);
-	COLOR = reiniciar ? vec4(0.5, 0.5, 0.0, 1.0) : vec4(altura + 0.5, actual.r + 0.5, 0.0, 1.0);
+	if (reiniciar) {
+		COLOR = vec4(0.5, 0.5, 0.0, 1.0);
+	} else {
+		vec2 texel = 1.0 / vec2(textureSize(previo, 0));
+		vec2 actual = texture(previo, UV).rg - 0.5;
+		// Laplaciano isotrópico de 9 puntos: evita que los anillos de la gota se cuadren con la grilla.
+		float cardinales = texture(previo, UV + vec2(texel.x, 0.0)).r
+				+ texture(previo, UV - vec2(texel.x, 0.0)).r
+				+ texture(previo, UV + vec2(0.0, texel.y)).r
+				+ texture(previo, UV - vec2(0.0, texel.y)).r
+				- 2.0;
+		float diagonales = texture(previo, UV + vec2(texel.x, texel.y)).r
+				+ texture(previo, UV + vec2(-texel.x, texel.y)).r
+				+ texture(previo, UV + vec2(texel.x, -texel.y)).r
+				+ texture(previo, UV + vec2(-texel.x, -texel.y)).r
+				- 2.0;
+		float laplaciano = 0.8 * cardinales + 0.2 * diagonales - 4.0 * actual.r;
+		float altura = (2.0 * actual.r - actual.g) * amortiguacion + velocidad * laplaciano;
+		if (gota.z != 0.0) {
+			vec2 distancia = (UV - gota.xy) / texel;
+			altura += gota.z * exp(-dot(distancia, distancia) / (radio_de_la_gota * radio_de_la_gota));
+		}
+		// La amortiguación ya lleva todo a cero. El tope es para muchas gotas en el mismo punto.
+		altura = clamp(altura, -0.5, 0.5);
+		COLOR = vec4(altura + 0.5, actual.r + 0.5, 0.0, 1.0);
+	}
 }

@@ -157,3 +157,14 @@ func test_el_shader_del_primer_charco_ya_tiene_un_testigo_para_el_calentamiento(
 	assert_bool(testigo.visible).is_false()
 	assert_int(charcos.cantidad()).is_zero()
 	assert_array(_mallas(charcos)).is_empty()
+
+
+func test_repasar_el_mismo_lugar_refresca_el_charco_sin_apilarlo() -> void:
+	var charcos := _charcos()
+	charcos.dejar_en(Vector3(1.0, 0.0, 1.0))
+	charcos.call("_process", 2.5)
+	var opacidad_vieja := _opacidad(_mallas(charcos)[0])
+	charcos.dejar_en(Vector3(1.02, 0.0, 1.01))
+	assert_int(charcos.cantidad()).is_equal(1)
+	assert_int(_mallas(charcos).size()).is_equal(1)
+	assert_float(_opacidad(_mallas(charcos)[0])).is_greater(opacidad_vieja)

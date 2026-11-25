@@ -1701,7 +1701,7 @@ func _cmd_get_performance_monitors(_params: Dictionary) -> void:
 	monitors["fps"] = Performance.get_monitor(Performance.TIME_FPS)
 	monitors["frame_time_msec"] = Performance.get_monitor(Performance.TIME_PROCESS) * 1000.0
 	monitors["physics_frame_time_msec"] = Performance.get_monitor(Performance.TIME_PHYSICS_PROCESS) * 1000.0
-	monitors["navigation_process_msec"] = Performance.get_monitor(Performance.TIME_NAVIGATION_PROCESS) * 1000.0
+	monitors["navigation_process_msec"] = _get_optional_monitor(&"TIME_NAVIGATION_PROCESS", 0.0) * 1000.0
 
 	monitors["memory_static"] = Performance.get_monitor(Performance.MEMORY_STATIC)
 	monitors["memory_static_max"] = Performance.get_monitor(Performance.MEMORY_STATIC_MAX)
@@ -1724,11 +1724,18 @@ func _cmd_get_performance_monitors(_params: Dictionary) -> void:
 	monitors["physics_3d_collision_pairs"] = Performance.get_monitor(Performance.PHYSICS_3D_COLLISION_PAIRS)
 	monitors["physics_3d_island_count"] = Performance.get_monitor(Performance.PHYSICS_3D_ISLAND_COUNT)
 
-	monitors["navigation_active_maps"] = Performance.get_monitor(Performance.NAVIGATION_ACTIVE_MAPS)
-	monitors["navigation_region_count"] = Performance.get_monitor(Performance.NAVIGATION_REGION_COUNT)
-	monitors["navigation_agent_count"] = Performance.get_monitor(Performance.NAVIGATION_AGENT_COUNT)
+	monitors["navigation_active_maps"] = _get_optional_monitor(&"NAVIGATION_ACTIVE_MAPS", 0.0)
+	monitors["navigation_region_count"] = _get_optional_monitor(&"NAVIGATION_REGION_COUNT", 0.0)
+	monitors["navigation_agent_count"] = _get_optional_monitor(&"NAVIGATION_AGENT_COUNT", 0.0)
 
 	_write_response({"result": {"monitors": monitors, "process": "game"}})
+
+
+func _get_optional_monitor(constant_name: StringName, fallback: float) -> float:
+	if not ClassDB.class_has_integer_constant(&"Performance", constant_name):
+		return fallback
+	var monitor_id: int = ClassDB.class_get_integer_constant(&"Performance", constant_name)
+	return Performance.get_monitor(monitor_id as Performance.Monitor)
 
 
 func _serialize_value(value: Variant) -> Variant:

@@ -9,7 +9,7 @@ const ASPECTO_VISIBLE := preload("res://src/escenas/objetos/agua_y_manchas.gdsha
 const GUIA_DE_MANCHAS := preload(
 	"res://assets/models/SEPT_JUEGOS_PROTOTIPO_Guía de jabones y manchas copy.png"
 )
-const SEGMENTOS := 48
+const SEGMENTOS := 64
 const ANILLOS := 12
 const PASO := 1.0 / 120.0
 const RELIEVE_DE_LAS_ONDAS := 1.8
@@ -43,12 +43,14 @@ var _normales_empaquetadas := PackedInt32Array()
 var _inicio_de_normales := 0
 var _paso_de_normales := 0
 var _gotas: Gotas
+var _pintura_de_gotas: ShaderMaterial
 var _nivel_previo := Vector2.ZERO
 var _centro_de_onda := Vector2.ZERO
 var _ultima_inclinacion := Vector2.INF
 var _estaba_quieta := false
 var _ondas := Ondas.new()
 var _aceleracion := Vector2.ZERO
+var _aceleracion_vertical := 0.0
 var _encogimiento: Tween
 var _color_previo := Color.TRANSPARENT
 var _densidad_previa := 0.0
@@ -72,13 +74,22 @@ func _ready() -> void:
 		pintura.set_shader_parameter(&"ondas_en_vertices", true)
 		pintura.set_shader_parameter(&"radio_del_disco", _radio)
 		pintura.set_shader_parameter(&"relieve_de_las_ondas", RELIEVE_DE_LAS_ONDAS)
+		# Las gotas comparten el mismo shader sin deformación de vértices para no aplastarse.
+		_pintura_de_gotas = pintura.duplicate() as ShaderMaterial
+		_pintura_de_gotas.set_shader_parameter(&"ondas_en_vertices", false)
+		_pintura_de_gotas.set_shader_parameter(&"transparencia", 0.55)
 		_gotas = Gotas.new()
 		add_child(_gotas)
-		_gotas.preparar(material_override)
+		_gotas.preparar(_pintura_de_gotas)
 		_crear_superficie()
 	else:
-		_onda = float(absf(global_basis.y.normalized().dot(Vector3.UP)) > 0.8)
+		_onda = float(
+			is_visible_in_tree() and absf(global_basis.y.normalized().dot(Vector3.UP)) > 0.8
+		)
 	_dibujar()
+	if not en_balde and _onda < 0.001:
+		set_physics_process(false)
+		set_process(false)
 
 
 func configurar_agua(acuosa: bool) -> void:
@@ -109,10 +120,12 @@ func pintar(color: Color) -> void:
 	if color == color_de_la_superficie():
 		return
 	if material_override is ShaderMaterial:
+		var densidad := _densidad_visual(color)
 		(material_override as ShaderMaterial).set_shader_parameter("color_del_agua", color)
-		(material_override as ShaderMaterial).set_shader_parameter(
-			"densidad_de_solucion", _densidad_visual(color)
-		)
+		(material_override as ShaderMaterial).set_shader_parameter("densidad_de_solucion", densidad)
+		if _pintura_de_gotas != null:
+			_pintura_de_gotas.set_shader_parameter("color_del_agua", color)
+			_pintura_de_gotas.set_shader_parameter("densidad_de_solucion", densidad)
 	else:
 		(material_override as StandardMaterial3D).albedo_color = color
 	_cancelar_mezcla()
@@ -134,10 +147,16 @@ func mezclar(color: Color) -> void:
 	# El destino ya sirve para la carga de la mopa; únicamente la superficie tarda en teñirse.
 	_color_previo = color_de_la_superficie()
 	_densidad_previa = _densidad_visual(_color_previo)
+	var densidad := _densidad_visual(color)
 	pintura.set_shader_parameter("color_del_agua", color)
-	pintura.set_shader_parameter("densidad_de_solucion", _densidad_visual(color))
+	pintura.set_shader_parameter("densidad_de_solucion", densidad)
+	if _pintura_de_gotas != null:
+		_pintura_de_gotas.set_shader_parameter("color_del_agua", color)
+		_pintura_de_gotas.set_shader_parameter("densidad_de_solucion", densidad)
 	_progreso_de_mezcla = 0.0
 	_actualizar_mezcla()
+	_ondas.perturbar(Vector2(0.15, -0.1), 0.28)
+	_estaba_quieta = false
 	set_physics_process(true)
 	set_process(true)
 
@@ -149,7 +168,17 @@ func llenar() -> void:
 		reiniciar()
 		_nivel_visual = 0.0
 	visible = true
+	_ondas.perturbar(Vector2.ZERO, 0.35)
 	_cambiar_nivel(1.0)
+
+
+func sacudir(fuerza: float = 0.45) -> void:
+	if not en_balde or not visible:
+		return
+	_ondas.perturbar(Vector2.ZERO, fuerza)
+	_estaba_quieta = false
+	set_physics_process(true)
+	set_process(true)
 
 
 func vaciar() -> void:
@@ -248,6 +277,7 @@ func reiniciar() -> void:
 	_nivel_previo = _nivel()
 	_ondas.reiniciar()
 	_aceleracion = Vector2.ZERO
+	_aceleracion_vertical = 0.0
 	if _gotas != null:
 		_gotas.limpiar()
 
@@ -271,6 +301,9 @@ func presentar(activa: bool) -> void:
 		reiniciar()
 	if not en_balde and activa and not visible:
 		perturbar()
+	if not en_balde and not activa:
+		set_physics_process(false)
+		set_process(false)
 	visible = activa
 
 
@@ -297,6 +330,9 @@ func _cancelar_encogimiento() -> void:
 func _terminar_encogimiento() -> void:
 	_encogimiento = null
 	visible = false
+	if not en_balde:
+		set_physics_process(false)
+		set_process(false)
 	encogida.emit()
 
 
@@ -309,6 +345,12 @@ func tocar_en(punto: Vector3) -> void:
 func _physics_process(delta: float) -> void:
 	if not is_visible_in_tree():
 		_muestreada = false
+		if not en_balde:
+			if _onda > 0.0:
+				_onda = 0.0
+				_dibujar()
+			set_physics_process(false)
+			set_process(false)
 		return
 	if delta <= 0.0:
 		return
@@ -350,26 +392,43 @@ func _mover_agua(delta: float) -> void:
 		_nivel_previo = _nivel()
 		_ondas.reiniciar()
 		_aceleracion = Vector2.ZERO
+		_aceleracion_vertical = 0.0
 		_muestreada = true
 		return
 	var velocidad := desplazamiento / delta
+	var nivel := _nivel()
+	if (
+		desplazamiento.length_squared() < 1e-8
+		and _velocidad_previa.length_squared() < 1e-8
+		and _aceleracion.length_squared() < 1e-6
+		and absf(_aceleracion_vertical) < 1e-4
+		and _pendiente.length_squared() < 1e-8
+		and _impulso.length_squared() < 1e-8
+		and nivel.is_equal_approx(_nivel_previo)
+	):
+		_onda = 0.0
+		return
 	var aceleracion := (velocidad - _velocidad_previa) / delta
 	_posicion_previa = global_position
 	_velocidad_previa = velocidad
 	var local := global_basis.inverse() * aceleracion.limit_length(24.0)
+	var suavizado := 1.0 - exp(-delta / 0.07)
 	# Filtra el cabeceo entre cuadros para no generar pulsos al caminar.
-	_aceleracion = _aceleracion.lerp(Vector2(local.x, local.z), 1.0 - exp(-delta / 0.07))
+	_aceleracion = _aceleracion.lerp(Vector2(local.x, local.z), suavizado)
+	_aceleracion_vertical = lerpf(_aceleracion_vertical, local.y, suavizado)
 	if _aceleracion.length() > 3.0:
 		_ondas.perturbar(-_aceleracion.normalized() * 0.65, _aceleracion.length() * delta * 0.25)
+	if absf(_aceleracion_vertical) > 2.5:
+		# Apoyar el balde o el rebote vertical excitan ondas concéntricas en el centro.
+		_ondas.perturbar(Vector2.ZERO, clampf(-_aceleracion_vertical * delta * 0.14, -0.35, 0.35))
 	var objetivo := -Vector2(local.x, local.z) / 9.81
 	# Inclinar o girar el recipiente también excita el agua aunque no se traslade.
-	var nivel := _nivel()
 	_impulso -= (nivel - _nivel_previo) * 4.0
 	_nivel_previo = nivel
 	var restante := delta
 	while restante > 0.0:
 		var paso := minf(PASO, restante)
-		_impulso += ((objetivo - _pendiente) * 45.0 - _impulso * 5.0) * paso
+		_impulso += ((objetivo - _pendiente) * 58.0 - _impulso * 3.1) * paso
 		_pendiente = (_pendiente + _impulso * paso).limit_length(0.65)
 		restante -= paso
 	_onda = minf(1.0, _pendiente.length() + _impulso.length() * 0.04)
@@ -379,7 +438,7 @@ func _mover_agua(delta: float) -> void:
 		+ _ondas.amplitud() * RELIEVE_DE_LAS_ONDAS
 		+ _impulso.length() * 0.06
 	)
-	if cresta > 0.095 and _onda > 0.1 and _espera <= 0.0:
+	if cresta > 0.082 and _onda > 0.1 and _espera <= 0.0:
 		var lado := (inclinacion + _pendiente).normalized()
 		lado *= _radio_del_borde(lado.angle())
 		var borde := Vector3(lado.x, maxf(0.145 - position.y, 0.0), lado.y)
@@ -397,12 +456,10 @@ func _nivel() -> Vector2:
 	return -Vector2(arriba.x, arriba.z) / maxf(absf(arriba.y), 0.35)
 
 
-func _radio_del_borde(angulo: float) -> float:
-	# Las esquinas de las doce paredes están a 0°, 30°…; sus normales, a 15°, 45°…
-	var normal := cos(wrapf(angulo, 0.0, PI / 6.0) - PI / 12.0)
-	# El apotema interior a la altura llena es 0.1663 m y el fondo es más angosto.
-	var apotema := 0.165 * lerpf(0.9, 1.0, _nivel_visual)
-	return minf(_radio, apotema / normal)
+func _radio_del_borde(_angulo: float) -> float:
+	# El balde lleva 32 lados (apotema interior ~0,173 m lleno, ~0,158 m en el fondo).
+	# Un borde circular de 0,1715 m evita facetas y mantiene margen dentro de las paredes.
+	return minf(_radio, 0.1715) * lerpf(0.9, 1.0, _nivel_visual)
 
 
 func _crear_topologia() -> void:
@@ -528,10 +585,18 @@ func vertices_dibujados() -> PackedVector3Array:
 		var ondas := 0.0
 		for modo: int in Ondas.MODOS:
 			ondas += amplitudes[modo] * Ondas.forma_en(modo, punto / _radio)
-		var altura := (
-			(inclinacion.dot(punto * borde) + ondas * RELIEVE_DE_LAS_ONDAS) * nivel - descenso
+		var altura_inicial := clampf(
+			(inclinacion.dot(punto * borde) + ondas * RELIEVE_DE_LAS_ONDAS) * nivel - descenso,
+			fondo,
+			limite
 		)
-		vertices.append(Vector3(punto.x * borde, clampf(altura, fondo, limite), punto.y * borde))
+		var escala := clampf(borde + altura_inicial * 0.24, 0.86, 1.015)
+		var altura := clampf(
+			(inclinacion.dot(punto * escala) + ondas * RELIEVE_DE_LAS_ONDAS) * nivel - descenso,
+			fondo,
+			limite
+		)
+		vertices.append(Vector3(punto.x * escala, altura, punto.y * escala))
 	return vertices
 
 

@@ -1,6 +1,7 @@
 [gd_scene format=3]
 
 [ext_resource type="Script" path="res://src/escenas/puestos/lector.gd" id="script"]
+[ext_resource type="Script" path="res://src/escenas/puestos/oclusion_de_apoyo_fijo.gd" id="oclusion"]
 
 [ext_resource type="ArrayMesh" path="res://assets/models/lector_del_almacen.res" id="modelo"]
 [ext_resource type="ConvexPolygonShape3D" path="res://assets/models/lector_del_almacen_colision.res" id="colision"]
@@ -25,3 +26,8 @@ shape = ExtResource("colision")
 [node name="Malla" type="MeshInstance3D" parent="."]
 mesh = ExtResource("modelo")
 gi_mode = 2
+script = ExtResource("oclusion")
+radio = 0.012
+intensidad = 0.68
+esquinas = 1.0
+altura_de_apoyo = 1.15

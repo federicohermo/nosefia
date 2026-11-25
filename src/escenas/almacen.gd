@@ -40,6 +40,7 @@ const ManijaDelBalde := preload("res://src/escenas/objetos/manija_del_balde.gd")
 const HabitacionesDelAlmacen := preload("res://src/escenas/puestos/habitaciones_del_almacen.gd")
 const NotasDelLocal := preload("res://src/escenas/puestos/notas_del_almacen.gd")
 const PilaDelDeposito := preload("res://src/escenas/puestos/pila_del_deposito.gd")
+const LotesDeExhibidos := preload("res://src/escenas/puestos/lotes_de_exhibidos.gd")
 const PALLETS_DE_ENTREGA := preload("res://src/escenas/puestos/pallets_de_entrega.tscn")
 const CAJAS_DEL_PROVEEDOR := preload("res://src/escenas/puestos/cajas_del_proveedor.tscn")
 const ReglasDelCierre := preload("res://src/dominio/almacen/reglas_del_cierre.gd")
@@ -539,6 +540,7 @@ func _al_abrir_la_jornada(jornada: int) -> void:
 	_reposicion_manual.limpiar()
 	_reposicion_manual.seleccionar_disposicion(jornada)
 	mostrar_las_bandejas(get_node("Estructura"), _reposicion_manual.es_de_prueba())
+	LotesDeExhibidos.consolidar(get_node("Estructura"))
 	mostrar_el_freezer(get_node("Estructura"), _reposicion_manual.es_de_prueba())
 	var productos := Catalogo.de_la_jornada(jornada)
 	var vacios := Apertura.vacios_de_la_jornada(
@@ -592,7 +594,9 @@ func _al_abrir_la_jornada(jornada: int) -> void:
 		_pallets_de_entrega = null
 	var llegadas := Apertura.productos_con_cajas_apiladas(jornada)
 	if not llegadas.is_empty():
-		var madera: MeshInstance3D = $Estructura/deposito_pallet_piso
+		var madera := (
+			$Estructura.find_child("deposito_pallet_fondo_0_0", true, false) as MeshInstance3D
+		)
 		_pallets_de_entrega = PALLETS_DE_ENTREGA.instantiate()
 		add_child(_pallets_de_entrega)
 		var pallets: Array[MeshInstance3D] = _pallets_de_entrega.call(
@@ -684,8 +688,7 @@ func _repisas_del_deposito() -> Array[AABB]:
 		"deposito_pallet_*", "MeshInstance3D", true, false
 	)
 	for pallet: MeshInstance3D in pallets:
-		if pallet.name != &"deposito_pallet_piso":
-			repisas.append(pallet.global_transform * pallet.get_aabb())
+		repisas.append(pallet.global_transform * pallet.get_aabb())
 	return repisas
 
 
@@ -1531,10 +1534,7 @@ func _revisar_orden_del_deposito() -> void:
 				if apoyo is CajaDeProductosDelDeposito:
 					estado.apoyo = OrdenDelDeposito.Apoyo.CAJA
 					estado.sobre = apoyo.producto
-				elif (
-					str(apoyo.get_parent().name).begins_with("deposito_pallet_")
-					and apoyo.get_parent().name != &"deposito_pallet_piso"
-				):
+				elif str(apoyo.get_parent().name).begins_with("deposito_pallet_"):
 					estado.apoyo = OrdenDelDeposito.Apoyo.ESTANTERIA
 				elif _habitaciones.de(caja.global_position) == ReglasDelCierre.Habitacion.LOCAL:
 					estado.apoyo = OrdenDelDeposito.Apoyo.LOCAL

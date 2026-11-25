@@ -368,14 +368,22 @@ func _difusores_del_bano(almacen: Node3D) -> Array[Rect2]:
 			continue
 		for superficie in malla.mesh.get_surface_count():
 			var material := malla.mesh.surface_get_material(superficie)
-			if material != null and material.resource_name == MATERIAL_DEL_DIFUSOR_DEL_BANO:
-				var caja := malla.global_transform * malla.mesh.get_aabb()
-				difusores.append(
-					Rect2(
-						Vector2(caja.position.x, caja.position.z), Vector2(caja.size.x, caja.size.z)
+			if material == null or material.resource_name != MATERIAL_DEL_DIFUSOR_DEL_BANO:
+				continue
+			# Las luminarias pueden viajar unidas en una sola malla: se mide cada triángulo, y no
+			# la caja de la malla, que abarcaría el techo entero.
+			var datos := malla.mesh.surface_get_arrays(superficie)
+			var vertices: PackedVector3Array = datos[Mesh.ARRAY_VERTEX]
+			var indices: PackedInt32Array = datos[Mesh.ARRAY_INDEX]
+			for triangulo in indices.size() / 3:
+				var caja := Rect2()
+				for esquina in 3:
+					var punto := malla.global_transform * vertices[indices[triangulo * 3 + esquina]]
+					var en_planta := Vector2(punto.x, punto.z)
+					caja = (
+						Rect2(en_planta, Vector2.ZERO) if esquina == 0 else caja.expand(en_planta)
 					)
-				)
-				break
+				difusores.append(caja)
 	return difusores
 
 

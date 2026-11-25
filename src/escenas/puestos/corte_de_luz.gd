@@ -51,6 +51,7 @@ const VIDRIOS_A_LA_CALLE := [
 	"local_vidrio_sobre_entrada",
 	"local_vidrio_puerta_entrada",
 	"local_vidrio_ventanilla",
+	"local_vidrio_sobre_ventanilla",
 ]
 
 ## La luz de emergencia de la noche sin luz: alcanza para orientarse alrededor del tablero. Vale
@@ -69,6 +70,7 @@ var _con_luz: LightmapGIData
 var _sin_luz: LightmapGIData
 var _entorno: Environment
 var _niebla := false
+var _densidad_niebla := 0.0
 var _luces: Array[Light3D] = []
 var _reflejos: Dictionary[ReflectionProbe, float] = {}
 var _emision: Dictionary[BaseMaterial3D, float] = {}
@@ -166,6 +168,7 @@ func preparar(raiz: Node, horno: LightmapGI, entorno: Environment) -> void:
 	_con_luz = horno.light_data
 	_entorno = entorno
 	_niebla = entorno.fog_enabled
+	_densidad_niebla = entorno.fog_density
 	_luces = luces_del_local(raiz)
 	_emision = emision_del_local(raiz)
 	for sonda: Node in raiz.find_children("*", "ReflectionProbe", true, false):
@@ -232,7 +235,10 @@ func _aplicar() -> void:
 
 
 func _poner_el_local(hay: bool) -> void:
-	_entorno.fog_enabled = _niebla and hay
+	# Mantener `fog_enabled` constante y variar sólo la densidad evita duplicar variantes
+	# `USE_FOG` en WebGL2 durante el corte de luz.
+	if _niebla:
+		_entorno.fog_density = _densidad_niebla if hay else 0.0
 	for luz in _luces:
 		luz.visible = hay
 	for sonda: ReflectionProbe in _reflejos:

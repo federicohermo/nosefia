@@ -22,7 +22,11 @@ def headers_de_vercel() -> list[tuple[str, str]]:
 
 
 class ConHeaders(SimpleHTTPRequestHandler):
-    extensions_map = {**SimpleHTTPRequestHandler.extensions_map, ".wasm": "application/wasm"}
+    extensions_map = {
+        **SimpleHTTPRequestHandler.extensions_map,
+        ".wasm": "application/wasm",
+        ".pck": "application/octet-stream",
+    }
     headers_extra: list[tuple[str, str]] = []
 
     def end_headers(self) -> None:

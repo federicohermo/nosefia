@@ -50,7 +50,79 @@ paths:
    binario, y `--aplicar` escribe sobre la fuente. Entraron en este orden: `renovar_bano.py`
    —que ya llama a `refinar_artefactos.py` y `ajustar_marco_bano.py`—,
    `colisiones_de_artefactos.py`, `texturizar_piso_bano.py`, `zocalos_del_bano.py`,
-   `ajustar_umbral_bano.py`, `reparar_cabinas_bano.py`, `terminar_cabinas_bano.py` y
-   `texturizar_rejilla_bano.py`. Después hubo ajustes a mano del riel y las cabinas que ningún
-   script reproduce. Un `.blend` del artista que entre como base nueva pide repetirlos en ese
-   orden y rehacer esos ajustes.
+   `ajustar_umbral_bano.py`, `reparar_cabinas_bano.py`, `terminar_cabinas_bano.py`,
+   `texturizar_rejilla_bano.py` y `aplanar_hoja_del_bano.py`. Ese último va después de la rejilla
+   porque extrapola las UV de `bano_rejilla_texturizada` sobre la cara plana. Después hubo ajustes
+   a mano del riel y las cabinas que ningún script reproduce. Un `.blend` del artista que entre como
+   base nueva pide repetirlos en ese orden y rehacer esos ajustes.
+
+9. **Los metales llevan detalle pintado desde su malla.** `blender/metal_con_detalle.py` pinta
+   satinado corto, huellas, rayones finos y suciedad de encuentros en el baño, las mesas, el
+   mostrador y `local_aluminio`. Esos trazos cambian tanto el color como la rugosidad. Sólo el
+   acero del baño suma marcas chicas de agua cerca del piso. Escribe cuatro pares color + ORM en
+   `source/textures/metal/`, sin materiales ni triángulos nuevos. Va antes de `armar_atlas.py`,
+   `exportar_modelo.py` y `assets/models/extraer_mallas.gd`. Un `.blend` nuevo del artista pide
+   repetirla.
+
+10. **El frente del mostrador, su compuerta y el friso son listones de roble pintados en la
+    textura.** La malla es la del artista, con el zócalo de acero.
+    `blender/restaurar_madera_del_artista.py` la devuelve si una corrida vieja la cambió.
+    `blender/ajustar_compuerta_mostrador.py` alinea el alto de la compuerta con el frente y quita
+    el listón saliente y las placas fijas.
+    `blender/listonar_frente_de_madera.py` escribe `madera_lambrin.png` con la chapa CC0 de
+    `source/textures/third-party/oak_veneer_01/`. Arma una grilla por cara con listones enteros
+    de 9 a 13 cm y una buña en cada borde y cada esquina. Lleva banda lisa arriba, y al
+    pie sólo en el mueble de las heladeras, y franja lisa para los cantos. También pone la UV en
+    metros de cada cara. Va antes de `armar_atlas.py`, `exportar_modelo.py` y `hornear.py`. Un
+    `.blend` nuevo del artista pide repetirla.
+
+11. **El exhibidor y los bloques del depósito llevan su paso sobre el `.blend`.**
+    `blender/engrosar_lateral_exhibidor.py` restaura los 20 mm del lateral izquierdo de
+    `exhibidor_golosinas-col`. `blender/ladrillos_del_deposito.py` reconstruye los bloques de
+    relieve en esquinas y jambas del depósito y del cuartito de limpieza, y une
+    `cuartito_revestimiento` en una sola malla conexa. Van antes de `exportar_modelo.py` y
+    `hornear.py`. Un `.blend` nuevo del artista pide repetirlos.
+
+12. **Los tres bidones de limpieza llevan bisel no destructivo en sus quiebres.**
+    `blender/biselar_bidones.py` suaviza caras y aristas y marca pesos de bisel desde 30°.
+    Arma una pila de 2 segmentos a 6 mm con triangulación y normales pesadas. Va antes de
+    `texturizar_bidones.py`, `armar_atlas.py` y `exportar_modelo.py`. Un `.blend` nuevo del
+    artista pide repetirlo.
+
+13. **La computadora, la registradora, el lector y el router llevan bisel no destructivo.**
+    `blender/biselar_puesto.py` suelda la tapa suelta de `cajaregistradora-col` y redondea a 48
+    lados la base del lector. También redondea `mouse-col` de 8 a 16 lados con hombro superior
+    curvo y bisel inferior de 2 mm (`220` triángulos). Excluye micro-aristas que activan
+    `clamp_overlap` en monitor y lector, y limpia duplicados y normales de `antenas-col`. Aplica
+    biseles de 2 segmentos con triangulación y normales pesadas en `SEPT_JUEGOS_PROTOTIPO.blend`
+    y `source/puestos/router.blend`. `blender/enderezar_uv_mouse.py` alinea la isla superior de
+    `mouse-col` con la rueda y la costura de botones de `Mouse_Normal.png`. Después van
+    `exportar_router.py`, `exportar_modelo.py`, `assets/models/extraer_lector.gd` y `hornear.py`.
+    Un `.blend` nuevo del artista pide repetirlo.
+
+14. **El cielorraso del baño es parte de `almacen-col` y no una placa separada.**
+    `blender/techo_del_bano.py` baja la cara `bano_cielorraso_blanco` de `almacen-col` a
+    `Z = 3,14 m` y ajusta la escala V de las paredes. También elimina `bano_cielorraso-convcol`
+    para evitar caras coplanares y sombras de oclusión en el encuentro con las paredes. Va antes
+    de `exportar_modelo.py` y `hornear.py`. Un `.blend` nuevo del artista pide repetirlo.
+
+15. **La porcelana del baño va lisa y ambas cabinas llevan portarrollos con papel higiénico.**
+    `blender/detalles_del_bano.py` desconecta `porcelana_atlas.png` de `bano_porcelana` y
+    `bano_asiento_marfil` para eliminar el pixelado del inodoro. Coloca `bano_portarrollo_1` y
+    `bano_portarrollo_2` (acero, tubo de cartón y rollo con hoja colgante) en la mampara izquierda
+    de cada cabina. Va antes de `exportar_modelo.py` y `hornear.py`. Un `.blend` nuevo del
+    artista pide repetirlo.
+
+16. **El piso del depósito queda libre sin el pallet suelto.**
+    `blender/quitar_pallet_piso.py` elimina `deposito_pallet_piso` de `SEPT_JUEGOS_PROTOTIPO.blend`
+    (los pallets temporales de entrega toman la malla desde `deposito_pallet_fondo_0_0` escalada a
+    `1,38 × 0,92 m`). Va antes de `exportar_modelo.py` y `hornear.py`. Un `.blend` nuevo del
+    artista pide repetirlo.
+
+17. **El balde lleva cuerpo y aro de 48 lados, manija curva suave y textura limpia.**
+    `blender/refinar_balde.py` reconstruye el cuerpo y ambos aros de `balde-col` a 48 lados con
+    labio superior redondeado. Reconstruye la manija a 40 tramos × 16 lados y el agarre a
+    16 × 18 lados, conservando pivotes, bisagras y logotipo. Luego
+    `blender/texturizar_utiles.py --aplicar` rehornea `utiles_de_limpieza.png` con plástico limpio
+    y desgaste leve. Va antes de `exportar_modelo.py`. Un `.blend` nuevo del artista pide
+    repetirlo.

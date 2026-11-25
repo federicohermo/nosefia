@@ -9,6 +9,10 @@ var _inversa := Transform3D.IDENTITY
 var _caja_de_una := AABB()
 
 
+func _ready() -> void:
+	set_process(not cuerpos.is_empty())
+
+
 func preparar(malla: Mesh, capacidad: int) -> void:
 	# El grupo escribe en el reloj del dibujo, así que el motor no tiene que volver a interpolar.
 	# Si lo hace, interpola entre dos valores ya interpolados y la copia se atrasa de nuevo. Ese
@@ -27,6 +31,7 @@ func preparar(malla: Mesh, capacidad: int) -> void:
 	multimesh.visible_instance_count = 1
 	custom_aabb = _caja_de_una
 	hide()
+	set_process(false)
 
 
 func agregar(cuerpo: RigidBody3D) -> void:
@@ -37,6 +42,7 @@ func agregar(cuerpo: RigidBody3D) -> void:
 	_reposos.append(false)
 	vista.hide()
 	show()
+	set_process(true)
 	if cuerpos.size() > multimesh.instance_count:
 		# Una caja puede traer más unidades que la fila del mueble. Redimensionar borra el buffer.
 		multimesh.instance_count = maxi(cuerpos.size(), multimesh.instance_count * 2)
@@ -63,6 +69,7 @@ func quitar(cuerpo: RigidBody3D) -> void:
 	_reposos.resize(ultimo)
 	multimesh.visible_instance_count = ultimo
 	visible = ultimo > 0
+	set_process(ultimo > 0)
 	if indice < ultimo:
 		_actualizar(indice, true)
 	_encuadrar()

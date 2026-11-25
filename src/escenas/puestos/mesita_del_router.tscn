@@ -1,0 +1,127 @@
+[gd_scene format=3]
+
+[ext_resource type="Texture2D" path="res://assets/models/SEPT_JUEGOS_PROTOTIPO_silla_patas_madera.png" id="madera"]
+[ext_resource type="Texture2D" path="res://assets/models/SEPT_JUEGOS_PROTOTIPO_cromo_de_las_mesas_color.png" id="cromo_color"]
+[ext_resource type="Texture2D" path="res://assets/models/SEPT_JUEGOS_PROTOTIPO_cromo_de_las_mesas_orm.png" id="cromo_orm"]
+[ext_resource type="Script" path="res://src/escenas/puestos/oclusion_de_apoyo_fijo.gd" id="oclusion"]
+
+[sub_resource type="StandardMaterial3D" id="mat_madera"]
+albedo_texture = ExtResource("madera")
+roughness = 0.36
+uv1_scale = Vector3(0.85, 0.85, 1.0)
+uv1_offset = Vector3(0.08, 0.08, 0.0)
+
+[sub_resource type="StandardMaterial3D" id="mat_metal"]
+albedo_texture = ExtResource("cromo_color")
+metallic = 1.0
+metallic_texture = ExtResource("cromo_orm")
+metallic_texture_channel = 2
+roughness_texture = ExtResource("cromo_orm")
+roughness_texture_channel = 1
+ao_enabled = true
+ao_texture = ExtResource("cromo_orm")
+uv1_triplanar = true
+
+[sub_resource type="BoxMesh" id="malla_tapa"]
+material = SubResource("mat_madera")
+size = Vector3(0.64, 0.038, 0.55)
+
+[sub_resource type="BoxMesh" id="malla_estante"]
+material = SubResource("mat_madera")
+size = Vector3(0.57, 0.026, 0.48)
+
+[sub_resource type="BoxMesh" id="malla_pata"]
+material = SubResource("mat_metal")
+size = Vector3(0.034, 1.009, 0.034)
+
+[sub_resource type="BoxMesh" id="malla_travesano_x"]
+material = SubResource("mat_metal")
+size = Vector3(0.52, 0.034, 0.022)
+
+[sub_resource type="BoxMesh" id="malla_travesano_z"]
+material = SubResource("mat_metal")
+size = Vector3(0.022, 0.034, 0.43)
+
+[sub_resource type="BoxShape3D" id="colision_mesita"]
+size = Vector3(0.64, 1.047, 0.55)
+
+[node name="MesitaDelRouter" type="StaticBody3D"]
+
+[node name="Forma" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5235, 0)
+shape = SubResource("colision_mesita")
+
+[node name="Tapa" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.0278, 0)
+gi_mode = 2
+mesh = SubResource("malla_tapa")
+
+[node name="EstanteInferior" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.3, 0)
+gi_mode = 2
+mesh = SubResource("malla_estante")
+script = ExtResource("oclusion")
+radio = 0.075
+intensidad = 0.26
+esquinas = 0.2
+altura_de_apoyo = 0.1032
+
+[node name="PataNO" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.275, 0.5045, -0.23)
+gi_mode = 2
+mesh = SubResource("malla_pata")
+script = ExtResource("oclusion")
+radio = 0.016
+intensidad = 0.36
+esquinas = 0.2
+altura_de_apoyo = 0.1032
+
+[node name="PataNE" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.275, 0.5045, -0.23)
+gi_mode = 2
+mesh = SubResource("malla_pata")
+script = ExtResource("oclusion")
+radio = 0.016
+intensidad = 0.36
+esquinas = 0.2
+altura_de_apoyo = 0.1032
+
+[node name="PataSO" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.275, 0.5045, 0.23)
+gi_mode = 2
+mesh = SubResource("malla_pata")
+script = ExtResource("oclusion")
+radio = 0.016
+intensidad = 0.36
+esquinas = 0.2
+altura_de_apoyo = 0.1032
+
+[node name="PataSE" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.275, 0.5045, 0.23)
+gi_mode = 2
+mesh = SubResource("malla_pata")
+script = ExtResource("oclusion")
+radio = 0.016
+intensidad = 0.36
+esquinas = 0.2
+altura_de_apoyo = 0.1032
+
+[node name="TravesanoFrente" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.993, -0.23)
+gi_mode = 2
+mesh = SubResource("malla_travesano_x")
+
+[node name="TravesanoAtras" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.993, 0.23)
+gi_mode = 2
+mesh = SubResource("malla_travesano_x")
+
+[node name="TravesanoIzq" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.275, 0.993, 0)
+gi_mode = 2
+mesh = SubResource("malla_travesano_z")
+
+[node name="TravesanoDer" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.275, 0.993, 0)
+gi_mode = 2
+mesh = SubResource("malla_travesano_z")

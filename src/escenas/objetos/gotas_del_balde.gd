@@ -16,8 +16,8 @@ func preparar(pintura: Material) -> void:
 	var esfera := SphereMesh.new()
 	esfera.radius = 0.009
 	esfera.height = 0.018
-	esfera.radial_segments = 6
-	esfera.rings = 3
+	esfera.radial_segments = 8
+	esfera.rings = 4
 	var lote := MultiMesh.new()
 	lote.transform_format = MultiMesh.TRANSFORM_3D
 	lote.mesh = esfera
@@ -86,10 +86,9 @@ func _dibujar() -> void:
 		if _vidas[indice] <= 0.0:
 			continue
 		var escala := minf(1.0, _vidas[indice] * 5.0)
-		_malla.multimesh.set_instance_transform(
-			activas, Transform3D(Basis.IDENTITY.scaled(Vector3.ONE * escala), _posiciones[indice])
-		)
-		var suya := AABB(_posiciones[indice] - Vector3.ONE * 0.01, Vector3.ONE * 0.02)
+		var base := _base_de_gota(_velocidades[indice], escala)
+		_malla.multimesh.set_instance_transform(activas, Transform3D(base, _posiciones[indice]))
+		var suya := AABB(_posiciones[indice] - Vector3.ONE * 0.015, Vector3.ONE * 0.03)
 		caja = suya if activas == 0 else caja.merge(suya)
 		activas += 1
 	if activas == 0:
@@ -98,3 +97,17 @@ func _dibujar() -> void:
 	_malla.custom_aabb = caja
 	_malla.multimesh.visible_instance_count = activas
 	_malla.visible = true
+
+
+func _base_de_gota(velocidad: Vector3, escala: float) -> Basis:
+	var rapidez := velocidad.length()
+	if rapidez < 0.05:
+		return Basis.IDENTITY.scaled(Vector3.ONE * escala)
+	var eje_y := velocidad / rapidez
+	var referencia := Vector3.UP if absf(eje_y.y) < 0.95 else Vector3.RIGHT
+	var eje_x := referencia.cross(eje_y).normalized()
+	var eje_z := eje_x.cross(eje_y)
+	# Estira la gota en la dirección de vuelo conservando su volumen aproximado.
+	var largo := clampf(1.0 + rapidez * 0.25, 1.0, 2.2)
+	var ancho := 1.0 / sqrt(largo)
+	return Basis(eje_x * (ancho * escala), eje_y * (largo * escala), eje_z * (ancho * escala))
