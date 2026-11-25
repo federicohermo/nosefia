@@ -28,25 +28,8 @@ class ConHeaders(SimpleHTTPRequestHandler):
         ".pck": "application/octet-stream",
     }
     headers_extra: list[tuple[str, str]] = []
-    _sirviendo_brotli: bool = False
-
-    def translate_path(self, path: str) -> str:
-        ruta = Path(super().translate_path(path))
-        self._sirviendo_brotli = False
-        if not ruta.is_file() and ruta.with_name(ruta.name + ".br").is_file():
-            self._sirviendo_brotli = True
-            return str(ruta.with_name(ruta.name + ".br"))
-        return str(ruta)
-
-    def guess_type(self, path: str) -> str:
-        if path.endswith(".br"):
-            return super().guess_type(path[:-3])
-        return super().guess_type(path)
 
     def end_headers(self) -> None:
-        if self._sirviendo_brotli:
-            self.send_header("Content-Encoding", "br")
-            self.send_header("Vary", "Accept-Encoding")
         for clave, valor in self.headers_extra:
             self.send_header(clave, valor)
         super().end_headers()

@@ -194,6 +194,7 @@ jobs:
         run: |
           set -euo pipefail
           python -m pip install --quiet brotli
+          python .github/scripts/tests/test_comprimir_export_web.py
           python .github/scripts/comprimir_export_web.py export/web vercel.json
           npm install --global vercel@latest
           url="$(vercel deploy export/web --prod --yes --archive=tgz --token "$VERCEL_TOKEN")"

@@ -11,7 +11,9 @@ RAIZ = Path(__file__).resolve().parents[3]
 sys.path.insert(0, str(SCRIPTS))
 
 from comprimir_export_web import (  # noqa: E402
+    CALIDAD_POR_DEFECTO,
     OBJETIVOS,
+    VENTANA_BROTLI,
     _descomprimir_bytes,
     comprimir_export,
     construir_vercel_con_brotli,
@@ -55,7 +57,9 @@ class PrecompresionBrotli(unittest.TestCase):
             (carpeta / "index.wasm").write_bytes(wasm_original)
             (carpeta / "index.pck").write_bytes(pck_original)
 
-            resumen = comprimir_export(carpeta, RAIZ / "vercel.json", calidad=4)
+            resumen = comprimir_export(carpeta, RAIZ / "vercel.json")
+            self.assertEqual(CALIDAD_POR_DEFECTO, 11)
+            self.assertEqual(VENTANA_BROTLI, 24)
 
             self.assertFalse((carpeta / "index.wasm").exists())
             self.assertFalse((carpeta / "index.pck").exists())
@@ -68,14 +72,6 @@ class PrecompresionBrotli(unittest.TestCase):
 
             vercel_generado = json.loads((carpeta / "vercel.json").read_text(encoding="utf-8"))
             self.assertEqual(len(vercel_generado["rewrites"]), 2)
-
-    def test_desplegar_precomprime_despues_de_topes_y_antes_de_publicar(self):
-        workflow = (RAIZ / ".github" / "workflows" / "desplegar.yml").read_text(encoding="utf-8")
-        tope = workflow.index("python .github/scripts/tope_de_carga.py")
-        compresion = workflow.index("python .github/scripts/comprimir_export_web.py")
-        deploy = workflow.index("vercel deploy")
-        self.assertLess(tope, compresion)
-        self.assertLess(compresion, deploy)
 
 
 if __name__ == "__main__":

@@ -1,8 +1,8 @@
 ## Consolida los productos exhibidos repetidos del freezer en `MultiMeshInstance3D`.
 ##
-## El modelo del freezer trae 20 mallas dinámicas (`exhibido_*`, sin lightmap) repartidas entre
-## 4 mallas idénticas. Agruparlas por recurso de malla baja 16 llamadas de dibujo en el salón
-## manteniendo nombres `exhibido_*` para que `Almacen.mostrar_el_freezer` siga alternándolas.
+## Los exhibidos del freezer (`exhibido_*`) son mallas dinámicas que comparten recurso de malla.
+## Agruparlas reduce llamadas de dibujo en el salón y conserva nombres `exhibido_*` para que
+## `Almacen.mostrar_el_freezer` siga alternándolas.
 extends RefCounted
 
 
@@ -43,9 +43,25 @@ static func consolidar(estructura: Node) -> int:
 		mm.transform_format = MultiMesh.TRANSFORM_3D
 		mm.mesh = primero.mesh
 		mm.instance_count = lista.size()
+		var buffer := PackedFloat32Array()
+		buffer.resize(lista.size() * 12)
 		for i: int in lista.size():
 			var mi := lista[i] as MeshInstance3D
-			mm.set_instance_transform(i, _transform_relativo(mi, freezer))
+			var t := _transform_relativo(mi, freezer)
+			var base := i * 12
+			buffer[base] = t.basis.x.x
+			buffer[base + 1] = t.basis.y.x
+			buffer[base + 2] = t.basis.z.x
+			buffer[base + 3] = t.origin.x
+			buffer[base + 4] = t.basis.x.y
+			buffer[base + 5] = t.basis.y.y
+			buffer[base + 6] = t.basis.z.y
+			buffer[base + 7] = t.origin.y
+			buffer[base + 8] = t.basis.x.z
+			buffer[base + 9] = t.basis.y.z
+			buffer[base + 10] = t.basis.z.z
+			buffer[base + 11] = t.origin.z
+		mm.buffer = buffer
 		lote.multimesh = mm
 		freezer.add_child(lote)
 
@@ -65,10 +81,13 @@ static func _es_consolidable(mi: MeshInstance3D) -> bool:
 		return false
 	if mi.get_script() != null or mi.get_child_count() > 0:
 		return false
-	if mi.material_override != null or mi.get_surface_override_material_count() > 0:
-		for s: int in mi.get_surface_override_material_count():
-			if mi.get_surface_override_material(s) != null:
-				return false
+	if mi.material_override != null or mi.material_overlay != null:
+		return false
+	if not is_zero_approx(mi.transparency):
+		return false
+	for s: int in mi.get_surface_override_material_count():
+		if mi.get_surface_override_material(s) != null:
+			return false
 	return mi.mesh.get_surface_count() == 1 and mi.gi_mode != GeometryInstance3D.GI_MODE_STATIC
 
 

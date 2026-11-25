@@ -25,6 +25,7 @@ import unittest
 from lib.despliegue import (
     AISLAMIENTO,
     CACHE,
+    COMPRIMIDOS_BROTLI,
     HILOS,
     OBLIGATORIOS,
     PISO_DEL_WASM,
@@ -232,6 +233,8 @@ class LaPublicacion(unittest.TestCase):
             headers = self.sana()
             if nombre.endswith(".wasm"):
                 headers["Content-Type"] = TIPO_DEL_WASM
+            if nombre in COMPRIMIDOS_BROTLI:
+                headers["Content-Encoding"] = "br"
             return Respuesta(200, headers)
 
         return pedir
@@ -273,16 +276,37 @@ class LaPublicacion(unittest.TestCase):
         problemas = problemas_de_la_publicacion(
             "https://x.test",
             self.servidor(
-                **{"index.wasm": Respuesta(200, self.sana() | {"Content-Type": "text/plain"})}
+                **{
+                    "index.wasm": Respuesta(
+                        200,
+                        self.sana() | {"Content-Type": "text/plain", "Content-Encoding": "br"},
+                    )
+                }
             ),
         )
         self.assertTrue(any(TIPO_DEL_WASM in p for p in problemas))
+
+    def test_un_binario_precomprimido_sin_content_encoding_br_es_un_problema(self):
+        for archivo in COMPRIMIDOS_BROTLI:
+            with self.subTest(archivo=archivo):
+                headers = self.sana()
+                if archivo.endswith(".wasm"):
+                    headers["Content-Type"] = TIPO_DEL_WASM
+                problemas = problemas_de_la_publicacion(
+                    "https://x.test",
+                    self.servidor(**{archivo: Respuesta(200, headers)}),
+                )
+                self.assertTrue(
+                    any(archivo in p and "content-encoding: br" in p for p in problemas),
+                    problemas,
+                )
 
     def test_los_headers_se_leen_sin_importar_la_capitalizacion(self):
         # Un CDN puede devolver `cache-control` en minúscula y Vercel lo escribe capitalizado.
         # Comparar el string tal cual diría que falta el header que está.
         gritado = {k.upper(): v for k, v in self.sana().items()}
         gritado["CONTENT-TYPE"] = TIPO_DEL_WASM
+        gritado["CONTENT-ENCODING"] = "br"
         self.assertEqual(
             problemas_de_la_publicacion("https://x.test", lambda _u: Respuesta(200, gritado)), []
         )
@@ -293,7 +317,9 @@ class LaPublicacion(unittest.TestCase):
 
         def registrando(url: str) -> Respuesta:
             pedidos.append(url.rsplit("/", 1)[-1])
-            return Respuesta(200, self.sana() | {"Content-Type": TIPO_DEL_WASM})
+            return Respuesta(
+                200, self.sana() | {"Content-Type": TIPO_DEL_WASM, "Content-Encoding": "br"}
+            )
 
         problemas_de_la_publicacion("https://x.test", registrando)
         self.assertEqual(set(pedidos), {"index.html", "index.js", "index.wasm", "index.pck"})
@@ -379,6 +405,18 @@ class ElWorkflowDeDespliegue(unittest.TestCase):
         self.assertLess(self.texto.index("export-release"), control)
         self.assertLess(control, self.texto.index("vercel deploy"))
         self.assertIn("--software", self.texto)
+
+    def test_precomprime_despues_de_topes_y_corre_su_test_antes_de_publicar(self):
+        sin_comentarios = "\n".join(
+            linea for linea in self.texto.splitlines() if not linea.lstrip().startswith("#")
+        )
+        tope = sin_comentarios.index("python .github/scripts/tope_de_carga.py")
+        prueba = sin_comentarios.index("python .github/scripts/tests/test_comprimir_export_web.py")
+        compresion = sin_comentarios.index("python .github/scripts/comprimir_export_web.py")
+        deploy = sin_comentarios.index("vercel deploy")
+        self.assertLess(tope, prueba)
+        self.assertLess(prueba, compresion)
+        self.assertLess(compresion, deploy)
 
     def test_le_pega_a_la_url_publicada(self):
         # La cita de la publicación corrida de verdad. Contra una URL viva se corre con

@@ -2,18 +2,16 @@
 
     python .github/scripts/comprimir_export_web.py export/web vercel.json
 
-Godot exporta `index.wasm` (~28 MB) e `index.pck` (~100 MB) sin comprimir. Vercel no aplica
-compresión automática sobre archivos grandes ni sobre `application/octet-stream`, y además
-rechaza archivos sueltos por encima de 100 MB. Precomprimirlos en `*.br` con rewrites y
-headers explícitos reduce la transferencia inicial a menos de la mitad, evita la doble
-compresión del CDN y mantiene `vercel.json` de raíz compatible con exports sin comprimir.
+Godot exporta `index.wasm` e `index.pck` sin comprimir. Vercel no aplica compresión automática
+sobre archivos grandes ni sobre `application/octet-stream`, y además rechaza archivos sueltos por
+encima de su límite por archivo. Precomprimirlos en `*.br` con rewrites y headers explícitos reduce
+la transferencia inicial, evita la doble compresión del CDN y mantiene `vercel.json` de raíz
+compatible con exports sin comprimir.
 """
 
 import copy
 import hashlib
 import json
-import shutil
-import subprocess
 import sys
 from pathlib import Path
 
@@ -23,53 +21,31 @@ OBJETIVOS: dict[str, str] = {
     "index.pck": "application/octet-stream",
 }
 
-#: Nivel Brotli por defecto: buen balance entre tamaño final y tiempo en runners de CI (~2-4 s).
-CALIDAD_POR_DEFECTO = 6
+#: Nivel máximo estándar de Brotli (RFC 7932): se paga una vez por deploy en CI y maximiza el
+#: ahorro de descarga en cada carga del jugador.
+CALIDAD_POR_DEFECTO = 11
+
+#: Ventana máxima compatible con navegadores (`brotli.compress` usa 22 por defecto y deja ahorro
+#: sobre la mesa en calidad 11).
+VENTANA_BROTLI = 24
+
+
+def _importar_brotli():
+    try:
+        import brotli  # type: ignore[import-not-found]
+    except ImportError as error:
+        raise RuntimeError(
+            "falta el paquete Python `brotli`: instalalo con `python -m pip install brotli`."
+        ) from error
+    return brotli
 
 
 def _comprimir_bytes(datos: bytes, calidad: int) -> bytes:
-    try:
-        import brotli  # type: ignore[import-not-found]
-    except ImportError:
-        brotli = None
-
-    if brotli is not None:
-        return brotli.compress(datos, quality=calidad)
-
-    ejecutable = shutil.which("brotli")
-    if ejecutable is None:
-        raise RuntimeError(
-            "falta Brotli: instalá el paquete `brotli` (`python -m pip install brotli`) "
-            "o el binario `brotli` en el PATH."
-        )
-    resultado = subprocess.run(
-        [ejecutable, f"-q", str(calidad), "-c"],
-        input=datos,
-        capture_output=True,
-        check=True,
-    )
-    return resultado.stdout
+    return _importar_brotli().compress(datos, quality=calidad, lgwin=VENTANA_BROTLI)
 
 
 def _descomprimir_bytes(datos: bytes) -> bytes:
-    try:
-        import brotli  # type: ignore[import-not-found]
-    except ImportError:
-        brotli = None
-
-    if brotli is not None:
-        return brotli.decompress(datos)
-
-    ejecutable = shutil.which("brotli")
-    if ejecutable is None:
-        raise RuntimeError("falta Brotli para verificar la descompresión.")
-    resultado = subprocess.run(
-        [ejecutable, "-d", "-c"],
-        input=datos,
-        capture_output=True,
-        check=True,
-    )
-    return resultado.stdout
+    return _importar_brotli().decompress(datos)
 
 
 def construir_vercel_con_brotli(vercel_base: dict, comprimidos: dict[str, str]) -> dict:
