@@ -18,6 +18,8 @@ IMPORTADORES = {"assets/models/importar_modelo.gd", "assets/models/importar_caja
 IMPORTADOR_DE_CAJAS = "assets/models/importar_caja.gd"
 MATERIAL = "src/escenas/puestos/vidrio_del_local.tres"
 EXCLUIDOS = {".github", ".claude", ".agents", "docs", "reports", "specs", "tools"}
+MANIFIESTO_IMPORTS = ".huellas-import.json"
+_PREFIJO_HASH_IMPORT = re.compile(r"^(.+-[0-9a-f]{32})\.")
 
 
 @dataclass(frozen=True)
@@ -169,21 +171,104 @@ def restauracion(datos: dict, entorno: Mapping[str, str]) -> str:
     return "ninguna"
 
 
-def preparar_verificacion(raiz: Path, conservar: bool) -> list[str]:
+def huellas_de_imports(raiz: Path) -> dict[str, str]:
+    """SHA-256 de cada archivo `.import` versionado en el checkout."""
+    huellas: dict[str, str] = {}
+    for nombre in archivos_versionados(raiz):
+        if not nombre.endswith(".import"):
+            continue
+        ruta = raiz / nombre
+        if not ruta.is_file() or ruta.is_symlink():
+            continue
+        with ruta.open("rb") as entrada:
+            huellas[nombre] = hashlib.file_digest(entrada, "sha256").hexdigest()
+    return huellas
+
+
+def sellar_importaciones(raiz: Path) -> Path | None:
+    """Guarda en `.godot/imported/` la huella de cada `.import` que produjo esta caché.
+
+    Godot sólo registra `source_md5` y `dest_md5` en sus `.md5`, no los `[params]` del `.import`:
+    sin este manifiesto, una restauración parcial reutiliza `.ctex` viejos aunque haya cambiado
+    `process/size_limit` o `compress/mode`.
+    """
+    carpeta = destino_privado(raiz, "res://.godot/imported/comprobacion").parent
+    if not carpeta.is_dir():
+        return None
+    manifiesto = carpeta / MANIFIESTO_IMPORTS
+    manifiesto.write_text(
+        json.dumps(huellas_de_imports(raiz), sort_keys=True, separators=(",", ":")) + "\n",
+        encoding="utf-8",
+    )
+    return manifiesto
+
+
+def _leer_manifiesto(carpeta: Path) -> dict[str, str]:
+    manifiesto = carpeta / MANIFIESTO_IMPORTS
+    if not manifiesto.is_file() or manifiesto.is_symlink():
+        return {}
+    try:
+        datos = json.loads(manifiesto.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError):
+        return {}
+    return datos if isinstance(datos, dict) else {}
+
+
+def _purgar_destino(raiz: Path, destino: str, vistos: set[str]) -> list[str]:
+    archivo = destino_privado(raiz, destino)
+    carpeta = archivo.parent
+    candidatos: list[Path] = [archivo, archivo.with_suffix(".md5")]
+    coincidencia = _PREFIJO_HASH_IMPORT.match(archivo.name)
+    if coincidencia and carpeta.is_dir():
+        prefijo = coincidencia.group(1) + "."
+        candidatos.extend(
+            entrada for entrada in sorted(carpeta.iterdir())
+            if entrada.name.startswith(prefijo)
+        )
+    eliminados: list[str] = []
+    for actual in candidatos:
+        relativa = actual.relative_to(raiz).as_posix()
+        if relativa in vistos:
+            continue
+        if actual.exists() or actual.is_symlink():
+            actual.unlink()
+            vistos.add(relativa)
+            eliminados.append(relativa)
+    return eliminados
+
+
+def preparar_verificacion(raiz: Path, conservar: bool, parcial: bool = False) -> list[str]:
     carpeta = destino_privado(raiz, "res://.godot/imported/comprobacion").parent
     if not conservar and carpeta.exists():
         shutil.rmtree(carpeta)
-    eliminados = []
+    eliminados: list[str] = []
+    vistos: set[str] = set()
     for ruta in sorted((raiz / "assets" / "models").glob("*.glb.import")):
         script, destinos = configuracion_importacion(ruta)
         if script != IMPORTADOR_DE_CAJAS:
             continue
         for destino in destinos:
-            archivo = destino_privado(raiz, destino)
-            for actual in (archivo, archivo.with_suffix(".md5")):
-                if actual.exists() or actual.is_symlink():
-                    actual.unlink()
-                    eliminados.append(actual.relative_to(raiz).as_posix())
+            eliminados.extend(_purgar_destino(raiz, destino, vistos))
+    if conservar and parcial and carpeta.is_dir():
+        guardadas = _leer_manifiesto(carpeta)
+        for nombre, actual_sha in huellas_de_imports(raiz).items():
+            if guardadas.get(nombre) == actual_sha:
+                continue
+            ruta = raiz / nombre
+            _, destinos = configuracion_importacion(ruta)
+            for destino in destinos:
+                eliminados.extend(_purgar_destino(raiz, destino, vistos))
+            origen = nombre.removesuffix(".import")
+            prefijo_origen = f"{Path(origen).name}-{hashlib.md5(f'res://{origen}'.encode()).hexdigest()}."
+            for entrada in sorted(carpeta.iterdir()):
+                if not entrada.name.startswith(prefijo_origen):
+                    continue
+                relativa = entrada.relative_to(raiz).as_posix()
+                if relativa in vistos:
+                    continue
+                entrada.unlink()
+                vistos.add(relativa)
+                eliminados.append(relativa)
     return eliminados
 
 
@@ -191,10 +276,13 @@ def main() -> int:
     parser = argparse.ArgumentParser(
         description="Identidad por contenido y limpieza de la caché privada de importaciones."
     )
-    parser.add_argument("operacion", choices=("identidad", "preparar"))
+    parser.add_argument("operacion", choices=("identidad", "preparar", "sellar"))
     parser.add_argument("--raiz", type=Path, default=Path.cwd())
     args = parser.parse_args()
     raiz = args.raiz.resolve()
+    if args.operacion == "sellar":
+        sellar_importaciones(raiz)
+        return 0
     reporte = raiz / "reports" / "cache-importaciones.json"
     reporte.parent.mkdir(parents=True, exist_ok=True)
     if args.operacion == "identidad":
@@ -218,7 +306,9 @@ def main() -> int:
         datos |= {
             "hit": cual == "exacta", "restauracion": cual,
             "resultado_restore": os.environ.get("CACHE_RESULTADO", "skipped"),
-            "purgados": preparar_verificacion(raiz, cual != "ninguna"),
+            "purgados": preparar_verificacion(
+                raiz, cual != "ninguna", parcial=(cual == "parcial")
+            ),
         }
         resumen = os.environ.get("GITHUB_STEP_SUMMARY")
         if resumen:
