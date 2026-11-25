@@ -145,12 +145,11 @@ El parche hace estas cosas, todas bajo `WEB_ENABLED`:
   baja de 21 s a 14 s.
 - **Un material sin luz no separa variantes por luces ni por lightmaps.** Su código no los usa.
 
-La receta también apaga los módulos del motor que el juego no usa. Son red, navegación 2D,
-física 2D, XR, CSG, glTF y video, y los cargadores de imágenes que sólo usa el importador. La
-navegación 3D queda: el addon del editor nombra sus monitores, y sin ella su script no compila.
-Brotli queda: la fuente por defecto del motor viene en WOFF2. Usa el servidor de texto simple,
-sin ICU. El motor compila menos y el WASM pesa menos. Si el juego empieza a usar uno de esos
-módulos, hay que sacarlo de `OPCIONES` en el preparador.
+La receta también apaga los módulos del motor que el juego no usa. Son red, navegación 2D y 3D,
+física 2D, XR, CSG, glTF y video, y los cargadores de imágenes que sólo usa el importador. Brotli
+queda: la fuente por defecto del motor viene en WOFF2. Usa el servidor de texto simple, sin ICU.
+El motor compila menos y el WASM pesa menos. Si el juego empieza a usar uno de esos módulos, hay
+que sacarlo de `OPCIONES` en el preparador.
 
 `test_plantilla_web.py` falla si el parche agrega una línea fuera de `WEB_ENABLED`.
 
