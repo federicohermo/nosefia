@@ -266,7 +266,7 @@ esta doctrina ya aprendió, y está incompleta a propósito.
 | no hay «terminado con asterisco» | **Definition of Done** |
 | las dudas se resuelven antes de implementar | **shift-left** |
 | cada criterio se tiene que poder ver fallar | la **T de INVEST** |
-| el issue declara su radio de escritura y sus comandos | el **task-brief** de ITBAF |
+| el issue declara su radio de escritura y sus comandos | el formato **task-brief** |
 | el fix fuera de alcance va a su propio PR | los **datos de tamaño de PR**: 87 % → 28 % |
 | la deuda deliberada la decide el usuario | el **cuadrante de Fowler** |
 

@@ -19,4 +19,4 @@ citado por un test.
 El costo, dicho: nueve contratos que hay que mantener al día, y un régimen de IDs tipados
 —`BR-<COD>-###`, `AC-<COD>-###`— que no se renumeran nunca.
 
-Formato de referencia: *spec-anchored agentic development*, y el task-brief de ITBAF.
+Formato de referencia: *spec-anchored agentic development* y el formato task-brief.
