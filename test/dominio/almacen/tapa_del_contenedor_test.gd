@@ -94,3 +94,18 @@ func test_la_intencion_distingue_abrir_de_cerrar_durante_el_giro() -> void:  # A
 	assert_float(tapa.angulo()).is_equal(angulo)
 	tapa.reiniciar()
 	assert_bool(tapa.abierta()).is_true()
+
+
+func test_en_destino_distingue_topes_de_giro_en_curso() -> void:
+	var tapa := Tapa.new()
+	assert_bool(tapa.en_destino()).is_true()
+	tapa.alternar()
+	assert_bool(tapa.en_destino()).is_false()
+	tapa.avanzar(0.1)
+	assert_bool(tapa.en_destino()).is_false()
+	tapa.avanzar(10.0)
+	assert_bool(tapa.en_destino()).is_true()
+	tapa.alternar()
+	assert_bool(tapa.en_destino()).is_false()
+	tapa.avanzar(10.0)
+	assert_bool(tapa.en_destino()).is_true()

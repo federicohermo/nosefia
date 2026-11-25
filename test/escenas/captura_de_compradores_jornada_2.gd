@@ -19,7 +19,11 @@ func _compradores(_jornada: int) -> Array[Comprador]:
 
 func tabla() -> Dictionary:
 	var script: Script = load("res://src/escenas/puestos/ventanilla.gd")
-	return script.get_script_constant_map()["ANIMACIONES"]
+	var rutas: Dictionary = script.get_script_constant_map()["RUTAS_DE_ANIMACIONES"]
+	var cargadas: Dictionary = {}
+	for personaje: int in rutas:
+		cargadas[personaje] = load(rutas[personaje])
+	return cargadas
 
 
 func crear(padre: Node) -> Node3D:

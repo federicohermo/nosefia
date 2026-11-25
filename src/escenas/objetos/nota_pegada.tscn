@@ -2,7 +2,6 @@
 
 [ext_resource type="FontFile" path="res://assets/ui/manada/notas/orange_lovely.otf" id="letra"]
 [ext_resource type="Texture2D" path="res://assets/ui/manada/notas/papel_tareas.svg" id="papel_tareas"]
-[ext_resource type="Texture2D" path="res://assets/ui/manada/notas/papel_orden.svg" id="papel_orden"]
 [ext_resource type="Texture2D" path="res://assets/ui/manada/notas/titulo_tareas.svg" id="titulo_tareas"]
 [ext_resource type="Texture2D" path="res://assets/ui/manada/notas/titulo_mantener.svg" id="titulo_mantener"]
 [ext_resource type="Texture2D" path="res://assets/ui/manada/notas/titulo_ordenado.svg" id="titulo_ordenado"]
@@ -79,7 +78,7 @@ rotation = Vector3(-1.5707963, 0, 0)
 scale = Vector3(1, 1.414227, 1)
 pixel_size = 0.004
 render_priority = -1
-texture = ExtResource("papel_orden")
+texture = ExtResource("papel_tareas")
 texture_filter = 1
 
 [node name="titulo_mantener" type="Sprite3D" parent="Orden"]

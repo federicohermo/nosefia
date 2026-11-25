@@ -100,12 +100,16 @@ const GONDOLA_DEL_DEPOSITO := "la góndola del depósito"
 ## libre delante del tramo, hasta la distancia más lejana a la que se para quien suelta contra la
 ## pared. Más cerca, el zócalo de la pared es asunto de cada caso.
 const ALCANCE_DEL_TRAMO_LIBRE := 2.6
-## De dónde a dónde, a lo ancho de la fachada, se busca el tramo.
-const BUSQUEDA_DE_LA_PARED := Vector2(-2.4, 7.6)
+## De dónde a dónde se busca un tramo libre en la fachada (`x`) y las paredes laterales (`z`).
+const BUSQUEDA_DE_LA_FACHADA := Vector2(-2.4, 7.6)
+const BUSQUEDA_DE_LAS_LATERALES := Vector2(0.0, 5.6)
 const PASO_DE_LA_BUSQUEDA := 0.05
-## Desde qué `z` se tantea hacia la fachada: cerca de ella, para que lo primero que se toque sea
-## la pared y no un mueble del salón.
-const DESDE_DONDE_SE_TANTEA_LA_PARED := 5.0
+## Desde qué coordenada interior se tantea cada pared, para no tocar un mueble del salón primero.
+const DESDE_DONDE_SE_TANTEA_LA_FACHADA := 5.0
+const DESDE_DONDE_SE_TANTEA_LA_PARED_DERECHA := 5.0
+const DESDE_DONDE_SE_TANTEA_LA_PARED_IZQUIERDA := 0.0
+## Medio ancho del tramo plano de pared exigido a cada costado del punto elegido, en metros.
+const MEDIO_ANCHO_DEL_TRAMO := 0.45
 ## El apilado: la caja de abajo contra la pared y el jugador detrás. Suman menos que el alcance del
 ## tramo libre, para que el jugador esté adentro de lo que se comprobó libre.
 const DISTANCIA_DE_LA_CAJA_A_LA_PARED := 1.2
@@ -134,10 +138,11 @@ const DERECHO := 3.0
 ## radio y el bidón 0,46 de ancho.
 const AL_LADO := 1.0
 
-## Un tramo de la pared de la fachada con piso libre delante: `x` y `z` del punto de la pared. Se
-## busca en la escena de cada caso (`_buscar_la_pared_libre`) y no se fija: una planta nueva lo
-## movería sin avisar.
-static var _pared_libre := Vector2.ZERO
+## Un tramo de pared del edificio con piso libre delante: punto en la cara y normal hacia adentro
+## del local. Se busca en la escena de cada caso (`_buscar_la_pared_libre`) y no se fija: una
+## planta nueva lo movería sin avisar.
+static var _pared_libre := Vector3.ZERO
+static var _normal_de_la_pared := Vector3.ZERO
 
 
 func _almacen(jornada: int = ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA) -> Node3D:
@@ -148,20 +153,22 @@ func _almacen(jornada: int = ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA) -> Node
 	# noche contra la que se midieron: sacar no lo pide (BR-STK-017).
 	AperturaConLugar.abrir_con_todo_el_lugar(almacen)
 	await get_tree().physics_frame
-	_pared_libre = _buscar_la_pared_libre(almacen)
+	var tramo := _buscar_la_pared_libre(almacen)
+	_pared_libre = tramo[0]
+	_normal_de_la_pared = tramo[1]
 	# La premisa de los casos contra la pared: que haya un tramo de pared con piso libre delante.
 	(
-		assert_bool(_pared_libre != Vector2.ZERO)
-		. override_failure_message("la escena no tiene un tramo libre de la pared de la fachada")
+		assert_bool(_normal_de_la_pared != Vector3.ZERO)
+		. override_failure_message("la escena no tiene un tramo libre de pared del edificio")
 		. is_true()
 	)
 	return almacen
 
 
-## El primer punto de la pared de la fachada con `ALCANCE_DEL_TRAMO_LIBRE` de piso libre delante,
+## El primer punto de pared del edificio con `ALCANCE_DEL_TRAMO_LIBRE` de piso libre delante,
 ## donde cabe el cuerpo del jugador con holgura. La pared es el cuerpo `almacen` del edificio, y no
-## una puerta, un vidrio, un mostrador ni una góndola. `Vector2.ZERO` si no hay ninguno.
-static func _buscar_la_pared_libre(almacen: Node3D) -> Vector2:
+## una puerta, un vidrio, un mostrador ni una góndola. Devuelve `[punto, normal]` o dos `ZERO`.
+static func _buscar_la_pared_libre(almacen: Node3D) -> Array[Vector3]:
 	var jugador: CharacterBody3D = almacen.get("_jugador")
 	var cuerpo := (jugador.get_node("Cuerpo") as CollisionShape3D).shape as CapsuleShape3D
 	var capsula := CapsuleShape3D.new()
@@ -170,29 +177,88 @@ static func _buscar_la_pared_libre(almacen: Node3D) -> Vector2:
 	var espacio := jugador.get_world_3d().direct_space_state
 	var suelo: CollisionShape3D = almacen.get_node("Estructura/SueloSolido/Local")
 	var piso := suelo.global_position.y + (suelo.shape as BoxShape3D).size.y / 2.0
-	var alto := piso + ALTO_DEL_TANTEO
 	var edificio := almacen.get_node("Estructura/almacen")
-	var x := BUSQUEDA_DE_LA_PARED.x
-	while x <= BUSQUEDA_DE_LA_PARED.y:
-		x += PASO_DE_LA_BUSQUEDA
-		var rayo := PhysicsRayQueryParameters3D.create(
-			Vector3(x, alto, DESDE_DONDE_SE_TANTEA_LA_PARED), Vector3(x, alto, 20.0)
-		)
-		var golpe := espacio.intersect_ray(rayo)
-		# El primer sólido hacia la fachada es la pared: lo que se interponga descarta el tramo.
-		if golpe.is_empty() or not edificio.is_ancestor_of(golpe["collider"] as Node):
-			continue
-		if (golpe["normal"] as Vector3).dot(Vector3.BACK) > -0.99:
-			continue
-		var z: float = (golpe["position"] as Vector3).z
-		var consulta := PhysicsShapeQueryParameters3D.new()
-		consulta.shape = capsula
-		consulta.transform = Transform3D(Basis(), Vector3(x, alto, z - ALCANCE_DEL_TRAMO_LIBRE))
-		consulta.motion = Vector3(0.0, 0.0, ALCANCE_DEL_TRAMO_LIBRE - CERCA_DE_LA_PARED.max())
-		consulta.exclude = [jugador.get_rid()]
-		if espacio.cast_motion(consulta)[0] >= 1.0:
-			return Vector2(x, z)
-	return Vector2.ZERO
+	var caras: Array[Array] = [
+		[BUSQUEDA_DE_LA_FACHADA, Vector3.FORWARD, DESDE_DONDE_SE_TANTEA_LA_FACHADA, 20.0],
+		[
+			BUSQUEDA_DE_LAS_LATERALES,
+			Vector3.LEFT,
+			DESDE_DONDE_SE_TANTEA_LA_PARED_DERECHA,
+			15.0,
+		],
+		[
+			BUSQUEDA_DE_LAS_LATERALES,
+			Vector3.RIGHT,
+			DESDE_DONDE_SE_TANTEA_LA_PARED_IZQUIERDA,
+			-10.0,
+		],
+	]
+	var parada := maxf(CERCA_DE_LA_PARED.min(), capsula.radius + 0.05)
+	for cara: Array in caras:
+		var rango: Vector2 = cara[0]
+		var normal: Vector3 = cara[1]
+		var desde_coord: float = cara[2]
+		var hasta_coord: float = cara[3]
+		var lateral := normal.cross(Vector3.UP).normalized()
+		var avance := rango.x
+		while avance <= rango.y:
+			avance += PASO_DE_LA_BUSQUEDA
+			var punto := _tramo_plano_en(
+				espacio, edificio, piso, normal, lateral, avance, desde_coord, hasta_coord
+			)
+			if punto == Vector3.INF:
+				continue
+			var consulta := PhysicsShapeQueryParameters3D.new()
+			consulta.shape = capsula
+			consulta.transform = Transform3D(
+				Basis(),
+				Vector3(punto.x, piso + ALTO_DEL_TANTEO, punto.z) + normal * ALCANCE_DEL_TRAMO_LIBRE
+			)
+			consulta.motion = -normal * (ALCANCE_DEL_TRAMO_LIBRE - parada)
+			consulta.exclude = [jugador.get_rid()]
+			if espacio.cast_motion(consulta)[0] >= 1.0:
+				return [punto, normal]
+	return [Vector3.ZERO, Vector3.ZERO]
+
+
+## Comprueba que la pared del edificio forme una cara plana continua de al menos
+## `2 * MEDIO_ANCHO_DEL_TRAMO` y altura completa en `avance`. Devuelve el punto central o `INF`.
+static func _tramo_plano_en(
+	espacio: PhysicsDirectSpaceState3D,
+	edificio: Node,
+	piso: float,
+	normal: Vector3,
+	lateral: Vector3,
+	avance: float,
+	desde_coord: float,
+	hasta_coord: float
+) -> Vector3:
+	var centro := Vector3.INF
+	var eje_normal := Vector3(absf(normal.x), 0.0, absf(normal.z))
+	var eje_lateral := Vector3(absf(lateral.x), 0.0, absf(lateral.z))
+	for alto: float in [piso + ALTO_DEL_TANTEO, piso + 1.8]:
+		for sesgo: float in [-MEDIO_ANCHO_DEL_TRAMO, 0.0, MEDIO_ANCHO_DEL_TRAMO]:
+			var origen := (
+				eje_lateral * (avance + sesgo) + eje_normal * desde_coord + Vector3.UP * alto
+			)
+			var destino := (
+				eje_lateral * (avance + sesgo) + eje_normal * hasta_coord + Vector3.UP * alto
+			)
+			var golpe := espacio.intersect_ray(PhysicsRayQueryParameters3D.create(origen, destino))
+			if golpe.is_empty() or not edificio.is_ancestor_of(golpe["collider"] as Node):
+				return Vector3.INF
+			if (golpe["normal"] as Vector3).dot(normal) < 0.99:
+				return Vector3.INF
+			var posicion: Vector3 = golpe["position"]
+			if centro == Vector3.INF:
+				centro = posicion
+			elif absf((posicion - centro).dot(normal)) > 0.02:
+				return Vector3.INF
+	return Vector3(
+		eje_lateral.x * avance + eje_normal.x * centro.x,
+		piso,
+		eje_lateral.z * avance + eje_normal.z * centro.z
+	)
 
 
 ## Las caras de la malla visible, en coordenadas del mundo.
@@ -352,9 +418,13 @@ func test_mirar_deja_la_vista_que_se_pide_con_un_mouse_lento() -> void:
 
 
 ## Para al jugador a `CARRERA` del frente, mirando hacia el mueble, y lo hace caminar.
-func _caminar_hacia(jugador: CharacterBody3D, frente: Vector3) -> void:
-	jugador.global_position = Vector3(frente.x, jugador.global_position.y, frente.z - CARRERA)
-	_mirar(jugador, PI, 0.0)
+func _caminar_hacia(
+	jugador: CharacterBody3D, frente: Vector3, hacia: Vector3 = Vector3.BACK
+) -> void:
+	jugador.global_position = Vector3(
+		frente.x - hacia.x * CARRERA, jugador.global_position.y, frente.z - hacia.z * CARRERA
+	)
+	_mirar(jugador, atan2(-hacia.x, -hacia.z), 0.0)
 	Input.action_press(ReglasDelJugador.ACCION_ADELANTE)
 
 
@@ -471,7 +541,10 @@ func _frente_a(almacen: Node3D, cara: String, parado: float) -> Array:
 				Vector3.FORWARD
 			]
 		PARED_DE_LA_FACHADA:
-			return [Vector3(_pared_libre.x, alto, _pared_libre.y - parado), Vector3.BACK]
+			return [
+				Vector3(_pared_libre.x, alto, _pared_libre.z) + _normal_de_la_pared * parado,
+				-_normal_de_la_pared,
+			]
 	var gondola: MeshInstance3D = almacen.get_node("Estructura/gondola_deposito03_001")
 	var suya := gondola.global_transform * gondola.get_aabb()
 	return [Vector3(suya.get_center().x, alto, suya.end.z + parado), Vector3.FORWARD]
@@ -908,8 +981,11 @@ func test_lo_que_no_toca_el_cuerpo_se_sigue_soltando_adelante() -> void:
 			for cuadro in CUADROS_DE_REPOSO:
 				await get_tree().physics_frame
 			if parado >= SIN_TOCAR_EL_CUERPO:
+				var avance := (objeto.global_position - jugador.global_position).dot(
+					-_normal_de_la_pared
+				)
 				(
-					assert_float(objeto.global_position.z - jugador.global_position.z)
+					assert_float(avance)
 					. override_failure_message("%s, no cayó adelante" % donde)
 					. is_greater(radio)
 				)
@@ -974,12 +1050,12 @@ static func _empujon_para_sacarlo(cuerpo: PhysicsBody3D) -> Vector3:
 	return resultado.get_travel()
 
 
-## Cuánto separa el volumen del objeto de la cara de la pared de la fachada, en metros.
+## Cuánto separa el volumen del objeto de la cara de la pared, en metros.
 static func _separacion_de_la_fachada(objeto: Node3D) -> float:
-	var frente := -INF
+	var menor := INF
 	for punto in _puntos_del_volumen(objeto):
-		frente = maxf(frente, punto.z)
-	return _pared_libre.y - frente
+		menor = minf(menor, (punto - _pared_libre).dot(_normal_de_la_pared))
+	return menor
 
 
 ## Cuánto puede hundirse un cuerpo vivo en lo que toca sin estar adentro: el roce y el margen del
@@ -1001,11 +1077,11 @@ func test_la_caja_soltada_pegada_a_una_pared_no_entra_al_empujarla() -> void:
 	var caja := _caja_grande(almacen)
 	var suelo: CollisionShape3D = almacen.get_node("Estructura/SueloSolido/Local")
 	var piso := suelo.global_position.y + (suelo.shape as BoxShape3D).size.y / 2.0
-	var frente := Vector3(_pared_libre.x, piso, _pared_libre.y)
+	var frente := Vector3(_pared_libre.x, piso, _pared_libre.z)
 	caja.global_basis = Basis.IDENTITY
-	caja.global_position = frente + Vector3(0.0, MEDIA_CAJA, -MEDIA_CAJA)
+	caja.global_position = frente + Vector3.UP * MEDIA_CAJA + _normal_de_la_pared * MEDIA_CAJA
 	caja.call("quedarse_quieta")
-	_caminar_hacia(jugador, frente)
+	_caminar_hacia(jugador, frente, -_normal_de_la_pared)
 	for cuadro in CUADROS_CAMINANDO + PASOS_DESPUES_DE_BLOQUEARSE:
 		await get_tree().physics_frame
 	Input.action_release(ReglasDelJugador.ACCION_ADELANTE)
@@ -1097,17 +1173,19 @@ func test_la_caja_se_sigue_apilando_sobre_otra() -> void:  # AC-PLY-023
 	var jugador: CharacterBody3D = almacen.get("_jugador")
 	var suelo: CollisionShape3D = almacen.get_node("Estructura/SueloSolido/Local")
 	var piso := suelo.global_position.y + (suelo.shape as BoxShape3D).size.y / 2.0
+	var frente := Vector3(_pared_libre.x, piso, _pared_libre.z)
 	abajo.global_basis = Basis.IDENTITY
-	abajo.global_position = Vector3(
-		_pared_libre.x, piso + MEDIA_CAJA, _pared_libre.y - DISTANCIA_DE_LA_CAJA_A_LA_PARED
+	abajo.global_position = (
+		frente + Vector3.UP * MEDIA_CAJA + _normal_de_la_pared * DISTANCIA_DE_LA_CAJA_A_LA_PARED
 	)
 	abajo.call("quedarse_quieta")
 	var alto := jugador.global_position.y
 	jugador.global_position = (
-		abajo.global_position + Vector3(0.0, 0.0, -DISTANCIA_DEL_JUGADOR_A_LA_CAJA)
+		abajo.global_position + _normal_de_la_pared * DISTANCIA_DEL_JUGADOR_A_LA_CAJA
 	)
 	jugador.global_position.y = alto
-	_mirar(jugador, PI, 0.0)
+	var hacia := -_normal_de_la_pared
+	_mirar(jugador, atan2(-hacia.x, -hacia.z), 0.0)
 	_accion(jugador, arriba, ReglasDeLosObjetos.ACCION_AGARRAR)
 	await get_tree().physics_frame
 	_apuntar(jugador, abajo.global_position + Vector3.UP * MEDIA_CAJA)

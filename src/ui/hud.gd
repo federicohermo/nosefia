@@ -49,6 +49,7 @@ func _ready() -> void:
 	_mira.offset_bottom = mitad
 	ocultar_foco()
 	_pintar_el_subtitulo()
+	set_process(not _linea.texto().is_empty())
 
 
 ## El pensamiento corre con el cuadro. Con la pausa abierta el árbol no procesa, y el tiempo
@@ -56,6 +57,8 @@ func _ready() -> void:
 func _process(delta: float) -> void:
 	_linea.avanzar(delta)
 	_pintar_el_subtitulo()
+	if _linea.texto().is_empty():
+		set_process(false)
 
 
 func mostrar_foco(_objetivo: Node3D, _distancia: float) -> void:
@@ -73,6 +76,8 @@ func pensar(texto: String) -> void:
 	_linea.pensar(texto)
 	_es_de_un_comprador = _es_de_un_comprador and texto.is_empty()
 	_pintar_el_subtitulo()
+	if not texto.is_empty():
+		set_process(true)
 
 
 ## Lo que dice un comprador: se ve como un pensamiento, con el diseño del diálogo de comprador. Un
@@ -81,6 +86,8 @@ func decir_comprador(texto: String) -> void:
 	_linea.decir_comprador(texto)
 	_es_de_un_comprador = _es_de_un_comprador or not texto.is_empty()
 	_pintar_el_subtitulo()
+	if not texto.is_empty():
+		set_process(true)
 
 
 ## Cuánto se alejó el jugador del lugar del pensamiento: lejos, se va antes.
@@ -94,6 +101,7 @@ func mostrar_subtitulo(texto: String) -> void:
 	_linea.fijar(texto)
 	_es_de_un_comprador = false
 	_pintar_el_subtitulo()
+	set_process(false)
 
 
 ## Pinta las líneas de la referencia con el control que cada gesto tiene asignado ahora. Qué
@@ -152,6 +160,7 @@ static func _nombre_del_evento(evento: InputEvent) -> String:
 func vaciar_subtitulo() -> void:
 	_linea.soltar()
 	_pintar_el_subtitulo()
+	set_process(false)
 
 
 func _pintar_el_subtitulo() -> void:

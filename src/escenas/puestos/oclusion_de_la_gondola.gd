@@ -4,10 +4,11 @@
 ##
 ## 1. **Base oscurecida (`base_activa`).** Escribe la base local de cada producto en los materiales
 ##    del lote (`producto_de_la_gondola.gdshader`). Sin rayos ni dibujos extra.
-## 2. **Mancha debajo de cada unidad (`manchas_activas`).** Un `MultiMeshInstance3D` por bloque con
-##    `sombra_de_contacto.gdshader` y el recorte de su estante en `INSTANCE_CUSTOM`. Sigue la
-##    inclinación real del estante —también en una rampa— y se sincroniza cuando se saca o repone
-##    una unidad.
+## 2. **Mancha debajo de cada unidad (`manchas_activas`).** Un `MultiMeshInstance3D` compartido
+##    con `sombra_de_contacto.gdshader`, el recorte de su estante en `INSTANCE_CUSTOM`, `esquinas`
+##    en el largo de `basis.y` (`1 + esquinas`) y el tamaño de cada producto en `MODEL_MATRIX`.
+##    Sigue la inclinación real del estante —también en una rampa— y se sincroniza cuando se saca
+##    o repone una unidad.
 ##
 ## Reusa la banda de apoyo y el shader de `oclusion_de_contacto.gd` para conservar la forma de la
 ## mancha de las unidades sueltas, con su propio alcance e intensidad por defecto para envases
@@ -21,7 +22,8 @@ const GRUPO := &"oclusion_de_la_gondola"
 ## Valores por defecto de la góndola, compartidos con las unidades de producto sueltas.
 const RADIO_POR_DEFECTO := OclusionDeContacto.RADIO_DEL_PRODUCTO
 const INTENSIDAD_POR_DEFECTO := OclusionDeContacto.INTENSIDAD_DEL_PRODUCTO
-## Flotantes por copia en un `MultiMesh` 3D con `use_custom_data`: 12 de la pose y 4 del recorte.
+## Flotantes por copia en un `MultiMesh` 3D con `use_custom_data`: 12 de la pose (con `1 + esquinas`
+## en el largo de `basis.y`) y 4 del recorte.
 const FLOTANTES_POR_MANCHA := 16
 ## Prioridad menor que el vidrio (0) y que el pre-pase del foco (-1): la mancha nunca se dibuja
 ## delante de las puertas de las heladeras.
@@ -47,7 +49,7 @@ const ALCANCE_MINIMO_DE_RECORTE := 0.15
 @export var manchas_activas := true:
 	set(valor):
 		manchas_activas = valor
-		_aplicar_visibilidad_a_todos()
+		_aplicar_visibilidad_del_lote()
 
 ## Alcance compartido de las dos partes, en metros.
 @export var radio := RADIO_POR_DEFECTO:
@@ -61,10 +63,12 @@ const ALCANCE_MINIMO_DE_RECORTE := 0.15
 	set(valor):
 		intensidad = clampf(valor, 0.0, 1.0)
 		_aplicar_base_a_todos()
-		_aplicar_intensidad_de_manchas()
-		_aplicar_visibilidad_a_todos()
+		_aplicar_material_del_lote()
+		_aplicar_visibilidad_del_lote()
 
 var _bloques: Dictionary[int, Dictionary] = {}
+var _lote: MultiMeshInstance3D
+var _total_visibles := 0
 
 
 func _ready() -> void:
@@ -73,23 +77,23 @@ func _ready() -> void:
 
 ## Borra todos los bloques de manchas armados para la disposición anterior.
 func limpiar() -> void:
-	for datos: Dictionary in _bloques.values():
-		var sombras: MultiMeshInstance3D = datos["sombras"]
-		if is_instance_valid(sombras):
-			if sombras.get_parent() == self:
-				remove_child(sombras)
-			sombras.queue_free()
+	if is_instance_valid(_lote):
+		if _lote.get_parent() == self:
+			remove_child(_lote)
+		_lote.queue_free()
+	_lote = null
+	_total_visibles = 0
 	_bloques.clear()
 
 
-## Arma la base oscurecida y el `MultiMesh` de manchas para un producto de la góndola.
+## Arma la base oscurecida y agrega las manchas de un producto al lote compartido.
 func preparar_bloque(
 	id: int,
-	nombre: String,
 	malla_del_modelo: Mesh,
 	materiales_del_bloque: Array[ShaderMaterial],
 	derecho: Basis,
-	bloque: PackedFloat32Array
+	bloque: PackedFloat32Array,
+	subir_al_lote: bool = true
 ) -> void:
 	var apoyo := _medir_apoyo_local(malla_del_modelo, derecho)
 	var copias := DisposicionDeLaGondola.copias(bloque)
@@ -105,30 +109,31 @@ func preparar_bloque(
 		var medido := _pose_y_recorte(copia, apoyo, inversa, espacio, consulta, alcance_recorte)
 		poses.append(medido[0] as Transform3D)
 		recortes.append(medido[1] as Color)
-	var sombras := _crear_lote_de_sombras(
-		nombre, apoyo["huella"] as Vector2, apoyo["esquinas"] as float, copias
-	)
+	_asegurar_lote()
 	var datos := {
 		"materiales": materiales_del_bloque.duplicate(),
 		"eje": apoyo["eje"] as Vector3,
 		"base": apoyo["base"] as float,
 		"huella": apoyo["huella"] as Vector2,
+		"esquinas": apoyo["esquinas"] as float,
 		"poses": poses,
 		"recortes": recortes,
 		"buffer_completo": PackedFloat32Array(),
-		"sombras": sombras,
+		"buffer_visible": PackedFloat32Array(),
 		"orden": [],
 		"ocupados": 0,
+		"inicio": 0,
 	}
 	_bloques[id] = datos
 	_rearmar_buffer(datos)
 	_aplicar_base(datos)
-	_aplicar_material_de_sombra(datos)
+	_aplicar_material_del_lote()
 	if copias > 0:
-		var orden_inicial: Array[int] = []
-		for indice in copias:
-			orden_inicial.append(indice)
-		sincronizar(id, orden_inicial, copias)
+		datos["orden"] = range(copias)
+		datos["ocupados"] = copias
+		datos["buffer_visible"] = datos["buffer_completo"]
+	if subir_al_lote:
+		_subir_lote()
 
 
 ## Suma materiales de otra malla del mismo producto (por ejemplo `VencidosDeCindolor`) para que
@@ -147,44 +152,43 @@ func agregar_materiales(id: int, malla: Mesh) -> void:
 
 ## Reordena las manchas del bloque en el mismo orden que `ReposicionManual._mostrar_lo_puesto`:
 ## los `cantidad_ocupados` primeros lugares (sanos y vencidos) quedan visibles; los huecos, fuera.
-func sincronizar(id: int, orden: Array, cantidad_ocupados: int) -> void:
+func sincronizar(id: int, orden: Array, cantidad_ocupados: int, subir_al_lote: bool = true) -> void:
 	if not _bloques.has(id):
 		return
 	var datos: Dictionary = _bloques[id]
 	datos["orden"] = orden.duplicate()
 	datos["ocupados"] = cantidad_ocupados
-	var sombras: MultiMeshInstance3D = datos["sombras"]
-	var completo: PackedFloat32Array = datos["buffer_completo"]
-	if completo.is_empty():
-		sombras.multimesh.visible_instance_count = 0
-		sombras.visible = false
-		return
-	var compacto := PackedFloat32Array()
-	compacto.resize(orden.size() * FLOTANTES_POR_MANCHA)
-	var destino := 0
-	for puesto: int in orden:
-		var desde := puesto * FLOTANTES_POR_MANCHA
-		for paso in FLOTANTES_POR_MANCHA:
-			compacto[destino + paso] = completo[desde + paso]
-		destino += FLOTANTES_POR_MANCHA
-	if compacto.size() == completo.size():
-		sombras.multimesh.buffer = compacto
-	sombras.multimesh.visible_instance_count = cantidad_ocupados
-	_aplicar_visibilidad(datos)
+	_compactar(datos)
+	if subir_al_lote:
+		_subir_lote()
 
 
-## El `MultiMeshInstance3D` de manchas de un producto, o `null` si no existe.
+## Sube al `MultiMesh` compartido todos los bloques preparados o sincronizados sin subida inmediata.
+func subir() -> void:
+	_subir_lote()
+
+
+## El `MultiMeshInstance3D` compartido que dibuja las manchas, o `null` si el bloque no existe.
 func sombras_de(id: int) -> MultiMeshInstance3D:
 	if not _bloques.has(id):
 		return null
-	return _bloques[id]["sombras"] as MultiMeshInstance3D
+	return _lote
 
 
-func _crear_lote_de_sombras(
-	nombre: String, huella: Vector2, esquinas: float, copias: int
-) -> MultiMeshInstance3D:
+## `(inicio, cantidad)` de las instancias visibles de un producto dentro del lote compartido.
+func rango_de(id: int) -> Vector2i:
+	if not _bloques.has(id):
+		return Vector2i.ZERO
+	var datos: Dictionary = _bloques[id]
+	var cantidad := (datos["buffer_visible"] as PackedFloat32Array).size() / FLOTANTES_POR_MANCHA
+	return Vector2i(datos["inicio"] as int, cantidad)
+
+
+func _asegurar_lote() -> void:
+	if is_instance_valid(_lote):
+		return
 	var lote := MultiMeshInstance3D.new()
-	lote.name = "SombrasDe" + nombre
+	lote.name = "SombrasDeLaGondola"
 	lote.physics_interpolation_mode = Node.PHYSICS_INTERPOLATION_MODE_OFF
 	lote.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 	lote.gi_mode = GeometryInstance3D.GI_MODE_DISABLED
@@ -192,24 +196,65 @@ func _crear_lote_de_sombras(
 	var material := ShaderMaterial.new()
 	material.shader = OclusionDeContacto.SOMBRA
 	material.render_priority = PRIORIDAD_DE_LA_MANCHA
-	material.set_shader_parameter(&"huella", huella)
-	material.set_shader_parameter(&"esquinas", esquinas)
+	material.set_shader_parameter(&"parametros_por_instancia", true)
 	material.set_shader_parameter(&"recorte_por_instancia", true)
 	lote.material_override = material
 	var mm := MultiMesh.new()
 	mm.transform_format = MultiMesh.TRANSFORM_3D
 	mm.use_custom_data = true
 	mm.mesh = OclusionDeContacto.plano()
-	mm.instance_count = copias
+	mm.instance_count = 0
 	mm.visible_instance_count = 0
 	lote.multimesh = mm
 	lote.visible = false
 	add_child(lote)
-	return lote
+	_lote = lote
+
+
+func _compactar(datos: Dictionary) -> void:
+	var orden: Array = datos["orden"]
+	var ocupados: int = datos["ocupados"]
+	var completo: PackedFloat32Array = datos["buffer_completo"]
+	var visibles := PackedFloat32Array()
+	if not completo.is_empty() and ocupados > 0:
+		var contar := mini(ocupados, orden.size())
+		for indice in contar:
+			var puesto: int = orden[indice]
+			var desde := puesto * FLOTANTES_POR_MANCHA
+			visibles.append_array(completo.slice(desde, desde + FLOTANTES_POR_MANCHA))
+	datos["buffer_visible"] = visibles
+
+
+func _subir_lote() -> void:
+	if not is_instance_valid(_lote):
+		return
+	var capacidad := 0
+	var visibles := 0
+	for datos: Dictionary in _bloques.values():
+		capacidad += (datos["poses"] as Array).size()
+		datos["inicio"] = visibles
+		visibles += (datos["buffer_visible"] as PackedFloat32Array).size() / FLOTANTES_POR_MANCHA
+	_total_visibles = visibles
+	var mm := _lote.multimesh
+	if capacidad == 0:
+		mm.instance_count = 0
+		mm.visible_instance_count = 0
+		_aplicar_visibilidad_del_lote()
+		return
+	if mm.instance_count != capacidad:
+		mm.instance_count = capacidad
+	var salida := PackedFloat32Array()
+	for datos: Dictionary in _bloques.values():
+		salida.append_array(datos["buffer_visible"] as PackedFloat32Array)
+	salida.resize(capacidad * FLOTANTES_POR_MANCHA)
+	mm.buffer = salida
+	mm.visible_instance_count = visibles
+	_aplicar_visibilidad_del_lote()
 
 
 func _rearmar_buffer(datos: Dictionary) -> void:
 	var huella: Vector2 = datos["huella"]
+	var esquinas: float = datos["esquinas"]
 	var tamano := huella * 2.0 + Vector2.ONE * (radio * 2.0)
 	var poses: Array = datos["poses"]
 	var recortes: Array = datos["recortes"]
@@ -218,8 +263,11 @@ func _rearmar_buffer(datos: Dictionary) -> void:
 	var destino := 0
 	for indice in poses.size():
 		var base_pose: Transform3D = poses[indice]
+		# El plano vive en `y = 0` y no usa normales: el largo de `basis.y` (`1 + esquinas`)
+		# transporta la redondez sin habilitar `use_colors` ni depender de `COLOR` en WebGL2.
 		var escalada := Transform3D(
-			base_pose.basis.scaled_local(Vector3(tamano.x, 1.0, tamano.y)), base_pose.origin
+			base_pose.basis.scaled_local(Vector3(tamano.x, 1.0 + esquinas, tamano.y)),
+			base_pose.origin
 		)
 		var b := escalada.basis
 		var o := escalada.origin
@@ -261,41 +309,26 @@ func _aplicar_base(datos: Dictionary) -> void:
 		material.set_shader_parameter(OclusionDeContacto.PARAMETRO_DE_LA_MALLA, valor)
 
 
-func _aplicar_material_de_sombra(datos: Dictionary) -> void:
-	var sombras: MultiMeshInstance3D = datos["sombras"]
-	var material := sombras.material_override as ShaderMaterial
-	var huella: Vector2 = datos["huella"]
-	var tamano := huella * 2.0 + Vector2.ONE * (radio * 2.0)
-	material.set_shader_parameter(&"tamano", tamano)
+func _aplicar_material_del_lote() -> void:
+	if not is_instance_valid(_lote):
+		return
+	var material := _lote.material_override as ShaderMaterial
 	material.set_shader_parameter(&"suavidad", radio)
 	material.set_shader_parameter(&"intensidad", intensidad * OclusionDeContacto.OPACIDAD_MAXIMA)
 
 
-func _aplicar_intensidad_de_manchas() -> void:
-	var opacidad := intensidad * OclusionDeContacto.OPACIDAD_MAXIMA
-	for datos: Dictionary in _bloques.values():
-		var sombras: MultiMeshInstance3D = datos["sombras"]
-		(sombras.material_override as ShaderMaterial).set_shader_parameter(&"intensidad", opacidad)
-
-
 func _actualizar_tamano_de_manchas() -> void:
-	for id: int in _bloques:
-		var datos: Dictionary = _bloques[id]
-		_aplicar_material_de_sombra(datos)
-		_rearmar_buffer(datos)
-		var orden: Array = datos["orden"]
-		if not orden.is_empty():
-			sincronizar(id, orden, datos["ocupados"] as int)
-
-
-func _aplicar_visibilidad_a_todos() -> void:
+	_aplicar_material_del_lote()
 	for datos: Dictionary in _bloques.values():
-		_aplicar_visibilidad(datos)
+		_rearmar_buffer(datos)
+		_compactar(datos)
+	_subir_lote()
 
 
-func _aplicar_visibilidad(datos: Dictionary) -> void:
-	var sombras: MultiMeshInstance3D = datos["sombras"]
-	sombras.visible = manchas_activas and intensidad > 0.0 and (datos["ocupados"] as int) > 0
+func _aplicar_visibilidad_del_lote() -> void:
+	if not is_instance_valid(_lote):
+		return
+	_lote.visible = manchas_activas and intensidad > 0.0 and _total_visibles > 0
 
 
 ## Mide la huella de apoyo de una malla en su espacio local usando la misma banda de apoyo que

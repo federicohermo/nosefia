@@ -221,6 +221,10 @@ PUBLICADOS: tuple[str, ...] = ("index.html", "index.js", "index.wasm", "index.pc
 #: `application/octet-stream` la página carga igual y el juego no arranca nunca.
 TIPO_DEL_WASM = "application/wasm"
 
+#: Los binarios que el despliegue precomprime en `.br`. Si Vercel deja de mandar
+#: `Content-Encoding: br`, el navegador recibe los bytes Brotli como si fueran crudos.
+COMPRIMIDOS_BROTLI: tuple[str, ...] = ("index.wasm", "index.pck")
+
 
 @dataclass
 class Respuesta:
@@ -289,5 +293,11 @@ def problemas_de_la_publicacion(url: str, pedir: Callable[[str], Respuesta]) -> 
             problemas.append(
                 f"`{archivo}` se sirve como `{respuesta.header('content-type') or 'nada'}` y no "
                 f"como `{TIPO_DEL_WASM}`: el navegador no lo compila en streaming."
+            )
+        if archivo in COMPRIMIDOS_BROTLI and respuesta.header("content-encoding").lower() != "br":
+            problemas.append(
+                f"`{archivo}` no trae `content-encoding: br` "
+                f"(trajo `{respuesta.header('content-encoding') or 'nada'}`): "
+                "el navegador recibiría el binario precomprimido sin descomprimir."
             )
     return problemas

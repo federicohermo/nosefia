@@ -36,7 +36,10 @@ uniform int cantidad_cajas = 0;
 // `(centro_x, centro_z, mitad_x, mitad_z)` en metros respecto del centro del plano.
 uniform vec4 cajas[8];
 // Si es cierto, cada instancia del `MultiMesh` define su propia mancha rectangular:
-// `INSTANCE_CUSTOM` trae `(suavidad, esquinas, intensidad, 0)` y el tamaño sale de `MODEL_MATRIX`.
+// el tamaño sale de `MODEL_MATRIX`. Sin `recorte_por_instancia`, `INSTANCE_CUSTOM` trae
+// `(suavidad, esquinas, intensidad, 0)`. Con `recorte_por_instancia`, `INSTANCE_CUSTOM` trae el
+// recorte `(min_x, min_z, max_x, max_z)`, `length(MODEL_MATRIX[1].xyz) - 1.0` trae `esquinas`
+// (el plano vive en `y = 0`), y `suavidad`/`intensidad` salen de los uniformes compartidos.
 uniform bool parametros_por_instancia = false;
 
 varying vec2 plano;
@@ -50,10 +53,15 @@ void vertex() {
 		plano = VERTEX.xz * tamano_inst;
 		en_el_apoyo = vec3(0.0);
 		recorte_instancia = INSTANCE_CUSTOM;
+		float suav_inst = recorte_por_instancia ? suavidad : INSTANCE_CUSTOM.x;
+		float esq_inst = recorte_por_instancia
+			? clamp(length(MODEL_MATRIX[1].xyz) - 1.0, 0.0, 1.0)
+			: INSTANCE_CUSTOM.y;
+		float int_inst = recorte_por_instancia ? intensidad : INSTANCE_CUSTOM.z;
 		datos_instancia = vec4(
-			max(vec2(0.001), 0.5 * tamano_inst - vec2(INSTANCE_CUSTOM.x)),
-			INSTANCE_CUSTOM.y,
-			INSTANCE_CUSTOM.z
+			max(vec2(0.001), 0.5 * tamano_inst - vec2(suav_inst)),
+			esq_inst,
+			int_inst
 		);
 	} else {
 		plano = VERTEX.xz * tamano;
@@ -80,9 +88,16 @@ void fragment() {
 		vec2 huella_inst = datos_instancia.xy;
 		float radio_inst = datos_instancia.z * min(huella_inst.x, huella_inst.y);
 		float dist_inst = distancia_al_rectangulo(plano, huella_inst, radio_inst);
-		float borde_inst = 1.0 - smoothstep(0.0, recorte_instancia.x, dist_inst);
+		float suav_inst = recorte_por_instancia ? suavidad : recorte_instancia.x;
+		float borde_inst = 1.0 - smoothstep(0.0, suav_inst, dist_inst);
+		float dentro_inst = 1.0;
+		if (recorte_por_instancia) {
+			vec2 desde = smoothstep(recorte_instancia.xy, recorte_instancia.xy + 0.01, plano);
+			vec2 hasta = 1.0 - smoothstep(recorte_instancia.zw - 0.01, recorte_instancia.zw, plano);
+			dentro_inst = desde.x * desde.y * hasta.x * hasta.y;
+		}
 		ALBEDO = vec3(0.0);
-		ALPHA = datos_instancia.w * borde_inst;
+		ALPHA = datos_instancia.w * borde_inst * dentro_inst;
 	} else {
 		float distancia = 0.0;
 		if (usar_silueta) {

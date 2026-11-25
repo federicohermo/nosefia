@@ -301,6 +301,55 @@ class CacheImportacionesTests(unittest.TestCase):
         self.assertEqual(datos["restauracion"], "ninguna")
         self.assertFalse((self.raiz / ".godot/imported").exists())
 
+    def test_restauracion_parcial_purga_imports_modificados_y_conserva_los_iguales(self):
+        import hashlib
+        h_a = hashlib.md5(b"res://assets/a.png").hexdigest()
+        h_b = hashlib.md5(b"res://assets/b.png").hexdigest()
+        self.escribir("assets/a.png", "img-a")
+        self.escribir("assets/b.png", "img-b")
+        self.escribir("assets/a.png.import", f'dest_files=["res://.godot/imported/a.png-{h_a}.ctex"]\nprocess/size_limit=0\n')
+        self.escribir("assets/b.png.import", f'dest_files=["res://.godot/imported/b.png-{h_b}.ctex"]\nprocess/size_limit=0\n')
+        self.escribir(f".godot/imported/a.png-{h_a}.ctex", "ctex-a")
+        self.escribir(f".godot/imported/a.png-{h_a}.md5", "md5-a")
+        self.escribir(f".godot/imported/b.png-{h_b}.ctex", "ctex-b-viejo")
+        self.escribir(f".godot/imported/b.png-{h_b}.md5", "md5-b-viejo")
+        cache.sellar_importaciones(self.raiz)
+
+        self.escribir("assets/b.png.import", f'dest_files=["res://.godot/imported/b.png-{h_b}.ctex"]\nprocess/size_limit=724\n')
+        eliminados = cache.preparar_verificacion(self.raiz, True, parcial=True)
+
+        self.assertTrue((self.raiz / f".godot/imported/a.png-{h_a}.ctex").exists())
+        self.assertTrue((self.raiz / f".godot/imported/a.png-{h_a}.md5").exists())
+        self.assertFalse((self.raiz / f".godot/imported/b.png-{h_b}.ctex").exists())
+        self.assertFalse((self.raiz / f".godot/imported/b.png-{h_b}.md5").exists())
+        self.assertEqual(len(eliminados), 2)
+
+    def test_restauracion_parcial_purga_variantes_ctex_y_s3tc_al_cambiar_compresion(self):
+        import hashlib
+        h = hashlib.md5(b"res://assets/router.png").hexdigest()
+        self.escribir("assets/router.png", "img-router")
+        self.escribir("assets/router.png.import", f'dest_files=["res://.godot/imported/router.png-{h}.ctex"]\ncompress/mode=0\n')
+        self.escribir(f".godot/imported/router.png-{h}.ctex", "ctex-viejo")
+        self.escribir(f".godot/imported/router.png-{h}.md5", "md5-viejo")
+        cache.sellar_importaciones(self.raiz)
+
+        self.escribir("assets/router.png.import", f'dest_files=["res://.godot/imported/router.png-{h}.s3tc.ctex"]\ncompress/mode=2\n')
+        cache.preparar_verificacion(self.raiz, True, parcial=True)
+
+        self.assertFalse((self.raiz / f".godot/imported/router.png-{h}.ctex").exists())
+        self.assertFalse((self.raiz / f".godot/imported/router.png-{h}.md5").exists())
+
+    def test_restauracion_parcial_sin_manifiesto_purga_salidas_de_imports(self):
+        import hashlib
+        h = hashlib.md5(b"res://assets/sprite.png").hexdigest()
+        self.escribir("assets/sprite.png", "img")
+        self.escribir("assets/sprite.png.import", f'dest_files=["res://.godot/imported/sprite.png-{h}.ctex"]\nprocess/size_limit=724\n')
+        self.escribir(f".godot/imported/sprite.png-{h}.ctex", "ctex-sin-manifiesto")
+        self.escribir(f".godot/imported/sprite.png-{h}.md5", "md5-sin-manifiesto")
+        cache.preparar_verificacion(self.raiz, True, parcial=True)
+        self.assertFalse((self.raiz / f".godot/imported/sprite.png-{h}.ctex").exists())
+        self.assertFalse((self.raiz / f".godot/imported/sprite.png-{h}.md5").exists())
+
 
 class CheckoutActualTests(unittest.TestCase):
     def test_recursos_actuales_son_elegibles_y_clase_nueva_conserva_clave(self):

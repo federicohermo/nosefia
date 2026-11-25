@@ -76,9 +76,13 @@ vec3 ondas_y_gradiente(vec2 p) {
 }
 
 // La altura sin recortar del agua en un punto de la malla quieta, en metros locales.
-float altura_libre(vec2 punto) {
-	return (dot(inclinacion, punto * borde)
+float altura_en_escala(vec2 punto, float escala) {
+	return (dot(inclinacion, punto * escala)
 		+ ondas_en(punto / radio_del_disco) * relieve_de_las_ondas) * nivel - descenso;
+}
+
+float altura_libre(vec2 punto) {
+	return altura_en_escala(punto, borde);
 }
 
 // La normal analítica por píxel, más la altura libre y la agitación calculadas en la misma pasada.

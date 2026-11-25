@@ -123,6 +123,7 @@ jobs:
           set -euo pipefail
           mkdir -p reports
           git ls-files -z 'assets/models/*.res' | xargs -0 -r sha256sum > reports/cache-recursos.sha256
+          python .github/scripts/cache_importaciones.py sellar
 
       - name: Guardar importaciones para próximas revisiones
         if: >-

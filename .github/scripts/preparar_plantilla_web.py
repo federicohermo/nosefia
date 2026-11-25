@@ -33,17 +33,18 @@ ARCHIVOS = {
 }
 # Lo que el juego no usa se apaga: compila menos y el WASM que baja el navegador pesa menos.
 # El servidor de texto simple alcanza para el español y saca ICU, que es lo más pesado.
-# La navegación 3D queda: sin ella, el motor saca los monitores que nombra el addon del editor.
+# La navegación 3D también se apaga: el addon consulta sus monitores sólo si el motor los expone.
 # Brotli queda: la fuente por defecto del motor viene en WOFF2, y sin él el HUD sale en cuadritos.
 OPCIONES = [
     "platform=web", "target=template_release", "threads=yes", "optimize=size", "lto=thin",
     "module_text_server_adv_enabled=no", "module_text_server_fb_enabled=yes",
-    "disable_physics_2d=yes", "disable_navigation_2d=yes", "disable_xr=yes", "minizip=no",
+    "disable_physics_2d=yes", "disable_navigation_2d=yes", "disable_navigation_3d=yes",
+    "disable_xr=yes", "minizip=no",
     *(f"module_{modulo}_enabled=no" for modulo in (
         "astcenc", "basis_universal", "bmp", "csg", "dds", "enet", "etcpak", "fbx", "gltf",
         "godot_physics_2d", "godot_physics_3d", "gridmap", "hdr", "interactive_music", "jpg",
         "jsonrpc", "ktx", "meshoptimizer", "mobile_vr", "mp3", "msdfgen", "multiplayer",
-        "navigation_2d", "noise", "regex", "theora", "tga", "tinyexr", "upnp",
+        "navigation_2d", "navigation_3d", "noise", "regex", "theora", "tga", "tinyexr", "upnp",
         "vhacd", "visual_shader", "webrtc", "websocket", "webxr", "zip",
     )),
 ]

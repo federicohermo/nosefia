@@ -22,14 +22,21 @@ func angulo() -> float:
 
 
 func angulo_siguiente(segundos: float) -> float:
-	var destino := ANGULO_ABIERTA if _abierta else 0.0
-	return move_toward(_angulo, destino, VELOCIDAD_DEL_GIRO * maxf(segundos, 0.0))
+	return move_toward(_angulo, _destino(), VELOCIDAD_DEL_GIRO * maxf(segundos, 0.0))
 
 
 func avanzar(segundos: float, paso_libre := true) -> float:
 	if paso_libre:
 		_angulo = angulo_siguiente(segundos)
 	return _angulo
+
+
+func en_destino() -> bool:
+	return is_equal_approx(_angulo, _destino())
+
+
+func _destino() -> float:
+	return ANGULO_ABIERTA if _abierta else 0.0
 
 
 func recibe_objetos() -> bool:

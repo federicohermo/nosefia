@@ -76,7 +76,7 @@ comercial. La incorporación al build local no acredita una licencia comercial.
 | `linea_detalle.svg` | Figma, `3:912` / `3:446` | Separadores del detalle |
 | `solapa.svg` | Figma, `3:913` / `3:448` | Solapa sobre el separador |
 | `barra_marco.png`, `barra_relleno.png`, `barra_control.png` | Dibujo pixelado original del proyecto, creado el 2026-10-14 a partir de la barra de carga | Barras de Configuraciones: el marco con la parte vacía, el relleno y el control, que copia los botones − y + |
-| `puntos_de_carga.svg` | Figma, las elipses del frame «UI INICIO» (`105:97`) | Puntos del marco de la pantalla de carga, sobre el lienzo de 1920 × 1080; las líneas son `cabecera.svg` |
+| `puntos_de_carga_izquierda.svg`, `puntos_de_carga_derecha.svg` | Figma, las elipses del frame «UI INICIO» (`105:97`) | Puntos del marco de la pantalla de carga recortados a cada grupo; las líneas son `cabecera.svg` |
 | `computadora.svg` | Figma, instancia `112:411` | Ícono de la opción Registro, en la navegación derecha |
 | `registro.svg` | Figma, componente `3:983` | Ícono de la opción Notas, en la navegación derecha |
 | `<producto>.png`, una por producto del catálogo | Mallas actuales de `assets/models/producto_*.res` | Filas de la planilla de registro |

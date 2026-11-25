@@ -43,6 +43,16 @@ func fisica() -> bool:
 	return _agenda != null
 
 
+## Los personajes distintos que llegan en esta jornada, sin `NINGUNO`.
+func personajes() -> Array[DialogosDeCompradores.Personaje]:
+	var distintos: Array[DialogosDeCompradores.Personaje] = []
+	for comprador in _compradores:
+		var personaje := comprador.personaje as DialogosDeCompradores.Personaje
+		if personaje != DialogosDeCompradores.Personaje.NINGUNO and not distintos.has(personaje):
+			distintos.append(personaje)
+	return distintos
+
+
 func _init(compradores: Array[Comprador], inventario: Inventario) -> void:
 	_compradores = compradores
 	_inventario = inventario

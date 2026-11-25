@@ -220,13 +220,21 @@ func test_una_unidad_de_producto_suelta_toma_los_valores_de_la_gondola_y_los_dem
 	for ruta: String in [
 		"res://src/escenas/objetos/caja_de_productos.tscn",
 		"res://src/escenas/objetos/bolsa_de_basura.tscn",
-		"res://src/escenas/objetos/llave.tscn",
+		"res://src/escenas/objetos/documento_impreso.tscn",
 	]:
 		var otro: Node3D = auto_free((load(ruta) as PackedScene).instantiate())
 		add_child(otro)
 		var oclusion_otro := _oclusion_de(otro)
 		assert_float(oclusion_otro.radio).is_equal(Oclusion.RADIO_POR_DEFECTO)
 		assert_float(oclusion_otro.intensidad).is_equal(Oclusion.INTENSIDAD_POR_DEFECTO)
+
+	var llave: ObjetoAgarrable = auto_free(
+		(load("res://src/escenas/objetos/llave.tscn") as PackedScene).instantiate()
+	)
+	add_child(llave)
+	var oclusion_llave := _oclusion_de(llave)
+	assert_float(oclusion_llave.radio).is_equal(llave.radio_de_oclusion)
+	assert_float(oclusion_llave.intensidad).is_equal(llave.intensidad_de_oclusion)
 
 
 func _esquinas_de_mancha(objeto: Node) -> float:

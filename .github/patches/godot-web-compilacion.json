@@ -6,7 +6,7 @@
   "emscripten": "4.0.11",
   "emsdk_zip_sha256": "1e0e53bb21fd9308079991eb222efa6216ca8fdb53f742f9c98b6156c13e5ac4",
   "scons": "4.9.1",
-  "opciones": ["platform=web", "target=template_release", "threads=yes", "optimize=size", "lto=thin", "module_text_server_adv_enabled=no", "module_text_server_fb_enabled=yes", "disable_physics_2d=yes", "disable_navigation_2d=yes", "disable_xr=yes", "minizip=no", "module_astcenc_enabled=no", "module_basis_universal_enabled=no", "module_bmp_enabled=no", "module_csg_enabled=no", "module_dds_enabled=no", "module_enet_enabled=no", "module_etcpak_enabled=no", "module_fbx_enabled=no", "module_gltf_enabled=no", "module_godot_physics_2d_enabled=no", "module_godot_physics_3d_enabled=no", "module_gridmap_enabled=no", "module_hdr_enabled=no", "module_interactive_music_enabled=no", "module_jpg_enabled=no", "module_jsonrpc_enabled=no", "module_ktx_enabled=no", "module_meshoptimizer_enabled=no", "module_mobile_vr_enabled=no", "module_mp3_enabled=no", "module_msdfgen_enabled=no", "module_multiplayer_enabled=no", "module_navigation_2d_enabled=no", "module_noise_enabled=no", "module_regex_enabled=no", "module_theora_enabled=no", "module_tga_enabled=no", "module_tinyexr_enabled=no", "module_upnp_enabled=no", "module_vhacd_enabled=no", "module_visual_shader_enabled=no", "module_webrtc_enabled=no", "module_websocket_enabled=no", "module_webxr_enabled=no", "module_zip_enabled=no"],
+  "opciones": ["platform=web", "target=template_release", "threads=yes", "optimize=size", "lto=thin", "module_text_server_adv_enabled=no", "module_text_server_fb_enabled=yes", "disable_physics_2d=yes", "disable_navigation_2d=yes", "disable_navigation_3d=yes", "disable_xr=yes", "minizip=no", "module_astcenc_enabled=no", "module_basis_universal_enabled=no", "module_bmp_enabled=no", "module_csg_enabled=no", "module_dds_enabled=no", "module_enet_enabled=no", "module_etcpak_enabled=no", "module_fbx_enabled=no", "module_gltf_enabled=no", "module_godot_physics_2d_enabled=no", "module_godot_physics_3d_enabled=no", "module_gridmap_enabled=no", "module_hdr_enabled=no", "module_interactive_music_enabled=no", "module_jpg_enabled=no", "module_jsonrpc_enabled=no", "module_ktx_enabled=no", "module_meshoptimizer_enabled=no", "module_mobile_vr_enabled=no", "module_mp3_enabled=no", "module_msdfgen_enabled=no", "module_multiplayer_enabled=no", "module_navigation_2d_enabled=no", "module_navigation_3d_enabled=no", "module_noise_enabled=no", "module_regex_enabled=no", "module_theora_enabled=no", "module_tga_enabled=no", "module_tinyexr_enabled=no", "module_upnp_enabled=no", "module_vhacd_enabled=no", "module_visual_shader_enabled=no", "module_webrtc_enabled=no", "module_websocket_enabled=no", "module_webxr_enabled=no", "module_zip_enabled=no"],
   "archivos": {
     "drivers/gles3/rasterizer_gles3.cpp": {
       "original_sha256": "7906073ee78a23816dfa0a0a21ec5879980f10f4eb5119ffa39051aba957311e",
@@ -42,10 +42,10 @@
     }
   },
   "plantilla_publicada": {
-    "url": "https://github.com/federicohermo/nosefia/releases/download/godot-web-1/web_release.zip",
-    "receta_sha256": "1cf2f80a85d23feb6bfc1b62ba639d22c80167b67d91da7961dbda2a19f0d06b",
-    "zip_sha256": "e086f30c48bd3b871d718dce22ea64fd6753a45d4a790cf757b7fc6dfcbfcb03",
-    "wasm_sha256": "e3c87f3bc42eb3a24266c8ca5b0b46fab2817b0cef4870b395203f523041bab5"
+    "url": "https://github.com/federicohermo/nosefia/releases/download/godot-web-2/web_release.zip",
+    "receta_sha256": "7a3716487b939eef40abd74b29d9a5ca469b6ac445851dc3c5a5c9cf70b6dcb3",
+    "zip_sha256": "74a4dc8d1a7f347bf0ba5e53ffb4b2e70f41caadc2392e1fadee5faeb6dfdabf",
+    "wasm_sha256": "5c87e70320604e30ef0deff7f8c74dc824d5ed728b6d3dda5224a571cf043444"
   },
   "uso": "Aplicar con git apply --check antes de compilar la plantilla web; comprobar el commit y las huellas de cada archivo, antes y después. Todo el cambio queda bajo WEB_ENABLED: conserva el camino nativo.",
   "estado": "Plantilla release validada localmente e integrada al preset Web y al flujo de despliegue. El editor y la plantilla debug siguen usando el motor oficial."

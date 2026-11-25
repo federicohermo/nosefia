@@ -85,7 +85,7 @@ var _vistas: Array[Transform3D] = []
 ## un `SubViewport`, como el agua del baño, que no se actualiza mientras la escena está detenida.
 var _capa_2d: CanvasLayer
 ## Cambia el local entre la luz de siempre y la del corte: el `bool` dice si queda a oscuras. La
-## oscuridad apaga luces y niebla, y con eso cambia el programa de casi todos los materiales. Sin
+## oscuridad apaga luces, y con eso cambia el programa de casi todos los materiales. Sin
 ## prepararla, los programas se enlazan al cortarse la luz y hasta entonces lo suyo no se dibuja.
 var _oscuridad := Callable()
 var _a_oscuras := false
@@ -129,16 +129,12 @@ func _calentar_la_pasada(escena: Node3D) -> void:
 	_inicio = ahora.call()
 	_dibujar_materiales_2d(escena)
 	_tomar_luces_y_sondas(escena)
-	for reflejo: ReflectionProbe in _reflejos:
-		reflejo.update_mode = ReflectionProbe.UPDATE_ALWAYS
 	if not _reflejos.is_empty():
 		# La sonda debe tener una captura válida para que el renderer active su variante.
-		# Capturar antes de ocultar geometría también evita guardar un salón incompleto.
-		for _cuadro: int in 4:
-			await get_tree().process_frame
-		for reflejo: ReflectionProbe in _reflejos:
-			if is_instance_valid(reflejo):
-				reflejo.update_mode = ReflectionProbe.UPDATE_ONCE
+		# Capturar una por cuadro antes de ocultar geometría evita el pico de 30 caras juntas.
+		await _capturar_reflejos()
+		if not is_inside_tree():
+			return
 	var caja := AABB()
 	for objeto: GeometryInstance3D in escena.find_children("*", "GeometryInstance3D", true, false):
 		# El modelo de referencia queda en el GLB para editarlo, pero tiene un reemplazo en
@@ -974,13 +970,11 @@ func _terminar() -> void:
 	set_process(false)
 	_restaurar_escena()
 	if _solo_de.is_empty() and not _reflejos.is_empty():
-		# La primera captura ocurrió con la geometría oculta durante la carga. Se rehace
-		# con el local restaurado, todavía detrás de la pantalla, sin muestras temporales.
-		for reflejo: ReflectionProbe in _reflejos:
-			if is_instance_valid(reflejo):
-				reflejo.update_mode = ReflectionProbe.UPDATE_ALWAYS
-		await get_tree().process_frame
-		await get_tree().process_frame
+		# La primera captura ocurrió con la geometría oculta durante la carga. Se rehace una
+		# sonda por cuadro con el local restaurado, detrás de la pantalla y sin muestras.
+		await _capturar_reflejos()
+		if not is_inside_tree():
+			return
 		_restaurar_reflejos()
 		while programas_en_cola.call() > 0:
 			await get_tree().process_frame
@@ -1052,6 +1046,18 @@ func _restaurar_escena() -> void:
 	_camara = null
 	if is_instance_valid(_anterior) and _anterior.is_inside_tree():
 		_anterior.make_current()
+
+
+func _capturar_reflejos() -> void:
+	for reflejo: ReflectionProbe in _reflejos.keys():
+		if not is_inside_tree():
+			return
+		if not is_instance_valid(reflejo):
+			continue
+		reflejo.update_mode = ReflectionProbe.UPDATE_ALWAYS
+		await get_tree().process_frame
+		if is_instance_valid(reflejo):
+			reflejo.update_mode = ReflectionProbe.UPDATE_ONCE
 
 
 func _restaurar_reflejos() -> void:

@@ -11,6 +11,7 @@ no es obvia.
 | Los headers | `vercel.json` |
 | La versión del motor | `.godot-version` |
 | La preparación de la plantilla web | [`.github/scripts/preparar_plantilla_web.py`](../../.github/scripts/preparar_plantilla_web.py) |
+| La precompresión Brotli del export | [`.github/scripts/comprimir_export_web.py`](../../.github/scripts/comprimir_export_web.py) |
 | El parche y la receta de compilación | [`.github/patches/godot-web-compilacion.json`](../../.github/patches/godot-web-compilacion.json) |
 | El veredicto del export | `.claude/scripts/verificar_export.py` |
 | El veredicto de la URL | `.claude/scripts/verificar_despliegue.py` |
@@ -144,12 +145,11 @@ El parche hace estas cosas, todas bajo `WEB_ENABLED`:
   baja de 21 s a 14 s.
 - **Un material sin luz no separa variantes por luces ni por lightmaps.** Su código no los usa.
 
-La receta también apaga los módulos del motor que el juego no usa. Son red, navegación 2D,
-física 2D, XR, CSG, glTF y video, y los cargadores de imágenes que sólo usa el importador. La
-navegación 3D queda: el addon del editor nombra sus monitores, y sin ella su script no compila.
-Brotli queda: la fuente por defecto del motor viene en WOFF2. Usa el servidor de texto simple,
-sin ICU. El motor compila menos y el WASM pesa menos. Si el juego empieza a usar uno de esos
-módulos, hay que sacarlo de `OPCIONES` en el preparador.
+La receta también apaga los módulos del motor que el juego no usa. Son red, navegación 2D y 3D,
+física 2D, XR, CSG, glTF y video, y los cargadores de imágenes que sólo usa el importador. Brotli
+queda: la fuente por defecto del motor viene en WOFF2. Usa el servidor de texto simple, sin ICU.
+El motor compila menos y el WASM pesa menos. Si el juego empieza a usar uno de esos módulos, hay
+que sacarlo de `OPCIONES` en el preparador.
 
 `test_plantilla_web.py` falla si el parche agrega una línea fuera de `WEB_ENABLED`.
 
@@ -258,8 +258,8 @@ mkdir -p export/web
 python .claude/scripts/verificar_export.py export/web   # el veredicto NO es el $? de arriba
 python .github/scripts/preparar_plantilla_web.py --verificar-export export/web
 
-cp vercel.json export/web/
-vercel deploy export/web --prod --yes --token "$VERCEL_TOKEN"
+python .github/scripts/comprimir_export_web.py export/web vercel.json
+vercel deploy export/web --prod --yes --archive=tgz --token "$VERCEL_TOKEN"
 
 python .claude/scripts/verificar_despliegue.py https://<proyecto>.vercel.app
 node .github/scripts/humo_en_navegador.mjs https://<proyecto>.vercel.app

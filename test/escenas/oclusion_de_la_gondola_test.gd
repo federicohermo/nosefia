@@ -51,16 +51,20 @@ func _transform_de_mancha(mm: MultiMesh, indice: int) -> Transform3D:
 	)
 
 
+func _esquinas_de_mancha(mm: MultiMesh, indice: int) -> float:
+	return _transform_de_mancha(mm, indice).basis.y.length() - 1.0
+
+
 func _recorte_de_mancha(mm: MultiMesh, indice: int) -> Color:
 	var valores := mm.buffer
 	var inicio := indice * OclusionDeLaGondola.FLOTANTES_POR_MANCHA + 12
 	return Color(valores[inicio], valores[inicio + 1], valores[inicio + 2], valores[inicio + 3])
 
 
-func _posiciones_de_manchas(lote: MultiMeshInstance3D) -> Array[Vector3]:
+func _posiciones_de_manchas(lote: MultiMeshInstance3D, rango: Vector2i) -> Array[Vector3]:
 	var lista: Array[Vector3] = []
 	var mm := lote.multimesh
-	for indice in mm.visible_instance_count:
+	for indice in range(rango.x, rango.x + rango.y):
 		lista.append((lote.global_transform * _transform_de_mancha(mm, indice)).origin)
 	return lista
 
@@ -82,6 +86,9 @@ func test_todos_los_bloques_oscurecen_su_base_y_dejan_mancha_sin_contorno_y_detr
 	var estante: Estante = almacen.get("_repositor").estante()
 	var oclusion := _oclusion_gondola(almacen)
 	assert_object(oclusion).is_not_null()
+	assert_int(oclusion.get_child_count()).is_equal(1)
+	var total_ocupados := 0
+	var lote_compartido: MultiMeshInstance3D = null
 	for producto in Catalogo.todos():
 		var grupo: MultiMeshInstance3D = puesto.get_node("ProductosDe" + producto.nombre)
 		for material in _materiales_del_grupo(grupo):
@@ -101,13 +108,19 @@ func test_todos_los_bloques_oscurecen_su_base_y_dejan_mancha_sin_contorno_y_detr
 			)
 		var sombras: MultiMeshInstance3D = oclusion.sombras_de(producto.id)
 		assert_object(sombras).is_not_null()
+		if lote_compartido == null:
+			lote_compartido = sombras
+		else:
+			assert_object(sombras).is_same(lote_compartido)
 		var ocupados := estante.casilleros_ocupados(producto).size()
-		assert_int(sombras.multimesh.visible_instance_count).is_equal(ocupados)
-		assert_bool(sombras.visible).is_equal(ocupados > 0)
-		assert_bool(sombras.is_in_group(ReglasDeLosObjetos.GRUPO_SIN_CONTORNO)).is_true()
-		var mat_sombra := sombras.material_override as ShaderMaterial
-		assert_object(mat_sombra).is_not_null()
-		assert_int(mat_sombra.render_priority).is_less(0)
+		total_ocupados += ocupados
+		assert_int((oclusion.rango_de(producto.id) as Vector2i).y).is_equal(ocupados)
+	assert_int(lote_compartido.multimesh.visible_instance_count).is_equal(total_ocupados)
+	assert_bool(lote_compartido.visible).is_equal(total_ocupados > 0)
+	assert_bool(lote_compartido.is_in_group(ReglasDeLosObjetos.GRUPO_SIN_CONTORNO)).is_true()
+	var mat_sombra := lote_compartido.material_override as ShaderMaterial
+	assert_object(mat_sombra).is_not_null()
+	assert_int(mat_sombra.render_priority).is_less(0)
 	var vencidos: MultiMeshInstance3D = puesto.get_node("VencidosDeCindolor")
 	for material in _materiales_del_grupo(vencidos):
 		assert_bool(material.get_shader_parameter(OclusionDeContacto.LOCAL_DE_LA_MALLA)).is_true()
@@ -129,8 +142,8 @@ func test_sacar_una_unidad_saca_su_mancha_reponerla_la_devuelve_y_los_huecos_no_
 	var vacios := estante.casilleros_vacios(producto)
 	var ocupados := estante.casilleros_ocupados(producto)
 	assert_int(vacios.size()).is_equal(2)
-	assert_int(sombras.multimesh.visible_instance_count).is_equal(ocupados.size())
-	var visibles_iniciales := _posiciones_de_manchas(sombras)
+	assert_int((oclusion.rango_de(producto.id) as Vector2i).y).is_equal(ocupados.size())
+	var visibles_iniciales := _posiciones_de_manchas(sombras, oclusion.rango_de(producto.id))
 	for hueco: int in vacios:
 		var pie_hueco: Vector3 = puesto.call("_apoyo", producto.id, hueco)
 		assert_bool(_hay_mancha_cerca(visibles_iniciales, pie_hueco)).is_false()
@@ -138,11 +151,25 @@ func test_sacar_una_unidad_saca_su_mancha_reponerla_la_devuelve_y_los_huecos_no_
 	var pie_sacado: Vector3 = puesto.call("_apoyo", producto.id, sacado)
 	assert_bool(_hay_mancha_cerca(visibles_iniciales, pie_sacado)).is_true()
 	puesto.agarrar_de_la_gondola(producto.id, sacado)
-	assert_int(sombras.multimesh.visible_instance_count).is_equal(ocupados.size() - 1)
-	assert_bool(_hay_mancha_cerca(_posiciones_de_manchas(sombras), pie_sacado)).is_false()
+	assert_int((oclusion.rango_de(producto.id) as Vector2i).y).is_equal(ocupados.size() - 1)
+	(
+		assert_bool(
+			_hay_mancha_cerca(
+				_posiciones_de_manchas(sombras, oclusion.rango_de(producto.id)), pie_sacado
+			)
+		)
+		. is_false()
+	)
 	puesto.pedir_colocar(producto.id, sacado)
-	assert_int(sombras.multimesh.visible_instance_count).is_equal(ocupados.size())
-	assert_bool(_hay_mancha_cerca(_posiciones_de_manchas(sombras), pie_sacado)).is_true()
+	assert_int((oclusion.rango_de(producto.id) as Vector2i).y).is_equal(ocupados.size())
+	(
+		assert_bool(
+			_hay_mancha_cerca(
+				_posiciones_de_manchas(sombras, oclusion.rango_de(producto.id)), pie_sacado
+			)
+		)
+		. is_true()
+	)
 
 
 func test_los_vencidos_tienen_mancha_y_sacar_uno_la_quita() -> void:
@@ -155,13 +182,27 @@ func test_los_vencidos_tienen_mancha_y_sacar_uno_la_quita() -> void:
 	assert_array(vencidos).is_not_empty()
 	var sombras: MultiMeshInstance3D = oclusion.sombras_de(cindolor.id)
 	var ocupados_antes := estante.casilleros_ocupados(cindolor).size()
-	assert_int(sombras.multimesh.visible_instance_count).is_equal(ocupados_antes)
+	assert_int((oclusion.rango_de(cindolor.id) as Vector2i).y).is_equal(ocupados_antes)
 	var casillero_vencido: int = vencidos[0]
 	var pie_vencido: Vector3 = puesto.call("_apoyo", cindolor.id, casillero_vencido)
-	assert_bool(_hay_mancha_cerca(_posiciones_de_manchas(sombras), pie_vencido)).is_true()
+	(
+		assert_bool(
+			_hay_mancha_cerca(
+				_posiciones_de_manchas(sombras, oclusion.rango_de(cindolor.id)), pie_vencido
+			)
+		)
+		. is_true()
+	)
 	puesto.agarrar_de_la_gondola(cindolor.id, casillero_vencido)
-	assert_int(sombras.multimesh.visible_instance_count).is_equal(ocupados_antes - 1)
-	assert_bool(_hay_mancha_cerca(_posiciones_de_manchas(sombras), pie_vencido)).is_false()
+	assert_int((oclusion.rango_de(cindolor.id) as Vector2i).y).is_equal(ocupados_antes - 1)
+	(
+		assert_bool(
+			_hay_mancha_cerca(
+				_posiciones_de_manchas(sombras, oclusion.rango_de(cindolor.id)), pie_vencido
+			)
+		)
+		. is_false()
+	)
 
 
 func test_cada_parte_se_prende_y_se_apaga_en_vivo_sin_afectar_a_la_otra() -> void:
@@ -239,13 +280,14 @@ func test_una_unidad_suelta_y_una_acomodada_comparten_forma_y_la_gondola_usa_sus
 	oclusion_suelta.actualizar()
 	assert_bool(oclusion_suelta.sombra.visible).is_true()
 	var mat_suelta := oclusion_suelta.sombra.material_override as ShaderMaterial
-	var mat_gondola := oclusion.sombras_de(id).material_override as ShaderMaterial
-	assert_float(mat_gondola.get_shader_parameter(&"esquinas")).is_equal_approx(
+	var lote := oclusion.sombras_de(id) as MultiMeshInstance3D
+	var mat_gondola := lote.material_override as ShaderMaterial
+	var rango: Vector2i = oclusion.rango_de(id)
+	var t_inst := _transform_de_mancha(lote.multimesh, rango.x)
+	assert_float(_esquinas_de_mancha(lote.multimesh, rango.x)).is_equal_approx(
 		mat_suelta.get_shader_parameter(&"esquinas"), 0.001
 	)
 	var huella_suelta: Vector2 = mat_suelta.get_shader_parameter(&"huella")
-	var huella_gondola: Vector2 = mat_gondola.get_shader_parameter(&"huella")
-	assert_vector(huella_gondola).is_equal_approx(huella_suelta, Vector2.ONE * 0.002)
 	var radio_gondola: float = oclusion.radio
 	var intensidad_gondola: float = oclusion.intensidad
 	assert_float(radio_gondola).is_equal(OclusionDeLaGondola.RADIO_POR_DEFECTO)
@@ -260,9 +302,9 @@ func test_una_unidad_suelta_y_una_acomodada_comparten_forma_y_la_gondola_usa_sus
 	assert_float(mat_suelta.get_shader_parameter(&"intensidad")).is_equal_approx(
 		mat_gondola.get_shader_parameter(&"intensidad"), 0.005
 	)
-	var tamano_esperado: Vector2 = huella_gondola * 2.0 + Vector2.ONE * (radio_gondola * 2.0)
-	var tamano_gondola: Vector2 = mat_gondola.get_shader_parameter(&"tamano")
-	assert_vector(tamano_gondola).is_equal_approx(tamano_esperado, Vector2.ONE * 0.001)
+	var tamano_gondola := Vector2(t_inst.basis.x.length(), t_inst.basis.z.length())
+	var huella_gondola := 0.5 * tamano_gondola - Vector2.ONE * radio_gondola
+	assert_vector(huella_gondola).is_equal_approx(huella_suelta, Vector2.ONE * 0.002)
 
 
 func test_en_una_rampa_inclinada_la_mancha_sigue_la_pendiente_y_se_corta_en_el_borde() -> void:
@@ -298,7 +340,7 @@ func test_en_una_rampa_inclinada_la_mancha_sigue_la_pendiente_y_se_corta_en_el_b
 	var oclusion: Node3D = auto_free(OclusionDeLaGondola.new())
 	add_child(oclusion)
 	var sin_materiales: Array[ShaderMaterial] = []
-	oclusion.preparar_bloque(0, "Rampa", malla_prod, sin_materiales, Basis.IDENTITY, bloque)
+	oclusion.preparar_bloque(0, malla_prod, sin_materiales, Basis.IDENTITY, bloque)
 	oclusion.sincronizar(0, [0], 1)
 	var sombras: MultiMeshInstance3D = oclusion.sombras_de(0)
 	assert_bool(sombras.visible).is_true()
@@ -319,12 +361,14 @@ func test_cambiar_de_jornada_rearma_las_manchas_sin_dejar_nodos_viejos() -> void
 	almacen.call("_al_abrir_la_jornada", ReglasDeLaPartida.PRIMERA_JORNADA_COMPLETA + 1)
 	await get_tree().process_frame
 	var estante: Estante = almacen.get("_repositor").estante()
-	assert_int(oclusion.get_child_count()).is_equal(Catalogo.todos().size())
+	assert_int(oclusion.get_child_count()).is_equal(1)
+	var total := 0
 	for producto in Catalogo.todos():
-		var sombras: MultiMeshInstance3D = oclusion.sombras_de(producto.id)
-		assert_int(sombras.multimesh.visible_instance_count).is_equal(
-			estante.casilleros_ocupados(producto).size()
-		)
+		var ocupados := estante.casilleros_ocupados(producto).size()
+		total += ocupados
+		assert_int((oclusion.rango_de(producto.id) as Vector2i).y).is_equal(ocupados)
+	var lote := oclusion.sombras_de(Catalogo.todos()[0].id) as MultiMeshInstance3D
+	assert_int(lote.multimesh.visible_instance_count).is_equal(total)
 
 
 func test_en_la_gondola_una_lata_deja_una_mancha_mas_redonda_que_una_caja_y_coincide_con_la_suelta(
@@ -334,10 +378,11 @@ func test_en_la_gondola_una_lata_deja_una_mancha_mas_redonda_que_una_caja_y_coin
 	var agarre: Agarre = almacen.get("_agarre")
 	var estante: Estante = almacen.get("_repositor").estante()
 	var oclusion := _oclusion_gondola(almacen)
-	var mat_lata := oclusion.sombras_de(Producto.Id.ARVECOR).material_override as ShaderMaterial
-	var mat_caja := oclusion.sombras_de(Producto.Id.ZUCARACHAS).material_override as ShaderMaterial
-	var esquinas_gondola_lata: float = mat_lata.get_shader_parameter(&"esquinas")
-	var esquinas_gondola_caja: float = mat_caja.get_shader_parameter(&"esquinas")
+	var lote := oclusion.sombras_de(Producto.Id.ARVECOR) as MultiMeshInstance3D
+	var rango_lata: Vector2i = oclusion.rango_de(Producto.Id.ARVECOR)
+	var rango_caja: Vector2i = oclusion.rango_de(Producto.Id.ZUCARACHAS)
+	var esquinas_gondola_lata := _esquinas_de_mancha(lote.multimesh, rango_lata.x)
+	var esquinas_gondola_caja := _esquinas_de_mancha(lote.multimesh, rango_caja.x)
 	assert_float(esquinas_gondola_lata).is_greater(esquinas_gondola_caja)
 	var id := Producto.Id.ARVECOR
 	var casillero: int = estante.casilleros_ocupados(Catalogo.de(id))[0]

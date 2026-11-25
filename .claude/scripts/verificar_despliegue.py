@@ -41,7 +41,7 @@ def pedir(url: str) -> Respuesta:
     `HTTPError` se traduce a un `Respuesta` en vez de subir. Lo que sí sube es no poder
     preguntar —DNS, TLS, la red, el `timeout`—, que es otra cosa y la reporta `main`.
     """
-    peticion = urllib.request.Request(url, method="HEAD")
+    peticion = urllib.request.Request(url, method="HEAD", headers={"Accept-Encoding": "br"})
     try:
         with _SIN_SEGUIR.open(peticion, timeout=ESPERA) as respuesta:
             return Respuesta(respuesta.status, dict(respuesta.headers))
