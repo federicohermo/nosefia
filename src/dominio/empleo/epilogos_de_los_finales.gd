@@ -7,10 +7,10 @@
 class_name EpilogosDeLosFinales
 extends RefCounted
 
-const FONDO_DEL_FINAL_1: Texture2D = preload("res://assets/ui/manada/fondo_epilogo_1.png")
-const FONDO_DEL_FINAL_2: Texture2D = preload("res://assets/ui/manada/fondo_epilogo_2.png")
-const FONDO_DEL_FINAL_4: Texture2D = preload("res://assets/ui/manada/fondo_epilogo_4.png")
-const FONDO_DEL_FINAL_5: Texture2D = preload("res://assets/ui/manada/fondo_epilogo_5.png")
+const RUTA_DEL_FINAL_1 := "res://assets/ui/manada/fondo_epilogo_1.png"
+const RUTA_DEL_FINAL_2 := "res://assets/ui/manada/fondo_epilogo_2.png"
+const RUTA_DEL_FINAL_4 := "res://assets/ui/manada/fondo_epilogo_4.png"
+const RUTA_DEL_FINAL_5 := "res://assets/ui/manada/fondo_epilogo_5.png"
 
 const TEXTOS: Dictionary[FinalConPantalla.Cual, Array] = {
 	FinalConPantalla.Cual.EMPLEADO_ESTRESADO:
@@ -168,11 +168,11 @@ const TEXTOS: Dictionary[FinalConPantalla.Cual, Array] = {
 	],
 }
 
-const FONDOS: Dictionary[FinalConPantalla.Cual, Texture2D] = {
-	FinalConPantalla.Cual.EMPLEADO_ESTRESADO: FONDO_DEL_FINAL_1,
-	FinalConPantalla.Cual.LOCURA_PARANOICA: FONDO_DEL_FINAL_2,
-	FinalConPantalla.Cual.JEFE_SABOTEADOR: FONDO_DEL_FINAL_4,
-	FinalConPantalla.Cual.JEFE_INCOMPETENTE: FONDO_DEL_FINAL_5,
+const RUTAS_DE_FONDOS: Dictionary[FinalConPantalla.Cual, String] = {
+	FinalConPantalla.Cual.EMPLEADO_ESTRESADO: RUTA_DEL_FINAL_1,
+	FinalConPantalla.Cual.LOCURA_PARANOICA: RUTA_DEL_FINAL_2,
+	FinalConPantalla.Cual.JEFE_SABOTEADOR: RUTA_DEL_FINAL_4,
+	FinalConPantalla.Cual.JEFE_INCOMPETENTE: RUTA_DEL_FINAL_5,
 }
 
 
@@ -188,12 +188,20 @@ class Placa:
 		texto = texto_de_la_placa
 
 
+## Carga el fondo de un final recién cuando se pide su epílogo, para no retener en VRAM las cuatro
+## ilustraciones durante toda la partida.
+static func fondo_del_final(final: FinalConPantalla.Cual) -> Texture2D:
+	if not RUTAS_DE_FONDOS.has(final):
+		return null
+	return load(RUTAS_DE_FONDOS[final]) as Texture2D
+
+
 ## Las placas con texto del epílogo de un final, en orden. Vacía si el final no tiene epílogo: el
 ## despido, la partida en curso, o un final al que la ficha todavía no le escribió ninguna placa.
 static func placas_de(final: FinalConPantalla.Cual) -> Array[Placa]:
 	if not TEXTOS.has(final):
 		return []
-	return con_texto(FONDOS[final], TEXTOS[final])
+	return con_texto(fondo_del_final(final), TEXTOS[final])
 
 
 ## Una placa por cada texto no vacío, todas con el mismo fondo.

@@ -9,7 +9,7 @@ signal interaccion_pedida
 
 var atenciones: Ventanilla
 var manos: Manos
-var _imagenes: Dictionary[Texture2D, Image] = {}
+var _mascaras: Dictionary[Texture2D, BitMap] = {}
 
 
 func _ready() -> void:
@@ -28,8 +28,18 @@ func precargar(animaciones: Array) -> void:
 		for animacion: StringName in cuadros.get_animation_names():
 			for indice: int in cuadros.get_frame_count(animacion):
 				var textura := cuadros.get_frame_texture(animacion, indice)
-				if not _imagenes.has(textura):
-					_imagenes[textura] = textura.get_image()
+				if not _mascaras.has(textura):
+					_mascaras[textura] = _mascara_de(textura)
+
+
+func limpiar() -> void:
+	_mascaras.clear()
+
+
+static func _mascara_de(textura: Texture2D) -> BitMap:
+	var mascara := BitMap.new()
+	mascara.create_from_image_alpha(textura.get_image(), 0.0)
+	return mascara
 
 
 func _actualizar_disponibilidad() -> void:
@@ -88,9 +98,9 @@ func admite_foco_en(punto: Vector3, ojo: Vector3) -> bool:
 	var textura := figura_de_foco.sprite_frames.get_frame_texture(
 		figura_de_foco.animation, figura_de_foco.frame
 	)
-	if not _imagenes.has(textura):
-		_imagenes[textura] = textura.get_image()
-	var imagen := _imagenes[textura]
+	if not _mascaras.has(textura):
+		_mascaras[textura] = _mascara_de(textura)
+	var mascara := _mascaras[textura]
 	var local := figura_de_foco.to_local(punto)
 	var pixel := Vector2(local.x, -local.y) / figura_de_foco.pixel_size
 	pixel += textura.get_size() / 2.0 - figura_de_foco.offset
@@ -99,9 +109,9 @@ func admite_foco_en(punto: Vector3, ojo: Vector3) -> bool:
 	if figura_de_foco.flip_v:
 		pixel.y = textura.get_height() - pixel.y - 1.0
 	var celda := Vector2i(pixel.floor())
-	if not Rect2i(Vector2i.ZERO, imagen.get_size()).has_point(celda):
+	if not Rect2i(Vector2i.ZERO, mascara.get_size()).has_point(celda):
 		return false
-	return imagen.get_pixelv(celda).a > 0.0
+	return mascara.get_bitv(celda)
 
 
 func _tapado_por_el_antepecho(ojo: Vector3, punto: Vector3) -> bool:

@@ -16,6 +16,9 @@ const SEGUNDOS_ENTRE_ONDAS_DEL_INODORO := Vector2(6.0, 15.0)
 const FUERZA_DE_LA_GOTA := 0.4
 const FUERZA_DE_LA_ONDA_DEL_INODORO := 0.25
 
+## Resultado compartido de la consulta de extensiones WebGL2 para no crear varios contextos.
+static var _soporta_floats := -1
+
 ## El contorno de cada agua sale del modelo: es el corte de la bacha y de la taza a la altura
 ## del agua, en el plano XZ de su nodo.
 @export var lavatorio: MeshInstance3D
@@ -47,6 +50,14 @@ func _ready() -> void:
 	)
 	if not simula:
 		set_process(false)
+		return
+	_lavatorio.conectar_visibilidad(_actualizar_proceso)
+	_inodoro.conectar_visibilidad(_actualizar_proceso)
+	_actualizar_proceso()
+
+
+func _actualizar_proceso() -> void:
+	set_process(_lavatorio.en_pantalla() or _inodoro.en_pantalla())
 
 
 func _process(delta: float) -> void:
@@ -90,18 +101,27 @@ func _gota_en_el_agua(llegada: Vector3) -> void:
 
 ## En la web, el render target de floats pide una extensión de WebGL2. Sin ella la textura es
 ## de 8 bits, la onda sale rota, y es mejor el agua quieta.
-func _hay_floats() -> bool:
+static func _hay_floats() -> bool:
+	if _soporta_floats >= 0:
+		return _soporta_floats == 1
 	if not OS.has_feature("web"):
+		_soporta_floats = 1
 		return true
-	var extension := "document.createElement('canvas').getContext('webgl2')?.getExtension('%s')"
 	var consulta := (
-		"!!(%s || %s)"
-		% [extension % "EXT_color_buffer_float", extension % "EXT_color_buffer_half_float"]
+		"(() => {"
+		+ " const gl = document.createElement('canvas').getContext('webgl2');"
+		+ " if (!gl) return 0;"
+		+ " const ok = !!(gl.getExtension('EXT_color_buffer_float')"
+		+ " || gl.getExtension('EXT_color_buffer_half_float'));"
+		+ " gl.getExtension('WEBGL_lose_context')?.loseContext();"
+		+ " return ok ? 1 : 0;"
+		+ " })()"
 	)
 	# `JavaScriptBridge.eval` devuelve un booleano como `int`, y compararlo con `true` es un error
 	# que corta la función. Medido el 2026-09-24 en Chrome.
 	var hay: Variant = JavaScriptBridge.eval(consulta)
-	return hay == 1
+	_soporta_floats = 1 if hay == 1 else 0
+	return _soporta_floats == 1
 
 
 class Superficie:
@@ -142,6 +162,13 @@ class Superficie:
 	## El punto de la onda que cae sobre `local`, un punto en el plano de la malla.
 	func uv_de(local: Vector3) -> Vector2:
 		return (Vector2(local.x, local.z) - _desde) / _tamano
+
+	func en_pantalla() -> bool:
+		return _en_pantalla.is_on_screen()
+
+	func conectar_visibilidad(al_cambiar: Callable) -> void:
+		_en_pantalla.screen_entered.connect(al_cambiar)
+		_en_pantalla.screen_exited.connect(al_cambiar)
 
 	func tocar(uv: Vector2, fuerza: float) -> void:
 		_gota = Vector3(uv.x, uv.y, fuerza)

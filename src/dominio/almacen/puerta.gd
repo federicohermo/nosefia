@@ -120,6 +120,11 @@ func _destino() -> float:
 	return ANGULO_ABIERTA if _abierta else 0.0
 
 
+## Si la hoja ya llegó al ángulo que le toca.
+func en_destino() -> bool:
+	return is_equal_approx(_angulo, _destino())
+
+
 ## Si la hoja no giró en el último `avanzar()`.
 func quieta() -> bool:
 	return _quieta

@@ -35,6 +35,13 @@ func _textura_de(malla: MeshInstance3D, superficie: int) -> Texture2D:
 	return material.albedo_texture if material != null else null
 
 
+func _imagen_de(textura: Texture2D) -> Image:
+	var imagen := textura.get_image()
+	if imagen.is_compressed():
+		imagen.decompress()
+	return imagen
+
+
 func test_el_dibujo_llena_la_malla_de_borde_a_borde() -> void:
 	var malla := _malla_del_papel()
 	var caja := malla.mesh.get_aabb()
@@ -69,7 +76,7 @@ func test_el_dorso_no_tiene_tinta_adentro_del_borde() -> void:
 	assert_int(dorso).is_greater_equal(0)
 	if dorso < 0:
 		return
-	var imagen := _textura_de(malla, dorso).get_image()
+	var imagen := _imagen_de(_textura_de(malla, dorso))
 	var margen := roundi(imagen.get_width() * MARGEN_DEL_BORDE)
 	var con_tinta := 0
 	for y in range(margen, imagen.get_height() - margen):
@@ -85,8 +92,8 @@ func test_el_dorso_tiene_los_mismos_dientes_que_el_frente() -> void:
 	assert_int(dorso).is_greater_equal(0)
 	if dorso < 0:
 		return
-	var imagen := _textura_de(malla, dorso).get_image()
-	var diseno := DISENO.get_image()
+	var imagen := _imagen_de(_textura_de(malla, dorso))
+	var diseno := _imagen_de(DISENO)
 	var comparados := 0
 	for y in range(PASO_DE_LA_MUESTRA / 2, diseno.get_height(), PASO_DE_LA_MUESTRA):
 		for x in range(PASO_DE_LA_MUESTRA / 2, diseno.get_width(), PASO_DE_LA_MUESTRA):

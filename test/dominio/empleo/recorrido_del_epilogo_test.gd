@@ -8,7 +8,9 @@ func _placas(cantidad: int) -> Array[EpilogosDeLosFinales.Placa]:
 	var textos: Array = []
 	for indice in range(cantidad):
 		textos.append("placa %d" % indice)
-	return EpilogosDeLosFinales.con_texto(EpilogosDeLosFinales.FONDO_DEL_FINAL_1, textos)
+	return EpilogosDeLosFinales.con_texto(
+		EpilogosDeLosFinales.fondo_del_final(FinalConPantalla.Cual.EMPLEADO_ESTRESADO), textos
+	)
 
 
 ## Cuenta cuántas veces avisó que la última placa se cerró.
@@ -60,8 +62,13 @@ func test_entre_placas_del_mismo_fondo_se_funde_el_texto_y_no_el_negro() -> void
 
 func test_entre_dos_placas_de_fondo_distinto_se_funde_la_pantalla() -> void:  # AC-SHF-138
 	var placas: Array[EpilogosDeLosFinales.Placa] = [
-		EpilogosDeLosFinales.Placa.new(EpilogosDeLosFinales.FONDO_DEL_FINAL_1, "primera"),
-		EpilogosDeLosFinales.Placa.new(EpilogosDeLosFinales.FONDO_DEL_FINAL_2, "segunda"),
+		EpilogosDeLosFinales.Placa.new(
+			EpilogosDeLosFinales.fondo_del_final(FinalConPantalla.Cual.EMPLEADO_ESTRESADO),
+			"primera"
+		),
+		EpilogosDeLosFinales.Placa.new(
+			EpilogosDeLosFinales.fondo_del_final(FinalConPantalla.Cual.LOCURA_PARANOICA), "segunda"
+		),
 	]
 	var recorrido := RecorridoDelEpilogo.new(placas)
 	_leyendo_la_placa(recorrido)

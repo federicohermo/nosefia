@@ -7,6 +7,7 @@ extends GdUnitTestSuite
 
 const ALMACEN := preload("res://src/escenas/almacen.tscn")
 const COLILLA := preload("res://src/escenas/objetos/colilla.tscn")
+const ReglasDelCierre := preload("res://src/dominio/almacen/reglas_del_cierre.gd")
 
 ## Cada cuántos metros se para el jugador, en x y en z.
 const PASO := 0.75
@@ -85,6 +86,7 @@ func _cabe_el_jugador(jugador: CharacterBody3D, lugar: Vector3) -> bool:
 func _lugares_donde_pararse(
 	almacen: Node3D, jugador: CharacterBody3D, altura: float
 ) -> Array[Vector3]:
+	var habitaciones: Node3D = almacen.get("_habitaciones")
 	var limites := _deposito_en_el_mundo(almacen)
 	var lugares: Array[Vector3] = []
 	var x := limites.position.x
@@ -92,7 +94,10 @@ func _lugares_donde_pararse(
 		var z := limites.position.z
 		while z <= limites.end.z:
 			var lugar := Vector3(x, altura, z)
-			if _cabe_el_jugador(jugador, lugar):
+			if (
+				habitaciones.call("de", lugar) != ReglasDelCierre.Habitacion.AFUERA
+				and _cabe_el_jugador(jugador, lugar)
+			):
 				lugares.append(lugar)
 			z += PASO
 		x += PASO

@@ -64,7 +64,7 @@ func test_el_despido_y_la_partida_en_curso_no_tienen_epilogo() -> void:  # AC-SH
 
 
 func test_una_placa_sin_texto_no_se_muestra() -> void:  # AC-SHF-137
-	var fondo := EpilogosDeLosFinales.FONDO_DEL_FINAL_1
+	var fondo := EpilogosDeLosFinales.fondo_del_final(FinalConPantalla.Cual.EMPLEADO_ESTRESADO)
 	var placas := EpilogosDeLosFinales.con_texto(fondo, ["uno", "", "tres"])
 	assert_int(placas.size()).is_equal(2)
 	assert_str(placas[0].texto).is_equal("uno")

@@ -169,3 +169,18 @@ func test_el_angulo_siguiente_no_mueve_la_hoja() -> void:  # AC-PLY-140
 	var siguiente := puerta.angulo_siguiente(0.1)
 	assert_float(puerta.angulo()).is_zero()
 	assert_float(puerta.avanzar(0.1)).is_equal(siguiente)
+
+
+func test_en_destino_distingue_topes_de_giro_en_curso() -> void:
+	var puerta := Puerta.new()
+	assert_bool(puerta.en_destino()).is_true()
+	puerta.alternar()
+	assert_bool(puerta.en_destino()).is_false()
+	puerta.avanzar(0.1)
+	assert_bool(puerta.en_destino()).is_false()
+	puerta.avanzar(10.0)
+	assert_bool(puerta.en_destino()).is_true()
+	puerta.alternar()
+	assert_bool(puerta.en_destino()).is_false()
+	puerta.avanzar(10.0)
+	assert_bool(puerta.en_destino()).is_true()

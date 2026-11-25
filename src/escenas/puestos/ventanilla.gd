@@ -29,12 +29,12 @@ signal pista_pedida(identidad: String)
 const JugadorDelLocal := preload("res://src/escenas/jugador.gd")
 const CompradorEnRetirada := preload("res://src/escenas/objetos/comprador_en_retirada.gd")
 const CompradorInteractuable := preload("res://src/escenas/objetos/comprador_interactuable.gd")
-const ANIMACIONES := {
-	DialogosDeCompradores.Personaje.TIN: preload("res://assets/characters/martin/idle.tres"),
-	DialogosDeCompradores.Personaje.TIA: preload("res://assets/characters/tiago/idle.tres"),
-	DialogosDeCompradores.Personaje.FEDE: preload("res://assets/characters/fede/idle.tres"),
-	DialogosDeCompradores.Personaje.MIA: preload("res://assets/characters/mia/idle.tres"),
-	DialogosDeCompradores.Personaje.CAMI: preload("res://assets/characters/cami/idle.tres"),
+const RUTAS_DE_ANIMACIONES := {
+	DialogosDeCompradores.Personaje.TIN: "res://assets/characters/martin/idle.tres",
+	DialogosDeCompradores.Personaje.TIA: "res://assets/characters/tiago/idle.tres",
+	DialogosDeCompradores.Personaje.FEDE: "res://assets/characters/fede/idle.tres",
+	DialogosDeCompradores.Personaje.MIA: "res://assets/characters/mia/idle.tres",
+	DialogosDeCompradores.Personaje.CAMI: "res://assets/characters/cami/idle.tres",
 }
 
 ## El hueco de la pared desde el puesto, con los bordes metidos en la pared. Su cara de adentro cae
@@ -61,6 +61,7 @@ var _retiradas: Array[CompradorEnRetirada] = []
 var _entrada: Tween
 var _posicion_de_espera: Vector3
 var _hueco: StaticBody3D
+var _animaciones: Dictionary[DialogosDeCompradores.Personaje, SpriteFrames] = {}
 
 
 func _ready() -> void:
@@ -68,7 +69,6 @@ func _ready() -> void:
 	_armar_el_hueco()
 	objetivo.atenciones = atenciones
 	objetivo.manos = jugador.agarre.manos()
-	objetivo.precargar(ANIMACIONES.values())
 	objetivo.interaccion_pedida.connect(_al_pulsar)
 	jugador.agarre.objeto_soltado.connect(_al_soltar)
 	reloj.turno_cerrado.connect(_al_cerrar_el_turno)
@@ -123,6 +123,13 @@ func _al_preparar() -> void:
 	panel.preparar(atenciones.tarea().fisica())
 	comprador_visible.hide()
 	comprador_visible.stop()
+	comprador_visible.sprite_frames = null
+	_animaciones.clear()
+	objetivo.limpiar()
+	for personaje: DialogosDeCompradores.Personaje in atenciones.tarea().personajes():
+		if RUTAS_DE_ANIMACIONES.has(personaje):
+			_animaciones[personaje] = load(RUTAS_DE_ANIMACIONES[personaje]) as SpriteFrames
+	objetivo.precargar(_animaciones.values())
 	cerrar()
 
 
@@ -203,7 +210,7 @@ func _mostrar_personaje(atendida: Atencion) -> void:
 		comprador_visible.hide()
 		comprador_visible.stop()
 		return
-	var cuadros: SpriteFrames = ANIMACIONES[atendida.comprador().personaje]
+	var cuadros := _animacion_de(atendida.comprador().personaje)
 	if comprador_visible.sprite_frames != cuadros:
 		comprador_visible.sprite_frames = cuadros
 		comprador_visible.set_frame_and_progress(0, 0.0)
@@ -212,6 +219,14 @@ func _mostrar_personaje(atendida: Atencion) -> void:
 	if _imagen_de != atendida:
 		_iniciar_entrada()
 	_imagen_de = atendida
+
+
+func _animacion_de(personaje: DialogosDeCompradores.Personaje) -> SpriteFrames:
+	if not _animaciones.has(personaje):
+		var cargada := load(RUTAS_DE_ANIMACIONES[personaje]) as SpriteFrames
+		_animaciones[personaje] = cargada
+		objetivo.precargar([cargada])
+	return _animaciones[personaje]
 
 
 func _iniciar_entrada() -> void:
@@ -361,4 +376,7 @@ func _al_cerrar_el_turno(_cumplidas: int) -> void:
 	_imagen_de = null
 	comprador_visible.hide()
 	comprador_visible.stop()
+	comprador_visible.sprite_frames = null
+	_animaciones.clear()
+	objetivo.limpiar()
 	cerrar()
