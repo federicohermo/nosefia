@@ -47,3 +47,9 @@ El detalle está en [CLAUDE.md](./CLAUDE.md) —que es también la guía para lo
 ## El equipo
 
 Camila Dos Santos · Federico Hermo · Martín Páez Gerez · Tiago Picolo · Mía Sanz Pedemonte
+
+## Licencia
+
+- **Código propio:** [MIT](./LICENSE) (`src/`, `test/`, `addons/hornear/`, `mcp-server/`, `.claude/`, `.agents/`, `.github/`).
+- **Assets, audio, narrativa y marca propios:** todos los derechos reservados ([LICENSE](./LICENSE)).
+- **Componentes de terceros:** ver [THIRD_PARTY_NOTICES.md](./THIRD_PARTY_NOTICES.md).
