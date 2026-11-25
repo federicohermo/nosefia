@@ -51,15 +51,13 @@ func _transform_de_mancha(mm: MultiMesh, indice: int) -> Transform3D:
 	)
 
 
-func _color_de_mancha(mm: MultiMesh, indice: int) -> Color:
-	var valores := mm.buffer
-	var inicio := indice * OclusionDeLaGondola.FLOTANTES_POR_MANCHA + 12
-	return Color(valores[inicio], valores[inicio + 1], valores[inicio + 2], valores[inicio + 3])
+func _esquinas_de_mancha(mm: MultiMesh, indice: int) -> float:
+	return _transform_de_mancha(mm, indice).basis.y.length() - 1.0
 
 
 func _recorte_de_mancha(mm: MultiMesh, indice: int) -> Color:
 	var valores := mm.buffer
-	var inicio := indice * OclusionDeLaGondola.FLOTANTES_POR_MANCHA + 16
+	var inicio := indice * OclusionDeLaGondola.FLOTANTES_POR_MANCHA + 12
 	return Color(valores[inicio], valores[inicio + 1], valores[inicio + 2], valores[inicio + 3])
 
 
@@ -286,11 +284,10 @@ func test_una_unidad_suelta_y_una_acomodada_comparten_forma_y_la_gondola_usa_sus
 	var mat_gondola := lote.material_override as ShaderMaterial
 	var rango: Vector2i = oclusion.rango_de(id)
 	var t_inst := _transform_de_mancha(lote.multimesh, rango.x)
-	var color_inst := _color_de_mancha(lote.multimesh, rango.x)
-	assert_float(color_inst.r).is_equal_approx(mat_suelta.get_shader_parameter(&"esquinas"), 0.001)
+	assert_float(_esquinas_de_mancha(lote.multimesh, rango.x)).is_equal_approx(
+		mat_suelta.get_shader_parameter(&"esquinas"), 0.001
+	)
 	var huella_suelta: Vector2 = mat_suelta.get_shader_parameter(&"huella")
-	var huella_gondola: Vector2 = oclusion.huella_de(id)
-	assert_vector(huella_gondola).is_equal_approx(huella_suelta, Vector2.ONE * 0.002)
 	var radio_gondola: float = oclusion.radio
 	var intensidad_gondola: float = oclusion.intensidad
 	assert_float(radio_gondola).is_equal(OclusionDeLaGondola.RADIO_POR_DEFECTO)
@@ -305,9 +302,9 @@ func test_una_unidad_suelta_y_una_acomodada_comparten_forma_y_la_gondola_usa_sus
 	assert_float(mat_suelta.get_shader_parameter(&"intensidad")).is_equal_approx(
 		mat_gondola.get_shader_parameter(&"intensidad"), 0.005
 	)
-	var tamano_esperado: Vector2 = huella_gondola * 2.0 + Vector2.ONE * (radio_gondola * 2.0)
 	var tamano_gondola := Vector2(t_inst.basis.x.length(), t_inst.basis.z.length())
-	assert_vector(tamano_gondola).is_equal_approx(tamano_esperado, Vector2.ONE * 0.001)
+	var huella_gondola := 0.5 * tamano_gondola - Vector2.ONE * radio_gondola
+	assert_vector(huella_gondola).is_equal_approx(huella_suelta, Vector2.ONE * 0.002)
 
 
 func test_en_una_rampa_inclinada_la_mancha_sigue_la_pendiente_y_se_corta_en_el_borde() -> void:
@@ -343,7 +340,7 @@ func test_en_una_rampa_inclinada_la_mancha_sigue_la_pendiente_y_se_corta_en_el_b
 	var oclusion: Node3D = auto_free(OclusionDeLaGondola.new())
 	add_child(oclusion)
 	var sin_materiales: Array[ShaderMaterial] = []
-	oclusion.preparar_bloque(0, "Rampa", malla_prod, sin_materiales, Basis.IDENTITY, bloque)
+	oclusion.preparar_bloque(0, malla_prod, sin_materiales, Basis.IDENTITY, bloque)
 	oclusion.sincronizar(0, [0], 1)
 	var sombras: MultiMeshInstance3D = oclusion.sombras_de(0)
 	assert_bool(sombras.visible).is_true()
@@ -381,8 +378,11 @@ func test_en_la_gondola_una_lata_deja_una_mancha_mas_redonda_que_una_caja_y_coin
 	var agarre: Agarre = almacen.get("_agarre")
 	var estante: Estante = almacen.get("_repositor").estante()
 	var oclusion := _oclusion_gondola(almacen)
-	var esquinas_gondola_lata: float = oclusion.esquinas_de(Producto.Id.ARVECOR)
-	var esquinas_gondola_caja: float = oclusion.esquinas_de(Producto.Id.ZUCARACHAS)
+	var lote := oclusion.sombras_de(Producto.Id.ARVECOR) as MultiMeshInstance3D
+	var rango_lata: Vector2i = oclusion.rango_de(Producto.Id.ARVECOR)
+	var rango_caja: Vector2i = oclusion.rango_de(Producto.Id.ZUCARACHAS)
+	var esquinas_gondola_lata := _esquinas_de_mancha(lote.multimesh, rango_lata.x)
+	var esquinas_gondola_caja := _esquinas_de_mancha(lote.multimesh, rango_caja.x)
 	assert_float(esquinas_gondola_lata).is_greater(esquinas_gondola_caja)
 	var id := Producto.Id.ARVECOR
 	var casillero: int = estante.casilleros_ocupados(Catalogo.de(id))[0]

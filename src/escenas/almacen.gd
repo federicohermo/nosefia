@@ -14,7 +14,6 @@ extends Node3D
 ## `Label3D` y llamarle `declarar_jornada()` no compilaría.
 const RelojDeMesaDelLocal := preload("res://src/escenas/puestos/reloj_de_mesa.gd")
 const CorteDeLuz := preload("res://src/escenas/puestos/corte_de_luz.gd")
-const OclusoresDelLocal := preload("res://src/escenas/puestos/oclusores_del_local.gd")
 const EscritorioDelLocal := preload("res://src/escenas/puestos/escritorio.gd")
 const TableroElectrico := preload("res://src/escenas/puestos/tablero_electrico.gd")
 const RouterDelWifi := preload("res://src/escenas/puestos/router_del_wifi.gd")
@@ -189,9 +188,6 @@ func _ready() -> void:
 	var aviso_al_salir := AvisoAlSalir.new()
 	aviso_al_salir.vigilar(_reloj)
 	add_child(aviso_al_salir)
-	var oclusores := OclusoresDelLocal.new()
-	oclusores.name = "OclusoresDelLocal"
-	add_child(oclusores)
 	# La lista de la escena no la nombra: `almacen.tscn` no se mergea y no se toca a mano.
 	_puertas.append($Estructura/puerta_limpieza/CuerpoDeLaHoja)
 	_puertas.append($Estructura/compuerta_mostrador/CuerpoDeLaHoja)

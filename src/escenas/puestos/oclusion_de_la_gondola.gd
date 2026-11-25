@@ -6,8 +6,9 @@
 ##    del lote (`producto_de_la_gondola.gdshader`). Sin rayos ni dibujos extra.
 ## 2. **Mancha debajo de cada unidad (`manchas_activas`).** Un `MultiMeshInstance3D` compartido
 ##    con `sombra_de_contacto.gdshader`, el recorte de su estante en `INSTANCE_CUSTOM`, `esquinas`
-##    en `COLOR.r` y el tamaño de cada producto en `MODEL_MATRIX`. Sigue la inclinación real del
-##    estante —también en una rampa— y se sincroniza cuando se saca o repone una unidad.
+##    en el largo de `basis.y` (`1 + esquinas`) y el tamaño de cada producto en `MODEL_MATRIX`.
+##    Sigue la inclinación real del estante —también en una rampa— y se sincroniza cuando se saca
+##    o repone una unidad.
 ##
 ## Reusa la banda de apoyo y el shader de `oclusion_de_contacto.gd` para conservar la forma de la
 ## mancha de las unidades sueltas, con su propio alcance e intensidad por defecto para envases
@@ -21,9 +22,9 @@ const GRUPO := &"oclusion_de_la_gondola"
 ## Valores por defecto de la góndola, compartidos con las unidades de producto sueltas.
 const RADIO_POR_DEFECTO := OclusionDeContacto.RADIO_DEL_PRODUCTO
 const INTENSIDAD_POR_DEFECTO := OclusionDeContacto.INTENSIDAD_DEL_PRODUCTO
-## Flotantes por copia en un `MultiMesh` 3D con `use_colors` y `use_custom_data`: 12 de la pose,
-## 4 del color (`esquinas`, 0, 0, 1) y 4 del recorte.
-const FLOTANTES_POR_MANCHA := 20
+## Flotantes por copia en un `MultiMesh` 3D con `use_custom_data`: 12 de la pose (con `1 + esquinas`
+## en el largo de `basis.y`) y 4 del recorte.
+const FLOTANTES_POR_MANCHA := 16
 ## Prioridad menor que el vidrio (0) y que el pre-pase del foco (-1): la mancha nunca se dibuja
 ## delante de las puertas de las heladeras.
 const PRIORIDAD_DE_LA_MANCHA := -2
@@ -88,11 +89,11 @@ func limpiar() -> void:
 ## Arma la base oscurecida y agrega las manchas de un producto al lote compartido.
 func preparar_bloque(
 	id: int,
-	_nombre: String,
 	malla_del_modelo: Mesh,
 	materiales_del_bloque: Array[ShaderMaterial],
 	derecho: Basis,
-	bloque: PackedFloat32Array
+	bloque: PackedFloat32Array,
+	subir_al_lote: bool = true
 ) -> void:
 	var apoyo := _medir_apoyo_local(malla_del_modelo, derecho)
 	var copias := DisposicionDeLaGondola.copias(bloque)
@@ -128,11 +129,10 @@ func preparar_bloque(
 	_aplicar_base(datos)
 	_aplicar_material_del_lote()
 	if copias > 0:
-		var orden_inicial: Array[int] = []
-		for indice in copias:
-			orden_inicial.append(indice)
-		sincronizar(id, orden_inicial, copias)
-	else:
+		datos["orden"] = range(copias)
+		datos["ocupados"] = copias
+		datos["buffer_visible"] = datos["buffer_completo"]
+	if subir_al_lote:
 		_subir_lote()
 
 
@@ -152,25 +152,19 @@ func agregar_materiales(id: int, malla: Mesh) -> void:
 
 ## Reordena las manchas del bloque en el mismo orden que `ReposicionManual._mostrar_lo_puesto`:
 ## los `cantidad_ocupados` primeros lugares (sanos y vencidos) quedan visibles; los huecos, fuera.
-func sincronizar(id: int, orden: Array, cantidad_ocupados: int) -> void:
+func sincronizar(id: int, orden: Array, cantidad_ocupados: int, subir_al_lote: bool = true) -> void:
 	if not _bloques.has(id):
 		return
 	var datos: Dictionary = _bloques[id]
 	datos["orden"] = orden.duplicate()
 	datos["ocupados"] = cantidad_ocupados
-	var completo: PackedFloat32Array = datos["buffer_completo"]
-	var visibles := PackedFloat32Array()
-	if not completo.is_empty() and cantidad_ocupados > 0:
-		var contar := mini(cantidad_ocupados, orden.size())
-		visibles.resize(contar * FLOTANTES_POR_MANCHA)
-		var destino := 0
-		for indice in contar:
-			var puesto: int = orden[indice]
-			var desde := puesto * FLOTANTES_POR_MANCHA
-			for paso in FLOTANTES_POR_MANCHA:
-				visibles[destino + paso] = completo[desde + paso]
-			destino += FLOTANTES_POR_MANCHA
-	datos["buffer_visible"] = visibles
+	_compactar(datos)
+	if subir_al_lote:
+		_subir_lote()
+
+
+## Sube al `MultiMesh` compartido todos los bloques preparados o sincronizados sin subida inmediata.
+func subir() -> void:
 	_subir_lote()
 
 
@@ -186,19 +180,8 @@ func rango_de(id: int) -> Vector2i:
 	if not _bloques.has(id):
 		return Vector2i.ZERO
 	var datos: Dictionary = _bloques[id]
-	return Vector2i(datos["inicio"] as int, datos["ocupados"] as int)
-
-
-func huella_de(id: int) -> Vector2:
-	if not _bloques.has(id):
-		return Vector2.ZERO
-	return _bloques[id]["huella"] as Vector2
-
-
-func esquinas_de(id: int) -> float:
-	if not _bloques.has(id):
-		return 0.0
-	return _bloques[id]["esquinas"] as float
+	var cantidad := (datos["buffer_visible"] as PackedFloat32Array).size() / FLOTANTES_POR_MANCHA
+	return Vector2i(datos["inicio"] as int, cantidad)
 
 
 func _asegurar_lote() -> void:
@@ -218,7 +201,6 @@ func _asegurar_lote() -> void:
 	lote.material_override = material
 	var mm := MultiMesh.new()
 	mm.transform_format = MultiMesh.TRANSFORM_3D
-	mm.use_colors = true
 	mm.use_custom_data = true
 	mm.mesh = OclusionDeContacto.plano()
 	mm.instance_count = 0
@@ -227,6 +209,20 @@ func _asegurar_lote() -> void:
 	lote.visible = false
 	add_child(lote)
 	_lote = lote
+
+
+func _compactar(datos: Dictionary) -> void:
+	var orden: Array = datos["orden"]
+	var ocupados: int = datos["ocupados"]
+	var completo: PackedFloat32Array = datos["buffer_completo"]
+	var visibles := PackedFloat32Array()
+	if not completo.is_empty() and ocupados > 0:
+		var contar := mini(ocupados, orden.size())
+		for indice in contar:
+			var puesto: int = orden[indice]
+			var desde := puesto * FLOTANTES_POR_MANCHA
+			visibles.append_array(completo.slice(desde, desde + FLOTANTES_POR_MANCHA))
+	datos["buffer_visible"] = visibles
 
 
 func _subir_lote() -> void:
@@ -248,13 +244,9 @@ func _subir_lote() -> void:
 	if mm.instance_count != capacidad:
 		mm.instance_count = capacidad
 	var salida := PackedFloat32Array()
-	salida.resize(capacidad * FLOTANTES_POR_MANCHA)
-	var destino := 0
 	for datos: Dictionary in _bloques.values():
-		var bloque_visible: PackedFloat32Array = datos["buffer_visible"]
-		for indice in bloque_visible.size():
-			salida[destino + indice] = bloque_visible[indice]
-		destino += bloque_visible.size()
+		salida.append_array(datos["buffer_visible"] as PackedFloat32Array)
+	salida.resize(capacidad * FLOTANTES_POR_MANCHA)
 	mm.buffer = salida
 	mm.visible_instance_count = visibles
 	_aplicar_visibilidad_del_lote()
@@ -271,8 +263,11 @@ func _rearmar_buffer(datos: Dictionary) -> void:
 	var destino := 0
 	for indice in poses.size():
 		var base_pose: Transform3D = poses[indice]
+		# El plano vive en `y = 0` y no usa normales: el largo de `basis.y` (`1 + esquinas`)
+		# transporta la redondez sin habilitar `use_colors` ni depender de `COLOR` en WebGL2.
 		var escalada := Transform3D(
-			base_pose.basis.scaled_local(Vector3(tamano.x, 1.0, tamano.y)), base_pose.origin
+			base_pose.basis.scaled_local(Vector3(tamano.x, 1.0 + esquinas, tamano.y)),
+			base_pose.origin
 		)
 		var b := escalada.basis
 		var o := escalada.origin
@@ -289,14 +284,10 @@ func _rearmar_buffer(datos: Dictionary) -> void:
 		salida[destino + 9] = b.y.z
 		salida[destino + 10] = b.z.z
 		salida[destino + 11] = o.z
-		salida[destino + 12] = esquinas
-		salida[destino + 13] = 0.0
-		salida[destino + 14] = 0.0
-		salida[destino + 15] = 1.0
-		salida[destino + 16] = recorte.r
-		salida[destino + 17] = recorte.g
-		salida[destino + 18] = recorte.b
-		salida[destino + 19] = recorte.a
+		salida[destino + 12] = recorte.r
+		salida[destino + 13] = recorte.g
+		salida[destino + 14] = recorte.b
+		salida[destino + 15] = recorte.a
 		destino += FLOTANTES_POR_MANCHA
 	datos["buffer_completo"] = salida
 
@@ -328,24 +319,9 @@ func _aplicar_material_del_lote() -> void:
 
 func _actualizar_tamano_de_manchas() -> void:
 	_aplicar_material_del_lote()
-	for id: int in _bloques:
-		var datos: Dictionary = _bloques[id]
+	for datos: Dictionary in _bloques.values():
 		_rearmar_buffer(datos)
-		var orden: Array = datos["orden"]
-		var ocupados: int = datos["ocupados"]
-		var completo: PackedFloat32Array = datos["buffer_completo"]
-		var visibles := PackedFloat32Array()
-		if not completo.is_empty() and ocupados > 0:
-			var contar := mini(ocupados, orden.size())
-			visibles.resize(contar * FLOTANTES_POR_MANCHA)
-			var destino := 0
-			for indice in contar:
-				var puesto: int = orden[indice]
-				var desde := puesto * FLOTANTES_POR_MANCHA
-				for paso in FLOTANTES_POR_MANCHA:
-					visibles[destino + paso] = completo[desde + paso]
-				destino += FLOTANTES_POR_MANCHA
-		datos["buffer_visible"] = visibles
+		_compactar(datos)
 	_subir_lote()
 
 

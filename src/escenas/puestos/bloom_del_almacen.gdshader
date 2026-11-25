@@ -14,10 +14,10 @@ vec3 aporte_de_brillo(vec3 muestra) {
 
 void fragment() {
 	vec3 base = textureLod(pantalla, SCREEN_UV, 0.0).rgb;
-	vec2 paso = SCREEN_PIXEL_SIZE * radio * 0.5;
-	// Núcleo binomial 5x5 ([1, 4, 6, 4, 1], suma 16^2 = 256) reducido a 9 muestras bilineales
-	// en desplazamientos 0 y ±1.2 con pesos [5, 6, 5], reutilizando `base` en el centro.
-	vec2 d = paso * 1.2;
+	// Aproximación de 9 muestras (pesos [5, 6, 5], suma 16^2 = 256) al núcleo binomial 5x5,
+	// con desplazamiento entero en píxeles de igual varianza (sqrt(1.6) ≈ 1.265) para muestrear
+	// centros de texel antes del umbral y reutilizar `base` en el centro.
+	vec2 d = SCREEN_PIXEL_SIZE * max(1.0, round(radio * 0.5 * 1.265));
 	vec3 halo = aporte_de_brillo(base) * 36.0;
 	halo += (
 		aporte_de_brillo(textureLod(pantalla, SCREEN_UV + vec2(-d.x, 0.0), 0.0).rgb)

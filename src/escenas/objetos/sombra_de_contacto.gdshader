@@ -38,8 +38,8 @@ uniform vec4 cajas[8];
 // Si es cierto, cada instancia del `MultiMesh` define su propia mancha rectangular:
 // el tamaño sale de `MODEL_MATRIX`. Sin `recorte_por_instancia`, `INSTANCE_CUSTOM` trae
 // `(suavidad, esquinas, intensidad, 0)`. Con `recorte_por_instancia`, `INSTANCE_CUSTOM` trae el
-// recorte `(min_x, min_z, max_x, max_z)`, `COLOR.r` trae `esquinas`, y `suavidad`/`intensidad`
-// salen de los uniformes compartidos.
+// recorte `(min_x, min_z, max_x, max_z)`, `length(MODEL_MATRIX[1].xyz) - 1.0` trae `esquinas`
+// (el plano vive en `y = 0`), y `suavidad`/`intensidad` salen de los uniformes compartidos.
 uniform bool parametros_por_instancia = false;
 
 varying vec2 plano;
@@ -54,7 +54,9 @@ void vertex() {
 		en_el_apoyo = vec3(0.0);
 		recorte_instancia = INSTANCE_CUSTOM;
 		float suav_inst = recorte_por_instancia ? suavidad : INSTANCE_CUSTOM.x;
-		float esq_inst = recorte_por_instancia ? COLOR.r : INSTANCE_CUSTOM.y;
+		float esq_inst = recorte_por_instancia
+			? clamp(length(MODEL_MATRIX[1].xyz) - 1.0, 0.0, 1.0)
+			: INSTANCE_CUSTOM.y;
 		float int_inst = recorte_por_instancia ? intensidad : INSTANCE_CUSTOM.z;
 		datos_instancia = vec4(
 			max(vec2(0.001), 0.5 * tamano_inst - vec2(suav_inst)),
