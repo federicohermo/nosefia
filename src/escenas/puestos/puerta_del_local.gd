@@ -102,10 +102,14 @@ func _ready() -> void:
 	if eje_de_la_bisagra != null:
 		punto = hoja.to_local(eje_de_la_bisagra.global_position)
 	_bisagra = _cerrada * punto
-	_desde_la_hoja = hoja.global_transform.affine_inverse() * global_transform
+	var pose_global := global_transform
+	_desde_la_hoja = hoja.global_transform.affine_inverse() * pose_global
 	top_level = true
+	global_transform = pose_global
+	reset_physics_interpolation()
 	if se_abre_al_empujar:
 		_armar_el_empuje()
+	set_physics_process(not _en_destino())
 
 
 ## Un sensor del tamaño de la hoja y más grueso que ella: el cuerpo lo toca antes que a la hoja,
@@ -145,6 +149,7 @@ func _al_tocar(cuerpo: Node3D) -> void:
 	var hacia := 1 if Vector3.UP.cross(punta).dot(lejos) >= 0.0 else -1
 	if hacia != sentido_del_giro or not _puerta.empujar():
 		return
+	set_physics_process(true)
 	puerta_abierta.emit(self)
 
 
@@ -157,6 +162,7 @@ func accionar() -> void:
 	if lo_que_se_lleva.is_valid():
 		var llevado: ObjetoDelAlmacen = lo_que_se_lleva.call()
 		if _puerta.forzar(llevado):
+			set_physics_process(true)
 			(
 				(
 					puerta_forzada_con_llave
@@ -188,13 +194,16 @@ func alternar() -> void:
 	if not _puerta.alternar():
 		(porton_trabado if traba == Traba.PORTON else puerta_trabada).emit(self)
 	elif _puerta.abierta():
+		set_physics_process(true)
 		puerta_abierta.emit(self)
 	else:
+		set_physics_process(true)
 		puerta_cerrada.emit(self)
 
 
 func abrir_para_salida() -> void:
 	if _puerta.abrir_para_salida():
+		set_physics_process(true)
 		puerta_abierta.emit(self)
 
 
@@ -207,6 +216,7 @@ func puerta() -> Puerta:
 func cerrar_de_golpe() -> void:
 	_puerta.cerrar_de_golpe()
 	_girando = false
+	set_physics_process(false)
 	hoja.transform = _cerrada
 	# Animable, el cuerpo llega a su lugar con velocidad y despide lo que toca la hoja: medido el
 	# 2026-09-26, una unidad apoyada salía a 85 m/s. Estático, salta.
@@ -233,6 +243,12 @@ func _physics_process(delta: float) -> void:
 	elif _girando:
 		_girando = false
 		hoja_quieta.emit(self)
+	if _en_destino() and not _girando:
+		set_physics_process(false)
+
+
+func _en_destino() -> bool:
+	return is_equal_approx(_puerta.angulo(), Puerta.ANGULO_ABIERTA if _puerta.abierta() else 0.0)
 
 
 func _pose_de_la_hoja(angulo: float) -> Transform3D:

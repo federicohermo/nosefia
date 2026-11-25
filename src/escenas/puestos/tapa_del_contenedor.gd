@@ -26,16 +26,22 @@ func _ready() -> void:
 	)
 	for adicional: Node3D in bisagras_adicionales:
 		_cerradas_adicionales.append(adicional.transform)
-	_desde_la_bisagra = bisagra.global_transform.affine_inverse() * global_transform
+	var pose_global := global_transform
+	_desde_la_bisagra = bisagra.global_transform.affine_inverse() * pose_global
 	top_level = true
+	global_transform = pose_global
+	reset_physics_interpolation()
+	set_physics_process(not _en_destino())
 
 
 func accionar() -> void:
 	_tapa.alternar()
+	set_physics_process(true)
 
 
 func reiniciar() -> void:
 	_tapa.reiniciar()
+	set_physics_process(false)
 	_dibujar()
 	# Un salto de jornada no debe darle velocidad a un objeto apoyado en la tapa.
 	PhysicsServer3D.body_set_mode(get_rid(), PhysicsServer3D.BODY_MODE_STATIC)
@@ -54,6 +60,14 @@ func _physics_process(delta: float) -> void:
 	var siguiente := _tapa.angulo_siguiente(delta)
 	_tapa.avanzar(delta, _paso_libre(siguiente))
 	_dibujar()
+	if _en_destino():
+		set_physics_process(false)
+
+
+func _en_destino() -> bool:
+	return is_equal_approx(
+		_tapa.angulo(), TapaDelContenedor.ANGULO_ABIERTA if _tapa.abierta() else 0.0
+	)
 
 
 func _dibujar() -> void:

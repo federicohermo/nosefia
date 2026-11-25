@@ -32,6 +32,10 @@ func precargar(animaciones: Array) -> void:
 					_imagenes[textura] = textura.get_image()
 
 
+func limpiar() -> void:
+	_imagenes.clear()
+
+
 func _actualizar_disponibilidad() -> void:
 	var vigente := _vigente()
 	collision_layer = 2 if vigente else 0

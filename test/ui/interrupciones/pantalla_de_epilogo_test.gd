@@ -18,7 +18,9 @@ func _placas(cantidad: int) -> Array[EpilogosDeLosFinales.Placa]:
 	var textos: Array = []
 	for indice in range(cantidad):
 		textos.append("placa %d" % indice)
-	return EpilogosDeLosFinales.con_texto(EpilogosDeLosFinales.FONDO_DEL_FINAL_2, textos)
+	return EpilogosDeLosFinales.con_texto(
+		EpilogosDeLosFinales.fondo_del_final(FinalConPantalla.Cual.LOCURA_PARANOICA), textos
+	)
 
 
 func _pantalla(placas: Array[EpilogosDeLosFinales.Placa]) -> PantallaDeEpilogo:

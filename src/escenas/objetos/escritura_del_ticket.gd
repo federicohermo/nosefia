@@ -106,6 +106,8 @@ static func _material_de(textura: Texture2D) -> StandardMaterial3D:
 func _escribir(ticket: Ticket) -> void:
 	var fondo := TextureRect.new()
 	fondo.texture = PAPEL
+	fondo.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	fondo.stretch_mode = TextureRect.STRETCH_SCALE
 	fondo.size = Vector2(TAMANO_DEL_PAPEL)
 	_raiz.add_child(fondo)
 	for posicion: Vector2 in SEPARADORES:
