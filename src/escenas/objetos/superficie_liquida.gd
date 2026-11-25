@@ -83,8 +83,13 @@ func _ready() -> void:
 		_gotas.preparar(_pintura_de_gotas)
 		_crear_superficie()
 	else:
-		_onda = float(absf(global_basis.y.normalized().dot(Vector3.UP)) > 0.8)
+		_onda = float(
+			is_visible_in_tree() and absf(global_basis.y.normalized().dot(Vector3.UP)) > 0.8
+		)
 	_dibujar()
+	if not en_balde and _onda < 0.001:
+		set_physics_process(false)
+		set_process(false)
 
 
 func configurar_agua(acuosa: bool) -> void:
@@ -296,6 +301,9 @@ func presentar(activa: bool) -> void:
 		reiniciar()
 	if not en_balde and activa and not visible:
 		perturbar()
+	if not en_balde and not activa:
+		set_physics_process(false)
+		set_process(false)
 	visible = activa
 
 
@@ -322,6 +330,9 @@ func _cancelar_encogimiento() -> void:
 func _terminar_encogimiento() -> void:
 	_encogimiento = null
 	visible = false
+	if not en_balde:
+		set_physics_process(false)
+		set_process(false)
 	encogida.emit()
 
 
@@ -334,6 +345,12 @@ func tocar_en(punto: Vector3) -> void:
 func _physics_process(delta: float) -> void:
 	if not is_visible_in_tree():
 		_muestreada = false
+		if not en_balde:
+			if _onda > 0.0:
+				_onda = 0.0
+				_dibujar()
+			set_physics_process(false)
+			set_process(false)
 		return
 	if delta <= 0.0:
 		return

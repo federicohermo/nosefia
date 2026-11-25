@@ -191,7 +191,9 @@ func preparar() -> void:
 		_rehacer_disposicion()
 	else:
 		for id in _grupos.size():
-			_mostrar_lo_puesto(id)
+			_mostrar_lo_puesto(id, false)
+		if _oclusion != null:
+			_oclusion.subir()
 	_actualizar_zonas()
 
 
@@ -260,7 +262,9 @@ func _rehacer_disposicion() -> void:
 	_radios_de_las_filas.clear()
 	_preparar_grupos()
 	for id in _grupos.size():
-		_mostrar_lo_puesto(id)
+		_mostrar_lo_puesto(id, false)
+	if _oclusion != null:
+		_oclusion.subir()
 	_preparar_los_casilleros()
 	_disposicion_preparada = disposicion
 
@@ -1369,12 +1373,7 @@ func _preparar_grupos() -> void:
 			if mat != null:
 				materiales.append(mat)
 		_oclusion.preparar_bloque(
-			producto.id,
-			producto.nombre,
-			malla,
-			materiales,
-			_derecho(producto.id),
-			_bloques[producto.id]
+			producto.id, malla, materiales, _derecho(producto.id), _bloques[producto.id], false
 		)
 		var faltantes := _dibujar("HuecosDe" + producto.nombre, malla, _bloques[producto.id])
 		faltantes.visible = false
@@ -1654,7 +1653,7 @@ func _rebasar(bloque: PackedFloat32Array, desde: Basis, hacia: Basis) -> PackedF
 ## corte. Cada copia
 ## lleva su lugar, así que reordenarlas no mueve ninguna: la que se agarró del medio deja un hueco
 ## en el medio.
-func _mostrar_lo_puesto(id: Producto.Id) -> void:
+func _mostrar_lo_puesto(id: Producto.Id, subir_oclusion: bool = true) -> void:
 	if _bloques[id].is_empty():
 		return
 	var producto := Catalogo.de(id)
@@ -1694,7 +1693,7 @@ func _mostrar_lo_puesto(id: Producto.Id) -> void:
 		_vencidos_puestos.multimesh.visible_instance_count = vencidos.size()
 		_vencidos_puestos.visible = not vencidos.is_empty()
 	if _oclusion != null:
-		_oclusion.sincronizar(id, orden, ocupados.size())
+		_oclusion.sincronizar(id, orden, ocupados.size(), subir_oclusion)
 
 
 ## Un `MultiMeshInstance3D` con todas las copias de un bloque, prendidas.
@@ -1841,7 +1840,9 @@ func limpiar() -> void:
 	# por `id` mata el primer cuadro con un `Out of bounds` que no nombra ni a la jornada ni a
 	# este puesto.
 	for id in _grupos.size():
-		_mostrar_lo_puesto(id)
+		_mostrar_lo_puesto(id, false)
+	if _oclusion != null:
+		_oclusion.subir()
 	_actualizar_zonas()
 
 
