@@ -181,6 +181,10 @@ jobs:
       # la publicación anterior cada vez que el proyecto cambie de nombre.
       # `--archive=tgz` sube un solo archivo comprimido: sin él, el `index.pck` de más de 100 MB
       # supera el límite por archivo de Vercel y la CLI sale con «File size limit exceeded».
+      # Precomprimir `index.wasm` e `index.pck` en `.br` y armar el `vercel.json` dentro del
+      # directorio publicado: reduce la descarga inicial a menos de la mitad, evita que `index.pck`
+      # supere el límite por archivo de Vercel y mantiene intacta la verificación previa sobre el
+      # export sin comprimir.
       - name: Publicar en Vercel
         id: publicar
         env:
@@ -189,7 +193,9 @@ jobs:
           VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
         run: |
           set -euo pipefail
-          cp vercel.json export/web/
+          python -m pip install --quiet brotli
+          python .github/scripts/tests/test_comprimir_export_web.py
+          python .github/scripts/comprimir_export_web.py export/web vercel.json
           npm install --global vercel@latest
           url="$(vercel deploy export/web --prod --yes --archive=tgz --token "$VERCEL_TOKEN")"
           # El encabezado de este archivo ya lo dice de la CLI: puede terminar sin desplegar y

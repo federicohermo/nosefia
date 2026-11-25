@@ -11,6 +11,7 @@ no es obvia.
 | Los headers | `vercel.json` |
 | La versión del motor | `.godot-version` |
 | La preparación de la plantilla web | [`.github/scripts/preparar_plantilla_web.py`](../../.github/scripts/preparar_plantilla_web.py) |
+| La precompresión Brotli del export | [`.github/scripts/comprimir_export_web.py`](../../.github/scripts/comprimir_export_web.py) |
 | El parche y la receta de compilación | [`.github/patches/godot-web-compilacion.json`](../../.github/patches/godot-web-compilacion.json) |
 | El veredicto del export | `.claude/scripts/verificar_export.py` |
 | El veredicto de la URL | `.claude/scripts/verificar_despliegue.py` |
@@ -258,8 +259,8 @@ mkdir -p export/web
 python .claude/scripts/verificar_export.py export/web   # el veredicto NO es el $? de arriba
 python .github/scripts/preparar_plantilla_web.py --verificar-export export/web
 
-cp vercel.json export/web/
-vercel deploy export/web --prod --yes --token "$VERCEL_TOKEN"
+python .github/scripts/comprimir_export_web.py export/web vercel.json
+vercel deploy export/web --prod --yes --archive=tgz --token "$VERCEL_TOKEN"
 
 python .claude/scripts/verificar_despliegue.py https://<proyecto>.vercel.app
 node .github/scripts/humo_en_navegador.mjs https://<proyecto>.vercel.app
