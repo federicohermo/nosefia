@@ -37,6 +37,10 @@ import bpy  # type: ignore[import-not-found]
 from mathutils import Vector  # type: ignore[import-not-found]
 
 RAIZ = Path(__file__).resolve().parents[3]
+sys.path.insert(0, str(RAIZ / ".claude/scripts"))
+
+from lib.consola import configurar  # noqa: E402
+
 FUENTE = RAIZ / "assets/models/SEPT_JUEGOS_PROTOTIPO.blend"
 DESTINO = RAIZ / "reports/techo-del-bano.blend"
 EDIFICIO = "almacen-col"
@@ -173,6 +177,7 @@ def aplicar_techo_del_bano() -> dict:
 
 
 def main() -> None:
+    configurar()
     argumentos = sys.argv[sys.argv.index("--") + 1 :] if "--" in sys.argv else []
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--aplicar", action="store_true")

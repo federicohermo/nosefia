@@ -15,10 +15,11 @@ varying vec2 punto_del_balde;
 void vertex() {
 	punto_del_balde = VERTEX.xz;
 	if (ondas_en_vertices) {
-		float y = clamp(altura_libre(punto_del_balde), fondo, limite);
+		float y_inicial = clamp(altura_libre(punto_del_balde), fondo, limite);
 		// Sigue la conicidad del balde: la cresta acompaña la pared y el valle no la atraviesa.
-		VERTEX.xz *= clamp(borde + y * 0.24, 0.86, 1.015);
-		VERTEX.y = y;
+		float escala = clamp(borde + y_inicial * 0.24, 0.86, 1.015);
+		VERTEX.xz *= escala;
+		VERTEX.y = clamp(altura_en_escala(punto_del_balde, escala), fondo, limite);
 	}
 }
 

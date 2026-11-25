@@ -585,12 +585,17 @@ func vertices_dibujados() -> PackedVector3Array:
 		var ondas := 0.0
 		for modo: int in Ondas.MODOS:
 			ondas += amplitudes[modo] * Ondas.forma_en(modo, punto / _radio)
-		var altura := clampf(
+		var altura_inicial := clampf(
 			(inclinacion.dot(punto * borde) + ondas * RELIEVE_DE_LAS_ONDAS) * nivel - descenso,
 			fondo,
 			limite
 		)
-		var escala := clampf(borde + altura * 0.24, 0.86, 1.015)
+		var escala := clampf(borde + altura_inicial * 0.24, 0.86, 1.015)
+		var altura := clampf(
+			(inclinacion.dot(punto * escala) + ondas * RELIEVE_DE_LAS_ONDAS) * nivel - descenso,
+			fondo,
+			limite
+		)
 		vertices.append(Vector3(punto.x * escala, altura, punto.y * escala))
 	return vertices
 
